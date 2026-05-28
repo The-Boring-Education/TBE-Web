@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mobile App Developer Roadmap 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            height: auto;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            height: auto;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 12px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 2px 0 18px 20px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── YOUTUBE LINKS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS TABLE ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── SALARY / STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 600px) {
+            .resource-viewer {
+                padding: 0;
+                gap: 0;
+                width: 100%;
+                align-items: stretch;
+            }
+
+            .print-bar {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 0;
+                background: #e8e5df;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 8px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 20px 0;
+            }
+
+            .cover-hero {
+                padding: 28px 20px 28px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 36px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+            }
+
+            .cover-quote-block {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .cover-footer {
+                padding: 14px 20px;
+                flex-wrap: wrap;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 20px 12px;
+            }
+
+            .page-body {
+                padding: 20px 20px;
+            }
+
+            .page-footer {
+                padding: 12px 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .step-content {
+                padding: 2px 0 16px 12px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 8px;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .cover-decoration {
+                width: 140px;
+                height: 140px;
+                right: -30px;
+                top: 20px;
+                transform: none;
+            }
+
+            .stack-table {
+                font-size: 11px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: hidden;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                height: 297mm;
+                min-height: unset;
+            }
+
+            .inner-page {
+                height: 297mm;
+                min-height: unset;
+            }
+
+            .page-body {
+                overflow: hidden;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z">
+                    </path>
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+                <div class="cover-hook">The complete path — iOS, Android &amp; Cross-Platform</div>
+                <h1 class="cover-title">
+                    Mobile<br /><span>App</span><br />Developer<br />Roadmap
+                </h1>
+                <p class="cover-subtitle">
+                    From programming fundamentals to shipping production iOS and Android apps in 2026. Swift, Kotlin,
+                    React Native, Flutter — every platform, every tool, with free YouTube resources for every phase.
+                </p>
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "There are 7 billion smartphones on Earth. Every one of them runs apps built by mobile
+                        developers. The engineer who can ship a polished, performant, production-grade mobile app is in
+                        demand everywhere — startups, big tech, freelance, and beyond."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">10–14</div>
+                        <div class="stat-label">Months to job-ready</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">11</div>
+                        <div class="stat-label">Phases to master</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">45+</div>
+                        <div class="stat-label">Free YT resources</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">Career ceiling</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com  ·  Free Tech Education for
+                    Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 2 — PHASES 1–3 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Foundation Layer</div>
+                <h2 class="section-title">Start Here — Programming, CS Basics &amp; Dev Tools</h2>
+                <div class="roadmap">
+                    <!-- PHASE 1 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 1–4</div>
+                            <div class="step-phase">Phase 01 · Programming Fundamentals</div>
+                            <div class="step-heading">Core Programming Concepts Every Mobile Dev Must Know</div>
+                            <div class="step-desc">Before you touch Swift or Kotlin, you need rock-solid programming
+                                fundamentals. Master <strong>variables, data types, and control flow</strong> — loops,
+                                conditionals, and functions. Understand <strong>Object-Oriented Programming
+                                    (OOP)</strong>: classes, objects, inheritance, encapsulation, and polymorphism —
+                                mobile frameworks are built entirely on OOP. Learn <strong>data structures</strong>:
+                                arrays, lists, dictionaries/maps, and sets — you'll use these daily. Understand
+                                <strong>algorithms basics</strong>: sorting, searching, Big-O notation. Get comfortable
+                                with <strong>Git and GitHub</strong> for version control — this is mandatory before
+                                anything else. Set up your development environment: <strong>Xcode</strong> for iOS or
+                                <strong>Android Studio</strong> for Android.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Non-negotiable</span>
+                                <span class="tag">OOP concepts</span>
+                                <span class="tag">Data structures</span>
+                                <span class="tag">Git / GitHub</span>
+                                <span class="tag">Xcode / Android Studio</span>
+                                <span class="tag">Functions &amp; closures</span>
+                                <span class="tag">Algorithms basics</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Intro+to+Programming+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Intro to Programming – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Data+Structures+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Data Structures Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Git+%26+GitHub+Crash+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Git &amp; GitHub Crash Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=OOP+Concepts+%E2%80%93+Programming+with+Mosh"
+                                    target="_blank">OOP Concepts – Programming with Mosh</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PHASE 2 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 3–8</div>
+                            <div class="step-phase">Phase 02 · Choose Your Path — Swift or Kotlin</div>
+                            <div class="step-heading">Swift for iOS or Kotlin for Android — Pick One First</div>
+                            <div class="step-desc">You must go deep on one native language before going cross-platform.
+                                For iOS, learn <strong>Swift</strong>: optionals, protocols, extensions, closures,
+                                concurrency with async/await, and the Swift Package Manager. For Android, learn
+                                <strong>Kotlin</strong>: null safety, coroutines, extension functions, data classes,
+                                sealed classes, and lambdas. Both languages are modern, expressive, and safe. Master
+                                <strong>type systems</strong>: Swift's and Kotlin's strong typing prevent entire classes
+                                of bugs at compile time. Understand <strong>memory management</strong>: ARC (Swift) and
+                                GC (Kotlin/JVM). You don't need both at first — pick iOS if you want App Store, pick
+                                Android if you want more market share globally.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Language mastery</span>
+                                <span class="tag">Swift 5.9+</span>
+                                <span class="tag">Kotlin coroutines</span>
+                                <span class="tag">Optionals / null safety</span>
+                                <span class="tag">Protocols / interfaces</span>
+                                <span class="tag">async/await</span>
+                                <span class="tag">Memory management</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Swift+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Swift Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Kotlin+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Kotlin Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Swift+Concurrency+async%2Fawait+%E2%80%93+Sean+Allen"
+                                    target="_blank">Swift Concurrency async/await – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Kotlin+Coroutines+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Kotlin Coroutines – Philipp Lackner</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PHASE 3 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 6–12</div>
+                            <div class="step-phase">Phase 03 · Native UI Frameworks</div>
+                            <div class="step-heading">SwiftUI / Jetpack Compose — Modern Declarative UI</div>
+                            <div class="step-desc">The future of native mobile UI is declarative. For iOS, master
+                                <strong>SwiftUI</strong>: Views, State, Binding, ObservableObject, NavigationStack,
+                                Lists, sheets, animations, and the @Environment system. Understand <strong>UIKit
+                                    interop</strong> for legacy codebases — most jobs still require UIKit knowledge. For
+                                Android, master <strong>Jetpack Compose</strong>: Composables, State hoisting, remember,
+                                LazyColumn, Navigation Compose, and Material 3 theming. Learn <strong>layout
+                                    systems</strong>: SwiftUI's HStack/VStack/ZStack vs Compose's Row/Column/Box.
+                                Understand <strong>state management</strong>: how data flows from model to UI and back.
+                                Build at least 3 small UI-only apps before moving on — UI fluency is foundational.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">UI foundation</span>
+                                <span class="tag">SwiftUI</span>
+                                <span class="tag">UIKit basics</span>
+                                <span class="tag">Jetpack Compose</span>
+                                <span class="tag">State management</span>
+                                <span class="tag">Navigation</span>
+                                <span class="tag">Material 3</span>
+                                <span class="tag">Animations</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=SwiftUI+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">SwiftUI Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Jetpack+Compose+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Jetpack Compose Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=SwiftUI+Tutorial+%E2%80%93+Sean+Allen"
+                                    target="_blank">SwiftUI Tutorial – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Jetpack+Compose+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Jetpack Compose – Philipp Lackner</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:16px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">📱</div>
+                        <div class="tip-text"><strong>Don't skip native before going cross-platform.</strong> Developers
+                            who jump straight to Flutter or React Native without native knowledge struggle with
+                            platform-specific bugs, performance issues, and plugin limitations. Spend at least 2–3
+                            months on native UI. You'll understand why Flutter or React Native does what it does — and
+                            debug it 10x faster.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 3 — PHASES 4–5 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Networking, Data &amp; State</div>
+                <h2 class="section-title">APIs, Local Storage &amp; App Architecture</h2>
+                <div class="roadmap">
+                    <!-- PHASE 4 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 10–16</div>
+                            <div class="step-phase">Phase 04 · Networking &amp; REST APIs</div>
+                            <div class="step-heading">Connecting Apps to the Internet — HTTP, JSON &amp; Auth</div>
+                            <div class="step-desc">Real apps talk to servers. Master <strong>URLSession (iOS)</strong>
+                                and <strong>Retrofit / Ktor (Android)</strong> for making HTTP requests. Understand
+                                <strong>REST API design</strong>: GET, POST, PUT, DELETE, status codes, headers. Learn
+                                <strong>JSON parsing</strong>: Codable in Swift, Gson/Moshi in Kotlin — mapping server
+                                responses to your app's data models. Implement <strong>authentication</strong>: JWT
+                                tokens, OAuth 2.0, refresh token flows, and secure storage with Keychain (iOS) or
+                                EncryptedSharedPreferences (Android). Handle <strong>network errors gracefully</strong>:
+                                no internet, timeouts, server errors — mobile users go offline constantly. Learn
+                                <strong>async networking patterns</strong>: callbacks, Combine (iOS), and Kotlin Flow
+                                for reactive data streams.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Must-have skill</span>
+                                <span class="tag">URLSession / Retrofit</span>
+                                <span class="tag">REST APIs</span>
+                                <span class="tag">JSON / Codable</span>
+                                <span class="tag">JWT / OAuth 2.0</span>
+                                <span class="tag">Combine / Flow</span>
+                                <span class="tag">Error handling</span>
+                                <span class="tag">Keychain / Secure storage</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Networking+in+SwiftUI+%E2%80%93+Sean+Allen"
+                                    target="_blank">Networking in SwiftUI – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Retrofit+Android+Tutorial+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Retrofit Android Tutorial – Philipp Lackner</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=REST+API+Crash+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">REST API Crash Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Kotlin+Flow+%26+Coroutines+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Kotlin Flow &amp; Coroutines – Philipp Lackner</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PHASE 5 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 12–20</div>
+                            <div class="step-phase">Phase 05 · Local Storage &amp; App Architecture</div>
+                            <div class="step-heading">Persistence, Architecture Patterns &amp; Clean Code</div>
+                            <div class="step-desc">Apps need to store data locally. Learn <strong>UserDefaults /
+                                    SharedPreferences</strong> for small key-value data. Master <strong>Core Data
+                                    (iOS)</strong> and <strong>Room Database (Android)</strong> for structured local
+                                persistence. Explore <strong>SQLite</strong> fundamentals — Core Data and Room sit on
+                                top of it. Learn <strong>app architecture patterns</strong>: MVVM (Model-View-ViewModel)
+                                is the industry standard for both platforms. Understand <strong>Dependency
+                                    Injection</strong>: Swinject/Factory (iOS), Hilt/Dagger (Android) — inject
+                                dependencies rather than hardcoding them. Master <strong>SOLID principles</strong>
+                                applied to mobile. Learn how to keep ViewModels testable, how to separate concerns
+                                cleanly, and why fat ViewControllers/Activities are a career liability.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Architecture essentials</span>
+                                <span class="tag">Core Data / Room</span>
+                                <span class="tag">MVVM pattern</span>
+                                <span class="tag">Dependency Injection</span>
+                                <span class="tag">Hilt / Swinject</span>
+                                <span class="tag">SOLID principles</span>
+                                <span class="tag">UserDefaults / SharedPrefs</span>
+                                <span class="tag">Repository pattern</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Core+Data+Tutorial+%E2%80%93+Paul+Hudson"
+                                    target="_blank">Core Data Tutorial – Paul Hudson</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Room+Database+Android+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Room Database Android – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=MVVM+Architecture+iOS+%E2%80%93+Sean+Allen"
+                                    target="_blank">MVVM Architecture iOS – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Hilt+Dependency+Injection+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Hilt Dependency Injection – Philipp Lackner</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="tip-block">
+                    <div class="tip-icon">🏗️</div>
+                    <div class="tip-text"><strong>Architecture separates junior from senior developers.</strong> A
+                        junior puts all logic in the ViewController or Activity. A senior builds clean MVVM layers where
+                        the UI knows nothing about the data source. Interviewers at top companies will ask you to walk
+                        through your architecture — if you can't explain it clearly, you won't get the offer. Learn MVVM
+                        deeply before you go to your first interview.</div>
+                </div>
+                <div style="margin-top:14px;">
+                    <div class="section-label">Architecture Pattern Comparison</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Complexity</th>
+                                <th>Best For</th>
+                                <th>Industry Usage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MVC</td>
+                                <td>Low</td>
+                                <td>Small apps, quick prototypes</td>
+                                <td>Legacy codebases, learning projects</td>
+                            </tr>
+                            <tr>
+                                <td>MVVM</td>
+                                <td>Medium</td>
+                                <td>Most production apps</td>
+                                <td>Industry standard — used everywhere</td>
+                            </tr>
+                            <tr>
+                                <td>MVI / TCA</td>
+                                <td>High</td>
+                                <td>Complex, reactive, testable apps</td>
+                                <td>Advanced teams, The Composable Architecture (iOS)</td>
+                            </tr>
+                            <tr>
+                                <td>Clean Architecture</td>
+                                <td>High</td>
+                                <td>Large teams, long-lived codebases</td>
+                                <td>Enterprise apps, multi-module Android</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 4 — PHASES 6–7 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Cross-Platform &amp; Backend Integration</div>
+                <h2 class="section-title">Flutter, React Native &amp; Firebase / Supabase</h2>
+                <div class="roadmap">
+                    <!-- PHASE 6 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 18–28</div>
+                            <div class="step-phase">Phase 06 · Cross-Platform Development</div>
+                            <div class="step-heading">Flutter or React Native — Ship iOS &amp; Android From One Codebase
+                            </div>
+                            <div class="step-desc">Cross-platform skills 2x your job opportunities.
+                                <strong>Flutter</strong> is Google's UI toolkit using Dart — write once, render
+                                everywhere via its own Skia/Impeller engine. Learn <strong>Widgets, BuildContext,
+                                    StatefulWidget vs StatelessWidget</strong>, Flutter Navigation 2.0, and state
+                                management with <strong>Provider, Riverpod, or BLoC</strong>. For <strong>React
+                                    Native</strong>, learn its bridge architecture (moving to the new JSI/Fabric
+                                architecture), components, StyleSheet, FlatList, and state with <strong>React hooks and
+                                    Zustand/Redux Toolkit</strong>. Understand <strong>platform channels</strong>: how
+                                to call native Swift/Kotlin code from Flutter or RN when plugins don't exist. Know when
+                                cross-platform is the right call and when to stay native.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">2x job opportunities</span>
+                                <span class="tag">Flutter / Dart</span>
+                                <span class="tag">React Native</span>
+                                <span class="tag">Riverpod / BLoC</span>
+                                <span class="tag">React hooks</span>
+                                <span class="tag">Zustand / Redux</span>
+                                <span class="tag">Platform channels</span>
+                                <span class="tag">Expo</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Flutter+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Flutter Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=React+Native+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">React Native Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Flutter+Riverpod+%E2%80%93+Rivaan+Ranawat"
+                                    target="_blank">Flutter Riverpod – Rivaan Ranawat</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Flutter+BLoC+Pattern+%E2%80%93+Reso+Coder"
+                                    target="_blank">Flutter BLoC Pattern – Reso Coder</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Expo+React+Native+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Expo React Native – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PHASE 7 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 22–30</div>
+                            <div class="step-phase">Phase 07 · Backend as a Service &amp; Cloud</div>
+                            <div class="step-heading">Firebase, Supabase &amp; Push Notifications</div>
+                            <div class="step-desc">Most mobile apps need a backend. You don't need to build one from
+                                scratch. Learn <strong>Firebase</strong>: Authentication (Google, Apple, Email),
+                                Firestore (real-time NoSQL database), Cloud Storage (images/files), Cloud Functions, and
+                                Remote Config for feature flags. Learn <strong>Supabase</strong> — the open-source
+                                Firebase alternative with PostgreSQL, Row Level Security, Realtime subscriptions, and
+                                Auth. Master <strong>Push Notifications</strong>: APNs (Apple Push Notification service)
+                                for iOS, FCM (Firebase Cloud Messaging) for Android — this is a mandatory feature in
+                                almost every production app. Learn <strong>App Check</strong> for API security.
+                                Understand <strong>real-time data</strong> with Firestore listeners or Supabase
+                                Realtime.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Backend essentials</span>
+                                <span class="tag">Firebase Auth</span>
+                                <span class="tag">Firestore</span>
+                                <span class="tag">Supabase</span>
+                                <span class="tag">APNs / FCM</span>
+                                <span class="tag">Cloud Functions</span>
+                                <span class="tag">Remote Config</span>
+                                <span class="tag">Real-time listeners</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Firebase+Full+Course+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Firebase Full Course – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Supabase+Flutter+Tutorial+%E2%80%93+Tadas+Petra"
+                                    target="_blank">Supabase Flutter Tutorial – Tadas Petra</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Push+Notifications+iOS+%E2%80%93+Sean+Allen"
+                                    target="_blank">Push Notifications iOS – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=FCM+Android+Notifications+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">FCM Android Notifications – Philipp Lackner</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="tip-block">
+                    <div class="tip-icon">☁️</div>
+                    <div class="tip-text"><strong>Firebase is the fastest path from zero to shipped.</strong> For your
+                        first 3–4 projects, use Firebase. It handles auth, database, storage, and push notifications so
+                        you can focus on the app itself. Once you're comfortable shipping apps, learn Supabase as your
+                        open-source alternative — many startups prefer it for cost and data control reasons.</div>
+                </div>
+                <div style="margin-top:14px;">
+                    <div class="section-label">Cross-Platform Framework Comparison</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Framework</th>
+                                <th>Language</th>
+                                <th>Performance</th>
+                                <th>Who Uses It</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Flutter</td>
+                                <td>Dart</td>
+                                <td>Near-native (own renderer)</td>
+                                <td>Google, Alibaba, BMW, startups</td>
+                            </tr>
+                            <tr>
+                                <td>React Native</td>
+                                <td>JavaScript / TypeScript</td>
+                                <td>Good (new Fabric arch)</td>
+                                <td>Meta, Shopify, Microsoft, Discord</td>
+                            </tr>
+                            <tr>
+                                <td>Swift (iOS native)</td>
+                                <td>Swift</td>
+                                <td>Best (native)</td>
+                                <td>Apple ecosystem, fintech, gaming</td>
+                            </tr>
+                            <tr>
+                                <td>Kotlin (Android native)</td>
+                                <td>Kotlin</td>
+                                <td>Best (native)</td>
+                                <td>Google, Samsung, enterprise Android</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 5 — PHASES 8–9 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Testing, Performance &amp; App Store</div>
+                <h2 class="section-title">Testing, Optimization &amp; Shipping to App Stores</h2>
+                <div class="roadmap">
+                    <!-- PHASE 8 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 24–32</div>
+                            <div class="step-phase">Phase 08 · Testing &amp; Debugging</div>
+                            <div class="step-heading">Unit Tests, UI Tests &amp; Crash Reporting</div>
+                            <div class="step-desc">Apps without tests break silently in production. Learn <strong>unit
+                                    testing</strong>: XCTest (iOS) and JUnit + Mockito (Android) to test ViewModels,
+                                repositories, and business logic. Write <strong>UI tests</strong>: XCUITest (iOS) and
+                                Espresso (Android) for automated end-to-end user flow testing. Learn <strong>test
+                                    doubles</strong>: mocks, stubs, and fakes for isolating dependencies. Integrate
+                                <strong>crash reporting</strong> with Firebase Crashlytics — you need to know about
+                                crashes before your users email you. Use <strong>Xcode Instruments</strong> (iOS) and
+                                <strong>Android Profiler</strong> to detect memory leaks, CPU spikes, and frame drops.
+                                Learn <strong>TestFlight</strong> (iOS beta distribution) and <strong>Firebase App
+                                    Distribution</strong> (Android beta) for pre-release testing with real users.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Ship-quality gate</span>
+                                <span class="tag">XCTest / JUnit</span>
+                                <span class="tag">Espresso / XCUITest</span>
+                                <span class="tag">Mocking / stubs</span>
+                                <span class="tag">Firebase Crashlytics</span>
+                                <span class="tag">Xcode Instruments</span>
+                                <span class="tag">TestFlight</span>
+                                <span class="tag">Android Profiler</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Unit+Testing+iOS+Swift+%E2%80%93+Sean+Allen"
+                                    target="_blank">Unit Testing iOS Swift – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Android+Unit+Testing+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Android Unit Testing – Philipp Lackner</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Firebase+Crashlytics+Setup+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Firebase Crashlytics Setup – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Debugging+Android+Apps+%E2%80%93+Philipp+Lackner"
+                                    target="_blank">Debugging Android Apps – Philipp Lackner</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PHASE 9 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 28–36</div>
+                            <div class="step-phase">Phase 09 · Performance &amp; App Store Publishing</div>
+                            <div class="step-heading">App Optimization, Monetization &amp; Store Submission</div>
+                            <div class="step-desc">Performance is a feature. Learn <strong>image optimization</strong>:
+                                lazy loading, caching with SDWebImage (iOS) / Coil (Android), and proper image formats
+                                (WebP). Understand <strong>battery optimization</strong>: avoid background work that
+                                drains battery — the #1 reason for 1-star reviews. Use <strong>lazy loading and
+                                    pagination</strong> for large lists. Learn <strong>CI/CD for mobile</strong>:
+                                Fastlane automates certificate signing, building, and uploading to stores. Set up
+                                <strong>GitHub Actions</strong> for automated test runs on every PR. Understand
+                                <strong>App Store review guidelines</strong> (Apple) and <strong>Google Play
+                                    policies</strong> — violating them means rejection. Learn <strong>in-app purchases
+                                    (StoreKit 2 / Google Play Billing)</strong> and <strong>subscriptions</strong> —
+                                this is how apps make money. Master <strong>ASO</strong> (App Store Optimization):
+                                keywords, screenshots, descriptions.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Ship to production</span>
+                                <span class="tag">Fastlane CI/CD</span>
+                                <span class="tag">StoreKit 2</span>
+                                <span class="tag">Google Play Billing</span>
+                                <span class="tag">Image caching (Coil/SDWebImage)</span>
+                                <span class="tag">App Store submission</span>
+                                <span class="tag">ASO</span>
+                                <span class="tag">GitHub Actions</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Fastlane+CI%2FCD+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Fastlane CI/CD – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=StoreKit+2+Tutorial+%E2%80%93+Sean+Allen"
+                                    target="_blank">StoreKit 2 Tutorial – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Publish+Android+App+to+Google+Play+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Publish Android App to Google Play – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Submit+iOS+App+to+App+Store+%E2%80%93+Sean+Allen"
+                                    target="_blank">Submit iOS App to App Store – Sean Allen</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="section-label">Core Mobile Dev Patterns — Patterns Every Developer Must Know</div>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔁 MVVM + Repository</div>
+                        <div class="resource-card-desc">ViewModel exposes UI state. Repository abstracts data sources
+                            (API + local DB). View observes ViewModel. No business logic in the View. The
+                            industry-standard pattern for maintainable, testable mobile apps on both platforms.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=MVVM%0A++++++++++++++++++++++++++++++++Pattern+iOS+%E2%80%93+Sean+Allen"
+                                target="_blank">MVVM
+                                Pattern iOS – Sean Allen</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🌊 Reactive Data Flow</div>
+                        <div class="resource-card-desc">Data flows one way: Model → ViewModel → View. UI never mutates
+                            the model directly. Use Combine (iOS) or StateFlow/SharedFlow (Android) to observe changes
+                            reactively. Eliminates entire classes of state sync bugs.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=StateFlow+%26+SharedFlow+%E2%80%93+Philipp+Lackner"
+                                target="_blank">StateFlow &amp; SharedFlow – Philipp Lackner</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📦 Offline-First Design</div>
+                        <div class="resource-card-desc">Fetch from local DB first, show data immediately, then refresh
+                            from network in background. Sync changes when connectivity returns. Used by Gmail, WhatsApp,
+                            and every top app. Mobile users have spotty connections — plan for it.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=Offline-First+with+Room+%E2%80%93+freeCodeCamp"
+                                target="_blank">Offline-First with Room – freeCodeCamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔐 Secure by Default</div>
+                        <div class="resource-card-desc">Never store sensitive data in plain text. Use Keychain (iOS) /
+                            EncryptedSharedPreferences (Android). Certificate pinning for API security. Obfuscate with
+                            ProGuard/R8 (Android). NEVER log sensitive data. Security isn't a feature — it's a
+                            requirement.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=Android+Security+Best+Practices+%E2%80%93+Google"
+                                target="_blank">Android Security Best Practices – Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 6 — PHASES 10–11 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Advanced Topics &amp; Specialization</div>
+                <h2 class="section-title">Advanced Features &amp; Specialization Tracks</h2>
+                <div class="roadmap">
+                    <!-- PHASE 10 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 30–40</div>
+                            <div class="step-phase">Phase 10 · Advanced Native Features</div>
+                            <div class="step-heading">Maps, Camera, Bluetooth, AR &amp; On-Device ML</div>
+                            <div class="step-desc">Advanced platform features unlock premium app experiences. Master
+                                <strong>Maps integration</strong>: MapKit (iOS) / Google Maps SDK (Android) — adding
+                                annotations, routes, and geofencing. Learn <strong>Camera and media</strong>:
+                                AVFoundation (iOS) / CameraX (Android) for photo/video capture, processing, and scanning
+                                QR codes. Explore <strong>Bluetooth &amp; BLE</strong>: CoreBluetooth (iOS) / Android
+                                BLE
+                                stack for IoT app integrations. Learn <strong>on-device ML</strong>: Core ML (iOS) — run
+                                image classification, object detection, and NLP models locally with no internet. Learn
+                                <strong>ML Kit (Android/iOS)</strong> — Google's ready-made ML models for text
+                                recognition, face detection, barcode scanning. Study <strong>ARKit (iOS)</strong> /
+                                <strong>ARCore (Android)</strong> for augmented reality features — the frontier of
+                                mobile UX in 2026.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Premium features</span>
+                                <span class="tag">MapKit / Google Maps</span>
+                                <span class="tag">AVFoundation / CameraX</span>
+                                <span class="tag">CoreBluetooth</span>
+                                <span class="tag">Core ML</span>
+                                <span class="tag">ML Kit</span>
+                                <span class="tag">ARKit / ARCore</span>
+                                <span class="tag">HealthKit / Fit</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=MapKit+SwiftUI+Tutorial+%E2%80%93+Paul+Hudson"
+                                    target="_blank">MapKit SwiftUI Tutorial – Paul Hudson</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Core+ML+Tutorial+iOS+%E2%80%93+freeCodeCamp"
+                                    target="_blank">Core ML Tutorial iOS – freeCodeCamp</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=ML%0A++++++++++++++++++++++++++++++++++++Kit+Android+%E2%80%93+Google+Developers"
+                                    target="_blank">ML
+                                    Kit Android – Google Developers</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=ARKit+Tutorial+%E2%80%93+freeCodeCamp"
+                                    target="_blank">ARKit Tutorial – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PHASE 11 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 9–14 (Specialization)</div>
+                            <div class="step-phase">Phase 11 · Advanced Specialization</div>
+                            <div class="step-heading">Widgets, watchOS/WearOS, On-Device AI &amp; App Monetization</div>
+                            <div class="step-desc">Specialize to land senior and staff engineer roles. <strong>Home
+                                    Screen Widgets</strong>: WidgetKit (iOS) and Jetpack Glance (Android) — high-demand
+                                features in every consumer app. <strong>watchOS &amp; WearOS</strong>: build companion
+                                apps
+                                for Apple Watch and Wear OS — a growing market that few developers master.
+                                <strong>On-device AI / LLMs</strong>: Apple Intelligence APIs (iOS 18+), on-device
+                                models with llama.cpp + CoreML — the hottest area of mobile in 2026. <strong>App Clips
+                                    (iOS)</strong> and <strong>Instant Apps (Android)</strong>: no-install app
+                                experiences. <strong>Advanced animations</strong>: Lottie, Metal shaders (iOS), and
+                                custom Canvas drawing (Android). <strong>Accessibility (a11y)</strong>: VoiceOver /
+                                TalkBack, Dynamic Type — Apple now requires strong a11y compliance. These are the skills
+                                unlocking staff-level and platform team roles.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Frontier skills</span>
+                                <span class="tag">WidgetKit / Glance</span>
+                                <span class="tag">watchOS / WearOS</span>
+                                <span class="tag">Apple Intelligence APIs</span>
+                                <span class="tag">On-device LLMs</span>
+                                <span class="tag">App Clips</span>
+                                <span class="tag">Lottie animations</span>
+                                <span class="tag">Accessibility (a11y)</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=WidgetKit+Tutorial+%E2%80%93+Paul+Hudson"
+                                    target="_blank">WidgetKit Tutorial – Paul Hudson</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=watchOS+App+Development+%E2%80%93+Sean+Allen"
+                                    target="_blank">watchOS App Development – Sean Allen</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=Lottie+Animations+Flutter+%E2%80%93+Rivaan+Ranawat"
+                                    target="_blank">Lottie Animations Flutter – Rivaan Ranawat</a>
+                                <a class="yt-link"
+                                    href="https://www.youtube.com/results?search_query=iOS+Accessibility+Guide+%E2%80%93+freeCodeCamp"
+                                    target="_blank">iOS Accessibility Guide – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="section-label">Specialization Tracks — Pick Your Path</div>
+                <table class="stack-table">
+                    <thead>
+                        <tr>
+                            <th>Track</th>
+                            <th>Focus</th>
+                            <th>Key Tools</th>
+                            <th>Who's Hiring</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>iOS Native</td>
+                            <td>SwiftUI, performance, Apple ecosystem depth</td>
+                            <td>Swift, SwiftUI, Core Data, WidgetKit</td>
+                            <td>Apple, Airbnb, Uber, fintech startups</td>
+                        </tr>
+                        <tr>
+                            <td>Android Native</td>
+                            <td>Compose, multi-module, enterprise Android</td>
+                            <td>Kotlin, Jetpack Compose, Hilt, Room</td>
+                            <td>Google, Samsung, enterprise, agencies</td>
+                        </tr>
+                        <tr>
+                            <td>Flutter</td>
+                            <td>Cross-platform, design-rich apps, fast iteration</td>
+                            <td>Flutter, Dart, Riverpod, Supabase</td>
+                            <td>Startups, agencies, global cos., freelance</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile AI/ML</td>
+                            <td>On-device ML, Apple Intelligence, edge inference</td>
+                            <td>Core ML, ML Kit, TFLite, llama.cpp</td>
+                            <td>Apple, Google, AI-first startups</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 7 — SKILL MAP + PROJECTS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Skill Map &amp; Projects</div>
+                <h2 class="section-title">Full Timeline &amp; Portfolio Projects to Build</h2>
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Month 1–4</div>
+                        <div class="skill-item">Swift or Kotlin fundamentals</div>
+                        <div class="skill-item">SwiftUI or Jetpack Compose UI</div>
+                        <div class="skill-item">MVVM architecture pattern</div>
+                        <div class="skill-item">REST APIs + URLSession/Retrofit</div>
+                        <div class="skill-item">Local storage (Core Data / Room)</div>
+                        <div class="skill-item">Git &amp; GitHub version control</div>
+                        <div class="skill-item">Firebase Auth + Firestore</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Month 5–9</div>
+                        <div class="skill-item">Flutter or React Native basics</div>
+                        <div class="skill-item">State management (Riverpod/Zustand)</div>
+                        <div class="skill-item">Push notifications (APNs/FCM)</div>
+                        <div class="skill-item">Unit &amp; UI testing</div>
+                        <div class="skill-item">Firebase Crashlytics</div>
+                        <div class="skill-item">App Store / Play Store submission</div>
+                        <div class="skill-item">In-app purchases (StoreKit 2)</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Month 10–14</div>
+                        <div class="skill-item">WidgetKit / Jetpack Glance</div>
+                        <div class="skill-item">On-device ML (Core ML / ML Kit)</div>
+                        <div class="skill-item">Maps, Camera, Bluetooth features</div>
+                        <div class="skill-item">Fastlane CI/CD automation</div>
+                        <div class="skill-item">Accessibility (VoiceOver/TalkBack)</div>
+                        <div class="skill-item">Specialization track depth</div>
+                        <div class="skill-item">Published apps + portfolio</div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="section-label">Portfolio Projects — Build These 4 to Get Hired</div>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🌤️ Weather + News App</div>
+                        <div class="resource-card-desc">Fetch real weather from OpenWeatherMap API and news from
+                            NewsAPI. Clean MVVM architecture. Offline caching with Core Data / Room. SwiftUI or Compose
+                            UI with custom animations. Shows REST API integration, architecture, and local storage — the
+                            holy trinity of mobile fundamentals.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=SwiftUI+Networking+Project+%E2%80%93+Sean+Allen"
+                                target="_blank">SwiftUI Networking Project – Sean Allen</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">💬 Real-Time Chat App</div>
+                        <div class="resource-card-desc">Full-featured messaging app with Firebase Auth (Google sign-in),
+                            Firestore real-time messages, push notifications via FCM/APNs, image sharing via Cloud
+                            Storage, and online presence. Shows real-time data, auth flows, push notifications, and
+                            cloud storage — all mandatory mobile skills.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=Firebase+Full+Course+%E2%80%93+freeCodeCamp"
+                                target="_blank">Firebase Full Course – freeCodeCamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🛒 E-Commerce App</div>
+                        <div class="resource-card-desc">Product catalog with search and filters, shopping cart, Stripe
+                            or in-app purchase checkout, order history, and user profiles. Clean architecture with
+                            repository pattern, dependency injection, and unit tests. Demonstrates commercial-grade
+                            development and monetization skills that employers care about.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=Flutter+E-Commerce+%E2%80%93+Rivaan+Ranawat"
+                                target="_blank">Flutter E-Commerce – Rivaan Ranawat</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📷 AI Photo / ML App</div>
+                        <div class="resource-card-desc">On-device image classification with Core ML (iOS) or ML Kit
+                            (Android). Real-time camera feed processing, object detection, or text recognition (OCR). No
+                            internet required for inference. Bonus: add a Home Screen Widget showing the last photo
+                            scanned. The AI/ML angle makes this portfolio stand out in 2026.</div>
+                        <div class="yt-links">
+                            <a class="yt-link"
+                                href="https://www.youtube.com/results?search_query=Core%0A++++++++++++++++++++++++++++++++ML+Project+%E2%80%93+freeCodeCamp"
+                                target="_blank">Core
+                                ML Project – freeCodeCamp</a>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="section-label">Daily Routine</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">The Boring Mobile
+                    Dev Routine That Works</div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Read one iOS/Android blog post (Swift by Sundell, Android Weekly,
+                        or Hacking with Swift)
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> 1 hour of hands-on building — one new screen, one new API
+                        integration, one failing test fixed
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Run your unit tests — catch regressions before your users do
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Open your app on a real device — the simulator lies; the device
+                        tells the truth
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Share one build update, crash fix, or UI improvement on LinkedIn
+                        or X/Twitter
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img alt="TBE" class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" />
+                <span class="page-header-title">Mobile App Developer Roadmap · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free YouTube Channels for Mobile Development</h2>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Sean Allen</div>
+                        <div class="resource-card-desc">The best iOS educator on YouTube. Deep dives on Swift, SwiftUI,
+                            UIKit, MVVM, networking, and App Store submission. His "iOS Dev Job Interview" series is
+                            mandatory watching before any interview. Real-world focused, no fluff.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=%40seanallen"
+                                target="_blank">@seanallen</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Philipp Lackner</div>
+                        <div class="resource-card-desc">The #1 Android development channel. Kotlin, Jetpack Compose,
+                            MVVM, Hilt, Room, Coroutines, Flow, and advanced architecture. His "Android Masterclass"
+                            playlist alone is worth months of study. Clear, practical, and production-grade.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=%40PhilippLackner"
+                                target="_blank">@PhilippLackner</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 freeCodeCamp</div>
+                        <div class="resource-card-desc">Full-length free courses on Flutter, React Native, Firebase,
+                            SwiftUI, Android, and more. The best place for comprehensive, project-based mobile
+                            development learning at zero cost. Hours of quality content per video.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=%40freecodecamp"
+                                target="_blank">@freecodecamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Paul Hudson (Hacking with Swift)</div>
+                        <div class="resource-card-desc">Swift and SwiftUI from the author of Hacking with Swift. 100
+                            Days of SwiftUI is the best free structured iOS curriculum available. Crystal-clear
+                            explanations, real-world projects, and deep platform knowledge from a true Swift expert.
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=%40twostraws"
+                                target="_blank">@twostraws</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Rivaan Ranawat</div>
+                        <div class="resource-card-desc">The clearest Flutter tutorials on YouTube. Full-stack Flutter
+                            apps with Supabase, Riverpod, animations, and beautiful UI. His projects are
+                            production-realistic and the code quality is genuinely high. Best for Flutter cross-platform
+                            learners.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=%40RivaanRanawat"
+                                target="_blank">@RivaanRanawat</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Google Developers</div>
+                        <div class="resource-card-desc">Official channel from Google for Android, Jetpack Compose, ML
+                            Kit, ARCore, and Wear OS. The authoritative source for new API announcements, best
+                            practices, and architectural guidance straight from the teams that build Android and
+                            Flutter.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=%40GoogleDevelopers"
+                                target="_blank">@GoogleDevelopers</a>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider" />
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">YouFocus — Distraction-free YT</span>
+                    <span class="tag">Interview Prep — Question banks</span>
+                    <span class="tag">Community — Peer learning</span>
+                </div>
+                <div class="cta-block">
+                    <div class="cta-title">The Mobile Era Is Still Growing 📱</div>
+                    <div class="cta-sub">Smartphones aren't going anywhere. The developers who build fast, polished,
+                        production-grade mobile apps are among the most employable engineers on Earth.<br />Start with
+                        one
+                        screen. Ship one app. Then build the next one better.</div>
+                    <a class="cta-link" href="https://www.theboringeducation.com" target="_blank">→
+                        theboringeducation.com</a>
+                </div>
+                <hr class="divider" />
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img alt="Instagram" class="social-icon"
+                            src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" />
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img alt="LinkedIn" class="social-icon"
+                            src="https://cdn-icons-png.flaticon.com/512/174/174857.png" />
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img alt="GitHub" class="social-icon"
+                            src="https://cdn-icons-png.flaticon.com/512/733/733609.png" />
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

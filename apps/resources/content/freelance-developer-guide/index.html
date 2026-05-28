@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Developer Guide – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Plus Jakarta Sans', sans-serif;
+            --green: #22c55e;
+            --green-light: #f0fdf4;
+            --green-mid: #dcfce7;
+            --amber: #f59e0b;
+            --amber-light: #fffbeb;
+            --amber-mid: #fef3c7;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        /* ── PRINT BAR ── */
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ── PAGE SHELL ── */
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .cover-logo {
+            height: 22px;
+            opacity: 0.85;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px 48px 32px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 58px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 15px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        /* ── INBOX BLOCK (cover) ── */
+        .inbox-block {
+            background: var(--dark);
+            border-radius: 16px;
+            padding: 24px 32px;
+            max-width: 600px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inbox-block::before {
+            content: '💻';
+            font-size: 64px;
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.08;
+        }
+
+        .inbox-block-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .inbox-block-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .inbox-symptoms {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .inbox-symptom {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .inbox-symptom-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGE ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header-logo-img {
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── STEPS / ROADMAP ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 12px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 2px 0 18px 20px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.65;
+            margin-bottom: 6px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        .tag.green {
+            background: var(--green-light);
+            color: #15803d;
+            border-color: var(--green-mid);
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        .green-tip {
+            background: var(--green-light);
+            border: 1px solid var(--green-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .green-tip .tip-text {
+            color: var(--dark);
+        }
+
+        .green-tip .tip-text strong {
+            color: #15803d;
+        }
+
+        /* ── DARK TIP ── */
+        .dark-tip {
+            background: var(--dark);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .dark-tip .tip-text {
+            color: #ccc;
+        }
+
+        .dark-tip .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── RATE METER ── */
+        .rate-meter {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .rate-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rate-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--dark);
+            font-weight: 600;
+            width: 160px;
+            flex-shrink: 0;
+        }
+
+        .rate-bar-wrap {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .rate-bar {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--red);
+        }
+
+        .rate-bar.green {
+            background: var(--green);
+        }
+
+        .rate-bar.amber {
+            background: var(--amber);
+        }
+
+        .rate-pct {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--dark);
+            width: 36px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* ── FORMULA BLOCKS ── */
+        .formula-block {
+            background: var(--dark);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formula-block::before {
+            content: attr(data-n);
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--mono);
+            font-size: 56px;
+            font-weight: 800;
+            color: white;
+            opacity: 0.05;
+        }
+
+        .formula-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .formula-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .formula-equation {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: #aaa;
+            line-height: 1.7;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .formula-var {
+            background: rgba(255, 87, 87, 0.2);
+            color: var(--red);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .formula-op {
+            color: #666;
+        }
+
+        /* ── COMPARISON TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+            vertical-align: top;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .stack-table-wrap {
+            overflow-x: auto;
+        }
+
+        /* ── TWO COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── REALITY BOX ── */
+        .reality-box {
+            background: #fff8f0;
+            border: 1.5px solid #ffe4b5;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+        }
+
+        .reality-box-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: #cc6600;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reality-box-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.65;
+        }
+
+        .reality-box-text strong {
+            color: #cc4400;
+        }
+
+        /* ── EMAIL ANATOMY CARD ── */
+        .email-anatomy {
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            font-size: 12px;
+        }
+
+        .email-anatomy-header {
+            background: var(--bg);
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .email-anatomy-header-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .email-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .email-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .email-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+        }
+
+        .email-row:last-child {
+            border-bottom: none;
+        }
+
+        .email-row-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            width: 80px;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .email-row-content {
+            flex: 1;
+            color: var(--dark);
+            line-height: 1.55;
+        }
+
+        .email-row-badge {
+            font-family: var(--mono);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .badge-critical {
+            background: #fff0f0;
+            color: var(--red);
+            border: 1px solid var(--red-mid);
+        }
+
+        .badge-high {
+            background: var(--amber-light);
+            color: #92400e;
+            border: 1px solid var(--amber-mid);
+        }
+
+        .badge-medium {
+            background: var(--green-light);
+            color: #15803d;
+            border: 1px solid var(--green-mid);
+        }
+
+        /* ── SUBJECT LINE CARDS ── */
+        .subject-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .subject-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .subject-card.good::before {
+            background: var(--green);
+        }
+
+        .subject-card.bad::before {
+            background: #ef4444;
+        }
+
+        .subject-card-meta {
+            flex-shrink: 0;
+        }
+
+        .subject-card-type {
+            font-family: var(--mono);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .subject-card-type.good {
+            color: #15803d;
+        }
+
+        .subject-card-type.bad {
+            color: #dc2626;
+        }
+
+        .subject-card-content {
+            flex: 1;
+        }
+
+        .subject-card-line {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+            font-family: var(--mono);
+            line-height: 1.4;
+        }
+
+        .subject-card-why {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+        }
+
+        /* ── TEMPLATE BOX ── */
+        .template-box {
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .template-box-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .template-type-badge {
+            font-family: var(--mono);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .template-content {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.75;
+        }
+
+        .template-content .placeholder {
+            background: var(--red-light);
+            color: var(--red);
+            border: 1px solid var(--red-mid);
+            padding: 0px 5px;
+            border-radius: 3px;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── RESOURCE GRID ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── PRICING CARD ── */
+        .pricing-card {
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--red);
+        }
+
+        .pricing-card.green::before {
+            background: var(--green);
+        }
+
+        .pricing-card.amber::before {
+            background: var(--amber);
+        }
+
+        .pricing-tier {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--soft);
+            margin-bottom: 4px;
+        }
+
+        .pricing-rate {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            font-family: var(--mono);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .pricing-rate span {
+            font-size: 13px;
+            color: var(--soft);
+            font-weight: 500;
+        }
+
+        .pricing-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .pricing-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .pricing-tag {
+            font-family: var(--mono);
+            font-size: 9px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 600px) {
+            .resource-viewer {
+                padding: 0;
+                gap: 0;
+                background: #0a0a0b;
+            }
+
+            .print-bar {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 0;
+                background: #e8e5df;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 8px;
+            }
+
+            .cover {
+                min-height: unset;
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 18px 18px 0;
+            }
+
+            .cover-logo {
+                height: 18px;
+            }
+
+            .cover-hero {
+                padding: 24px 18px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .inbox-block {
+                padding: 18px 20px;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .inbox-block::before {
+                display: none;
+            }
+
+            .cover-stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 22px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .cover-footer {
+                padding: 14px 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .inner-page {
+                min-height: unset;
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 18px 12px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+                letter-spacing: 0.04em;
+                max-width: 55%;
+                text-align: right;
+            }
+
+            .page-header-logo-img {
+                height: 16px;
+            }
+
+            .page-body {
+                padding: 18px 18px;
+            }
+
+            .page-footer {
+                padding: 12px 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+            }
+
+            .stack-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .stack-table {
+                font-size: 11px;
+                min-width: 520px;
+            }
+
+            .rate-label {
+                width: 120px;
+                font-size: 9px;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .step-left {
+                width: 36px;
+            }
+
+            .step-dot {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+
+            .step-content {
+                padding: 0 0 16px 12px;
+            }
+        }
+
+        /* ── PRINT ── */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: hidden;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                height: 297mm;
+                min-height: 0;
+            }
+
+            .inner-page {
+                height: 297mm;
+                min-height: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            .stack-table-wrap {
+                overflow: visible;
+            }
+
+            .stack-table {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════ PAGE 1 — COVER ══════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="cover-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">Freelance Dev Masterclass 2026</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">No boss. No office. No salary cap.</div>
+
+                <h1 class="cover-title">
+                    You're a<br>Developer.<br><span>Start</span><br><span>Charging.</span>
+                </h1>
+
+                <p class="cover-subtitle">
+                    Most developers have the skills to freelance but never start — because they don't know how to find
+                    clients, set rates, or close projects. This guide gives you the exact system: from your first client
+                    to a full pipeline.
+                </p>
+
+                <div class="inbox-block">
+                    <div class="inbox-block-label">⚠ Your freelance career is probably stuck here...</div>
+                    <div class="inbox-block-title">"I'm not sure I'm good enough yet. I'll start freelancing once I
+                        finish one more course..."</div>
+                    <div class="inbox-symptoms">
+                        <div class="inbox-symptom">
+                            <div class="inbox-symptom-dot"></div>Undercharging because you're scared clients will say no
+                            — so they say yes, and you resent the project
+                        </div>
+                        <div class="inbox-symptom">
+                            <div class="inbox-symptom-dot"></div>No portfolio site, so you send a Google Drive link with
+                            two screenshots from 2022
+                        </div>
+                        <div class="inbox-symptom">
+                            <div class="inbox-symptom-dot"></div>Taking every project that comes in — even bad-fit
+                            clients who waste your time and pay late
+                        </div>
+                        <div class="inbox-symptom">
+                            <div class="inbox-symptom-dot"></div>Ghosting after delivery instead of asking for
+                            referrals, testimonials, or retainer work
+                        </div>
+                        <div class="inbox-symptom">
+                            <div class="inbox-symptom-dot"></div>Building on platforms that own your client
+                            relationships — no email list, no pipeline of your own
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">$0</div>
+                        <div class="stat-label">cost to start</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">3×</div>
+                        <div class="stat-label">avg rate vs job salary</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">5</div>
+                        <div class="stat-label">client sources that work</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">1</div>
+                        <div class="stat-label">project to start. not 10.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Freelance Dev Guide — Build. Ship.
+                    Get Paid.</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════ PAGE 2 — FOUNDATIONS + ANATOMY ══════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Freelance Dev Guide · The Boring Education</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+
+                <div class="reality-box">
+                    <div class="reality-box-title">🔥 The Uncomfortable Truth</div>
+                    <div class="reality-box-text">
+                        You don't need more skills to start freelancing. You need <strong>one client</strong>. Every
+                        month you spend "getting ready" is a month someone less skilled than you is charging $5,000 for
+                        the same work. Freelancing is not a talent contest — it's a <strong>positioning and
+                            communication game</strong>. The developer who can explain their value wins. The one who
+                        waits to feel ready never starts.
+                    </div>
+                </div>
+
+                <div class="section-label">The Freelance Readiness Reality Check</div>
+                <div class="rate-meter" style="margin-bottom:6px;">
+                    <div
+                        style="font-family:var(--mono);font-size:10px;color:var(--soft);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:700;">
+                        What actually gets you clients</div>
+                    <div class="rate-row">
+                        <div class="rate-label">Years of experience</div>
+                        <div class="rate-bar-wrap">
+                            <div class="rate-bar" style="width:15%;background:#ef4444;"></div>
+                        </div>
+                        <div class="rate-pct">15%</div>
+                    </div>
+                    <div class="rate-row">
+                        <div class="rate-label">Certifications / degrees</div>
+                        <div class="rate-bar-wrap">
+                            <div class="rate-bar" style="width:10%;background:#ef4444;"></div>
+                        </div>
+                        <div class="rate-pct">10%</div>
+                    </div>
+                    <div class="rate-row">
+                        <div class="rate-label">Clear portfolio + niche</div>
+                        <div class="rate-bar-wrap">
+                            <div class="rate-bar green" style="width:55%;"></div>
+                        </div>
+                        <div class="rate-pct">55%</div>
+                    </div>
+                    <div class="rate-row">
+                        <div class="rate-label">Referrals + network</div>
+                        <div class="rate-bar-wrap">
+                            <div class="rate-bar green" style="width:72%;"></div>
+                        </div>
+                        <div class="rate-pct">72%</div>
+                    </div>
+                    <div class="rate-row">
+                        <div class="rate-label">Fast, clear communication</div>
+                        <div class="rate-bar-wrap">
+                            <div class="rate-bar green" style="width:80%;"></div>
+                        </div>
+                        <div class="rate-pct">80%</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Anatomy of a Winning Freelance Profile</div>
+                <h2 class="section-title">Every Section Has One Job. Don't Waste Any.</h2>
+
+                <div class="email-anatomy">
+                    <div class="email-anatomy-header">
+                        <div class="email-dots">
+                            <div class="email-dot" style="background:#ff5f57;"></div>
+                            <div class="email-dot" style="background:#febc2e;"></div>
+                            <div class="email-dot" style="background:#28c840;"></div>
+                        </div>
+                        <div class="email-anatomy-header-title">Freelance Portfolio — Dissected</div>
+                    </div>
+                    <div class="email-row">
+                        <div class="email-row-label">Headline</div>
+                        <div class="email-row-content"><strong>One line. Outcome-focused, not title-focused.</strong>
+                            Not "Full-Stack Developer." Instead: "I build fast, scalable web apps for SaaS startups — in
+                            3 weeks." The client doesn't care what you are. They care what you do for them.</div>
+                        <div class="email-row-badge badge-critical">Critical</div>
+                    </div>
+                    <div class="email-row">
+                        <div class="email-row-label">Niche</div>
+                        <div class="email-row-content"><strong>Pick one problem for one type of client.</strong>
+                            "E-commerce checkout optimization for Shopify stores" beats "I do web development." Niching
+                            feels like shrinking. It actually amplifies. Specialists charge 3× generalists.</div>
+                        <div class="email-row-badge badge-critical">Critical</div>
+                    </div>
+                    <div class="email-row">
+                        <div class="email-row-label">Portfolio</div>
+                        <div class="email-row-content">3 projects max. Each one: problem → what you built → measurable
+                            result. No screenshots without context. No "personal project" without a live link. Quality
+                            beats quantity. One case study with numbers destroys ten vague descriptions.</div>
+                        <div class="email-row-badge badge-high">High</div>
+                    </div>
+                    <div class="email-row">
+                        <div class="email-row-label">Social Proof</div>
+                        <div class="email-row-content">One real testimonial is worth more than any credential. If you
+                            have no testimonials yet, do one project free for a well-known person or company — then ask
+                            for a specific quote. "Delivered in 2 weeks, no revisions needed" beats "great developer!"
+                        </div>
+                        <div class="email-row-badge badge-high">High</div>
+                    </div>
+                    <div class="email-row">
+                        <div class="email-row-label">Process</div>
+                        <div class="email-row-content">Show how you work: discovery → proposal → build → review →
+                            delivery. Clients hire developers they trust won't disappear. A clear process signals
+                            professionalism before the first call. It removes anxiety from the buying decision.</div>
+                        <div class="email-row-badge badge-high">High</div>
+                    </div>
+                    <div class="email-row">
+                        <div class="email-row-label">CTA</div>
+                        <div class="email-row-content">One action. "Book a free 30-minute call" with a direct Calendly
+                            link. No forms. No "send me an email." Every extra click loses a client. Make it
+                            frictionless to say yes.</div>
+                        <div class="email-row-badge badge-medium">Medium</div>
+                    </div>
+                </div>
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧠</div>
+                    <div class="tip-text"><strong>The Niche Test:</strong> Can a stranger read your headline and know
+                        exactly who you help and what outcome they get in 5 seconds? If they have to scroll to figure it
+                        out — rewrite it. The goal is not to explain what you know. The goal is to make the right client
+                        feel immediately understood.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 06</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════ PAGE 3 — PRICING + FORMULAS ══════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Freelance Dev Guide · The Boring Education</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Pricing Architecture</div>
+                <h2 class="section-title">What to Charge. How to Say It. When to Raise It.</h2>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+                    <div class="pricing-card">
+                        <div class="pricing-tier">Starter Rate</div>
+                        <div class="pricing-rate">$30<span>/hr</span></div>
+                        <div class="pricing-desc">First 1-2 clients. Get testimonials and case studies. Never go below
+                            this, even "for experience."</div>
+                        <div class="pricing-tags">
+                            <span class="pricing-tag">First project</span>
+                            <span class="pricing-tag">Build proof</span>
+                        </div>
+                    </div>
+                    <div class="pricing-card amber">
+                        <div class="pricing-tier">Growing Rate</div>
+                        <div class="pricing-rate">$75<span>/hr</span></div>
+                        <div class="pricing-desc">After 3 strong case studies. You have proof. Charge like it. Most
+                            freelancers stay here forever — don't.</div>
+                        <div class="pricing-tags">
+                            <span class="pricing-tag">3+ projects</span>
+                            <span class="pricing-tag">Niche locked</span>
+                        </div>
+                    </div>
+                    <div class="pricing-card green">
+                        <div class="pricing-tier">Expert Rate</div>
+                        <div class="pricing-rate">$150<span>/hr</span></div>
+                        <div class="pricing-desc">Specialist with referrals and a clear ROI story. The clients who push
+                            back on this rate aren't your clients.</div>
+                        <div class="pricing-tags">
+                            <span class="pricing-tag">Deep niche</span>
+                            <span class="pricing-tag">Referral-only</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">3 Proven Client Acquisition Formulas</div>
+                <h2 class="section-title" style="font-size:18px;margin-bottom:10px;">Pick the channel that fits where
+                    you are right now</h2>
+
+                <div class="formula-block" data-n="1">
+                    <div class="formula-label">Formula 01 · The Warm Network Play</div>
+                    <div class="formula-title">Best for: complete beginners with zero clients. Works in week 1.</div>
+                    <div class="formula-equation">
+                        <span class="formula-var">Tell 20 people you've started</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Specific ask (referral, not job)</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Follow up once in 7 days</span>
+                    </div>
+                </div>
+
+                <div class="formula-block" data-n="2">
+                    <div class="formula-label">Formula 02 · The Inbound Content Engine</div>
+                    <div class="formula-title">Best for: patient builders who want clients to come to them within 60–90
+                        days</div>
+                    <div class="formula-equation">
+                        <span class="formula-var">Post your build process publicly</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Solve 1 problem per post</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Link to portfolio in bio</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Engage daily for 30 days</span>
+                    </div>
+                </div>
+
+                <div class="formula-block" data-n="3">
+                    <div class="formula-label">Formula 03 · The Platform Fast Track</div>
+                    <div class="formula-title">Best for: developers who need clients this week without an existing
+                        audience</div>
+                    <div class="formula-equation">
+                        <span class="formula-var">Upwork/Toptal profile optimized</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Apply to 5 jobs/day with custom proposals</span>
+                        <span class="formula-op">+</span>
+                        <span class="formula-var">Escape platform within 90 days</span>
+                    </div>
+                </div>
+
+                <div class="green-tip">
+                    <div class="tip-icon">💡</div>
+                    <div class="tip-text"><strong>The Pricing Paradox:</strong> Raising your rate filters out bad
+                        clients automatically. Low-rate clients are 3× more demanding, 2× more likely to be late on
+                        payment, and 5× more likely to ask for out-of-scope changes. Higher rates attract clients who
+                        respect your time because they're used to paying for expertise. Double your rate. See what
+                        happens.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 06</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════ PAGE 4 — PROPOSALS + SCRIPTS ══════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Freelance Dev Guide · The Boring Education</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Copy-Paste Scripts</div>
+                <h2 class="section-title">3 Ready-to-Send Messages. Personalize the <span style="color:var(--red);">red
+                        parts</span>.</h2>
+
+                <div class="template-box">
+                    <div class="template-box-label">
+                        Script 01 — The Warm Outreach (to your existing network)
+                        <span class="template-type-badge"
+                            style="background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);">Start
+                            Here</span>
+                    </div>
+                    <div class="template-content">
+                        Hey <span class="placeholder">[Name]</span>,<br><br>
+                        Quick update — I've started taking on freelance <span
+                            class="placeholder">[web/mobile/backend]</span> projects. I'm focusing on helping <span
+                            class="placeholder">[type of business: e.g. early-stage startups, e-commerce brands]</span>
+                        with <span class="placeholder">[specific outcome: e.g. building their MVP / fixing their
+                            checkout flow]</span>.<br><br>
+                        I'm looking for my first 2–3 clients to build case studies. If you know anyone who might need
+                        this, even a loose referral would mean a lot. And if you hear of anything yourself — I'm
+                        open.<br><br>
+                        Here's what I've built so far: <span class="placeholder">[link to portfolio or one
+                            project]</span><br><br>
+                        Thanks either way — <span class="placeholder">[Your Name]</span>
+                    </div>
+                </div>
+
+                <div class="template-box">
+                    <div class="template-box-label">
+                        Script 02 — The Upwork / Platform Proposal
+                        <span class="template-type-badge"
+                            style="background:var(--green-light);color:#15803d;border:1px solid var(--green-mid);">Highest
+                            Reply Rate</span>
+                    </div>
+                    <div class="template-content">
+                        Hi <span class="placeholder">[Client Name]</span>,<br><br>
+                        I read through your project brief — specifically the part about <span class="placeholder">[one
+                            specific detail from their post]</span>. That's a problem I've solved before.<br><br>
+                        I recently built <span class="placeholder">[relevant project]</span> for <span
+                            class="placeholder">[similar client type]</span> — it handled <span
+                            class="placeholder">[similar technical requirement]</span> and delivered <span
+                            class="placeholder">[result in numbers]</span>. Here's the link: <span
+                            class="placeholder">[URL]</span><br><br>
+                        For your project, I'd approach it by: <span class="placeholder">[2-sentence technical
+                            approach]</span>. Timeline: <span class="placeholder">[X weeks]</span>. Budget: <span
+                            class="placeholder">[your rate]</span>.<br><br>
+                        Happy to do a 15-minute call if you'd like to dig in. When works for you?<br><br>
+                        — <span class="placeholder">[Your Name]</span>
+                    </div>
+                </div>
+
+                <div class="template-box">
+                    <div class="template-box-label">
+                        Script 03 — The Post-Project Referral Ask
+                        <span class="template-type-badge"
+                            style="background:var(--amber-light);color:#92400e;border:1px solid var(--amber-mid);">Most
+                            Underused</span>
+                    </div>
+                    <div class="template-content">
+                        Hi <span class="placeholder">[Client Name]</span>,<br><br>
+                        Really enjoyed working on <span class="placeholder">[project name]</span> — glad we got <span
+                            class="placeholder">[result]</span> across the line.<br><br>
+                        Two quick things if you have a moment:<br>
+                        1. Would you be open to writing 2–3 sentences about working together? Even a quick LinkedIn
+                        recommendation goes a long way.<br>
+                        2. If you know anyone else who needs <span class="placeholder">[your service]</span>, I'm taking
+                        on new projects in <span class="placeholder">[month]</span> and would love a warm
+                        introduction.<br><br>
+                        No pressure on either — and thanks again for the trust. <span class="placeholder">[Your
+                            Name]</span>
+                    </div>
+                </div>
+
+                <div class="dark-tip">
+                    <div class="tip-icon">⚡</div>
+                    <div class="tip-text"><strong>The Referral Machine Principle.</strong> 65% of freelance work comes
+                        from referrals — but only if you ask. Most developers deliver great work and then disappear. The
+                        ask takes 30 seconds and compounds forever. Every happy client is a sales rep who costs you
+                        nothing. Send Script 03 within 48 hours of every project completion, every single time.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 06</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════ PAGE 5 — COMMON MISTAKES + PRO MOVES ══════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Freelance Dev Guide · The Boring Education</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Pro Moves That Change Everything</div>
+                <h2 class="section-title">The Unfair Advantages Most Freelancers Never Use</h2>
+
+                <div class="stack-table-wrap">
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Move</th>
+                                <th>What to Do</th>
+                                <th>Why It Works</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Scope Document</td>
+                                <td>Write a 1-page scope doc before starting any project — what's included, what's not,
+                                    delivery date, revision policy</td>
+                                <td>Eliminates scope creep, sets expectations, and positions you as a professional — not
+                                    a freelancer</td>
+                            </tr>
+                            <tr>
+                                <td>Upfront Payment</td>
+                                <td>Always take 50% upfront before writing a single line of code</td>
+                                <td>Filters serious clients instantly. Anyone who refuses was never going to pay the
+                                    rest anyway</td>
+                            </tr>
+                            <tr>
+                                <td>Weekly Check-In</td>
+                                <td>Send a short weekly update to every active client — even if nothing changed</td>
+                                <td>Communication anxiety is the #1 reason clients go silent or pull out. This removes
+                                    all of it</td>
+                            </tr>
+                            <tr>
+                                <td>The Retainer Offer</td>
+                                <td>After each project, offer a monthly retainer: "I can reserve 10 hrs/month for
+                                    ongoing work at a slight discount"</td>
+                                <td>Predictable income without constant re-acquisition. Even 2 retainer clients change
+                                    your life</td>
+                            </tr>
+                            <tr>
+                                <td>Loom Demos</td>
+                                <td>Deliver all updates and milestones as 2-minute Loom walkthrough videos, not just
+                                    screenshots</td>
+                                <td>Clients feel seen and informed. Dramatically reduces back-and-forth and revision
+                                    requests</td>
+                            </tr>
+                            <tr>
+                                <td>The Rate Anchor</td>
+                                <td>When discussing price, mention your highest package first, then offer the one you
+                                    want them to pick</td>
+                                <td>Anchoring psychology — your real rate feels reasonable compared to the premium tier
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Wait to Discount</td>
+                                <td>Never offer a discount unless asked — and only discount time, not rate ("I can fit
+                                    this in 6 weeks, not 4")</td>
+                                <td>Discounting your rate immediately signals you don't believe in your own pricing.
+                                    Never do it first</td>
+                            </tr>
+                            <tr>
+                                <td>Niche Your LinkedIn</td>
+                                <td>Rewrite your LinkedIn headline to describe the outcome you deliver, not your job
+                                    title</td>
+                                <td>Inbound leads from clients who specifically need what you do — not recruiters
+                                    scanning for keywords</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Freelance Anti-Patterns</div>
+                <div
+                    style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:12px; letter-spacing:-0.01em;">
+                    Stop doing these. Now.</div>
+
+                <div class="two-col">
+                    <div>
+                        <div class="reality-box" style="margin-bottom:10px;">
+                            <div class="reality-box-title">❌ Anti-Pattern #1</div>
+                            <div class="reality-box-text"><strong>The Discount Spiral.</strong> Dropping your rate to
+                                win a project trains you — and the client — that your work isn't worth full price. Every
+                                discount devalues the next proposal. Price is the story you tell about yourself.</div>
+                        </div>
+                        <div class="reality-box" style="margin-bottom:10px;">
+                            <div class="reality-box-title">❌ Anti-Pattern #2</div>
+                            <div class="reality-box-text"><strong>The Yes Machine.</strong> Saying yes to every project
+                                type, every client, every timeline destroys your reputation. You can't be excellent at
+                                everything. Saying no to bad-fit clients is what makes you someone worth hiring.</div>
+                        </div>
+                        <div class="reality-box">
+                            <div class="reality-box-title">❌ Anti-Pattern #3</div>
+                            <div class="reality-box-text"><strong>Platform Dependency.</strong> Building your entire
+                                business on Upwork, Fiverr, or any platform means they own your clients. One algorithm
+                                change ends your business. Always move clients to direct relationships — email,
+                                contracts, direct payment.</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="green-tip" style="margin-bottom:10px;">
+                            <div class="tip-icon">✅</div>
+                            <div class="tip-text"><strong>Pattern #1 — Fire one bad client:</strong> Every bad client
+                                you keep costs you a good client's time slot. Identify your most draining client
+                                relationship right now. Draft the off-boarding email. The relief pays for itself within
+                                48 hours.</div>
+                        </div>
+                        <div class="green-tip" style="margin-bottom:10px;">
+                            <div class="tip-icon">✅</div>
+                            <div class="tip-text"><strong>Pattern #2 — Build a waitlist signal:</strong> When you're
+                                fully booked, add "currently booked through [month]" to your profile. Scarcity isn't
+                                manipulation — it's honest. And it makes the next client more eager to lock you in
+                                early.</div>
+                        </div>
+                        <div class="green-tip">
+                            <div class="tip-icon">✅</div>
+                            <div class="tip-text"><strong>Pattern #3 — Monthly rate audit:</strong> Every 90 days, check
+                                if your rate reflects your current skill and portfolio. If every client says yes
+                                immediately, you're undercharging. A 20% raise with 1 rejection is more money than a 0%
+                                raise with 0 rejections.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 06</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════ PAGE 6 — WEEKLY SYSTEM + CTA ══════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo-img" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Freelance Dev Guide · The Boring Education</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">The Weekly Freelance Operating System</div>
+                <h2 class="section-title">Consistent Actions. Compounding Every Month.</h2>
+
+                <div class="checklist" style="margin-bottom:16px;">
+                    <div class="check-item">
+                        <div class="check-box"></div> Monday: Review your pipeline — who hasn't replied in 7 days? Send
+                        a follow-up. Update your project tracker. Set the week's priorities.
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Tuesday: Outreach day — send 3 personalized proposals or warm DMs.
+                        Do not send mass messages. One specific, researched message beats ten generic ones.
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Wednesday: Deep work — no meetings, no emails before noon. The
+                        only day you should be heads-down building. Protect it like it pays your rent (it does).
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Thursday: Client comms — send weekly updates to all active
+                        projects. Reply to all messages. Book any pending discovery calls for the following week.
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Friday: Publish something — a short LinkedIn post, a GitHub
+                        commit, a project update. Visibility is the long game. Consistency over 90 days changes
+                        everything.
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> End of month: Invoice everyone. Review your rates. Ask completed
+                        clients for testimonials. Check whether any past clients have new needs.
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Every quarter: Raise your rate by 15–20%. Tell existing clients 30
+                        days in advance. The ones who leave were never your long-term clients anyway.
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools That Make This Easier</div>
+                <div class="resource-grid" style="margin-bottom:14px;">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📄 Bonsai / HoneyBook</div>
+                        <div class="resource-card-desc">Contracts, invoices, and proposals in one place. Send
+                            professional contracts in 2 minutes. Clients who see a contract feel safe. Clients who feel
+                            safe pay on time.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🎬 Loom</div>
+                        <div class="resource-card-desc">Record project demos and delivery walkthroughs. Clients watch
+                            video updates 3× more than they read text. 2 minutes of Loom replaces 20 minutes of
+                            back-and-forth email.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📅 Notion / Linear</div>
+                        <div class="resource-card-desc">Track every client, every project, every follow-up date in one
+                            place. Freelancers who track lose fewer clients, miss fewer deadlines, and remember to ask
+                            for referrals.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">💳 Stripe / Wise</div>
+                        <div class="resource-card-desc">Get paid fast, globally, professionally. Set up a payment link
+                            before your first client call. "I'll send you a payment link" closes deals faster than any
+                            invoice PDF ever will.</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="cta-block">
+                    <div class="cta-title">Your first freelance client is one message away. 💻</div>
+                    <div class="cta-sub">You've been waiting to feel ready. Every developer who freelances felt
+                        unready.<br>Open your contacts. Pick one person. Send Script 01 before midnight tonight.</div>
+                    <a href="https://theboringeducation.com" class="cta-link" target="_blank">→ More Guides at TBE</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                            alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                            alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"
+                            alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">06 / 06</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
