@@ -146,6 +146,7 @@ const routes = {
     mySheets: "/user/interview-prep",
     myPlaylists: "/user/playlists",
     interviewPrep: "/interview-prep",
+    coreSubjects: "/interview-prep/core-subjects",
     dsaSheet: "/interview-prep/dsa-sheet",
     dsaSync: "/interview-prep/dsa-sheet/sync",
     dsaQuestionNote: "/interview-prep/dsa-sheet/question/note",

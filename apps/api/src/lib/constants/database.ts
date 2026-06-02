@@ -35,6 +35,7 @@ const DATABASE_MODELS = {
   COUPON: "Coupon",
   DSA_QUESTION: "DSAQuestion",
   APTITUDE_TOPIC: "AptitudeTopic",
+  CORE_SUBJECT: "CoreSubject",
   STUDY_GUIDE: "StudyGuide",
   /** Admin-configured INR prices for subscription SKUs (productType + planKey) */
   SUBSCRIPTION_PLAN: "SubscriptionPlan",
