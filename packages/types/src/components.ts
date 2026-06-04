@@ -1139,6 +1139,7 @@ export interface MainNavbarProps {
   customBranding?: ReactNode;
   customActions?: ReactNode[];
   dashboardRoute?: string;
+  profileRoute?: string;
   theme?: "light" | "dark";
   totalChapters?: number;
   completedChapters?: number;

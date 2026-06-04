@@ -48,6 +48,7 @@ const Layout = ({ children }: LayoutProps) => {
         theme="dark"
         dashboardRoute={dashboardRoute}
         hidePricingLink={isPurchased === true}
+        profileRoute="/profile"
       />
 
       <main

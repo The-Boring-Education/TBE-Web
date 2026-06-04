@@ -62,6 +62,7 @@ const Navbar = ({
   backButtonHref = "/",
   compact = false,
   hidePricingLink = false,
+  profileRoute,
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -212,7 +213,10 @@ const Navbar = ({
           <>
             <div className="flex lg:hidden gap-[8px] items-center">
               {requiresAuth && (
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                <UserAvatar
+                  dashboardRoute={finalDashboardRoute}
+                  profileRoute={profileRoute}
+                />
               )}
               <button
                 className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
@@ -236,7 +240,10 @@ const Navbar = ({
                 <LoginRedirectButton text="Login" />
               )}
               {requiresAuth && (
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                <UserAvatar
+                  dashboardRoute={finalDashboardRoute}
+                  profileRoute={profileRoute}
+                />
               )}
             </div>
           </>
@@ -246,7 +253,10 @@ const Navbar = ({
               {requiresAuth && showNotifications && <NotificationPopover />}
               {showGamification && <UserPointButton />}
               {requiresAuth && (
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                <UserAvatar
+                  dashboardRoute={finalDashboardRoute}
+                  profileRoute={profileRoute}
+                />
               )}
               <button
                 className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
@@ -321,7 +331,10 @@ const Navbar = ({
                   <LoginRedirectButton text="Login" />
                 )}
                 {requiresAuth && (
-                  <UserAvatar dashboardRoute={finalDashboardRoute} />
+                  <UserAvatar
+                    dashboardRoute={finalDashboardRoute}
+                    profileRoute={profileRoute}
+                  />
                 )}
               </div>
             )}
