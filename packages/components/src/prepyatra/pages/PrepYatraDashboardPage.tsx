@@ -179,7 +179,7 @@ const PrepYatraDashboardPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Suspense fallback={<LoadingSpinner />}>
-        <Navbar variant="prepyatra" />
+        <Navbar variant="prepyatra" profileRoute="/profile" />
       </Suspense>
 
       <main className="w-full px-2 md:px-4 pt-[72px] pb-6">
