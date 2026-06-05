@@ -47,6 +47,7 @@ export default function OnCampusLandingPage() {
         variant="oncampus"
         theme="dark"
         hidePricingLink={isPurchased === true}
+        profileRoute="/profile"
       />
       <main className="dark min-h-screen bg-[#0A0A0A] pt-20 text-white">
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 md:py-24">

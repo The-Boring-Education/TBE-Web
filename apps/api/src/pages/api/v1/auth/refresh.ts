@@ -60,6 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       name: user.name,
       image: user.image,
       isOnboarded: user.isOnboarded,
+      userName: user.userName,
     });
 
     return res.status(200).json(

@@ -34,7 +34,7 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <main className="min-h-screen w-full bg-white text-contentLight">
-        <Navbar variant="prepyatra" />
+        <Navbar variant="prepyatra" profileRoute="/profile" />
         <InstallButton />
 
         <div className="pt-24">

@@ -46,6 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       name: string;
       image?: string;
       isOnboarded?: boolean;
+      userName?: string;
     }>(token);
     if (!payload?.sub) return null;
     return {
@@ -54,6 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       name: payload.name,
       image: payload.image,
       isOnboarded: payload.isOnboarded ?? false,
+      userName: payload.userName,
     };
   }, []);
 

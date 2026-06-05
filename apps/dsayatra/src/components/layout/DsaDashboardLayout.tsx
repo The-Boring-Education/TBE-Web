@@ -102,6 +102,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
           variant="dsayatra"
           theme="dark"
           hidePricingLink={isPurchased === true}
+          profileRoute="/profile"
         />
         <div className="flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col overflow-x-clip px-3 pt-[72px] pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:px-5 lg:px-6 lg:pb-8 lg:pt-[72px] xl:px-8">
           {children}
