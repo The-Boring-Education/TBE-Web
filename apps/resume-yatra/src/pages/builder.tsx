@@ -39,7 +39,7 @@ function BuilderContent() {
 export default function Builder() {
   return (
     <ProtectedRoute redirectTo="/login" loadingComponent={<LoadingScreen />}>
-      <Navbar variant="resume-yatra" />
+      <Navbar variant="resume-yatra" profileRoute="/profile" />
       <BuilderContent />
     </ProtectedRoute>
   );

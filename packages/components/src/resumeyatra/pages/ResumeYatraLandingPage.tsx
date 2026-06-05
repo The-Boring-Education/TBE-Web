@@ -60,7 +60,7 @@ export function ResumeYatraLandingPage({
     <main className="min-h-screen w-full bg-white text-contentLight">
       <SEO seoMeta={seoMeta} />
 
-      <Navbar variant="resume-yatra" />
+      <Navbar variant="resume-yatra" profileRoute="/profile" />
 
       {heroComponent ? (
         heroComponent
