@@ -78,6 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       name: user.name,
       image: user.image,
       isOnboarded: user.isOnboarded,
+      userName: user.userName,
     });
 
     const refreshToken = signRefreshToken(user._id.toString());

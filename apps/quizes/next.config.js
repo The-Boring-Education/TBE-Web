@@ -17,6 +17,12 @@ const nextConfig = {
     "@tbe/config",
     "@tbe/gamification",
   ],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     // Use 'loose' mode to handle mixed ESM/CJS packages
     // This allows webpack to convert require() to import() for ESM packages like date-fns

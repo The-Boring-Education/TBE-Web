@@ -426,7 +426,7 @@ const ResumeYatraProfilePage = () => {
                       Username
                     </span>
                     <span className="text-slate-700 font-medium">
-                      @{form.userName || "not_set"}
+                      @{form.userName || "username"}
                     </span>
                   </div>
                   <div className="flex items-center">
