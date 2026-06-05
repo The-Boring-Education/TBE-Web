@@ -5,14 +5,18 @@ import { cn, sendRequest } from "@tbe/utils";
 import {
   ArrowLeft,
   BookOpen,
+  ChevronLeft,
   ChevronRight,
+  Clock,
   Folder,
   FolderOpen,
+  List,
   ListFilter,
   Play,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 import type { Chapter, Subject } from "@/config/coreSubjectsData";
 
@@ -141,130 +145,343 @@ function ChapterContent({
   chapter,
   subjectLabel,
   onBack,
+  prevChapter,
+  nextChapter,
+  onChapterSelect,
 }: {
   chapter: Chapter;
   subjectLabel: string;
   onBack: () => void;
+  prevChapter: Chapter | null;
+  nextChapter: Chapter | null;
+  onChapterSelect: (chapter: Chapter) => void;
 }) {
   const { content } = chapter;
+  const [activeId, setActiveId] = useState<string>("");
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Dynamic Reading Time Estimator
+  const readingTime = useMemo(() => {
+    const text = content.markdownContent || content.overview || "";
+    const words = text.split(/\s+/).filter(Boolean).length;
+    // Base estimation + items
+    const elementCount =
+      (content.notes?.length ?? 0) +
+      (content.importantPoints?.length ?? 0) +
+      (content.interviewQuestions?.length ?? 0);
+    return Math.max(1, Math.ceil(words / 200) + Math.ceil(elementCount * 0.5));
+  }, [content]);
+
+  // Extract headings (H2, H3) for TOC
+  const headings = useMemo(() => {
+    if (!content.markdownContent) return [];
+    const lines = content.markdownContent.split("\n");
+    const list: { text: string; id: string; level: number }[] = [];
+    let inCodeBlock = false;
+
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith("```")) {
+        inCodeBlock = !inCodeBlock;
+        return;
+      }
+      if (inCodeBlock) return;
+
+      const match = line.match(/^(#{2,3})\s+(.*)/);
+      if (match) {
+        const level = match[1].length;
+        const text = match[2].trim().replace(/\*\*|`/g, "");
+        const id = text
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+        if (text) {
+          list.push({ text, id, level });
+        }
+      }
+    });
+    return list;
+  }, [content.markdownContent]);
+
+  // Observe which heading is in view
+  useEffect(() => {
+    if (headings.length === 0) return;
+
+    const observerOptions = {
+      root: scrollContainerRef.current,
+      rootMargin: "-20px 0px -65% 0px", // triggers when heading is in top-third of container
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+      if (visibleEntries.length > 0) {
+        // Find the one closest to the top margin
+        const sorted = visibleEntries.sort(
+          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
+        );
+        setActiveId(sorted[0].target.id);
+      }
+    }, observerOptions);
+
+    headings.forEach((heading) => {
+      const el = document.getElementById(heading.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [headings, content.markdownContent]);
+
+  // Load completion state from LocalStorage
+  useEffect(() => {
+    const key = `coresubjects-completed-${chapter.id}`;
+    setIsCompleted(localStorage.getItem(key) === "true");
+  }, [chapter.id]);
+
+  const toggleCompleted = () => {
+    const key = `coresubjects-completed-${chapter.id}`;
+    const nextState = !isCompleted;
+    setIsCompleted(nextState);
+    localStorage.setItem(key, String(nextState));
+  };
+
   return (
-    <div className="flex-1 overflow-y-auto bg-[#050505] scrollbar-thin-grey">
-      {/* Chapter header */}
-      <div className="sticky top-0 z-10 bg-[#0A0A0A]/95 backdrop-blur border-b border-gray-800 px-6 py-4 flex items-center gap-3">
-        <button
-          onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 rounded-lg border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-200 shrink-0 active:scale-95"
-          title="Back to chapters"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </button>
-        <div>
-          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-0.5">
-            {subjectLabel}
-          </p>
-          <h1 className="text-lg font-extrabold text-white tracking-tight">
+    <div
+      ref={scrollContainerRef}
+      className="flex-1 overflow-y-auto bg-[#050505] scrollbar-thin-grey scroll-smooth relative"
+    >
+      {/* Main Content Layout Container */}
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8 flex gap-8 items-start">
+        {/* Left column - Content */}
+        <div className="flex-1 min-w-0 xl:max-w-[72%]">
+          {/* Sleek Minimal Back Button Link */}
+          <button
+            onClick={onBack}
+            className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-400 transition-colors mb-4 cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to chapters</span>
+          </button>
+
+          {/* Sleek Minimal Title */}
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
             {chapter.title}
           </h1>
+
+          {/* Sleek aesthetic breadcrumb & reading time / completion row */}
+          <div className="flex items-center gap-3 text-xs text-gray-500 pb-4 border-b border-gray-900 mb-6 flex-wrap">
+            <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded">
+              {subjectLabel}
+            </span>
+            <span className="text-gray-700 font-semibold">•</span>
+            <div className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-gray-550 shrink-0" />
+              <span>{readingTime} min read</span>
+            </div>
+            <span className="text-gray-700 font-semibold">•</span>
+            <button
+              onClick={toggleCompleted}
+              className={cn(
+                "flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer",
+                isCompleted
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                  : "bg-red-500/5 border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40",
+              )}
+            >
+              {isCompleted ? "Completed" : "Mark Read"}
+            </button>
+          </div>
+
+          {content.markdownContent ? (
+            /* Render Markdown Content */
+            <div className="prose prose-invert max-w-none prose-red prose-headings:scroll-mt-6">
+              <CoreSubjectMDXRenderer mdxSource={content.markdownContent} />
+            </div>
+          ) : (
+            /* Fallback layout for classic non-markdown subjects */
+            <div className="space-y-8">
+              {/* Overview */}
+              <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-6">
+                <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                  <span className="w-4 h-[2px] bg-red-500 rounded-full" />
+                  Overview
+                </h2>
+                <p className="text-gray-300 text-[15px] leading-relaxed">
+                  {content.overview}
+                </p>
+              </section>
+
+              {/* Notes */}
+              {(content.notes?.length ?? 0) > 0 && (
+                <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-6">
+                  <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span className="w-4 h-[2px] bg-red-500 rounded-full" />
+                    Key Notes
+                  </h2>
+                  <ul className="space-y-3">
+                    {(content.notes ?? []).map((note, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-gray-300 text-[14px] leading-relaxed"
+                      >
+                        <ChevronRight className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                        <span>{note}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* Code block */}
+              {content.codeBlock && (
+                <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-6">
+                  <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span className="w-4 h-[2px] bg-red-500 rounded-full" />
+                    Code Example
+                  </h2>
+                  <pre className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-4 overflow-x-auto text-[13px] text-green-400 font-mono leading-relaxed scrollbar-thin-grey whitespace-pre-wrap">
+                    <code>{content.codeBlock}</code>
+                  </pre>
+                </section>
+              )}
+
+              {/* Important Points */}
+              {(content.importantPoints?.length ?? 0) > 0 && (
+                <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-6">
+                  <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span className="w-4 h-[2px] bg-red-500 rounded-full" />
+                    Crucial takeaways
+                  </h2>
+                  <div className="space-y-3">
+                    {(content.importantPoints ?? []).map((pt, i) => (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 bg-red-500/[0.03] border border-red-500/10 rounded-xl px-4 py-3.5"
+                      >
+                        <span className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                          <span className="text-[9px] font-black text-red-500">
+                            {i + 1}
+                          </span>
+                        </span>
+                        <p className="text-gray-300 text-[14px] leading-relaxed">
+                          {pt}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Interview Questions */}
+              {(content.interviewQuestions?.length ?? 0) > 0 && (
+                <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-6">
+                  <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span className="w-4 h-[2px] bg-red-500 rounded-full" />
+                    Frequently Asked Questions
+                  </h2>
+                  <div className="space-y-4">
+                    {(content.interviewQuestions ?? []).map((qa, i) => (
+                      <div
+                        key={i}
+                        className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-4 hover:border-red-500/10 transition-colors"
+                      >
+                        <p className="text-white font-bold text-[14px] mb-2 flex items-start gap-2">
+                          <span className="text-red-500 shrink-0">Q.</span>
+                          {qa.q}
+                        </p>
+                        <p className="text-gray-400 text-[13px] leading-relaxed pl-5 border-l border-red-500/20">
+                          {qa.a}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+          )}
+
+          {/* Navigation controls (Next/Prev) */}
+          <div className="flex items-center justify-between border-t border-gray-800/60 mt-12 pt-8 pb-16">
+            {prevChapter ? (
+              <button
+                type="button"
+                onClick={() => onChapterSelect(prevChapter)}
+                className="group flex flex-col items-start px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-left transition-all duration-300 max-w-[45%]"
+              >
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                  <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                  PREVIOUS CHAPTER
+                </span>
+                <span className="text-white font-bold text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
+                  {prevChapter.title}
+                </span>
+              </button>
+            ) : (
+              <div />
+            )}
+
+            {nextChapter ? (
+              <button
+                type="button"
+                onClick={() => onChapterSelect(nextChapter)}
+                className="group flex flex-col items-end px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 max-w-[45%] ml-auto"
+              >
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                  NEXT CHAPTER
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+                <span className="text-white font-bold text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
+                  {nextChapter.title}
+                </span>
+              </button>
+            ) : (
+              <div />
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-8 space-y-8 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] lg:pb-12">
-        {/* Overview */}
-        <section>
-          <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-            <span className="w-4 h-[2px] bg-red-500 rounded-full" />
-            Overview
-          </h2>
-          <p className="text-gray-300 text-[15px] leading-relaxed">
-            {content.overview}
-          </p>
-        </section>
-
-        {/* Notes */}
-        {content.notes.length > 0 && (
-          <section>
-            <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-4 h-[2px] bg-red-500 rounded-full" />
-              Notes
-            </h2>
-            <ul className="space-y-2">
-              {content.notes.map((note, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-3 text-gray-400 text-[14px] leading-relaxed"
-                >
-                  <ChevronRight className="w-4 h-4 text-red-500/60 shrink-0 mt-0.5" />
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {/* Code block */}
-        {content.codeBlock && (
-          <section>
-            <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-4 h-[2px] bg-red-500 rounded-full" />
-              Code Example
-            </h2>
-            <pre className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-4 overflow-x-auto text-[13px] text-green-400 font-mono leading-relaxed scrollbar-thin-grey whitespace-pre-wrap">
-              <code>{content.codeBlock}</code>
-            </pre>
-          </section>
-        )}
-
-        {/* Important Points */}
-        {content.importantPoints.length > 0 && (
-          <section>
-            <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-4 h-[2px] bg-red-500 rounded-full" />
-              Important Points
-            </h2>
-            <div className="space-y-2">
-              {content.importantPoints.map((pt, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 bg-red-500/[0.04] border border-red-500/10 rounded-lg px-4 py-3"
-                >
-                  <span className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[9px] font-black text-red-500">
-                      {i + 1}
-                    </span>
-                  </span>
-                  <p className="text-gray-300 text-[14px] leading-relaxed">
-                    {pt}
-                  </p>
-                </div>
-              ))}
+        {/* Right column - Sticky Table of Contents (only for Markdown) */}
+        {content.markdownContent && headings.length > 0 && (
+          <aside className="w-[28%] shrink-0 hidden xl:block sticky top-24 self-start space-y-6">
+            <div className="bg-[#0A0A0A]/50 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur-sm">
+              <div className="flex items-center gap-2 border-b border-gray-800 pb-3 mb-4">
+                <List className="w-4 h-4 text-red-500" />
+                <span className="text-[11px] font-black text-white uppercase tracking-wider">
+                  Table of Contents
+                </span>
+              </div>
+              <nav className="space-y-0.5 max-h-[60vh] overflow-y-auto scrollbar-thin-grey pr-1">
+                {headings.map((heading) => (
+                  <button
+                    key={heading.id}
+                    onClick={() => scrollToHeading(heading.id)}
+                    className={cn(
+                      "w-full text-left transition-all duration-200 py-1.5 px-3 border-l text-[12px] block truncate",
+                      heading.level === 3 ? "pl-6 text-[11px]" : "font-bold",
+                      activeId === heading.id
+                        ? "text-red-500 border-red-500 bg-red-500/[0.02] font-extrabold"
+                        : "text-gray-500 border-transparent hover:text-gray-300 hover:border-gray-700",
+                    )}
+                  >
+                    {heading.text}
+                  </button>
+                ))}
+              </nav>
             </div>
-          </section>
-        )}
 
-        {/* Interview Questions */}
-        {content.interviewQuestions.length > 0 && (
-          <section>
-            <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-4 h-[2px] bg-red-500 rounded-full" />
-              Interview Questions
-            </h2>
-            <div className="space-y-4">
-              {content.interviewQuestions.map((qa, i) => (
-                <div
-                  key={i}
-                  className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-4"
-                >
-                  <p className="text-white font-bold text-[14px] mb-2 flex items-start gap-2">
-                    <span className="text-red-500 shrink-0">Q.</span>
-                    {qa.q}
-                  </p>
-                  <p className="text-gray-400 text-[13px] leading-relaxed pl-5 border-l border-red-500/20">
-                    {qa.a}
-                  </p>
-                </div>
-              ))}
+            {/* Quick Helper Widget */}
+            <div className="bg-gradient-to-br from-red-500/[0.02] to-transparent border border-gray-800/60 rounded-2xl p-5 shadow-lg">
+              <h3 className="text-white font-bold text-[12px] mb-1.5 tracking-tight flex items-center gap-1.5">
+                💡 Learning Guide
+              </h3>
+              <p className="text-gray-400 text-[11px] leading-relaxed">
+                Read carefully. Take note of code patterns. Click code blocks to
+                copy them directly for hands-on practice. Mark as complete once
+                understood.
+              </p>
             </div>
-          </section>
+          </aside>
         )}
       </div>
     </div>
@@ -304,6 +521,22 @@ const CoreSubjectsPage = () => {
     (s) => s.id === selectedSubjectId,
   );
 
+  const currentChapterIndex =
+    selectedSubject?.chapters.findIndex((c) => c.id === selectedChapter?.id) ??
+    -1;
+
+  const prevChapter =
+    currentChapterIndex > 0
+      ? selectedSubject?.chapters[currentChapterIndex - 1]
+      : null;
+
+  const nextChapter =
+    selectedSubject &&
+    currentChapterIndex >= 0 &&
+    currentChapterIndex < selectedSubject.chapters.length - 1
+      ? selectedSubject.chapters[currentChapterIndex + 1]
+      : null;
+
   const handleSubjectClick = (id: string) => {
     setSelectedSubjectId(id);
     setIsMobileSubjectsOpen(false);
@@ -333,103 +566,105 @@ const CoreSubjectsPage = () => {
       layoutMode="workspace"
     >
       <div className="flex flex-col h-full w-full">
-        {/* ── Top header bar ── */}
-        <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
-          {/* Left column — sidebar label */}
-          <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-auto lg:w-[260px]">
-            {selectedSubjectId && (
-              <button
-                onClick={handleBackToSubjects}
-                className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
-                title="Back to Subjects"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-              </button>
-            )}
-            <div className="hidden lg:block">
-              <Text
-                level="h2"
-                className="text-[13px] font-black text-white mb-0.5 tracking-tight"
-              >
-                Core Subjects
-              </Text>
-              <Text
-                level="p"
-                className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
-              >
-                Choose a subject
-              </Text>
+        {/* ── Top header bar & Mobile drawer (Hidden during study mode) ── */}
+        {!selectedChapter && (
+          <>
+            <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
+              {/* Left column — sidebar label */}
+              <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-auto lg:w-[260px]">
+                {selectedSubjectId && (
+                  <button
+                    onClick={handleBackToSubjects}
+                    className="flex items-center justify-center w-[28px] h-[28px] rounded-[6px] border border-red-500/40 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500 transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.1)] active:scale-95"
+                    title="Back to Subjects"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <div className="hidden lg:block">
+                  <Text
+                    level="h2"
+                    className="text-[13px] font-black text-white mb-0.5 tracking-tight"
+                  >
+                    Core Subjects
+                  </Text>
+                  <Text
+                    level="p"
+                    className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+                  >
+                    Choose a subject
+                  </Text>
+                </div>
+              </div>
+
+              {/* Right header area */}
+              <div className="flex flex-1 items-center justify-between px-4">
+                <FlexContainer wrap={false} className="gap-2 min-w-0">
+                  <FlexContainer
+                    direction="col"
+                    itemCenter={false}
+                    justifyCenter={false}
+                    wrap={false}
+                    className="min-w-0"
+                  >
+                    <Text
+                      level="h1"
+                      className="strong-text font-bold text-white mb-0.5 tracking-tight line-clamp-1"
+                    >
+                      {selectedSubject
+                        ? selectedSubject.label
+                        : "Core Subjects"}
+                    </Text>
+                    <Text
+                      level="p"
+                      className="text-[10px] font-medium text-gray-500 uppercase tracking-wider hidden sm:block"
+                    >
+                      {selectedSubject
+                        ? `${selectedSubject.chapters.length} chapters available`
+                        : "Select a subject to begin learning"}
+                    </Text>
+                  </FlexContainer>
+                </FlexContainer>
+
+                {/* Mobile toggle */}
+                <button
+                  onClick={() => setIsMobileSubjectsOpen(!isMobileSubjectsOpen)}
+                  className={cn(
+                    "lg:hidden flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all duration-200 active:scale-95",
+                    isMobileSubjectsOpen
+                      ? "bg-red-500/10 border-red-500/60 text-red-400"
+                      : "bg-gray-900/50 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600",
+                  )}
+                  title="Toggle subjects list"
+                >
+                  <ListFilter className="w-3.5 h-3.5" />
+                  <span>{coreSubjects.length} Subjects</span>
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Right header area */}
-          <div className="flex flex-1 items-center justify-between px-4">
-            <FlexContainer wrap={false} className="gap-2 min-w-0">
-              <FlexContainer
-                direction="col"
-                itemCenter={false}
-                justifyCenter={false}
-                wrap={false}
-                className="min-w-0"
-              >
-                <Text
-                  level="h1"
-                  className="strong-text font-bold text-white mb-0.5 tracking-tight line-clamp-1"
-                >
-                  {selectedChapter
-                    ? selectedChapter.title
-                    : selectedSubject
-                      ? selectedSubject.label
-                      : "Core Subjects"}
-                </Text>
-                <Text
-                  level="p"
-                  className="text-[10px] font-medium text-gray-500 uppercase tracking-wider hidden sm:block"
-                >
-                  {selectedChapter
-                    ? `Reading · ${selectedSubject?.label}`
-                    : selectedSubject
-                      ? `${selectedSubject.chapters.length} chapters available`
-                      : "Select a subject to begin learning"}
-                </Text>
-              </FlexContainer>
-            </FlexContainer>
-
-            {/* Mobile toggle */}
-            <button
-              onClick={() => setIsMobileSubjectsOpen(!isMobileSubjectsOpen)}
+            {/* ── Mobile collapsible subject drawer ── */}
+            <div
               className={cn(
-                "lg:hidden flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all duration-200 active:scale-95",
+                "lg:hidden w-full bg-[#0A0A0A] border-b border-gray-800 overflow-y-auto scrollbar-thin-grey transition-[max-height] duration-300 ease-in-out",
                 isMobileSubjectsOpen
-                  ? "bg-red-500/10 border-red-500/60 text-red-400"
-                  : "bg-gray-900/50 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600",
+                  ? "max-h-[50vh]"
+                  : "max-h-0 overflow-hidden",
               )}
-              title="Toggle subjects list"
             >
-              <ListFilter className="w-3.5 h-3.5" />
-              <span>{coreSubjects.length} Subjects</span>
-            </button>
-          </div>
-        </div>
-
-        {/* ── Mobile collapsible subject drawer ── */}
-        <div
-          className={cn(
-            "lg:hidden w-full bg-[#0A0A0A] border-b border-gray-800 overflow-y-auto scrollbar-thin-grey transition-[max-height] duration-300 ease-in-out",
-            isMobileSubjectsOpen ? "max-h-[50vh]" : "max-h-0 overflow-hidden",
-          )}
-        >
-          <div className="px-3 py-2 space-y-1">
-            {coreSubjects.map((subject) => (
-              <SubjectItem
-                key={subject.id}
-                subject={subject}
-                isActive={selectedSubjectId === subject.id}
-                onClick={() => handleSubjectClick(subject.id)}
-              />
-            ))}
-          </div>
-        </div>
+              <div className="px-3 py-2 space-y-1">
+                {coreSubjects.map((subject) => (
+                  <SubjectItem
+                    key={subject.id}
+                    subject={subject}
+                    isActive={selectedSubjectId === subject.id}
+                    onClick={() => handleSubjectClick(subject.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* ── Body: sidebar + content ── */}
         <FlexContainer
@@ -510,6 +745,9 @@ const CoreSubjectsPage = () => {
               chapter={selectedChapter}
               subjectLabel={selectedSubject?.label ?? ""}
               onBack={handleBackToChapters}
+              prevChapter={prevChapter ?? null}
+              nextChapter={nextChapter ?? null}
+              onChapterSelect={(ch) => setSelectedChapter(ch)}
             />
           ) : (
             /* Chapter cards grid */

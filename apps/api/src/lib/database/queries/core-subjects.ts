@@ -27,6 +27,7 @@ const getCoreSubjectsFromDB = async (): Promise<DatabaseQueryResponseType> => {
           importantPoints: ch.content?.importantPoints ?? [],
           interviewQuestions: ch.content?.interviewQuestions ?? [],
           codeBlock: ch.content?.codeBlock ?? undefined,
+          markdownContent: ch.content?.markdownContent ?? undefined,
         },
       })),
     }));

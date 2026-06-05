@@ -103,9 +103,6 @@ const MDXRenderer = ({
       return `**${text.trim()}**`;
     });
 
-    // 5) Fix malformed code blocks - remove empty code fences
-    out = out.replace(/```\s*\n\s*```/g, "");
-
     // 5) Ensure fenced code blocks are properly closed and fix duplicates.
     // Split by lines and track open/close state
     const codeBlockLines = out.split("\n");
@@ -134,6 +131,13 @@ const MDXRenderer = ({
           fixedLines.push("```");
           inCodeBlock = false;
           codeBlockLang = "";
+
+          // If the fence starts a new language, open a new block
+          if (newLang) {
+            fixedLines.push(line);
+            inCodeBlock = true;
+            codeBlockLang = newLang;
+          }
         } else {
           // Open a new code block
           codeBlockLang = codeFenceMatch[1] || "";
@@ -309,11 +313,23 @@ const MDXRenderer = ({
     return content;
   };
 
-  // Add class names to specific tags
+  // Add class names and unique IDs to specific tags for table-of-contents navigation
   md.renderer.rules.heading_open = (tokens: any[], idx: number) => {
     const token = tokens[idx];
     const { tag } = token;
     const level = parseInt(tag.charAt(1)) || 1;
+
+    // Generate id attribute from the heading text for anchor links
+    const nextToken = tokens[idx + 1];
+    const titleText =
+      nextToken && nextToken.type === "inline" ? nextToken.content : "";
+    const idAttr = titleText
+      ? ` id="${titleText
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "")}"`
+      : "";
+
     const headingSizes = {
       1: "text-2xl",
       2: "text-xl",
@@ -328,7 +344,7 @@ const MDXRenderer = ({
       theme === "dark"
         ? `text-contentDark font-bold mb-2 ${sizeClass}`
         : `text-contentLight font-bold mb-2 ${sizeClass}`;
-    return `<${tag} class="${headingClass}">`;
+    return `<${tag}${idAttr} class="${headingClass}">`;
   };
 
   md.renderer.rules.heading_close = (tokens: any[], idx: number) => {
@@ -378,19 +394,102 @@ const MDXRenderer = ({
     return `<a href=${href} target="_blank">${href}</a>`;
   };
 
+  // Explicit image renderer so markdown images are never swallowed
+  md.renderer.rules.image = (
+    tokens: any,
+    idx: any,
+    options: any,
+    env: any,
+    self: any,
+  ) => {
+    const token = tokens[idx];
+    const src = token.attrGet("src") || "";
+    const alt = self.renderInlineAsText(token.children, options, env) || "";
+    const title = token.attrGet("title") || "";
+    return (
+      `<figure class="my-6">` +
+      `<img` +
+      ` src="${src}"` +
+      ` alt="${alt}"` +
+      (title ? ` title="${title}"` : "") +
+      ` loading="lazy"` +
+      ` class="max-w-full h-auto rounded-xl border border-gray-800 shadow-lg mx-auto block"` +
+      ` />` +
+      (alt
+        ? `<figcaption class="text-center text-xs text-gray-500 mt-2 italic">${alt}</figcaption>`
+        : "") +
+      `</figure>`
+    );
+  };
+
   md.renderer.rules.fence = (tokens, idx) => {
     const token = tokens[idx];
     if (!token) return "";
 
-    const lang = token.info?.trim() || "";
+    const lang = token.info?.trim() || "text";
     const code = token.content || "";
-    const hoverBgClass =
-      theme === "dark" ? "hover:bg-[#1A1A1A]" : "hover:bg-greyLight";
 
+    // Lightweight regex-based syntax highlighter
+    const highlightCode = (rawCode: string, language: string): string => {
+      let escaped = md.utils.escapeHtml(rawCode);
+      const cleanLang = language.toLowerCase();
+      if (
+        cleanLang === "java" ||
+        cleanLang === "javascript" ||
+        cleanLang === "js" ||
+        cleanLang === "cpp" ||
+        cleanLang === "c++" ||
+        cleanLang === "c"
+      ) {
+        escaped = escaped.replace(
+          /\b(public|private|protected|class|interface|extends|implements|static|final|void|new|return|import|package|const|let|var|function)\b/g,
+          '<span class="text-red-400 font-semibold">$1</span>',
+        );
+        escaped = escaped.replace(
+          /\b(String|int|double|float|char|boolean|System|out|println|console|log|Car|Main|String\[\])\b/g,
+          '<span class="text-sky-400 font-medium">$1</span>',
+        );
+        escaped = escaped.replace(
+          /(\/\/.*)/g,
+          '<span class="text-gray-500 italic">$1</span>',
+        );
+        escaped = escaped.replace(
+          /(&quot;.*?&quot;|'.*?')/g,
+          '<span class="text-emerald-400">$1</span>',
+        );
+      } else if (cleanLang === "python" || cleanLang === "py") {
+        escaped = escaped.replace(
+          /\b(def|class|import|from|return|if|else|elif|for|while|in|is|not|and|or|try|except|as|print)\b/g,
+          '<span class="text-red-400 font-semibold">$1</span>',
+        );
+        escaped = escaped.replace(
+          /(#.*)/g,
+          '<span class="text-gray-500 italic">$1</span>',
+        );
+        escaped = escaped.replace(
+          /(&quot;.*?&quot;|'.*?')/g,
+          '<span class="text-emerald-400">$1</span>',
+        );
+      } else if (cleanLang === "sql") {
+        escaped = escaped.replace(
+          /\b(SELECT|FROM|WHERE|GROUP\s+BY|HAVING|ORDER\s+BY|LIMIT|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|DROP|AVG|COUNT|SUM|MAX|MIN|AS|DESC|ASC)\b/gi,
+          '<span class="text-red-400 font-semibold">$1</span>',
+        );
+        escaped = escaped.replace(
+          /(--.*)/g,
+          '<span class="text-gray-500 italic">$1</span>',
+        );
+      }
+      return escaped;
+    };
+
+    const highlightedHTML = highlightCode(code, lang);
+
+    // Output a bare code block wrapper — useEffect will group & add tab UI
     return (
-      `<div class="relative mb-4">` +
-      `<pre class="${codeBgClass} ${codeTextClass} overflow-x-auto ${hoverBgClass} transition border px-4 py-6 rounded">` +
-      `<code class="language-${lang}">${md.utils.escapeHtml(code)}</code>` +
+      `<div class="tbe-code-block" data-lang="${lang}">` +
+      `<pre class="overflow-x-auto px-5 py-4 text-[13px] font-mono leading-relaxed text-gray-300 scrollbar-thin-grey whitespace-pre bg-[#0A0A0C]">` +
+      `<code>${highlightedHTML}</code>` +
       `</pre>` +
       `</div>`
     );
@@ -420,30 +519,121 @@ const MDXRenderer = ({
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const codeBlocks = containerRef.current.querySelectorAll("pre code");
-    codeBlocks.forEach((codeElem) => {
-      const parentPre = codeElem.parentElement;
-      if (!parentPre) return;
-      const wrapperDiv = parentPre.parentElement;
-      if (!wrapperDiv) return;
-      if (wrapperDiv.querySelector(".copy-button")) return;
-      const btn = document.createElement("button");
-      btn.innerText = "Copy";
-      btn.type = "button";
-      btn.className =
-        theme === "dark"
-          ? "copy-button absolute top-2 right-2 px-2 py-1 bg-gray-800 text-white text-sm rounded border border-gray-700 hover:bg-gray-700 hover:scale-105 transition-all z-10 max-sm:top-1 max-sm:right-1 max-sm:px-1 max-sm:py-0.5 max-sm:text-xs"
-          : "copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-sm rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 max-sm:top-1 max-sm:right-1 max-sm:px-1 max-sm:py-0.5 max-sm:text-xs";
-      btn.onclick = () => {
-        const textToCopy = codeElem.textContent || "";
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          btn.innerText = "Copied!";
+
+    const allBlocks = Array.from(
+      containerRef.current.querySelectorAll<HTMLElement>(
+        ".tbe-code-block:not([data-processed])",
+      ),
+    );
+    const visited = new Set<Element>();
+
+    const langLabel = (raw: string) => {
+      const map: Record<string, string> = {
+        cpp: "C++",
+        "c++": "C++",
+        js: "JavaScript",
+        javascript: "JavaScript",
+        java: "Java",
+        python: "Python",
+        py: "Python",
+        sql: "SQL",
+        ts: "TypeScript",
+        typescript: "TypeScript",
+        text: "Code",
+        c: "C",
+        go: "Go",
+        rust: "Rust",
+      };
+      return (
+        map[raw.toLowerCase()] ?? raw.charAt(0).toUpperCase() + raw.slice(1)
+      );
+    };
+
+    allBlocks.forEach((block) => {
+      if (visited.has(block)) return;
+
+      // Collect this block + all directly following sibling code blocks
+      const group: HTMLElement[] = [block];
+      let next = block.nextElementSibling;
+      while (next && next.classList.contains("tbe-code-block")) {
+        group.push(next as HTMLElement);
+        visited.add(next);
+        next = next.nextElementSibling;
+      }
+      visited.add(block);
+      group.forEach((b) => b.setAttribute("data-processed", "true"));
+
+      // Build tabbed widget
+      const wrapper = document.createElement("div");
+      wrapper.className =
+        "tbe-code-tabs rounded-xl overflow-hidden border border-gray-800 mb-6";
+
+      // Header bar: language tabs + copy button
+      const bar = document.createElement("div");
+      bar.className = "flex items-center bg-[#111318] border-b border-gray-800";
+
+      const tabButtons: HTMLButtonElement[] = [];
+      group.forEach((b, i) => {
+        const raw = b.getAttribute("data-lang") || "text";
+        const tab = document.createElement("button");
+        tab.type = "button";
+        tab.textContent = langLabel(raw);
+        tab.className =
+          i === 0
+            ? "px-4 py-2.5 text-[11px] font-black tracking-widest text-white border-b-2 border-red-500 bg-transparent transition-all cursor-pointer"
+            : "px-4 py-2.5 text-[11px] font-black tracking-widest text-gray-500 border-b-2 border-transparent hover:text-gray-300 bg-transparent transition-all cursor-pointer";
+        tabButtons.push(tab);
+        bar.appendChild(tab);
+      });
+
+      const copyBtn = document.createElement("button");
+      copyBtn.type = "button";
+      copyBtn.textContent = "Copy";
+      copyBtn.className =
+        "ml-auto px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors cursor-pointer";
+      copyBtn.addEventListener("click", () => {
+        const activeBlock = wrapper.querySelector<HTMLElement>(
+          '.tbe-code-block[data-active="true"]',
+        );
+        const text = activeBlock?.querySelector("code")?.textContent || "";
+        navigator.clipboard.writeText(text).then(() => {
+          copyBtn.textContent = "Copied!";
           setTimeout(() => {
-            btn.innerText = "Copy";
+            copyBtn.textContent = "Copy";
           }, 1500);
         });
+      });
+      bar.appendChild(copyBtn);
+
+      // Tab switching
+      const activateTab = (index: number) => {
+        tabButtons.forEach((btn, j) => {
+          btn.className =
+            j === index
+              ? "px-4 py-2.5 text-[11px] font-black tracking-widest text-white border-b-2 border-red-500 bg-transparent transition-all cursor-pointer"
+              : "px-4 py-2.5 text-[11px] font-black tracking-widest text-gray-500 border-b-2 border-transparent hover:text-gray-300 bg-transparent transition-all cursor-pointer";
+        });
+        wrapper
+          .querySelectorAll<HTMLElement>(".tbe-code-block")
+          .forEach((blk, j) => {
+            blk.style.display = j === index ? "block" : "none";
+            blk.dataset.active = j === index ? "true" : "false";
+          });
       };
-      wrapperDiv.appendChild(btn);
+      tabButtons.forEach((btn, i) =>
+        btn.addEventListener("click", () => activateTab(i)),
+      );
+
+      // Mount: insert wrapper, add bar, move blocks in
+      block.parentNode!.insertBefore(wrapper, block);
+      wrapper.appendChild(bar);
+      group.forEach((b, i) => {
+        b.style.display = i === 0 ? "block" : "none";
+        b.dataset.active = i === 0 ? "true" : "false";
+        b.style.margin = "0";
+        b.style.borderRadius = "0";
+        wrapper.appendChild(b);
+      });
     });
   }, [mdxHTML, theme]);
 
@@ -460,7 +650,7 @@ const MDXRenderer = ({
       <div
         dangerouslySetInnerHTML={{ __html: processedHTML }}
         ref={containerRef}
-        className={`break-words ${textColorClass} [&_*]:${textColorClass} [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-bold [&_strong]:${textColorClass} [&_em]:italic`}
+        className={`break-words ${textColorClass} [&_*]:${textColorClass} [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-bold [&_strong]:${textColorClass} [&_em]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-left [&_th]:px-4 [&_th]:py-2 [&_th]:border-b [&_th]:border-gray-800 [&_th]:text-gray-200 [&_th]:font-bold [&_th]:text-sm [&_td]:px-4 [&_td]:py-2 [&_td]:border-b [&_td]:border-gray-900 [&_td]:text-gray-400 [&_td]:text-sm`}
       />
       {actionContainer}
     </div>
