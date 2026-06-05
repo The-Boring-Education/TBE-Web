@@ -60,7 +60,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: "At least one field is required to update",
+          message:
+            "Required field: experienceBand or at least one profile field to update",
         }),
       );
     }
