@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
+import { buildUserSocialProfileUpdate } from "@/lib/database";
 import { User } from "@/lib/database/models";
 import { toObjectId } from "@/lib/database/queries/common";
 import { sendAPIResponse } from "@/lib/utils";
@@ -79,7 +80,17 @@ const handlePatchPreferences = async (
   res: NextApiResponse,
 ) => {
   try {
-    const { userId, duration, offCampus } = req.body;
+    const {
+      userId,
+      duration,
+      offCampus,
+      name,
+      username,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
+    } = req.body;
+
     if (!userId || typeof userId !== "string") {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -89,11 +100,19 @@ const handlePatchPreferences = async (
       );
     }
 
-    if (duration === undefined && offCampus === undefined) {
+    if (
+      duration === undefined &&
+      offCampus === undefined &&
+      name === undefined &&
+      username === undefined &&
+      linkedInUrl === undefined &&
+      githubUrl === undefined &&
+      leetCodeUrl === undefined
+    ) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
-          message: "At least one field is required: duration or offCampus",
+          message: "At least one field is required to update",
         }),
       );
     }
@@ -119,11 +138,20 @@ const handlePatchPreferences = async (
       update["oncampus.offCampus"] = offCampus === true || offCampus === "true";
     }
 
+    const socialUpdates = buildUserSocialProfileUpdate({
+      name,
+      userName: username,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
+    });
+    Object.assign(update, socialUpdates);
+
     const updated = await User.findByIdAndUpdate(
       toObjectId(userId),
       { $set: update },
       { new: true },
-    ).select("oncampus");
+    );
 
     if (!updated) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -137,7 +165,7 @@ const handlePatchPreferences = async (
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
-        data: updated.oncampus,
+        data: updated,
       }),
     );
   } catch (error) {

@@ -987,6 +987,12 @@ export interface UserProfile {
     preferredLanguage?: string;
     companies?: string[];
   };
+  oncampus?: {
+    onboardingCompleted?: boolean;
+    experienceLevel?: string;
+    duration?: string;
+    offCampus?: boolean;
+  };
 }
 
 export interface DsaQuestion {
@@ -1205,6 +1211,7 @@ export interface RoadmapNode {
 }
 
 import type {
+  PatternQuizResult,
   StudyGuideConfig,
   StudyGuideDivider,
   StudyGuideModel,
@@ -1212,7 +1219,6 @@ import type {
   StudyGuideNavProps,
   StudyGuideReaderProps,
   StudyGuideSection,
-  PatternQuizResult,
 } from "@tbe/types";
 
 export type {
