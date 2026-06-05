@@ -973,6 +973,7 @@ export interface UserProfile {
   prepYatra: {
     goal?: string;
     experienceLevel?: string;
+    workDomain?: string;
     pyOnboarded?: boolean;
     targetCompanies?: string[];
     preferences?: {
