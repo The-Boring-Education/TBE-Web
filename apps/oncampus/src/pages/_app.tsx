@@ -40,9 +40,7 @@ const AppContent = ({
   // Exclude the Quizzes page for fullscreen workspace experience
   const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
   // Exclude the Core Subjects page for fullscreen workspace experience
-  const isCoreSubjectsRoute = router.pathname.startsWith(
-    "/dashboard/coresubjects",
-  );
+  const isCoreSubjectsRoute = router.pathname.startsWith("/coresubjects");
 
   const shouldUseDashboardLayout =
     (isDashboardRoute || isDSAPrepRoute) &&

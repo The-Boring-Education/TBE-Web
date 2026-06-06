@@ -14,6 +14,7 @@ import {
   ListFilter,
   Play,
 } from "lucide-react";
+import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
@@ -22,7 +23,7 @@ import type { Chapter, Subject } from "@/config/coreSubjectsData";
 
 /* ─────────────────────────────────────────────
    Sub-components
-───────────────────────────────────────────── */
+ ───────────────────────────────────────────── */
 
 /** Single subject entry in the left sidebar */
 function SubjectItem({
@@ -89,7 +90,7 @@ function ChapterCard({
           {/* Top row */}
           <div className="flex items-center justify-between mb-3">
             <div className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-800 bg-gray-900/50 group-hover:scale-110 transition-transform duration-300">
-              <span className="text-[11px] font-black text-gray-500 group-hover:text-red-500 transition-colors duration-300">
+              <span className="text-[11px] font-black text-gray-505 group-hover:text-red-500 transition-colors duration-300">
                 {String(index + 1).padStart(2, "0")}
               </span>
             </div>
@@ -104,7 +105,7 @@ function ChapterCard({
           </h3>
 
           {/* Description */}
-          <p className="text-gray-500 text-xs leading-relaxed mb-3 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300 flex-1">
+          <p className="text-gray-550 text-xs leading-relaxed mb-3 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300 flex-1">
             {chapter.description}
           </p>
 
@@ -114,7 +115,7 @@ function ChapterCard({
               <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">
                 Progress
               </span>
-              <span className="text-[10px] font-bold text-gray-600">0%</span>
+              <span className="text-[10px] font-bold text-gray-650">0%</span>
             </div>
             <div className="w-full h-[3px] bg-gray-800 rounded-full overflow-hidden">
               <div className="h-full w-0 bg-red-500 rounded-full transition-all duration-500" />
@@ -160,6 +161,13 @@ function ChapterContent({
   const [activeId, setActiveId] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToHeading = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   // Dynamic Reading Time Estimator
   const readingTime = useMemo(() => {
@@ -427,7 +435,7 @@ function ChapterContent({
                 onClick={() => onChapterSelect(nextChapter)}
                 className="group flex flex-col items-end px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 max-w-[45%] ml-auto"
               >
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="text-[9px] font-black text-gray-550 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
                   NEXT CHAPTER
                   <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>
@@ -488,11 +496,18 @@ function ChapterContent({
   );
 }
 
-/* ─────────────────────────────────────────────
-   Main Page
-───────────────────────────────────────────── */
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 const CoreSubjectsPage = () => {
+  const router = useRouter();
+  const { params } = router.query;
+
   const { data: response, isLoading } = useQuery<any>({
     queryKey: ["coreSubjects"],
     queryFn: () =>
@@ -506,50 +521,92 @@ const CoreSubjectsPage = () => {
     return response?.data ?? [];
   }, [response]);
 
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(
-    null,
-  );
-  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
+  const paramsArr = useMemo(() => {
+    if (!params) return [];
+    return Array.isArray(params) ? params : [params];
+  }, [params]);
+
+  const selectedSubjectId = paramsArr[0] || null;
+  const selectedChapterSlug = paramsArr[1] || null;
+
   const [isMobileSubjectsOpen, setIsMobileSubjectsOpen] = useState(false);
 
   useEffect(() => {
-    // Reset chapter when subject changes
-    setSelectedChapter(null);
+    if (!selectedSubjectId) {
+      setIsMobileSubjectsOpen(true);
+    } else {
+      setIsMobileSubjectsOpen(false);
+    }
   }, [selectedSubjectId]);
 
-  const selectedSubject: Subject | undefined = coreSubjects.find(
-    (s) => s.id === selectedSubjectId,
-  );
+  const selectedSubject = useMemo(() => {
+    if (!selectedSubjectId) return undefined;
+    return coreSubjects.find((s) => s.id === selectedSubjectId);
+  }, [coreSubjects, selectedSubjectId]);
 
-  const currentChapterIndex =
-    selectedSubject?.chapters.findIndex((c) => c.id === selectedChapter?.id) ??
-    -1;
+  const selectedChapter = useMemo(() => {
+    if (!selectedSubject || !selectedChapterSlug) return null;
+    return (
+      selectedSubject.chapters.find(
+        (c) =>
+          slugify(c.title) === selectedChapterSlug ||
+          c.id === selectedChapterSlug,
+      ) || null
+    );
+  }, [selectedSubject, selectedChapterSlug]);
 
-  const prevChapter =
-    currentChapterIndex > 0
-      ? selectedSubject?.chapters[currentChapterIndex - 1]
-      : null;
+  const currentChapterIndex = useMemo(() => {
+    if (!selectedSubject || !selectedChapter) return -1;
+    return selectedSubject.chapters.findIndex(
+      (c) => c.id === selectedChapter.id,
+    );
+  }, [selectedSubject, selectedChapter]);
 
-  const nextChapter =
-    selectedSubject &&
-    currentChapterIndex >= 0 &&
-    currentChapterIndex < selectedSubject.chapters.length - 1
-      ? selectedSubject.chapters[currentChapterIndex + 1]
-      : null;
+  const prevChapter = useMemo(() => {
+    if (currentChapterIndex > 0 && selectedSubject) {
+      return selectedSubject.chapters[currentChapterIndex - 1];
+    }
+    return null;
+  }, [selectedSubject, currentChapterIndex]);
+
+  const nextChapter = useMemo(() => {
+    if (
+      selectedSubject &&
+      currentChapterIndex >= 0 &&
+      currentChapterIndex < selectedSubject.chapters.length - 1
+    ) {
+      return selectedSubject.chapters[currentChapterIndex + 1];
+    }
+    return null;
+  }, [selectedSubject, currentChapterIndex]);
 
   const handleSubjectClick = (id: string) => {
-    setSelectedSubjectId(id);
-    setIsMobileSubjectsOpen(false);
+    router.push(`/coresubjects/${id}`, undefined, { shallow: true });
   };
 
   const handleBackToSubjects = () => {
-    setSelectedSubjectId(null);
-    setSelectedChapter(null);
+    router.push("/coresubjects", undefined, { shallow: true });
     setIsMobileSubjectsOpen(true);
   };
 
   const handleBackToChapters = () => {
-    setSelectedChapter(null);
+    if (selectedSubjectId) {
+      router.push(`/coresubjects/${selectedSubjectId}`, undefined, {
+        shallow: true,
+      });
+    } else {
+      router.push("/coresubjects", undefined, { shallow: true });
+    }
+  };
+
+  const handleChapterSelect = (ch: Chapter) => {
+    if (selectedSubjectId) {
+      router.push(
+        `/coresubjects/${selectedSubjectId}/${slugify(ch.title)}`,
+        undefined,
+        { shallow: true },
+      );
+    }
   };
 
   if (isLoading) {
@@ -590,7 +647,7 @@ const CoreSubjectsPage = () => {
                   </Text>
                   <Text
                     level="p"
-                    className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.1em]"
+                    className="text-[9px] font-bold text-gray-550 uppercase tracking-[0.1em]"
                   >
                     Choose a subject
                   </Text>
@@ -617,7 +674,7 @@ const CoreSubjectsPage = () => {
                     </Text>
                     <Text
                       level="p"
-                      className="text-[10px] font-medium text-gray-500 uppercase tracking-wider hidden sm:block"
+                      className="text-[10px] font-medium text-gray-550 uppercase tracking-wider hidden sm:block"
                     >
                       {selectedSubject
                         ? `${selectedSubject.chapters.length} chapters available`
@@ -747,7 +804,7 @@ const CoreSubjectsPage = () => {
               onBack={handleBackToChapters}
               prevChapter={prevChapter ?? null}
               nextChapter={nextChapter ?? null}
-              onChapterSelect={(ch) => setSelectedChapter(ch)}
+              onChapterSelect={handleChapterSelect}
             />
           ) : (
             /* Chapter cards grid */
@@ -757,7 +814,7 @@ const CoreSubjectsPage = () => {
                 <h2 className="text-2xl font-extrabold text-white tracking-tight mb-1">
                   {selectedSubject?.label}
                 </h2>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-550 text-sm">
                   {selectedSubject?.chapters.length} chapters · Click a card to
                   start reading
                 </p>
@@ -769,7 +826,7 @@ const CoreSubjectsPage = () => {
                     key={chapter.id}
                     chapter={chapter}
                     index={i}
-                    onClick={() => setSelectedChapter(chapter)}
+                    onClick={() => handleChapterSelect(chapter)}
                   />
                 ))}
               </div>
