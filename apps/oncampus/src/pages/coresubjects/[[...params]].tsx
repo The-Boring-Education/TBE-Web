@@ -14,6 +14,7 @@ import {
   ListFilter,
   Play,
 } from "lucide-react";
+import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
@@ -22,7 +23,7 @@ import type { Chapter, Subject } from "@/config/coreSubjectsData";
 
 /* ─────────────────────────────────────────────
    Sub-components
-───────────────────────────────────────────── */
+ ───────────────────────────────────────────── */
 
 /** Single subject entry in the left sidebar */
 function SubjectItem({
@@ -89,7 +90,7 @@ function ChapterCard({
           {/* Top row */}
           <div className="flex items-center justify-between mb-3">
             <div className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-800 bg-gray-900/50 group-hover:scale-110 transition-transform duration-300">
-              <span className="text-[11px] font-black text-gray-500 group-hover:text-red-500 transition-colors duration-300">
+              <span className="text-[11px] font-black text-gray-500 transition-colors duration-300 group-hover:text-red-500">
                 {String(index + 1).padStart(2, "0")}
               </span>
             </div>
@@ -160,6 +161,13 @@ function ChapterContent({
   const [activeId, setActiveId] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToHeading = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   // Dynamic Reading Time Estimator
   const readingTime = useMemo(() => {
@@ -239,6 +247,13 @@ function ChapterContent({
     setIsCompleted(localStorage.getItem(key) === "true");
   }, [chapter.id]);
 
+  // Scroll to top of next/prev topic when chapter changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [chapter.id]);
+
   const toggleCompleted = () => {
     const key = `coresubjects-completed-${chapter.id}`;
     const nextState = !isCompleted;
@@ -270,7 +285,7 @@ function ChapterContent({
           </h1>
 
           {/* Sleek aesthetic breadcrumb & reading time / completion row */}
-          <div className="flex items-center gap-3 text-xs text-gray-500 pb-4 border-b border-gray-900 mb-6 flex-wrap">
+          <div className="flex items-center gap-3 text-xs text-gray-550 pb-4 border-b border-gray-900 mb-6 flex-wrap">
             <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded">
               {subjectLabel}
             </span>
@@ -402,41 +417,41 @@ function ChapterContent({
           )}
 
           {/* Navigation controls (Next/Prev) */}
-          <div className="flex items-center justify-between border-t border-gray-800/60 mt-12 pt-8 pb-16">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-800/60 mt-12 pt-8 pb-16">
             {prevChapter ? (
               <button
                 type="button"
                 onClick={() => onChapterSelect(prevChapter)}
-                className="group flex flex-col items-start px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-left transition-all duration-300 max-w-[45%]"
+                className="group flex flex-col items-start px-4 py-2.5 sm:px-5 sm:py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-left transition-all duration-300 w-full sm:w-auto sm:max-w-[45%]"
               >
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1">
                   <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
                   PREVIOUS CHAPTER
                 </span>
-                <span className="text-white font-bold text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
+                <span className="text-white font-bold text-xs sm:text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
                   {prevChapter.title}
                 </span>
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
 
             {nextChapter ? (
               <button
                 type="button"
                 onClick={() => onChapterSelect(nextChapter)}
-                className="group flex flex-col items-end px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 max-w-[45%] ml-auto"
+                className="group flex flex-col items-end px-4 py-2.5 sm:px-5 sm:py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 w-full sm:w-auto sm:max-w-[45%] sm:ml-auto"
               >
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1">
                   NEXT CHAPTER
                   <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>
-                <span className="text-white font-bold text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
+                <span className="text-white font-bold text-xs sm:text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
                   {nextChapter.title}
                 </span>
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
           </div>
         </div>
@@ -488,11 +503,18 @@ function ChapterContent({
   );
 }
 
-/* ─────────────────────────────────────────────
-   Main Page
-───────────────────────────────────────────── */
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 const CoreSubjectsPage = () => {
+  const router = useRouter();
+  const { params } = router.query;
+
   const { data: response, isLoading } = useQuery<any>({
     queryKey: ["coreSubjects"],
     queryFn: () =>
@@ -506,20 +528,36 @@ const CoreSubjectsPage = () => {
     return response?.data ?? [];
   }, [response]);
 
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(
-    null,
-  );
-  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
+  const paramsArr = useMemo(() => {
+    if (!params) return [];
+    return Array.isArray(params) ? params : [params];
+  }, [params]);
+
+  const selectedSubjectId = paramsArr[0] || null;
+  const selectedChapterSlug = paramsArr[1] || null;
+
   const [isMobileSubjectsOpen, setIsMobileSubjectsOpen] = useState(false);
 
   useEffect(() => {
-    // Reset chapter when subject changes
-    setSelectedChapter(null);
+    if (!selectedSubjectId) {
+      setIsMobileSubjectsOpen(true);
+    } else {
+      setIsMobileSubjectsOpen(false);
+    }
   }, [selectedSubjectId]);
 
   const selectedSubject: Subject | undefined = coreSubjects.find(
-    (s) => s.id === selectedSubjectId,
+    (s) => s.id === selectedSubjectId || slugify(s.label) === selectedSubjectId,
   );
+
+  const selectedChapter: Chapter | null =
+    (selectedSubject && selectedChapterSlug
+      ? selectedSubject.chapters.find(
+          (c) =>
+            slugify(c.title) === selectedChapterSlug ||
+            c.id === selectedChapterSlug,
+        )
+      : null) || null;
 
   const currentChapterIndex =
     selectedSubject?.chapters.findIndex((c) => c.id === selectedChapter?.id) ??
@@ -537,19 +575,39 @@ const CoreSubjectsPage = () => {
       ? selectedSubject.chapters[currentChapterIndex + 1]
       : null;
 
-  const handleSubjectClick = (id: string) => {
-    setSelectedSubjectId(id);
-    setIsMobileSubjectsOpen(false);
+  const handleSubjectClick = (subject: Subject) => {
+    router.push(`/coresubjects/${slugify(subject.label)}`, undefined, {
+      shallow: true,
+    });
   };
 
   const handleBackToSubjects = () => {
-    setSelectedSubjectId(null);
-    setSelectedChapter(null);
+    router.push("/coresubjects", undefined, { shallow: true });
     setIsMobileSubjectsOpen(true);
   };
 
   const handleBackToChapters = () => {
-    setSelectedChapter(null);
+    if (selectedSubject) {
+      router.push(
+        `/coresubjects/${slugify(selectedSubject.label)}`,
+        undefined,
+        {
+          shallow: true,
+        },
+      );
+    } else {
+      router.push("/coresubjects", undefined, { shallow: true });
+    }
+  };
+
+  const handleChapterSelect = (ch: Chapter) => {
+    if (selectedSubject) {
+      router.push(
+        `/coresubjects/${slugify(selectedSubject.label)}/${slugify(ch.title)}`,
+        undefined,
+        { shallow: true },
+      );
+    }
   };
 
   if (isLoading) {
@@ -657,8 +715,12 @@ const CoreSubjectsPage = () => {
                   <SubjectItem
                     key={subject.id}
                     subject={subject}
-                    isActive={selectedSubjectId === subject.id}
-                    onClick={() => handleSubjectClick(subject.id)}
+                    isActive={
+                      selectedSubject
+                        ? selectedSubject.id === subject.id
+                        : false
+                    }
+                    onClick={() => handleSubjectClick(subject)}
                   />
                 ))}
               </div>
@@ -690,8 +752,12 @@ const CoreSubjectsPage = () => {
                     <SubjectItem
                       key={subject.id}
                       subject={subject}
-                      isActive={selectedSubjectId === subject.id}
-                      onClick={() => handleSubjectClick(subject.id)}
+                      isActive={
+                        selectedSubject
+                          ? selectedSubject.id === subject.id
+                          : false
+                      }
+                      onClick={() => handleSubjectClick(subject)}
                     />
                   ))}
                 </FlexContainer>
@@ -747,7 +813,7 @@ const CoreSubjectsPage = () => {
               onBack={handleBackToChapters}
               prevChapter={prevChapter ?? null}
               nextChapter={nextChapter ?? null}
-              onChapterSelect={(ch) => setSelectedChapter(ch)}
+              onChapterSelect={handleChapterSelect}
             />
           ) : (
             /* Chapter cards grid */
@@ -769,7 +835,7 @@ const CoreSubjectsPage = () => {
                     key={chapter.id}
                     chapter={chapter}
                     index={i}
-                    onClick={() => setSelectedChapter(chapter)}
+                    onClick={() => handleChapterSelect(chapter)}
                   />
                 ))}
               </div>

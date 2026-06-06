@@ -33,7 +33,7 @@ export const ONCAMPUS_DASHBOARD_NAV_ITEMS: OncampusDashboardNavItem[] = [
   {
     name: "Core Subjects",
     shortLabel: "Subjects",
-    href: "/dashboard/coresubjects",
+    href: "/coresubjects",
     icon: BookOpen,
   },
 ];
