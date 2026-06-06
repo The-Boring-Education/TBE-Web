@@ -97,6 +97,40 @@ const TabbedCodeBlock = ({
   );
 };
 
+interface PlainTextBlockProps {
+  content: string;
+}
+
+const PlainTextBlock = ({ content }: PlainTextBlockProps) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard not available */
+    }
+  };
+
+  return (
+    <div className="relative group bg-[#0A0A0A] border border-gray-800/40 rounded-lg my-6 overflow-hidden">
+      <button
+        onClick={handleCopy}
+        className="absolute top-2.5 right-2.5 px-2 py-1 text-[10px] font-mono rounded border transition-all duration-200 opacity-0 group-hover:opacity-100 z-10 bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600 cursor-pointer"
+      >
+        {copied ? "✓ Copied" : "Copy"}
+      </button>
+      <div className="overflow-x-auto p-4 scrollbar-thin-grey">
+        <pre className="font-mono text-[12.5px] text-gray-300 leading-relaxed whitespace-pre bg-transparent p-0 m-0 border-0 shadow-none">
+          {content}
+        </pre>
+      </div>
+    </div>
+  );
+};
+
 interface CoreSubjectMDXRendererProps {
   mdxSource: string;
 }
@@ -218,6 +252,7 @@ export const CoreSubjectMDXRenderer = ({
           defaultLanguage: string;
           languages: Record<string, { code: string }>;
         }
+      | { type: "text-block"; content: string }
     > = [];
     let currentMarkdownLines: string[] = [];
 
@@ -232,6 +267,27 @@ export const CoreSubjectMDXRenderer = ({
             content: currentMarkdownLines.join("\n"),
           });
           currentMarkdownLines = [];
+        }
+
+        const initialLang = line.trim().slice(3).trim().toLowerCase() || "text";
+
+        if (["text", "txt", "plaintext"].includes(initialLang)) {
+          const codeLines: string[] = [];
+          i++; // skip ```
+          while (i < lines.length) {
+            const codeLine = lines[i];
+            if (codeLine.trim() === "```") {
+              i++;
+              break;
+            }
+            codeLines.push(codeLine);
+            i++;
+          }
+          segments.push({
+            type: "text-block",
+            content: codeLines.join("\n"),
+          });
+          continue;
         }
 
         const groupLanguages: Record<string, { code: string }> = {};
@@ -337,6 +393,8 @@ export const CoreSubjectMDXRenderer = ({
                 className="break-words text-contentDark [&_*]:text-contentDark [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-bold [&_strong]:text-contentDark [&_em]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-left [&_th]:px-4 [&_th]:py-2 [&_th]:border-b [&_th]:border-gray-800 [&_th]:text-gray-200 [&_th]:font-bold [&_th]:text-sm [&_td]:px-4 [&_td]:py-2 [&_td]:border-b [&_td]:border-gray-900 [&_td]:text-gray-400 [&_td]:text-sm"
               />
             );
+          } else if (seg.type === "text-block") {
+            return <PlainTextBlock key={idx} content={seg.content} />;
           } else {
             return (
               <TabbedCodeBlock

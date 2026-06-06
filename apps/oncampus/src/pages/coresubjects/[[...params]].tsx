@@ -410,41 +410,41 @@ function ChapterContent({
           )}
 
           {/* Navigation controls (Next/Prev) */}
-          <div className="flex items-center justify-between border-t border-gray-800/60 mt-12 pt-8 pb-16">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-800/60 mt-12 pt-8 pb-16">
             {prevChapter ? (
               <button
                 type="button"
                 onClick={() => onChapterSelect(prevChapter)}
-                className="group flex flex-col items-start px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-left transition-all duration-300 max-w-[45%]"
+                className="group flex flex-col items-start px-4 py-2.5 sm:px-5 sm:py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-left transition-all duration-300 w-full sm:w-auto sm:max-w-[45%]"
               >
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1">
                   <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
                   PREVIOUS CHAPTER
                 </span>
-                <span className="text-white font-bold text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
+                <span className="text-white font-bold text-xs sm:text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
                   {prevChapter.title}
                 </span>
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
 
             {nextChapter ? (
               <button
                 type="button"
                 onClick={() => onChapterSelect(nextChapter)}
-                className="group flex flex-col items-end px-5 py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 max-w-[45%] ml-auto"
+                className="group flex flex-col items-end px-4 py-2.5 sm:px-5 sm:py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 w-full sm:w-auto sm:max-w-[45%] sm:ml-auto"
               >
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1.5 mb-1">
                   NEXT CHAPTER
                   <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>
-                <span className="text-white font-bold text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
+                <span className="text-white font-bold text-xs sm:text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
                   {nextChapter.title}
                 </span>
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
           </div>
         </div>
