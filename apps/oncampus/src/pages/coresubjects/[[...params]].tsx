@@ -247,6 +247,13 @@ function ChapterContent({
     setIsCompleted(localStorage.getItem(key) === "true");
   }, [chapter.id]);
 
+  // Scroll to top of next/prev topic when chapter changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [chapter.id]);
+
   const toggleCompleted = () => {
     const key = `coresubjects-completed-${chapter.id}`;
     const nextState = !isCompleted;
