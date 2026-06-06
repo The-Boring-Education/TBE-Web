@@ -1,9 +1,10 @@
 export type ChapterContent = {
-  overview: string;
-  notes: string[];
-  importantPoints: string[];
-  interviewQuestions: { q: string; a: string }[];
+  overview?: string;
+  notes?: string[];
+  importantPoints?: string[];
+  interviewQuestions?: { q: string; a: string }[];
   codeBlock?: string;
+  markdownContent?: string;
 };
 
 export type Chapter = {

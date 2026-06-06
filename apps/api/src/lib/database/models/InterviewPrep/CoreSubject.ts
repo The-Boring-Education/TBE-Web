@@ -16,6 +16,7 @@ interface ChapterContent {
   importantPoints: string[];
   interviewQuestions: InterviewQuestion[];
   codeBlock?: string;
+  markdownContent?: string;
 }
 
 interface CoreSubjectChapter {
@@ -58,6 +59,7 @@ const CoreSubjectChapterContentSchema = new Schema<ChapterContent>(
       default: [],
     },
     codeBlock: { type: String, default: "" },
+    markdownContent: { type: String, default: "" },
   },
   { _id: false },
 );
