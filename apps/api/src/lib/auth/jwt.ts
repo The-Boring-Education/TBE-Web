@@ -16,6 +16,7 @@ export interface AccessTokenPayload {
   name: string;
   image?: string;
   isOnboarded?: boolean;
+  userName?: string;
   type: "access";
 }
 

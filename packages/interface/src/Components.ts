@@ -973,6 +973,7 @@ export interface UserProfile {
   prepYatra: {
     goal?: string;
     experienceLevel?: string;
+    workDomain?: string;
     pyOnboarded?: boolean;
     targetCompanies?: string[];
     preferences?: {
@@ -986,6 +987,12 @@ export interface UserProfile {
     experienceLevel?: string;
     preferredLanguage?: string;
     companies?: string[];
+  };
+  oncampus?: {
+    onboardingCompleted?: boolean;
+    experienceLevel?: string;
+    duration?: string;
+    offCampus?: boolean;
   };
 }
 
@@ -1205,6 +1212,7 @@ export interface RoadmapNode {
 }
 
 import type {
+  PatternQuizResult,
   StudyGuideConfig,
   StudyGuideDivider,
   StudyGuideModel,
@@ -1212,7 +1220,6 @@ import type {
   StudyGuideNavProps,
   StudyGuideReaderProps,
   StudyGuideSection,
-  PatternQuizResult,
 } from "@tbe/types";
 
 export type {

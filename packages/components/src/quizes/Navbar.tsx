@@ -63,6 +63,7 @@ export function Navbar() {
       variant="quizes"
       customActions={user ? customActions : undefined}
       theme="light"
+      profileRoute="/profile"
     />
   );
 }

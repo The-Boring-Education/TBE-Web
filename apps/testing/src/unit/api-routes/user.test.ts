@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createMocks } from "node-mocks-http";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createMocks } from "node-mocks-http";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import handler from "../../../../api/src/pages/api/v1/user/index";
 
 // Mock dependencies
@@ -38,13 +39,18 @@ vi.mock("../../../../api/src/middleware/api", () => ({
   connectDB: () => mockConnectDB(),
 }));
 
-vi.mock("../../../../api/src/lib/constants", () => ({
-  apiStatusCodes: {
-    OKAY: 200,
-    BAD_REQUEST: 400,
-    INTERNAL_SERVER_ERROR: 500,
-  },
-}));
+vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/constants")>();
+  return {
+    ...actual,
+    apiStatusCodes: {
+      OKAY: 200,
+      BAD_REQUEST: 400,
+      INTERNAL_SERVER_ERROR: 500,
+    },
+  };
+});
 
 describe("User API Route", () => {
   beforeEach(() => {

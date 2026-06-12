@@ -6,9 +6,10 @@ import { Fragment, useEffect, useState } from "react";
 
 interface UserAvatarProps {
   dashboardRoute?: string;
+  profileRoute?: string;
 }
 
-const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
+const UserAvatar = ({ dashboardRoute, profileRoute }: UserAvatarProps = {}) => {
   const { user, isAuthenticated, isLoading, signOut } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
@@ -73,7 +74,9 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
                     href={
                       id === "user-dashboard" && dashboardRoute
                         ? dashboardRoute
-                        : href
+                        : id === "user-profile" && profileRoute
+                          ? profileRoute
+                          : href
                     }
                     target={target}
                   >

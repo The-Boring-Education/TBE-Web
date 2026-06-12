@@ -207,6 +207,22 @@
     "tags": ["roadmap", "genai"]
   },
   {
+    "slug": "javascript-interview-questions",
+    "title": "41 JavaScript Interview Questions",
+    "description": "A curated set of 41 essential JavaScript interview questions covering core concepts, closures, async/await, event loop, prototypes, DOM manipulation, and performance optimization.",
+    "keywords": [
+      "javascript",
+      "frontend",
+      "web development",
+      "async",
+      "closures",
+      "es6",
+      "dom",
+      "interview prep"
+    ],
+    "tags": ["javascript", "interview", "frontend"]
+  },
+  {
     "slug": "nodejs-express-interview-questions",
     "title": "50 Node.js and Express Interview Questions",
     "description": "A practical collection of Node.js and Express interview questions with concise answers on architecture, middleware, security, performance, and APIs.",

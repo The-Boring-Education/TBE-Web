@@ -8,17 +8,22 @@ const mockGetUserByIdFromDB = vi.fn();
 const mockGetUserDataByUserNameFromDB = vi.fn();
 const mockSendWelcomeEmail = vi.fn();
 
-vi.mock("../../../../api/src/lib/constants", () => ({
-  apiStatusCodes: {
-    OKAY: 200,
-    RESOURCE_CREATED: 201,
-    BAD_REQUEST: 400,
-    UNAUTHORIZED: 401,
-    NOT_FOUND: 404,
-    INTERNAL_SERVER_ERROR: 500,
-    METHOD_NOT_ALLOWED: 405,
-  },
-}));
+vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/constants")>();
+  return {
+    ...actual,
+    apiStatusCodes: {
+      OKAY: 200,
+      RESOURCE_CREATED: 201,
+      BAD_REQUEST: 400,
+      UNAUTHORIZED: 401,
+      NOT_FOUND: 404,
+      INTERNAL_SERVER_ERROR: 500,
+      METHOD_NOT_ALLOWED: 405,
+    },
+  };
+});
 
 vi.mock("../../../../api/src/lib/database", () => ({
   createUserInDB: (...args: unknown[]) => mockCreateUserInDB(...args),
