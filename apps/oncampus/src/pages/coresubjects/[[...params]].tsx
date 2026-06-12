@@ -15,11 +15,16 @@ import {
   Play,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
-import type { Chapter, Subject } from "@/config/coreSubjectsData";
+import { VISUALIZER_MAP } from "@/components/visualizers";
+import {
+  type Chapter,
+  CORE_SUBJECTS,
+  type Subject,
+} from "@/config/coreSubjectsData";
 
 /* ─────────────────────────────────────────────
    Sub-components
@@ -141,6 +146,48 @@ function ChapterCard({
   );
 }
 
+function VisualizerBlock({
+  id,
+}: {
+  id: string;
+  height?: string;
+  title?: string;
+}) {
+  const Component = VISUALIZER_MAP[id];
+  if (!Component) return null;
+  return (
+    <div className="my-8">
+      <Component />
+    </div>
+  );
+}
+
+const extractVisualizerConfig = (markdown: string) => {
+  const match = markdown.match(/```visualizer\s+([\s\S]*?)```/);
+  if (!match) return { cleanedMarkdown: markdown, visualizer: null };
+
+  const configStr = match[1];
+  const config: Record<string, string> = {};
+  configStr.split("\n").forEach((line) => {
+    const idx = line.indexOf(":");
+    if (idx !== -1) {
+      const key = line.substring(0, idx).trim();
+      const val = line.substring(idx + 1).trim();
+      config[key] = val;
+    }
+  });
+
+  const cleanedMarkdown = markdown.replace(/```visualizer\s+[\s\S]*?```/, "");
+  return {
+    cleanedMarkdown: cleanedMarkdown.trim(),
+    visualizer: {
+      id: config.id || "",
+      height: config.height || "480px",
+      title: config.title || "Algorithm Visualizer",
+    },
+  };
+};
+
 /** Inline chapter content view */
 function ChapterContent({
   chapter,
@@ -169,9 +216,15 @@ function ChapterContent({
     }
   };
 
+  const { cleanedMarkdown, visualizer } = useMemo(() => {
+    if (!content.markdownContent)
+      return { cleanedMarkdown: "", visualizer: null };
+    return extractVisualizerConfig(content.markdownContent);
+  }, [content.markdownContent]);
+
   // Dynamic Reading Time Estimator
   const readingTime = useMemo(() => {
-    const text = content.markdownContent || content.overview || "";
+    const text = cleanedMarkdown || content.overview || "";
     const words = text.split(/\s+/).filter(Boolean).length;
     // Base estimation + items
     const elementCount =
@@ -179,12 +232,18 @@ function ChapterContent({
       (content.importantPoints?.length ?? 0) +
       (content.interviewQuestions?.length ?? 0);
     return Math.max(1, Math.ceil(words / 200) + Math.ceil(elementCount * 0.5));
-  }, [content]);
+  }, [
+    cleanedMarkdown,
+    content.overview,
+    content.notes,
+    content.importantPoints,
+    content.interviewQuestions,
+  ]);
 
   // Extract headings (H2, H3) for TOC
   const headings = useMemo(() => {
-    if (!content.markdownContent) return [];
-    const lines = content.markdownContent.split("\n");
+    if (!cleanedMarkdown) return [];
+    const lines = cleanedMarkdown.split("\n");
     const list: { text: string; id: string; level: number }[] = [];
     let inCodeBlock = false;
 
@@ -210,7 +269,7 @@ function ChapterContent({
       }
     });
     return list;
-  }, [content.markdownContent]);
+  }, [cleanedMarkdown]);
 
   // Observe which heading is in view
   useEffect(() => {
@@ -239,7 +298,7 @@ function ChapterContent({
     });
 
     return () => observer.disconnect();
-  }, [headings, content.markdownContent]);
+  }, [headings, cleanedMarkdown]);
 
   // Load completion state from LocalStorage
   useEffect(() => {
@@ -308,11 +367,24 @@ function ChapterContent({
             </button>
           </div>
 
-          {content.markdownContent ? (
-            /* Render Markdown Content */
-            <div className="prose prose-invert max-w-none prose-red prose-headings:scroll-mt-6">
-              <CoreSubjectMDXRenderer mdxSource={content.markdownContent} />
-            </div>
+          {cleanedMarkdown ? (
+            <>
+              {/* Render Markdown Content */}
+              <div className="prose prose-invert max-w-none prose-red prose-headings:scroll-mt-6">
+                <CoreSubjectMDXRenderer mdxSource={cleanedMarkdown} />
+              </div>
+
+              {/* Render Visualizer outside prose and MD renderer */}
+              {visualizer && (
+                <div className="mt-10">
+                  <VisualizerBlock
+                    id={visualizer.id}
+                    height={visualizer.height}
+                    title={visualizer.title}
+                  />
+                </div>
+              )}
+            </>
           ) : (
             /* Fallback layout for classic non-markdown subjects */
             <div className="space-y-8">
@@ -457,7 +529,7 @@ function ChapterContent({
         </div>
 
         {/* Right column - Sticky Table of Contents (only for Markdown) */}
-        {content.markdownContent && headings.length > 0 && (
+        {cleanedMarkdown && headings.length > 0 && (
           <aside className="w-[28%] shrink-0 hidden xl:block sticky top-24 self-start space-y-6">
             <div className="bg-[#0A0A0A]/50 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur-sm">
               <div className="flex items-center gap-2 border-b border-gray-800 pb-3 mb-4">
@@ -525,7 +597,10 @@ const CoreSubjectsPage = () => {
   });
 
   const coreSubjects: Subject[] = useMemo(() => {
-    return response?.data ?? [];
+    if (response?.data && response.data.length > 0) {
+      return response.data;
+    }
+    return CORE_SUBJECTS;
   }, [response]);
 
   const paramsArr = useMemo(() => {
