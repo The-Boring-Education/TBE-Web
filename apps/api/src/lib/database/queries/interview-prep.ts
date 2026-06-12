@@ -117,24 +117,12 @@ const getInterviewSheetBySlugFromDB = async (
     let mappedQuestions = (sheet.questions || []).map((q) => q.toObject());
 
     if (userId) {
-      const targetCompanies = await getUserDSATargetCompanies(userId);
       const userSheet = await UserSheet.findOne({
         userId,
         sheetId: sheet._id,
       });
 
       isEnrolled = !!userSheet;
-
-      // Filter questions based on personalization settings if targets are set
-      if (targetCompanies.length > 0) {
-        mappedQuestions = mappedQuestions.filter((question: any) => {
-          if (!question.companyTypes || question.companyTypes.length === 0)
-            return true;
-          return question.companyTypes.some((type: string) =>
-            targetCompanies.includes(type),
-          );
-        });
-      }
 
       if (userSheet) {
         mappedQuestions = mappedQuestions.map((question: any) => {
@@ -148,9 +136,6 @@ const getInterviewSheetBySlugFromDB = async (
             isStarred: userQuestion?.isStarred || false,
           };
         });
-      } else if (targetCompanies.length > 0) {
-        // Even if not enrolled, the list of questions should be personalized
-        // mappedQuestions is already filtered above
       }
     }
 

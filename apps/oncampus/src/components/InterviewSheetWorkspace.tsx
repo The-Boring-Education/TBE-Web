@@ -4,8 +4,6 @@ import {
   DifficultyGroupedList,
   FeedbackPopup,
   FlexContainer,
-  mapInterviewPriorityToDifficultyGroup,
-  MDXRenderer,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
@@ -37,6 +35,7 @@ import {
 } from "react";
 import { FaLock } from "react-icons/fa";
 
+import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
 import InterviewQuestionContent from "@/components/InterviewQuestionContent";
 import { MobileNav } from "@/components/MobileNav";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
@@ -48,6 +47,13 @@ const slugify = (text: string) =>
     .replace(/[^\w\s-]/g, "")
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
+
+const getSafeId = (id: any): string => {
+  if (!id) return "";
+  if (typeof id === "string") return id;
+  if (typeof id === "object" && "$oid" in id) return id.$oid;
+  return id.toString();
+};
 
 /** Serializes `href` for `next/link` — `QuestionLink` only accepts `string`, not a UrlObject. */
 const buildPathWithQuery = (
@@ -110,7 +116,7 @@ export const InterviewSheetWorkspace = ({
   const currentQuestion = useMemo(() => {
     if (!urlQuestionSlug) {
       return (
-        questions.find((q) => q._id.toString() === initialQuestionId) ||
+        questions.find((q) => getSafeId(q._id) === initialQuestionId) ||
         questions[0]
       );
     }
@@ -121,7 +127,7 @@ export const InterviewSheetWorkspace = ({
   }, [questions, urlQuestionSlug, initialQuestionId]);
 
   const currentQuestionId = useMemo(
-    () => currentQuestion?._id?.toString() || "",
+    () => getSafeId(currentQuestion?._id),
     [currentQuestion],
   );
   const isQuestionCompleted = useMemo(
@@ -134,7 +140,7 @@ export const InterviewSheetWorkspace = ({
   );
 
   const currentIndex = useMemo(
-    () => questions.findIndex((q) => q._id.toString() === currentQuestionId),
+    () => questions.findIndex((q) => getSafeId(q._id) === currentQuestionId),
     [questions, currentQuestionId],
   );
 
@@ -200,7 +206,7 @@ export const InterviewSheetWorkspace = ({
     (questionMeta: string, questionId: string) => {
       if (!isLocked) {
         const selectedQuestion = questions.find(
-          (q) => q._id.toString() === questionId,
+          (q) => getSafeId(q._id) === questionId,
         );
 
         if (selectedQuestion) {
@@ -237,7 +243,7 @@ export const InterviewSheetWorkspace = ({
     // Optimistic update
     setQuestions((prev) =>
       prev.map((q) =>
-        q._id.toString() === currentQuestionId
+        getSafeId(q._id) === currentQuestionId
           ? { ...q, isStarred: newStarStatus }
           : q,
       ),
@@ -284,7 +290,7 @@ export const InterviewSheetWorkspace = ({
       // Optimistic update
       setQuestions((prev) =>
         prev.map((q) =>
-          q._id.toString() === currentQuestionId
+          getSafeId(q._id) === currentQuestionId
             ? { ...q, isCompleted: newCompletionStatus }
             : q,
         ),
@@ -341,7 +347,7 @@ export const InterviewSheetWorkspace = ({
 
         if (newCompletionStatus) {
           const updatedQuestions = questions.map((question) =>
-            question._id.toString() === currentQuestionId
+            getSafeId(question._id) === currentQuestionId
               ? { ...question, isCompleted: newCompletionStatus }
               : question,
           );
@@ -386,12 +392,8 @@ export const InterviewSheetWorkspace = ({
       <DifficultyGroupedList
         className="gap-px flex-grow"
         items={questions ?? []}
-        getDifficulty={(q) =>
-          mapInterviewPriorityToDifficultyGroup(
-            (q as { priority?: string }).priority,
-          )
-        }
-        getItemKey={(q) => q._id?.toString() ?? ""}
+        getDifficulty={(q) => (q as { difficulty?: string }).difficulty}
+        getItemKey={(q) => getSafeId(q._id)}
         initialExpandedGroups={STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED}
         difficultyOrder={STANDARD_DIFFICULTY_ORDER}
         difficultyLabels={STANDARD_DIFFICULTY_LABELS}
@@ -403,11 +405,12 @@ export const InterviewSheetWorkspace = ({
             title,
             question,
             answer,
+            content,
             isCompleted,
             frequency,
             isStarred,
           } = item;
-          const questionId = _id?.toString() ?? "";
+          const questionId = getSafeId(_id);
           const questionSlug = slugify(title);
 
           const questionHref = buildPathWithQuery(router.asPath.split("?")[0], {
@@ -415,17 +418,20 @@ export const InterviewSheetWorkspace = ({
             question: questionSlug,
           });
 
+          const fullQuestionText =
+            content?.markdownContent || `${question}\n\n${answer}`;
+
           return (
             <div key={questionId} className="flex items-center w-full">
               <QuestionLink
                 currentQuestionId={currentQuestionId}
                 frequency={frequency}
                 handleQuestionClick={() =>
-                  handleQuestionClick(`${question}\n\n${answer}`, questionId)
+                  handleQuestionClick(fullQuestionText, questionId)
                 }
                 href={questionHref}
                 isCompleted={isCompleted}
-                question={`${question}\n\n${answer}`}
+                question={fullQuestionText}
                 questionId={questionId}
                 title={title}
                 isLocked={isLocked}
@@ -569,7 +575,9 @@ export const InterviewSheetWorkspace = ({
                   <Text level="h2" className="heading-4 mb-4 text-contentDark">
                     Interview Sheet Overview
                   </Text>
-                  <MDXRenderer theme="dark" mdxSource={sheet.meta || ""} />
+                  <div className="prose prose-invert max-w-none prose-red prose-headings:scroll-mt-6">
+                    <CoreSubjectMDXRenderer mdxSource={sheet.meta || ""} />
+                  </div>
                   <div className="mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm text-black">
                     <Text level="h4" className="mb-2 flex items-center gap-2">
                       <FaLock className="text-yellow-600" />
@@ -612,7 +620,11 @@ export const InterviewSheetWorkspace = ({
                     <InterviewQuestionContent
                       questionTitle={currentQuestion?.title || ""}
                       question={currentQuestion?.question || ""}
-                      answer={currentQuestion?.answer || ""}
+                      answer={
+                        currentQuestion?.content?.markdownContent ||
+                        currentQuestion?.answer ||
+                        ""
+                      }
                       frequency={currentQuestion?.frequency}
                       priority={currentQuestion?.priority}
                       companyTypes={currentQuestion?.companyTypes}

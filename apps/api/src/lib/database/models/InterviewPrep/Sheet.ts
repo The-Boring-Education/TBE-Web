@@ -43,6 +43,16 @@ const questionSchema = new Schema<InterviewSheetQuestionModel>(
       default: "Medium",
       required: true,
     },
+    difficulty: {
+      type: String,
+      default: "Medium",
+    },
+    content: {
+      markdownContent: {
+        type: String,
+        default: null,
+      },
+    },
     resources: {
       youtubeURL: {
         type: String,
