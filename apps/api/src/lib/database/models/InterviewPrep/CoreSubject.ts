@@ -130,7 +130,7 @@ applyContentIdOnCreate(CoreSubjectSchema);
 const CoreSubject: Model<CoreSubjectModel> =
   mongoose.models?.CoreSubject ||
   mongoose.model<CoreSubjectModel>(
-    DATABASE_MODELS.CORE_SUBJECT || "CoreSubject",
+    DATABASE_MODELS.CORE_SUBJECT,
     CoreSubjectSchema,
   );
 
