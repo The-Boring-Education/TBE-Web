@@ -217,6 +217,12 @@ export interface InterviewSheetQuestionModel {
   frequency: QuestionFrequencyType;
   isCompleted: boolean;
   isStarred?: boolean;
+  priority?: string;
+  difficulty?: string;
+  companyTypes?: string[];
+  content?: {
+    markdownContent?: string;
+  };
   resources?: QuestionResourcesModel;
 }
 
