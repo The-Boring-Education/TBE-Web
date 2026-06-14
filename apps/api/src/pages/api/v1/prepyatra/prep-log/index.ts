@@ -222,6 +222,9 @@ const handleAddMentorFeedback = async (
       try {
         const { emailClient } = await import("@/lib/services");
 
+        const firstName =
+          userName.trim().split(" ").filter(Boolean)[0] || "there";
+
         await emailClient.sendEmail({
           from_email: process.env.FROM_EMAIL || "theboringeducation@gmail.com",
           from_name: "Sachin from The Boring Education",
@@ -229,7 +232,7 @@ const handleAddMentorFeedback = async (
           to_name: userName,
           subject: "I have some feedback for your Prep Yatra 🚀",
           html_content:
-            `<p>Hi ${userName.split(" ")[0]},</p>` +
+            `<p>Hi ${firstName},</p>` +
             `<p>I reviewed your recent Prep Yatra logs. Here's my feedback to help you level up this week:</p>` +
             `<blockquote style="margin:12px 0;padding:12px;border-left:4px solid #6b46c1;background:#faf7ff;">${
               mentorFeedback
