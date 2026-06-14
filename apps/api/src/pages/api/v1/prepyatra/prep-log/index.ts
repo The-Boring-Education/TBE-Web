@@ -229,7 +229,7 @@ const handleAddMentorFeedback = async (
           to_name: userName,
           subject: "I have some feedback for your Prep Yatra 🚀",
           html_content:
-            `<p>Hi ${userName.split(" ")[0]},</p>` +
+            `<p>Hi ${userName.trim().split(" ").filter(Boolean)[0] || "there"},</p>` +
             `<p>I reviewed your recent Prep Yatra logs. Here's my feedback to help you level up this week:</p>` +
             `<blockquote style="margin:12px 0;padding:12px;border-left:4px solid #6b46c1;background:#faf7ff;">${
               mentorFeedback
