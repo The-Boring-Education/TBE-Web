@@ -261,16 +261,21 @@ const handleLeadDashboard = async (
       isActive: true,
     }).sort({ createdAt: 1 });
 
-    type DevRelTaskDoc = (typeof allTasks)[number];
+    type DevRelTaskDoc = {
+      getLeadStatus: (leadId: string) => { status?: string | null };
+      isOverdue: boolean;
+      type: string;
+    };
     type TaskBuckets = {
       pending: DevRelTaskDoc[];
       inProgress: DevRelTaskDoc[];
       completed: DevRelTaskDoc[];
       overdue: DevRelTaskDoc[];
     };
+    const typedAllTasks = allTasks as DevRelTaskDoc[];
 
     // Categorize tasks by status for this lead
-    const tasks = allTasks.reduce<TaskBuckets>(
+    const tasks = typedAllTasks.reduce<TaskBuckets>(
       (acc, task) => {
         const leadStatus = task.getLeadStatus(lead._id.toString());
         const status = leadStatus.status || "pending";
