@@ -859,6 +859,11 @@ export interface ResumeEvaluationSectionProps {
 }
 
 // Generic product interface for PaymentCard
+export interface AppliedCoupon {
+  code: string;
+  description?: string;
+}
+
 export interface BaseProductProps {
   _id: string;
   name: string;
@@ -867,7 +872,10 @@ export interface BaseProductProps {
   features?: string[];
   isPremium?: boolean;
   isEnrolled?: boolean;
-  [key: string]: any;
+  originalPrice?: number;
+  discountAmount?: number;
+  savings?: number;
+  appliedCoupon?: AppliedCoupon;
 }
 
 export interface ResumeEvaluationData {

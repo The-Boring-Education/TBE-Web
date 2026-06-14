@@ -50,6 +50,7 @@ export interface DevRelTaskModel extends Document {
 
   tags?: string[];
   isActive: boolean;
+  isOverdue: boolean;
 
   createdAt: Date;
   updatedAt: Date;

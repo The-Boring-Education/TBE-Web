@@ -907,7 +907,7 @@ export interface FeedbackPopupProps {
 // ================================
 
 export interface PaymentCardProps {
-  course: any;
+  course: Record<string, unknown>;
   onClose: () => void;
   productType: string;
 }

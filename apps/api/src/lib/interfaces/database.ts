@@ -116,14 +116,14 @@ export interface ProjectChapter {
   chapterName: string;
   content: string;
   isOptional?: boolean;
-  toObject: any;
+  toObject: () => Record<string, unknown>;
 }
 
 export interface ProjectSection {
   sectionId: string;
   sectionName: string;
   chapters: ProjectChapter[];
-  toObject: any;
+  toObject: () => Record<string, unknown>;
 }
 
 export interface ProjectDocumentModel extends Document {
@@ -698,7 +698,7 @@ export interface UserInterestModel {
   userId: Types.ObjectId;
   eventType: InterestEventType;
   eventDescription?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   isActive: boolean;
   source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
   ipAddress?: string;
@@ -709,30 +709,30 @@ export interface APIMakeRquestProps {
   method?: APIMethodTypes;
   url: string;
   headers?: { [key: string]: string };
-  body?: any;
+  body?: unknown;
 }
 
 export interface ClientAPIResponseProps {
   status: boolean;
-  data?: any;
+  data?: unknown;
 }
 
 export interface APIResponseProps extends ClientAPIResponseProps {
   message?: string;
-  error?: any;
+  error?: unknown;
 }
 
 export interface ApiHookResultProps {
-  data: any | undefined;
+  data: unknown;
   isSuccess: boolean;
   loading: boolean;
-  error: any;
+  error: unknown;
   makeRequest: (params: APIMakeRquestProps) => Promise<void>;
 }
 
 export interface ClientAPIResponse {
   status: boolean;
-  data?: any;
+  data?: unknown;
 }
 
 export interface AddProjectRequestPayloadProps {
@@ -746,14 +746,14 @@ export interface AddProjectRequestPayloadProps {
 }
 
 export interface AddSectionRequestPayloadProps {
-  toObject: any;
+  toObject: () => unknown;
   sectionId: string;
   sectionName: string;
   chapters: ProjectChapter[];
 }
 
 export interface AddChapterRequestPayloadProps {
-  toObject: any;
+  toObject: () => unknown;
   chapterId: string;
   chapterName: string;
   content: string;
@@ -1150,7 +1150,7 @@ export interface CreateUserInterestRequestProps {
   userId: string;
   eventType: import("@/lib/constants").InterestEventType;
   eventDescription?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
 }
 
@@ -1168,7 +1168,7 @@ export interface UserInterestResponseProps {
   userId: string;
   eventType: InterestEventType;
   eventDescription?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   isActive: boolean;
   source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
   ipAddress?: string;
@@ -1399,8 +1399,7 @@ export interface StudyGuideContentSection {
     | StudyGuideIntroContent
     | StudyGuideConceptContent
     | StudyGuidePatternContent
-    | StudyGuideCheatsheetContent
-    | any;
+    | StudyGuideCheatsheetContent;
 }
 
 // Top-level document

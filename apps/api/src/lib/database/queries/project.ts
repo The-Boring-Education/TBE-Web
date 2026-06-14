@@ -8,7 +8,9 @@ import type {
   DatabaseQueryResponseType,
   DeleteSectionRequestPayloadProps,
   EnrollProjectInDBRequestProps,
+  ProjectChapter,
   ProjectPickedPageProps,
+  ProjectSection,
   UpateSectionRequestPayloadProps,
   UpdateChapterDBRequestProps,
   UpdateProjectRequestPayloadProps,
@@ -244,7 +246,7 @@ const addSectionToProjectInDB = async (
       return { error: "Project not found" };
     }
 
-    project.sections.push(sectionData.toObject());
+    project.sections.push(sectionData.toObject() as ProjectSection);
 
     await project.save();
 
@@ -369,7 +371,7 @@ const addChapterToSectionInDB = async (
       return { error: "Section not found" };
     }
 
-    section.chapters.push(chapterData.toObject());
+    section.chapters.push(chapterData.toObject() as ProjectChapter);
 
     await project.save();
 

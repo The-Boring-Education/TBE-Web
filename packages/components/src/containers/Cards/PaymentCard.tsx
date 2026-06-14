@@ -10,7 +10,7 @@ import { Button, FlexContainer, Text } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { getProductConfig } from "@tbe/constants";
 import { useCashfreePayment, useUser } from "@tbe/hooks";
-import type { PaymentCardProps } from "@tbe/interface";
+import type { BaseProductProps, PaymentCardProps } from "@tbe/interface";
 import React, { useState } from "react";
 
 const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
@@ -45,8 +45,8 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
           productType,
           customerName: user?.name,
           customerEmail: user?.email,
-          ...((course as any).appliedCoupon && {
-            couponCode: (course as any).appliedCoupon.code,
+          ...((course as BaseProductProps).appliedCoupon && {
+            couponCode: (course as BaseProductProps).appliedCoupon!.code,
           }),
         }),
       },
@@ -257,34 +257,40 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
             </div>
 
             {/* Price breakdown logic */}
-            {(course as any).originalPrice &&
-            (course as any).originalPrice !== course.price ? (
+            {(course as BaseProductProps).originalPrice &&
+            (course as BaseProductProps).originalPrice !== course.price ? (
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">Original Price</span>
                   <span className="line-through text-gray-500">
-                    ₹{(course as any).originalPrice?.toLocaleString("en-IN")}
+                    ₹
+                    {(course as BaseProductProps).originalPrice?.toLocaleString(
+                      "en-IN",
+                    )}
                   </span>
                 </div>
-                {(course as any).discountAmount > 0 && (
+                {((course as BaseProductProps).discountAmount ?? 0) > 0 && (
                   <div className="flex justify-between items-center text-sm text-green-600">
                     <span>Total Discount</span>
                     <span>
                       -₹
-                      {(course as any).discountAmount?.toLocaleString("en-IN")}
+                      {(
+                        course as BaseProductProps
+                      ).discountAmount?.toLocaleString("en-IN")}
                     </span>
                   </div>
                 )}
-                {(course as any).appliedCoupon && (
+                {(course as BaseProductProps).appliedCoupon && (
                   <div className="bg-green-50 rounded-lg p-3 border border-green-200">
                     <div className="flex items-center gap-2 text-sm text-green-700">
                       <CheckCircleIcon className="w-4 h-4" />
                       <span className="font-medium">
-                        Coupon Applied: {(course as any).appliedCoupon.code}
+                        Coupon Applied:{" "}
+                        {(course as BaseProductProps).appliedCoupon!.code}
                       </span>
                     </div>
                     <Text level="p" className="text-xs text-green-600 mt-1">
-                      {(course as any).appliedCoupon.description}
+                      {(course as BaseProductProps).appliedCoupon!.description}
                     </Text>
                   </div>
                 )}
@@ -297,10 +303,13 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
                     <Text level="h4" className="font-bold text-gray-900">
                       ₹{course.price?.toLocaleString("en-IN")}
                     </Text>
-                    {(course as any).savings > 0 && (
+                    {((course as BaseProductProps).savings ?? 0) > 0 && (
                       <Text level="p" className="text-sm text-green-600">
                         You save ₹
-                        {(course as any).savings?.toLocaleString("en-IN")}!
+                        {(course as BaseProductProps).savings?.toLocaleString(
+                          "en-IN",
+                        )}
+                        !
                       </Text>
                     )}
                   </div>
