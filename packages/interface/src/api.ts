@@ -21,42 +21,42 @@ export interface APIMakeRquestProps {
   method?: APIMethodTypes;
   url: string;
   headers?: { [key: string]: string };
-  body?: any;
+  body?: unknown;
 }
 
 export interface ClientAPIResponseProps {
   status: boolean;
-  data?: any;
+  data?: unknown;
 }
 
 export interface APIResponseProps extends ClientAPIResponseProps {
   message?: string;
-  error?: any;
+  error?: unknown;
 }
 
 export interface ApiHookResultProps {
-  data: any | undefined;
+  data: unknown;
   isSuccess: boolean;
   loading: boolean;
-  error: any;
+  error: unknown;
   makeRequest: (params: APIMakeRquestProps) => Promise<void>;
 }
 
 export interface ClientAPIResponse {
   status: boolean;
-  data?: any;
+  data?: unknown;
 }
 
 export interface APIResponseType extends ClientAPIResponse {
   message?: string;
-  error?: any;
-  details?: any;
+  error?: unknown;
+  details?: unknown;
 }
 
 export type DatabaseQueryResponseType = {
-  data?: any;
-  error?: any;
-  details?: any;
+  data?: unknown;
+  error?: unknown;
+  details?: unknown;
 };
 
 export interface AddProjectRequestPayloadProps {
@@ -70,14 +70,14 @@ export interface AddProjectRequestPayloadProps {
 }
 
 export interface AddSectionRequestPayloadProps {
-  toObject: any;
+  toObject: Record<string, unknown>;
   sectionId: string;
   sectionName: string;
   chapters: ProjectChapter[];
 }
 
 export interface AddChapterRequestPayloadProps {
-  toObject: any;
+  toObject: Record<string, unknown>;
   chapterId: string;
   chapterName: string;
   content: string;
@@ -517,7 +517,7 @@ export interface CreateUserInterestRequestProps {
   userId: string;
   eventType: InterestEventType;
   eventDescription?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
 }
 
@@ -535,7 +535,7 @@ export interface UserInterestResponseProps {
   userId: string;
   eventType: InterestEventType;
   eventDescription?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   isActive: boolean;
   source: "WEBAPP" | "PREPYATRA" | "ADMIN" | "API";
   ipAddress?: string;

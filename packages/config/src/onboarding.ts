@@ -11,8 +11,11 @@ const createField = (
     placeholder?: string;
     checkAvailability?: boolean;
     options?: Array<{ value: string; label: string }>;
-    validation?: any;
-    prefill?: any;
+    validation?: Record<string, unknown>;
+    prefill?: {
+      fromUser: (user: BaseUser) => unknown;
+      defaultValue?: unknown;
+    };
   }
 ) => ({
   name,
@@ -75,13 +78,16 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
-      transformPayload: (form: any, _userId: string, from?: string) => ({
-        userName: form.userName,
-        occupation: form.occupation,
-        purpose: form.purpose,
-        contactNo: form.contactNo,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, _userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userName: f.userName,
+          occupation: f.occupation,
+          purpose: f.purpose,
+          contactNo: f.contactNo,
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'platform',
@@ -163,19 +169,22 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: () => `/prepyatra/onboarding`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        name: form.name,
-        username: form.username,
-        goal: form.goal,
-        targetCompanies: form.targetCompanies,
-        preferredCategories: form.preferredCategories,
-        experienceLevel: form.experienceLevel,
-        ...(form.linkedInUrl ? { linkedInUrl: form.linkedInUrl } : {}),
-        ...(form.githubUrl ? { githubUrl: form.githubUrl } : {}),
-        ...(form.leetCodeUrl ? { leetCodeUrl: form.leetCodeUrl } : {}),
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          name: f.name,
+          username: f.username,
+          goal: f.goal,
+          targetCompanies: f.targetCompanies,
+          preferredCategories: f.preferredCategories,
+          experienceLevel: f.experienceLevel,
+          ...(f.linkedInUrl ? { linkedInUrl: f.linkedInUrl } : {}),
+          ...(f.githubUrl ? { githubUrl: f.githubUrl } : {}),
+          ...(f.leetCodeUrl ? { leetCodeUrl: f.leetCodeUrl } : {}),
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'prep-yatra',
@@ -221,13 +230,16 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: (userId: string) => `/quiz/onboarding?userId=${userId}`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        username: form.username,
-        interests: form.interests,
-        skillLevel: form.skillLevel,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          username: f.username,
+          interests: f.interests,
+          skillLevel: f.skillLevel,
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'quizes',
@@ -285,16 +297,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: () => `/onboarding/complete`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        name: form.name,
-        email: form.email,
-        username: form.username,
-        interests: form.interests,
-        experience: form.experience,
-        goals: form.goals,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          name: f.name,
+          email: f.email,
+          username: f.username,
+          interests: f.interests,
+          experience: f.experience,
+          goals: f.goals,
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'onboarding',
@@ -416,20 +431,23 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: () => `/dsayatra/onboarding`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        name: form.name,
-        username: form.username,
-        preferredLanguage: form.preferredLanguage,
-        timeline: form.timeline,
-        experienceLevel: form.experienceLevel,
-        target: form.target,
-        targetTopics: form.targetTopics,
-        ...(form.linkedInUrl ? { linkedInUrl: form.linkedInUrl } : {}),
-        ...(form.githubUrl ? { githubUrl: form.githubUrl } : {}),
-        ...(form.leetCodeUrl ? { leetCodeUrl: form.leetCodeUrl } : {}),
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          name: f.name,
+          username: f.username,
+          preferredLanguage: f.preferredLanguage,
+          timeline: f.timeline,
+          experienceLevel: f.experienceLevel,
+          target: f.target,
+          targetTopics: f.targetTopics,
+          ...(f.linkedInUrl ? { linkedInUrl: f.linkedInUrl } : {}),
+          ...(f.githubUrl ? { githubUrl: f.githubUrl } : {}),
+          ...(f.leetCodeUrl ? { leetCodeUrl: f.leetCodeUrl } : {}),
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'prep-yatra',
@@ -463,12 +481,15 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: () => `/user/oncampus/onboarding`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        duration: String(form.duration || '').replace(/\s+/g, ''),
-        offCampus: form.offCampus === 'Yes',
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          duration: String(f.duration || '').replace(/\s+/g, ''),
+          offCampus: f.offCampus === 'Yes',
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'platform',
@@ -499,11 +520,14 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: () => `/techyatra/onboarding`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        focus: form.focus,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          focus: f.focus,
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'platform',
@@ -535,11 +559,14 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: () => `/resumeyatra/onboarding`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        experienceBand: form.experienceBand,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userId,
+          experienceBand: f.experienceBand,
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'platform',
@@ -597,13 +624,16 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     api: {
       endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
-      transformPayload: (form: any, _userId: string, from?: string) => ({
-        userName: form.userName,
-        occupation: form.occupation,
-        purpose: form.purpose,
-        contactNo: form.contactNo,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: (form: unknown, _userId: string, from?: string) => {
+        const f = form as Record<string, unknown>;
+        return {
+          userName: f.userName,
+          occupation: f.occupation,
+          purpose: f.purpose,
+          contactNo: f.contactNo,
+          ...(from ? { from } : {}),
+        };
+      },
     },
     ui: {
       variant: 'platform',

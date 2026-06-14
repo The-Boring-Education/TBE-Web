@@ -5,6 +5,13 @@
  * but not necessarily part of the common domain types.
  */
 
+import type {
+  CourseModel,
+  InterviewSheetModel,
+  PlaylistModel,
+  ProjectDocumentModel,
+} from "./database";
+
 // Define FooterLinksContainerProps locally to avoid dependency on @tbe/interface
 interface FooterLinksContainerProps {
   heading: string;
@@ -316,7 +323,7 @@ export interface EmailSendRequest {
   subject?: string;
   htmlContent?: string;
   textContent?: string;
-  variables?: Record<string, any>;
+  variables?: Record<string, unknown>;
   attachments?: {
     filename: string;
     content: string | Buffer;
@@ -365,7 +372,7 @@ export interface AnalyticsEvent {
   action: string;
   label?: string;
   value?: number;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
   userId?: string;
   sessionId: string;
   timestamp: string;
@@ -377,31 +384,31 @@ export interface AnalyticsEvent {
 // ================================
 
 export interface PageProps {
-  slug: any;
+  slug: string | string[];
   isDev?: boolean;
   seoMeta: GetSEOMetaResponseType;
   resolvedUrl?: string;
 }
 
 export interface ProjectPageProps extends PageProps {
-  project: any; // Will be typed properly with database types
+  project: Partial<ProjectDocumentModel>;
   meta: string;
   currentChapterId: string;
 }
 
 export interface PlaylistPageProps extends PageProps {
-  playlist: any; // Will be typed properly with database types
+  playlist: Partial<PlaylistModel>;
   PlaylistId: string;
 }
 
 export interface CoursePageProps extends PageProps {
-  course: any; // Will be typed properly with database types
+  course: Partial<CourseModel>;
   meta: string;
   currentChapterId: string;
 }
 
 export interface SheetPageProps extends PageProps {
-  sheet: any; // Will be typed properly with database types
+  sheet: Partial<InterviewSheetModel>;
   meta: string;
   currentQuestionId: string;
 }
@@ -451,7 +458,7 @@ export interface WebinarsLandingPageProps extends PageProps {
 }
 
 export interface CertificatePageProps extends PageProps {
-  certificate: any; // Will be typed properly with database types
+  certificate: Record<string, unknown>;
 }
 
 export interface UnskilledLandingPageProps extends PageProps {
@@ -486,7 +493,7 @@ export interface UseUserReturnType {
   isAuth: boolean;
   loading: boolean;
   isOnboarded: boolean;
-  updateSession: () => Promise<any>;
+  updateSession: () => Promise<void>;
 }
 
 type ActionTypes =
@@ -582,7 +589,7 @@ export type TrackEventProps = {
   action: ActionTypes;
   category: CategoryTypes;
   label?: EventLabelTypes;
-  value?: any;
+  value?: unknown;
 };
 
 export interface useFeedbackProps {
@@ -661,26 +668,29 @@ export type PlatformConstants = typeof PLATFORM_CONSTANTS;
 export interface PlatformError {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
   stack?: string;
   timestamp: string;
   userId?: string;
   requestId?: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 export interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
-  errorInfo: any;
+  errorInfo: { componentStack?: string | null } | null;
 }
 
 export interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ComponentType<{
     error: Error;
-    errorInfo: any;
+    errorInfo: { componentStack?: string | null };
     resetError: () => void;
   }>;
-  onError?: (error: Error, errorInfo: any) => void;
+  onError?: (
+    error: Error,
+    errorInfo: { componentStack?: string | null },
+  ) => void;
 }

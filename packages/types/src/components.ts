@@ -907,7 +907,17 @@ export interface FeedbackPopupProps {
 // ================================
 
 export interface PaymentCardProps {
-  course: any;
+  course: Record<string, unknown> & {
+    _id: string;
+    name: string;
+    price?: number;
+    description?: string;
+    features?: string[];
+    originalPrice?: number;
+    discountAmount?: number;
+    savings?: number;
+    appliedCoupon?: { code: string; description?: string };
+  };
   onClose: () => void;
   productType: string;
 }
