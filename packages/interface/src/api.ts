@@ -70,14 +70,14 @@ export interface AddProjectRequestPayloadProps {
 }
 
 export interface AddSectionRequestPayloadProps {
-  toObject: Record<string, unknown>;
+  toObject: () => Record<string, unknown>;
   sectionId: string;
   sectionName: string;
   chapters: ProjectChapter[];
 }
 
 export interface AddChapterRequestPayloadProps {
-  toObject: Record<string, unknown>;
+  toObject: () => Record<string, unknown>;
   chapterId: string;
   chapterName: string;
   content: string;
