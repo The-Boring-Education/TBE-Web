@@ -1,7 +1,7 @@
 {
   "name": "tbe-web",
   "private": true,
-  "version": "2.16.0",
+  "version": "2.16.2",
   "scripts": {
     "build": "turbo run build --concurrency=1",
     "build:all": "turbo run build",

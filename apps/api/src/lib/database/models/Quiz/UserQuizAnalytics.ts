@@ -23,6 +23,7 @@ export interface UserQuizAnalyticsModel {
   bestScore: number;
   averageScore: number;
   totalTimeSpent: number; // seconds
+  bestStreak: number;
   strengthAreas: string[];
   improvementAreas: string[];
   difficultyPerformance: DifficultyPerformance;
@@ -104,6 +105,11 @@ const UserQuizAnalyticsSchema = new Schema<UserQuizAnalyticsModel>(
       default: 0,
       min: 0,
       max: 100,
+    },
+    bestStreak: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
     averageScore: {
       type: Number,
