@@ -304,10 +304,11 @@ export {
 
 // Export all UI components from the main ui directory
 export * from "./common/Icons/ExternalIcons";
+export { PatternQuizBanner, PatternQuizPanel } from "./common/PatternQuiz";
 export type { PageHeaderProps } from "./layout/PageHeader";
 export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
 export * from "./techyatra";
 export * from "./ui";
-export { PatternQuizPanel, PatternQuizBanner } from "./common/PatternQuiz";
+export * from "./visualizers";

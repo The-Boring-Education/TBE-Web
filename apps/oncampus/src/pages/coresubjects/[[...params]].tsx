@@ -1,4 +1,4 @@
-import { FlexContainer, Text } from "@tbe/components";
+import { FlexContainer, Text, VISUALIZER_MAP } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { CACHE_TIMES, useQuery } from "@tbe/query";
 import { cn, sendRequest } from "@tbe/utils";
@@ -19,7 +19,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
-import { VISUALIZER_MAP } from "@/components/visualizers";
 import {
   type Chapter,
   CORE_SUBJECTS,

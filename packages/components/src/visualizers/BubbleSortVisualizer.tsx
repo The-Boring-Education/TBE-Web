@@ -29,7 +29,7 @@ function generateSteps(input: number[]): SortStep[] {
       array: [...arr],
       comparing,
       swapped,
-      sortedValues: [...sortedSet],
+      sortedValues: Array.from(sortedSet),
       description,
     });
 
@@ -38,15 +38,23 @@ function generateSteps(input: number[]): SortStep[] {
   for (let i = 0; i < n - 1; i++) {
     let didSwap = false;
     for (let j = 0; j < n - i - 1; j++) {
-      snap([j, j + 1], false, `Comparing  ${arr[j]}  and  ${arr[j + 1]}`);
-      if (arr[j] > arr[j + 1]) {
-        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-        didSwap = true;
-        snap([j, j + 1], true, `Swap  ${arr[j + 1]}  ↔  ${arr[j]}`);
+      const val1 = arr[j];
+      const val2 = arr[j + 1];
+      if (val1 !== undefined && val2 !== undefined) {
+        snap([j, j + 1], false, `Comparing  ${val1}  and  ${val2}`);
+        if (val1 > val2) {
+          arr[j] = val2;
+          arr[j + 1] = val1;
+          didSwap = true;
+          snap([j, j + 1], true, `Swap  ${val2}  ↔  ${val1}`);
+        }
       }
     }
-    sortedSet.add(arr[n - 1 - i]);
-    snap(null, false, `${arr[n - 1 - i]} is in its final position`);
+    const finalVal = arr[n - 1 - i];
+    if (finalVal !== undefined) {
+      sortedSet.add(finalVal);
+      snap(null, false, `${finalVal} is in its final position`);
+    }
     if (!didSwap) {
       arr.forEach((v) => sortedSet.add(v));
       break;
@@ -64,7 +72,7 @@ function generateSteps(input: number[]): SortStep[] {
 function randomArray(size: number): number[] {
   const vals = new Set<number>();
   while (vals.size < size) vals.add(Math.floor(Math.random() * 90) + 10);
-  return [...vals];
+  return Array.from(vals);
 }
 
 const SPEEDS: { label: string; stepMs: number; transitionMs: number }[] = [
@@ -103,7 +111,7 @@ export default function BubbleSortVisualizer() {
   const [speedIdx, setSpeedIdx] = useState(1);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const step = steps[idx];
+  const step = steps[idx] || steps[0]!;
   const finished = idx === steps.length - 1;
   const n = step.array.length;
   const maxVal = Math.max(...step.array);
@@ -127,7 +135,8 @@ export default function BubbleSortVisualizer() {
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     if (!playing) return;
-    timerRef.current = setTimeout(advance, SPEEDS[speedIdx].stepMs);
+    const currentSpeed = SPEEDS[speedIdx] || SPEEDS[1]!;
+    timerRef.current = setTimeout(advance, currentSpeed.stepMs);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
@@ -163,7 +172,8 @@ export default function BubbleSortVisualizer() {
     .slice(0, idx + 1)
     .slice(-6)
     .reverse();
-  const transMs = SPEEDS[speedIdx].transitionMs;
+  const currentSpeed = SPEEDS[speedIdx] || SPEEDS[1]!;
+  const transMs = currentSpeed.transitionMs;
 
   return (
     <div

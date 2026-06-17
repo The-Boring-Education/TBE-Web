@@ -23,6 +23,10 @@
       "types": "./src/ui/index.ts",
       "default": "./src/ui/index.ts"
     },
+    "./visualizers": {
+      "types": "./src/visualizers/index.ts",
+      "default": "./src/visualizers/index.ts"
+    },
     "./grouped-list": {
       "types": "./src/common/GroupedList/index.ts",
       "default": "./src/common/GroupedList/index.ts"
