@@ -215,7 +215,9 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
           <div className="hidden lg:flex flex-1 items-center px-6">
             <div>
               <p className="text-sm font-bold text-white leading-tight">
-                {activeRoadmapLabel} Interview Sheets
+                {selectedRoadmap === "all"
+                  ? "Interview Sheets"
+                  : `${activeRoadmapLabel} Interview Sheets`}
               </p>
               <p className="text-[10px] text-white/30 font-medium mt-0.5 uppercase tracking-wider">
                 {selectedRoadmap === "all"
@@ -226,22 +228,22 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
           </div>
         </div>
 
-        {/* Mobile horizontal category scroll */}
+        {/* Mobile category pills (wrapped, no horizontal scroll) */}
         <div className="lg:hidden w-full border-b border-white/[0.05] bg-[#080808] shrink-0">
-          <div className="flex items-center gap-2 overflow-x-auto px-3 py-2.5 scrollbar-none">
+          <div className="flex flex-wrap items-center gap-1.5 px-3 py-2">
             <button
               onClick={() => handleRoadmapClick("all")}
               className={cn(
-                "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all duration-200 active:scale-95",
+                "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all duration-200 active:scale-95",
                 selectedRoadmap === "all"
                   ? "bg-primary/10 border-primary/30 text-primary"
                   : "bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white",
               )}
             >
               {selectedRoadmap === "all" ? (
-                <FolderOpen className="w-3 h-3" />
+                <FolderOpen className="w-2.5 h-2.5" />
               ) : (
-                <Folder className="w-3 h-3" />
+                <Folder className="w-2.5 h-2.5" />
               )}
               All
             </button>
@@ -253,16 +255,16 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                   key={roadmap}
                   onClick={() => handleRoadmapClick(slug)}
                   className={cn(
-                    "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all duration-200 active:scale-95",
+                    "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all duration-200 active:scale-95",
                     isActive
                       ? "bg-primary/10 border-primary/30 text-primary"
                       : "bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white",
                   )}
                 >
                   {isActive ? (
-                    <FolderOpen className="w-3 h-3" />
+                    <FolderOpen className="w-2.5 h-2.5" />
                   ) : (
-                    <Folder className="w-3 h-3" />
+                    <Folder className="w-2.5 h-2.5" />
                   )}
                   {roadmap}
                 </button>
