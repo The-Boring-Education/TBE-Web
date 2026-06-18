@@ -144,13 +144,14 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
     return key || "Interview Prep";
   }, [selectedRoadmap, roadmapKeys]);
 
-  const visibleRoadmaps = useMemo(() => {
-    if (selectedRoadmap === "all") return groupedByRoadmap;
-    const entry = Object.entries(groupedByRoadmap).find(
-      ([roadmap]) => roadmap.toLowerCase() === selectedRoadmap,
+  // Flat list of cards for the selected roadmap (or all)
+  const visibleSheets = useMemo(() => {
+    if (selectedRoadmap === "all") return sheets;
+    const matchedRoadmap = roadmapKeys.find(
+      (k) => k.toLowerCase() === selectedRoadmap,
     );
-    return entry ? { [entry[0]]: entry[1] } : {};
-  }, [groupedByRoadmap, selectedRoadmap]);
+    return matchedRoadmap ? (groupedByRoadmap[matchedRoadmap] ?? []) : [];
+  }, [sheets, selectedRoadmap, roadmapKeys, groupedByRoadmap]);
 
   const handleRoadmapClick = (slug: string) => {
     if (slug === "all") {
@@ -218,7 +219,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
               </p>
               <p className="text-[10px] text-white/30 font-medium mt-0.5 uppercase tracking-wider">
                 {selectedRoadmap === "all"
-                  ? "Select a category or browse all"
+                  ? "Browse all available sheets"
                   : `Browsing ${activeRoadmapLabel} sheets`}
               </p>
             </div>
@@ -233,7 +234,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
               className={cn(
                 "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all duration-200 active:scale-95",
                 selectedRoadmap === "all"
-                  ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-400"
+                  ? "bg-primary/10 border-primary/30 text-primary"
                   : "bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white",
               )}
             >
@@ -254,7 +255,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                   className={cn(
                     "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all duration-200 active:scale-95",
                     isActive
-                      ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-400"
+                      ? "bg-primary/10 border-primary/30 text-primary"
                       : "bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white",
                   )}
                 >
@@ -285,14 +286,14 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                 <button
                   onClick={() => handleRoadmapClick("all")}
                   className={cn(
-                    "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left sheets-cat-item",
+                    "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left",
                     selectedRoadmap === "all"
-                      ? "bg-indigo-500/8 border-indigo-500/20 text-white sheets-cat-item--active"
+                      ? "bg-primary/[0.08] border-primary/25 text-white"
                       : "border-transparent bg-transparent hover:bg-white/[0.03] hover:border-white/[0.05] text-white/40 hover:text-white/70",
                   )}
                 >
                   {selectedRoadmap === "all" ? (
-                    <FolderOpen className="w-4 h-4 shrink-0 text-indigo-400" />
+                    <FolderOpen className="w-4 h-4 shrink-0 text-primary" />
                   ) : (
                     <Folder className="w-4 h-4 shrink-0 text-white/25 group-hover:text-white/50 transition-colors" />
                   )}
@@ -303,7 +304,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                     className={cn(
                       "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
                       selectedRoadmap === "all"
-                        ? "bg-indigo-500/15 text-indigo-400"
+                        ? "bg-primary/15 text-primary"
                         : "bg-white/[0.04] text-white/25",
                     )}
                   >
@@ -321,14 +322,14 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                       key={roadmap}
                       onClick={() => handleRoadmapClick(slug)}
                       className={cn(
-                        "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left sheets-cat-item",
+                        "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left",
                         isActive
-                          ? "bg-indigo-500/8 border-indigo-500/20 text-white sheets-cat-item--active"
+                          ? "bg-primary/[0.08] border-primary/25 text-white"
                           : "border-transparent bg-transparent hover:bg-white/[0.03] hover:border-white/[0.05] text-white/40 hover:text-white/70",
                       )}
                     >
                       {isActive ? (
-                        <FolderOpen className="w-4 h-4 shrink-0 text-indigo-400" />
+                        <FolderOpen className="w-4 h-4 shrink-0 text-primary" />
                       ) : (
                         <Folder className="w-4 h-4 shrink-0 text-white/25 group-hover:text-white/50 transition-colors" />
                       )}
@@ -339,7 +340,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                         className={cn(
                           "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
                           isActive
-                            ? "bg-indigo-500/15 text-indigo-400"
+                            ? "bg-primary/15 text-primary"
                             : "bg-white/[0.04] text-white/25",
                         )}
                       >
@@ -362,78 +363,117 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                 </Text>
               </div>
             ) : (
-              <div className="space-y-10 pb-10 max-w-5xl mx-auto w-full">
-                {Object.entries(visibleRoadmaps).map(([roadmap, cards]) => (
-                  <section key={roadmap}>
-                    {/* Category heading */}
-                    <div className="category-section-heading">
-                      <div className="category-section-line" />
-                      <span className="category-section-label">{roadmap}</span>
-                      <div className="category-section-line" />
-                    </div>
+              <div className="max-w-5xl mx-auto w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                  {visibleSheets.map((card) => {
+                    const rawSheet = sheetsData.find(
+                      (s: any) => s._id === card.id,
+                    );
+                    const isLocked = card.isPremium && !card.isPurchased;
 
-                    {/* Cards grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                      {cards.map((card) => {
-                        const rawSheet = sheetsData.find(
-                          (s: any) => s._id === card.id,
-                        );
-                        const isLocked = card.isPremium && !card.isPurchased;
-                        return (
-                          <Link
-                            key={card.id}
-                            href={
-                              card.href ||
-                              `/interview-sheets?topic=${rawSheet?.slug}`
-                            }
-                            className="group block"
-                          >
-                            <div
-                              className={cn(
-                                "relative h-full rounded-xl border p-4 transition-all duration-200",
-                                "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]",
-                                "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
-                              )}
-                            >
-                              {/* Premium badge */}
+                    const coverImage =
+                      card.image ||
+                      rawSheet?.coverImageURL ||
+                      (rawSheet as any)?.coverImageUrl ||
+                      (rawSheet as any)?.cover_image_url ||
+                      (rawSheet as any)?.thumbnail;
+
+                    return (
+                      <Link
+                        key={card.id}
+                        href={
+                          card.href ||
+                          `/interview-sheets?topic=${rawSheet?.slug}`
+                        }
+                        className="group block"
+                      >
+                        <div
+                          className={cn(
+                            "relative h-full rounded-xl border overflow-hidden transition-all duration-300",
+                            "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]",
+                            "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
+                          )}
+                        >
+                          {/* Cover image */}
+                          {coverImage ? (
+                            <div className="relative w-full aspect-[16/9] overflow-hidden">
+                              <img
+                                src={coverImage}
+                                alt={card.imageAltText || card.title}
+                                referrerPolicy="no-referrer"
+                                className="w-full h-full object-cover opacity-95 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500"
+                                onError={(e) => {
+                                  (
+                                    e.currentTarget as HTMLImageElement
+                                  ).style.display = "none";
+                                }}
+                              />
+                              {/* Subtle gradient at bottom only */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+                              {/* Badge overlaid on image */}
                               {isLocked && (
-                                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-                                  <Lock className="w-2.5 h-2.5 text-amber-400" />
-                                  <span className="text-[9px] font-bold text-amber-400 uppercase tracking-wider">
+                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12] backdrop-blur-sm">
+                                  <Lock className="w-2.5 h-2.5 text-white/50" />
+                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
                                     Premium
                                   </span>
                                 </div>
                               )}
                               {card.isPurchased && (
-                                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                                  <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
-                                  <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">
+                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12] backdrop-blur-sm">
+                                  <Sparkles className="w-2.5 h-2.5 text-white/50" />
+                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
                                     Purchased
                                   </span>
                                 </div>
                               )}
-
-                              {/* Card body */}
-                              <div className="flex flex-col gap-2 pr-16">
-                                <p className="text-[13px] font-bold text-white/85 leading-snug group-hover:text-white transition-colors line-clamp-2">
-                                  {card.title}
-                                </p>
-                              </div>
-
-                              {/* Footer */}
-                              <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/[0.05]">
-                                <span className="text-[10px] font-semibold text-white/25 uppercase tracking-wider">
-                                  {roadmap}ss
-                                </span>
-                                <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />
-                              </div>
                             </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </section>
-                ))}
+                          ) : (
+                            /* Fallback when no cover image */
+                            <div className="relative w-full aspect-[16/9] bg-white/[0.03] flex items-center justify-center">
+                              <BookOpen className="w-8 h-8 text-white/10" />
+                              {isLocked && (
+                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12]">
+                                  <Lock className="w-2.5 h-2.5 text-white/50" />
+                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
+                                    Premium
+                                  </span>
+                                </div>
+                              )}
+                              {card.isPurchased && (
+                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12]">
+                                  <Sparkles className="w-2.5 h-2.5 text-white/50" />
+                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
+                                    Purchased
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Card body */}
+                          <div className="p-3.5">
+                            <p className="text-[13px] font-semibold text-white/85 leading-snug group-hover:text-white transition-colors line-clamp-2">
+                              {card.title}
+                            </p>
+
+                            {card.content && (
+                              <p className="text-[11px] text-white/35 leading-relaxed mt-1.5 line-clamp-2 group-hover:text-white/50 transition-colors">
+                                {card.content}
+                              </p>
+                            )}
+
+                            {/* Footer */}
+                            <div className="flex items-center justify-end mt-3 pt-2.5 border-t border-white/[0.04]">
+                              <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-white/40 group-hover:translate-x-0.5 transition-all" />
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
