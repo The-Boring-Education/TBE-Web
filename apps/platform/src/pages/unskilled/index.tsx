@@ -105,7 +105,7 @@ const UnskilledLandingPage = ({
         <YAxis type='number' />
         <XAxis dataKey='name' type='category' width={100} />
         <Tooltip />
-        <Bar dataKey='count' fill='bg-primary' />
+        <Bar dataKey='count' fill='hsl(var(--primary))' />
       </BarChart>
     </ResponsiveContainer>,
 
