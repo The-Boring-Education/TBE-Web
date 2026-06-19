@@ -33,7 +33,7 @@ test.describe("Prep Yatra smoke flow", () => {
     });
 
     await expect(
-      page.getByRole("heading", { name: "Welcome Back!" }),
+      page.getByRole("heading", { name: "The Boring Education" }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Continue with Google" }),
@@ -44,7 +44,7 @@ test.describe("Prep Yatra smoke flow", () => {
     await page.goto("/login");
 
     await expect(
-      page.getByRole("heading", { name: "Welcome Back!" }),
+      page.getByRole("heading", { name: "The Boring Education" }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Continue with Google" }),

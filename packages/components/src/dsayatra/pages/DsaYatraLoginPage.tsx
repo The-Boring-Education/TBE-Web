@@ -10,7 +10,7 @@ import LoginCardNew from "../../containers/Cards/LoginCardNew";
  */
 export default function DsaYatraLoginPage() {
   const router = useRouter();
-  const { signIn, isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -24,29 +24,13 @@ export default function DsaYatraLoginPage() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  const _handleSignIn = () => {
-    let callbackUrl = (router.query.callbackUrl as string) || "/dashboard";
-
-    if (callbackUrl && !callbackUrl.startsWith("/")) {
-      callbackUrl = "/dashboard";
-    }
-
-    signIn(callbackUrl);
-  };
-
   if (isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0b]">
         <LoadingSpinner />
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-lightBG">
-      <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <LoginCardNew variant="dsayatra" />
-      </div>
-    </div>
-  );
+  return <LoginCardNew variant="dsayatra" />;
 }
