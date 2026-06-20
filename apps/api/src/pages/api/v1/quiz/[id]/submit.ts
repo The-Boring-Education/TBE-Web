@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { addUserQuizAttemptToDB, getQuizByIdFromDB } from "@/lib/database";
+import { updateUserAnalyticsInDB } from "@/lib/database/queries/enhancedQuiz";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
@@ -149,6 +150,20 @@ async function handleSubmitQuiz(
       }),
     );
   }
+
+  // Update analytics (including bestStreak) — fire and forget; don't block response
+  updateUserAnalyticsInDB({
+    userId,
+    categoryName: quiz.categoryName,
+    score,
+    difficulty: "mixed",
+    timeSpent: totalTimeSpent,
+    answers: detailedResults.map((r) => r.isCorrect),
+  }).catch((err) =>
+    logger.error("Failed to update quiz analytics after submit", {
+      error: err instanceof Error ? err.message : String(err),
+    }),
+  );
 
   // Return results
   return res.status(200).json(

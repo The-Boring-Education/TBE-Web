@@ -1,9 +1,7 @@
+export type { ContentEntityMapKey, EntityMapKey } from "./content-entity-map";
+export { CONTENT_ENTITY_MAP, ENTITY_MAP } from "./content-entity-map";
 export type {
-  EntityMapKey,
   MigrateEntityOptions,
   MigrateEntityResult,
 } from "./content-migrate-entity";
-export {
-  ENTITY_MAP,
-  migrateCollectionByContentId,
-} from "./content-migrate-entity";
+export { migrateCollectionByContentId } from "./content-migrate-entity";

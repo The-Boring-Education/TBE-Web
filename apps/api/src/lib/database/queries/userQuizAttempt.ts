@@ -225,6 +225,24 @@ export const getLeaderboardFromDB = async (
         },
       },
       {
+        $lookup: {
+          from: "userquizanalytics",
+          localField: "_id",
+          foreignField: "userId",
+          as: "analytics",
+        },
+      },
+      {
+        $addFields: {
+          bestStreak: {
+            $ifNull: [{ $max: "$analytics.bestStreak" }, 0],
+          },
+        },
+      },
+      {
+        $project: { analytics: 0 },
+      },
+      {
         $sort: { bestScore: -1 },
       },
       {

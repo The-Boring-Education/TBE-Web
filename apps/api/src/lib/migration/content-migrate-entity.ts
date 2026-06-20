@@ -1,6 +1,14 @@
 import chalk from "chalk";
 import type mongoose from "mongoose";
 
+import {
+  CONTENT_ENTITY_MAP,
+  ENTITY_MAP,
+  type EntityMapKey,
+} from "./content-entity-map";
+
+export { CONTENT_ENTITY_MAP, ENTITY_MAP, type EntityMapKey };
+
 /**
  * Shared migration logic used by `scripts/migrate-content.ts`.
  *
@@ -16,18 +24,6 @@ import type mongoose from "mongoose";
  *   Migrate `dsaQuestions` (and any similar collections) to the same target **before** or
  *   ensure apps resolve by `contentId` where possible.
  */
-export const ENTITY_MAP = {
-  interviewSheets: "interviewsheets",
-  dsaQuestions: "dsaquestions",
-  /** DSA topic study guides (`StudyGuide` model, collection `studyguides`) */
-  studyGuides: "studyguides",
-  aptitudeTopics: "aptitudetopics",
-  courses: "courses",
-  projects: "projects",
-  quizzes: "quizzes",
-} as const;
-
-export type EntityMapKey = keyof typeof ENTITY_MAP;
 
 export interface MigrateEntityResult {
   entity: string;

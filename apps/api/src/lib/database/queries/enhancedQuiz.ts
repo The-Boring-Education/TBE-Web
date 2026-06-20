@@ -280,6 +280,7 @@ const completeQuizSessionInDB = async (
       score,
       difficulty: session.difficulty,
       timeSpent: totalTime,
+      answers: answeredQuestions.map((q) => q.isCorrect ?? false),
     });
 
     return { data: session };
@@ -402,6 +403,17 @@ const updateSpacedRepetition = (
 // Analytics
 // ====================
 
+// Calculate the longest consecutive correct-answer streak from an attempt
+const calculateBestStreak = (answers: boolean[]): number => {
+  let best = 0;
+  let current = 0;
+  for (const correct of answers) {
+    current = correct ? current + 1 : 0;
+    if (current > best) best = current;
+  }
+  return best;
+};
+
 // Update user analytics
 const updateUserAnalyticsInDB = async ({
   userId,
@@ -409,12 +421,14 @@ const updateUserAnalyticsInDB = async ({
   score,
   difficulty,
   timeSpent,
+  answers = [],
 }: {
   userId: string;
   categoryName: string;
   score: number;
   difficulty: string;
   timeSpent: number;
+  answers?: boolean[];
 }): Promise<DatabaseQueryResponseType> => {
   try {
     let analytics = await UserQuizAnalytics.findOne({
@@ -430,6 +444,7 @@ const updateUserAnalyticsInDB = async ({
         bestScore: 0,
         averageScore: 0,
         totalTimeSpent: 0,
+        bestStreak: 0,
         strengthAreas: [],
         improvementAreas: [],
         difficultyPerformance: {
@@ -444,6 +459,10 @@ const updateUserAnalyticsInDB = async ({
 
     analytics.totalAttempts++;
     analytics.bestScore = Math.max(analytics.bestScore, score);
+    if (answers.length > 0) {
+      const attemptStreak = calculateBestStreak(answers);
+      analytics.bestStreak = Math.max(analytics.bestStreak ?? 0, attemptStreak);
+    }
     analytics.averageScore =
       (analytics.averageScore * (analytics.totalAttempts - 1) + score) /
       analytics.totalAttempts;
@@ -538,7 +557,7 @@ const getQuizLeaderboardFromDB = async (
           totalScore: "$bestScore",
           totalAttempts: 1,
           averageScore: 1,
-          bestStreak: { $literal: 0 }, // TODO: Calculate from attempts
+          bestStreak: { $ifNull: ["$bestStreak", 0] },
         },
       },
       { $sort: { totalScore: -1, averageScore: -1 } },

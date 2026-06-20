@@ -595,6 +595,16 @@ export const getLoginCardVariantConfig = (): Record<
         title: "Curated Resources",
         description: "Access handpicked tutorials and guides",
       },
+      {
+        icon: FileText,
+        title: "Core Subjects",
+        description: "Master OS, DBMS, Networks, and OOPS",
+      },
+      {
+        icon: Target,
+        title: "Interview Sheets",
+        description: "Practice top interview questions with solutions",
+      },
     ],
     redirectPath: "/dashboard",
     termsHref: "/",

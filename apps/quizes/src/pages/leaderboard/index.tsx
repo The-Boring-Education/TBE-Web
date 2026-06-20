@@ -53,7 +53,7 @@ function LeaderboardContent() {
       }
 
       // Check if response.data exists and is an array
-      if (response.success && response.data && Array.isArray(response.data)) {
+      if (response.status && response.data && Array.isArray(response.data)) {
         console.log(`✅ Received ${response.data.length} leaderboard entries`);
 
         // Transform quiz leaderboard data to LeaderboardEntry
@@ -100,7 +100,7 @@ function LeaderboardContent() {
           "entries",
         );
         setLeaderboard(transformedData);
-      } else if (response.success === false) {
+      } else if (response.status === false) {
         console.error("❌ API returned error:", response.message);
         setError(response.message || "Failed to load leaderboard");
       } else if (!response.data || !Array.isArray(response.data)) {

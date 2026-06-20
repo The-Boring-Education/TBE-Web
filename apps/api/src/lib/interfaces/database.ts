@@ -226,6 +226,10 @@ export interface InterviewSheetQuestionModel {
   frequency: QuestionFrequencyType;
   companyTypes?: CompanyType[];
   priority: PriorityType;
+  difficulty?: string;
+  content?: {
+    markdownContent?: string;
+  };
   toObject: () => InterviewSheetQuestionModel;
   resources?: QuestionResourcesModel;
 }

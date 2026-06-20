@@ -21,7 +21,7 @@
  *
  * From `apps/api/`: `pnpm run migrate -- --from dev --to local --entity all`
  *
- * `--entity`: interviewSheets | dsaQuestions | studyGuides | aptitudeTopics | courses | projects | quizzes | all
+ * `--entity`: interviewSheets | dsaQuestions | studyGuides | aptitudeTopics | coreSubjects | courses | projects | quizzes | all
  * `--to prod` only with `--from dev`; prod writes wait 5s (Ctrl+C to cancel).
  */
 import chalk from "chalk";
