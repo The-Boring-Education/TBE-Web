@@ -970,9 +970,9 @@ const CoreSubjectsPage = () => {
                   🔒 This Chapter is Locked
                 </h2>
                 <p className="text-gray-400 mb-6 max-w-md text-sm leading-relaxed">
-                  You have completed 30% of the free content for this subject.
-                  To read this chapter and get full access to all subjects,
-                  please upgrade your plan.
+                  This chapter is part of the premium Core Subjects content.
+                  Upgrade your plan to unlock this chapter and get full access
+                  to all subjects.
                 </p>
                 <button
                   onClick={() => router.push(routes.oncampus.pricing)}
@@ -1000,6 +1000,9 @@ const CoreSubjectsPage = () => {
                   unlockedCount={
                     selectedSubject.chapters.filter((ch) => !ch.isLocked).length
                   }
+                  message={`Freemium preview — ${
+                    selectedSubject.chapters.filter((ch) => !ch.isLocked).length
+                  } chapters unlocked. Subscribe to access all.`}
                   onUpgradeClick={() => router.push(routes.oncampus.pricing)}
                 />
               )}
@@ -1034,6 +1037,7 @@ const CoreSubjectsPage = () => {
         onDismiss={() => setShowPayment(false)}
         title="Unlock OnCampus Core Subjects"
         description="Subscribe to OnCampus to access all core subject chapters, key notes, code snippets, and interview questions."
+        dismissLabel="Continue with free chapters"
       />
     </OnCampusLearningLayout>
   );

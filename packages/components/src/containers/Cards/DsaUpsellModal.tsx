@@ -13,6 +13,8 @@ export interface DsaUpsellModalProps {
   description?: string;
   /** Optional primary CTA label override. */
   ctaLabel?: string;
+  /** Optional dismiss button label. Defaults to "Continue with free questions". */
+  dismissLabel?: string;
 }
 
 /**
@@ -28,6 +30,7 @@ const DsaUpsellModal = ({
   title = "Unlock DSA Yatra",
   description = "Subscribe to access all questions, solutions, and study guides. One plan, lifetime access.",
   ctaLabel = "View Plans — Subscribe Now",
+  dismissLabel = "Continue with free questions",
 }: DsaUpsellModalProps) => {
   if (!open) return null;
 
@@ -69,7 +72,7 @@ const DsaUpsellModal = ({
               onClick={onDismiss}
               className="text-gray-500 hover:text-gray-300 text-xs font-medium transition-colors"
             >
-              Continue with free questions
+              {dismissLabel}
             </button>
           </div>
         </div>
