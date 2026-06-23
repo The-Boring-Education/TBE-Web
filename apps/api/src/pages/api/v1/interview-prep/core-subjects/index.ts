@@ -1,11 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { type AuthenticatedRequest, withAuth } from "@tbe/auth";
+import type { NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getCoreSubjectsFromDB } from "@/lib/database";
+import {
+  checkPaymentStatusFromDB,
+  getCoreSubjectsFromDB,
+} from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
@@ -15,7 +19,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const { data, error } = await getCoreSubjectsFromDB();
+  const userId = req.user.id;
+  const isPaidUser =
+    (await checkPaymentStatusFromDB(userId, "oncampus", "ONCAMPUS")).data
+      ?.purchased === true;
+
+  const { data, error } = await getCoreSubjectsFromDB(isPaidUser);
 
   if (error || !data) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -32,4 +41,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .json(sendAPIResponse({ status: true, data }));
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withAuth(handler));

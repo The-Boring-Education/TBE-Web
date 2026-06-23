@@ -126,7 +126,7 @@ const routes = {
     dsa: "/sheets",
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",
-    aptitude: "/dashboard/aptitude",
+    aptitude: "/aptitude",
   },
   unskilled: "/unskilled",
   /** Shareable, minimal payment entry (query: productType, productId, optional coupon, next) */
