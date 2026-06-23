@@ -3,6 +3,7 @@ import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockAddAInterviewSheetToDB = vi.fn();
+const mockCheckPaymentStatusFromDB = vi.fn();
 const mockGetAllInterviewSheetsFromDB = vi.fn();
 const mockGetAptitudeMetadataFromDB = vi.fn();
 const mockGetAptitudeQuestionsByTopicFromDB = vi.fn();
@@ -38,6 +39,8 @@ vi.mock("../../../../api/src/lib/constants", () => ({
 vi.mock("../../../../api/src/lib/database", () => ({
   addAInterviewSheetToDB: (...args: unknown[]) =>
     mockAddAInterviewSheetToDB(...args),
+  checkPaymentStatusFromDB: (...args: unknown[]) =>
+    mockCheckPaymentStatusFromDB(...args),
   getAllInterviewSheetsFromDB: (...args: unknown[]) =>
     mockGetAllInterviewSheetsFromDB(...args),
   getAptitudeMetadataFromDB: (...args: unknown[]) =>
@@ -326,6 +329,9 @@ describe("Interview Prep Index API Route", () => {
   });
 
   it("GET (roadmap=APTITUDE, topic=slug, userId) passes mergeProgressForUserId", async () => {
+    mockCheckPaymentStatusFromDB.mockResolvedValue({
+      data: { purchased: false },
+    });
     mockGetAptitudeQuestionsByTopicFromDB.mockResolvedValue({
       data: { questions: [], pagination: {} },
       error: null,
