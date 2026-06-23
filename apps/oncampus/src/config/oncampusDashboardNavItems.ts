@@ -29,7 +29,7 @@ export const ONCAMPUS_DASHBOARD_NAV_ITEMS: OncampusDashboardNavItem[] = [
   },
   { name: "DSA", href: "/sheets", icon: FileText },
   { name: "Quizzes", href: "/dashboard/quizzes", icon: ClipboardList },
-  { name: "Aptitude", href: "/dashboard/aptitude", icon: BrainCircuit },
+  { name: "Aptitude", href: "/aptitude", icon: BrainCircuit },
   {
     name: "Core Subjects",
     shortLabel: "Subjects",

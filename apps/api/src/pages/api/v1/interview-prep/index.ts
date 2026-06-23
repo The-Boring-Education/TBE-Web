@@ -10,6 +10,7 @@ import {
 } from "@/lib/constants";
 import {
   addAInterviewSheetToDB,
+  checkPaymentStatusFromDB,
   getAllInterviewSheetsFromDB,
   getAptitudeMetadataFromDB,
   getAptitudeQuestionsByTopicFromDB,
@@ -288,6 +289,12 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
       .json(sendAPIResponse({ status: true, data }));
   }
 
+  const isPaidUser =
+    typeof userId === "string"
+      ? (await checkPaymentStatusFromDB(userId, "oncampus", "ONCAMPUS")).data
+          ?.purchased === true
+      : false;
+
   if (topic) {
     const mergeProgressForUserId =
       typeof userId === "string" && userId.trim().length > 0
@@ -301,6 +308,7 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
         page: page ? parseInt(page as string, 10) : 1,
         limit: parsePositiveInt(limit),
         mergeProgressForUserId,
+        isPaidUser,
       },
     );
 
@@ -331,6 +339,7 @@ async function handleAptitudeMode(req: NextApiRequest, res: NextApiResponse) {
   const { data, error } = await getAptitudeTopicsWithQuestionCountFromDB({
     category: validCategory,
     subCategory: validSubCategory,
+    isPaidUser,
   });
 
   if (error) {

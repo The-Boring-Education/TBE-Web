@@ -34,7 +34,7 @@ const AppContent = ({
   // Exclude the main DSA prep page for fullscreen experience
   const isDSAMainRoute = router.pathname === "/sheets";
   // Exclude the Aptitude page for fullscreen workspace experience
-  const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
+  const isAptitudeRoute = router.pathname === "/aptitude";
   // Exclude the Interview Prep main page for fullscreen workspace experience
   const isInterviewPrepMainRoute = router.pathname === "/interview-sheets";
   // Exclude the Quizzes page for fullscreen workspace experience

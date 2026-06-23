@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
+  checkPaymentStatusFromDB,
   getAptitudeStudyGuideByTopicFromDB,
   upsertAptitudeStudyGuideToDB,
 } from "@/lib/database";
@@ -26,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // GET /api/v1/interview-prep/aptitude/study-guide?topic=<slug>
 const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { topic } = req.query;
+  const { topic, userId } = req.query;
 
   if (!topic || typeof topic !== "string") {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -37,7 +38,16 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const { data, error } = await getAptitudeStudyGuideByTopicFromDB(topic);
+  const isPaidUser =
+    typeof userId === "string"
+      ? (await checkPaymentStatusFromDB(userId, "oncampus", "ONCAMPUS")).data
+          ?.purchased === true
+      : false;
+
+  const { data, error } = await getAptitudeStudyGuideByTopicFromDB(
+    topic,
+    isPaidUser,
+  );
 
   if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
