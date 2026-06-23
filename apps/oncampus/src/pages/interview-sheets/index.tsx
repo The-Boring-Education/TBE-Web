@@ -1,11 +1,12 @@
 import { FlexContainer, LoadingSpinner, Text } from "@tbe/components";
-import { routes } from "@tbe/constants";
+import { envConfig, routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { PrimaryCardWithCTAProps, SheetPageProps } from "@tbe/interface";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import {
   cn,
   getSheetPageProps,
+  isUserAuthenticated,
   mapInterviewSheetResponseToCard,
   sendRequest,
 } from "@tbe/utils";
@@ -491,7 +492,70 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
 export const getServerSideProps = async (context: any) => {
   const { topic } = context.query;
   if (topic) {
-    return getSheetPageProps(context);
+    const pagePropsResult = await getSheetPageProps(context);
+
+    if ("redirect" in pagePropsResult) {
+      return pagePropsResult;
+    }
+
+    const props = pagePropsResult.props as any;
+    if (props && props.sheet) {
+      const sheet = props.sheet;
+      const user = await isUserAuthenticated(context.req);
+
+      let isPaidUser = false;
+      if (user?.id) {
+        try {
+          const checkRes = await fetch(
+            `${envConfig.API_URL}${routes.api.checkStatus}?userId=${user.id}&productId=oncampus&productType=ONCAMPUS`,
+          );
+          const checkData = await checkRes.json();
+          isPaidUser =
+            checkData?.status === true && checkData?.data?.purchased === true;
+        } catch (err) {
+          console.error(
+            "Error checking payment status in getServerSideProps:",
+            err,
+          );
+        }
+      }
+
+      if (!isPaidUser && sheet.questions && sheet.questions.length > 0) {
+        const total = sheet.questions.length;
+        const freeLimit = Math.ceil(total * 0.3);
+
+        sheet.questions = sheet.questions.map((q: any, idx: number) => {
+          const isLocked = idx >= freeLimit;
+          if (isLocked) {
+            return {
+              ...q,
+              isLocked: true,
+              answer: "",
+              resources: [],
+              notes: "",
+              content: {
+                ...q.content,
+                markdownContent: "",
+              },
+            };
+          }
+          return {
+            ...q,
+            isLocked: false,
+          };
+        });
+      } else if (sheet.questions) {
+        sheet.questions = sheet.questions.map((q: any) => ({
+          ...q,
+          isLocked: false,
+        }));
+      }
+
+      props.sheet = sheet;
+      props.isPaidUser = isPaidUser;
+    }
+
+    return pagePropsResult;
   }
   return { props: {} };
 };

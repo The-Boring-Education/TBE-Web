@@ -2,8 +2,10 @@ import {
   Button,
   CopyButton,
   DifficultyGroupedList,
+  DsaUpsellModal,
   FeedbackPopup,
   FlexContainer,
+  FreemiumLockBanner,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
@@ -85,8 +87,18 @@ export const InterviewSheetWorkspace = ({
   const [showFeedback, setShowFeedback] = useState(false);
 
   const [showPayment, setShowPayment] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const paymentSectionRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const hasLockedQuestions = useMemo(
+    () => questions.some((q: any) => q.isLocked),
+    [questions],
+  );
+  const unlockedCount = useMemo(
+    () => questions.filter((q: any) => !q.isLocked).length,
+    [questions],
+  );
 
   const totalQuestions = questions.length;
   const completedQuestions = questions.filter((q) => q.isCompleted).length;
@@ -422,7 +434,17 @@ export const InterviewSheetWorkspace = ({
             content?.markdownContent || `${question}\n\n${answer}`;
 
           return (
-            <div key={questionId} className="flex items-center w-full">
+            <div
+              key={questionId}
+              className="flex items-center w-full"
+              onClickCapture={(e) => {
+                if ((item as any).isLocked) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setShowPaymentModal(true);
+                }
+              }}
+            >
               <QuestionLink
                 currentQuestionId={currentQuestionId}
                 frequency={frequency}
@@ -434,7 +456,7 @@ export const InterviewSheetWorkspace = ({
                 question={fullQuestionText}
                 questionId={questionId}
                 title={title}
-                isLocked={isLocked}
+                isLocked={isLocked || (item as any).isLocked}
                 theme="dark"
                 isStarred={isStarred}
               />
@@ -461,6 +483,12 @@ export const InterviewSheetWorkspace = ({
         isLoading={isDataLoading}
         layoutMode="workspace"
       >
+        {hasLockedQuestions && (
+          <FreemiumLockBanner
+            unlockedCount={unlockedCount}
+            onUpgradeClick={() => router.push(routes.oncampus.pricing)}
+          />
+        )}
         <FlexContainer
           className="flex-1 min-h-0 w-full h-full"
           direction="col"
@@ -678,6 +706,13 @@ export const InterviewSheetWorkspace = ({
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type="INTERVIEW_SHEET" />
       )}
+      <DsaUpsellModal
+        open={showPaymentModal}
+        onViewPlans={() => router.push(routes.oncampus.pricing)}
+        onDismiss={() => setShowPaymentModal(false)}
+        title="Unlock OnCampus Sheets"
+        description="Subscribe to OnCampus to access all interview sheets, questions, and detailed solutions."
+      />
     </Fragment>
   );
 };

@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getCoreSubjectsFromDB } from "@/lib/database";
+import {
+  checkPaymentStatusFromDB,
+  getCoreSubjectsFromDB,
+} from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
 
@@ -15,7 +18,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const { data, error } = await getCoreSubjectsFromDB();
+  const { userId } = req.query;
+  const isPaidUser =
+    typeof userId === "string"
+      ? (await checkPaymentStatusFromDB(userId, "oncampus", "ONCAMPUS")).data
+          ?.purchased === true
+      : false;
+
+  const { data, error } = await getCoreSubjectsFromDB(isPaidUser);
 
   if (error || !data) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
