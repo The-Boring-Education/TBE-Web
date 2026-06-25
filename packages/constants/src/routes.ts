@@ -128,6 +128,7 @@ const routes = {
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",
     aptitude: "/aptitude",
+    patternQuiz: "/pattern-quiz",
   },
   unskilled: "/unskilled",
   /** Shareable, minimal payment entry (query: productType, productId, optional coupon, next) */
