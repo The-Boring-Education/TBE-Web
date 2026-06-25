@@ -1257,4 +1257,5 @@ export interface PatternQuizPanelProps {
 export interface PatternQuizBannerProps {
   onStart?: () => void;
   className?: string;
+  compact?: boolean;
 }

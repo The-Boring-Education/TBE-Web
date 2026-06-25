@@ -4,7 +4,6 @@ import { ProtectedRoute, useAuth } from "@tbe/auth";
 import {
   EditDsaOnboardingModal,
   PatternQuizBanner,
-  PatternQuizPanel,
   SEO,
   StatCard,
 } from "@tbe/components";
@@ -28,13 +27,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 const DsaClient = () => {
+  const router = useRouter();
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [showPatternQuiz, setShowPatternQuiz] = useState(false);
 
   const { data: topicRows } = useDsaTopicSummaries();
   const { solvedToday } = useDsaCompletedQuestions({ userId: user?.id });
@@ -73,6 +73,13 @@ const DsaClient = () => {
   return (
     <div className="w-full min-w-0 max-w-full font-sans selection:bg-[#ff5757]/30 selection:text-white">
       <div className="w-full min-w-0 max-w-full space-y-5 pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
+        {/* Pattern Quiz Welcome Banner */}
+        <PatternQuizBanner
+          onStart={() => router.push(routes.dsayatra.patternQuiz)}
+          compact
+          className="w-full mt-4 sm:mt-5"
+        />
+
         {/* Profile + goals — single scan-friendly panel */}
         <Card className="w-full min-w-0 max-w-full border-[#252525] bg-gradient-to-b from-[#151515] to-[#111] shadow-[0_0_0_1px_rgba(255,87,87,0.06)] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 size-[min(380px,100%)] rounded-full bg-[#ff5757]/[0.06] blur-[90px] pointer-events-none translate-x-1/4 -translate-y-1/4" />
@@ -313,16 +320,6 @@ const DsaClient = () => {
             className="md:col-span-1 lg:col-span-2"
           />
         </div>
-
-        {/* Pattern Quiz Section */}
-        {!showPatternQuiz && (
-          <PatternQuizBanner onStart={() => setShowPatternQuiz(true)} />
-        )}
-        {showPatternQuiz && (
-          <Card className="min-w-0 max-w-full rounded-2xl border-[#222] bg-[#111] p-0 overflow-hidden">
-            <PatternQuizPanel questionsPerRound={5} />
-          </Card>
-        )}
 
         {/* Topic-wise Progress Section */}
         <Card className="min-w-0 max-w-full rounded-2xl border-[#222] bg-[#111] p-6 sm:p-8">
