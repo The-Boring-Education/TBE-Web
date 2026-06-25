@@ -52,6 +52,7 @@ const routes = {
     login: "/login",
     dashboard: "/dashboard",
     pricing: "/pricing",
+    patternQuiz: "/pattern-quiz",
     /** Public shareable progress page */
     journey: (username: string) => `/journey/${encodeURIComponent(username)}`,
     baseUrl: "https://dsayatra.theboringeducation.com",

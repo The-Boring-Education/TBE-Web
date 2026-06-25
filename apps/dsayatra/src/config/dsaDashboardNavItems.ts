@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  Brain,
   ClipboardList,
   FileText,
   Home,
@@ -21,6 +22,7 @@ export const DSA_DASHBOARD_NAV_ITEMS: DsaDashboardNavItem[] = [
   { name: "Sheets", href: "/sheets", icon: Target },
   { name: "Revisions", href: "/revisions", icon: FileText },
   { name: "Topics", href: "/topics", icon: ClipboardList },
+  { name: "Pattern Quiz", href: "/pattern-quiz", icon: Brain },
   {
     name: "Progress",
     href: "/dashboard#overall-progress",
