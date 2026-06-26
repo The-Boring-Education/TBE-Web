@@ -282,7 +282,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
               className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[80vh] overflow-y-auto bg-white'
               itemCenter={false}
             >
-              <div className='w-full sticky top-0 bg-inherit py-2'>
+              <div className='w-full sticky top-0 z-10 bg-white py-2'>
                 <Text className='heading-5' level='h5'>
                   Questions
                 </Text>
