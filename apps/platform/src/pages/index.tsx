@@ -34,6 +34,7 @@ const Home = ({ seoMeta }: PageProps) => {
       <LandingPageHero
         backgroundImageUrl={`${STATIC_FILE_PATH.svg}/hero-image.svg`}
         heroText='Learn Tech Skills & Prepare yourself for a Tech Job.'
+        showThemeToggle={true}
         primaryButton={
           <LinkButton
             buttonProps={{

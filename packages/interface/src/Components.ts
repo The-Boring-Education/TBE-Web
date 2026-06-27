@@ -337,6 +337,7 @@ export interface LandingPageHeroProps {
   backgroundImageUrl: string;
   heroText: string;
   theme?: "light" | "dark";
+  showThemeToggle?: boolean;
 }
 
 interface BaseCardContainerProps {
