@@ -9,10 +9,10 @@ import { useRouter } from "next/router";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import LoadingSpinner from "../../common/LoadingSpinner";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
 import DashboardTabs from "../dashboard/DashboardTabs";
-import LoadingSpinner from "../dashboard/LoadingSpinner";
 import ProfileSection from "../dashboard/ProfileSection";
 import BuildYourStack from "../features/BuildYourStack";
 import DailyPrepEncouragement from "../features/DailyPrepEncouragement";
@@ -146,10 +146,12 @@ const PrepYatraDashboardPage = () => {
     toast.success("Recruiter contact deleted successfully!");
   };
 
-  const handleSkillsUpdated = () => {
+  const handleSkillsUpdated = (updatedSkills: string[]) => {
     if (user?.id) {
+      setProfile((prev) =>
+        prev ? { ...prev, userSkills: updatedSkills } : prev,
+      );
       fetchProfile(user.id);
-      toast.success("Skills updated successfully!");
     }
   };
 
@@ -177,7 +179,7 @@ const PrepYatraDashboardPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Suspense fallback={<LoadingSpinner />}>
-        <Navbar variant="prepyatra" />
+        <Navbar variant="prepyatra" profileRoute="/profile" />
       </Suspense>
 
       <main className="w-full px-2 md:px-4 pt-[72px] pb-6">

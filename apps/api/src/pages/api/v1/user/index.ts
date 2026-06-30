@@ -2,11 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
+  buildUserSocialProfileUpdate,
   createUserInDB,
   getUserByEmailFromDB,
   getUserByIdFromDB,
   getUserDataByUserNameFromDB,
 } from "@/lib/database";
+import User from "@/lib/database/models/User";
 import type { CreateUserRequestPayloadProps } from "@/lib/interfaces";
 import { sendWelcomeEmail } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
@@ -29,6 +31,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     case "POST":
       return handleCreateUser(req, res);
+    case "PATCH":
+      return handleUpdateUserProfile(req, res);
   }
 };
 
@@ -214,6 +218,82 @@ const handleCreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
         status: false,
         error,
         message: "Error while creating user",
+      }),
+    );
+  }
+};
+
+const handleUpdateUserProfile = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  try {
+    const { userId, name, username, linkedInUrl, githubUrl, leetCodeUrl } =
+      req.body;
+
+    if (!userId || typeof userId !== "string") {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Required field: userId",
+        }),
+      );
+    }
+
+    if (
+      name === undefined &&
+      username === undefined &&
+      linkedInUrl === undefined &&
+      githubUrl === undefined &&
+      leetCodeUrl === undefined
+    ) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "At least one field is required to update",
+        }),
+      );
+    }
+
+    const socialUpdates = buildUserSocialProfileUpdate({
+      name,
+      userName: username,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
+    });
+
+    const updated = await User.findByIdAndUpdate(
+      userId,
+      { $set: socialUpdates },
+      { new: true },
+    );
+
+    if (!updated) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: "User not found",
+        }),
+      );
+    }
+
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data: updated,
+        message: "User profile updated successfully",
+      }),
+    );
+  } catch (error) {
+    logger.error("PATCH /api/v1/user failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Server error",
       }),
     );
   }

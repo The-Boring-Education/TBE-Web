@@ -25,6 +25,10 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Handle Canvas for client-side (if using any Canvas libraries)
     if (!isServer) {

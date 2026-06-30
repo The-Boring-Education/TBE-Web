@@ -12,22 +12,30 @@ export interface DsaTopicSummaryRow {
 
 import useUser from "./useUser";
 
+type DsaProductContext = "DSA_YATRA" | "ONCAMPUS";
+
 /**
  * Fetches DSA topic ids + question counts only (no question bodies).
  * Use for sheet landing; pair with {@link useDsaQuestionsForTopic} on topic select.
  */
-export const useDsaTopicSummaries = () => {
+export const useDsaTopicSummaries = (
+  productType: DsaProductContext = "DSA_YATRA",
+) => {
   const { user } = useUser();
   const userId = user?.id;
 
   return useQuery({
-    queryKey: queryKeys.dsa.topics(userId),
+    queryKey: [...queryKeys.dsa.topics(userId), productType],
     queryFn: async () => {
-      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}`;
+      const url = `${routes.api.base}${routes.api.dsaSheet}?query=topics${userId ? `&userId=${userId}` : ""}&productType=${productType}`;
       const result = await sendRequest({
         url,
         method: "GET",
       });
+
+      if (result.status !== true) {
+        throw new Error(result.message || "Failed to fetch DSA topics");
+      }
 
       const raw = result.data?.topics;
       if (!Array.isArray(raw)) {

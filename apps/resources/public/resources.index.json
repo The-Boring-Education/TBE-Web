@@ -1,5 +1,41 @@
 [
   {
+    "slug": "agentic-ai-engineer-roadmap",
+    "title": "Agentic AI Engineer Roadmap 2026",
+    "description": "A complete step-by-step roadmap to becoming an Agentic AI Engineer, covering LLMs, AI agents, RAG systems, workflows, tool calling, memory, multi-agent systems, deployment, and real-world AI applications.",
+    "keywords": [
+      "agentic ai",
+      "ai agents",
+      "llm",
+      "rag",
+      "multi agent systems",
+      "openai",
+      "langchain",
+      "autonomous ai",
+      "python",
+      "generative ai"
+    ],
+    "tags": ["roadmap", "agenticai"]
+  },
+  {
+    "slug": "mobile-app-developer-roadmap",
+    "title": "Mobile App Developer Roadmap 2026",
+    "description": "A complete step-by-step roadmap to becoming a Mobile App Developer, covering Android, iOS, Flutter, React Native, app architecture, APIs, databases, UI/UX, deployment, performance optimization, and real-world mobile applications.",
+    "keywords": [
+      "mobile app development",
+      "android development",
+      "ios development",
+      "flutter",
+      "react native",
+      "kotlin",
+      "swift",
+      "mobile ui ux",
+      "firebase",
+      "cross platform apps"
+    ],
+    "tags": ["roadmap", "mobiledevelopment"]
+  },
+  {
     "slug": "aiml-engineer-roadmap",
     "title": "AI/ML Engineer Roadmap 2026",
     "description": "A structured, step-by-step roadmap to becoming an AI/ML engineer, covering mathematics, machine learning algorithms, deep learning, model deployment, and real-world applications.",
@@ -46,6 +82,100 @@
     "tags": ["roadmap", "blockchain"]
   },
   {
+    "slug": "cloud-engineer-roadmap",
+    "title": "Cloud Engineer Roadmap 2026",
+    "description": "A complete step-by-step roadmap to becoming a Cloud Engineer, covering cloud computing fundamentals, AWS, Azure, Google Cloud, DevOps, networking, containers, Kubernetes, CI/CD, security, and real-world deployment practices.",
+    "keywords": [
+      "cloud engineer",
+      "cloud computing",
+      "aws",
+      "azure",
+      "google cloud",
+      "devops",
+      "kubernetes",
+      "docker",
+      "ci cd",
+      "networking"
+    ],
+    "tags": ["roadmap", "cloud"]
+  },
+  {
+    "slug": "cold-email-guide",
+    "title": "Cold Mail Masterclass 2026",
+    "description": "Learn the exact subject lines, body formulas, and follow-up tricks that hiring managers actually respond to. One email. One job. No resume needed.",
+    "keywords": [
+      "cold email",
+      "job search",
+      "hiring",
+      "networking",
+      "career advice"
+    ],
+    "tags": []
+  },
+  {
+    "slug": "freelance-developer-guide",
+    "title": "Freelance Developer Guide 2026",
+    "description": "A complete step-by-step guide to becoming a successful Freelance Developer, covering client acquisition, personal branding, portfolio building, pricing, contracts, remote work, communication, scaling income, and building a long-term freelance career.",
+    "keywords": [
+      "freelance developer",
+      "freelancing",
+      "web developer freelance",
+      "remote work",
+      "client acquisition",
+      "developer portfolio",
+      "upwork",
+      "fiverr",
+      "software developer",
+      "tech freelancing"
+    ],
+    "tags": ["guide", "freelancing"]
+  },
+  {
+    "slug": "cyber-security-engineer-roadmap",
+    "title": "Cyber Security Engineer Roadmap 2026",
+    "description": "A structured, step-by-step roadmap to becoming a Cyber Security Engineer, covering networking, operating systems, ethical hacking, security tools, cloud security, incident response, and real-world security practices.",
+    "keywords": [
+      "cyber security",
+      "ethical hacking",
+      "network security",
+      "security",
+      "penetration testing",
+      "linux",
+      "cloud security"
+    ],
+    "tags": ["roadmap", "cybersecurity"]
+  },
+  {
+    "slug": "devops-engineer-roadmap",
+    "title": "DevOps Engineer Roadmap 2026",
+    "description": "A structured, step-by-step roadmap to becoming a DevOps Engineer, covering Linux, networking, CI/CD, cloud platforms, containers, Kubernetes, infrastructure as code, monitoring, and deployment automation.",
+    "keywords": [
+      "devops",
+      "cloud",
+      "docker",
+      "kubernetes",
+      "ci cd",
+      "linux",
+      "automation"
+    ],
+    "tags": ["roadmap", "devops"]
+  },
+  {
+    "slug": "dsa-escape-plan-2026",
+    "title": "DSA Escape Plan 2026",
+    "description": "A practical, no-fluff guide to escaping tutorial hell with a structured DSA roadmap, daily problem-solving strategy, pattern recognition techniques, and a 90-day plan to become interview-ready.",
+    "keywords": [
+      "dsa",
+      "data structures",
+      "algorithms",
+      "leetcode",
+      "coding interview",
+      "problem solving",
+      "roadmap"
+    ],
+    "tags": ["dsa", "roadmap", "interview-prep"]
+  },
+  {
     "slug": "frontend-engineer-roadmap",
     "title": "Frontend Developer Roadmap 2026",
     "description": "A comprehensive, step-by-step guide to becoming a professional frontend developer, covering HTML, CSS, JavaScript, React, and modern CSS frameworks.",
@@ -75,6 +205,22 @@
       "vector database"
     ],
     "tags": ["roadmap", "genai"]
+  },
+  {
+    "slug": "javascript-interview-questions",
+    "title": "41 JavaScript Interview Questions",
+    "description": "A curated set of 41 essential JavaScript interview questions covering core concepts, closures, async/await, event loop, prototypes, DOM manipulation, and performance optimization.",
+    "keywords": [
+      "javascript",
+      "frontend",
+      "web development",
+      "async",
+      "closures",
+      "es6",
+      "dom",
+      "interview prep"
+    ],
+    "tags": ["javascript", "interview", "frontend"]
   },
   {
     "slug": "nodejs-express-interview-questions",

@@ -11,7 +11,7 @@ const LinerProgressBar = ({
 
   return (
     <div className="w-full">
-      <div className="bg-gray-300 rounded-full h-4">
+      <div className="bg-gray-300 rounded-full h-4 overflow-hidden">
         <div
           className="bg-success h-full rounded-full"
           style={{ width: `${completionPercentage}%` }}

@@ -70,6 +70,10 @@ const OncampusSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  experienceLevel: {
+    type: String,
+    default: "Fresher (0-1 yr)",
+  },
   duration: {
     type: String,
     enum: ["1Month", "3Months", "6Months", "1Year"],

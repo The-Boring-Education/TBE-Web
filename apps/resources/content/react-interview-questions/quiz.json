@@ -1,0 +1,466 @@
+{
+  "title": "React Knowledge Check",
+  "description": "Test your React knowledge with these 40 interview questions covering hooks, state, lifecycle, and more.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the virtual DOM in React?",
+      "options": [
+        "A direct copy of the real DOM stored in memory",
+        "A lightweight in-memory representation of the real DOM used to optimize updates",
+        "A server-side rendered version of the DOM",
+        "A browser API provided by modern browsers"
+      ],
+      "correct": 1,
+      "explanation": "The virtual DOM is React's lightweight in-memory representation used to efficiently diff and update the real DOM."
+    },
+    {
+      "id": 2,
+      "question": "Which hook is used to perform side effects in a functional component?",
+      "options": ["useState", "useContext", "useEffect", "useReducer"],
+      "correct": 2,
+      "explanation": "useEffect lets you run side effects (data fetching, subscriptions, DOM mutations) after render and optionally clean them up."
+    },
+    {
+      "id": 3,
+      "question": "What does the second argument of useEffect do?",
+      "options": [
+        "Sets the initial state value",
+        "Specifies the dependency array to control when the effect runs",
+        "Defines cleanup logic for the effect",
+        "Provides a callback after the component mounts"
+      ],
+      "correct": 1,
+      "explanation": "The second argument is the dependency array; the effect runs when those dependencies change (or once if empty)."
+    },
+    {
+      "id": 4,
+      "question": "What is a controlled component in React?",
+      "options": [
+        "A component rendered by a parent without props",
+        "A component whose form data is handled by the component state",
+        "A component that controls other components via context",
+        "A component that uses the ref API"
+      ],
+      "correct": 1,
+      "explanation": "A controlled component stores its input values in React state and updates via callbacks, giving React control over the data."
+    },
+    {
+      "id": 5,
+      "question": "What hook would you use to access a value from React Context?",
+      "options": ["useRef", "useContext", "useReducer", "useMemo"],
+      "correct": 1,
+      "explanation": "useContext allows you to read the current value of a context created with createContext."
+    },
+    {
+      "id": 6,
+      "question": "What does React.memo do?",
+      "options": [
+        "Memoizes a function so it is not recreated on every render",
+        "Creates a memoized version of a value",
+        "Wraps a component to prevent re-renders if props have not changed",
+        "Provides a cache for asynchronous data"
+      ],
+      "correct": 2,
+      "explanation": "React.memo wraps a component and shallowly compares props to skip re-rendering when props are unchanged."
+    },
+    {
+      "id": 7,
+      "question": "Which hook returns a memoized callback function?",
+      "options": ["useMemo", "useCallback", "useEffect", "useRef"],
+      "correct": 1,
+      "explanation": "useCallback returns a memoized function reference that only changes when its dependencies change."
+    },
+    {
+      "id": 8,
+      "question": "What is the purpose of the key prop in a list?",
+      "options": [
+        "To add CSS styles to list items",
+        "To help React identify which items have changed, are added, or removed",
+        "To pass unique data between sibling components",
+        "To define the tab order of elements"
+      ],
+      "correct": 1,
+      "explanation": "The key prop helps React match elements between renders for efficient updates; it should be stable and unique."
+    },
+    {
+      "id": 9,
+      "question": "What does useRef return?",
+      "options": [
+        "A state variable and a setter function",
+        "A mutable ref object whose .current property is persisted across renders",
+        "A context object",
+        "A callback function"
+      ],
+      "correct": 1,
+      "explanation": "useRef returns a mutable object with a .current property that persists between renders and can hold DOM nodes or values."
+    },
+    {
+      "id": 10,
+      "question": "Which lifecycle method is equivalent to useEffect with an empty dependency array?",
+      "options": [
+        "componentDidUpdate",
+        "componentWillUnmount",
+        "componentDidMount",
+        "shouldComponentUpdate"
+      ],
+      "correct": 2,
+      "explanation": "useEffect with an empty array runs after the first render, similar to componentDidMount in class components."
+    },
+    {
+      "id": 11,
+      "question": "What is prop drilling?",
+      "options": [
+        "Passing data directly through a portal",
+        "A performance optimization technique",
+        "Passing props through multiple nested components to reach a deeply nested child",
+        "An anti-pattern for using context"
+      ],
+      "correct": 2,
+      "explanation": "Prop drilling refers to passing props through many levels of components just to reach a deep child; context or state managers avoid this."
+    },
+    {
+      "id": 12,
+      "question": "What is the difference between state and props?",
+      "options": [
+        "State is read-only, props are mutable",
+        "Props are internal, state is passed from parent",
+        "State is managed internally by a component, props are passed from a parent",
+        "There is no difference"
+      ],
+      "correct": 2,
+      "explanation": "State is internal and mutable within a component; props are passed in from a parent and should be treated as read-only."
+    },
+    {
+      "id": 13,
+      "question": "What does React.lazy do?",
+      "options": [
+        "Delays state updates to batch them together",
+        "Allows you to render a dynamic import as a regular component for code splitting",
+        "Creates a lazy-evaluated context value",
+        "Memoizes expensive computations"
+      ],
+      "correct": 1,
+      "explanation": "React.lazy enables code-splitting by loading components via dynamic import and rendering them like normal components."
+    },
+    {
+      "id": 14,
+      "question": "What is Suspense used for in React?",
+      "options": [
+        "To suspend component re-renders during heavy computations",
+        "To display a fallback while waiting for something (lazy load or data fetch) to resolve",
+        "To delay side effects until after the paint",
+        "To create deferred state updates"
+      ],
+      "correct": 1,
+      "explanation": "Suspense shows a fallback UI while waiting for lazy-loaded components or asynchronous data to be ready."
+    },
+    {
+      "id": 15,
+      "question": "What is the correct way to update state based on its previous value?",
+      "options": [
+        "setState(state + 1)",
+        "setState((prev) => prev + 1)",
+        "state = state + 1",
+        "setState(this.state + 1)"
+      ],
+      "correct": 1,
+      "explanation": "Use the updater function form (prev => ...) to reliably compute new state from previous state, avoiding stale closures."
+    },
+    {
+      "id": 16,
+      "question": "What is reconciliation in React?",
+      "options": [
+        "The process of syncing state with the server",
+        "The algorithm React uses to diff the virtual DOM and update the real DOM efficiently",
+        "Converting JSX to JavaScript",
+        "Merging multiple context providers"
+      ],
+      "correct": 1,
+      "explanation": "Reconciliation is React's diffing process that determines minimal DOM updates by comparing previous and next VDOM trees."
+    },
+    {
+      "id": 17,
+      "question": "What does the useReducer hook return?",
+      "options": [
+        "A memoized value and a cache function",
+        "A ref object and a dispatch function",
+        "The current state and a dispatch function",
+        "A context and a provider"
+      ],
+      "correct": 2,
+      "explanation": "useReducer returns the current state and a dispatch function to send actions to the reducer (similar to Redux patterns)."
+    },
+    {
+      "id": 18,
+      "question": "When should you use useReducer instead of useState?",
+      "options": [
+        "When you want to avoid re-renders",
+        "When state logic is complex or the next state depends on the previous one with multiple sub-values",
+        "When you need to access the DOM",
+        "When sharing state across multiple components"
+      ],
+      "correct": 1,
+      "explanation": "useReducer is preferable for complex state transitions or when multiple related values must be updated together."
+    },
+    {
+      "id": 19,
+      "question": "What is a React Fragment?",
+      "options": [
+        "A way to split code into smaller bundles",
+        "A wrapper that lets you group elements without adding an extra DOM node",
+        "A component lifecycle hook",
+        "A memoized version of a child component"
+      ],
+      "correct": 1,
+      "explanation": "Fragments let you return multiple children from a component without creating an extra wrapper DOM element."
+    },
+    {
+      "id": 20,
+      "question": "What is the purpose of React portals?",
+      "options": [
+        "To share state across multiple applications",
+        "To render children into a DOM node outside the parent component's DOM hierarchy",
+        "To create global context",
+        "To lazy-load components"
+      ],
+      "correct": 1,
+      "explanation": "Portals render children into a different part of the DOM tree (useful for modals, tooltips where DOM hierarchy shouldn't constrain styling)."
+    },
+    {
+      "id": 21,
+      "question": "What is Error Boundary in React?",
+      "options": [
+        "A hook that catches promise rejections",
+        "A class component that catches JavaScript errors in its child tree and displays a fallback UI",
+        "A try-catch block for functional components",
+        "A context that propagates error states"
+      ],
+      "correct": 1,
+      "explanation": "Error boundaries are class components that catch runtime errors in their descendant tree and render a fallback UI instead of crashing the app."
+    },
+    {
+      "id": 22,
+      "question": "What does JSX stand for?",
+      "options": [
+        "JavaScript XML",
+        "Java Syntax Extension",
+        "JavaScript Extra",
+        "JSON Syntax for XML"
+      ],
+      "correct": 0,
+      "explanation": "JSX stands for JavaScript XML — a syntax extension that looks like HTML and compiles to React.createElement calls."
+    },
+    {
+      "id": 23,
+      "question": "Which method is called when a component is removed from the DOM?",
+      "options": [
+        "componentDidMount",
+        "componentDidUpdate",
+        "componentWillUnmount",
+        "componentWillReceiveProps"
+      ],
+      "correct": 2,
+      "explanation": "componentWillUnmount is invoked just before a component is removed and is used for cleanup like removing listeners or timers."
+    },
+    {
+      "id": 24,
+      "question": "What is the default value of the React context if no Provider is above it?",
+      "options": [
+        "null",
+        "undefined",
+        "The value passed to createContext()",
+        "An empty object {}"
+      ],
+      "correct": 2,
+      "explanation": "createContext accepts a default value which is used when no matching Provider is present higher in the tree."
+    },
+    {
+      "id": 25,
+      "question": "What does forwardRef do?",
+      "options": [
+        "Forwards props to child components automatically",
+        "Allows a parent to pass a ref to a child component's DOM element",
+        "Creates a ref that persists in a forward cache",
+        "Forwards context to nested consumers"
+      ],
+      "correct": 1,
+      "explanation": "forwardRef lets a parent pass a ref through a component to one of its children, commonly used to expose DOM nodes."
+    },
+    {
+      "id": 26,
+      "question": "What is the purpose of useMemo?",
+      "options": [
+        "To memoize a callback function reference",
+        "To persist values across renders without causing re-renders",
+        "To memoize the result of an expensive computation so it only re-runs when dependencies change",
+        "To memo-ize component trees"
+      ],
+      "correct": 2,
+      "explanation": "useMemo caches the result of an expensive computation and recomputes it only when dependencies change, improving performance."
+    },
+    {
+      "id": 27,
+      "question": "What is React Fiber?",
+      "options": [
+        "A new CSS-in-JS library used with React",
+        "A reimplementation of React's core algorithm enabling incremental rendering",
+        "A server-side rendering framework",
+        "A file bundler optimized for React"
+      ],
+      "correct": 1,
+      "explanation": "React Fiber is the reimplementation of React's reconciliation algorithm that enables interruptible and incremental rendering."
+    },
+    {
+      "id": 28,
+      "question": "What is the strict mode in React used for?",
+      "options": [
+        "To enforce TypeScript types in JSX",
+        "To enable production optimizations",
+        "To highlight potential problems in an application by activating extra checks and warnings",
+        "To restrict component re-renders"
+      ],
+      "correct": 2,
+      "explanation": "StrictMode activates additional checks and warnings (e.g., deprecated APIs, unsafe lifecycles) to help find issues during development."
+    },
+    {
+      "id": 29,
+      "question": "How do you prevent a component from re-rendering when its parent re-renders?",
+      "options": [
+        "Use useEffect with an empty dependency array",
+        "Wrap the component with React.memo",
+        "Use useRef instead of useState",
+        "Use dangerouslySetInnerHTML"
+      ],
+      "correct": 1,
+      "explanation": "Wrapping a component with React.memo prevents unnecessary re-renders by shallowly comparing props and skipping updates when unchanged."
+    },
+    {
+      "id": 30,
+      "question": "What is the purpose of the children prop?",
+      "options": [
+        "To pass state from child to parent",
+        "To allow a component to render whatever is passed between its opening and closing tags",
+        "To list sub-components in a parent",
+        "To define default props"
+      ],
+      "correct": 1,
+      "explanation": "The children prop contains any elements placed between a component's opening and closing tags, enabling composition."
+    },
+    {
+      "id": 31,
+      "question": "What will happen if you call setState inside render?",
+      "options": [
+        "The state updates silently without re-rendering",
+        "React will batch the update for the next cycle",
+        "It causes an infinite loop of re-renders",
+        "It throws a compile-time error"
+      ],
+      "correct": 2,
+      "explanation": "Calling setState in render triggers repeated renders leading to an infinite loop; state updates should occur in effects or event handlers."
+    },
+    {
+      "id": 32,
+      "question": "What does the useLayoutEffect hook do differently from useEffect?",
+      "options": [
+        "It runs only once on mount",
+        "It fires synchronously after all DOM mutations but before the browser paints",
+        "It runs asynchronously after the browser paints",
+        "It is used for CSS layout calculations only"
+      ],
+      "correct": 1,
+      "explanation": "useLayoutEffect runs synchronously after DOM updates but before the browser paints, useful for measurements and synchronously applying changes."
+    },
+    {
+      "id": 33,
+      "question": "What is server-side rendering (SSR) in the context of React?",
+      "options": [
+        "Rendering React components to a string on the server and sending HTML to the client",
+        "Using a Node.js server to manage React state",
+        "Pre-fetching API data before mounting components",
+        "Rendering only the server components and skipping the client bundle"
+      ],
+      "correct": 0,
+      "explanation": "SSR renders components to HTML on the server, sending fully-formed HTML to the client for faster first paint and SEO."
+    },
+    {
+      "id": 34,
+      "question": "What is hydration in React?",
+      "options": [
+        "Adding CSS variables to a React component",
+        "Loading remote data into the component state",
+        "The process of attaching event listeners to server-rendered HTML on the client",
+        "Converting static HTML to a React component tree"
+      ],
+      "correct": 2,
+      "explanation": "Hydration is when React attaches event listeners and makes server-rendered HTML interactive on the client."
+    },
+    {
+      "id": 35,
+      "question": "Which prop is used to conditionally apply CSS classes in React?",
+      "options": ["style", "className", "class", "cssClass"],
+      "correct": 1,
+      "explanation": "Use the className prop to assign CSS classes to elements in JSX; 'class' is reserved in JavaScript."
+    },
+    {
+      "id": 36,
+      "question": "What is the purpose of the useImperativeHandle hook?",
+      "options": [
+        "To imperatively update the DOM",
+        "To customize the instance value exposed to parent components when using ref",
+        "To override React's reconciliation algorithm",
+        "To bypass prop validation"
+      ],
+      "correct": 1,
+      "explanation": "useImperativeHandle customizes the ref value exposed to parent components when using forwardRef, limiting what is accessible."
+    },
+    {
+      "id": 37,
+      "question": "What is the difference between an uncontrolled and a controlled input in React?",
+      "options": [
+        "Uncontrolled inputs use useState; controlled inputs use useRef",
+        "Controlled inputs store their value in React state; uncontrolled inputs let the DOM manage the value",
+        "Uncontrolled inputs are read-only; controlled inputs accept user input",
+        "There is no functional difference"
+      ],
+      "correct": 1,
+      "explanation": "Controlled inputs keep their value in React state and sync on change; uncontrolled inputs rely on the DOM and refs for value access."
+    },
+    {
+      "id": 38,
+      "question": "What does the spread operator do when used in JSX like <Component {...props}>?",
+      "options": [
+        "It deep-clones the props object",
+        "It passes all properties of the props object as individual props to the component",
+        "It merges the component's default props with the passed props",
+        "It converts props to a string"
+      ],
+      "correct": 1,
+      "explanation": "The spread syntax spreads the object's key/value pairs as individual props on the component."
+    },
+    {
+      "id": 39,
+      "question": "What is the purpose of the displayName property on a React component?",
+      "options": [
+        "To set the title shown in the browser tab",
+        "To label the component in React DevTools for easier debugging",
+        "To display a label above the rendered component",
+        "To set the component's accessible name"
+      ],
+      "correct": 1,
+      "explanation": "displayName helps identify components in React DevTools and error messages for easier debugging."
+    },
+    {
+      "id": 40,
+      "question": "Which React hook would you use to subscribe to an external store (e.g., Zustand, Redux)?",
+      "options": [
+        "useContext",
+        "useEffect",
+        "useSyncExternalStore",
+        "useReducer"
+      ],
+      "correct": 2,
+      "explanation": "useSyncExternalStore is designed for safely subscribing to external stores in a way that works with concurrent rendering."
+    }
+  ]
+}

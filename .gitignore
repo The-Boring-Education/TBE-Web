@@ -35,6 +35,9 @@ out/
 build
 dist
 
+# next-sitemap runs as postbuild after `next build`; CI/production include these in deploy artifacts.
+apps/*/public/sitemap.xml
+apps/*/public/robots.txt
 
 # Debug
 npm-debug.log*
@@ -53,4 +56,7 @@ yarn-error.log*
 apps/testing/playwright-report/
 
 # Local subscription plan pricing (copy from subscription-plans.example.json — never commit real amounts)
-apps/api/scripts/subscription-plans.local.json
+apps/api/scripts/subscription-plans.json
+
+# Build artifacts
+*.tsbuildinfo

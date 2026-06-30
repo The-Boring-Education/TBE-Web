@@ -272,9 +272,11 @@ const getNavbarVariantConfig = (
     subText: "By The Boring Education",
     dashboardRoute: "/",
     borderClass: "border-b border-greyLight",
-    requiresAuth: false,
+    requiresAuth: true,
     showGamification: false,
     showNotifications: false,
+    showLoginButton: false,
+    accentColor: "emerald-500",
     navigation: {
       issues: ["issue-bug-report"],
       cohorts: false,
@@ -307,6 +309,7 @@ const getNavbarVariantConfig = (
 export interface FooterVariantConfig {
   branding: React.ReactNode;
   subtitle: string;
+  accentColor?: string;
 }
 
 // Get Footer Variant Configuration
@@ -420,6 +423,7 @@ export const getFooterVariantConfig = (
     ),
     subtitle:
       "Free guides, roadmaps, and learning resources from The Boring Education. Start your tech journey today.",
+    accentColor: "emerald-500",
   },
 });
 
@@ -590,6 +594,16 @@ export const getLoginCardVariantConfig = (): Record<
         icon: BookOpen,
         title: "Curated Resources",
         description: "Access handpicked tutorials and guides",
+      },
+      {
+        icon: FileText,
+        title: "Core Subjects",
+        description: "Master OS, DBMS, Networks, and OOPS",
+      },
+      {
+        icon: Target,
+        title: "Interview Sheets",
+        description: "Practice top interview questions with solutions",
       },
     ],
     redirectPath: "/dashboard",

@@ -50,7 +50,7 @@ export const pricingPlanCardClassName = (
 ): string => {
   const t = getPricingPlanThemeClasses(theme);
   return cn(
-    "relative w-full max-w-sm rounded-2xl border p-6 flex flex-col transition-all duration-300",
+    "relative flex h-full w-full max-w-[25rem] flex-col rounded-2xl border p-6 transition-all duration-300",
     t.cardHoverGlow,
     isPopular ? t.cardPopular : t.cardDefault,
   );

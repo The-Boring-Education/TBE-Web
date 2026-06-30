@@ -33,7 +33,7 @@ test.describe("DSA Yatra smoke flow", () => {
     expect(response?.status()).toBe(200);
 
     await expect(
-      page.getByRole("heading", { name: "Welcome to DSA Yatra" }),
+      page.getByRole("heading", { name: "The Boring Education" }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Continue with Google" }),

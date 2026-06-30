@@ -17,6 +17,7 @@ export { default as AccordionLinkItem } from "./common/Accordion/AccordionLinkIt
 export type { AccordionListItem } from "./common/Accordion/AccordionList";
 export { default as AccordionList } from "./common/Accordion/AccordionList";
 export { default as Alert } from "./common/Alert";
+export { default as AnalyticsSurface } from "./common/Analytics/AnalyticsSurface";
 export { default as AnalyticsWrapper } from "./common/Analytics/AnalyticsWrapper";
 export { default as Banner } from "./common/Banner";
 export {
@@ -26,6 +27,7 @@ export {
   BannerVariantC,
 } from "./common/Banner";
 export { default as Button } from "./common/Buttons/Button";
+export { default as CopyButton } from "./common/Buttons/CopyButton";
 export { default as FloatingActionButton } from "./common/Buttons/FloatingActionButton";
 export { default as LinkButton } from "./common/Buttons/LinkButton";
 export { default as LoginRedirectButton } from "./common/Buttons/LoginRedirectButton";
@@ -302,9 +304,11 @@ export {
 
 // Export all UI components from the main ui directory
 export * from "./common/Icons/ExternalIcons";
+export { PatternQuizBanner, PatternQuizPanel } from "./common/PatternQuiz";
 export type { PageHeaderProps } from "./layout/PageHeader";
 export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
 export * from "./techyatra";
 export * from "./ui";
+export * from "./visualizers";

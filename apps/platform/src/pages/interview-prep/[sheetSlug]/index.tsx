@@ -4,14 +4,12 @@ import {
   FlexContainer,
   LinerProgressBar,
   LoadingSpinner,
-  MDXRenderer,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
   Section,
   SEO,
   SheetHeroContainer,
-  StarButton,
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
@@ -28,6 +26,9 @@ import { getSheetPageProps, sendRequest } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
+
+import InterviewQuestionContent from '@/components/InterviewQuestionContent';
+import { InterviewSheetMDXRenderer } from '@/components/InterviewSheetMDXRenderer';
 
 const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const router = useRouter();
@@ -117,12 +118,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     isEnrolled: sheet?.isEnrolled,
   });
 
-  const {
-    isStarred,
-    isLoading: isStarLoading,
-    toggleStar,
-    setIsStarred,
-  } = useQuestionStarred({
+  const { isStarred, toggleStar, setIsStarred } = useQuestionStarred({
     userId: user?.id || '',
     sheetId: sheet._id?.toString() || '',
     questionId: currentQuestionId || '',
@@ -223,6 +219,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
             const questionId = next._id.toString();
             setCurrentQuestionId(questionId);
             setSheetMeta(`${next.question}\n\n${next.answer}`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         }
       } else {
@@ -344,7 +341,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 
             {/* Main Content Area */}
             <FlexContainer
-              className='border md:w-8/12 w-full p-2 rounded'
+              className='border md:w-8/12 w-full p-6 rounded bg-white'
               itemCenter={false}
               justifyCenter={false}
             >
@@ -353,7 +350,10 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   <Text level='h2' className='heading-4 mb-4'>
                     Interview Sheet Overview
                   </Text>
-                  <MDXRenderer mdxSource={sheet.meta || ''} />
+                  <InterviewSheetMDXRenderer
+                    mdxSource={sheet.meta || ''}
+                    theme='light'
+                  />
                   <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
                     <Text level='h4' className='mb-2 flex items-center gap-2'>
                       <FaLock className='text-yellow-600' />
@@ -384,7 +384,20 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   )}
                 </div>
               ) : (
-                <MDXRenderer
+                <InterviewQuestionContent
+                  questionTitle={currentQuestion?.title || ''}
+                  question={currentQuestion?.question || ''}
+                  answer={
+                    currentQuestion?.content?.markdownContent ||
+                    currentQuestion?.answer ||
+                    ''
+                  }
+                  frequency={currentQuestion?.frequency}
+                  priority={currentQuestion?.priority}
+                  companyTypes={currentQuestion?.companyTypes}
+                  theme='light'
+                  isStarred={isStarred}
+                  onToggleStar={handleStarToggle}
                   actions={[
                     currentQuestionId && (
                       <Button
@@ -413,25 +426,15 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                         onClick={toggleCompletion}
                       />
                     ),
-                    currentQuestionId && (
-                      <StarButton
-                        key='star'
-                        isStarred={isStarred}
-                        onToggle={handleStarToggle}
-                        isLoading={isStarLoading}
-                        className='mt-2 ml-2'
-                      />
-                    ),
                     currentQuestionId && questionResources && (
                       <ResourceTooltip
                         key='resources'
                         resources={questionResources}
                         theme='light'
-                        className='mt-2 ml-2'
+                        className='mt-2'
                       />
                     ),
                   ]}
-                  mdxSource={sheetMeta}
                 />
               )}
             </FlexContainer>

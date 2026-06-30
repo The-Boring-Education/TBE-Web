@@ -5,15 +5,9 @@
  * together and executes the Mongo aggregation. Each helper here is side-effect
  * free so it can be unit tested without a database.
  */
-import {
-  applyDSAFreemiumGating,
-  DSA_DIFFICULTY,
-  DSA_DURATION_DIFFICULTY_BUCKETS,
-  getDSAFreemiumBucket,
-} from "@tbe/constants";
+import { applyDSAFreemiumGating, getDSAFreemiumBucket } from "@tbe/constants";
 
-import type { DSADifficultyType, DSADomainType } from "@/lib/interfaces";
-import { selectQuestionsByDifficultyBuckets } from "@/lib/utils";
+import type { DSADomainType } from "@/lib/interfaces";
 
 import { toObjectId } from "./common";
 
@@ -21,16 +15,14 @@ export type RealWorldFilterMode = "include" | "exclude" | "only";
 
 export interface DSASheetFilters {
   domain?: DSADomainType | DSADomainType[];
-  difficulty?: DSADifficultyType | DSADifficultyType[];
+  difficulty?: string | string[];
   companyTypes?: string | string[];
   topics?: string | string[];
   page?: number;
   limit?: number;
   userId?: string;
-  /** Duration key e.g. "3Months", "6Months", "1Year" — enables difficulty buckets */
-  duration?: string;
-  /** Off-campus flag — scales bucket caps ×1.5 */
-  offCampus?: boolean;
+  /** Product context for shared DSA endpoint callers. */
+  productType?: "DSA_YATRA" | "ONCAMPUS";
   /** Filter real-world problems */
   realWorld?: RealWorldFilterMode;
   /** Whether the user has active paid subscription — determines freemium gating */
@@ -151,17 +143,9 @@ export const buildDsaMatchStage = (
     match.isRealWorldProblem = { $ne: true };
   }
 
-  if (userId && targetCompanies.length > 0) {
-    if (match.companyTypes) {
-      const currentIn: string[] = match.companyTypes.$in || [];
-      const intersection = currentIn.filter((t) => targetCompanies.includes(t));
-      match.companyTypes = {
-        $in: intersection.length > 0 ? intersection : targetCompanies,
-      };
-    } else {
-      match.companyTypes = { $in: targetCompanies };
-    }
-  }
+  // We still allow manual companyTypes filtering via the filters object (handled above),
+  // but we no longer restrict the overall result set to only targetCompanies.
+  // The targetCompanies array is still used to calculate _priorityScore for sorting.
 
   return match;
 };
@@ -278,50 +262,6 @@ export const DSA_SORT_STAGE = {
   },
 };
 
-const normalizeSeedValue = (value?: string | string[]) => {
-  if (!value) return "";
-  const values = Array.isArray(value) ? value : [value];
-  return values
-    .map((entry) => entry.toString().trim().toUpperCase())
-    .sort()
-    .join(",");
-};
-
-/**
- * Build a deterministic seed string for stable bucket tie-breaking.
- * Same filters + same user = same selection across requests.
- */
-export const buildDsaBucketSeed = (filters: DSASheetFilters): string =>
-  [
-    filters.userId ?? "__no_user__",
-    filters.duration ?? "",
-    filters.offCampus ? "off-campus" : "on-campus",
-    filters.realWorld ?? "include",
-    normalizeSeedValue(filters.domain as string | string[] | undefined),
-    normalizeSeedValue(filters.difficulty as string | string[] | undefined),
-    normalizeSeedValue(filters.companyTypes as string | string[] | undefined),
-    normalizeSeedValue(filters.topics as string | string[] | undefined),
-  ].join("|");
-
-/**
- * Scale `DSA_DURATION_DIFFICULTY_BUCKETS` caps by 1.5× when `offCampus` is true.
- * Returns `null` when the `duration` key isn't recognized.
- */
-export const scaleDsaBuckets = (
-  duration: string | undefined,
-  offCampus: boolean | undefined,
-): Record<DSADifficultyType, number> | null => {
-  if (!duration) return null;
-  const config = DSA_DURATION_DIFFICULTY_BUCKETS[duration];
-  if (!config) return null;
-  return Object.fromEntries(
-    Object.entries(config).map(([key, count]) => [
-      key,
-      offCampus ? Math.ceil(count * 1.5) : count,
-    ]),
-  ) as Record<DSADifficultyType, number>;
-};
-
 /** Slice rows for 1-based pagination and return a standard pagination envelope. */
 export const paginateDsaRows = <T>(
   rows: T[],
@@ -376,62 +316,6 @@ export const applyDsaFreemiumGate = (
 };
 
 /**
- * Duration-bucket path for paid users. Selects a capped subset per difficulty
- * (scaled 1.5× for `offCampus`), paginates, and returns the response envelope.
- * Falls back to plain pagination when `duration` isn't a known bucket key.
- */
-export const applyDsaDurationBuckets = (
-  rows: Record<string, unknown>[],
-  filters: DSASheetFilters,
-  page: number,
-  limit: number,
-) => {
-  const { duration, offCampus } = filters;
-  const scaledBuckets = scaleDsaBuckets(duration, offCampus);
-
-  if (!scaledBuckets) {
-    const { items, pagination } = paginateDsaRows(rows, page, limit);
-    return {
-      questions: items.map((r) =>
-        stripInternalDsaFields(r as Record<string, unknown>),
-      ),
-      pagination,
-    };
-  }
-
-  const { selected } = selectQuestionsByDifficultyBuckets(
-    rows as Array<Record<string, unknown> & { _id: unknown }>,
-    {
-      buckets: scaledBuckets,
-      difficultyOrder: DSA_DIFFICULTY,
-      seed: buildDsaBucketSeed(filters),
-      getDifficulty: (question) => {
-        const raw = String(
-          (question as { difficulty?: unknown }).difficulty || "",
-        )
-          .trim()
-          .toUpperCase();
-        return (DSA_DIFFICULTY as readonly string[]).includes(raw)
-          ? (raw as DSADifficultyType)
-          : null;
-      },
-      getPriorityScore: (question) => {
-        const score = (question as { _priorityScore?: unknown })._priorityScore;
-        return typeof score === "number" ? score : 0;
-      },
-    },
-  );
-
-  const { items, pagination } = paginateDsaRows(selected, page, limit);
-  return {
-    questions: items.map((r) =>
-      stripInternalDsaFields(r as Record<string, unknown>),
-    ),
-    pagination,
-  };
-};
-
-/**
  * Paid-user path with no duration bucket — returns the full list using the
  * caller-supplied `totalCount` (which should come from `countDocuments` on the
  * same match stage for accuracy).
@@ -442,9 +326,17 @@ export const applyDsaPaidPagination = (
   limit: number,
   totalCount: number,
 ) => {
-  const { items, pagination } = paginateDsaRows(rows, page, limit, totalCount);
+  // Rows are already paginated by Mongo ($skip/$limit) in getAllDSAQuestionsFromDB.
+  // Only compute pagination metadata here to avoid slicing the page twice.
+  const pagination = {
+    total: totalCount,
+    page,
+    limit,
+    totalPages: limit > 0 ? Math.ceil(totalCount / limit) : 0,
+    hasMore: limit > 0 ? page * limit < totalCount : false,
+  };
   return {
-    questions: items.map((r) =>
+    questions: rows.map((r) =>
       stripInternalDsaFields(r as Record<string, unknown>),
     ),
     pagination,

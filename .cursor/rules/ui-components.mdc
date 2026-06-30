@@ -1,0 +1,124 @@
+---
+description: Rules for creating and editing shared UI components inside packages/components
+globs: ["packages/components/**/*.tsx", "packages/components/**/*.ts"]
+alwaysApply: false
+---
+
+# UI Components Skill
+
+## Purpose
+Enforce consistency in the `@tbe/components` shared component library. All reusable UI elements live here. This skill ensures props are typed via `@tbe/interface`, animations use Framer Motion, variants are string unions not booleans, and loading states are handled uniformly.
+
+## Rules
+1. **Always import prop types from `@tbe/interface`** — define the interface there first, then import it.
+2. **Never use inline `style={{}}` props** for static styling — use Tailwind classes only. Framer Motion `animate`/`initial`/`exit` props are the only exception.
+3. **Always use the `Button` component** from `packages/components/src/common/Buttons/Button.tsx` for interactive buttons — never create ad-hoc `<button>` elements in new components.
+4. **Variants must be string union literals** — not booleans. Use `variant: "PRIMARY" | "SECONDARY" | "OUTLINE" | "GHOST" | "SUCCESS" | "NEUTRAL"`.
+5. **Always handle `isLoading` state** — show `<LoadingSpinner />` from `packages/components/src/common/LoadingSpinner` when loading.
+6. **Export all new components from `packages/components/src/index.ts`** — no deep imports allowed by consumers.
+7. **Page-level layout components must use `<PageLayout>`** — never wrap pages in raw `<main>` or `<div>` in consuming apps.
+8. **Animation must use `framer-motion`** — no CSS `@keyframes` in component files.
+9. **Component files must be PascalCase** — `MyComponent.tsx`, not `my-component.tsx`.
+10. **JSDoc the props interface** with a one-line description per prop — no wall-of-text.
+
+## Patterns
+
+### Standard shared component structure
+```tsx
+// packages/components/src/common/MyWidget/MyWidget.tsx
+import type { MyWidgetProps } from "@tbe/interface"; // 1. Props from @tbe/interface
+import { motion } from "framer-motion";
+import LoadingSpinner from "../LoadingSpinner";
+
+const MyWidget = ({
+  title,
+  isLoading = false,
+  variant = "PRIMARY",
+  onClick,
+}: MyWidgetProps) => {
+  if (isLoading) return <LoadingSpinner />;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="rounded-lg p-4 bg-white"
+    >
+      <h3 className="text-heading font-semibold">{title}</h3>
+    </motion.div>
+  );
+};
+
+export default MyWidget;
+```
+
+### Defining the props interface in @tbe/interface
+```ts
+// packages/interface/src/Components.ts
+export interface MyWidgetProps {
+  /** Title text displayed in the widget header */
+  title: string;
+  /** Shows loading spinner instead of content */
+  isLoading?: boolean;
+  /** Visual style variant */
+  variant?: "PRIMARY" | "SECONDARY" | "OUTLINE";
+  /** Click handler */
+  onClick?: () => void;
+}
+```
+
+### Button usage
+```tsx
+// CORRECT
+import Button from "@tbe/components/common/Buttons/Button";
+
+<Button
+  variant="PRIMARY"
+  text="Submit"
+  active={!isSubmitting}
+  isLoading={isSubmitting}
+  onClick={handleSubmit}
+/>
+
+// Also correct for navigation
+import LinkButton from "@tbe/components/common/Buttons/LinkButton";
+<LinkButton href="/dashboard" buttonProps={{ variant: "OUTLINE", text: "Dashboard" }} />
+```
+
+## Anti-Patterns
+
+### ❌ Raw button element with inline styles
+```tsx
+// BAD — never do this
+<button
+  style={{ backgroundColor: "#4f46e5", color: "white", padding: "8px 16px" }}
+  onClick={handleClick}
+>
+  Click me
+</button>
+```
+```tsx
+// GOOD
+import Button from "@tbe/components/common/Buttons/Button";
+<Button variant="PRIMARY" text="Click me" active onClick={handleClick} />
+```
+
+### ❌ Boolean variant prop
+```tsx
+// BAD
+interface BadButtonProps { isPrimary?: boolean; isOutline?: boolean; }
+```
+```tsx
+// GOOD
+interface GoodButtonProps { variant: "PRIMARY" | "OUTLINE" | "GHOST"; }
+```
+
+### ❌ Deep import bypassing index.ts
+```tsx
+// BAD — never import this way from consuming apps
+import Button from "@tbe/components/src/common/Buttons/Button";
+```
+```tsx
+// GOOD
+import { Button } from "@tbe/components";
+```

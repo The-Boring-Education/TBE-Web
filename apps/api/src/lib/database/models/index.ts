@@ -1,4 +1,3 @@
-// Export all database models
 export { default as Certificate } from "./Certificate";
 export { default as Coupon } from "./Coupon";
 export { default as Feedback } from "./Feedback";
@@ -8,6 +7,7 @@ export { default as Notification } from "./Notification";
 export { default as Payment } from "./Payment";
 export { default as SubscriptionPlan } from "./SubscriptionPlan";
 export { default as User } from "./User";
+export { default as UserActivityLog } from "./UserActivityLog";
 export { default as UserInterest } from "./UserInterest";
 export { default as Webinar } from "./Webinar";
 
@@ -16,6 +16,7 @@ export { DevRelLead, DevRelTask } from "./DevRel";
 
 // Interview Prep models
 export { default as AptitudeTopic } from "./InterviewPrep/AptitudeTopic";
+export { default as CoreSubject } from "./InterviewPrep/CoreSubject";
 export { default as DSAQuestion } from "./InterviewPrep/DSAQuestion";
 export { default as InterviewSheet } from "./InterviewPrep/Sheet";
 export { default as StudyGuide } from "./InterviewPrep/StudyGuide";

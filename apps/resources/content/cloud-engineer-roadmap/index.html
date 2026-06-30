@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Engineer Roadmap 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            height: auto;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            height: auto;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 12px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 2px 0 18px 20px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── YOUTUBE LINKS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS TABLE ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 6px;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 600px) {
+            .resource-viewer {
+                padding: 0;
+                gap: 0;
+                width: 100%;
+                align-items: stretch;
+            }
+
+            .print-bar {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 0;
+                background: #e8e5df;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 8px;
+            }
+
+            .cover {
+                height: auto;
+                min-height: unset;
+            }
+
+            .cover-header {
+                padding: 20px 20px 0;
+            }
+
+            .cover-hero {
+                padding: 28px 20px 28px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 36px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+            }
+
+            .cover-quote-block {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .cover-footer {
+                padding: 14px 20px;
+                flex-wrap: wrap;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 20px 12px;
+            }
+
+            .page-body {
+                padding: 20px 20px;
+            }
+
+            .page-footer {
+                padding: 12px 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .step-content {
+                padding: 2px 0 16px 12px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 8px;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .cover-decoration {
+                width: 140px;
+                height: 140px;
+                right: -30px;
+                top: 20px;
+                transform: none;
+            }
+
+            .stack-table {
+                font-size: 11px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .page-header-title {
+                display: none;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: hidden;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                height: 297mm;
+                min-height: unset;
+            }
+
+            .inner-page {
+                height: 297mm;
+                min-height: unset;
+            }
+
+            .page-body {
+                overflow: hidden;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+                <div class="cover-hook">From zero to cloud-native — no shortcuts</div>
+                <h1 class="cover-title">
+                    Cloud<br><span>Engineer</span><br>Roadmap
+                </h1>
+                <p class="cover-subtitle">
+                    From Linux basics to architecting multi-cloud production systems in 2026. Networking, IaC,
+                    containers, Kubernetes, DevOps, security, and cost engineering — everything you need with free
+                    YouTube resources for every phase.
+                </p>
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Every company runs on cloud infrastructure. The engineer who can design, automate, secure, and
+                        scale that infrastructure — reliably, at any size — will never be out of work. Cloud is the
+                        foundation everything else is built on."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">10–16</div>
+                        <div class="stat-label">Months to job-ready</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">11</div>
+                        <div class="stat-label">Phases to master</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">50+</div>
+                        <div class="stat-label">Free YT resources</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">Career ceiling</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for
+                    Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — PHASES 1–2 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Foundation Layer</div>
+                <h2 class="section-title">Start Here — Linux, Networking & Scripting</h2>
+                <div class="roadmap">
+
+                    <!-- PHASE 1 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 1–5</div>
+                            <div class="step-phase">Phase 01 · Linux Fundamentals</div>
+                            <div class="step-heading">Linux — The Operating System of the Cloud</div>
+                            <div class="step-desc">Every cloud server runs Linux. You cannot be a cloud engineer without
+                                fluency in the command line. Master the <strong>Linux file system hierarchy</strong>: /,
+                                /etc, /var, /home, /usr. Learn essential commands: <strong>ls, cd, grep, find, awk, sed,
+                                    ps, top, df, du, chmod, chown, ssh</strong>. Understand <strong>file permissions and
+                                    ownership</strong> — critical for security. Learn <strong>process
+                                    management</strong>: systemd, journalctl, cron jobs. Study <strong>package
+                                    management</strong>: apt (Ubuntu/Debian), yum/dnf (RHEL/Amazon Linux). Master
+                                <strong>shell scripting with Bash</strong>: variables, loops, conditionals, functions —
+                                you'll write these daily for automation. Understand <strong>environment
+                                    variables</strong>, stdin/stdout/stderr, pipes, and redirects. Practice everything
+                                on Ubuntu — it's the most common cloud distro.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Non-negotiable</span>
+                                <span class="tag">Linux CLI</span>
+                                <span class="tag">Bash scripting</span>
+                                <span class="tag">File permissions</span>
+                                <span class="tag">systemd / cron</span>
+                                <span class="tag">ssh / scp</span>
+                                <span class="tag">grep / awk / sed</span>
+                                <span class="tag">apt / yum</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Linux%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Linux Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Linux%20Command%20Line%20Basics%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Linux Command Line Basics – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Bash%20Scripting%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Bash Scripting Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Linux%20for%20Cloud%20Engineers%20%E2%80%93%20NetworkChuck"
+                                    target="_blank">Linux for Cloud Engineers – NetworkChuck</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Linux%20Permissions%20Explained%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Linux Permissions Explained – TechWorld with Nana</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 2 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 3–8</div>
+                            <div class="step-phase">Phase 02 · Networking Fundamentals</div>
+                            <div class="step-heading">Networking — The Invisible Backbone of Cloud</div>
+                            <div class="step-desc">Cloud is fundamentally distributed computing over networks. Without
+                                networking knowledge you'll be stuck debugging VPC issues for hours. Master the
+                                <strong>OSI model</strong> — know which layer each problem lives at. Understand
+                                <strong>TCP/IP, UDP, DNS, DHCP, HTTP/S, SSH, FTP</strong>. Learn <strong>IP addressing
+                                    and subnetting</strong> — CIDR notation (/16, /24, /32) is used everywhere in VPC
+                                design. Study <strong>routing and switching concepts</strong>: default gateways, route
+                                tables, NAT. Understand <strong>firewalls and security groups</strong>: inbound/outbound
+                                rules, stateful vs stateless. Learn <strong>load balancing</strong>: L4 vs L7,
+                                round-robin, health checks. Study <strong>CDN principles</strong> and <strong>DNS record
+                                    types</strong> (A, CNAME, MX, TXT, NS). These concepts map directly to AWS VPC,
+                                Security Groups, ELB, and Route 53.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Cloud backbone</span>
+                                <span class="tag">OSI model</span>
+                                <span class="tag">TCP/IP</span>
+                                <span class="tag">CIDR / subnetting</span>
+                                <span class="tag">DNS record types</span>
+                                <span class="tag">NAT / routing</span>
+                                <span class="tag">Load balancing</span>
+                                <span class="tag">Firewalls / SGs</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Computer%20Networking%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Computer Networking Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Subnetting%20%26%20CIDR%20%E2%80%93%20NetworkChuck"
+                                    target="_blank">Subnetting & CIDR – NetworkChuck</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=DNS%20Explained%20%E2%80%93%20NetworkChuck"
+                                    target="_blank">DNS Explained – NetworkChuck</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Load%20Balancer%20Explained%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Load Balancer Explained – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=How%20the%20Internet%20Works%20%E2%80%93%20Fireship"
+                                    target="_blank">How the Internet Works – Fireship</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="margin-top:16px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🐧</div>
+                        <div class="tip-text"><strong>Spin up a Linux VM and live in the terminal.</strong> Don't just
+                            watch tutorials — install Ubuntu in VirtualBox or WSL2, delete your GUI, and do everything
+                            from the command line for 30 days. AWS EC2, GCP Compute Engine, and Azure VMs are all Linux.
+                            If you can't navigate Linux confidently, you'll be slow at everything cloud-related.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — PHASES 3–4 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Cloud Platforms & Core Services</div>
+                <h2 class="section-title">AWS / GCP / Azure & Cloud Fundamentals</h2>
+                <div class="roadmap">
+
+                    <!-- PHASE 3 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 6–14</div>
+                            <div class="step-phase">Phase 03 · AWS Core Services</div>
+                            <div class="step-heading">Amazon Web Services — The Cloud You Must Know First</div>
+                            <div class="step-desc">AWS has 33% of the cloud market — start here. Deeply learn:
+                                <strong>EC2</strong> (virtual machines): instance types, AMIs, key pairs, EBS volumes,
+                                Auto Scaling Groups, Launch Templates. <strong>S3</strong>: buckets, storage classes,
+                                lifecycle policies, versioning, presigned URLs, static website hosting.
+                                <strong>VPC</strong>: subnets (public/private), Internet Gateway, NAT Gateway, Route
+                                Tables, Security Groups, NACLs, VPC Peering. <strong>IAM</strong>: users, groups, roles,
+                                policies (identity-based vs resource-based), MFA — this is the most important security
+                                service. <strong>RDS &amp; DynamoDB</strong>: managed relational and NoSQL databases.
+                                <strong>Lambda</strong>: serverless functions, event triggers, cold starts.
+                                <strong>ELB</strong>: ALB vs NLB, target groups, listener rules. <strong>Route
+                                    53</strong>: DNS hosting, health checks, routing policies.
+                                <strong>CloudWatch</strong>: metrics, logs, alarms, dashboards. Earn <strong>AWS
+                                    Solutions Architect Associate</strong> certification — it validates all of this.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Market leader — start here</span>
+                                <span class="tag">EC2 + Auto Scaling</span>
+                                <span class="tag">S3 + lifecycle</span>
+                                <span class="tag">VPC + subnets</span>
+                                <span class="tag">IAM roles/policies</span>
+                                <span class="tag">RDS / DynamoDB</span>
+                                <span class="tag">Lambda</span>
+                                <span class="tag">CloudWatch</span>
+                                <span class="tag">AWS SAA-C03 cert</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">AWS Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20SAA%20Prep%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">AWS SAA Prep – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20VPC%20Explained%20%E2%80%93%20Tiny%20Technical%20Tutorials"
+                                    target="_blank">AWS VPC Explained –
+                                    Tiny Technical Tutorials</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20IAM%20Deep%20Dive%20%E2%80%93%20Tiny%20Technical%20Tutorials"
+                                    target="_blank">AWS IAM Deep Dive –
+                                    Tiny Technical Tutorials</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Lambda%20Full%20Course%20%E2%80%93%20Digital%20Cloud%20Training"
+                                    target="_blank">AWS Lambda Full Course –
+                                    Digital Cloud Training</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 4 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 12–18</div>
+                            <div class="step-phase">Phase 04 · GCP & Azure (Secondary Cloud)</div>
+                            <div class="step-heading">Google Cloud & Azure — Be Multi-Cloud Capable</div>
+                            <div class="step-desc">Most enterprises use 2+ clouds. Learn the AWS equivalents on GCP and
+                                Azure to be a versatile hire. <strong>GCP focus</strong>: Compute Engine (EC2 equiv.),
+                                Cloud Storage (S3), GKE — Google Kubernetes Engine (the best managed K8s), BigQuery
+                                (data warehousing), Cloud Run (serverless containers), Cloud IAM, and VPC networking.
+                                GCP is dominant in data engineering and ML workloads. <strong>Azure focus</strong>:
+                                Azure VMs, Azure Blob Storage, AKS (Kubernetes), Azure Active Directory / Entra ID
+                                (critical for enterprise — AD integration is a key differentiator), Azure DevOps, App
+                                Service, and Azure Networking (VNets, NSGs). Earn <strong>Google Associate Cloud
+                                    Engineer</strong> or <strong>Azure AZ-900/AZ-104</strong> as secondary certs.
+                                Understanding the concept mapping across clouds (VPC ↔ VNet ↔ VPC) makes you a fast
+                                learner on any platform.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Multi-cloud</span>
+                                <span class="tag">GKE (best K8s)</span>
+                                <span class="tag">BigQuery</span>
+                                <span class="tag">Cloud Run</span>
+                                <span class="tag">Azure AD / Entra ID</span>
+                                <span class="tag">Azure DevOps</span>
+                                <span class="tag">AKS</span>
+                                <span class="tag">ACE / AZ-104 cert</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=GCP%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">GCP Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Azure%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Azure Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=GCP%20vs%20AWS%20vs%20Azure%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">GCP vs AWS vs Azure – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Azure%20AZ-900%20Prep%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Azure AZ-900 Prep – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="divider">
+                <div class="section-label">Cloud Provider Comparison</div>
+                <table class="stack-table">
+                    <thead>
+                        <tr>
+                            <th>Service Type</th>
+                            <th>AWS</th>
+                            <th>Google Cloud</th>
+                            <th>Azure</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Compute VMs</td>
+                            <td>EC2</td>
+                            <td>Compute Engine</td>
+                            <td>Azure Virtual Machines</td>
+                        </tr>
+                        <tr>
+                            <td>Object Storage</td>
+                            <td>S3</td>
+                            <td>Cloud Storage</td>
+                            <td>Blob Storage</td>
+                        </tr>
+                        <tr>
+                            <td>Managed K8s</td>
+                            <td>EKS</td>
+                            <td>GKE ⭐ (best)</td>
+                            <td>AKS</td>
+                        </tr>
+                        <tr>
+                            <td>Serverless</td>
+                            <td>Lambda</td>
+                            <td>Cloud Functions / Run</td>
+                            <td>Azure Functions</td>
+                        </tr>
+                        <tr>
+                            <td>DNS</td>
+                            <td>Route 53</td>
+                            <td>Cloud DNS</td>
+                            <td>Azure DNS</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — PHASES 5–6 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Containers & Orchestration</div>
+                <h2 class="section-title">Docker, Kubernetes & Container Ecosystem</h2>
+                <div class="roadmap">
+
+                    <!-- PHASE 5 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 10–18</div>
+                            <div class="step-phase">Phase 05 · Docker & Containerization</div>
+                            <div class="step-heading">Docker — Package Anything, Run Anywhere</div>
+                            <div class="step-desc">Containers are the unit of deployment in modern cloud. Master Docker
+                                completely. Understand <strong>container vs VM</strong>: containers share the host
+                                kernel, VMs have separate OS — containers are faster, lighter, portable. Learn to write
+                                production-quality <strong>Dockerfiles</strong>: multi-stage builds, layer caching,
+                                minimal base images (alpine, distroless), non-root users, .dockerignore. Master
+                                <strong>Docker Compose</strong> for multi-container local development: services,
+                                networks, volumes, environment files. Understand <strong>container registries</strong>:
+                                Docker Hub, Amazon ECR, Google Artifact Registry — tagging, pushing, pulling images.
+                                Learn <strong>container networking</strong>: bridge, host, overlay networks. Understand
+                                <strong>container security</strong>: image scanning with Trivy, running as non-root,
+                                read-only filesystems, secrets management. Learn <strong>Docker volumes</strong> for
+                                persistent data. Know the difference between COPY vs ADD, CMD vs ENTRYPOINT —
+                                interviewers love this.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Modern deployment unit</span>
+                                <span class="tag">Dockerfile best practices</span>
+                                <span class="tag">Multi-stage builds</span>
+                                <span class="tag">Docker Compose</span>
+                                <span class="tag">ECR / Artifact Registry</span>
+                                <span class="tag">Trivy image scanning</span>
+                                <span class="tag">Container networking</span>
+                                <span class="tag">Volumes / secrets</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Docker%20Full%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Docker Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Docker%20Tutorial%20for%20Beginners%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Docker Tutorial for Beginners – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Docker%20Compose%20Full%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Docker Compose Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Docker%20Security%20Best%20Practices%20%E2%80%93%20Fireship"
+                                    target="_blank">Docker Security Best Practices – Fireship</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Multi-stage%20Docker%20Builds%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Multi-stage Docker Builds – TechWorld with Nana</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 6 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 16–26</div>
+                            <div class="step-phase">Phase 06 · Kubernetes</div>
+                            <div class="step-heading">Kubernetes — The Operating System of the Cloud-Native World</div>
+                            <div class="step-desc">Kubernetes (K8s) is the most important technology in cloud
+                                engineering today. It orchestrates containers at scale. Master the core objects:
+                                <strong>Pods</strong> (smallest unit), <strong>Deployments</strong> (declarative
+                                rollouts, replicas, rolling updates), <strong>Services</strong> (ClusterIP, NodePort,
+                                LoadBalancer — how pods are exposed), <strong>ConfigMaps &amp; Secrets</strong>,
+                                <strong>PersistentVolumes &amp; PVCs</strong>, <strong>Namespaces</strong>. Learn
+                                <strong>Ingress controllers</strong> (nginx, Traefik) — routing external HTTP traffic.
+                                Study <strong>resource requests and limits</strong> — critical for stability and cost.
+                                Master <strong>kubectl</strong> inside-out: get, describe, logs, exec, apply, rollout.
+                                Learn <strong>Helm</strong>: the package manager for K8s — install and write charts.
+                                Study <strong>RBAC</strong> for access control. Understand <strong>Horizontal Pod
+                                    Autoscaler (HPA)</strong> and <strong>cluster autoscaler</strong>. Learn managed
+                                K8s: <strong>EKS, GKE, AKS</strong>. Earn the <strong>CKA (Certified Kubernetes
+                                    Administrator)</strong> — one of the most valuable certs in cloud engineering.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Most important cloud skill</span>
+                                <span class="tag">Pods / Deployments</span>
+                                <span class="tag">Services / Ingress</span>
+                                <span class="tag">Helm charts</span>
+                                <span class="tag">RBAC</span>
+                                <span class="tag">HPA / cluster autoscaler</span>
+                                <span class="tag">EKS / GKE / AKS</span>
+                                <span class="tag">CKA certification</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Kubernetes%20Full%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Kubernetes Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Kubernetes%20Crash%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Kubernetes Crash Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Helm%20Full%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Helm Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=CKA%20Exam%20Prep%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">CKA Exam Prep – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Kubernetes%20Networking%20Explained%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Kubernetes Networking Explained – TechWorld with Nana</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="divider">
+                <div class="tip-block">
+                    <div class="tip-icon">⚙️</div>
+                    <div class="tip-text"><strong>Run K8s locally before touching EKS/GKE.</strong> Use minikube or kind
+                        (Kubernetes in Docker) on your laptop. Break things, fix them, understand what YAML is actually
+                        doing. When you pay $0.10/hr for an EKS cluster you'll want to already understand what's going
+                        on. Use k9s as your terminal UI — it makes working with K8s 10x faster.</div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — PHASES 7–8 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Infrastructure as Code & DevOps</div>
+                <h2 class="section-title">Terraform, CI/CD & the DevOps Toolchain</h2>
+                <div class="roadmap">
+
+                    <!-- PHASE 7 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 18–26</div>
+                            <div class="step-phase">Phase 07 · Infrastructure as Code</div>
+                            <div class="step-heading">Terraform & IaC — Infrastructure Is Just Code Now</div>
+                            <div class="step-desc">Clicking around the AWS console is not cloud engineering — it's a
+                                recipe for undocumented, irreproducible infrastructure. Infrastructure as Code is the
+                                professional standard. Master <strong>Terraform</strong> deeply: providers, resources,
+                                variables, outputs, data sources, locals, modules (reusable infrastructure components),
+                                and state management. Understand <strong>Terraform state</strong>: local vs remote (S3 +
+                                DynamoDB for locking), state locking, state import. Learn <strong>Terraform
+                                    workspaces</strong> for multi-environment (dev/staging/prod) management. Study
+                                <strong>Terraform best practices</strong>: DRY modules, variable validation, sensitive
+                                outputs. Learn <strong>Terragrunt</strong> for managing Terraform at scale across many
+                                modules. Understand <strong>AWS CDK</strong> (Cloud Development Kit) — define
+                                infrastructure in TypeScript/Python. Study <strong>Pulumi</strong> as a modern IaC
+                                alternative. Also learn <strong>AWS CloudFormation</strong> basics for legacy system
+                                compatibility. Earn the <strong>HashiCorp Terraform Associate</strong> cert.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Professional standard</span>
+                                <span class="tag">Terraform HCL</span>
+                                <span class="tag">Remote state (S3)</span>
+                                <span class="tag">Terraform modules</span>
+                                <span class="tag">Terragrunt</span>
+                                <span class="tag">AWS CDK</span>
+                                <span class="tag">Pulumi</span>
+                                <span class="tag">Terraform Associate cert</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Terraform%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Terraform Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Terraform%20for%20Beginners%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Terraform for Beginners – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Terraform%20Modules%20%26%20Best%20Practices%20%E2%80%93%20Anton%20Babenko"
+                                    target="_blank">Terraform Modules & Best Practices – Anton Babenko</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Terraform%20State%20Management%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Terraform State Management – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20CDK%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">AWS CDK Full Course – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 8 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 20–30</div>
+                            <div class="step-phase">Phase 08 · CI/CD Pipelines</div>
+                            <div class="step-heading">CI/CD — Automate Every Deploy, Every Time</div>
+                            <div class="step-desc">Manual deployments don't scale. CI/CD is how professional teams ship
+                                code safely and fast. Master <strong>GitHub Actions</strong> completely: workflows,
+                                triggers (push, PR, schedule), jobs, steps, matrix builds, secrets, environments, and
+                                reusable workflows. This is the most widely used CI tool in 2026. Learn <strong>GitLab
+                                    CI/CD</strong>: .gitlab-ci.yml, stages, pipelines, runners, artifacts — common in
+                                enterprise. Study <strong>Jenkins</strong> for legacy enterprise environments:
+                                Jenkinsfile, declarative pipelines, agents, shared libraries. Understand
+                                <strong>pipeline stages</strong>: lint → test → build (Docker) → push (ECR) → deploy
+                                (kubectl/Helm/Terraform). Learn <strong>deployment strategies</strong>: rolling update,
+                                blue/green deployment, canary releases with traffic splitting. Master
+                                <strong>ArgoCD</strong>: GitOps for Kubernetes — sync K8s cluster state from Git
+                                automatically. Learn <strong>Flux CD</strong> as an alternative GitOps tool. Study
+                                <strong>SAST/DAST</strong> integration in pipelines for security.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Ship code safely</span>
+                                <span class="tag">GitHub Actions</span>
+                                <span class="tag">GitLab CI</span>
+                                <span class="tag">Jenkins</span>
+                                <span class="tag">ArgoCD (GitOps)</span>
+                                <span class="tag">Flux CD</span>
+                                <span class="tag">Blue/green deploys</span>
+                                <span class="tag">Canary releases</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=GitHub%20Actions%20Full%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">GitHub Actions Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=CI%2FCD%20Pipeline%20Tutorial%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">CI/CD Pipeline Tutorial – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=ArgoCD%20Full%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">ArgoCD Full Course – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=GitLab%20CI%2FCD%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">GitLab CI/CD – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Jenkins%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Jenkins Full Course – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="divider">
+                <div class="tip-block">
+                    <div class="tip-icon">🔁</div>
+                    <div class="tip-text"><strong>Adopt GitOps from day one.</strong> GitOps means your Git repo is the
+                        single source of truth for both application code AND infrastructure state. ArgoCD watches Git
+                        and auto-syncs your Kubernetes cluster. Any manual kubectl apply is a red flag. This pattern
+                        prevents configuration drift and makes rollbacks instant — just revert the Git commit.</div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — PHASES 9–10 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Security, Observability & Cost Engineering</div>
+                <h2 class="section-title">Cloud Security, Monitoring & FinOps</h2>
+                <div class="roadmap">
+
+                    <!-- PHASE 9 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 24–34</div>
+                            <div class="step-phase">Phase 09 · Cloud Security</div>
+                            <div class="step-heading">Cloud Security — The Skill That Keeps Systems Alive</div>
+                            <div class="step-desc">Security breaches in cloud cost companies millions. Cloud security is
+                                a multiplier skill — good engineers know it, great engineers live by it. Master
+                                <strong>IAM best practices</strong>: principle of least privilege, no root access in
+                                production, IAM roles over static credentials, cross-account roles. Understand
+                                <strong>AWS security services</strong>: GuardDuty (threat detection), Security Hub
+                                (posture management), AWS Config (compliance), CloudTrail (API audit logs — always
+                                enable this), Macie (S3 data discovery), Inspector (vulnerability scanning), WAF &amp;
+                                Shield (DDoS). Learn <strong>Secrets management</strong>: AWS Secrets Manager, HashiCorp
+                                Vault — never hardcode credentials. Understand <strong>encryption</strong>: KMS for key
+                                management, encryption at rest (S3 SSE, EBS encryption) and in transit (TLS). Study
+                                <strong>network security</strong>: private subnets, VPC endpoints (no internet for
+                                sensitive traffic), VPN vs Direct Connect. Learn <strong>container security</strong>:
+                                image scanning, Pod Security Standards, OPA/Gatekeeper policies. Study <strong>CSPM
+                                    tools</strong>: Wiz, Prisma Cloud for cloud posture. Earn <strong>AWS Security
+                                    Specialty</strong> cert for senior roles.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Keeps systems alive</span>
+                                <span class="tag">IAM least privilege</span>
+                                <span class="tag">GuardDuty / Security Hub</span>
+                                <span class="tag">CloudTrail (always on)</span>
+                                <span class="tag">AWS Secrets Manager</span>
+                                <span class="tag">KMS encryption</span>
+                                <span class="tag">VPC endpoints</span>
+                                <span class="tag">OPA / Gatekeeper</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Security%20Deep%20Dive%20%E2%80%93%20NetworkChuck"
+                                    target="_blank">AWS Security Deep Dive – NetworkChuck</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=HashiCorp%20Vault%20Tutorial%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">HashiCorp Vault Tutorial – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Cloud%20Security%20Best%20Practices%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Cloud Security Best Practices – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20GuardDuty%20%26%20Security%20Hub%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">AWS GuardDuty & Security Hub – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Kubernetes%20Security%20%26%20OPA%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Kubernetes Security & OPA – TechWorld with Nana</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 10 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 26–36</div>
+                            <div class="step-phase">Phase 10 · Observability & FinOps</div>
+                            <div class="step-heading">Monitoring, Logging, Tracing & Cloud Cost Engineering</div>
+                            <div class="step-desc">You can't manage what you can't measure. Build observability into
+                                everything. Learn the <strong>three pillars</strong>: <strong>Metrics</strong>
+                                (Prometheus + Grafana — the industry standard), <strong>Logs</strong> (ELK Stack /
+                                OpenSearch, Loki, CloudWatch Logs), <strong>Traces</strong> (Jaeger, Tempo, AWS X-Ray —
+                                distributed tracing for microservices). Understand <strong>alerting</strong>:
+                                Alertmanager with Prometheus, PagerDuty/OpsGenie for on-call. Study the
+                                <strong>OpenTelemetry (OTel)</strong> standard — vendor-neutral instrumentation that all
+                                modern tools support. Master <strong>Grafana dashboards</strong>: PromQL queries,
+                                panels, alerts. Learn <strong>FinOps (Cloud Cost Engineering)</strong>: AWS Cost
+                                Explorer, Budgets and alerts, Reserved Instances vs Savings Plans vs Spot Instances
+                                (save 60–90%), right-sizing EC2 instances, S3 lifecycle policies to move to cheaper
+                                tiers, Compute Optimizer. Study <strong>Kubecost</strong> for K8s cost visibility. An
+                                unmonitored cloud bill will bankrupt a startup in weeks.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Production-grade observability</span>
+                                <span class="tag">Prometheus + Grafana</span>
+                                <span class="tag">ELK / Loki</span>
+                                <span class="tag">Jaeger / X-Ray</span>
+                                <span class="tag">OpenTelemetry</span>
+                                <span class="tag">AWS Cost Explorer</span>
+                                <span class="tag">Savings Plans / Spot</span>
+                                <span class="tag">Kubecost</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Prometheus%20%2B%20Grafana%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Prometheus + Grafana – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=ELK%20Stack%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">ELK Stack Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=OpenTelemetry%20Explained%20%E2%80%93%20Fireship"
+                                    target="_blank">OpenTelemetry Explained – Fireship</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Cost%20Optimization%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">AWS Cost Optimization – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=FinOps%20for%20Engineers%20%E2%80%93%20CloudHealth"
+                                    target="_blank">FinOps for Engineers – CloudHealth</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — PHASE 11 + ARCHITECTURE ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Advanced Architecture</div>
+                <h2 class="section-title">Cloud-Native Architecture, Serverless & System Design</h2>
+                <div class="roadmap">
+                    <!-- PHASE 11 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 8–14 (Architecture Mastery)</div>
+                            <div class="step-phase">Phase 11 · Cloud Architecture & System Design</div>
+                            <div class="step-heading">Designing Scalable, Resilient, Cost-Efficient Cloud Systems</div>
+                            <div class="step-desc">This is what separates a cloud operator from a cloud architect. Learn
+                                the <strong>AWS Well-Architected Framework</strong>: 6 pillars — Operational Excellence,
+                                Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability. Study
+                                <strong>serverless architecture patterns</strong>: event-driven systems with Lambda +
+                                SQS/SNS + EventBridge + API Gateway — zero servers to manage. Learn
+                                <strong>microservices patterns</strong>: service mesh (Istio, AWS App Mesh), sidecar
+                                pattern, API Gateway pattern. Understand <strong>database architecture</strong>: read
+                                replicas, Multi-AZ RDS, Aurora serverless, DynamoDB global tables, ElastiCache (Redis)
+                                for caching. Study <strong>messaging systems</strong>: SQS (queues), SNS (pub/sub),
+                                Kafka (MSK), Kinesis (real-time streaming). Learn <strong>high availability and disaster
+                                    recovery</strong>: RTO vs RPO, active-active vs active-passive, multi-region
+                                deployments. Understand <strong>the 12-factor app</strong> methodology. Study
+                                <strong>cloud-native storage</strong>: EFS vs EBS vs S3 vs FSx — when to use each.
+                                Practice cloud system design interviews: design YouTube, design Twitter, design a URL
+                                shortener on AWS. This is what's tested at FAANG cloud interviews.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Architecture mastery</span>
+                                <span class="tag">Well-Architected Framework</span>
+                                <span class="tag">Event-driven (SQS/SNS)</span>
+                                <span class="tag">Service mesh (Istio)</span>
+                                <span class="tag">Aurora / DynamoDB global</span>
+                                <span class="tag">Kafka / Kinesis</span>
+                                <span class="tag">Multi-region HA</span>
+                                <span class="tag">Cloud system design</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Well-Architected%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">AWS Well-Architected – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Serverless%20Architecture%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Serverless Architecture – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Kafka%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Kafka Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Istio%20Service%20Mesh%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Istio Service Mesh – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=System%20Design%20Interview%20%E2%80%93%20Alex%20Xu"
+                                    target="_blank">System Design Interview – Alex Xu</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Cloud%20Architecture%20Patterns%20%E2%80%93%20AWS"
+                                    target="_blank">Cloud Architecture Patterns – AWS</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+                <div class="section-label">Cloud Architecture Patterns — The Patterns Every Engineer Must Know</div>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">☁️ Serverless Event-Driven</div>
+                        <div class="resource-card-desc">Lambda + SQS + SNS + EventBridge + API Gateway. Zero server
+                            management. Pay per invocation. Scales to 0 automatically. Best for variable, spiky
+                            workloads. Not for long-running tasks.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Event-Driven%20Architecture%20%E2%80%93%20freeCodeCamp"
+                                target="_blank">Event-Driven Architecture – freeCodeCamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔵 Blue/Green Deployment</div>
+                        <div class="resource-card-desc">Run two identical environments (blue=live, green=new). Switch
+                            traffic instantly with zero downtime. Instant rollback — just flip traffic back to blue.
+                            Used with ALB weighted target groups or Route 53.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Deployment%20Strategies%20%E2%80%93%20TechWorld"
+                                target="_blank">Deployment Strategies – TechWorld</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🌍 Multi-Region Active-Active</div>
+                        <div class="resource-card-desc">Deploy across 2+ regions simultaneously. Route 53 latency
+                            routing sends users to the nearest region. DynamoDB Global Tables replicate data. 99.99%+
+                            availability. Used by Netflix, Amazon, Google.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Multi-Region%20Architecture%20%E2%80%93%20AWS"
+                                target="_blank">Multi-Region Architecture – AWS</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔒 Zero-Trust Networking</div>
+                        <div class="resource-card-desc">Never trust, always verify. Everything inside the VPC is also
+                            untrusted by default. Workloads authenticate with short-lived tokens. Service-to-service
+                            mTLS via Istio. Replaces perimeter-based security models.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Zero%20Trust%20with%20Istio%20%E2%80%93%20TechWorld" target="_blank">Zero
+                                Trust with Istio – TechWorld</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+                <div class="section-label">Certifications Roadmap — In Priority Order</div>
+                <table class="stack-table">
+                    <thead>
+                        <tr>
+                            <th>Certification</th>
+                            <th>Provider</th>
+                            <th>Level</th>
+                            <th>When to Take</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AWS SAA-C03</td>
+                            <td>Amazon Web Services</td>
+                            <td>Associate</td>
+                            <td>Month 4–6 — first cert, highest ROI</td>
+                        </tr>
+                        <tr>
+                            <td>CKA</td>
+                            <td>Linux Foundation</td>
+                            <td>Professional</td>
+                            <td>Month 7–9 — after K8s mastery</td>
+                        </tr>
+                        <tr>
+                            <td>Terraform Associate</td>
+                            <td>HashiCorp</td>
+                            <td>Associate</td>
+                            <td>Month 6–8 — after IaC phase</td>
+                        </tr>
+                        <tr>
+                            <td>AWS DevOps Pro</td>
+                            <td>Amazon Web Services</td>
+                            <td>Professional</td>
+                            <td>Month 10–12 — senior level</td>
+                        </tr>
+                        <tr>
+                            <td>Google ACE</td>
+                            <td>Google Cloud</td>
+                            <td>Associate</td>
+                            <td>Month 8–10 — multi-cloud</td>
+                        </tr>
+                        <tr>
+                            <td>AWS Security Specialty</td>
+                            <td>Amazon Web Services</td>
+                            <td>Specialty</td>
+                            <td>Month 12+ — high salary boost</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — SKILL MAP + PROJECTS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Skill Map & Projects</div>
+                <h2 class="section-title">Full Timeline, Portfolio Projects & Daily Routine</h2>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Month 1–4</div>
+                        <div class="skill-item">Linux CLI + Bash scripting</div>
+                        <div class="skill-item">Networking fundamentals</div>
+                        <div class="skill-item">AWS core (EC2, S3, VPC, IAM)</div>
+                        <div class="skill-item">AWS SAA-C03 certification</div>
+                        <div class="skill-item">Docker fundamentals</div>
+                        <div class="skill-item">Git + GitHub workflows</div>
+                        <div class="skill-item">Python for automation scripts</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Month 5–9</div>
+                        <div class="skill-item">Kubernetes (CKA prep)</div>
+                        <div class="skill-item">Terraform + remote state</div>
+                        <div class="skill-item">GitHub Actions CI/CD</div>
+                        <div class="skill-item">ArgoCD / GitOps</div>
+                        <div class="skill-item">Prometheus + Grafana</div>
+                        <div class="skill-item">AWS security services</div>
+                        <div class="skill-item">ELK / Loki logging</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Month 10–16</div>
+                        <div class="skill-item">Multi-cloud (GCP/Azure)</div>
+                        <div class="skill-item">Service mesh (Istio)</div>
+                        <div class="skill-item">Kafka / Kinesis streaming</div>
+                        <div class="skill-item">FinOps + cost engineering</div>
+                        <div class="skill-item">Cloud system design</div>
+                        <div class="skill-item">AWS DevOps Pro / Security</div>
+                        <div class="skill-item">Published projects + blog</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Portfolio Projects — Build These 5 to Get Hired</div>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🏗️ 3-Tier AWS App (IaC)</div>
+                        <div class="resource-card-desc">Deploy a full 3-tier web app (frontend on S3+CloudFront, backend
+                            on EC2/ECS, RDS database) using 100% Terraform. VPC with public/private subnets, ALB, Auto
+                            Scaling Groups, RDS Multi-AZ. Zero manual console clicks. The classic cloud portfolio
+                            project.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Terraform%20AWS%20%E2%80%93%20freeCodeCamp"
+                                target="_blank">Terraform AWS – freeCodeCamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">☸️ K8s App + Full GitOps</div>
+                        <div class="resource-card-desc">Containerize a microservices app (3+ services), deploy on EKS or
+                            GKE with Helm charts, set up ArgoCD GitOps, Prometheus+Grafana monitoring, cert-manager for
+                            TLS, and a GitHub Actions pipeline that builds, pushes, and auto-deploys on merge to main.
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=ArgoCD%20Full%20Course%20%E2%80%93%20TechWorld" target="_blank">ArgoCD
+                                Full Course – TechWorld</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔒 Secure Landing Zone</div>
+                        <div class="resource-card-desc">Build an AWS multi-account landing zone with AWS Organizations,
+                            SCPs, CloudTrail across all accounts, GuardDuty, Security Hub, IAM Identity Center (SSO),
+                            and a centralized logging account. Shows enterprise-grade security thinking.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Control%20Tower%20Landing%20Zone%20%E2%80%93%20AWS" target="_blank">AWS
+                                Control Tower Landing Zone – AWS</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">⚡ Serverless Data Pipeline</div>
+                        <div class="resource-card-desc">Build an event-driven pipeline: S3 upload triggers Lambda →
+                            processes data → writes to DynamoDB → SNS notification. Add API Gateway REST endpoint.
+                            Deploy everything with CDK or SAM. Monitor with X-Ray tracing and CloudWatch dashboards.
+                        </div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=AWS%20Lambda%20Full%20Course" target="_blank">AWS
+                                Lambda Full Course</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Daily Routine</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">The Boring Cloud
+                    Engineering Routine That Works</div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Spin up and destroy one AWS resource with Terraform — muscle
+                        memory for IaC
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Read one AWS/GCP blog post, re:Invent talk, or architecture case
+                        study
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Practice 1 kubectl command or Linux task you're not fluent in yet
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Check your AWS cost dashboard — know where every dollar is going
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Push one GitHub commit on your portfolio project or cert study
+                        notes
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Share one cloud tip, architecture diagram, or project update on
+                        LinkedIn
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">08 / 09</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 9 — RESOURCES + CTA ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Cloud Engineer Roadmap · 2026</span>
+                <span class="page-num">09</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free YouTube Channels for Cloud Engineering</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 TechWorld with Nana</div>
+                        <div class="resource-card-desc">The single best cloud and DevOps YouTube channel. Covers Docker,
+                            Kubernetes, Terraform, Jenkins, GitLab CI, ArgoCD, Prometheus, and more — all in exceptional
+                            depth with real projects. Watch this channel first.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@TechWorldwithNana"
+                                target="_blank">@TechWorldwithNana</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 NetworkChuck</div>
+                        <div class="resource-card-desc">Makes networking and cloud genuinely exciting. Best for Linux,
+                            networking fundamentals, AWS, and home lab projects. His energy and hands-on approach makes
+                            dense technical content stick. Great for visual learners.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@NetworkChuck"
+                                target="_blank">@NetworkChuck</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 freeCodeCamp</div>
+                        <div class="resource-card-desc">Full-length courses on AWS, GCP, Azure, Terraform, Kubernetes,
+                            Docker, Jenkins, and every cloud tool. Completely free. The go-to for long-form,
+                            project-based learning covering every phase of this roadmap.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@freecodecamp"
+                                target="_blank">@freecodecamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Fireship</div>
+                        <div class="resource-card-desc">Fast, dense, highly accurate 5–10 minute explainers. Best for
+                            getting oriented on new cloud concepts quickly — Docker, K8s, serverless, DNS, networking.
+                            Watch a Fireship video first, then go deep with TechWorld with Nana.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@Fireship" target="_blank">@Fireship</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 AWS Official Channel</div>
+                        <div class="resource-card-desc">Direct from the source. re:Invent conference talks are gold —
+                            the "300-level" architecture talks show how companies like Netflix, NASA, and Airbnb use AWS
+                            at scale. Essential viewing for senior cloud roles.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@amazonwebservices"
+                                target="_blank">@amazonwebservices</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Anton Babenko</div>
+                        <div class="resource-card-desc">The foremost Terraform expert on YouTube. Covers Terraform
+                            modules, registry, best practices, Terragrunt, and advanced IaC patterns. If you want to
+                            write production-quality Terraform, follow every video he posts.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@AntonBabenko"
+                                target="_blank">@AntonBabenko</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">YouFocus — Distraction-free YT</span>
+                    <span class="tag">Interview Prep — Question banks</span>
+                    <span class="tag">Community — Peer learning</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">The Cloud Is Where Careers Are Built ☁️</div>
+                    <div class="cta-sub">Every startup, every enterprise, every government — they all run on cloud
+                        infrastructure.<br>The engineer who can build, secure, and scale that infrastructure will never
+                        run out of opportunities.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→
+                        theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                            alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                            alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"
+                            alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">09 / 09</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

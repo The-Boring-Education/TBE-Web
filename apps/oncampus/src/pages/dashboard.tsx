@@ -1,4 +1,10 @@
-import { Button, Card, LoadingSpinner, Progress } from "@tbe/components";
+import {
+  Button,
+  Card,
+  LoadingSpinner,
+  PatternQuizBanner,
+  Progress,
+} from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
@@ -148,6 +154,13 @@ const CampusPrepDashboard = () => {
         </div>
       </header>
 
+      {/* Pattern Quiz Welcome Banner */}
+      <PatternQuizBanner
+        onStart={() => router.push(routes.oncampus.patternQuiz)}
+        compact
+        className="w-full"
+      />
+
       {/* Grid for main sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Continue Learning Column */}
@@ -195,7 +208,7 @@ const CampusPrepDashboard = () => {
                         className="bg-transparent border-[#333] text-[#a0a0a0] hover:text-[#ff5757] hover:border-[#ff5757]/50 text-xs font-black h-8 px-4 rounded-lg uppercase tracking-tight"
                         text="Resume"
                         onClick={() =>
-                          router.push(`/interview-sheets/${sheet.slug}`)
+                          router.push(`/interview-sheets?topic=${sheet.slug}`)
                         }
                       />
                     </div>

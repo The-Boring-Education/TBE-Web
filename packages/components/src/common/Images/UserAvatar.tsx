@@ -6,9 +6,10 @@ import { Fragment, useEffect, useState } from "react";
 
 interface UserAvatarProps {
   dashboardRoute?: string;
+  profileRoute?: string;
 }
 
-const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
+const UserAvatar = ({ dashboardRoute, profileRoute }: UserAvatarProps = {}) => {
   const { user, isAuthenticated, isLoading, signOut } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
@@ -19,20 +20,6 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
   if (!isClient) return null;
   if (isLoading) return null;
   if (!isAuthenticated || !user) return null;
-
-  // Map user navigation links with correct dashboard route
-  const userNavLinks = TOP_NAVIGATION.user.map((link) => {
-    if (
-      link.href.includes("/user/dashboard") ||
-      link.href.includes("/dashboard")
-    ) {
-      return {
-        ...link,
-        href: dashboardRoute || link.href,
-      };
-    }
-    return link;
-  });
 
   const handleLogout = () => {
     signOut("/login");
@@ -80,11 +67,17 @@ const UserAvatar = ({ dashboardRoute }: UserAvatarProps = {}) => {
               leaveTo="transform opacity-0 scale-95 translate-y-1"
             >
               <Popover.Panel className="absolute z-50 mt-1.5 right-0 w-40 origin-top-right rounded-lg bg-white/80 p-1 shadow-2xl backdrop-blur-md ring-1 ring-black/5 focus:outline-none dark:bg-[#1A1A1A]/80 dark:ring-white/10 flex flex-col gap-0.5 border border-white/20 dark:border-white/10">
-                {userNavLinks.map(({ id, name, href, target }) => (
+                {TOP_NAVIGATION.user.map(({ id, name, href, target }) => (
                   <Link
                     key={id}
                     className="group flex w-full items-center rounded-md px-2.5 py-1.5 text-sm font-medium text-gray-700 transition-all hover:bg-gradient-to-r hover:from-primary/10 hover:to-transparent hover:text-primary dark:text-gray-200 dark:hover:from-primary/20 dark:hover:text-primary"
-                    href={href}
+                    href={
+                      id === "user-dashboard" && dashboardRoute
+                        ? dashboardRoute
+                        : id === "user-profile" && profileRoute
+                          ? profileRoute
+                          : href
+                    }
                     target={target}
                   >
                     {name}

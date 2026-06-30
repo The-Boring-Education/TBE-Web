@@ -27,7 +27,10 @@ export const queryKeys = {
   // ── Aptitude (subset of interview prep, but distinct cache) ──
   aptitude: {
     all: ["aptitude"] as const,
-    topics: () => [...queryKeys.aptitude.all, "topics"] as const,
+    topics: (userId?: string) =>
+      userId
+        ? ([...queryKeys.aptitude.all, "topics", userId] as const)
+        : ([...queryKeys.aptitude.all, "topics"] as const),
     questions: (topic: string, userId?: string) =>
       [
         ...queryKeys.aptitude.all,
@@ -35,8 +38,10 @@ export const queryKeys = {
         topic,
         userId ?? "__no_user__",
       ] as const,
-    studyGuide: (topic: string) =>
-      [...queryKeys.aptitude.all, "study-guide", topic] as const,
+    studyGuide: (topic: string, userId?: string) =>
+      userId
+        ? ([...queryKeys.aptitude.all, "study-guide", topic, userId] as const)
+        : ([...queryKeys.aptitude.all, "study-guide", topic] as const),
   },
 
   // ── DSA ──
@@ -51,6 +56,7 @@ export const queryKeys = {
       userId?: string;
       duration?: string;
       offCampus?: boolean;
+      productType?: string;
       realWorld?: string;
     }) => [...queryKeys.dsa.all, "questions", filters] as const,
     completedQuestions: (userId: string) =>

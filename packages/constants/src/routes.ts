@@ -52,6 +52,7 @@ const routes = {
     login: "/login",
     dashboard: "/dashboard",
     pricing: "/pricing",
+    patternQuiz: "/pattern-quiz",
     /** Public shareable progress page */
     journey: (username: string) => `/journey/${encodeURIComponent(username)}`,
     baseUrl: "https://dsayatra.theboringeducation.com",
@@ -89,7 +90,7 @@ const routes = {
   contribute: "/contribute",
   user: {
     profile: "/user/profile",
-    dashboard: "/user/dashboard",
+    dashboard: "/dashboard",
     courses: "/shiksha/my-courses",
     projects: "/projects/my-projects",
     sheets: "/interview-prep/my-sheets",
@@ -126,7 +127,8 @@ const routes = {
     dsa: "/sheets",
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",
-    aptitude: "/dashboard/aptitude",
+    aptitude: "/aptitude",
+    patternQuiz: "/pattern-quiz",
   },
   unskilled: "/unskilled",
   /** Shareable, minimal payment entry (query: productType, productId, optional coupon, next) */
@@ -146,6 +148,7 @@ const routes = {
     mySheets: "/user/interview-prep",
     myPlaylists: "/user/playlists",
     interviewPrep: "/interview-prep",
+    coreSubjects: "/interview-prep/core-subjects",
     dsaSheet: "/interview-prep/dsa-sheet",
     dsaSync: "/interview-prep/dsa-sheet/sync",
     dsaQuestionNote: "/interview-prep/dsa-sheet/question/note",

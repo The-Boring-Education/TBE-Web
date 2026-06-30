@@ -5,6 +5,8 @@ import { config } from "@tbe/config/quizes";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
+import LoadingSpinner from "../common/LoadingSpinner";
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
@@ -154,7 +156,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   if (isLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ef4444]" />
+        <LoadingSpinner />
       </div>
     );
   }

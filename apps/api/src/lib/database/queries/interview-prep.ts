@@ -1,5 +1,5 @@
 import { compareDsaTopicKeysForApi } from "@tbe/constants";
-import mongoose, { type PipelineStage } from "mongoose";
+import mongoose, { type PipelineStage, Types } from "mongoose";
 
 import { modelSelectParams } from "@/lib/constants";
 import type {
@@ -10,6 +10,7 @@ import type {
   DSADifficultyType,
   DSADomainType,
   DSATopicType,
+  InterviewSheetQuestionModel,
   SheetEnrollmentRequestProps,
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
@@ -26,7 +27,6 @@ import {
 } from "../models";
 import { toObjectId } from "./common";
 import {
-  applyDsaDurationBuckets,
   applyDsaFreemiumGate,
   applyDsaPaidPagination,
   buildDsaMatchStage,
@@ -117,24 +117,12 @@ const getInterviewSheetBySlugFromDB = async (
     let mappedQuestions = (sheet.questions || []).map((q) => q.toObject());
 
     if (userId) {
-      const targetCompanies = await getUserDSATargetCompanies(userId);
       const userSheet = await UserSheet.findOne({
         userId,
         sheetId: sheet._id,
       });
 
       isEnrolled = !!userSheet;
-
-      // Filter questions based on personalization settings if targets are set
-      if (targetCompanies.length > 0) {
-        mappedQuestions = mappedQuestions.filter((question: any) => {
-          if (!question.companyTypes || question.companyTypes.length === 0)
-            return true;
-          return question.companyTypes.some((type: string) =>
-            targetCompanies.includes(type),
-          );
-        });
-      }
 
       if (userSheet) {
         mappedQuestions = mappedQuestions.map((question: any) => {
@@ -148,9 +136,6 @@ const getInterviewSheetBySlugFromDB = async (
             isStarred: userQuestion?.isStarred || false,
           };
         });
-      } else if (targetCompanies.length > 0) {
-        // Even if not enrolled, the list of questions should be personalized
-        // mappedQuestions is already filtered above
       }
     }
 
@@ -298,6 +283,53 @@ const addQuestionToInterviewSheetInDB = async (
     });
     return {
       error: "Failed to add question to interview sheet",
+      details: error,
+    };
+  }
+};
+
+const appendQuestionsToInterviewSheetInDB = async (
+  sheetId: string,
+  rawQuestions: unknown[],
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (!Types.ObjectId.isValid(sheetId)) {
+      return { error: "Invalid interview sheet id" };
+    }
+
+    if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) {
+      return { error: "Questions must be a non-empty array" };
+    }
+
+    const questions = rawQuestions.map((questionItem: any) => ({
+      _id: new Types.ObjectId(),
+      title: questionItem.title,
+      question: questionItem.question,
+      answer: questionItem.answer,
+      frequency: questionItem.frequency,
+      priority: questionItem.priority,
+      companyTypes: questionItem.companyTypes,
+      resources: questionItem.resources,
+    })) as unknown as InterviewSheetQuestionModel[];
+
+    const updatedSheet = await InterviewSheet.findOneAndUpdate(
+      { _id: sheetId },
+      { $push: { questions: { $each: questions } } },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedSheet) {
+      return { error: "Interview sheet not found" };
+    }
+
+    return { data: updatedSheet };
+  } catch (error) {
+    logger.error("DB: appendQuestionsToInterviewSheetInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to append questions to interview sheet",
       details: error,
     };
   }
@@ -699,9 +731,8 @@ const deleteInterviewSheetFromDB = async (
  * Orchestrates the DSA sheet query pipeline:
  *  1. Resolve the user's target companies and build a match stage.
  *  2. Build the base aggregation (match + sort fields + optional user progress).
- *  3. Branch to one of three response paths:
- *     - Freemium gate (no paid access)
- *     - Paid + duration buckets
+ *  3. Branch to one of two response paths:
+ *     - Freemium gate (no paid access) — 3 Easy, 2 Medium, 1 Hard, 1 Real World unlocked
  *     - Paid + simple pagination
  *
  * All non-trivial logic lives in `./dsaSheet.ts` as pure, testable helpers.
@@ -710,7 +741,7 @@ const getAllDSAQuestionsFromDB = async (
   filters: DSASheetFilters = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const { userId, duration, page = 1, limit = 50, isPaidUser } = filters;
+    const { userId, page = 1, limit = 50, isPaidUser } = filters;
 
     const targetCompanies = userId
       ? await getUserDSATargetCompanies(userId)
@@ -737,12 +768,6 @@ const getAllDSAQuestionsFromDB = async (
       return { data: applyDsaFreemiumGate(allQuestions, page, limit) };
     }
 
-    // Paid + duration buckets path.
-    if (duration) {
-      const rows = await DSAQuestion.aggregate(aggregate);
-      return { data: applyDsaDurationBuckets(rows, filters, page, limit) };
-    }
-
     // Paid + simple pagination path (uses countDocuments for accurate total).
     const totalCount = await DSAQuestion.countDocuments(matchStage);
     const rows = await DSAQuestion.aggregate([
@@ -767,24 +792,22 @@ const getAllDSAQuestionsFromDB = async (
  */
 const getDSATopicSummariesFromDB = async (
   userId?: string,
+  productType: "DSA_YATRA" | "ONCAMPUS" = "DSA_YATRA",
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const matchStages: PipelineStage[] = [];
 
-    if (userId) {
-      const targetCompanies = await getUserDSATargetCompanies(userId);
-      if (targetCompanies.length > 0) {
-        matchStages.push({
-          $match: { companyTypes: { $in: targetCompanies } },
-        });
-      }
-    }
+    // targetCompanies is no longer used to filter topics. We want to show all topics
+    // and questions regardless of user preferences.
 
     const countPipeline: PipelineStage[] = [
       ...matchStages,
       {
+        $unwind: "$topics",
+      },
+      {
         $addFields: {
-          primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
+          primaryTopic: { $toUpper: "$topics" },
         },
       },
       {
@@ -988,6 +1011,28 @@ const getDSAQuestionByIDFromDB = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     return { error: "Failed to fetch DSA question", details: error };
+  }
+};
+
+const deleteDSAQuestionFromDB = async (
+  questionId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const deletedQuestion = await DSAQuestion.findByIdAndDelete(questionId);
+
+    if (!deletedQuestion) {
+      return { error: "DSA question not found" };
+    }
+
+    return {
+      data: { message: "DSA question deleted successfully", _id: questionId },
+    };
+  } catch (error) {
+    logger.error("DB: deleteDSAQuestionFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to delete DSA question", details: error };
   }
 };
 
@@ -1313,6 +1358,8 @@ export {
   // DSA Question functions
   addDSAQuestionToDB,
   addQuestionToInterviewSheetInDB,
+  appendQuestionsToInterviewSheetInDB,
+  deleteDSAQuestionFromDB,
   deleteInterviewSheetFromDB,
   deleteQuestionFromSheetInDB,
   enrollInASheet,

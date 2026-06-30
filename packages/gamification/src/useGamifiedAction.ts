@@ -23,7 +23,7 @@ import {
 const useGamifiedAction = () => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
-  const { points: currentPoints } = useGamification();
+  const { points: currentPoints, refetch: refetchPoints } = useGamification();
   const { makeRequest } = useApi("gamification");
   const { triggerCelebration, showToast } = useGamificationContext();
 
@@ -54,6 +54,8 @@ const useGamifiedAction = () => {
             url: routes.api.gamification,
             body: { actionType: event.gamificationAction },
           });
+
+          refetchPoints();
 
           let celebrationType: CelebrationType = "points";
           let celebrationIntensity: CelebrationIntensity;
@@ -124,6 +126,7 @@ const useGamifiedAction = () => {
       trackEvent,
       currentPoints,
       makeRequest,
+      refetchPoints,
       triggerCelebration,
       showToast,
     ],

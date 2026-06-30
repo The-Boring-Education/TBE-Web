@@ -1,4 +1,9 @@
-export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "";
+import {
+  installGlobalAnalyticsListeners,
+  trackEvent as trackEventFromCore,
+} from "@tbe/utils/analytics";
+
+export const ANALYTICS_ID = import.meta.env.VITE_ANALYTICS_ID || "";
 
 type EventParams = {
   category?: string;
@@ -7,74 +12,45 @@ type EventParams = {
   [key: string]: unknown;
 };
 
-export function initGA() {
+export const initGA = (): void => {
   if (typeof window === "undefined") return;
-  if (!GA_MEASUREMENT_ID) return;
-  if ((window as any).__ga_initialized) return;
-  (window as any).__ga_initialized = true;
+  if (!ANALYTICS_ID) return;
+  if ((window as Window & { __ga_initialized?: boolean }).__ga_initialized)
+    return;
+  (window as Window & { __ga_initialized?: boolean }).__ga_initialized = true;
 
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_ID}`;
     document.head.appendChild(script);
   }
 
-  (window as any).dataLayer = (window as any).dataLayer || [];
-  function gtag(...args: any[]) {
-    (window as any).dataLayer.push(args);
-  }
-  (window as any).gtag = gtag;
+  const w = window as Window & {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+  };
+  w.dataLayer = w.dataLayer || [];
+  const gtag = (...args: unknown[]) => {
+    w.dataLayer!.push(args);
+  };
+  w.gtag = gtag;
   gtag("js", new Date());
-  gtag("config", GA_MEASUREMENT_ID);
-}
+  gtag("config", ANALYTICS_ID);
+};
 
-export function trackPageview(url: string) {
+export const trackPageview = (url: string): void => {
   if (typeof window === "undefined") return;
-  if (!(window as any).gtag || !GA_MEASUREMENT_ID) return;
-  (window as any).gtag("config", GA_MEASUREMENT_ID, { page_path: url });
-}
+  const w = window as Window & { gtag?: (...args: unknown[]) => void };
+  if (!w.gtag || !ANALYTICS_ID) return;
+  w.gtag("config", ANALYTICS_ID, { page_path: url });
+};
 
-export function trackEvent(action: string, params: EventParams = {}) {
-  if (typeof window === "undefined") return;
-  if (!(window as any).gtag) return;
-  (window as any).gtag("event", action, params);
-}
+/** Forwards shared GA4 helper: adds page_path / app_id when configured. */
+export const trackEvent = (action: string, params: EventParams = {}) => {
+  trackEventFromCore(action, params);
+};
 
-export function installGlobalListeners() {
-  if (typeof window === "undefined") return;
-  if ((window as any).__ga_listeners_installed) return;
-  (window as any).__ga_listeners_installed = true;
-
-  document.addEventListener("click", (e) => {
-    const el = (e.target as HTMLElement)?.closest(
-      "a,button,[data-analytics]",
-    ) as HTMLElement | null;
-    if (!el) return;
-    const label = (
-      el.getAttribute("data-analytics-label") ||
-      el.textContent ||
-      ""
-    )
-      .trim()
-      .slice(0, 120);
-    const href = (el as HTMLAnchorElement).href;
-    const isOutbound = !!href && !href.includes(window.location.host);
-    trackEvent(isOutbound ? "outbound_click" : "click", {
-      category: "interaction",
-      label,
-      href,
-    });
-  });
-
-  document.addEventListener(
-    "submit",
-    (e) => {
-      const form = e.target as HTMLFormElement;
-      if (!form) return;
-      const name = form.getAttribute("name") || form.id || "form";
-      trackEvent("form_submit", { category: "form", label: name });
-    },
-    true,
-  );
-}
+export const installGlobalListeners = (): void => {
+  installGlobalAnalyticsListeners({ appId: "onboarding" });
+};

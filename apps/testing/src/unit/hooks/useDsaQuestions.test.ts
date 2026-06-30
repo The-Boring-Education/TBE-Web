@@ -34,6 +34,7 @@ const mockSendRequest = vi.mocked(sendRequest);
 
 describe("useDsaQuestions", () => {
   const mockApiResponse = {
+    status: true,
     data: {
       questions: [
         {
@@ -77,6 +78,8 @@ describe("useDsaQuestions", () => {
 
     expect(result.current.questions[0]!.id).toBe("q1");
     expect(result.current.questions[0]!.name).toBe("Two Sum");
+    expect(result.current.isError).toBe(false);
+    expect(result.current.errorMessage).toBe(null);
   });
 
   it("should accept custom limit", async () => {
@@ -113,5 +116,23 @@ describe("useDsaQuestions", () => {
     expect(result.current.rawQuestions[0]).toEqual(
       mockApiResponse.data.questions[0],
     );
+  });
+
+  it("should expose error state when API response status is false", async () => {
+    mockSendRequest.mockResolvedValue({
+      status: false,
+      message: "Invalid duration",
+      data: null,
+    });
+
+    const { result } = renderHookWithQuery(() => useDsaQuestions());
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.errorMessage).toBe("Invalid duration");
+    expect(result.current.questions).toEqual([]);
+    expect(result.current.rawQuestions).toEqual([]);
   });
 });

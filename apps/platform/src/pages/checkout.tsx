@@ -35,13 +35,17 @@ const SUBSCRIPTION_PRODUCT_TYPES: ProductType[] = [
   'ONCAMPUS',
 ];
 
-const PageSkeleton = () => (
-  <div className='min-h-screen bg-gradient-to-b from-slate-50 to-slate-100/80'>
+const PageSkeleton = ({ isDark }: { isDark: boolean }) => (
+  <div
+    className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#0a0a0b]' : 'bg-gradient-to-b from-slate-50 to-slate-100/80'}`}
+  >
     <Head>
       <title>Checkout — The Boring Education</title>
     </Head>
-    <div className='mx-auto max-w-lg px-4 py-10 sm:py-14'>
-      <div className='h-96 animate-pulse rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/80' />
+    <div className='mx-auto max-w-lg px-4 py-4 sm:py-6'>
+      <div
+        className={`h-80 animate-pulse rounded-2xl ${isDark ? 'bg-[#0e0e0e] border border-zinc-800/80 shadow-2xl' : 'bg-white shadow-sm ring-1 ring-slate-200/80'}`}
+      />
     </div>
   </div>
 );
@@ -65,6 +69,19 @@ const CheckoutPage = () => {
   const isSupported = Boolean(
     productType && SUPPORTED.includes(productType as ProductType) && productId,
   );
+
+  const isDark = useMemo(() => {
+    return productType === 'ONCAMPUS' || productType === 'DSA_YATRA';
+  }, [productType]);
+
+  // Lock body scroll on this page only — restore on unmount
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
   const {
     quote,
@@ -234,32 +251,57 @@ const CheckoutPage = () => {
     return `Pay ${formatInr(quote.finalAmount)}`;
   })();
 
+  const isUrlDark = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    const search = window.location.search;
+    return search.includes('ONCAMPUS') || search.includes('DSA_YATRA');
+  }, []);
+
   if (!router.isReady) {
-    return <PageSkeleton />;
+    return <PageSkeleton isDark={isUrlDark} />;
   }
 
   if (!isSupported) {
     return (
-      <div className='min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-4 py-16'>
+      <div
+        className={`min-h-screen px-4 py-16 transition-colors duration-300 ${isDark ? 'bg-[#0a0a0b] text-zinc-100' : 'bg-gradient-to-b from-slate-50 to-slate-100'}`}
+      >
         <Head>
           <title>Checkout — The Boring Education</title>
         </Head>
         <div className='mx-auto flex max-w-lg flex-col items-center text-center'>
-          <div className='mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 ring-1 ring-amber-100'>
-            <LockClosedIcon className='h-8 w-8 text-amber-600' />
+          <div
+            className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${isDark ? 'bg-zinc-900/60 ring-1 ring-zinc-800' : 'bg-amber-50 ring-1 ring-amber-100'}`}
+          >
+            <LockClosedIcon
+              className={`h-8 w-8 ${isDark ? 'text-[#FF5757]' : 'text-amber-600'}`}
+            />
           </div>
           <Text
             level='h2'
-            className='mb-2 text-slate-900 font-semibold text-xl'
+            className={`mb-2 font-semibold text-xl ${isDark ? 'text-zinc-200' : 'text-slate-900'}`}
           >
             This checkout link is incomplete
           </Text>
-          <Text level='p' className='mb-8 text-slate-600 leading-relaxed'>
+          <Text
+            level='p'
+            className={`mb-8 leading-relaxed ${isDark ? 'text-zinc-400' : 'text-slate-600'}`}
+          >
             Ask for a fresh link from the page you started from. It should
             include both product type and product id in the URL.
           </Text>
           <Link href={routes.home}>
-            <Button text='Go to home' variant='PRIMARY' />
+            {isDark ? (
+              <button
+                type='button'
+                className='py-2.5 px-6 text-sm font-semibold rounded-xl text-white transition-all duration-200 active:scale-[0.98] shadow-md cursor-pointer'
+                style={{ backgroundColor: '#FF5757' }}
+              >
+                Go to home
+              </button>
+            ) : (
+              <Button text='Go to home' variant='PRIMARY' />
+            )}
           </Link>
         </div>
       </div>
@@ -267,80 +309,156 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 px-4 py-8 sm:py-10 pb-[max(1.5rem,env(safe-area-inset-bottom))]'>
+    <div
+      className={`relative flex h-screen items-center justify-center overflow-hidden px-3 transition-colors duration-300 ${
+        isDark
+          ? 'bg-[#0a0a0b] text-zinc-100'
+          : 'bg-gradient-to-b from-slate-50 via-white to-slate-50'
+      }`}
+    >
       <Head>
         <title>{`Checkout — ${productLabel}`}</title>
         <meta
           name='description'
           content={`Complete your ${productLabel} purchase securely.`}
         />
+        <style>{`html, body { overflow: hidden !important; }`}</style>
       </Head>
 
-      <main className='mx-auto w-full max-w-lg'>
-        <div className='mb-4 flex items-center justify-center gap-2 text-xs text-slate-500'>
-          <ShieldCheckIcon className='h-4 w-4 text-emerald-600' aria-hidden />
+      {isDark && (
+        <div
+          aria-hidden
+          className='pointer-events-none absolute -top-32 right-[-10%] h-[420px] w-[420px] rounded-full blur-[120px]'
+          style={{
+            backgroundColor: 'rgba(255,87,87,0.10)',
+          }}
+        />
+      )}
+
+      <main className='relative z-10 mx-auto w-full max-w-sm overflow-y-auto max-h-[calc(100vh-2rem)] py-3'>
+        <div
+          className={`mb-1 flex items-center justify-center gap-1.5 text-[10px] ${isDark ? 'text-zinc-500' : 'text-slate-400'}`}
+        >
+          <ShieldCheckIcon
+            className={`h-3 w-3 ${isDark ? 'text-[#FF5757]' : 'text-emerald-600'}`}
+            aria-hidden
+          />
           <span>Secure checkout · Cashfree</span>
         </div>
 
-        <div className='overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/80'>
-          <div className='border-b border-slate-100 bg-gradient-to-r from-indigo-50/80 to-sky-50/50 px-5 py-5 sm:px-6 sm:py-6'>
-            <div className='flex gap-4'>
-              <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-indigo-100'>
-                <ProductIcon className='h-6 w-6 text-indigo-600' aria-hidden />
+        <div
+          className={`relative overflow-hidden rounded-2xl transition-all duration-300 ${
+            isDark
+              ? 'border border-zinc-800/80 bg-[#0e0e0e]/95 backdrop-blur-xl shadow-2xl'
+              : 'bg-white shadow-sm ring-1 ring-slate-200/80'
+          }`}
+        >
+          <div
+            className={`border-b px-3 py-2 ${
+              isDark
+                ? 'border-zinc-800/60 bg-gradient-to-r from-zinc-900/50 to-zinc-900/20'
+                : 'border-slate-100 bg-gradient-to-r from-indigo-50/80 to-sky-50/50'
+            }`}
+          >
+            <div className='flex items-center gap-2'>
+              <div
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all ${
+                  isDark
+                    ? 'bg-zinc-800/80 ring-1 ring-zinc-700/60'
+                    : 'bg-white shadow-sm ring-1 ring-indigo-100'
+                }`}
+              >
+                <ProductIcon
+                  className={`h-3.5 w-3.5 ${isDark ? 'text-[#FF5757]' : 'text-indigo-600'}`}
+                  aria-hidden
+                />
               </div>
               <div className='min-w-0 flex-1'>
                 <Text
                   level='h1'
-                  className='text-lg font-semibold tracking-tight text-slate-900 sm:text-xl'
+                  className={`text-xs font-semibold tracking-tight ${isDark ? 'text-zinc-100' : 'text-slate-900'}`}
                 >
                   {productLabel}
                 </Text>
-                <Text level='p' className='mt-1 text-sm text-slate-600'>
-                  One-time payment · Instant access after confirmation
+                <Text
+                  level='p'
+                  className={`text-[9px] leading-tight ${isDark ? 'text-zinc-400' : 'text-slate-500'}`}
+                >
+                  One-time · Instant access
                 </Text>
               </div>
             </div>
           </div>
 
-          <div className='p-5 sm:p-6'>
+          <div className='p-2.5'>
             {isUserLoading ? (
               <div className='flex items-center gap-3 py-2'>
                 <div
-                  className='h-11 w-11 animate-pulse rounded-full bg-slate-200'
+                  className={`h-9 w-9 animate-pulse rounded-full ${isDark ? 'bg-zinc-800' : 'bg-slate-200'}`}
                   aria-hidden
                 />
-                <div className='flex-1 space-y-2'>
-                  <div className='h-4 w-40 animate-pulse rounded bg-slate-200' />
-                  <div className='h-3 w-56 animate-pulse rounded bg-slate-100' />
+                <div className='flex-1 space-y-1.5'>
+                  <div
+                    className={`h-3.5 w-32 animate-pulse rounded ${isDark ? 'bg-zinc-800' : 'bg-slate-200'}`}
+                  />
+                  <div
+                    className={`h-2.5 w-48 animate-pulse rounded ${isDark ? 'bg-zinc-800/60' : 'bg-slate-100'}`}
+                  />
                 </div>
               </div>
             ) : !user ? (
-              <div className='space-y-5'>
-                <Text level='p' className='text-slate-700 leading-relaxed'>
+              <div className='space-y-4'>
+                <Text
+                  level='p'
+                  className={`leading-relaxed text-xs ${isDark ? 'text-zinc-300' : 'text-slate-700'}`}
+                >
                   Sign in with the account that should receive this purchase.
                 </Text>
                 <Link href={loginHref} className='block'>
-                  <Button
-                    text='Sign in to continue'
-                    variant='PRIMARY'
-                    className='w-full'
-                  />
+                  {isDark ? (
+                    <button
+                      type='button'
+                      className='w-full py-2.5 px-4 text-xs font-semibold rounded-xl text-white transition-all duration-200 active:scale-[0.98] shadow-md cursor-pointer'
+                      style={{ backgroundColor: '#FF5757' }}
+                    >
+                      Sign in to continue
+                    </button>
+                  ) : (
+                    <Button
+                      text='Sign in to continue'
+                      variant='PRIMARY'
+                      className='w-full py-2 text-xs'
+                    />
+                  )}
                 </Link>
               </div>
             ) : (
-              <form className='space-y-6' onSubmit={onSubmitPay}>
-                <div className='flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/80 p-3'>
-                  <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white'>
+              <form className='space-y-2' onSubmit={onSubmitPay}>
+                <div
+                  className={`flex items-center gap-1.5 rounded-md border p-1 ${
+                    isDark
+                      ? 'border-zinc-800 bg-zinc-900/40'
+                      : 'border-slate-200 bg-slate-50/80'
+                  }`}
+                >
+                  <div
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white ${
+                      isDark ? 'bg-[#FF5757]' : 'bg-indigo-600'
+                    }`}
+                  >
                     {user.name?.charAt(0)?.toUpperCase() ?? '?'}
                   </div>
                   <div className='min-w-0 flex-1'>
                     <Text
                       level='p'
-                      className='truncate font-semibold text-slate-900'
+                      className={`truncate text-[11px] font-semibold ${isDark ? 'text-zinc-200' : 'text-slate-900'}`}
                     >
                       {user.name}
                     </Text>
-                    <Text level='p' className='truncate text-xs text-slate-500'>
+                    <Text
+                      level='p'
+                      className={`truncate text-[9px] leading-none ${isDark ? 'text-zinc-500' : 'text-slate-400'}`}
+                    >
                       {user.email}
                     </Text>
                   </div>
@@ -358,6 +476,7 @@ const CheckoutPage = () => {
                   otherPricingBanners={otherPricingBanners}
                   bannersError={bannersError}
                   onUseOffer={handleUseOffer}
+                  isDark={isDark}
                 />
 
                 <CheckoutOrderSummary
@@ -365,41 +484,87 @@ const CheckoutPage = () => {
                   quote={quote}
                   quoteError={quoteError}
                   onRetry={loadQuote}
+                  isDark={isDark}
                 />
 
                 {(sdkError || payError) && (
                   <div
-                    className='rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800'
+                    className={`rounded border px-2 py-1.5 text-[11px] ${
+                      isDark
+                        ? 'border-red-950 bg-red-950/20 text-red-400'
+                        : 'border-red-200 bg-red-50 text-red-700'
+                    }`}
                     role='alert'
                   >
                     {payError || sdkError}
                   </div>
                 )}
 
-                <div className='space-y-3'>
-                  <Button
-                    type='submit'
-                    text={primaryCtaText}
-                    variant='PRIMARY'
-                    className='w-full py-3 text-base font-semibold shadow-sm'
-                    active={canPay && !isPaying}
-                    isLoading={isPaying}
-                  />
+                <div className='space-y-1.5'>
+                  {isDark ? (
+                    <button
+                      type='submit'
+                      disabled={!canPay || isPaying}
+                      className='w-full py-2 px-4 text-xs font-semibold rounded-lg text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_16px_rgba(255,87,87,0.15)] hover:shadow-[0_0_22px_rgba(255,87,87,0.3)] cursor-pointer'
+                      style={{
+                        backgroundColor: '#FF5757',
+                      }}
+                    >
+                      {isPaying ? (
+                        <span className='flex items-center justify-center gap-2'>
+                          <svg
+                            className='animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-white'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                          >
+                            <circle
+                              className='opacity-25'
+                              cx='12'
+                              cy='12'
+                              r='10'
+                              stroke='currentColor'
+                              strokeWidth='4'
+                            />
+                            <path
+                              className='opacity-75'
+                              fill='currentColor'
+                              d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                            />
+                          </svg>
+                          {primaryCtaText}
+                        </span>
+                      ) : (
+                        primaryCtaText
+                      )}
+                    </button>
+                  ) : (
+                    <Button
+                      type='submit'
+                      text={primaryCtaText}
+                      variant='PRIMARY'
+                      className='w-full py-2 text-xs font-semibold shadow-sm'
+                      active={canPay && !isPaying}
+                      isLoading={isPaying}
+                    />
+                  )}
                   {!isCashfreeLoaded && (
                     <Text
                       level='p'
-                      className='text-center text-xs text-slate-500'
+                      className={`text-center text-[10px] ${isDark ? 'text-zinc-500' : 'text-slate-400'}`}
                     >
-                      Loading the payment gateway — this usually takes a second.
+                      Loading payment gateway…
                     </Text>
                   )}
                 </div>
 
-                <div className='flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500'>
-                  <span className='inline-flex items-center gap-1'>
-                    <LockClosedIcon className='h-3.5 w-3.5' aria-hidden />
-                    Encrypted checkout
-                  </span>
+                <div
+                  className={`flex items-center justify-center gap-1 text-[10px] ${isDark ? 'text-zinc-600' : 'text-slate-400'}`}
+                >
+                  <LockClosedIcon
+                    className={`h-2.5 w-2.5 ${isDark ? 'text-zinc-600' : 'text-slate-400'}`}
+                    aria-hidden
+                  />
+                  <span>Encrypted checkout</span>
                 </div>
               </form>
             )}

@@ -5,6 +5,10 @@ import { User } from "@/lib/database/models";
 import { toObjectId } from "@/lib/database/queries/common";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import {
+  normalizeDsaDuration,
+  ONCAMPUS_EXPERIENCE_LEVEL,
+} from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -45,10 +49,21 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    const normalizedDuration = normalizeDsaDuration(String(duration));
+    if (!normalizedDuration) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Invalid duration. Use 1Month, 3Months, 6Months, or 1Year",
+        }),
+      );
+    }
+
     const updatePayload: Record<string, unknown> = {
       "oncampus.onboardingCompleted": true,
-      "oncampus.duration": duration,
+      "oncampus.duration": normalizedDuration,
       "oncampus.offCampus": offCampus === true || offCampus === "true",
+      "oncampus.experienceLevel": ONCAMPUS_EXPERIENCE_LEVEL,
     };
 
     const updated = await User.findByIdAndUpdate(

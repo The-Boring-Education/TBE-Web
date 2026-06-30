@@ -1,0 +1,133 @@
+---
+description: Rules for TypeScript types, interfaces, and type definitions across all TBE-Web packages
+globs: ["packages/types/src/**/*.ts", "packages/interface/src/**/*.ts", "apps/api/src/lib/interfaces/**/*.ts"]
+alwaysApply: false
+---
+
+# TypeScript Types & Interfaces Skill
+
+## Purpose
+Types are shared across all apps via `@tbe/types` (DB + API types) and `@tbe/interface` (component + page props). This skill prevents duplication, ensures separation between database types and UI types, and enforces the naming conventions established in the codebase.
+
+## Rules
+1. **DB model interfaces go in `packages/types/src/database.ts`** — types like `UserModel`, `CourseModel`.
+2. **API request/response types go in `packages/types/src/api.ts`** — types like `APIResponseType`, `APIMakeRequestProps`.
+3. **Component props interfaces go in `packages/interface/src/Components.ts`** — types consumed by `@tbe/components`.
+4. **Page-level props go in `packages/interface/src/page.ts`** — `PageProps`, `GetSEOMetaResponseType`.
+5. **Never use `type` for object shapes that extend or are extended** — use `interface`. Use `type` for unions and intersections.
+6. **Never use `any`** — use `unknown` for truly unknown values. If you must, add a `// eslint-disable-next-line @typescript-eslint/no-explicit-any` comment with a reason.
+7. **Always export named exports** — no default exports from type files.
+8. **Enum-style string unions go in `packages/types/src/database.ts`** — e.g., `UserRoleType`, `GoalType`. Never use TypeScript `enum` keyword — use `type` unions.
+9. **All `APIResponseType` shapes must have `status: boolean`** — this is the universal contract.
+10. **Use `as const` for constant object maps** — not TypeScript enums.
+11. **Prefix interfaces with nothing** — no `I` prefix (no `IUser`). Use `UserModel`, `UserProps`, etc.
+
+## Patterns
+
+### Database type (in packages/types/src/database.ts)
+```ts
+// Union type for DB enums
+export type SubscriptionType = "FREE" | "PREMIUM" | "ENTERPRISE";
+
+// Model interface mirroring Mongoose schema
+export interface UserModel {
+  _id: string;
+  email: string;
+  name: string;
+  role: UserRoleType;
+  isOnboarded: boolean;
+  subscription: SubscriptionType;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### API response type (in packages/types/src/api.ts)
+```ts
+export interface GetUserResponseType {
+  status: boolean;
+  data?: UserModel;
+  message?: string;
+  error?: string;
+}
+```
+
+### Component props interface (in packages/interface/src/Components.ts)
+```ts
+export interface ResourceCardProps {
+  /** Title displayed in the card header */
+  title: string;
+  /** Optional description text */
+  description?: string;
+  /** Loading skeleton state */
+  isLoading?: boolean;
+  /** Visual variant */
+  variant?: "DEFAULT" | "COMPACT" | "FEATURED";
+  /** Callback when card is clicked */
+  onClick?: () => void;
+}
+```
+
+### Constant map with as const
+```ts
+// packages/types/src/database.ts or packages/constants/src/
+export const SUBSCRIPTION_TIERS = {
+  FREE: "FREE",
+  PREMIUM: "PREMIUM",
+  ENTERPRISE: "ENTERPRISE",
+} as const;
+
+export type SubscriptionType = (typeof SUBSCRIPTION_TIERS)[keyof typeof SUBSCRIPTION_TIERS];
+```
+
+## Anti-Patterns
+
+### ❌ TypeScript enum keyword
+```ts
+// BAD — TypeScript enums have runtime overhead and don't work with const assertions
+enum UserRole { TECH_STUDENT = "TECH_STUDENT", WORKING_PROFESSIONAL = "WORKING_PROFESSIONAL" }
+```
+```ts
+// GOOD
+export type UserRoleType = "TECH_STUDENT" | "WORKING_PROFESSIONAL" | "NON_TECH_STUDENT";
+```
+
+### ❌ Using any without justification
+```ts
+// BAD
+const processData = (data: any) => { return data.value; };
+```
+```ts
+// GOOD
+const processData = (data: unknown) => {
+  if (typeof data === "object" && data !== null && "value" in data) {
+    return (data as { value: string }).value;
+  }
+  return null;
+};
+```
+
+### ❌ Duplicating types across packages
+```ts
+// BAD — UserModel defined in both apps/api AND packages/types
+// apps/api/src/lib/interfaces/database.ts
+interface UserModel { email: string; /* ... */ }
+// packages/types/src/database.ts
+interface UserModel { email: string; /* ... */ }  // duplicate!
+```
+```ts
+// GOOD — single source in packages/types, import everywhere else
+import type { UserModel } from "@tbe/types";
+```
+
+### ❌ I-prefixed interface names
+```ts
+// BAD
+interface IButtonProps { text: string; }
+interface IUserModel { email: string; }
+```
+```ts
+// GOOD
+interface ButtonProps { text: string; }
+interface UserModel { email: string; }
+```

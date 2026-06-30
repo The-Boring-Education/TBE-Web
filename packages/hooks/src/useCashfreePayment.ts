@@ -1,4 +1,4 @@
-import { isProductionEnv } from "@tbe/constants";
+import { getCashfreeMode } from "@tbe/constants";
 import { useCallback, useEffect, useState } from "react";
 
 declare global {
@@ -77,7 +77,7 @@ const useCashfreePayment = () => {
     }
 
     let mode = "sandbox";
-    if (isProductionEnv) {
+    if (getCashfreeMode() === "production") {
       mode = "production";
     }
 

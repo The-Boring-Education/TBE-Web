@@ -1,9 +1,10 @@
 import { useAnalytics } from "@tbe/hooks";
 import type { QuestionLinkProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
-import Link from "next/link";
 import { FaLock, FaRegCircle, FaStar } from "react-icons/fa";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+
+import LinkText from "../Typography/Link";
 
 const QuestionLink = ({
   href,
@@ -28,16 +29,14 @@ const QuestionLink = ({
     ? "hover:text-contentDark"
     : "hover:text-contentLight";
 
-  let additionalClasses =
+  const additionalClasses =
     currentQuestionId === questionId
-      ? isCompleted
-        ? isDark
-          ? "text-contentDark font-semibold bg-green-800"
-          : "text-dark font-semibold bg-green-200"
-        : isDark
-          ? "text-contentDark font-semibold bg-gray-800"
-          : "text-dark font-semibold bg-gray-200"
-      : "";
+      ? isDark
+        ? "bg-[#111] border-gray-700/60 shadow-[0_0_12px_rgba(0,0,0,0.25)] text-white font-medium"
+        : "bg-gray-100 border-gray-300 shadow-sm text-dark font-medium"
+      : isCompleted
+        ? "border-transparent opacity-80"
+        : "border-transparent";
 
   const iconColor = isCompleted
     ? isDark
@@ -47,34 +46,28 @@ const QuestionLink = ({
       ? "text-gray-400"
       : "text-greyDark";
 
-  if (frequency === "Most Asked") {
-    additionalClasses += " border-l-4 border-primary";
-  } else if (frequency === "Asked Frequently") {
-    additionalClasses += " border-l-4 border-secondary";
-  } else if (frequency === "Asked Sometimes") {
-    additionalClasses += " border-l-4 border-greyDark";
-  }
-
   return (
-    <Link
+    <LinkText
+      suppressGlobalUiClick
+      analyticsId={`learning_question_${questionId}`}
+      analyticsLabel={`question:${title}`}
       key={questionId}
-      className={`flex items-center gap-1 w-full p-2 mb-1 rounded text-left pre-title ${
+      className={`flex items-center gap-1 w-full p-2 mb-1 rounded border text-left pre-title ${
         isLocked
           ? isDark
-            ? "text-gray-500 cursor-not-allowed"
-            : "text-gray-700 cursor-not-allowed"
+            ? "text-gray-500 cursor-not-allowed border-transparent"
+            : "text-gray-700 cursor-not-allowed border-transparent"
           : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
       }`}
       href={href}
-      data-analytics
-      data-analytics-label={`question:${title}`}
       onClick={(e) => {
         if (isLocked) {
           e.preventDefault();
           return;
         }
 
-        // Track question start
+        e.preventDefault(); // Prevent full page navigation to support shallow routing
+
         trackEvent({
           action: "QUESTION_START",
           category: "Learning",
@@ -121,7 +114,7 @@ const QuestionLink = ({
         )}
       </div>
       {title}
-    </Link>
+    </LinkText>
   );
 };
 

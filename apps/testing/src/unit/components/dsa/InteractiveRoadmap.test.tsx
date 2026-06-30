@@ -172,6 +172,15 @@ describe("InteractiveRoadmap", () => {
     expect(screen.getByText("► scroll horizontally ►")).toBeInTheDocument();
   });
 
+  it("uses full-width scroll canvas with left inset (not 100vw under sidebar)", () => {
+    render(<InteractiveRoadmap {...defaultProps} />);
+    const scroll = screen.getByTestId("roadmap-canvas-scroll");
+    expect(scroll).toHaveClass("w-full");
+    expect(scroll).not.toHaveClass("w-[100vw]");
+    expect(scroll).toHaveClass("scroll-pl-6");
+    expect(scroll).toHaveClass("lg:scroll-pl-12");
+  });
+
   it("renders SVG paths in the canvas", () => {
     const { container } = render(<InteractiveRoadmap {...defaultProps} />);
     const paths = container.querySelectorAll("path");

@@ -4,6 +4,7 @@ import { sendRequest } from "@tbe/utils";
 export interface OncampusPreferences {
   duration: string; // "1Month" | "3Months" | "6Months" | "1Year"
   offCampus: boolean;
+  experienceLevel?: string;
 }
 
 export const getOncampusPreferences = async (

@@ -219,6 +219,38 @@ describe("migrateCollectionByContentId (integration)", () => {
     expect(onTarget?.slug).toBe("portfolio-api");
   });
 
+  it("migrates core subjects (coresubjects collection)", async () => {
+    const coll = ENTITY_MAP.coreSubjects;
+    const src = sourceConn.collection(coll);
+    const tgt = targetConn.collection(coll);
+    await src.deleteMany({});
+    await tgt.deleteMany({});
+
+    await src.insertOne({
+      contentId: "77777777-7777-7777-7777-777777777777",
+      subjectId: "OS",
+      label: "Operating Systems",
+      chapters: [],
+      isActive: true,
+      order: 1,
+    });
+
+    const result = await migrateCollectionByContentId(
+      sourceConn,
+      targetConn,
+      "coreSubjects",
+      coll,
+      { dryRun: false, verbose: false },
+    );
+
+    expect(result.inserted).toBe(1);
+    const onTarget = await tgt.findOne({
+      contentId: "77777777-7777-7777-7777-777777777777",
+    });
+    expect(onTarget?.subjectId).toBe("OS");
+    expect(onTarget?.label).toBe("Operating Systems");
+  });
+
   it("dry-run does not write to target", async () => {
     const coll = ENTITY_MAP.courses;
     const src = sourceConn.collection(coll);

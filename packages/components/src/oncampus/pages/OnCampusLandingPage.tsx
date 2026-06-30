@@ -1,4 +1,5 @@
 import { CAMPUS_PREP_RESOURCES } from "@tbe/constants";
+import { usePaymentStatus, useUser } from "@tbe/hooks";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
@@ -20,6 +21,15 @@ import {
  */
 export default function OnCampusLandingPage() {
   const router = useRouter();
+  const { user } = useUser();
+
+  const { isPurchased } = usePaymentStatus({
+    userId: user?.id,
+    productId: "oncampus",
+    productType: "ONCAMPUS",
+    isPremium: true,
+  });
+
   const comingSoonItems = CAMPUS_PREP_RESOURCES.filter(
     (item) => !item.isAvailable,
   ).map((item) => ({
@@ -33,7 +43,12 @@ export default function OnCampusLandingPage() {
 
   return (
     <Fragment>
-      <Navbar variant="oncampus" theme="dark" />
+      <Navbar
+        variant="oncampus"
+        theme="dark"
+        hidePricingLink={isPurchased === true}
+        profileRoute="/profile"
+      />
       <main className="dark min-h-screen bg-[#0A0A0A] pt-20 text-white">
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 md:py-24">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">

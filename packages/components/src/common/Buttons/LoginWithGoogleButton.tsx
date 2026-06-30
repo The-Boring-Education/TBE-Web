@@ -15,6 +15,7 @@ const LoginWithGoogleButton = ({ text = "Login" }: LoginWithGoogleBtnProps) => {
     <Button
       text={text}
       variant="PRIMARY"
+      suppressGlobalUiClick
       onClick={() => {
         trackEvent({
           action: "USER_LOGIN",

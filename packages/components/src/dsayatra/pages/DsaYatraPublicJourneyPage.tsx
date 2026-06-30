@@ -2,9 +2,9 @@ import { routes, TOPIC_LABELS } from "@tbe/constants";
 import type { UserProfile } from "@tbe/interface";
 import { getTimeOfDay, withProtocol } from "@tbe/utils";
 import {
+  ExternalLink,
   Github,
   Linkedin,
-  Monitor,
   PieChart,
   Target,
   User,
@@ -194,7 +194,7 @@ const DsaYatraPublicJourneyPage = () => {
 
             {(profile.linkedInUrl ||
               profile.githubUrl ||
-              profile.portfolioUrl) && (
+              profile.leetCodeUrl) && (
               <div className="flex justify-center flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-6">
                 {profile.linkedInUrl && (
                   <a
@@ -216,14 +216,14 @@ const DsaYatraPublicJourneyPage = () => {
                     <Github className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                 )}
-                {profile.portfolioUrl && (
+                {profile.leetCodeUrl && (
                   <a
-                    href={withProtocol(profile.portfolioUrl)}
+                    href={withProtocol(profile.leetCodeUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 sm:w-12 sm:h-12 border-border hover:border-primary/50 bg-muted/50 transition-all duration-200 hover:scale-105 rounded-md border flex items-center justify-center"
                   >
-                    <Monitor className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                 )}
               </div>

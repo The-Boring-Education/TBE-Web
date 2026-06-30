@@ -486,6 +486,8 @@ export interface LoadingSpinnerProps {
   marginClass?: string;
   className?: string;
   borderColour?: string;
+  fullPage?: boolean;
+  label?: string;
 }
 
 export interface LinerProgressBarProps {
@@ -1106,9 +1108,13 @@ export interface NavbarVariantConfig {
   requiresAuth?: boolean;
   showGamification?: boolean;
   showNotifications?: boolean;
+  /** When false, the Login redirect button is hidden (e.g. resources app handles auth via its own CTA). */
+  showLoginButton?: boolean;
   navigation?: NavbarNavigationConfig;
   /** Renders a top-nav link immediately before the Tools popover (desktop + mobile). */
   pricingNavLink?: { href: string; label?: string };
+  /** Custom accent color for variant (e.g. 'emerald-500' for resources). */
+  accentColor?: string;
 }
 
 export type FooterVariant =
@@ -1133,6 +1139,7 @@ export interface MainNavbarProps {
   customBranding?: ReactNode;
   customActions?: ReactNode[];
   dashboardRoute?: string;
+  profileRoute?: string;
   theme?: "light" | "dark";
   totalChapters?: number;
   completedChapters?: number;
@@ -1143,6 +1150,8 @@ export interface MainNavbarProps {
   compact?: boolean;
   onSignOut?: () => void;
   userId?: string;
+  /** When true, the pricing nav link defined by the variant config is hidden (e.g. user already subscribed). */
+  hidePricingLink?: boolean;
 }
 
 export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";

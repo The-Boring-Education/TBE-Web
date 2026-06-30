@@ -1,12 +1,13 @@
 import type {
   DatabaseQueryResponseType,
+  TBEAppType,
   UserPointsAction,
   UserPointsActionType,
 } from "@/lib/interfaces";
 import { calculateUserPointsForAction } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { Gamification } from "../models";
+import { Gamification, UserActivityLog } from "../models";
 
 const addGamificationDocInDB = async (
   userId: string,
@@ -51,6 +52,7 @@ const getUserPointsFromDB = async (
 const updateUserPointsInDB = async (
   userId: string,
   actionType: UserPointsActionType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const pointsEarned = calculateUserPointsForAction(actionType);
@@ -58,6 +60,7 @@ const updateUserPointsInDB = async (
     const action: UserPointsAction = {
       actionType,
       pointsEarned,
+      ...(app ? { app } : {}),
     };
 
     const updatedGamification = await Gamification.findOneAndUpdate(
@@ -73,6 +76,15 @@ const updateUserPointsInDB = async (
       return { error: "User not found" };
     }
 
+    // Log activity for streak tracking (intentionally unawaited, best-effort)
+    if (app) {
+      void logUserActivityForStreak(userId, app, actionType).catch((err) => {
+        logger.error("DB: logUserActivityForStreak failed silently", {
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
+    }
+
     return { data: updatedGamification };
   } catch (error) {
     logger.error("DB: updateUserPointsInDB failed", {
@@ -80,6 +92,37 @@ const updateUserPointsInDB = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     return { error: "Error updating user points", details: error };
+  }
+};
+
+/**
+ * Records a single activity entry in UserActivityLog for streak tracking.
+ * Silently skips duplicates for the same (userId, app, date) tuple.
+ */
+const logUserActivityForStreak = async (
+  userId: string,
+  app: TBEAppType,
+  actionType: UserPointsActionType,
+  metadata?: Record<string, unknown>,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    await UserActivityLog.create({ userId, app, actionType, date, metadata });
+    return { data: { logged: true } };
+  } catch (error: unknown) {
+    const isDuplicateKey =
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code: unknown }).code === 11000;
+
+    // Ignore duplicate key errors (11000) – this entry was already logged today
+    if (!isDuplicateKey) {
+      logger.error("DB: logUserActivityForStreak failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+    return { error: "Failed to log activity" };
   }
 };
 
@@ -122,10 +165,11 @@ const handleGamificationPoints = async (
   isCompleted: boolean,
   userId: string,
   actionType: UserPointsActionType,
+  app?: TBEAppType,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const { error, data } = isCompleted
-      ? await updateUserPointsInDB(userId, actionType)
+      ? await updateUserPointsInDB(userId, actionType, app)
       : await deductUserPointsFromDB(userId, actionType);
 
     if (error)
@@ -212,5 +256,6 @@ export {
   getLeaderboardFromDB,
   getUserPointsFromDB,
   handleGamificationPoints,
+  logUserActivityForStreak,
   updateUserPointsInDB,
 };

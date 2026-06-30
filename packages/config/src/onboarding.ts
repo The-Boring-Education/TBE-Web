@@ -391,6 +391,27 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
           fromUser: (user: BaseUser) => user.dsaYatra?.targetTopics || [],
         },
       }),
+      createField('linkedInUrl', 'LinkedIn URL', 'url', 8, {
+        required: false,
+        placeholder: 'Paste your LinkedIn profile URL',
+        prefill: {
+          fromUser: (user: BaseUser) => user.linkedInUrl || '',
+        },
+      }),
+      createField('githubUrl', 'GitHub URL', 'url', 8, {
+        required: false,
+        placeholder: 'Paste your GitHub profile URL',
+        prefill: {
+          fromUser: (user: BaseUser) => user.githubUrl || '',
+        },
+      }),
+      createField('leetCodeUrl', 'LeetCode URL', 'url', 8, {
+        required: false,
+        placeholder: 'Paste your LeetCode profile URL',
+        prefill: {
+          fromUser: (user: BaseUser) => user.leetCodeUrl || '',
+        },
+      }),
     ],
     api: {
       endpoint: () => `/dsayatra/onboarding`,
@@ -404,6 +425,9 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
         experienceLevel: form.experienceLevel,
         target: form.target,
         targetTopics: form.targetTopics,
+        ...(form.linkedInUrl ? { linkedInUrl: form.linkedInUrl } : {}),
+        ...(form.githubUrl ? { githubUrl: form.githubUrl } : {}),
+        ...(form.leetCodeUrl ? { leetCodeUrl: form.leetCodeUrl } : {}),
         ...(from ? { from } : {}),
       }),
     },

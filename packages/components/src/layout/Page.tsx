@@ -34,7 +34,11 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     };
   }, [isClient, router.events]);
 
-  if (router.pathname === routes.checkout) {
+  if (
+    router.pathname === routes.checkout ||
+    router.pathname === routes.paymentStatus ||
+    router.pathname === routes.login
+  ) {
     return (
       <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>
     );

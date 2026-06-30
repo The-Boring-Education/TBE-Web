@@ -25,6 +25,7 @@ import type {
   SubscriptionFeature,
   SubscriptionStatus,
   SubscriptionType,
+  TBEAppType,
   UserPointsActionType,
   UserRoleType,
   WorkDomainType,
@@ -81,6 +82,7 @@ export interface UserModel {
   };
   oncampus?: {
     onboardingCompleted?: boolean;
+    experienceLevel?: string;
     duration?: "1Month" | "3Months" | "6Months" | "1Year";
     offCampus?: boolean;
   };
@@ -224,6 +226,10 @@ export interface InterviewSheetQuestionModel {
   frequency: QuestionFrequencyType;
   companyTypes?: CompanyType[];
   priority: PriorityType;
+  difficulty?: string;
+  content?: {
+    markdownContent?: string;
+  };
   toObject: () => InterviewSheetQuestionModel;
   resources?: QuestionResourcesModel;
 }
@@ -576,6 +582,7 @@ export interface JobAggregateModel extends Document {
 export interface UserPointsAction {
   actionType: UserPointsActionType;
   pointsEarned: number;
+  app?: TBEAppType;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -588,11 +595,21 @@ export interface GamificationModel {
 
 export interface LeaderboardModel extends Document {
   type: LeaderboardEnum;
+  app?: TBEAppType;
   date: Date;
   entries: {
     userId: Types.ObjectId;
     points: number;
   }[];
+}
+
+export interface UserActivityLogModel extends Document {
+  userId: Types.ObjectId;
+  app: TBEAppType;
+  actionType: UserPointsActionType;
+  /** YYYY-MM-DD calendar day of the activity for fast streak lookups */
+  date: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface FeedbackModel extends Document {
@@ -623,6 +640,7 @@ export interface PrepYatraSubscriptionModel extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   type: SubscriptionType;
+  productType?: string;
   amount: number;
   duration: number;
   startDate: Date;

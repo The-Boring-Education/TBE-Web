@@ -1,9 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { getDYUserByIdFromDB, updateDYUserByIdInDB } from "@/lib/database";
+import {
+  buildUserSocialProfileUpdate,
+  getDYUserByIdFromDB,
+  updateDYUserByIdInDB,
+} from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { normalizeDsaDuration } from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -33,6 +38,9 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       preferredLanguage,
       experienceLevel,
       targetTopics,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
     }: DSAYatraOnboardingPayload = req.body;
 
     if (!userId || !name || !username || !timeline || !target) {
@@ -40,6 +48,16 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         sendAPIResponse({
           status: false,
           message: "Required fields: userId, name, username, timeline, target",
+        }),
+      );
+    }
+
+    const normalizedTimeline = normalizeDsaDuration(timeline);
+    if (!normalizedTimeline) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Invalid timeline. Use 1Month, 3Months, 6Months, or 1Year",
         }),
       );
     }
@@ -56,10 +74,15 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     const existingUser = userResult.data;
 
     const updatePayload = {
-      name,
-      userName: username,
+      ...buildUserSocialProfileUpdate({
+        name,
+        userName: username,
+        linkedInUrl,
+        githubUrl,
+        leetCodeUrl,
+      }),
       "dsaYatra.dyOnboarded": true,
-      "dsaYatra.timeline": timeline,
+      "dsaYatra.timeline": normalizedTimeline,
       "dsaYatra.target": target,
       "dsaYatra.preferredLanguage": preferredLanguage,
       "dsaYatra.experienceLevel": experienceLevel,

@@ -3,12 +3,14 @@ import {
   DsaUpsellModal,
   FreemiumLockBanner,
   LearningEnvironmentLayout,
+  LoadingSpinner,
   SEO,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
+  useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
   useDsaTopics,
   useDsaTopicSummaries,
@@ -34,7 +36,12 @@ const SheetsPageClient = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
 
-  const { data: topicRows, isLoading: topicsLoading } = useDsaTopicSummaries();
+  const {
+    data: topicRows,
+    isLoading: topicsLoading,
+    isError: topicSummariesError,
+    error: topicSummariesErrorValue,
+  } = useDsaTopicSummaries("DSA_YATRA");
   const userTargetCompanies = useMemo(() => {
     const pyTargets = (user as any)?.prepYatra?.targetCompanies || [];
     const dsaTarget = (user as any)?.dsaYatra?.target;
@@ -59,14 +66,15 @@ const SheetsPageClient = () => {
     [topicRows],
   );
 
-  // DSA Yatra is off-campus prep: pass offCampus=true (×1.5 bucket caps)
-  // and the user-selected timeline so paid users get a study-plan-sized sheet.
-  const dsaTimeline = (user as any)?.dsaYatra?.timeline as string | undefined;
-  const { questions: topicQuestions, loading: topicQuestionsLoading } =
-    useDsaQuestionsForTopic(selectedTopic, {
-      duration: dsaTimeline,
-      offCampus: true,
-    });
+  // Fetch questions for the selected topic
+  const {
+    questions: topicQuestions,
+    loading: topicQuestionsLoading,
+    isError: topicQuestionsError,
+    errorMessage: topicQuestionsErrorMessage,
+  } = useDsaQuestionsForTopic(selectedTopic, {
+    productType: "DSA_YATRA",
+  });
 
   const [topicQuestionsCache, setTopicQuestionsCache] = useState<
     Record<string, DsaQuestion[]>
@@ -142,12 +150,27 @@ const SheetsPageClient = () => {
   const questions = topicQuestions;
   const sheetsLoading =
     topicsLoading || (!!selectedTopic && topicQuestionsLoading);
+  const sheetsErrorMessage = topicSummariesError
+    ? topicSummariesErrorValue instanceof Error
+      ? topicSummariesErrorValue.message
+      : "Failed to load DSA topics"
+    : selectedTopic && topicQuestionsError
+      ? topicQuestionsErrorMessage ||
+        "Failed to load questions for the selected topic"
+      : null;
 
-  useEffect(() => {
-    if (router.isReady && router.query.topic) {
-      setSelectedTopic(router.query.topic as string);
-    }
-  }, [router.isReady, router.query.topic]);
+  const {
+    handleTopicClick,
+    handleQuestionClick: handleUrlSyncQuestionClick,
+    handleBackToTopics,
+  } = useDsaPrepUrlSync({
+    router,
+    selectedTopic,
+    setSelectedTopic,
+    setSelectedQuestion,
+    topicQuestions: questions,
+    topicQuestionsLoading: !!selectedTopic && topicQuestionsLoading,
+  });
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -160,38 +183,34 @@ const SheetsPageClient = () => {
       setShowPayment(true);
       return;
     }
-    setSelectedQuestion(question);
     setShowPayment(false);
-  };
-
-  const handleTopicClick = (topic: string) => {
-    setSelectedTopic(topic);
-    setSelectedQuestion(null);
-    setShowPayment(false);
-  };
-
-  const handleBackToTopics = () => {
-    setSelectedTopic(null);
-    setSelectedQuestion(null);
-    setShowPayment(false);
+    handleUrlSyncQuestionClick(question);
   };
 
   if (sheetsLoading || userLoading || isProgressLoading) {
     return (
-      <div className="flex min-h-screen bg-[#0A0A0A] font-sans items-center justify-center px-6 text-center">
-        <div className="space-y-1">
-          <p className="text-[12px] font-semibold text-gray-200 leading-tight">
-            Loading workspace
-            <span className="inline-flex w-4 justify-start" aria-hidden>
-              <span className="animate-pulse">.</span>
-              <span className="animate-pulse [animation-delay:150ms]">.</span>
-              <span className="animate-pulse [animation-delay:300ms]">.</span>
-            </span>
-          </p>
-          <p className="text-[10px] font-medium text-gray-500 leading-tight">
-            Just a moment
-          </p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (sheetsErrorMessage) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0A] px-6 text-center">
+        <p className="mb-3 text-lg font-semibold text-[#ff6b6b]">
+          Unable to load DSA sheet
+        </p>
+        <p className="mb-6 max-w-xl text-sm text-[#a0a0a0]">
+          {sheetsErrorMessage}
+        </p>
+        <button
+          type="button"
+          onClick={() => router.reload()}
+          className="rounded-md border border-[#ff5757]/40 px-4 py-2 text-sm font-semibold text-[#ff5757] transition-colors hover:bg-[#ff5757]/10"
+        >
+          Try again
+        </button>
       </div>
     );
   }

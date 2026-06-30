@@ -3,18 +3,13 @@ import "@/styles/globals.css";
 import "@/styles/colors.css";
 
 import { AuthProvider } from "@tbe/auth";
-import {
-  initGA,
-  installGlobalAnalyticsListeners,
-  trackPageview,
-} from "@tbe/components/analytics";
 import { GamificationProvider } from "@tbe/gamification";
-import { useUser } from "@tbe/hooks";
+import { useTracking, useUser } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
@@ -29,38 +24,33 @@ const AppContent = ({
 }) => {
   const router = useRouter();
   useUser();
-
-  // ✅ Initialize Google Analytics
-  useEffect(() => {
-    initGA();
-    installGlobalAnalyticsListeners();
-
-    const handleRouteChange = (url: string) => trackPageview(url);
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => router.events.off("routeChangeComplete", handleRouteChange);
-  }, [router.events]);
+  useTracking();
 
   const isDashboardRoute = router.pathname.startsWith("/dashboard");
   const isDSAPrepRoute = router.pathname.startsWith("/sheets");
+  const isPatternQuizRoute = router.pathname === "/pattern-quiz";
   // Exclude slug pages from DashboardLayout (they should be full-screen study view)
-  // router.pathname for dynamic routes is the pattern like '/interview-sheets/[sheetSlug]' or '/dsa-prep/[sheetSlug]'
+  // router.pathname for dynamic routes is the pattern like '/sheets' (with topic param) or '/dashboard/quizzes'
   const isStudyRoute = router.pathname.includes("[sheetSlug]");
   // Exclude the main DSA prep page for fullscreen experience
   const isDSAMainRoute = router.pathname === "/sheets";
   // Exclude the Aptitude page for fullscreen workspace experience
-  const isAptitudeRoute = router.pathname === "/dashboard/aptitude";
+  const isAptitudeRoute = router.pathname === "/aptitude";
   // Exclude the Interview Prep main page for fullscreen workspace experience
   const isInterviewPrepMainRoute = router.pathname === "/interview-sheets";
   // Exclude the Quizzes page for fullscreen workspace experience
   const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
+  // Exclude the Core Subjects page for fullscreen workspace experience
+  const isCoreSubjectsRoute = router.pathname.startsWith("/coresubjects");
 
   const shouldUseDashboardLayout =
-    (isDashboardRoute || isDSAPrepRoute) &&
+    (isDashboardRoute || isDSAPrepRoute || isPatternQuizRoute) &&
     !isStudyRoute &&
     !isDSAMainRoute &&
     !isAptitudeRoute &&
     !isInterviewPrepMainRoute &&
-    !isQuizzesRoute;
+    !isQuizzesRoute &&
+    !isCoreSubjectsRoute;
 
   /** Same idea as DSA Yatra: /pricing is full-screen only (no shell, no app chrome wrapper). */
   const isPricingRoute = router.pathname === "/pricing";

@@ -1,0 +1,139 @@
+---
+description: Rules for SEO, metadata, and JSON-LD schemas using the custom SEO component
+globs: ["packages/components/src/layout/SEO.tsx", "packages/components/src/layout/SEOWrapper.tsx", "apps/*/src/pages/**/*.tsx", "apps/api/src/pages/api/**/sitemap*"]
+alwaysApply: false
+---
+
+# SEO & Metadata Skill
+
+## Purpose
+TBE-Web uses a custom `<SEO>` component (Next.js `<Head>`) with JSON-LD structured data support. Every public-facing page must have SEO meta. This skill ensures canonical URLs, Open Graph tags, and JSON-LD schemas are set correctly and consistently.
+
+## Rules
+1. **Every public page must render `<SEO seoMeta={seoMeta} />`** from `@tbe/components` inside `<Fragment>`.
+2. **`seoMeta` must come from `getPreFetchProps`** via `getStaticProps` or `getServerSideProps` — never hardcode meta strings in components.
+3. **For Course pages, add `schema={{ type: "Course", course: { ... } }}`** to the `<SEO>` component.
+4. **For FAQ sections, add `schema={{ type: "FAQPage", faq: [...] }}`**.
+5. **For article/blog/webinar pages, add `schema={{ type: "Article", article: { ... } }}`**.
+6. **Always include `appId` from `@tbe/constants` `AppIdentifier`** in the SEO component — this determines the favicon.
+7. **Canonical URLs are generated automatically** by the SEO component from `useRouter().asPath` — never set `<link rel="canonical">` manually.
+8. **Open Graph images must be absolute URLs** — use `STATIC_FILE_PATH` from `@tbe/constants` for path construction.
+9. **`next-sitemap` config is in each app's `next-sitemap.config.js`** — never manually manage sitemap.xml files.
+10. **Dynamic pages must be excluded from static sitemap if data-dependent** — add to `exclude` in `next-sitemap.config.js`.
+
+## Patterns
+
+### Basic page with SEO
+```tsx
+import { SEO } from "@tbe/components";
+import type { PageProps } from "@tbe/interface";
+import { getPreFetchProps } from "@tbe/utils";
+import type { GetStaticProps } from "next";
+import { Fragment } from "react";
+
+const AboutPage = ({ seoMeta }: PageProps) => {
+  return (
+    <Fragment>
+      <SEO seoMeta={seoMeta} appId="platform" />
+      {/* page content */}
+    </Fragment>
+  );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return await getPreFetchProps({ pageId: "about" });
+};
+
+export default AboutPage;
+```
+
+### Course page with JSON-LD
+```tsx
+const CoursePage = ({ seoMeta, course }: CoursePageProps) => {
+  return (
+    <Fragment>
+      <SEO
+        seoMeta={seoMeta}
+        appId="platform"
+        schema={{
+          type: "Course",
+          course: {
+            name: course.title,
+            description: course.description,
+            provider: "The Boring Education",
+            url: `https://www.theboringeducation.com/courses/${course.slug}`,
+            skillLevel: course.difficulty,
+          },
+        }}
+      />
+      {/* course content */}
+    </Fragment>
+  );
+};
+```
+
+### FAQ page with JSON-LD
+```tsx
+<SEO
+  seoMeta={seoMeta}
+  schema={{
+    type: "FAQPage",
+    faq: [
+      { question: "What is TBE?", answer: "The Boring Education is..." },
+      { question: "How do I enroll?", answer: "Click Get Started..." },
+    ],
+  }}
+/>
+```
+
+### Breadcrumb schema
+```tsx
+<SEO
+  seoMeta={seoMeta}
+  schema={{
+    type: "BreadcrumbList",
+    breadcrumbs: [
+      { name: "Home", url: "https://www.theboringeducation.com/" },
+      { name: "Courses", url: "https://www.theboringeducation.com/shiksha" },
+      { name: course.title, url: `https://www.theboringeducation.com/shiksha/${course.slug}` },
+    ],
+  }}
+/>
+```
+
+## Anti-Patterns
+
+### ❌ Hardcoded meta tags in component
+```tsx
+// BAD
+const CoursePage = () => (
+  <>
+    <Head>
+      <title>React Course | TBE</title>
+      <meta name="description" content="Learn React..." />
+    </Head>
+    {/* ... */}
+  </>
+);
+```
+```tsx
+// GOOD — meta comes from API via getPreFetchProps
+const CoursePage = ({ seoMeta }: PageProps) => (
+  <Fragment>
+    <SEO seoMeta={seoMeta} appId="platform" />
+    {/* ... */}
+  </Fragment>
+);
+```
+
+### ❌ Manual canonical tag
+```tsx
+// BAD
+<Head>
+  <link rel="canonical" href="https://www.theboringeducation.com/courses/react" />
+</Head>
+```
+```tsx
+// GOOD — SEO component handles canonical automatically from router
+<SEO seoMeta={seoMeta} appId="platform" />
+```

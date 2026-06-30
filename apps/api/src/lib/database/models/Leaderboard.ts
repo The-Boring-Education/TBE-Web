@@ -1,6 +1,6 @@
 import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, LeaderboardEnum } from "@/lib/constants";
+import { DATABASE_MODELS, LeaderboardEnum, TBE_APP } from "@/lib/constants";
 import { type LeaderboardModel } from "@/lib/interfaces";
 
 const LeaderboardEntrySchema = new Schema(
@@ -25,6 +25,18 @@ const LeaderboardSchema = new Schema(
       enum: LeaderboardEnum,
       required: true,
     },
+    app: {
+      type: String,
+      enum: TBE_APP,
+      required: false,
+      /**
+       * null → global leaderboard (all apps combined).
+       * A specific TBEAppType value → app-scoped leaderboard.
+       * The compound index on { type, app } treats null as a distinct value,
+       * so each (type, null) pair maps to exactly one global document.
+       */
+      default: null,
+    },
     date: {
       type: Date,
       required: true,
@@ -36,6 +48,9 @@ const LeaderboardSchema = new Schema(
   },
   { timestamps: true },
 );
+
+// Compound index so each (type, app) pair has exactly one leaderboard document
+LeaderboardSchema.index({ type: 1, app: 1 }, { unique: true, sparse: false });
 
 const Leaderboard: Model<LeaderboardModel> =
   models[DATABASE_MODELS.LEADERBOARD] ||

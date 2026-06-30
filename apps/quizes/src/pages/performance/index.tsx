@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth";
-import { Button } from "@tbe/components";
+import { Button, LoadingSpinner } from "@tbe/components";
 import { Card, CardContent } from "@tbe/components/quizes";
 import { Layout } from "@tbe/components/quizes";
 import { ProtectedRoute } from "@tbe/components/quizes";
@@ -68,10 +68,7 @@ const PerformanceContent = () => {
     return (
       <Layout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto" />
-            <p className="mt-4 text-lg text-gray-600">Loading performance...</p>
-          </div>
+          <LoadingSpinner label="Loading performance..." />
         </div>
       </Layout>
     );

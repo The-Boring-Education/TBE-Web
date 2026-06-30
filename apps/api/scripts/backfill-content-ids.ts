@@ -22,21 +22,13 @@ import { v4 as uuidv4 } from "uuid";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
+import { CONTENT_ENTITY_MAP } from "../src/lib/migration/content-entity-map";
+
 /** `apps/api/` — scripts run as ESM (`"type": "module"`), so use import.meta.url not __dirname */
 const API_ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-
-const ENTITY_MAP: Record<string, string> = {
-  interviewSheets: "interviewsheets",
-  dsaQuestions: "dsaquestions",
-  studyGuides: "studyguides",
-  aptitudeTopics: "aptitudetopics",
-  courses: "courses",
-  projects: "projects",
-  quizzes: "quizzes",
-};
 
 type EnvOption = "local" | "dev" | "prod";
 
@@ -158,7 +150,9 @@ async function main() {
     updated: number;
   }> = [];
 
-  for (const [entityName, collectionName] of Object.entries(ENTITY_MAP)) {
+  for (const [entityName, collectionName] of Object.entries(
+    CONTENT_ENTITY_MAP,
+  )) {
     try {
       const result = await backfillCollection(conn, entityName, collectionName);
       summary.push({

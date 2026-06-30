@@ -17,6 +17,7 @@ vi.mock("framer-motion", () => ({
 vi.mock("markdown-it", () => ({
   default: vi.fn().mockImplementation(() => ({
     render: (text: string) => `<p>${text}</p>`,
+    renderInline: (text: string) => text,
   })),
 }));
 
@@ -99,29 +100,6 @@ describe("DsaPrepWorkspace", () => {
     expect(screen.queryByText("Valid Parentheses")).not.toBeInTheDocument();
   });
 
-  it("should show back button when topic is selected", () => {
-    renderWithQueryClient(
-      <DsaPrepWorkspace {...defaultProps} selectedTopic="ARRAY" />,
-    );
-
-    expect(screen.getByText(/View All Topics/i)).toBeInTheDocument();
-  });
-
-  it("should call onBackToTopics when back button is clicked", () => {
-    const onBackToTopics = vi.fn();
-
-    renderWithQueryClient(
-      <DsaPrepWorkspace
-        {...defaultProps}
-        selectedTopic="ARRAY"
-        onBackToTopics={onBackToTopics}
-      />,
-    );
-
-    fireEvent.click(screen.getByText(/View All Topics/i));
-    expect(onBackToTopics).toHaveBeenCalled();
-  });
-
   it("should render empty state when no topic is selected", () => {
     renderWithQueryClient(<DsaPrepWorkspace {...defaultProps} />);
 
@@ -170,5 +148,45 @@ describe("DsaPrepWorkspace", () => {
     );
 
     expect(screen.getByText("Questions")).toBeInTheDocument();
+  });
+
+  it("should show Completed next to Copy Link and call onToggleComplete when clicked", () => {
+    const onToggleComplete = vi.fn();
+
+    renderWithQueryClient(
+      <DsaPrepWorkspace
+        {...defaultProps}
+        selectedTopic="ARRAY"
+        selectedQuestion={mockQuestions[0]}
+        completedQuestionIds={[]}
+        onToggleComplete={onToggleComplete}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: /copy link/i }),
+    ).toBeInTheDocument();
+    const completedBtn = screen.getByRole("button", { name: /^completed$/i });
+    expect(completedBtn).toBeInTheDocument();
+
+    fireEvent.click(completedBtn);
+    expect(onToggleComplete).toHaveBeenCalledTimes(1);
+    expect(onToggleComplete).toHaveBeenCalledWith("q1");
+  });
+
+  it("should show Completed state when question id is in completedQuestionIds", () => {
+    renderWithQueryClient(
+      <DsaPrepWorkspace
+        {...defaultProps}
+        selectedTopic="ARRAY"
+        selectedQuestion={mockQuestions[0]}
+        completedQuestionIds={["q1"]}
+        onToggleComplete={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: /completed/i }),
+    ).toBeInTheDocument();
   });
 });

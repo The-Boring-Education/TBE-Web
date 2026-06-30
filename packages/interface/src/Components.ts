@@ -34,7 +34,23 @@ export interface SectionProps {
   isDev?: boolean;
 }
 
-export interface LinkProps {
+export interface DelegatedInteractiveAnalyticsProps {
+  /** Stable delegated id (`data-tbe-analytics-id`); surfaced as GA param `element_id`. */
+  analyticsId?: string;
+  /** Overrides inner-text label for delegated clicks (`data-tbe-analytics-label`). */
+  analyticsLabel?: string;
+  /** Attribute `data-tbe-surface` on this element so nearest ancestor wins in GA. */
+  analyticsSurface?: string;
+  /** When true, delegated `ui_click` is not emitted for this element. */
+  suppressGlobalUiClick?: boolean;
+  /**
+   * When true, emits `data-tbe-analytics` so the delegated listener targets this element
+   * (e.g. `div[role="button"]`). Ignore for native `button`, `input`, `a[href]`.
+   */
+  analyticsMarker?: boolean;
+}
+
+export interface LinkProps extends DelegatedInteractiveAnalyticsProps {
   children?: ReactNode;
   className?: string;
   href: string;
@@ -74,14 +90,16 @@ export interface LinkButtonProps extends LinkProps {
   noLoader?: boolean;
 }
 
-export interface ButtonProps {
-  variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+type ButtonVariant =
+  | "OUTLINE"
+  | "PRIMARY"
+  | "SECONDARY"
+  | "GHOST"
+  | "SUCCESS"
+  | "NEUTRAL";
+
+export interface ButtonProps extends DelegatedInteractiveAnalyticsProps {
+  variant: ButtonVariant;
   className?: string;
   text?: string;
   children?: React.ReactNode;
@@ -95,6 +113,22 @@ export interface ButtonProps {
   animationType?: "DEFAULT" | "BOUNCE" | "GLOW";
   size?: "SMALL" | "MEDIUM" | "LARGE";
   type?: "button" | "submit" | "reset";
+}
+
+export interface CopyButtonProps extends Omit<
+  ButtonProps,
+  "text" | "onClick" | "icon" | "variant"
+> {
+  /** Optional explicit value to copy. Defaults to the current page URL. */
+  value?: string;
+  text?: string;
+  copiedText?: string;
+  variant?: ButtonVariant;
+  copiedClassName?: string;
+  showIcon?: boolean;
+  resetAfterMs?: number;
+  onCopySuccess?: () => void;
+  onCopyError?: (error: unknown) => void;
 }
 
 export interface PageLayoutProps {
@@ -264,6 +298,8 @@ export interface LoadingSpinnerProps {
   marginClass?: string;
   className?: string;
   borderColour?: string;
+  fullPage?: boolean;
+  label?: string;
 }
 
 export interface NavbarDropdownContainerProps {
@@ -464,6 +500,8 @@ export interface LearningSidebarPanelProps {
   children?: ReactNode;
   theme?: "dark" | "light";
   onClose?: () => void;
+  /** GA delegated `surface` for chapter/question lists inside the panel (default `learning_sidebar`). */
+  analyticsSurface?: string;
 }
 
 export interface LearningSidebarListProps<T = any> {
@@ -928,11 +966,14 @@ export interface UserProfile {
   userSkills?: string[];
   userSkillsLastUpdated?: string;
   occupation?: string;
+  /** Stored from platform onboarding / profile */
+  contactNo?: string;
   portfolioUrl?: string;
   purpose?: string[];
   prepYatra: {
     goal?: string;
     experienceLevel?: string;
+    workDomain?: string;
     pyOnboarded?: boolean;
     targetCompanies?: string[];
     preferences?: {
@@ -946,6 +987,12 @@ export interface UserProfile {
     experienceLevel?: string;
     preferredLanguage?: string;
     companies?: string[];
+  };
+  oncampus?: {
+    onboardingCompleted?: boolean;
+    experienceLevel?: string;
+    duration?: string;
+    offCampus?: boolean;
   };
 }
 
@@ -1165,6 +1212,7 @@ export interface RoadmapNode {
 }
 
 import type {
+  PatternQuizResult,
   StudyGuideConfig,
   StudyGuideDivider,
   StudyGuideModel,
@@ -1198,4 +1246,16 @@ export interface TailorYourJourneyProps {
   imageVariant?: "src" | "placeholder";
   imageSrc: string;
   imageAlt: string;
+}
+
+export interface PatternQuizPanelProps {
+  questionsPerRound?: number;
+  className?: string;
+  onComplete?: (result: PatternQuizResult) => void;
+}
+
+export interface PatternQuizBannerProps {
+  onStart?: () => void;
+  className?: string;
+  compact?: boolean;
 }

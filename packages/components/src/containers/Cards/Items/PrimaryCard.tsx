@@ -18,7 +18,7 @@ const PrimaryCard = ({
     >
       <Image
         alt={imageAltText}
-        className="h-40 w-48"
+        className="h-40 w-48 mx-auto"
         fullHeight={false}
         fullWidth={false}
         src={`${image}`}

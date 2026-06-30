@@ -12,7 +12,7 @@ import type { TopNavbarLinkProps } from "@tbe/types";
 import { cn } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 
 import {
@@ -61,11 +61,29 @@ const Navbar = ({
   showBackButton = false,
   backButtonHref = "/",
   compact = false,
+  hidePricingLink = false,
+  profileRoute,
 }: MainNavbarProps = {}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [learningSidebarOpen, setLearningSidebarOpen] = useState(false);
   const { isVisible } = useScrollDirection(100);
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        openPopover &&
+        navRef.current &&
+        !navRef.current.contains(event.target as Node)
+      ) {
+        setOpenPopover(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openPopover]);
 
   const handleSetOpen = (popoverName: string) => {
     setOpenPopover(openPopover === popoverName ? null : popoverName);
@@ -140,8 +158,14 @@ const Navbar = ({
 
   const showNotifications = variantConfig.showNotifications !== false;
 
+  const showLoginButton = variantConfig.showLoginButton !== false;
+
+  // Compute accent color class from variant config, fallback to primary
+  const accentColorClass = variantConfig.accentColor || "primary";
+
   return (
     <motion.header
+      ref={navRef}
       animate={{ y: isVisible ? 0 : -100 }}
       className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-md shadow-white/5 dark:shadow-[0_1px_15px_rgba(255,255,255,0.1)]`}
       initial={{ y: 0 }}
@@ -189,7 +213,10 @@ const Navbar = ({
           <>
             <div className="flex lg:hidden gap-[8px] items-center">
               {requiresAuth && (
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                <UserAvatar
+                  dashboardRoute={finalDashboardRoute}
+                  profileRoute={profileRoute}
+                />
               )}
               <button
                 className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
@@ -209,9 +236,14 @@ const Navbar = ({
               ))}
               {requiresAuth && showNotifications && <NotificationPopover />}
               {/* {showGamification && <UserPointButton />} */}
-              {requiresAuth && <LoginRedirectButton text="Login" />}
+              {requiresAuth && showLoginButton && (
+                <LoginRedirectButton text="Login" />
+              )}
               {requiresAuth && (
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                <UserAvatar
+                  dashboardRoute={finalDashboardRoute}
+                  profileRoute={profileRoute}
+                />
               )}
             </div>
           </>
@@ -221,7 +253,10 @@ const Navbar = ({
               {requiresAuth && showNotifications && <NotificationPopover />}
               {showGamification && <UserPointButton />}
               {requiresAuth && (
-                <UserAvatar dashboardRoute={finalDashboardRoute} />
+                <UserAvatar
+                  dashboardRoute={finalDashboardRoute}
+                  profileRoute={profileRoute}
+                />
               )}
               <button
                 className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
@@ -239,7 +274,7 @@ const Navbar = ({
                 {issuesNav.visible && issuesNav.links[0]?.href && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
-                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
                       href={issuesNav.links[0].href}
                       target={issuesNav.links[0]?.target}
                     >
@@ -258,10 +293,10 @@ const Navbar = ({
                     <NavbarDropdownContainer links={learnNav.links} />
                   </PopoverContainer>
                 )}
-                {variantConfig.pricingNavLink && (
+                {variantConfig.pricingNavLink && !hidePricingLink && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
-                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
                       href={variantConfig.pricingNavLink.href}
                     >
                       {variantConfig.pricingNavLink.label ?? "Pricing"}
@@ -292,9 +327,14 @@ const Navbar = ({
 
                 {requiresAuth && showNotifications && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
-                {requiresAuth && <LoginRedirectButton text="Login" />}
+                {requiresAuth && showLoginButton && (
+                  <LoginRedirectButton text="Login" />
+                )}
                 {requiresAuth && (
-                  <UserAvatar dashboardRoute={finalDashboardRoute} />
+                  <UserAvatar
+                    dashboardRoute={finalDashboardRoute}
+                    profileRoute={profileRoute}
+                  />
                 )}
               </div>
             )}
@@ -358,7 +398,7 @@ const Navbar = ({
                         {showGamification && <UserPointButton />}
                       </FlexContainer>
                     )}
-                    {requiresAuth && (
+                    {requiresAuth && showLoginButton && (
                       <FlexContainer
                         className="gap-1"
                         direction="col"
@@ -376,14 +416,14 @@ const Navbar = ({
                         onLinkClick={handleCloseMobileMenu}
                       />
                     )}
-                    {variantConfig.pricingNavLink && (
+                    {variantConfig.pricingNavLink && !hidePricingLink && (
                       <FlexContainer
                         className="py-2"
                         direction="col"
                         itemCenter={false}
                       >
                         <Link
-                          className={`text-base font-medium ${theme === "dark" ? "text-white" : "text-black"} hover:text-primary`}
+                          className={`text-base font-medium ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
                           href={variantConfig.pricingNavLink.href}
                           onClick={handleCloseMobileMenu}
                         >

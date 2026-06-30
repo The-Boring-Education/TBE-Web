@@ -5,7 +5,7 @@ import { Progress } from "../ui/progress";
 import type { StatCardProps } from "./types";
 
 const statCardBaseClassName =
-  "bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 group rounded-xl p-5 h-full relative overflow-hidden flex flex-col justify-center";
+  "min-w-0 max-w-full bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#ff5757]/40 hover:shadow-[0_0_20px_rgba(255,87,87,0.15)] transition-all duration-300 group rounded-xl p-5 h-full relative overflow-hidden flex flex-col justify-center";
 
 const badgeVariantClass: Record<
   NonNullable<StatCardProps["badge"]>["variant"],
@@ -15,7 +15,7 @@ const badgeVariantClass: Record<
   danger: "border border-[#ff6b6b]/20 bg-[#ff6b6b]/10 text-[#ff6b6b]",
 };
 
-export function StatCard({
+export const StatCard = ({
   title,
   value,
   description,
@@ -24,31 +24,31 @@ export function StatCard({
   progress,
   badge,
   className,
-}: StatCardProps) {
+}: StatCardProps) => {
   const showSubsection = description || caption;
 
   return (
     <Card className={cn(statCardBaseClassName, className)}>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#ff5757]/0 to-[#ff5757]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <div className="relative z-10 flex flex-row items-center justify-between pb-2">
-        <p className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] lg:text-[11px]">
+      <div className="relative z-10 flex min-w-0 flex-row items-center justify-between gap-2 pb-2">
+        <p className="min-w-0 truncate text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] lg:text-[11px]">
           {title}
         </p>
-        {Icon ? <Icon className="h-4 w-4 text-[#ff5757]" /> : null}
+        {Icon ? <Icon className="h-4 w-4 shrink-0 text-[#ff5757]" /> : null}
       </div>
-      <div className="mt-1">
-        <div className="text-3xl font-black leading-tight text-[#f0f0f0] sm:text-4xl">
+      <div className="mt-1 min-w-0">
+        <div className="break-words text-3xl font-black leading-tight text-[#f0f0f0] sm:text-4xl">
           {value}
         </div>
         {showSubsection && (
-          <div className="mt-1.5 space-y-0.5">
+          <div className="mt-1.5 min-w-0 space-y-0.5">
             {description && (
-              <p className="text-xs font-medium text-[#808080] lg:text-sm">
+              <p className="break-words text-xs font-medium text-[#808080] lg:text-sm">
                 {description}
               </p>
             )}
             {caption && (
-              <p className="text-[10px] font-medium tracking-tight text-[#505050] lg:text-xs">
+              <p className="break-words text-[10px] font-medium tracking-tight text-[#505050] lg:text-xs">
                 {caption}
               </p>
             )}
@@ -75,4 +75,4 @@ export function StatCard({
       </div>
     </Card>
   );
-}
+};

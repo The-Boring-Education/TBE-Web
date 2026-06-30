@@ -4,7 +4,6 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -46,7 +45,6 @@ export const config = [
     plugins: {
       "react-hooks": pluginReactHooks,
       "simple-import-sort": simpleImportSort,
-      "unused-imports": unusedImports,
     },
     settings: { react: { version: "detect" } },
     rules: {
@@ -56,17 +54,8 @@ export const config = [
       // Import sorting
       "simple-import-sort/exports": "warn",
       "simple-import-sort/imports": "warn",
-      // Autofix/remove unused imports and keep variable checks.
-      "unused-imports/no-unused-imports": "warn",
-      "unused-imports/no-unused-vars": [
-        "warn",
-        {
-          vars: "all",
-          varsIgnorePattern: "^_",
-          args: "after-used",
-          argsIgnorePattern: "^_",
-        },
-      ],
+      // typescript-eslint recommended is applied again above; keep unused bindings via
+      // `unused-imports/*` rules from `@tbe/eslint-config/base` (underscore prefix allowed).
       "@typescript-eslint/no-unused-vars": "off",
       // React-specific rules
       "react/display-name": "off",

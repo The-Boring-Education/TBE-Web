@@ -1,0 +1,148 @@
+---
+description: Rules for MongoDB Mongoose models and query functions in apps/api/src/lib/database/
+globs: ["apps/api/src/lib/database/**/*.ts"]
+alwaysApply: false
+---
+
+# MongoDB + Mongoose Skill
+
+## Purpose
+All database access is in `apps/api`. Models live in `src/lib/database/models/`, query functions live in `src/lib/database/queries/`. This skill ensures models use typed interfaces, queries return `DatabaseQueryResponseType`, constants drive enum values, and connection is managed by the singleton `connectToDatabase`.
+
+## Rules
+1. **Every model must have a matching TypeScript interface** in `apps/api/src/lib/interfaces/database.ts` and/or `packages/types/src/database.ts`.
+2. **Schema enum values must reference imported constants** — never inline string literals like `enum: ["FAANG", "STARTUP"]`. Import from `@/lib/constants`.
+3. **Every query function returns `Promise<DatabaseQueryResponseType>`** — `{ data?: any; error?: string }`. Never throw from a query function.
+4. **Catch all errors in query functions** — return `{ error: "human-readable message" }` on failure.
+5. **Use `DATABASE_MODELS` constant** when calling `model(DATABASE_MODELS.USER, ...)` — never hardcode the model name string.
+6. **Check for existing model with `models[name]`** before registering — use the pattern `models[name] || model(name, schema)`.
+7. **Never call `connectToDatabase` inside a model file** — connection is handled by `withApiHandler` middleware.
+8. **Use virtual getters for computed fields** (e.g., `isExpired`, `isValid`) — never add computed logic in route handlers.
+9. **All monetary values are stored as integers (paise/cents)** — never store floats for amounts.
+10. **Indexes must be declared on the schema** — not added manually via Mongoose's `ensureIndexes`.
+
+## Patterns
+
+### Model file structure
+```ts
+// apps/api/src/lib/database/models/Resource.ts
+import { type Model, model, models, Schema } from "mongoose";
+import { DATABASE_MODELS, RESOURCE_TYPES } from "@/lib/constants";
+import type { ResourceModel } from "@/lib/interfaces";
+
+const ResourceSchema = new Schema<ResourceModel>(
+  {
+    title: {
+      type: String,
+      required: [true, "Title is required"],
+      trim: true,
+    },
+    type: {
+      type: String,
+      enum: RESOURCE_TYPES,  // constant, not inline array
+      required: [true, "Type is required"],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: DATABASE_MODELS.USER,
+    },
+  },
+  { timestamps: true },
+);
+
+// Virtual getter for computed field
+ResourceSchema.virtual("displayTitle").get(function () {
+  return this.title.trim().toUpperCase();
+});
+
+const ResourceModelClass: Model<ResourceModel> =
+  (models[DATABASE_MODELS.RESOURCE] as Model<ResourceModel>) ||
+  model<ResourceModel>(DATABASE_MODELS.RESOURCE, ResourceSchema);
+
+export default ResourceModelClass;
+```
+
+### Query function structure
+```ts
+// apps/api/src/lib/database/queries/resource.ts
+import type { DatabaseQueryResponseType } from "@/lib/utils/mongodb";
+import ResourceModel from "@/lib/database/models/Resource";
+
+export const getResourceByIdFromDB = async (
+  id: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const resource = await ResourceModel.findById(id).lean();
+    if (!resource) return { data: null };
+    return { data: resource };
+  } catch (error) {
+    return { error: "Error fetching resource by id" };
+  }
+};
+
+export const createResourceInDB = async (
+  payload: CreateResourcePayload,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const resource = await ResourceModel.create(payload);
+    return { data: resource };
+  } catch (error) {
+    return { error: "Error creating resource" };
+  }
+};
+```
+
+### Exporting from index
+```ts
+// apps/api/src/lib/database/models/index.ts
+export { default as ResourceModel } from "./Resource";
+// and so on...
+```
+
+## Anti-Patterns
+
+### ❌ Inline enum strings in schema
+```ts
+// BAD
+type: { type: String, enum: ["FAANG", "STARTUP", "MNC"] }
+```
+```ts
+// GOOD
+import { COMPANY_TYPES } from "@/lib/constants";
+type: { type: String, enum: COMPANY_TYPES }
+```
+
+### ❌ Throwing from a query function
+```ts
+// BAD
+export const getUser = async (id: string) => {
+  const user = await UserModel.findById(id); // throws if invalid id
+  return user;
+};
+```
+```ts
+// GOOD
+export const getUser = async (id: string): Promise<DatabaseQueryResponseType> => {
+  try {
+    const user = await UserModel.findById(id).lean();
+    return { data: user };
+  } catch (error) {
+    return { error: "Error fetching user" };
+  }
+};
+```
+
+### ❌ Registering model without checking for existing
+```ts
+// BAD — causes "Cannot overwrite model" error in Next.js dev mode
+const UserModel = model("User", UserSchema);
+```
+```ts
+// GOOD
+const UserModel = (models[DATABASE_MODELS.USER] as Model<UserModel>) ||
+  model<UserModel>(DATABASE_MODELS.USER, UserSchema);
+```
