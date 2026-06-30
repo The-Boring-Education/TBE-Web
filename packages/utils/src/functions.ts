@@ -31,7 +31,10 @@ import crypto from "crypto";
 import { twMerge } from "tailwind-merge";
 
 const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.API_URL}/${url}`);
+  const separator = url.includes("?") ? "&" : "?";
+  const response = await fetch(
+    `${envConfig.API_URL}/${url}${separator}t=${Date.now()}`,
+  );
   return await response.json();
 };
 

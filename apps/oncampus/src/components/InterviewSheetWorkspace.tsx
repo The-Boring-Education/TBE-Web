@@ -21,7 +21,7 @@ import {
   useGamificationContext,
   useGamifiedAction,
 } from "@tbe/gamification";
-import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
+import { useAnalytics, useApi, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
 import { cn, sendRequest } from "@tbe/utils";
@@ -75,15 +75,16 @@ const buildPathWithQuery = (
 };
 
 export const InterviewSheetWorkspace = ({
-  sheet,
+  sheet: initialSheet,
   meta,
   slug,
   seoMeta,
   currentQuestionId: initialQuestionId,
 }: SheetPageProps) => {
   const router = useRouter();
+  const [sheet, setSheet] = useState(initialSheet);
   const [, setSheetMeta] = useState<string>(meta || "");
-  const [questions, setQuestions] = useState(sheet?.questions || []);
+  const [questions, setQuestions] = useState(initialSheet?.questions || []);
   const [showFeedback, setShowFeedback] = useState(false);
 
   const [showPayment, setShowPayment] = useState(false);
@@ -107,9 +108,53 @@ export const InterviewSheetWorkspace = ({
     mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
       sendRequest(params),
   });
-  const { user } = useUser();
+  const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+
+  const { makeRequest: makeEnrollRequest, loading: enrollLoading } = useApi(
+    "interview-prep/enrollSheet",
+  );
+
+  const enrollSheet = () => {
+    makeEnrollRequest({
+      method: "POST",
+      url: routes.api.enrollSheet,
+      body: {
+        userId: user?.id,
+        sheetId: sheet?._id,
+      },
+    })
+      .then(async () => {
+        trackEvent({
+          action: "INTERVIEW_SHEET_ENROLL",
+          category: "InterviewSheet",
+          label: "Interview Sheet Enrolled",
+          value: {
+            userId: user?.id,
+            sheetId: sheet?._id,
+          },
+        });
+
+        await gamifiedAction.triggerGamifiedAction({
+          gamificationAction: "ENROLL_SHEET",
+          analytics: {
+            action: "INTERVIEW_SHEET_ENROLL",
+            category: "InterviewSheet",
+            label: "Interview Sheet Enrolled",
+          },
+          customMessage: "Interview sheet enrolled! Time to practice!",
+          metadata: {
+            sheetId: sheet?._id,
+            sheetName: sheet?.name,
+          },
+        });
+
+        // Revert page reload - update states dynamically in client instead!
+        setSheet((prev) => (prev ? { ...prev, isEnrolled: true } : prev));
+      })
+      .catch((error) => error);
+  };
   const { triggerCelebration, showToast } = useGamificationContext();
   const queryClient = useQueryClient();
 
@@ -293,7 +338,7 @@ export const InterviewSheetWorkspace = ({
   };
 
   const toggleCompletion = async () => {
-    if (isLocked) return;
+    if (isLocked || !sheet?.isEnrolled) return;
     setIsLoading(true);
     const oldQuestions = [...questions];
     try {
@@ -524,6 +569,15 @@ export const InterviewSheetWorkspace = ({
                 </div>
               </div>
               <div className="flex items-center gap-2 lg:hidden">
+                {isAuth && !sheet?.isEnrolled && (
+                  <Button
+                    text={enrollLoading ? "Enrolling..." : "Enroll"}
+                    isLoading={enrollLoading}
+                    variant="PRIMARY"
+                    onClick={enrollSheet}
+                    className="h-7 py-0.5 px-2 text-[10px] shrink-0 font-bold uppercase tracking-wide whitespace-nowrap"
+                  />
+                )}
                 {urlQuestionSlug && (
                   <Button
                     onClick={() => {
@@ -566,6 +620,15 @@ export const InterviewSheetWorkspace = ({
                 </Text>
               </FlexContainer>
               <div className="flex items-center gap-2 shrink-0">
+                {isAuth && !sheet?.isEnrolled && (
+                  <Button
+                    text={enrollLoading ? "Enrolling..." : "Enroll in Sheet"}
+                    isLoading={enrollLoading}
+                    variant="PRIMARY"
+                    onClick={enrollSheet}
+                    className="h-9 py-1 px-3 text-xs"
+                  />
+                )}
                 <CopyButton />
               </div>
             </div>
@@ -662,20 +725,24 @@ export const InterviewSheetWorkspace = ({
                             key="complete"
                             className="w-fit mt-2"
                             isLoading={isLoading}
-                            disabled={isLocked}
+                            disabled={isLocked || !sheet?.isEnrolled}
                             text={
                               isLoading
                                 ? "Marking..."
-                                : isQuestionCompleted
-                                  ? "Completed"
-                                  : "Mark As Completed"
+                                : !sheet?.isEnrolled
+                                  ? "Enroll to Mark Complete"
+                                  : isQuestionCompleted
+                                    ? "Completed"
+                                    : "Mark As Completed"
                             }
                             variant={
                               isQuestionCompleted
                                 ? "SUCCESS"
-                                : isLoading
+                                : !sheet?.isEnrolled
                                   ? "SECONDARY"
-                                  : "PRIMARY"
+                                  : isLoading
+                                    ? "SECONDARY"
+                                    : "PRIMARY"
                             }
                             onClick={toggleCompletion}
                           />

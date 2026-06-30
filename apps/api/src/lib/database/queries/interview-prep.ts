@@ -459,7 +459,19 @@ const markQuestionCompletedByUser = async (
           sheetId,
           "INTERVIEW_SHEET",
         );
-        if (paymentData?.purchased) hasAccess = true;
+        if (paymentData?.purchased) {
+          hasAccess = true;
+        } else {
+          // Also check if they have active ONCAMPUS subscription
+          const { data: oncampusPaymentData } = await checkPaymentStatusFromDB(
+            userId,
+            "oncampus",
+            "ONCAMPUS",
+          );
+          if (oncampusPaymentData?.purchased) {
+            hasAccess = true;
+          }
+        }
       }
 
       if (hasAccess) {
@@ -630,7 +642,19 @@ const markQuestionStarredByUser = async (
           sheetId,
           "INTERVIEW_SHEET",
         );
-        if (paymentData?.purchased) hasAccess = true;
+        if (paymentData?.purchased) {
+          hasAccess = true;
+        } else {
+          // Also check if they have active ONCAMPUS subscription
+          const { data: oncampusPaymentData } = await checkPaymentStatusFromDB(
+            userId,
+            "oncampus",
+            "ONCAMPUS",
+          );
+          if (oncampusPaymentData?.purchased) {
+            hasAccess = true;
+          }
+        }
       }
 
       if (hasAccess) {

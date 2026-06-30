@@ -507,7 +507,7 @@ export const getServerSideProps = async (context: any) => {
       if (user?.id) {
         try {
           const checkRes = await fetch(
-            `${envConfig.API_URL}${routes.api.checkStatus}?userId=${user.id}&productId=oncampus&productType=ONCAMPUS`,
+            `${envConfig.API_URL}${routes.api.checkStatus}?userId=${user.id}&productId=oncampus&productType=ONCAMPUS&t=${Date.now()}`,
           );
           const checkData = await checkRes.json();
           isPaidUser =
