@@ -4,6 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { getAllUsersWithLogsFromDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -55,4 +56,4 @@ const handleGetUsersWithLogs = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

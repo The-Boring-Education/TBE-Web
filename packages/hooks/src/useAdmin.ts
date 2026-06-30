@@ -1,14 +1,12 @@
 import { useAuth } from "@tbe/auth";
-import { routes } from "@tbe/constants";
+import { isAdminEmail, routes } from "@tbe/constants";
 import { useCallback, useState } from "react";
-
-const ADMIN_EMAIL = "theboringeducation@gmail.com";
 
 export const useAdmin = () => {
   const { user, isLoading } = useAuth();
 
   return {
-    isAdmin: user?.email === ADMIN_EMAIL,
+    isAdmin: isAdminEmail(user?.email),
     isLoading,
     user,
   };
@@ -39,7 +37,6 @@ export const useAdminData = () => {
           }
           fullUrl = url.toString();
         } catch {
-          // Fallback for invalid URLs (e.g., during SSG/build time)
           const queryString = params
             ? "?" +
               Object.entries(params)
@@ -53,7 +50,14 @@ export const useAdminData = () => {
           fullUrl = `${baseUrl}${endpoint}${queryString}`;
         }
 
-        const response = await fetch(fullUrl);
+        const token =
+          typeof document !== "undefined"
+            ? document.cookie.match(/(?:^|; )tbe_access_token=([^;]+)/)?.[1]
+            : null;
+
+        const response = await fetch(fullUrl, {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
         const result = await response.json();
 
         if (!response.ok) {

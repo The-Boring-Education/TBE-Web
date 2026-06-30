@@ -13,6 +13,7 @@ import {
   UserSheet,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 // Helper function to convert date to IST and format it
@@ -348,4 +349,4 @@ const handleAdminDashboard = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));
