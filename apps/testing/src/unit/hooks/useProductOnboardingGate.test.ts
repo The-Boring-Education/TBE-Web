@@ -118,10 +118,10 @@ describe("useProductOnboardingGate", () => {
 
     await waitFor(() => {
       expect(mockSendRequest).toHaveBeenCalled();
+      expect(result.current.isChecking).toBe(false);
     });
 
     expect(window.location.href).toBe("");
-    expect(result.current.isChecking).toBe(false);
   });
 
   it("sets isChecking to true when user is not onboarded and has finished fetching", async () => {
