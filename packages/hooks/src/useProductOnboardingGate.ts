@@ -133,7 +133,13 @@ export function useProductOnboardingGate({
   ]);
 
   const isChecking =
-    !isPublic && Boolean(isAuthenticated && user?.id) && isFetching;
+    !isPublic &&
+    Boolean(isAuthenticated && user?.id) &&
+    (isFetching ||
+      (!isError &&
+        userRecord !== undefined &&
+        userRecord !== null &&
+        !isOnboarded(userRecord)));
 
   return { isChecking };
 }

@@ -32,12 +32,12 @@ describe("useProductOnboardingGate", () => {
     // Allow assigning `window.location.href` in JSDOM
     // @ts-expect-error test double
     delete window.location;
-    window.location = { ...originalLocation, href: "" } as Location;
+    window.location = { ...originalLocation, href: "" } as any;
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
-    window.location = originalLocation;
+    window.location = originalLocation as any;
   });
 
   const opts = () => ({
@@ -117,5 +117,42 @@ describe("useProductOnboardingGate", () => {
     });
 
     expect(window.location.href).toBe("");
+  });
+
+  it("sets isChecking to true when user is not onboarded and has finished fetching", async () => {
+    mockSendRequest.mockResolvedValue({ data: { onboarded: false } });
+
+    const { result } = renderHookWithQuery(() =>
+      useProductOnboardingGate({
+        ...opts(),
+      }),
+    );
+
+    // Should start true because it's fetching
+    expect(result.current.isChecking).toBe(true);
+
+    // Wait for the redirect to happen, indicating the fetch finished and logic evaluated
+    await waitFor(() => {
+      expect(window.location.href).toContain("https://onboarding.test/?");
+    });
+    expect(result.current.isChecking).toBe(true);
+  });
+
+  it("sets isChecking to false when user is onboarded and has finished fetching", async () => {
+    mockSendRequest.mockResolvedValue({ data: { onboarded: true } });
+
+    const { result } = renderHookWithQuery(() =>
+      useProductOnboardingGate({
+        ...opts(),
+      }),
+    );
+
+    // Should start true because it's fetching
+    expect(result.current.isChecking).toBe(true);
+
+    // After fetch resolves, it should be false because they are onboarded
+    await waitFor(() => {
+      expect(result.current.isChecking).toBe(false);
+    });
   });
 });
