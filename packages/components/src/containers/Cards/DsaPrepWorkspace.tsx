@@ -185,9 +185,15 @@ const DsaPrepWorkspace = ({
                       variant="OUTLINE"
                       size="SMALL"
                       type="button"
-                      text="←"
                       className="border-gray-800 text-gray-400 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
-                    />
+                    >
+                      <span aria-hidden="true">←</span>
+                      <span className="sr-only">
+                        {isStudyGuideOpen
+                          ? "Back to questions"
+                          : "Back to topics"}
+                      </span>
+                    </Button>
                   )}
                   {currentTopicConfig?.hasStudyGuide && (
                     <button
