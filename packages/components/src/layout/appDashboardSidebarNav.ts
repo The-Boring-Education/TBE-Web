@@ -36,7 +36,6 @@ export function isDashboardSidebarLinkActive(
   pathname: string,
   asPath: string,
   href: string,
-  options?: { dashboardHomeHref?: string },
 ): boolean {
   const hrefHash = hashFromHref(href);
   if (hrefHash) {

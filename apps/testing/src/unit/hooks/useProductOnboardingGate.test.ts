@@ -32,12 +32,14 @@ describe("useProductOnboardingGate", () => {
     // Allow assigning `window.location.href` in JSDOM
     // @ts-expect-error test double
     delete window.location;
-    window.location = { ...originalLocation, href: "" } as any;
+    // @ts-expect-error test double
+    window.location = { ...originalLocation, href: "" } as unknown as Location;
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
-    window.location = originalLocation as any;
+    // @ts-expect-error test double
+    window.location = originalLocation;
   });
 
   const opts = () => ({
@@ -110,13 +112,16 @@ describe("useProductOnboardingGate", () => {
     mockSendRequest.mockResolvedValue({ data: { onboarded: false } });
     window.location.href = "";
 
-    renderHookWithQuery(() => useProductOnboardingGate({ ...opts() }));
+    const { result } = renderHookWithQuery(() =>
+      useProductOnboardingGate({ ...opts() }),
+    );
 
     await waitFor(() => {
       expect(mockSendRequest).toHaveBeenCalled();
     });
 
     expect(window.location.href).toBe("");
+    expect(result.current.isChecking).toBe(false);
   });
 
   it("sets isChecking to true when user is not onboarded and has finished fetching", async () => {
