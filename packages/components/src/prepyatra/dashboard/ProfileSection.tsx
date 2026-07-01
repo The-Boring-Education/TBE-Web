@@ -1,5 +1,6 @@
 "use client";
 
+import { formatGoalTimelineLabel } from "@tbe/utils";
 import { Copy, Edit, ExternalLink, Github, Linkedin } from "lucide-react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -196,7 +197,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               variant="default"
               className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
             >
-              {profile?.prepYatra?.goal || "Not set"}
+              {formatGoalTimelineLabel(profile?.prepYatra?.goal) || "Not set"}
             </Badge>
           </FlexContainer>
 
