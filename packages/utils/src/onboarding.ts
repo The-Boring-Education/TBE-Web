@@ -8,6 +8,29 @@ import { sendRequest } from "./api";
  * Pass `apiBaseUrl` in Vite or non-Next clients so `sendRequest` hits the API directly.
  */
 
+// Prep-yatra's "goal" has been stored in a few different raw formats over time
+// (e.g. "6_months", "6Months"), so map the known ones explicitly and fall back
+// to a generic humanization for anything else.
+const GOAL_TIMELINE_LABELS: Record<string, string> = {
+  "3_months": "3 Months",
+  "6_months": "6 Months",
+  "1_year": "1 Year",
+  "3Months": "3 Months",
+  "6Months": "6 Months",
+  "1Year": "1 Year",
+};
+
+export function formatGoalTimelineLabel(goal?: string | null): string {
+  if (!goal) return "";
+  if (GOAL_TIMELINE_LABELS[goal]) return GOAL_TIMELINE_LABELS[goal];
+
+  return goal
+    .replace(/_/g, " ")
+    .replace(/([0-9])([A-Za-z])/g, "$1 $2")
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .trim();
+}
+
 export async function checkUsernameAvailable(
   username: string,
   token?: string,
