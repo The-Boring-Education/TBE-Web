@@ -739,7 +739,7 @@ export const InterviewSheetWorkspace = ({
                               isQuestionCompleted
                                 ? "SUCCESS"
                                 : !sheet?.isEnrolled
-                                  ? "SECONDARY"
+                                  ? "PRIMARY"
                                   : isLoading
                                     ? "SECONDARY"
                                     : "PRIMARY"

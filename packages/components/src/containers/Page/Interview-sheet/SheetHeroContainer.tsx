@@ -20,7 +20,8 @@ const SheetHeroContainer = ({
   redirectTo,
   backHref,
   theme,
-}: SheetHeroContainerProps) => {
+  onEnrollSuccess,
+}: SheetHeroContainerProps & { onEnrollSuccess?: () => void }) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
@@ -64,6 +65,8 @@ const SheetHeroContainer = ({
         setTimeout(() => {
           if (redirectTo) {
             window.location.href = redirectTo;
+          } else if (onEnrollSuccess) {
+            onEnrollSuccess();
           } else {
             window.location.reload();
           }

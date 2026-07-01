@@ -399,7 +399,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                           isQuestionCompleted
                             ? "SUCCESS"
                             : !sheet.isEnrolled
-                              ? "SECONDARY"
+                              ? "PRIMARY"
                               : isLoading
                                 ? "SECONDARY"
                                 : "PRIMARY"

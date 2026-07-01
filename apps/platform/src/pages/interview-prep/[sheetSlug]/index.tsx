@@ -30,10 +30,16 @@ import { FaLock } from 'react-icons/fa';
 import InterviewQuestionContent from '@/components/InterviewQuestionContent';
 import { InterviewSheetMDXRenderer } from '@/components/InterviewSheetMDXRenderer';
 
-const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
+const SheetPage = ({
+  sheet: initialSheet,
+  meta,
+  slug,
+  seoMeta,
+}: SheetPageProps) => {
   const router = useRouter();
+  const [sheet, setSheet] = useState(initialSheet);
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');
-  const [questions, setQuestions] = useState(sheet.questions || []);
+  const [questions, setQuestions] = useState(sheet?.questions || []);
   const firstQuestionId = questions?.[0]?._id?.toString() || '';
   const [currentQuestionId, setCurrentQuestionId] = useState(firstQuestionId);
   const [isQuestionCompleted, setIsQuestionCompleted] = useState(
@@ -254,12 +260,15 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       <SEO seoMeta={seoMeta} />
       <Section className='md:p-2 p-2'>
         <SheetHeroContainer
-          id={sheet._id ?? ''}
-          isEnrolled={sheet.isEnrolled}
-          name={sheet.name ?? ''}
-          isPremium={sheet.isPremium}
+          id={sheet?._id ?? ''}
+          isEnrolled={sheet?.isEnrolled}
+          name={sheet?.name ?? ''}
+          isPremium={sheet?.isPremium}
           isPurchased={!!isPurchased} // Ensure boolean
           backHref={routes.interviewPrep}
+          onEnrollSuccess={() => {
+            setSheet((prev) => (prev ? { ...prev, isEnrolled: true } : prev));
+          }}
         />
       </Section>
 
@@ -418,7 +427,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                           isQuestionCompleted
                             ? 'SUCCESS'
                             : !sheet.isEnrolled
-                              ? 'SECONDARY'
+                              ? 'PRIMARY'
                               : isLoading
                                 ? 'SECONDARY'
                                 : 'PRIMARY'
