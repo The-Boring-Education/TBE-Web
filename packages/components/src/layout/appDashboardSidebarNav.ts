@@ -36,19 +36,11 @@ export function isDashboardSidebarLinkActive(
   pathname: string,
   asPath: string,
   href: string,
-  options?: { dashboardHomeHref?: string; dashboardHashId?: string },
 ): boolean {
-  const dashboardHome = options?.dashboardHomeHref ?? "/dashboard";
-  const hashId = options?.dashboardHashId ?? "overall-progress";
-
   const hrefHash = hashFromHref(href);
   if (hrefHash) {
     const base = pathWithoutHash(href);
     return pathname === base && asPath.includes(`#${hrefHash}`);
-  }
-
-  if (href === dashboardHome) {
-    return pathname === dashboardHome && !asPath.includes(`#${hashId}`);
   }
 
   if (href === "/pricing") {

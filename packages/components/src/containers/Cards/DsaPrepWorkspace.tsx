@@ -177,12 +177,23 @@ const DsaPrepWorkspace = ({
                 <div className="flex items-center gap-2">
                   {selectedTopic && (
                     <Button
-                      onClick={onBackToTopics}
+                      onClick={
+                        isStudyGuideOpen
+                          ? () => setIsStudyGuideOpen(false)
+                          : onBackToTopics
+                      }
                       variant="OUTLINE"
                       size="SMALL"
-                      text="←"
+                      type="button"
                       className="border-gray-800 text-gray-400 bg-transparent hover:border-red-500 hover:bg-red-500/10 shrink-0 py-[3px] px-[8px] h-auto text-[10px] font-bold uppercase tracking-wide whitespace-nowrap"
-                    />
+                    >
+                      <span aria-hidden="true">←</span>
+                      <span className="sr-only">
+                        {isStudyGuideOpen
+                          ? "Back to questions"
+                          : "Back to topics"}
+                      </span>
+                    </Button>
                   )}
                   {currentTopicConfig?.hasStudyGuide && (
                     <button
@@ -254,7 +265,11 @@ const DsaPrepWorkspace = ({
                       variant="OUTLINE"
                       size="SMALL"
                       type="button"
-                      text="Completed"
+                      text={
+                        isSelectedQuestionCompleted
+                          ? "Completed"
+                          : "Mark as Complete"
+                      }
                       icon={
                         isSelectedQuestionCompleted ? (
                           <Check

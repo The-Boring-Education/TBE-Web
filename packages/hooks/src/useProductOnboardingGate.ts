@@ -30,6 +30,12 @@ export function useProductOnboardingGate({
   buildRedirectUrl,
   isOnboarded,
 }: UseProductOnboardingGateOptions): { isChecking: boolean } {
+  const onboardingBaseUrl =
+    typeof process !== "undefined"
+      ? process.env.NEXT_PUBLIC_ONBOARDING_URL ||
+        process.env.NEXT_PUBLIC_ONBOARDING_APP_URL
+      : undefined;
+
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const hasRedirected = useRef(false);
 
@@ -98,12 +104,6 @@ export function useProductOnboardingGate({
       return;
     }
 
-    const onboardingBaseUrl =
-      typeof process !== "undefined"
-        ? process.env.NEXT_PUBLIC_ONBOARDING_URL ||
-          process.env.NEXT_PUBLIC_ONBOARDING_APP_URL
-        : undefined;
-
     if (!onboardingBaseUrl) {
       return;
     }
@@ -130,10 +130,18 @@ export function useProductOnboardingGate({
     buildRedirectUrl,
     isOnboarded,
     isError,
+    onboardingBaseUrl,
   ]);
 
   const isChecking =
-    !isPublic && Boolean(isAuthenticated && user?.id) && isFetching;
+    !isPublic &&
+    Boolean(isAuthenticated && user?.id) &&
+    (isFetching ||
+      (!isError &&
+        userRecord !== undefined &&
+        userRecord !== null &&
+        !isOnboarded(userRecord) &&
+        Boolean(onboardingBaseUrl)));
 
   return { isChecking };
 }

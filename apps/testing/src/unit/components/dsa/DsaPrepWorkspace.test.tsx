@@ -150,7 +150,7 @@ describe("DsaPrepWorkspace", () => {
     expect(screen.getByText("Questions")).toBeInTheDocument();
   });
 
-  it("should show Completed next to Copy Link and call onToggleComplete when clicked", () => {
+  it("should show Mark as Complete next to Copy Link and call onToggleComplete when clicked", () => {
     const onToggleComplete = vi.fn();
 
     renderWithQueryClient(
@@ -166,7 +166,9 @@ describe("DsaPrepWorkspace", () => {
     expect(
       screen.getByRole("button", { name: /copy link/i }),
     ).toBeInTheDocument();
-    const completedBtn = screen.getByRole("button", { name: /^completed$/i });
+    const completedBtn = screen.getByRole("button", {
+      name: /^mark as complete$/i,
+    });
     expect(completedBtn).toBeInTheDocument();
 
     fireEvent.click(completedBtn);
