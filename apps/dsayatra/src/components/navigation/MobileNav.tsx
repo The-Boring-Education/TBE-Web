@@ -18,10 +18,9 @@ export function MobileNav() {
       <div className="relative flex items-center justify-around h-[60px] px-1 safe-area-inset-bottom">
         {DSA_DASHBOARD_NAV_ITEMS.map((item) => {
           const isActive =
-            item.href === "/dashboard#overall-progress"
-              ? router.pathname === "/dashboard" &&
-                router.asPath.includes("overall-progress")
-              : router.pathname === item.href;
+            router.pathname === item.href ||
+            (item.href !== "/dashboard" &&
+              router.pathname.startsWith(item.href));
 
           return (
             <Link
