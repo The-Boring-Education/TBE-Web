@@ -1,5 +1,6 @@
 import {
   checkUsernameAvailable,
+  formatGoalTimelineLabel,
   getOnboardingUser,
 } from "@tbe/utils/onboarding";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -176,6 +177,30 @@ describe("Onboarding Utilities", () => {
       const result = await getOnboardingUser("user-123");
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("formatGoalTimelineLabel", () => {
+    it("should return empty string for undefined, null, or empty string", () => {
+      expect(formatGoalTimelineLabel()).toBe("");
+      expect(formatGoalTimelineLabel(null)).toBe("");
+      expect(formatGoalTimelineLabel("")).toBe("");
+    });
+
+    it("should return correct labels for known raw formats", () => {
+      expect(formatGoalTimelineLabel("3_months")).toBe("3 Months");
+      expect(formatGoalTimelineLabel("6_months")).toBe("6 Months");
+      expect(formatGoalTimelineLabel("1_year")).toBe("1 Year");
+      expect(formatGoalTimelineLabel("3Months")).toBe("3 Months");
+      expect(formatGoalTimelineLabel("6Months")).toBe("6 Months");
+      expect(formatGoalTimelineLabel("1Year")).toBe("1 Year");
+    });
+
+    it("should fall back to humanizing other formats", () => {
+      expect(formatGoalTimelineLabel("2_years")).toBe("2 Years");
+      expect(formatGoalTimelineLabel("18Months")).toBe("18 Months");
+      expect(formatGoalTimelineLabel("four_months")).toBe("Four Months");
+      expect(formatGoalTimelineLabel("  5_months  ")).toBe("5 Months");
     });
   });
 });
