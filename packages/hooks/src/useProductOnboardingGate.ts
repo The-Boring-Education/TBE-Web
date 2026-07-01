@@ -18,12 +18,6 @@ export interface UseProductOnboardingGateOptions {
   isOnboarded: (userData: unknown) => boolean;
 }
 
-const ONBOARDING_BASE_URL =
-  typeof process !== "undefined"
-    ? process.env.NEXT_PUBLIC_ONBOARDING_URL ||
-      process.env.NEXT_PUBLIC_ONBOARDING_APP_URL
-    : undefined;
-
 /**
  * Fetches the full user with an authenticated request (Bearer access token when present)
  * and redirects to the external onboarding app when `isOnboarded` is false.
@@ -36,6 +30,12 @@ export function useProductOnboardingGate({
   buildRedirectUrl,
   isOnboarded,
 }: UseProductOnboardingGateOptions): { isChecking: boolean } {
+  const onboardingBaseUrl =
+    typeof process !== "undefined"
+      ? process.env.NEXT_PUBLIC_ONBOARDING_URL ||
+        process.env.NEXT_PUBLIC_ONBOARDING_APP_URL
+      : undefined;
+
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const hasRedirected = useRef(false);
 
@@ -104,7 +104,7 @@ export function useProductOnboardingGate({
       return;
     }
 
-    if (!ONBOARDING_BASE_URL) {
+    if (!onboardingBaseUrl) {
       return;
     }
 
@@ -116,7 +116,7 @@ export function useProductOnboardingGate({
       from,
       redirect: buildRedirectUrl(),
     });
-    const base = ONBOARDING_BASE_URL.replace(/\/$/, "");
+    const base = onboardingBaseUrl.replace(/\/$/, "");
     window.location.href = `${base}/?${params.toString()}`;
   }, [
     authLoading,
@@ -130,6 +130,7 @@ export function useProductOnboardingGate({
     buildRedirectUrl,
     isOnboarded,
     isError,
+    onboardingBaseUrl,
   ]);
 
   const isChecking =
@@ -140,7 +141,7 @@ export function useProductOnboardingGate({
         userRecord !== undefined &&
         userRecord !== null &&
         !isOnboarded(userRecord) &&
-        Boolean(ONBOARDING_BASE_URL)));
+        Boolean(onboardingBaseUrl)));
 
   return { isChecking };
 }
