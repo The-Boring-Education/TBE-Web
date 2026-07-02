@@ -29,7 +29,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, signOut } = useAuth();
   const { isAdmin } = useAdmin();
   const location = useLocation();
 
@@ -97,8 +97,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           Your account does not have admin access. Contact the platform team if
           you believe this is an error.
         </p>
-        <Button asChild variant="outline">
-          <a href="/login">Back to login</a>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => signOut("/login")}
+        >
+          Back to login
         </Button>
       </div>
     );
