@@ -2,7 +2,7 @@
 
 > **Notion task:** [Event Tracking Setup in Apps](https://app.notion.com/p/38f32c1a15e280baa677d2b6c969c0c5)  
 > **Sprint:** Dev | Sprint 40 | release/v-2.17.0  
-> **Status:** In progress — execute phases sequentially
+> **Status:** Phases 0–5 complete — Phase 6 deferred (tbe-admin UI exists; wire in release follow-up)
 
 ## Goal
 
@@ -98,7 +98,7 @@ Server reporting: `GA4_PROPERTY_ID` + `GA4_SERVICE_ACCOUNT_JSON` in `apps/api`.
 | ----------------------------------- | -------------- | --------------------------------- |
 | Auth + pageviews + `ui_click`       | Wired          | `useTracking`                     |
 | `QUESTION_*` via gamification       | Wired          | DSA completion awards             |
-| **`dsa_question_view`**             | **Phase 3**    | Question selection on sheets page |
+| **`dsa_question_view`**             | Wired          | Question selection on sheets page |
 | **Gap:** `dsa_revision_week_select` | Optional later | Revisions page                    |
 
 ### oncampus
@@ -110,11 +110,11 @@ Server reporting: `GA4_PROPERTY_ID` + `GA4_SERVICE_ACCOUNT_JSON` in `apps/api`.
 
 ### resume-yatra
 
-| Event                         | Status      | Notes                         |
-| ----------------------------- | ----------- | ----------------------------- |
-| Auth + pageviews + `ui_click` | Wired       | `useTracking`                 |
-| **`resume_builder_complete`** | **Phase 3** | Result screen mount           |
-| **`resume_share`**            | **Phase 3** | Share button on result screen |
+| Event                         | Status | Notes                         |
+| ----------------------------- | ------ | ----------------------------- |
+| Auth + pageviews + `ui_click` | Wired  | `useTracking`                 |
+| **`resume_builder_complete`** | Wired  | Result screen mount           |
+| **`resume_share`**            | Wired  | Share button on result screen |
 
 ### techyatra
 
