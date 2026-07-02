@@ -1,8 +1,10 @@
 import {
+  clearAnalyticsUser,
   GA_TRACKING_ID,
   installGlobalAnalyticsListeners,
   readTbeAppIdFromEnv,
   resetDelegatedAnalyticsListenersForTesting,
+  setAnalyticsUser,
   trackCourseView,
   trackEnrollClick,
   trackEvent,
@@ -14,6 +16,7 @@ import {
   trackQuizScore,
   trackQuizStart,
   trackSignupSuccess,
+  trackUserActivated,
 } from "@tbe/utils/analytics";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -247,6 +250,41 @@ describe("Analytics Utilities", () => {
           user_id: "user-123",
         }),
       );
+    });
+
+    it("should track user activated", () => {
+      trackUserActivated("user-123", "platform");
+
+      expect(mockGtag).toHaveBeenCalledWith(
+        "event",
+        "user_activated",
+        expect.objectContaining({
+          user_id: "user-123",
+          product_id: "platform",
+        }),
+      );
+    });
+  });
+
+  describe("User identity", () => {
+    it("setAnalyticsUser configures GA4 user_id", () => {
+      setAnalyticsUser("user-123");
+
+      if (GA_TRACKING_ID.trim() !== "") {
+        expect(mockGtag).toHaveBeenCalledWith("config", GA_TRACKING_ID, {
+          user_id: "user-123",
+        });
+      }
+    });
+
+    it("clearAnalyticsUser clears GA4 user_id", () => {
+      clearAnalyticsUser();
+
+      if (GA_TRACKING_ID.trim() !== "") {
+        expect(mockGtag).toHaveBeenCalledWith("config", GA_TRACKING_ID, {
+          user_id: undefined,
+        });
+      }
     });
   });
 

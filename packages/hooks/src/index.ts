@@ -4,6 +4,7 @@ export { useAdminData } from "./useAdmin";
 export { default as useAnalytics } from "./useAnalytics";
 export { default as useApi } from "./useApi";
 export { default as useAPIResponseMapper } from "./useAPIResponseMapper";
+export { default as useAuthAnalytics } from "./useAuthAnalytics";
 export { default as useCashfreePayment } from "./useCashfreePayment";
 export { default as useCertificate } from "./useCertificate";
 export { default as useFeedback } from "./useFeedback";

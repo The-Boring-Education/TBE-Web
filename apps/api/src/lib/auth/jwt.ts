@@ -29,6 +29,7 @@ export interface AuthCodePayload {
   sub: string;
   type: "auth_code";
   redirect_uri: string;
+  is_new_user?: boolean;
 }
 
 export interface OAuthStatePayload {
@@ -53,12 +54,17 @@ export const signRefreshToken = (userId: string): string => {
   );
 };
 
-export const signAuthCode = (userId: string, redirectUri: string): string => {
+export const signAuthCode = (
+  userId: string,
+  redirectUri: string,
+  isNewUser = false,
+): string => {
   return jwt.sign(
     {
       sub: userId,
       type: "auth_code",
       redirect_uri: redirectUri,
+      is_new_user: isNewUser,
     } satisfies AuthCodePayload,
     getSecret(),
     { expiresIn: "5m" },

@@ -5,7 +5,7 @@ import type {
   UseOnboardingProps,
   UseOnboardingReturn,
 } from "@tbe/types";
-import { sendRequest, trackEvent } from "@tbe/utils";
+import { sendRequest, trackEvent, trackUserActivated } from "@tbe/utils";
 import { useEffect, useState } from "react";
 
 export default function useOnboarding({
@@ -135,6 +135,9 @@ export default function useOnboarding({
             category: "onboarding",
             label: productId,
           });
+          if (userId) {
+            trackUserActivated(userId, productId);
+          }
         } catch {}
 
         if (redirect) {
