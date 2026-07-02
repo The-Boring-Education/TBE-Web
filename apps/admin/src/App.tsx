@@ -7,6 +7,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LogProvider } from "@/contexts/LogContext";
 
+import AdminsPage from "./pages/AdminsPage";
 import AgentsPage from "./pages/AgentsPage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import ChallengesPage from "./pages/ChallengesPage";
@@ -206,6 +207,15 @@ const App = () => {
                 element={
                   <MainLayout>
                     <ChallengesPage />
+                  </MainLayout>
+                }
+              />
+
+              <Route
+                path="/admins"
+                element={
+                  <MainLayout>
+                    <AdminsPage />
                   </MainLayout>
                 }
               />

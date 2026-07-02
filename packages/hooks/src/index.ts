@@ -42,6 +42,7 @@ export { usePrepStats } from "./usePrepStats";
 export type { UseProductOnboardingGateOptions } from "./useProductOnboardingGate";
 export { useProductOnboardingGate } from "./useProductOnboardingGate";
 /** @deprecated Use `useGamification` from `@tbe/gamification` instead */
+export { default as usePatternQuiz } from "./usePatternQuiz";
 export { usePyGamification } from "./usePyGamification";
 export { default as useQuestionStarred } from "./useQuestionStarred";
 export { default as useQuizData } from "./useQuizData";
@@ -55,4 +56,3 @@ export { default as useTracking } from "./useTracking";
 export { default as useUnskilledGraphData } from "./useUnskilledGraphData";
 export { default as useUser } from "./useUser";
 export { default as useUsername } from "./useUsername";
-export { default as usePatternQuiz } from "./usePatternQuiz";

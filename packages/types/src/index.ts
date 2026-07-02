@@ -88,6 +88,9 @@ export * from "./pattern-quiz";
 
 // Subscription catalog (pricing pages, checkout product SKUs)
 export * from "./subscriptionPlanCatalog";
+
+// Admin user types
+export * from "./admin";
 // ================================
 // LEGACY EXPORTS (for backward compatibility)
 // ================================

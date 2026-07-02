@@ -527,3 +527,26 @@ export interface PrepLogsSummary {
   totalLogs: number;
   activeStreaks: number;
 }
+
+export interface AdminUser {
+  _id: string;
+  email: string;
+  name?: string;
+  isActive: boolean;
+  notes?: string;
+  addedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminUserFormData {
+  email: string;
+  name?: string;
+  notes?: string;
+}
+
+export interface AdminUserUpdateData {
+  name?: string;
+  notes?: string;
+  isActive?: boolean;
+}

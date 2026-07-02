@@ -1,4 +1,5 @@
 // Export all database queries (non-conflicting ones)
+export * from "./admin-user";
 export * from "./aptitude";
 export * from "./certificate";
 export * from "./common";

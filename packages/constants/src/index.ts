@@ -1,4 +1,3 @@
-export * from "./admin";
 export * from "./apps";
 export * from "./campusPrep";
 export * from "./challenges";
@@ -45,10 +44,10 @@ export {
 export * from "./onboarding";
 export * from "./pages";
 export * from "./pages/seo";
+export * from "./patternQuizData";
 export * from "./paymentConfig";
 export { getPlatformOrigin, toPlatformUrl } from "./platformUrl";
 export * from "./prepYatra";
 export * from "./productConfigs";
 export * from "./routes";
 export * from "./seo";
-export * from "./patternQuizData";

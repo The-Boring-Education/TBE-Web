@@ -11,6 +11,7 @@ import {
   ListChecks,
   LogOut,
   Mail,
+  Shield,
   Target,
   Ticket,
   Trophy,
@@ -59,6 +60,7 @@ const Sidebar = () => {
     { name: "Challenges", path: "/challenges", icon: <Target size={20} /> },
     { name: "Mentorship", path: "/mentorship", icon: <Trophy size={20} /> },
     { name: "Coupons", path: "/coupon", icon: <Ticket size={20} /> },
+    { name: "Admins", path: "/admins", icon: <Shield size={20} /> },
     {
       name: "Email Management",
       path: "/email-management",

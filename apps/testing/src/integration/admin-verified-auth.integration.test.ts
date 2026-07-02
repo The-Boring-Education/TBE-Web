@@ -15,6 +15,14 @@ vi.mock("@/lib/auth/jwt", () => ({
   verifyToken: (...args: unknown[]) => mockVerifyToken(...args),
 }));
 
+const mockIsAdminEmail = vi.fn();
+const mockWarmAdminEmailCache = vi.fn();
+
+vi.mock("@/lib/services/admin-cache", () => ({
+  isAdminEmail: (...args: unknown[]) => mockIsAdminEmail(...args),
+  warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
+}));
+
 import { ensureAdminAccess, verifyJwtAdmin } from "@/middleware/admin";
 import { adminMiddleware } from "@/middleware/api";
 
@@ -31,50 +39,55 @@ describe("Verified Admin Auth Integration", () => {
     vi.clearAllMocks();
     process.env.ADMIN_SECRET = ADMIN_SECRET;
     vi.mocked(adminMiddleware).mockResolvedValue(true);
+    mockWarmAdminEmailCache.mockResolvedValue(undefined);
+    mockIsAdminEmail.mockResolvedValue(false);
   });
 
-  it("returns admin user for valid admin JWT", () => {
+  it("returns admin user for valid admin JWT", async () => {
     mockVerifyToken.mockReturnValue({
       sub: "admin-id",
-      email: "theboringeducation@gmail.com",
+      email: "admin@example.com",
       name: "Admin",
       type: "access",
     });
+    mockIsAdminEmail.mockResolvedValue(true);
 
     const { req } = createMocks<NextApiRequest>({
       headers: { authorization: `Bearer ${adminToken}` },
     });
 
-    const admin = verifyJwtAdmin(req);
+    const admin = await verifyJwtAdmin(req);
     expect(admin).toEqual({
       id: "admin-id",
-      email: "theboringeducation@gmail.com",
+      email: "admin@example.com",
       name: "Admin",
     });
   });
 
-  it("returns null for non-admin JWT email", () => {
+  it("returns null for non-admin JWT email", async () => {
     mockVerifyToken.mockReturnValue({
       sub: "user-id",
       email: "user@example.com",
       name: "User",
       type: "access",
     });
+    mockIsAdminEmail.mockResolvedValue(false);
 
     const { req } = createMocks<NextApiRequest>({
       headers: { authorization: `Bearer ${userToken}` },
     });
 
-    expect(verifyJwtAdmin(req)).toBeNull();
+    expect(await verifyJwtAdmin(req)).toBeNull();
   });
 
   it("ensureAdminAccess allows admin JWT", async () => {
     mockVerifyToken.mockReturnValue({
       sub: "admin-id",
-      email: "theboringeducation@gmail.com",
+      email: "admin@example.com",
       name: "Admin",
       type: "access",
     });
+    mockIsAdminEmail.mockResolvedValue(true);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       headers: { authorization: `Bearer ${adminToken}` },
@@ -92,6 +105,7 @@ describe("Verified Admin Auth Integration", () => {
       name: "User",
       type: "access",
     });
+    mockIsAdminEmail.mockResolvedValue(false);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       headers: { authorization: `Bearer ${userToken}` },
