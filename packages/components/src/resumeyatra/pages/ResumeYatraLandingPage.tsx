@@ -100,6 +100,7 @@ export function ResumeYatraLandingPage({
             />
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
               <Marquee
+                theme="light"
                 items={featureCards.map((item) => ({
                   title: item.title,
                   description: item.content,
