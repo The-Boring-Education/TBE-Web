@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { fileURLToPath } from "url";
 import { defineConfig, loadEnv } from "vite";
 
 const SENTRY_STUB = `export const captureException=()=>{};
@@ -37,7 +38,7 @@ function sentryStubPlugin() {
   };
 }
 
-const root = path.resolve(__dirname);
+const root = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, root, "");
