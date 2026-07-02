@@ -26,7 +26,7 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await mockAuthRefreshUnavailable(page);
 
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await page.waitForURL(
+    await expect(page).toHaveURL(
       (url) => {
         const { pathname } = new URL(url);
         return pathname === "/" || pathname === "";
@@ -47,12 +47,7 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
       timeout: 20_000,
     });
-    await expect(page).toHaveURL(
-      (url) => new URL(url).pathname === "/dashboard",
-      {
-        timeout: 20_000,
-      },
-    );
+    await expect(page).toHaveURL(/\/dashboard\/?$/, { timeout: 20_000 });
     await expect(page.getByRole("main")).toBeVisible({ timeout: 20_000 });
   });
 });
