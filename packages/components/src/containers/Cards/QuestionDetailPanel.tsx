@@ -411,7 +411,7 @@ const QuestionDetailPanel = ({
 
         {question.isRealWorldProblem && <RealWorldBanner />}
 
-        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex flex-wrap gap-1.5 pb-1">
           {QUESTION_DETAIL_TABS.map((tab) => (
             <button
               key={tab}
@@ -486,12 +486,7 @@ const QuestionDetailPanel = ({
             <Text level="h2" className="text-red-500 font-semibold mb-3">
               COMPANIES
             </Text>
-            <FlexContainer
-              className="gap-2"
-              justifyCenter={false}
-              itemCenter={false}
-              wrap
-            >
+            <div className="flex flex-wrap gap-2">
               {question.companyType?.map((company) => (
                 <Text
                   level="span"
@@ -505,7 +500,7 @@ const QuestionDetailPanel = ({
                   No companies available.
                 </Text>
               )}
-            </FlexContainer>
+            </div>
           </div>
         )}
 

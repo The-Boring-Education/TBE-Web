@@ -17,6 +17,7 @@ vi.mock("@tbe/config", () => ({
 vi.mock("@tbe/utils", () => ({
   sendRequest: (...args: unknown[]) => mockSendRequest(...args),
   trackEvent: (...args: unknown[]) => mockTrackEvent(...args),
+  trackUserActivated: (...args: unknown[]) => mockTrackEvent(...args),
 }));
 
 import useOnboarding from "@tbe/hooks/useOnboarding";

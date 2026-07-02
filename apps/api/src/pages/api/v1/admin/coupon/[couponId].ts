@@ -8,7 +8,7 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 interface UpdateCouponRequest {
@@ -24,10 +24,6 @@ interface UpdateCouponRequest {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Apply admin middleware - only admins can access coupon management
-  const adminCheck = await adminMiddleware(req, res);
-  if (!adminCheck) return; // adminMiddleware handles the response
-
   const { method, query } = req;
   const { couponId } = query;
 
@@ -195,4 +191,4 @@ const handleDeleteCoupon = async (couponId: string, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

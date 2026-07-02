@@ -12,6 +12,7 @@ export type Chapter = {
   title: string;
   description: string;
   content: ChapterContent;
+  isLocked?: boolean;
 };
 
 export type Subject = {

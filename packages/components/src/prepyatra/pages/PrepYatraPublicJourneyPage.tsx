@@ -1,5 +1,5 @@
 import type { PrepLog, UserProfile } from "@tbe/interface";
-import { getTimeOfDay, withProtocol } from "@tbe/utils";
+import { formatGoalTimelineLabel, getTimeOfDay, withProtocol } from "@tbe/utils";
 import {
   Calendar,
   Clock,
@@ -207,7 +207,8 @@ const PrepYatraPublicJourneyPage = () => {
                 <span className="font-medium text-foreground">Goal:</span>
                 <br />
                 <span className="text-muted-foreground">
-                  {profile.prepYatra.goal || "Not specified"}
+                  {formatGoalTimelineLabel(profile.prepYatra.goal) ||
+                    "Not specified"}
                 </span>
               </div>
             </div>

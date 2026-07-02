@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { emailClient } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -124,4 +125,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

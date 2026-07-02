@@ -391,6 +391,21 @@ export const trackEnrollClick = (courseId: string) =>
   trackEvent("enroll_click", { course_id: courseId });
 
 /* -----------------------------
+   USER IDENTITY (GA4 User-ID)
+------------------------------ */
+export const setAnalyticsUser = (userId: string): void => {
+  if (typeof window === "undefined" || !userId.trim()) return;
+  if (!GA_TRACKING_ID || typeof window.gtag !== "function") return;
+  window.gtag("config", GA_TRACKING_ID, { user_id: userId });
+};
+
+export const clearAnalyticsUser = (): void => {
+  if (typeof window === "undefined") return;
+  if (!GA_TRACKING_ID || typeof window.gtag !== "function") return;
+  window.gtag("config", GA_TRACKING_ID, { user_id: undefined });
+};
+
+/* -----------------------------
    USER EVENTS
 ------------------------------ */
 export const trackLoginSuccess = (userId: string) =>
@@ -401,3 +416,15 @@ export const trackSignupSuccess = (userId: string) =>
 
 export const trackLogout = (userId: string) =>
   trackEvent("logout", { user_id: userId });
+
+export const trackUserActivated = (
+  userId: string,
+  productId?: string,
+): void => {
+  trackEvent("user_activated", {
+    user_id: userId,
+    ...(productId ? { product_id: productId } : {}),
+  });
+};
+
+export const PENDING_AUTH_ANALYTICS_KEY = "tbe_pending_auth_analytics";

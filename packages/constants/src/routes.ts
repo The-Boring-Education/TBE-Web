@@ -52,6 +52,7 @@ const routes = {
     login: "/login",
     dashboard: "/dashboard",
     pricing: "/pricing",
+    patternQuiz: "/pattern-quiz",
     /** Public shareable progress page */
     journey: (username: string) => `/journey/${encodeURIComponent(username)}`,
     baseUrl: "https://dsayatra.theboringeducation.com",
@@ -126,7 +127,8 @@ const routes = {
     dsa: "/sheets",
     interviewPrep: "/dashboard/interview-prep",
     quizes: "/dashboard/interview-prep",
-    aptitude: "/dashboard/aptitude",
+    aptitude: "/aptitude",
+    patternQuiz: "/pattern-quiz",
   },
   unskilled: "/unskilled",
   /** Shareable, minimal payment entry (query: productType, productId, optional coupon, next) */

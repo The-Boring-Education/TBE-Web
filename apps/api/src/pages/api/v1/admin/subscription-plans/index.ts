@@ -13,7 +13,7 @@ import {
 import type { APIResponseType } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /** Payload for POST — all catalog fields optional except core SKU + price. */
@@ -41,9 +41,6 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<APIResponseType>,
 ) => {
-  const adminCheck = await adminMiddleware(req, res);
-  if (!adminCheck) return;
-
   try {
     switch (req.method) {
       case "GET":
@@ -225,4 +222,4 @@ const handleDelete = async (
   );
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

@@ -147,6 +147,16 @@ const getAppSpecificSEOMeta = (
         ...seoCommonMeta,
         image: appConfig.defaultImage || seoCommonMeta.image,
       },
+      [routes.dsayatra.patternQuiz]: {
+        title: "Pattern Quiz | DSAYatra",
+        siteName: "DSAYatra",
+        description: "Identify which DSA pattern best solves a given problem.",
+        url: routes.dsayatra.patternQuiz,
+        keywords:
+          "DSAYatra Quiz, DSA Practice, Pattern Recognition, Interview Prep",
+        ...seoCommonMeta,
+        image: appConfig.defaultImage || seoCommonMeta.image,
+      },
       "/journey": {
         title: "DSA Learning Journey | DSAYatra",
         siteName: "DSAYatra",

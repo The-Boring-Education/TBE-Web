@@ -11,7 +11,12 @@ import Layout from "@/components/layout/Layout";
 import { OnboardingCheck } from "@/components/onboarding/OnboardingCheck";
 import { Providers } from "@/components/providers/Providers";
 
-const DSA_APP_SHELL_PATHS = new Set(["/dashboard", "/revisions", "/topics"]);
+const DSA_APP_SHELL_PATHS = new Set([
+  "/dashboard",
+  "/revisions",
+  "/topics",
+  "/pattern-quiz",
+]);
 
 function AppWithShell({ Component, pageProps }: AppProps) {
   const router = useRouter();

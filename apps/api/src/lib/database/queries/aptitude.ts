@@ -18,6 +18,31 @@ import { logger } from "@/lib/utils/logger";
 import { AptitudeTopic } from "../models";
 import { mergeAptitudeProgressIntoQuestions } from "./user-aptitude-topic";
 
+const isTopicLockedForFreeUser = (
+  topicSlug: string,
+  isPaidUser?: boolean,
+): boolean => {
+  if (isPaidUser) return false;
+  const allTopics = [...APTITUDE_TOPICS];
+  allTopics.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  const index = allTopics.findIndex((t) => t.slug === topicSlug);
+  if (index === -1) return false;
+  const freeLimit = Math.ceil(allTopics.length * 0.3);
+  return index >= freeLimit;
+};
+
+const maskLockedQuestions = (questions: any[]) => {
+  return questions.map((q) => ({
+    ...q,
+    isLocked: true,
+    answer: "",
+    options: (q.options || []).map((o: any) => ({
+      ...o,
+      isCorrect: false,
+    })),
+  }));
+};
+
 // ─── Question Queries ────────────────────────────────────────────────────────
 
 /**
@@ -52,6 +77,7 @@ const getAptitudeQuestionsByTopicFromDB = async (
     limit?: number;
     /** When set, each question includes `isCompleted` from UserAptitudeTopic. */
     mergeProgressForUserId?: string;
+    isPaidUser?: boolean;
   } = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
@@ -60,6 +86,7 @@ const getAptitudeQuestionsByTopicFromDB = async (
       page = 1,
       limit: limitInput,
       mergeProgressForUserId,
+      isPaidUser,
     } = filters;
 
     const topicDoc = await AptitudeTopic.findOne({
@@ -83,6 +110,11 @@ const getAptitudeQuestionsByTopicFromDB = async (
     }
 
     let questions = topicDoc.questions || [];
+    const isLocked = isTopicLockedForFreeUser(topic, isPaidUser);
+
+    if (isLocked) {
+      questions = maskLockedQuestions(questions);
+    }
 
     if (difficulty) {
       questions = questions.filter((q) => q.difficulty === difficulty);
@@ -100,6 +132,7 @@ const getAptitudeQuestionsByTopicFromDB = async (
       return {
         data: {
           questions: mergedQuestions,
+          isLocked,
           pagination: {
             total: totalCount,
             page: 1,
@@ -125,6 +158,7 @@ const getAptitudeQuestionsByTopicFromDB = async (
     return {
       data: {
         questions: mergedPaginated,
+        isLocked,
         pagination: {
           total: totalCount,
           page,
@@ -173,10 +207,11 @@ const getAptitudeTopicsWithQuestionCountFromDB = async (
   filters: {
     category?: AptitudeCategoryType;
     subCategory?: AptitudeSubCategoryType;
+    isPaidUser?: boolean;
   } = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    let topics = APTITUDE_TOPICS;
+    let topics = [...APTITUDE_TOPICS];
     if (filters.category) {
       topics = topics.filter((t) => t.category === filters.category);
     }
@@ -201,7 +236,18 @@ const getAptitudeTopicsWithQuestionCountFromDB = async (
       questionCount: countMap.get(t.slug) || 0,
     }));
 
-    return { data };
+    // Sort by name alphabetically to match frontend sorting convention for gating alignment
+    data.sort((a: any, b: any) => (a.name || "").localeCompare(b.name || ""));
+
+    const totalTopics = data.length;
+    const freeLimit = Math.ceil(totalTopics * 0.3);
+
+    const mappedData = data.map((t, idx) => ({
+      ...t,
+      isLocked: !filters.isPaidUser && idx >= freeLimit,
+    }));
+
+    return { data: mappedData };
   } catch (error) {
     return { error: "Failed to fetch topics with counts", details: error };
   }
@@ -350,13 +396,24 @@ const bulkUploadAptitudeDataToDB = async (
 
 const getAptitudeStudyGuideByTopicFromDB = async (
   topic: string,
+  isPaidUser?: boolean,
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    const isLocked = isTopicLockedForFreeUser(topic, isPaidUser);
+    if (isLocked) {
+      return { data: { content: "", topic, isLocked: true } };
+    }
     const topicDoc = await AptitudeTopic.findOne({ topic }).lean();
     if (!topicDoc || !topicDoc.studyGuide) {
       return { data: null };
     }
-    return { data: { content: topicDoc.studyGuide, topic: topicDoc.topic } };
+    return {
+      data: {
+        content: topicDoc.studyGuide,
+        topic: topicDoc.topic,
+        isLocked: false,
+      },
+    };
   } catch (error) {
     return { error: "Failed to fetch study guide", details: error };
   }

@@ -10,6 +10,7 @@ import {
   UserSheet,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -982,4 +983,4 @@ const getUserDemographics = async (
   );
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

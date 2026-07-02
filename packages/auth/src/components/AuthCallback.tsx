@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { getAuthApiUrl } from "../config";
+import { PENDING_AUTH_ANALYTICS_KEY } from "../constants";
 import { setTokens } from "../token";
 
 export const AuthCallback = () => {
@@ -49,6 +50,16 @@ export const AuthCallback = () => {
         const result = await response.json();
         if (result.status && result.data) {
           setTokens(result.data.accessToken, result.data.refreshToken);
+          const userId = result.data.user?.id;
+          if (userId) {
+            sessionStorage.setItem(
+              PENDING_AUTH_ANALYTICS_KEY,
+              JSON.stringify({
+                userId,
+                isNewUser: result.data.isNewUser === true,
+              }),
+            );
+          }
           setStatus("Sign in successful! Redirecting...");
           window.location.href = returnTo;
         } else {

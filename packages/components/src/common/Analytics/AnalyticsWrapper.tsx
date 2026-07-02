@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthAnalytics } from "@tbe/hooks";
 import {
   initGA,
   installGlobalAnalyticsListeners,
@@ -11,6 +12,8 @@ import { useEffect } from "react";
 const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  useAuthAnalytics();
 
   useEffect(() => {
     initGA();

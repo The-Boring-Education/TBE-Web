@@ -1,4 +1,10 @@
-import { Button, Card, LoadingSpinner, Progress } from "@tbe/components";
+import {
+  Button,
+  Card,
+  LoadingSpinner,
+  PatternQuizBanner,
+  Progress,
+} from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
@@ -147,6 +153,13 @@ const CampusPrepDashboard = () => {
           />
         </div>
       </header>
+
+      {/* Pattern Quiz Welcome Banner */}
+      <PatternQuizBanner
+        onStart={() => router.push(routes.oncampus.patternQuiz)}
+        compact
+        className="w-full"
+      />
 
       {/* Grid for main sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

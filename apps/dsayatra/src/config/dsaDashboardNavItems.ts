@@ -1,11 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  ClipboardList,
-  FileText,
-  Home,
-  Target,
-  TrendingUp,
-} from "lucide-react";
+import { Brain, ClipboardList, FileText, Home, Target } from "lucide-react";
 
 export type DsaDashboardNavItem = {
   name: string;
@@ -21,9 +15,5 @@ export const DSA_DASHBOARD_NAV_ITEMS: DsaDashboardNavItem[] = [
   { name: "Sheets", href: "/sheets", icon: Target },
   { name: "Revisions", href: "/revisions", icon: FileText },
   { name: "Topics", href: "/topics", icon: ClipboardList },
-  {
-    name: "Progress",
-    href: "/dashboard#overall-progress",
-    icon: TrendingUp,
-  },
+  { name: "Pattern Quiz", href: "/pattern-quiz", icon: Brain },
 ];

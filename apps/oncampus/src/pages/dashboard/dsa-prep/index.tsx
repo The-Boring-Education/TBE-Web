@@ -206,6 +206,8 @@ const DSAPrepPage = () => {
         open={showPayment}
         onViewPlans={handleUpgrade}
         onDismiss={handleDismissUpsell}
+        title="Unlock OnCampus"
+        description="Subscribe to OnCampus to access all DSA questions, solutions, and study guides."
       />
     </OnCampusLearningLayout>
   );

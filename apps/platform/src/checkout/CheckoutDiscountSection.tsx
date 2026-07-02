@@ -1,7 +1,7 @@
-import { Button, Text } from '@tbe/components';
+import { Text } from '@tbe/components';
 
 import { shouldShowCheckoutApplyButton } from './checkoutCouponApplyVisibility';
-import { formatInr, formatRelativeEnd, formatShortDate } from './formatters';
+import { formatInr, formatShortDate } from './formatters';
 import type { CheckoutQuote, PricingBannerRow } from './types';
 
 type CheckoutDiscountSectionProps = {
@@ -16,6 +16,7 @@ type CheckoutDiscountSectionProps = {
   otherPricingBanners: PricingBannerRow[];
   bannersError: boolean;
   onUseOffer: (code: string) => void;
+  isDark?: boolean;
 };
 
 export const CheckoutDiscountSection = ({
@@ -30,6 +31,7 @@ export const CheckoutDiscountSection = ({
   otherPricingBanners,
   bannersError,
   onUseOffer,
+  isDark = false,
 }: CheckoutDiscountSectionProps) => {
   const showApplyButton = shouldShowCheckoutApplyButton(
     quote?.couponCode,
@@ -38,15 +40,24 @@ export const CheckoutDiscountSection = ({
   );
 
   return (
-    <div className='rounded-xl border border-slate-200 bg-white p-4'>
-      <Text level='h2' className='text-sm font-semibold text-slate-900'>
-        Discount code
+    <div
+      className={`rounded-lg border p-1.5 ${isDark ? 'border-zinc-800/80 bg-zinc-900/30' : 'border-slate-200 bg-white'}`}
+    >
+      <Text
+        level='h2'
+        className={`text-[9px] font-semibold uppercase tracking-wider ${isDark ? 'text-zinc-500' : 'text-slate-400'}`}
+      >
+        Promo code
       </Text>
-      <p className='mt-1 text-xs text-slate-500'>
-        Optional. Type a code, or use another offer below.
-      </p>
 
-      <div className='mt-3 flex flex-col gap-2 sm:flex-row sm:items-center'>
+      {/* Sleek pill input row */}
+      <div
+        className={`mt-0.5 flex h-6 items-center overflow-hidden rounded-md border ${
+          isDark
+            ? 'border-zinc-700 bg-zinc-800/60'
+            : 'border-slate-200 bg-white'
+        }`}
+      >
         <label className='sr-only' htmlFor='checkout-coupon-code'>
           Coupon code
         </label>
@@ -55,47 +66,67 @@ export const CheckoutDiscountSection = ({
           type='text'
           value={couponDraft}
           onChange={(e) => onCouponDraftChange(e.target.value.toUpperCase())}
-          placeholder='Enter Code'
-          className='h-10 w-full min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300'
+          placeholder='Enter promo code'
+          className={`h-full flex-1 min-w-0 bg-transparent px-2 text-[10px] font-mono tracking-wider focus:outline-none ${
+            isDark
+              ? 'text-zinc-100 placeholder:text-zinc-600'
+              : 'text-slate-800 placeholder:text-slate-400'
+          }`}
           maxLength={20}
           autoComplete='off'
           name='coupon'
         />
-        <div className='flex w-full items-center gap-2 sm:w-auto sm:shrink-0'>
-          {showApplyButton ? (
-            <Button
-              type='button'
-              text='Apply'
-              variant='PRIMARY'
-              className='h-10 min-w-[4.5rem] px-4'
-              onClick={onApply}
-              active
-            />
-          ) : null}
-          {hasCouponInUrl ? (
-            <button
-              type='button'
-              onClick={onRemove}
-              className='h-10 shrink-0 px-2 text-sm text-slate-500 underline decoration-slate-300 underline-offset-2 hover:text-slate-800'
-            >
-              Remove
-            </button>
-          ) : null}
-        </div>
+        {showApplyButton && (
+          <button
+            type='button'
+            onClick={onApply}
+            className={`h-full shrink-0 border-l px-2 text-[10px] font-semibold transition-colors ${
+              isDark
+                ? 'border-zinc-700 bg-zinc-800 text-[#FF5757] hover:bg-zinc-750'
+                : 'border-slate-200 bg-slate-50 text-indigo-600 hover:bg-slate-100'
+            }`}
+          >
+            Apply
+          </button>
+        )}
+        {hasCouponInUrl && (
+          <button
+            type='button'
+            onClick={onRemove}
+            className={`h-full shrink-0 border-l px-2 text-[10px] transition-colors ${
+              isDark
+                ? 'border-zinc-700 bg-zinc-800 text-zinc-500 hover:text-zinc-300'
+                : 'border-slate-200 bg-slate-50 text-slate-400 hover:text-slate-600'
+            }`}
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {couponApplyError ? (
-        <p className='mt-2 text-sm text-red-600' role='alert'>
+        <p
+          className={`mt-0.5 text-[9px] ${isDark ? 'text-red-400' : 'text-red-500'}`}
+          role='alert'
+        >
           {couponApplyError}
         </p>
       ) : null}
 
       {quote?.couponCode && !couponApplyError ? (
-        <p className='mt-3 text-sm text-slate-800' role='status'>
-          <span className='mr-1.5 text-emerald-600' aria-hidden>
+        <p
+          className={`mt-1 text-[10px] ${isDark ? 'text-zinc-300' : 'text-slate-700'}`}
+          role='status'
+        >
+          <span
+            className={`mr-1 ${isDark ? 'text-[#FF5757]' : 'text-emerald-600'}`}
+            aria-hidden
+          >
             ✓
           </span>
-          <span className='font-mono font-semibold text-slate-900'>
+          <span
+            className={`font-mono font-semibold ${isDark ? 'text-zinc-100' : 'text-slate-900'}`}
+          >
             {quote.couponCode}
           </span>
           {(() => {
@@ -112,7 +143,10 @@ export const CheckoutDiscountSection = ({
               minVal > 0 ? `min ${formatInr(minVal)}` : null,
             ].filter(Boolean);
             return blurb.length > 0 ? (
-              <span className='text-slate-600'> — {blurb.join(' · ')}</span>
+              <span className={isDark ? 'text-zinc-400' : 'text-slate-600'}>
+                {' '}
+                — {blurb.join(' · ')}
+              </span>
             ) : null;
           })()}
         </p>
@@ -120,43 +154,55 @@ export const CheckoutDiscountSection = ({
       {quote?.couponCode &&
         !couponApplyError &&
         quote.baseAmount === quote.finalAmount && (
-          <p className='mt-1.5 text-xs text-amber-800/90'>
-            This order may not get a price cut (e.g. below minimum or not valid
-            for this plan). You can still check out.
+          <p
+            className={`mt-0.5 text-[9px] ${isDark ? 'text-amber-500/90' : 'text-amber-700/90'}`}
+          >
+            Code may not apply to this order. You can still check out.
           </p>
         )}
 
       {otherPricingBanners.length > 0 ? (
-        <div className='mt-4 border-t border-slate-100 pt-4'>
-          <p className='mb-2 text-xs font-medium text-slate-600'>More offers</p>
-          <ul className='space-y-2'>
+        <div
+          className={`mt-1 border-t pt-1 ${isDark ? 'border-zinc-800/60' : 'border-slate-100'}`}
+        >
+          <p
+            className={`mb-0.5 text-[9px] font-semibold uppercase tracking-wider ${isDark ? 'text-zinc-600' : 'text-slate-400'}`}
+          >
+            More offers
+          </p>
+          <ul className='max-h-16 overflow-y-auto space-y-0.5 pr-0.5'>
             {otherPricingBanners.map((b) => (
               <li
                 key={b.code}
-                className='flex items-start justify-between gap-3 rounded-md border border-slate-100 bg-slate-50/50 px-3 py-2.5'
+                className={`flex items-center justify-between gap-1.5 rounded border px-1.5 py-0.5 ${
+                  isDark
+                    ? 'border-zinc-800 bg-zinc-900/50'
+                    : 'border-slate-100 bg-slate-50/60'
+                }`}
               >
                 <div className='min-w-0 flex-1'>
-                  <p className='text-sm font-medium text-slate-900'>
+                  <p
+                    className={`text-[10px] font-medium leading-tight ${isDark ? 'text-zinc-200' : 'text-slate-800'}`}
+                  >
                     {b.description?.trim() || `${b.discountPercentage}% off`}
                   </p>
                   <p
-                    className='mt-0.5 text-xs text-slate-500'
+                    className={`text-[9px] leading-none ${isDark ? 'text-zinc-500' : 'text-slate-400'}`}
                     title={formatShortDate(b.expiryDate)}
                   >
                     <span className='font-mono'>{b.code}</span>
                     {' · '}
                     {b.discountPercentage}% off
-                    {' · '}
-                    {formatRelativeEnd(b.expiryDate)}
-                    {b.minimumAmount > 0
-                      ? ` · min ${formatInr(b.minimumAmount)}`
-                      : ''}
                   </p>
                 </div>
                 <button
                   type='button'
                   onClick={() => onUseOffer(b.code)}
-                  className='shrink-0 text-sm font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 hover:text-slate-900'
+                  className={`shrink-0 text-[9px] font-semibold underline underline-offset-1 ${
+                    isDark
+                      ? 'text-zinc-400 decoration-zinc-700 hover:text-zinc-200'
+                      : 'text-indigo-600 decoration-slate-200 hover:text-indigo-700'
+                  }`}
                 >
                   Use
                 </button>
@@ -167,7 +213,9 @@ export const CheckoutDiscountSection = ({
       ) : null}
 
       {bannersError ? (
-        <p className='mt-3 text-xs text-slate-500'>
+        <p
+          className={`mt-3 text-xs ${isDark ? 'text-zinc-500' : 'text-slate-500'}`}
+        >
           Offers couldn&apos;t load; you can still type a code.
         </p>
       ) : null}

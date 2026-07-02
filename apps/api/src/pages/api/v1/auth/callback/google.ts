@@ -86,6 +86,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await connectDB();
 
     let userId: string;
+    let isNewUser = false;
     const { data: existingUser } = await getUserByEmailFromDB(userInfo.email);
 
     if (existingUser) {
@@ -94,6 +95,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         email: userInfo.email,
       });
     } else {
+      isNewUser = true;
       const { data: newUser, error: createError } = await createUserInDB({
         name: userInfo.name,
         email: userInfo.email,
@@ -115,7 +117,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
 
-    const authCode = signAuthCode(userId, statePayload.redirect_uri);
+    const authCode = signAuthCode(userId, statePayload.redirect_uri, isNewUser);
 
     const redirectUrl = new URL(statePayload.redirect_uri);
     redirectUrl.searchParams.set("code", authCode);
