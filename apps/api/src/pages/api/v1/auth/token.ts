@@ -95,6 +95,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           accessToken,
           refreshToken,
           user: buildUserResponse(user),
+          isNewUser: payload.is_new_user === true,
         },
       }),
     );

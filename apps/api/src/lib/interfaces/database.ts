@@ -407,6 +407,16 @@ export interface CouponModel extends Document {
   isValid: boolean;
 }
 
+export interface AdminUserModel extends Document {
+  email: string;
+  name?: string;
+  isActive: boolean;
+  notes?: string;
+  addedBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface PaymentModel extends Document {
   _id: Types.ObjectId;
   user: Types.ObjectId;
@@ -1235,26 +1245,15 @@ export interface AptitudeStudyGuideUploadPayload {
 
 // Section types for StudyGuide
 export type StudyGuideSectionType =
-  | "intro"
-  | "concept"
-  | "pattern"
-  | "cheatsheet";
+  "intro" | "concept" | "pattern" | "cheatsheet";
 
 export type StudyGuideDifficulty = "Easy" | "Medium" | "Hard";
 
 export type StudyGuideCodeLanguage =
-  | "python"
-  | "java"
-  | "cpp"
-  | "javascript"
-  | "go"
-  | "pseudocode";
+  "python" | "java" | "cpp" | "javascript" | "go" | "pseudocode";
 
 export type StudyGuideCalloutVariant =
-  | "info"
-  | "success"
-  | "warning"
-  | "danger";
+  "info" | "success" | "warning" | "danger";
 
 // Shared sub-types
 export interface StudyGuidePrereqCard {

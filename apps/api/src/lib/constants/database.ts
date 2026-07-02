@@ -40,6 +40,7 @@ const DATABASE_MODELS = {
   /** Admin-configured INR prices for subscription SKUs (productType + planKey) */
   SUBSCRIPTION_PLAN: "SubscriptionPlan",
   USER_ACTIVITY_LOG: "UserActivityLog",
+  ADMIN_USER: "AdminUser",
 };
 
 export const FEEDBACK_TYPES = [

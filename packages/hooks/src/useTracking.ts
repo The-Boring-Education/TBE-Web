@@ -7,6 +7,8 @@ import {
 import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
 
+import useAuthAnalytics from "./useAuthAnalytics";
+
 export interface TrackingEventParams {
   action: string;
   category?: string;
@@ -25,6 +27,8 @@ export interface TrackingEventParams {
  */
 const useTracking = () => {
   const router = useRouter();
+
+  useAuthAnalytics();
 
   // Initialize GA & global listeners once
   useEffect(() => {

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getActiveSessionsFromDB } from "@/lib/database";
 import { logger } from "@/lib/utils/logger";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,4 +29,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

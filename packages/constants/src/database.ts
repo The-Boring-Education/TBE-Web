@@ -33,6 +33,7 @@ const DATABASE_MODELS = {
   USER_INTEREST: "UserInterest",
   COUPON: "Coupon",
   USER_ACTIVITY_LOG: "UserActivityLog",
+  ADMIN_USER: "AdminUser",
 };
 
 export const FEEDBACK_TYPES = [

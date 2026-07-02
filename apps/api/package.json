@@ -21,6 +21,7 @@
     "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env production --yes"
   },
   "dependencies": {
+    "@google-analytics/data": "^5.1.0",
     "@sentry/nextjs": "^9.38.0",
     "@tbe/auth": "workspace:*",
     "@tbe/constants": "workspace:*",

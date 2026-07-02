@@ -1,3 +1,4 @@
+export { default as AdminUser } from "./AdminUser";
 export { default as Certificate } from "./Certificate";
 export { default as Coupon } from "./Coupon";
 export { default as Feedback } from "./Feedback";

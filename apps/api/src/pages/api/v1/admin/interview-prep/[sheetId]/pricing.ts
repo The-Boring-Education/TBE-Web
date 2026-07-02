@@ -4,7 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { updateInterviewSheetInDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 interface UpdateSheetPricingRequest {
@@ -12,9 +12,6 @@ interface UpdateSheetPricingRequest {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const adminCheck = await adminMiddleware(req, res);
-  if (!adminCheck) return; // adminMiddleware handles the response
-
   const { method, query } = req;
   const { sheetId } = query;
 
@@ -108,4 +105,4 @@ const handleUpdateSheetPricing = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));
