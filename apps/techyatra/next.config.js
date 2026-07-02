@@ -13,6 +13,8 @@ const nextConfig = {
     "@tbe/services",
     "@tbe/config",
     "@tbe/gamification",
+    "@tbe/auth",
+    "@tbe/query",
   ],
   swcMinify: true,
   images: {

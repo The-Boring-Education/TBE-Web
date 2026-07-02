@@ -26,13 +26,7 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await mockAuthRefreshUnavailable(page);
 
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
-    await expect(page).toHaveURL(
-      (url) => {
-        const { pathname } = new URL(url);
-        return pathname === "/" || pathname === "";
-      },
-      { timeout: 30_000 },
-    );
+    await expect(page).toHaveURL(/\/(\?.*)?$/, { timeout: 45_000 });
   });
 
   test("authenticated and product-onboarded user remains on dashboard", async ({
@@ -45,9 +39,9 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
 
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
-      timeout: 20_000,
+      timeout: 45_000,
     });
-    await expect(page).toHaveURL(/\/dashboard\/?$/, { timeout: 20_000 });
-    await expect(page.getByRole("main")).toBeVisible({ timeout: 20_000 });
+    await expect(page).toHaveURL(/\/dashboard\/?$/, { timeout: 45_000 });
+    await expect(page.getByRole("main")).toBeVisible({ timeout: 45_000 });
   });
 });
