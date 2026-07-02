@@ -341,7 +341,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 
             {/* Main Content Area */}
             <FlexContainer
-              className='border md:w-8/12 w-full p-6 rounded bg-white'
+              className='border md:w-8/12 w-full p-4 sm:p-6 rounded bg-white'
               itemCenter={false}
               justifyCenter={false}
             >

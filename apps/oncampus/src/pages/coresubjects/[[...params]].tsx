@@ -421,12 +421,12 @@ function ChapterContent({
 
               {/* Code block */}
               {content.codeBlock && (
-                <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-6">
+                <section className="bg-[#0A0A0A]/30 border border-gray-900 rounded-2xl p-4 sm:p-6">
                   <h2 className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <span className="w-4 h-[2px] bg-red-500 rounded-full" />
                     Code Example
                   </h2>
-                  <pre className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-4 overflow-x-auto text-[13px] text-green-400 font-mono leading-relaxed scrollbar-thin-grey whitespace-pre-wrap">
+                  <pre className="bg-[#0A0A0A] border border-gray-800 rounded-xl p-3 sm:p-4 -mx-2 sm:mx-0 max-sm:rounded-[6px] overflow-x-auto text-[11px] sm:text-[13px] text-green-400 font-mono leading-relaxed scrollbar-thin-grey whitespace-pre-wrap break-words">
                     <code>{content.codeBlock}</code>
                   </pre>
                 </section>

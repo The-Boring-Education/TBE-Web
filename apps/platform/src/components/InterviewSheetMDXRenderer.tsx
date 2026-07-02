@@ -48,7 +48,7 @@ const TabbedCodeBlock = ({
 
   return (
     <div
-      className={`border rounded-lg overflow-hidden my-6 ${
+      className={`border rounded-lg overflow-hidden my-6 -mx-4 sm:mx-0 max-sm:rounded-none max-sm:border-x-0 ${
         isDark ? 'bg-[#141414] border-gray-800/80' : 'bg-white border-gray-200'
       }`}
     >
@@ -103,7 +103,7 @@ const TabbedCodeBlock = ({
         >
           {/* Line numbers */}
           <div
-            className={`py-3 pl-3 pr-2 select-none border-r shrink-0 ${
+            className={`py-3 pl-3 pr-2 select-none border-r shrink-0 hidden sm:block ${
               isDark ? 'border-gray-800/30' : 'border-gray-200/50'
             }`}
           >
@@ -121,7 +121,7 @@ const TabbedCodeBlock = ({
           {/* Code */}
           <div className='py-3 px-3 flex-1 min-w-0'>
             <pre
-              className={`font-mono text-[13px] leading-relaxed whitespace-pre bg-transparent p-0 m-0 border-0 shadow-none ${
+              className={`font-mono text-[11px] sm:text-[13px] leading-relaxed whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal bg-transparent p-0 m-0 border-0 shadow-none ${
                 isDark ? 'text-gray-300' : 'text-gray-800'
               }`}
             >
@@ -155,7 +155,7 @@ const PlainTextBlock = ({ content, theme = 'light' }: PlainTextBlockProps) => {
 
   return (
     <div
-      className={`relative group border rounded-lg my-6 overflow-hidden ${
+      className={`relative group border rounded-lg my-6 overflow-hidden -mx-4 sm:mx-0 max-sm:rounded-none max-sm:border-x-0 ${
         isDark
           ? 'bg-[#0A0A0A] border-gray-800/40'
           : 'bg-[#fafafa] border-gray-200'
@@ -173,7 +173,7 @@ const PlainTextBlock = ({ content, theme = 'light' }: PlainTextBlockProps) => {
       </button>
       <div className='overflow-x-auto p-4 scrollbar-thin-grey'>
         <pre
-          className={`font-mono text-[12.5px] leading-relaxed whitespace-pre bg-transparent p-0 m-0 border-0 shadow-none ${
+          className={`font-mono text-[11px] sm:text-[12.5px] leading-relaxed whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal bg-transparent p-0 m-0 border-0 shadow-none ${
             isDark ? 'text-gray-300' : 'text-gray-800'
           }`}
         >
