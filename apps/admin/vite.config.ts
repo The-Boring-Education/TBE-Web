@@ -17,6 +17,9 @@ export const capturePaymentError=()=>{};
 export const trackPerformance=()=>{};`;
 
 function sentryStubPlugin() {
+  // Stub @sentry/nextjs for Vite — @tbe/utils re-exports sentry helpers that
+  // depend on Next.js Sentry. resolveId/load only; do NOT add a resolve.alias
+  // to "virtual:sentry-stub" (breaks Vite 5 dev pre-transform).
   return {
     name: "stub-sentry-nextjs",
     resolveId(id: string) {
@@ -43,7 +46,7 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       host: "::",
-      port: 8080,
+      port: 3008,
     },
     plugins: [react(), sentryStubPlugin()],
     define: {
@@ -59,11 +62,11 @@ export default defineConfig(({ mode }) => {
           "../../packages/constants/src/index.ts",
         ),
         "@tbe/hooks": path.resolve(root, "../../packages/hooks/src"),
-        "@sentry/nextjs": "virtual:sentry-stub",
+        "@tbe/utils": path.resolve(root, "../../packages/utils/src"),
       },
     },
     optimizeDeps: {
-      exclude: ["@tbe/auth", "@tbe/constants", "@tbe/hooks"],
+      exclude: ["@tbe/auth", "@tbe/constants", "@tbe/hooks", "@tbe/utils"],
     },
   };
 });

@@ -18,24 +18,6 @@
     "tags": ["roadmap", "agenticai"]
   },
   {
-    "slug": "mobile-app-developer-roadmap",
-    "title": "Mobile App Developer Roadmap 2026",
-    "description": "A complete step-by-step roadmap to becoming a Mobile App Developer, covering Android, iOS, Flutter, React Native, app architecture, APIs, databases, UI/UX, deployment, performance optimization, and real-world mobile applications.",
-    "keywords": [
-      "mobile app development",
-      "android development",
-      "ios development",
-      "flutter",
-      "react native",
-      "kotlin",
-      "swift",
-      "mobile ui ux",
-      "firebase",
-      "cross platform apps"
-    ],
-    "tags": ["roadmap", "mobiledevelopment"]
-  },
-  {
     "slug": "aiml-engineer-roadmap",
     "title": "AI/ML Engineer Roadmap 2026",
     "description": "A structured, step-by-step roadmap to becoming an AI/ML engineer, covering mathematics, machine learning algorithms, deep learning, model deployment, and real-world applications.",
@@ -113,24 +95,6 @@
     "tags": []
   },
   {
-    "slug": "freelance-developer-guide",
-    "title": "Freelance Developer Guide 2026",
-    "description": "A complete step-by-step guide to becoming a successful Freelance Developer, covering client acquisition, personal branding, portfolio building, pricing, contracts, remote work, communication, scaling income, and building a long-term freelance career.",
-    "keywords": [
-      "freelance developer",
-      "freelancing",
-      "web developer freelance",
-      "remote work",
-      "client acquisition",
-      "developer portfolio",
-      "upwork",
-      "fiverr",
-      "software developer",
-      "tech freelancing"
-    ],
-    "tags": ["guide", "freelancing"]
-  },
-  {
     "slug": "cyber-security-engineer-roadmap",
     "title": "Cyber Security Engineer Roadmap 2026",
     "description": "A structured, step-by-step roadmap to becoming a Cyber Security Engineer, covering networking, operating systems, ethical hacking, security tools, cloud security, incident response, and real-world security practices.",
@@ -174,6 +138,24 @@
       "roadmap"
     ],
     "tags": ["dsa", "roadmap", "interview-prep"]
+  },
+  {
+    "slug": "freelance-developer-guide",
+    "title": "Freelance Developer Guide 2026",
+    "description": "A complete step-by-step guide to becoming a successful Freelance Developer, covering client acquisition, personal branding, portfolio building, pricing, contracts, remote work, communication, scaling income, and building a long-term freelance career.",
+    "keywords": [
+      "freelance developer",
+      "freelancing",
+      "web developer freelance",
+      "remote work",
+      "client acquisition",
+      "developer portfolio",
+      "upwork",
+      "fiverr",
+      "software developer",
+      "tech freelancing"
+    ],
+    "tags": ["guide", "freelancing"]
   },
   {
     "slug": "frontend-engineer-roadmap",
@@ -221,6 +203,24 @@
       "interview prep"
     ],
     "tags": ["javascript", "interview", "frontend"]
+  },
+  {
+    "slug": "mobile-app-developer-roadmap",
+    "title": "Mobile App Developer Roadmap 2026",
+    "description": "A complete step-by-step roadmap to becoming a Mobile App Developer, covering Android, iOS, Flutter, React Native, app architecture, APIs, databases, UI/UX, deployment, performance optimization, and real-world mobile applications.",
+    "keywords": [
+      "mobile app development",
+      "android development",
+      "ios development",
+      "flutter",
+      "react native",
+      "kotlin",
+      "swift",
+      "mobile ui ux",
+      "firebase",
+      "cross platform apps"
+    ],
+    "tags": ["roadmap", "mobiledevelopment"]
   },
   {
     "slug": "nodejs-express-interview-questions",
