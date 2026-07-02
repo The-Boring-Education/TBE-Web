@@ -1,3 +1,9 @@
+import {
+  ANALYTICS_EVENTS,
+  type AnalyticsEventName,
+  type AnalyticsEventParams,
+} from "@tbe/constants";
+
 /**
  * GA4 instrumentation for TBE products.
  *
@@ -243,11 +249,19 @@ export const trackPageview = trackPageView;
 /* -----------------------------
     GENERAL EVENT
 ------------------------------ */
-export const trackEvent = (name: string, params: AnalyticsTrackParams = {}) => {
+export function trackEvent<E extends AnalyticsEventName>(
+  name: E,
+  params?: AnalyticsEventParams<E> & AnalyticsTrackParams,
+): void;
+export function trackEvent(name: string, params?: AnalyticsTrackParams): void;
+export function trackEvent(
+  name: string,
+  params: AnalyticsTrackParams = {},
+): void {
   if (typeof window === "undefined" || typeof window.gtag !== "function")
     return;
   window.gtag("event", name, enrichEventParams(params));
-};
+}
 
 /**
  * Removes delegated listeners registered by {@link installGlobalAnalyticsListeners}.
@@ -305,7 +319,7 @@ const delegatedClickCaptureHandlerBody = (e: MouseEvent): void => {
     }
   }
 
-  trackEvent("ui_click", {
+  trackEvent(ANALYTICS_EVENTS.UI_CLICK, {
     interaction_type: "click",
     element_tag: tagName,
     ...(elementIdRaw ? { element_id: elementIdRaw } : {}),
@@ -328,7 +342,7 @@ const delegatedSubmitCaptureHandlerBody = (e: Event): void => {
   }
   const formName =
     form.getAttribute("name")?.trim() || form.id?.trim() || undefined;
-  trackEvent("ui_form_submit", {
+  trackEvent(ANALYTICS_EVENTS.UI_FORM_SUBMIT, {
     interaction_type: "form_submit",
     form_name: formName ?? "anonymous_form",
     surface: readSurfaceFromAncestors(form),
@@ -362,33 +376,33 @@ export const installGlobalAnalyticsListeners = (
    QUIZ EVENTS
 ------------------------------ */
 export const trackQuizStart = (quizId: string) =>
-  trackEvent("quiz_start", { quiz_id: quizId });
+  trackEvent(ANALYTICS_EVENTS.QUIZ_START, { quiz_id: quizId });
 
 export const trackQuizAnswer = (
   quizId: string,
   questionId: string,
   correct: boolean,
 ) =>
-  trackEvent("quiz_question_answered", {
+  trackEvent(ANALYTICS_EVENTS.QUIZ_QUESTION_ANSWERED, {
     quiz_id: quizId,
     question_id: questionId,
     correct,
   });
 
 export const trackQuizComplete = (quizId: string) =>
-  trackEvent("quiz_complete", { quiz_id: quizId });
+  trackEvent(ANALYTICS_EVENTS.QUIZ_COMPLETE, { quiz_id: quizId });
 
 export const trackQuizScore = (quizId: string, score: number) =>
-  trackEvent("quiz_score", { quiz_id: quizId, score });
+  trackEvent(ANALYTICS_EVENTS.QUIZ_SCORE, { quiz_id: quizId, score });
 
 /* -----------------------------
    COURSE EVENTS
 ------------------------------ */
 export const trackCourseView = (courseId: string) =>
-  trackEvent("course_view", { course_id: courseId });
+  trackEvent(ANALYTICS_EVENTS.COURSE_VIEW, { course_id: courseId });
 
 export const trackEnrollClick = (courseId: string) =>
-  trackEvent("enroll_click", { course_id: courseId });
+  trackEvent(ANALYTICS_EVENTS.ENROLL_CLICK, { course_id: courseId });
 
 /* -----------------------------
    USER IDENTITY (GA4 User-ID)
@@ -409,19 +423,19 @@ export const clearAnalyticsUser = (): void => {
    USER EVENTS
 ------------------------------ */
 export const trackLoginSuccess = (userId: string) =>
-  trackEvent("login_success", { user_id: userId });
+  trackEvent(ANALYTICS_EVENTS.LOGIN_SUCCESS, { user_id: userId });
 
 export const trackSignupSuccess = (userId: string) =>
-  trackEvent("signup_success", { user_id: userId });
+  trackEvent(ANALYTICS_EVENTS.SIGNUP_SUCCESS, { user_id: userId });
 
 export const trackLogout = (userId: string) =>
-  trackEvent("logout", { user_id: userId });
+  trackEvent(ANALYTICS_EVENTS.LOGOUT, { user_id: userId });
 
 export const trackUserActivated = (
   userId: string,
   productId?: string,
 ): void => {
-  trackEvent("user_activated", {
+  trackEvent(ANALYTICS_EVENTS.USER_ACTIVATED, {
     user_id: userId,
     ...(productId ? { product_id: productId } : {}),
   });

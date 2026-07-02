@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useToast } from "@tbe/hooks";
 import { trackEvent } from "@tbe/utils";
 import { AlertTriangle, Plus, X } from "lucide-react";
@@ -80,7 +81,7 @@ const AddSkillsModal = ({
           description: `${skill} added to your stack.`,
         });
         try {
-          trackEvent("skill_add", { category: "skills", skill });
+          trackEvent(ANALYTICS_EVENTS.SKILL_ADD, { category: "skills", skill });
         } catch {}
         if (onSkillsUpdated) {
           onSkillsUpdated(updatedSkills);
@@ -122,7 +123,10 @@ const AddSkillsModal = ({
           description: `${skill} removed from your stack.`,
         });
         try {
-          trackEvent("skill_remove", { category: "skills", skill });
+          trackEvent(ANALYTICS_EVENTS.SKILL_REMOVE, {
+            category: "skills",
+            skill,
+          });
         } catch {}
         if (onSkillsUpdated) {
           onSkillsUpdated(updatedSkills);

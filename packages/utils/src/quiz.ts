@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { QuizResult, QuizSession } from "@tbe/types";
 
 import { trackEvent } from "./analytics";
@@ -82,7 +83,7 @@ export const quizService = {
 
       // Analytics
       try {
-        trackEvent("quiz_session_start", {
+        trackEvent(ANALYTICS_EVENTS.QUIZ_SESSION_START, {
           action: "quiz_session_start",
           category: "quiz",
           label: quizId,
@@ -122,7 +123,7 @@ export const quizService = {
 
       // Analytics
       try {
-        trackEvent("quiz_answer_submit", {
+        trackEvent(ANALYTICS_EVENTS.QUIZ_ANSWER_SUBMIT, {
           action: "quiz_answer_submit",
           category: "quiz",
           value: selectedOption,
@@ -172,7 +173,7 @@ export const quizService = {
 
       // Analytics
       try {
-        trackEvent("quiz_session_complete", {
+        trackEvent(ANALYTICS_EVENTS.QUIZ_SESSION_COMPLETE, {
           action: "quiz_session_complete",
           category: "quiz",
           sessionId,

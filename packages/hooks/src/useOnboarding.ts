@@ -1,4 +1,5 @@
 import { getOnboardingConfig, isValidOnboardingProduct } from "@tbe/config";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import type {
   BaseUser,
@@ -78,7 +79,7 @@ export default function useOnboarding({
 
   const handleNext = () => {
     try {
-      trackEvent("onboarding_next", {
+      trackEvent(ANALYTICS_EVENTS.ONBOARDING_NEXT, {
         category: "onboarding",
         label: `${productId}_step_${step}`,
         value: step,
@@ -89,7 +90,7 @@ export default function useOnboarding({
 
   const handleBack = () => {
     try {
-      trackEvent("onboarding_previous", {
+      trackEvent(ANALYTICS_EVENTS.ONBOARDING_PREVIOUS, {
         category: "onboarding",
         label: `${productId}_step_${step}`,
         value: step,
@@ -108,7 +109,7 @@ export default function useOnboarding({
     setError("");
 
     try {
-      trackEvent("onboarding_submit", {
+      trackEvent(ANALYTICS_EVENTS.ONBOARDING_SUBMIT, {
         category: "onboarding",
         label: productId,
       });
@@ -131,7 +132,7 @@ export default function useOnboarding({
 
       if (response.success) {
         try {
-          trackEvent("onboarding_complete", {
+          trackEvent(ANALYTICS_EVENTS.ONBOARDING_COMPLETE, {
             category: "onboarding",
             label: productId,
           });
@@ -151,7 +152,7 @@ export default function useOnboarding({
       setError(errorMessage);
 
       try {
-        trackEvent("onboarding_error", {
+        trackEvent(ANALYTICS_EVENTS.ONBOARDING_ERROR, {
           category: "onboarding",
           label: `${productId}_${errorMessage}`,
         });

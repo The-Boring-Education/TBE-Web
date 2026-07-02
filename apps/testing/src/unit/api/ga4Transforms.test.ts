@@ -7,6 +7,7 @@ import {
   transformMauReport,
   transformRetentionReport,
 } from "@api/lib/analytics/ga4Transforms";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { describe, expect, it } from "vitest";
 
 describe("ga4Config", () => {
@@ -54,7 +55,35 @@ describe("ga4Transforms", () => {
     ]);
   });
 
-  it("transformActivationReport computes activation rate", () => {
+  it("transformActivationReport uses registry event names", () => {
+    const result = transformActivationReport(
+      {
+        rows: [
+          {
+            dimensionValues: [
+              { value: ANALYTICS_EVENTS.SIGNUP_SUCCESS },
+              { value: "20260701" },
+            ],
+            metricValues: [{ value: "100" }],
+          },
+          {
+            dimensionValues: [
+              { value: ANALYTICS_EVENTS.USER_ACTIVATED },
+              { value: "20260701" },
+            ],
+            metricValues: [{ value: "40" }],
+          },
+        ],
+      },
+      "30d",
+    );
+
+    expect(result.signups).toBe(100);
+    expect(result.activated).toBe(40);
+    expect(result.activationRate).toBe(40);
+  });
+
+  it("transformActivationReport computes activation rate with legacy fixture shape", () => {
     const result = transformActivationReport(
       {
         rows: [

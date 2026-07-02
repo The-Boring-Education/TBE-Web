@@ -1,5 +1,6 @@
 import { useAuth } from "@tbe/auth";
 import { Button } from "@tbe/components";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { LoginRedirectButtonProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
 import { usePathname, useRouter } from "next/navigation";
@@ -37,7 +38,7 @@ const LoginRedirectButton = ({
   const handleLoginRedirect = () => {
     if (!isAuthenticated) {
       try {
-        trackEvent("login_redirect_click", {
+        trackEvent(ANALYTICS_EVENTS.LOGIN_REDIRECT_CLICK, {
           category: "auth",
           label: "Login Redirect",
         });

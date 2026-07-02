@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { ChapterLinkProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
 import { FaLock, FaRegCircle } from "react-icons/fa";
@@ -42,7 +43,7 @@ const ChapterLink = ({
           return;
         }
         try {
-          trackEvent("COURSE_CHAPTER_START", {
+          trackEvent(ANALYTICS_EVENTS.COURSE_CHAPTER_START, {
             category: "Course",
             label: name,
             chapterId,

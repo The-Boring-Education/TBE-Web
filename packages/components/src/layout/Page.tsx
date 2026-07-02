@@ -1,5 +1,5 @@
 import { Footer, Navbar } from "@tbe/components";
-import { envConfig, routes } from "@tbe/constants";
+import { routes } from "@tbe/constants";
 import type { PageLayoutProps } from "@tbe/interface";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -16,19 +16,12 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   useEffect(() => {
     if (!isClient) return;
 
-    const handleRouteChange = (url: string) => {
+    const handleRouteChange = () => {
       window.scrollTo(0, 0);
-
-      if (typeof window.gtag !== "undefined") {
-        window.gtag("config", envConfig.GA_TRACKING_ID, {
-          page_path: url,
-        });
-      }
     };
 
     router.events.on("routeChangeComplete", handleRouteChange);
 
-    // Clean up the event listener when the component unmounts
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };

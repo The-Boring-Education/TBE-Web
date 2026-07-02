@@ -1,4 +1,5 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { GROWTH_ANALYTICS_ACTIVATION_EVENTS } from "@tbe/constants";
 
 import {
   type Ga4Config,
@@ -83,7 +84,7 @@ export const fetchActivationAnalytics = async (
       filter: {
         fieldName: "eventName",
         inListFilter: {
-          values: ["signup_success", "user_activated"],
+          values: [...GROWTH_ANALYTICS_ACTIVATION_EVENTS],
         },
       },
     },

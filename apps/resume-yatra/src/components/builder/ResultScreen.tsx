@@ -1,4 +1,6 @@
 import { Button, Card, CardContent } from "@tbe/components/ui";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
+import { trackEvent } from "@tbe/utils";
 import { Copy, RotateCcw, Sparkles } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -18,8 +20,15 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
   useEffect(() => {
     setShowConfetti(true);
     const timer = setTimeout(() => setShowConfetti(false), 3000);
+    try {
+      trackEvent(ANALYTICS_EVENTS.RESUME_BUILDER_COMPLETE, {
+        score: calculateOverallScore(),
+      });
+    } catch {
+      /* ignore analytics errors */
+    }
     return () => clearTimeout(timer);
-  }, [setShowConfetti]);
+  }, [setShowConfetti, calculateOverallScore]);
 
   useEffect(() => {
     // Ensure scroll is unlocked when leaving the result screen
@@ -31,6 +40,13 @@ export default function ResultScreen({ builder }: ResultScreenProps) {
   const handleShareResult = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
+    try {
+      trackEvent(ANALYTICS_EVENTS.RESUME_SHARE, {
+        score: calculateOverallScore(),
+      });
+    } catch {
+      /* ignore analytics errors */
+    }
     toast.success("Link Copied!", {
       description:
         "Resume builder link copied to clipboard. Share it with your friends!",

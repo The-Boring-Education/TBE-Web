@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@tbe/auth";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import { trackEvent } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -21,7 +22,7 @@ export function ResourceSearch({ items }: { items: ResourceIndexEntry[] }) {
 
   const handleSignUp = () => {
     try {
-      trackEvent("signup_click", {
+      trackEvent(ANALYTICS_EVENTS.SIGNUP_CLICK, {
         category: "auth",
         label: "Resources Search Overlay",
       });

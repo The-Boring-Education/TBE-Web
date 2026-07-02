@@ -25,7 +25,8 @@ All apps use the same `NEXT_PUBLIC_ANALYTICS_ID` value in production (single pro
 
 | File                                                            | Role                                                       |
 | --------------------------------------------------------------- | ---------------------------------------------------------- |
-| `packages/utils/src/analytics.ts`                               | GA4 init, `trackEvent`, delegated listeners, named helpers |
+| `packages/constants/src/analyticsEvents.ts`                     | **Single source of truth** — `ANALYTICS_EVENTS` registry   |
+| `packages/utils/src/analytics.ts`                               | GA4 init, typed `trackEvent`, delegated listeners, helpers |
 | `packages/hooks/src/useTracking.ts`                             | Init GA + pageviews + `trackEvent` wrapper (Pages Router)  |
 | `packages/components/src/common/Analytics/AnalyticsWrapper.tsx` | Init GA + pageviews (App Router)                           |
 | `apps/onboarding/src/utils/analytics.ts`                        | Vite-specific GA init                                      |
@@ -78,7 +79,7 @@ All apps use the same `NEXT_PUBLIC_ANALYTICS_ID` value in production (single pro
 
 ### Typed taxonomy (legacy `trackEvent({ action, category, label })`)
 
-Defined in `packages/interface/src/hooks.ts` — `USER_LOGIN`, `COURSE_ENROLL`, `COURSE_CHAPTER_START`, etc. Used by gamification and container components.
+Defined in `packages/constants/src/analyticsEvents.ts` as `LEGACY_ANALYTICS_ACTIONS` and re-exported via `packages/interface/src/hooks.ts` as `TrackEventProps`. Used by gamification and container components.
 
 ## App × GA Init Coverage
 
@@ -99,8 +100,10 @@ Defined in `packages/interface/src/hooks.ts` — `USER_LOGIN`, `COURSE_ENROLL`, 
 1. **No GA4 `user_id`** — added `setAnalyticsUser` / `clearAnalyticsUser`
 2. **Login/signup/logout helpers unused** — wired via auth callback + `useAuthAnalytics`
 3. **No activation event** — added `user_activated` on onboarding complete
-4. **No MAU/retention/activation dashboards** — added `/api/v1/admin/growth-analytics` + tbe-admin Growth Analytics page
-5. **Duplicate pageview** — `Page.tsx` still fires gtag config (low priority; documented)
+4. **No MAU/retention/activation dashboards** — added `/api/v1/admin/growth-analytics` + tbe-admin Growth Analytics page (UI later phase)
+5. **Duplicate pageview** — removed duplicate `gtag('config')` from `Page.tsx` (pageviews handled by `useTracking` / `AnalyticsWrapper`)
+6. **Scattered event strings** — centralized in `@tbe/constants` `ANALYTICS_EVENTS` registry; all apps migrated
+7. **Per-app gaps** — added `dsa_question_view` (dsayatra), `resume_builder_complete` / `resume_share` (resume-yatra)
 
 ## GA4 Admin Console Checklist
 

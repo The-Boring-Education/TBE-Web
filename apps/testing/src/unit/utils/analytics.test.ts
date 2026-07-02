@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import {
   clearAnalyticsUser,
   GA_TRACKING_ID,
@@ -90,7 +91,10 @@ describe("Analytics Utilities", () => {
 
   describe("trackEvent", () => {
     it("should track event with enrichment (page_path, app_id)", () => {
-      trackEvent("ui_click", { element_id: "hero-cta", click_label: "Start" });
+      trackEvent(ANALYTICS_EVENTS.UI_CLICK, {
+        element_id: "hero-cta",
+        click_label: "Start",
+      });
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
