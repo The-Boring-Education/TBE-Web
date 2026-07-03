@@ -269,7 +269,7 @@ function ResultsContent() {
                           <span className="font-semibold mr-2 mt-1 flex-shrink-0">
                             {String.fromCharCode(65 + optionIndex)}.
                           </span>
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0 overflow-hidden">
                             <MarkdownRenderer
                               content={cleanOptionText(option)}
                               className="text-left"
