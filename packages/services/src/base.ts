@@ -107,6 +107,7 @@ export class APIClient {
 
     const response = await fetch(url, {
       method: "GET",
+      cache: "no-store",
       headers: {
         ...this.getAuthHeaders(),
         ...requestOptions.headers,
@@ -124,6 +125,7 @@ export class APIClient {
   ): Promise<T> {
     const response = await fetch(this.buildURL(endpoint), {
       method: "POST",
+      cache: "no-store",
       headers: {
         ...this.getAuthHeaders(),
         ...options.headers,
@@ -142,6 +144,7 @@ export class APIClient {
   ): Promise<T> {
     const response = await fetch(this.buildURL(endpoint), {
       method: "PUT",
+      cache: "no-store",
       headers: {
         ...this.getAuthHeaders(),
         ...options.headers,
@@ -156,6 +159,7 @@ export class APIClient {
   async delete<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const response = await fetch(this.buildURL(endpoint), {
       method: "DELETE",
+      cache: "no-store",
       headers: {
         ...this.getAuthHeaders(),
         ...options.headers,

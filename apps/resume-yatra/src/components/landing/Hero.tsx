@@ -89,7 +89,7 @@ const Hero = () => {
               <div className="space-y-4">
                 <div className="border-b border-gray-200 pb-4">
                   <h3 className="text-2xl font-bold text-gray-900">
-                    Sachin Kumar Singh
+                    Sachin Kr. Shukla
                   </h3>
                   <p className="text-gray-600">Full Stack Developer</p>
                   <p className="text-sm text-gray-500">

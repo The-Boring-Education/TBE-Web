@@ -70,6 +70,20 @@ describe("APIClient (base)", () => {
     expect(h.get("Content-Type")).toBe("application/json");
   });
 
+  it("uses cache: no-store on GET to avoid 304 empty-body failures", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ ok: true }), { status: 200 }),
+      ) as unknown as typeof fetch;
+
+    const client = new APIClient("http://api.test");
+    await client.get("gamification", { params: { userId: "123" } });
+
+    const init = vi.mocked(globalThis.fetch).mock.calls[0]![1] as RequestInit;
+    expect(init.cache).toBe("no-store");
+  });
+
   it("returns JSON body on success", async () => {
     const payload = { id: "q1", name: "Quiz" };
     globalThis.fetch = vi
