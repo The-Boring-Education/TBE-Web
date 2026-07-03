@@ -1,6 +1,5 @@
 import { ProtectedRoute } from "@tbe/auth";
 import { Navbar } from "@tbe/components";
-import { Loader2 } from "lucide-react";
 
 import BuilderMain from "@/components/builder/BuilderMain";
 import InitialChoice from "@/components/builder/InitialChoice";
@@ -10,7 +9,26 @@ import { useResumeBuilder } from "@/hooks/use-resume-builder";
 
 const LoadingScreen = () => (
   <div className="min-h-screen flex items-center justify-center bg-white">
-    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+    <svg
+      className="w-8 h-8 animate-spin text-[#ef4444]"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-label="Loading"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
   </div>
 );
 
