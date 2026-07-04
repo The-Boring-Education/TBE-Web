@@ -7,6 +7,7 @@ vi.mock("@tbe/constants", async (importOriginal) => {
     envConfig: {
       ...actual.envConfig,
       UNSKILLED_API_URL: "https://unskilled.test.com",
+      API_URL: "https://api.test.com",
     },
   };
 });
@@ -19,6 +20,7 @@ describe("resumeEvaluationService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -28,8 +30,9 @@ describe("resumeEvaluationService", () => {
   describe("evaluateResume", () => {
     it("returns evaluation on success", async () => {
       const mockResponse = {
-        score: 85,
-        feedback: ["Good experience"],
+        status: true,
+        message: "OK",
+        data: { resumeScore: 85 },
       };
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
@@ -38,20 +41,17 @@ describe("resumeEvaluationService", () => {
       });
 
       const result = await resumeEvaluationService.evaluateResume({
-        resume: "resume text",
-        jobDescription: "job desc",
+        resumeSkills: ["javascript"],
+        domains: ["Backend Development"],
+        experienceLevel: "Fresher (0 yrs)",
       });
 
       expect(global.fetch).toHaveBeenCalledWith(
         "https://unskilled.test.com/resume/evaluate",
-        {
+        expect.objectContaining({
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            resume: "resume text",
-            jobDescription: "job desc",
-          }),
-        },
+        }),
       );
       expect(result).toEqual(mockResponse);
     });
@@ -67,8 +67,9 @@ describe("resumeEvaluationService", () => {
 
       await expect(
         resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
+          resumeSkills: ["js"],
+          domains: ["Backend Development"],
+          experienceLevel: "Fresher (0 yrs)",
         }),
       ).rejects.toThrow(`Server returned 500: ${longText.substring(0, 200)}`);
     });
@@ -83,8 +84,9 @@ describe("resumeEvaluationService", () => {
 
       await expect(
         resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
+          resumeSkills: ["js"],
+          domains: ["Backend Development"],
+          experienceLevel: "Fresher (0 yrs)",
         }),
       ).rejects.toThrow("Invalid resume format");
     });
@@ -99,23 +101,75 @@ describe("resumeEvaluationService", () => {
 
       await expect(
         resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
+          resumeSkills: ["js"],
+          domains: ["Backend Development"],
+          experienceLevel: "Fresher (0 yrs)",
         }),
       ).rejects.toThrow("Failed to evaluate resume");
     });
 
-    it("throws on network error", async () => {
+    it("falls back to internal API on network error", async () => {
+      const internalResponse = {
+        status: true,
+        message: "Resume evaluation successfully",
+        data: {
+          matchedSkills: [
+            { skill: "javascript", frequency: 10, percentage: 50 },
+          ],
+          missingSkills: [
+            { skill: "typescript", frequency: 8, percentage: 40 },
+          ],
+          resumeScore: 60,
+          totalJobsAnalyzed: 20,
+          companyTypeDistribution: [
+            { name: "Startup", count: 5, percentage: 25 },
+          ],
+          remoteJobs: 3,
+        },
+      };
+
+      (global.fetch as ReturnType<typeof vi.fn>)
+        .mockRejectedValueOnce(new TypeError("Failed to fetch"))
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => internalResponse,
+        });
+
+      const result = await resumeEvaluationService.evaluateResume({
+        resumeSkills: ["javascript"],
+        domains: ["Backend Development"],
+        experienceLevel: "Fresher (0 yrs)",
+      });
+
+      expect(result.status).toBe(true);
+      expect(result.data.resumeScore).toBe(60);
+      expect(result.data.skillsMatched).toBe(1);
+      expect(result.data.skillsMissing).toBe(1);
+      expect(result.data.matchingSkills[0].jobCount).toBe(10);
+      expect(result.data.companyTypeDistribution[0].type).toBe("Startup");
+
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenNthCalledWith(
+        2,
+        "https://api.test.com/v1/unskilled/evaluation",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+
+    it("shows user-friendly message when both services fail with network error", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValue(
-        new Error("Network error"),
+        new TypeError("Failed to fetch"),
       );
 
       await expect(
         resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
+          resumeSkills: ["js"],
+          domains: ["Backend Development"],
+          experienceLevel: "Fresher (0 yrs)",
         }),
-      ).rejects.toThrow("Network error");
+      ).rejects.toThrow(
+        "Unable to reach the evaluation service. Please check your internet connection and try again.",
+      );
     });
   });
 
@@ -135,6 +189,7 @@ describe("resumeEvaluationService", () => {
 
       expect(global.fetch).toHaveBeenCalledWith(
         "https://unskilled.test.com/evaluate/health",
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
       );
       expect(result).toEqual(mockHealth);
     });
@@ -149,13 +204,13 @@ describe("resumeEvaluationService", () => {
       );
     });
 
-    it("throws on network error", async () => {
+    it("throws user-friendly message on network error", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValue(
-        new Error("Connection refused"),
+        new TypeError("Failed to fetch"),
       );
 
       await expect(resumeEvaluationService.checkHealth()).rejects.toThrow(
-        "Connection refused",
+        "Evaluation service is temporarily unavailable.",
       );
     });
   });
