@@ -25,12 +25,6 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
   ],
   tools: [
     {
-      id: "tool-unskilled",
-      name: products.unskilled!.label,
-      description: products.unskilled!.description,
-      href: products.unskilled!.slug,
-    },
-    {
       id: "tool-techyatra",
       name: products.techYatra!.label,
       description: products.techYatra!.description,
@@ -197,16 +191,6 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     href: toPlatformUrl(routes.youfocus),
     active: true,
     ctaText: "Explore YouFocus",
-  },
-  {
-    id: "unskilled",
-    image: `${STATIC_FILE_PATH.svg}/unskilled.svg`,
-    imageAltText: products.unskilled!.label,
-    title: products.unskilled!.label,
-    content: products.unskilled!.description,
-    href: toPlatformUrl(routes.unskilled!),
-    active: true,
-    ctaText: "Explore Unskilled",
   },
   {
     id: "portfolio",
