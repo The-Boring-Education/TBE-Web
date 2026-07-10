@@ -118,12 +118,14 @@ const handleGetRevenueData = async (
       date: payment.date,
       type: payment.type,
       // Anonymize user data for privacy
-      userInitials: payment.user?.name
+      userInitials: payment.user?.name?.trim()
         ? payment.user.name
+            .trim()
             .split(" ")
+            .filter(Boolean)
             .map((n: string) => n[0])
             .join("")
-            .toUpperCase()
+            .toUpperCase() || "U"
         : "U",
     }));
 

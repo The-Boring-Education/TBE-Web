@@ -72,7 +72,7 @@ function DashboardContent() {
           {/* Welcome Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome back, {user?.name?.split(" ")[0]}! 👋
+              Welcome back, {user?.name?.trim().split(" ").filter(Boolean)[0] || "there"}! 👋
             </h1>
             <p className="text-xl text-gray-600">
               Ready to test your knowledge? Choose a quiz below to get started.
