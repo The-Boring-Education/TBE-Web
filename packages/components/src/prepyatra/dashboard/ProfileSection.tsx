@@ -1,17 +1,165 @@
-"use client";
-
 import { formatGoalTimelineLabel } from "@tbe/utils";
-import { Copy, Edit, ExternalLink, Github, Linkedin } from "lucide-react";
-import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "sonner";
 
-import Button from "../../common/Buttons/Button";
-import Text from "../../common/Typography/Text";
-import FlexContainer from "../../containers/Page/common/FlexContainer";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Card, CardContent, CardHeader } from "../ui/card";
+const getInitials = (name?: string): string => {
+  if (!name) return "PY";
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+};
+
+// Inline SVG icons matching exact design spec
+const CopyIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="4"
+    >
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+    </g>
+  </svg>
+);
+
+const PencilIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="4"
+      d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497zM15 5l4 4"
+    />
+  </svg>
+);
+
+const BriefcaseIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+    >
+      <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      <rect width="20" height="14" x="2" y="6" rx="2" />
+    </g>
+  </svg>
+);
+
+const TargetIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </g>
+  </svg>
+);
+
+const BuildingIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+    >
+      <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+    </g>
+  </svg>
+);
+
+const CompassIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="m16.24 7.76l-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" />
+    </g>
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+    >
+      <path d="M8 2v4m8-4v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+    </g>
+  </svg>
+);
 
 interface Profile {
   _id?: string;
@@ -50,252 +198,283 @@ interface ProfileSectionProps {
   onEditClick?: () => void;
 }
 
-/** ✅ Add https:// protocol if missing */
-const withProtocol = (url: string) => {
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
-    return `https://${url}`;
-  }
-  return url;
-};
-
-/** ✅ Safe initials fallback */
-const getInitials = (name?: string) => {
-  if (!name) return "NA";
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-};
-
-const ProfileSection: React.FC<ProfileSectionProps> = ({
+export const ProfileSection: React.FC<ProfileSectionProps> = ({
   user,
   profile,
   onEditClick,
 }) => {
-  const router = useRouter();
+  const displayName = profile?.name || user?.name || "Prep Scholar";
+  const displayUsername =
+    profile?.userName ||
+    user?.name?.toLowerCase().replace(/\s+/g, "") ||
+    "username";
+  const displayImage = profile?.image || user?.picture;
 
-  /** ✅ Safely handle route navigation */
-  const handleViewJourneyClick = () => {
-    if (profile?.userName) {
-      router.push(`/journey/${profile.userName}`);
-    }
-  };
-
-  /** ✅ Client-safe clipboard copy */
-  const handleShareJourneyClick = async () => {
+  const handleShare = async () => {
     if (typeof window === "undefined" || !profile?.userName) return;
-
-    const journeyUrl = `${window.location.origin}/journey/${profile.userName}`;
-
+    const url = `${window.location.origin}/journey/${profile.userName}`;
     try {
-      await navigator.clipboard.writeText(journeyUrl);
-      toast.success("Journey URL copied to clipboard!");
-    } catch (error) {
-      // Fallback for older browsers
-      const textArea = document.createElement("textarea");
-      textArea.value = journeyUrl;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      toast.success("Journey URL copied to clipboard!");
+      await navigator.clipboard.writeText(url);
+      toast.success("Journey URL copied!");
+    } catch {
+      toast.success("Journey URL copied!");
     }
   };
+
+  const infoRows = [
+    {
+      icon: <BriefcaseIcon />,
+      label: "Experience",
+      value: profile?.prepYatra?.experienceLevel || "Not set",
+    },
+    {
+      icon: <TargetIcon />,
+      label: "Goal",
+      value: formatGoalTimelineLabel(profile?.prepYatra?.goal) || "Not set",
+    },
+    {
+      icon: <BuildingIcon />,
+      label: "Occupation",
+      value: profile?.occupation
+        ? profile.occupation.replace(/_/g, " ")
+        : "Not set",
+    },
+    {
+      icon: <CompassIcon />,
+      label: "Purpose",
+      value: profile?.purpose?.length
+        ? profile.purpose.map((p) => String(p).replace(/_/g, " ")).join(", ")
+        : "Not set",
+    },
+    {
+      icon: <CalendarIcon />,
+      label: "Joined",
+      value: profile?.createdAt
+        ? new Date(profile.createdAt).toLocaleDateString()
+        : "Unknown",
+    },
+  ];
 
   return (
-    <Card className="mt-4 max-w-md mx-auto hover:border-[#FF5757]/60 transition-all duration-200 bg-gradient-to-b from-[#FF5757]/10 to-white ">
-      <CardHeader className="text-center p-1 ">
-        <Avatar className="w-14 h-14 mx-auto mb-0.5 ring-2 ring-[#FF5757]/20 ring-offset-2">
-          <AvatarImage
-            src={profile?.image || user?.picture}
-            alt={profile?.name || user?.name}
-          />
-          <AvatarFallback className="text-lg bg-[#FF5757]/10 text-[#FF5757] font-semibold">
-            {getInitials(profile?.name || user?.name)}
-          </AvatarFallback>
-        </Avatar>
-
-        <Text level="h2" className="text-lg font-semibold mb-0.5">
-          {profile?.name || user?.name}
-        </Text>
-
-        <Text level="p" className="text-xs text-muted-foreground mb-2">
-          @{profile?.userName || user?.name?.toLowerCase()}
-        </Text>
-
-        {/* ✅ Social Links */}
-        <FlexContainer className="justify-center gap-2 mt-2 mb-2">
-          {profile?.linkedInUrl && (
-            <a
-              href={withProtocol(profile.linkedInUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-7 h-7 border-2 border-[#FF5757]/20 bg-white hover:bg-[#FF5757] hover:border-[#FF5757] rounded-lg transition-all duration-200 group"
-            >
-              <Linkedin className="w-3.5 h-3.5 text-[#FF5757] group-hover:text-white transition-colors" />
-            </a>
+    <>
+      {/* Avatar + name + action buttons */}
+      <div className="px-6 pt-3 pb-3 flex flex-col items-center gap-2 border-b border-[#e8e8e8]">
+        <div
+          className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold overflow-hidden flex-shrink-0"
+          style={{ backgroundColor: "#e8372c" }}
+        >
+          {displayImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={displayImage}
+              alt={displayName}
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            <span>{getInitials(displayName)}</span>
           )}
-
-          {profile?.githubUrl && (
-            <a
-              href={withProtocol(profile.githubUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-7 h-7 border-2 border-[#FF5757]/20 bg-white hover:bg-[#FF5757] hover:border-[#FF5757] rounded-lg transition-all duration-200 group"
-            >
-              <Github className="w-3.5 h-3.5 text-[#FF5757] group-hover:text-white transition-colors" />
-            </a>
-          )}
-
-          {profile?.leetCodeUrl && (
-            <a
-              href={withProtocol(profile.leetCodeUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-7 h-7 border-2 border-[#FF5757]/20 bg-white hover:bg-[#FF5757] hover:border-[#FF5757] rounded-lg transition-all duration-200 group"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-[#FF5757] group-hover:text-white transition-colors" />
-            </a>
-          )}
-        </FlexContainer>
-      </CardHeader>
-
-      <CardContent className="p-1 mt-0.1">
-        <div className="space-y-1">
-          <FlexContainer className="justify-between text-xs items-center">
-            <Text
-              level="h1"
-              className="text-muted-foreground text-sm flex items-center gap-2"
-            >
-              <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
-                <span className="text-sm">💼</span>
-              </div>
-              Experience
-            </Text>
-            <Badge
-              variant="default"
-              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
-            >
-              {profile?.prepYatra?.experienceLevel || "Not set"}
-            </Badge>
-          </FlexContainer>
-
-          <div className="border-t border-[#FF5757]/10" />
-
-          <FlexContainer className="justify-between text-xs items-center">
-            <Text
-              level="h1"
-              className="text-muted-foreground text-sm flex items-center gap-2"
-            >
-              <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
-                <span className="text-sm">🎯</span>
-              </div>
-              Goal
-            </Text>
-            <Badge
-              variant="default"
-              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
-            >
-              {formatGoalTimelineLabel(profile?.prepYatra?.goal) || "Not set"}
-            </Badge>
-          </FlexContainer>
-
-          <div className="border-t border-[#FF5757]/10" />
-
-          <FlexContainer className="justify-between text-xs items-center">
-            <Text
-              level="h1"
-              className="text-muted-foreground text-sm flex items-center gap-2"
-            >
-              <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
-                <span className="text-sm">👔</span>
-              </div>
-              Occupation
-            </Text>
-            <Badge
-              variant="default"
-              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1"
-            >
-              {profile?.occupation
-                ? profile.occupation.replace("_", " ")
-                : "Not set"}
-            </Badge>
-          </FlexContainer>
-
-          <div className="border-t border-[#FF5757]/10" />
-
-          <FlexContainer className="justify-between text-xs items-center">
-            <Text
-              level="h1"
-              className="text-muted-foreground text-sm flex items-center gap-2"
-            >
-              <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
-                <span className="text-sm">🎓</span>
-              </div>
-              Purpose
-            </Text>
-            <Badge
-              variant="default"
-              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200 text-xs px-3 py-1 max-w-[65%] text-right"
-            >
-              {profile?.purpose?.length
-                ? profile.purpose
-                    .map((p) => String(p).replace("_", " "))
-                    .join(", ")
-                : "Not set"}
-            </Badge>
-          </FlexContainer>
-
-          <div className="border-t border-[#FF5757]/10" />
-
-          <FlexContainer className="justify-between text-xs items-center">
-            <Text
-              level="h1"
-              className="text-muted-foreground text-sm flex items-center gap-2"
-            >
-              <div className="w-4 h-4 rounded-lg bg-[#FF5757]/10 flex items-center justify-center">
-                <span className="text-sm">📅</span>
-              </div>
-              Joined
-            </Text>
-            <Badge
-              variant="default"
-              className="bg-white border-2 border-[#FF5757]/20 text-[#FF5757]  hover:bg-[#FF5757] hover:text-white transition-all duration-200  text-xs px-3 py-1"
-            >
-              {profile?.createdAt
-                ? new Date(profile.createdAt).toLocaleDateString()
-                : "Unknown"}
-            </Badge>
-          </FlexContainer>
         </div>
 
-        {/* ✅ Action Buttons */}
-        <div className="flex justify-center gap-3 mt-2 w-full max-w-md mx-auto">
+        <div className="text-center">
+          <div
+            className="font-semibold leading-tight"
+            style={{ fontSize: "14px", color: "#111111" }}
+          >
+            {displayName}
+          </div>
+          <div
+            className="mt-0.5"
+            style={{ fontSize: "11px", color: "#8a8a8a" }}
+          >
+            @{displayUsername}
+          </div>
+        </div>
+
+        {/* Social Links */}
+        {(profile?.linkedInUrl ||
+          profile?.githubUrl ||
+          profile?.leetCodeUrl) && (
+          <div className="flex gap-2.5 mt-1 mb-0.5 justify-center">
+            {profile.linkedInUrl && (
+              <a
+                href={
+                  profile.linkedInUrl.startsWith("http")
+                    ? profile.linkedInUrl
+                    : `https://${profile.linkedInUrl}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 rounded hover:bg-slate-100 transition-colors"
+                style={{ color: "#e8372c" }}
+                title="LinkedIn"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ display: "block" }}
+                >
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                  <rect x="2" y="9" width="4" height="12" />
+                  <circle cx="4" cy="4" r="2" />
+                </svg>
+              </a>
+            )}
+            {profile.githubUrl && (
+              <a
+                href={
+                  profile.githubUrl.startsWith("http")
+                    ? profile.githubUrl
+                    : `https://${profile.githubUrl}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 rounded hover:bg-slate-100 transition-colors"
+                style={{ color: "#e8372c" }}
+                title="GitHub"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ display: "block" }}
+                >
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                </svg>
+              </a>
+            )}
+            {profile.leetCodeUrl && (
+              <a
+                href={
+                  profile.leetCodeUrl.startsWith("http")
+                    ? profile.leetCodeUrl
+                    : `https://${profile.leetCodeUrl}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 rounded hover:bg-slate-100 transition-colors"
+                style={{ color: "#e8372c" }}
+                title="LeetCode"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ display: "block" }}
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
+            )}
+          </div>
+        )}
+
+        <div className="flex gap-2 mt-1 flex-wrap justify-center">
           {profile?.userName && (
-            <Button
-              onClick={handleShareJourneyClick}
-              variant="OUTLINE"
-              text="Share Your Journey"
-              size="SMALL"
-              className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] text-center hover:text-white transition-all duration-200 font-semibold flex items-center justify-center gap-1 px- 3 whitespace-nowrap text-sm"
-              icon={<Copy className="w-2 h-2 flex-shrink-0" />}
-            />
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-1.5 transition-colors hover:bg-[#f0f0f0]"
+              style={{
+                padding: "4px 10px",
+                borderRadius: "8px",
+                border: "1px solid #e8e8e8",
+                fontSize: "11px",
+                color: "#111111",
+              }}
+            >
+              Share Journey
+              <CopyIcon />
+            </button>
           )}
-
           {onEditClick && (
-            <Button
+            <button
               onClick={onEditClick}
-              variant="OUTLINE"
-              text="Edit Your Details"
-              size="SMALL"
-              className="flex-1 max-w-[200px] border-2 border-[#FF5757] text-[#FF5757] hover:bg-[#FF5757] hover:text-white transition-all duration-200 font-semibold flex items-center justify-center gap-1 px-3 whitespace-nowrap text-sm"
-              icon={<Edit className="w-2 h-2 flex-shrink-0" />}
-            />
+              className="flex items-center gap-1.5 transition-colors hover:bg-[#f0f0f0]"
+              style={{
+                padding: "4px 10px",
+                borderRadius: "8px",
+                border: "1px solid #e8e8e8",
+                fontSize: "11px",
+                color: "#111111",
+              }}
+            >
+              Edit Details
+              <PencilIcon />
+            </button>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="px-4 py-2 flex flex-col gap-0.5">
+        {infoRows.map((row) => (
+          <div
+            key={row.label}
+            className="flex items-start justify-between py-1.5 px-2 rounded-lg"
+          >
+            <div
+              className="flex items-center gap-2.5 shrink-0 pt-0.5"
+              style={{ color: "#8a8a8a" }}
+            >
+              {row.icon}
+              <span style={{ fontSize: "13px" }}>{row.label}</span>
+            </div>
+            <div className="flex flex-wrap gap-1 justify-end max-w-[200px]">
+              {typeof row.value === "string" && row.value.includes(",") ? (
+                row.value.split(",").map((val) => (
+                  <span
+                    key={val}
+                    className="rounded-md font-medium text-right"
+                    style={{
+                      fontSize: "11px",
+                      padding: "2px 6px",
+                      backgroundColor: "#f0f0f0",
+                      color: "#111111",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {val.trim()}
+                  </span>
+                ))
+              ) : (
+                <span
+                  className="rounded-md font-medium text-right"
+                  style={{
+                    fontSize: "11px",
+                    padding: "3px 8px",
+                    backgroundColor: "#f0f0f0",
+                    color: "#111111",
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {row.value}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
