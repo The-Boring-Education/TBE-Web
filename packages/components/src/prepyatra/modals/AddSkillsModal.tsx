@@ -4,64 +4,107 @@ import { trackEvent } from "@tbe/utils";
 import { AlertTriangle, Plus, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
-import Button from "../../common/Buttons/Button";
-import Text from "../../common/Typography/Text";
-import FlexContainer from "../../containers/Page/common/FlexContainer";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
 } from "../ui/dialog";
-import { InputField } from "../ui/input";
+
+// Helper components
+const ModalLabel: React.FC<{
+  children: React.ReactNode;
+  required?: boolean;
+}> = ({ children, required }) => (
+  <label
+    className="block font-medium mb-1.5"
+    style={{ fontSize: "13px", color: "#111111" }}
+  >
+    {children} {required && <span className="text-[#e8372c]">*</span>}
+  </label>
+);
+
+const ModalInput = React.forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>((props, ref) => (
+  <input
+    ref={ref}
+    {...props}
+    className="w-full bg-white border border-[#e8e8e8] px-3.5 py-2 transition-all duration-200 outline-none rounded-md text-[13px] placeholder:text-[#8a8a8a] text-[#111111] focus:border-[#e8372c] focus:ring-1 focus:ring-[#e8372c]/10"
+  />
+));
+ModalInput.displayName = "ModalInput";
+
+const PrimaryButton: React.FC<
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+> = ({ children, ...props }) => (
+  <button
+    {...props}
+    className="px-4 py-2 font-medium text-white transition-colors duration-200 rounded-lg text-[13px]"
+    style={{ backgroundColor: "#e8372c" }}
+    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#d42e23")}
+    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#e8372c")}
+  >
+    {children}
+  </button>
+);
+
+const OutlineButton: React.FC<
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+> = ({ children, ...props }) => (
+  <button
+    {...props}
+    className="px-4 py-2 font-medium transition-colors duration-200 border border-[#e8e8e8] hover:bg-[#f0f0f0] rounded-lg text-[13px]"
+    style={{ backgroundColor: "#ffffff", color: "#111111" }}
+  >
+    {children}
+  </button>
+);
 
 interface AddSkillsModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
   userSkills: string[];
-  lastUpdated?: string;
-  onSkillsUpdated?: (updatedSkills: string[]) => void;
+  onSkillsUpdated: (skills: string[]) => void;
 }
 
-function isOlderThan60Days(dateString: string | undefined) {
-  if (!dateString) {
-    return true;
-  }
-  const last = new Date(dateString);
-  const now = new Date();
-  const diff = now.getTime() - last.getTime();
-  return diff > 60 * 24 * 60 * 60 * 1000; // 60 days in ms
-}
+const POPULAR_SKILLS = [
+  "React",
+  "TypeScript",
+  "Node.js",
+  "Go",
+  "Python",
+  "AWS",
+  "Docker",
+  "Next.js",
+  "Postgres",
+  "MongoDB",
+];
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-const AddSkillsModal = ({
+export const AddSkillsModal = ({
   isOpen,
   onClose,
   userId,
   userSkills,
   onSkillsUpdated,
 }: AddSkillsModalProps) => {
-  const [skills, setSkills] = useState<string[]>(userSkills);
-  const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const [removing, setRemoving] = useState<string | null>(null);
-  const { toast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [skillsList, setSkillsList] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState("");
 
-  // Sync state with props when modal opens or props change
   useEffect(() => {
-    setSkills(userSkills);
+    setSkillsList(userSkills || []);
   }, [userSkills, isOpen]);
 
-  // Show warning only if no skills
-  const showWarning = skills.length === 0;
-
-  const handleAddSkill = async (e: React.FormEvent) => {
+  const handleAddSkill = (e: React.FormEvent) => {
     e.preventDefault();
-    const skill = inputValue.trim();
-    if (!skill || skills.includes(skill)) {
+    const cleanSkill = inputValue.trim();
+    if (!cleanSkill) return;
+    if (skillsList.some((s) => s.toLowerCase() === cleanSkill.toLowerCase())) {
+      toast.error("Skill already added");
       return;
     }
     setLoading(true);
@@ -82,7 +125,7 @@ const AddSkillsModal = ({
         });
         try {
           trackEvent(ANALYTICS_EVENTS.SKILL_ADD, { category: "skills", skill });
-        } catch {}
+        } catch { }
         if (onSkillsUpdated) {
           onSkillsUpdated(updatedSkills);
         }
@@ -127,110 +170,156 @@ const AddSkillsModal = ({
             category: "skills",
             skill,
           });
-        } catch {}
+        } catch { }
         if (onSkillsUpdated) {
           onSkillsUpdated(updatedSkills);
         }
       } else {
-        toast({
-          title: "Error",
-          description: result.message || "Failed to remove skill.",
-          variant: "destructive",
-        });
+        return [...prev, skill];
       }
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: "Failed to remove skill.",
-        variant: "destructive",
-      });
+    });
+  };
+
+  const handleRemoveSkill = (skillToRemove: string) => {
+    setSkillsList((prev) => prev.filter((s) => s !== skillToRemove));
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const addedSkills = skillsList.filter((s) => !userSkills.includes(s));
+      const removedSkills = userSkills.filter((s) => !skillsList.includes(s));
+
+      const promises = [];
+
+      if (addedSkills.length > 0) {
+        promises.push(
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/prepyatra/userskills`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, userSkills: addedSkills }),
+          }).then((res) => res.json()),
+        );
+      }
+
+      for (const skill of removedSkills) {
+        promises.push(
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/prepyatra/userskills`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, skill }),
+          }).then((res) => res.json()),
+        );
+      }
+
+      await Promise.all(promises);
+      toast.success("Tech stack saved successfully!");
+      onSkillsUpdated(skillsList);
+      onClose();
+    } catch {
+      toast.error("Failed to save tech stack");
     } finally {
-      setRemoving(null);
+      setLoading(false);
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto glass p-6 border-greyLight rounded-xl">
-        <DialogHeader>
-          <Text level="h3" className="text-contentLight text-lg font-semibold">
-            ✨ Add Skills
-          </Text>
-          <Text level="p" className="text-greyDark text-sm">
-            Build your skills stack to showcase your expertise
-          </Text>
+      <DialogContent className="bg-white rounded-2xl border border-[#e8e8e8] shadow-xl p-6 sm:max-w-[480px]">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-[17px] font-semibold text-[#111111]">
+            Build Your Tech Stack
+          </DialogTitle>
+          <p className="mt-1" style={{ fontSize: "13px", color: "#8a8a8a" }}>
+            Add programming languages, frameworks, or developer tools you know.
+          </p>
         </DialogHeader>
 
-        {showWarning && (
-          <FlexContainer className="items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-lg px-4 py-3 mb-4">
-            <AlertTriangle className="w-5 h-5 text-yellow-400" />
-            <Text level="span">
-              You haven't added any skills yet. Please add your skills to build
-              your stack!
-            </Text>
-          </FlexContainer>
-        )}
-
-        <form onSubmit={handleAddSkill} className="space-y-4">
-          <InputField
-            label="Skill Name"
-            field="skill"
-            value={inputValue}
-            onChange={(field, value) => setInputValue(value)}
-            placeholder="Type a skill and press Add Skill..."
-            className="bg-white border-greyLight text-contentLight"
-            required
-          />
-
-          <div className="flex flex-wrap gap-2 justify-start items-start">
-            {skills.length === 0 && (
-              <Text level="span" className="text-greyDark text-sm">
-                No skills added yet. Start building your stack!
-              </Text>
-            )}
-            {skills.map((skill) => (
-              <div key={skill} className="relative inline-flex items-center">
-                <Button
-                  variant="OUTLINE"
-                  size="SMALL"
-                  text={skill}
-                  className="font-medium px-4 py-2 text-sm rounded-full text-black pr-6"
+        <div className="space-y-5">
+          {/* Custom Input */}
+          <div>
+            <ModalLabel>Add a Skill</ModalLabel>
+            <form onSubmit={handleAddSkill} className="flex gap-2">
+              <div className="flex-1">
+                <ModalInput
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="E.g. Rust, Kubernetes, Vue"
                 />
-                <button
-                  type="button"
-                  className="absolute right-2 text-primary hover:text-red-500 focus:outline-none transition-colors"
-                  onClick={() => handleRemoveSkill(skill)}
-                  disabled={removing === skill}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
               </div>
-            ))}
+              <PrimaryButton type="submit">Add</PrimaryButton>
+            </form>
           </div>
 
-          <DialogFooter className="flex flex-col-reverse md:flex-row gap-2">
-            <Button
-              variant="OUTLINE"
-              size="SMALL"
-              text="Cancel"
-              onClick={onClose}
-              className="text-sm h-5"
-              isLoading={loading}
-              animationType="BOUNCE"
-            />
-            <Button
-              variant="PRIMARY"
-              size="SMALL"
-              text={loading ? "Adding..." : "Add Skill"}
-              disabled={loading || !inputValue.trim()}
-              className="text-sm h-5"
-              icon={<Plus className="w-4 h-4" />}
-              isLoading={loading}
-              animationType="BOUNCE"
-              type="submit"
-            />
+          {/* Prebuilt Quick Add Capsules */}
+          <div>
+            <ModalLabel>Quick Add Popular Skills</ModalLabel>
+            <div className="flex flex-wrap gap-1.5 mt-1.5">
+              {POPULAR_SKILLS.map((skill) => {
+                const isSelected = skillsList.some(
+                  (s) => s.toLowerCase() === skill.toLowerCase(),
+                );
+                return (
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() => handleTogglePrebuiltSkill(skill)}
+                    className="px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all duration-200 active:scale-[0.97]"
+                    style={{
+                      backgroundColor: isSelected ? "#fff0ef" : "#ffffff",
+                      color: isSelected ? "#e8372c" : "#555555",
+                      borderColor: isSelected ? "#e8372c" : "#e8e8e8",
+                    }}
+                  >
+                    {skill} {isSelected ? "✓" : "+"}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Current stack display */}
+          <div>
+            <ModalLabel>My Tech Stack ({skillsList.length})</ModalLabel>
+            {skillsList.length === 0 ? (
+              <div className="py-6 text-center border border-dashed border-[#e8e8e8] rounded-xl bg-slate-50/30">
+                <p
+                  style={{ fontSize: "12px", color: "#8a8a8a" }}
+                  className="italic"
+                >
+                  No skills in stack yet. Use the fields above to add!
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto p-2.5 border border-[#e8e8e8] rounded-xl bg-slate-50/50">
+                {skillsList.map((skill) => (
+                  <span
+                    key={skill}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] bg-white border border-[#e8e8e8] text-[#111111] font-semibold shadow-sm"
+                  >
+                    {skill}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill)}
+                      className="text-[#8a8a8a] hover:text-[#e8372c] font-bold text-[13px] ml-0.5"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="flex gap-2 justify-end pt-3 border-t border-[#e8e8e8]">
+            <OutlineButton type="button" onClick={onClose}>
+              Cancel
+            </OutlineButton>
+            <PrimaryButton onClick={handleSave} disabled={loading}>
+              {loading ? "Saving..." : "Save Stack"}
+            </PrimaryButton>
           </DialogFooter>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

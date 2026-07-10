@@ -1,37 +1,145 @@
 import { useChallenges } from "@tbe/hooks";
 import type { Challenge } from "@tbe/types";
-import {
-  Calendar,
-  Flame,
-  Plus,
-  Share2,
-  Star,
-  Target,
-  TrendingUp,
-  Trophy,
-} from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import ChallengeCard from "../cards/ChallengeCard";
 import ChallengeLogModal from "../modals/ChallengeLogModal";
 import ChallengeLogsModal from "../modals/ChallengeLogsModal";
 import CreateChallengeModal from "../modals/CreateChallengeModal";
-import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
+
+// SVG Icons (inline)
+const PlusIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+      d="M5 12h14m-7-7v14"
+    />
+  </svg>
+);
+
+const TargetRingsIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="22"
+    height="22"
+    viewBox="0 0 24 24"
+    style={{ display: "block" }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.5"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </g>
+  </svg>
+);
+
+const TrophyIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+      <path d="M4 22h16" />
+      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+      <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+    </g>
+  </svg>
+);
+
+const FlameIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6.5c.5 2.5 2 4.9 4 6.5c2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+    />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M8 2v4m8-4v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+    </g>
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+    />
+  </svg>
+);
 
 interface ChallengeSectionProps {
   userId: string;
   className?: string;
 }
 
-const ChallengeSection = ({
+export const ChallengeSection = ({
   userId,
   className = "",
 }: ChallengeSectionProps) => {
@@ -46,7 +154,6 @@ const ChallengeSection = ({
     challenges,
     activeChallenges,
     completedChallenges,
-    currentChallenge,
     totalDaysCommitted,
     completionRate,
     loading,
@@ -54,229 +161,273 @@ const ChallengeSection = ({
     refetch,
   } = useChallenges(userId);
 
-  const handleChallengeCreated = () => {
-    refetch();
-  };
-
-  const handleChallengeUpdated = () => {
-    refetch();
-  };
-
+  const handleChallengeUpdated = () => refetch();
   const handleLogProgress = (challenge: Challenge) => {
     setSelectedChallenge(challenge);
     setIsLogModalOpen(true);
   };
-
   const handleProgressLogged = () => {
     refetch();
     setIsLogModalOpen(false);
     setSelectedChallenge(null);
   };
-
   const handleViewLogs = (challenge: Challenge) => {
     setSelectedChallenge(challenge);
     setIsLogsModalOpen(true);
   };
 
-  // Check if any challenges are completed
-  const hasCompletedChallenges = challenges.some(
-    (challenge) => challenge.currentDay >= challenge.totalDays,
-  );
-
+  // Loading skeleton
   if (loading) {
     return (
-      <div className={`space-y-6 ${className}`}>
-        <Skeleton className="h-8 w-48" />
-        <div className="grid gap-4">
+      <div className={`space-y-4 animate-pulse ${className}`}>
+        <div
+          className="rounded-xl"
+          style={{ height: "56px", backgroundColor: "#f0f0f0" }}
+        />
+        <div className="grid grid-cols-2 gap-3">
           {[1, 2].map((i) => (
-            <Skeleton key={i} className="h-32 w-full" />
+            <div
+              key={i}
+              className="rounded-xl"
+              style={{ height: "120px", backgroundColor: "#f0f0f0" }}
+            />
           ))}
         </div>
       </div>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div className={`${className}`}>
-        <Card className="border-red-500/20 bg-red-500/10">
-          <CardContent className="pt-6">
-            <p className="text-red-400">Failed to load challenges: {error}</p>
-            <Button
-              onClick={() => refetch()}
-              variant="outline"
-              size="sm"
-              className="mt-2"
-            >
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
+      <div
+        className={`p-6 text-center rounded-xl ${className}`}
+        style={{
+          backgroundColor: "#fff0ef",
+          border: "1px solid #fdecea",
+        }}
+      >
+        <p
+          className="font-semibold"
+          style={{ fontSize: "13px", color: "#e8372c" }}
+        >
+          Failed to load challenges: {error}
+        </p>
+        <button
+          onClick={() => refetch()}
+          className="mt-3 font-medium transition-colors"
+          style={{
+            padding: "8px 16px",
+            borderRadius: "12px",
+            backgroundColor: "#e8372c",
+            color: "#ffffff",
+            fontSize: "13px",
+          }}
+        >
+          Try Again
+        </button>
       </div>
     );
   }
 
-  // Show the "Create Your First Challenge" section if no challenges exist
+  // Empty state — matching exact design with concentric circles
   if (challenges.length === 0) {
     return (
-      <div className={`space-y-6 ${className}`}>
-        {/* Simple Hero Card */}
-        <Card className="bg-white border border-black/10 shadow-md">
-          <CardHeader className="text-center pb-4">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-[#FF5757] rounded-full flex items-center justify-center shadow-lg">
-                <Target className="w-8 h-8 text-white" />
-              </div>
-            </div>
-
-            <CardTitle className="text-2xl font-bold text-black mb-3">
-              Ready to Transform Your Skills?
-            </CardTitle>
-            <CardDescription className="text-gray-600 text-base max-w-lg mx-auto">
-              Create structured learning challenges to stay consistent, track
-              progress, and share your journey with the world.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="text-center space-y-6">
-            {/* Key Benefits */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-[#FF5757]" />
-                </div>
-                <div className="text-black font-medium">Daily Consistency</div>
-                <div className="text-gray-600 text-xs">
-                  Build lasting habits
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-[#FF5757]" />
-                </div>
-                <div className="text-Black font-medium">Track Progress</div>
-                <div className="text-gray-600 text-xs">See your growth</div>
-              </div>
-
-              <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 bg-[#FF5757]/20 rounded-full flex items-center justify-center">
-                  <Share2 className="w-6 h-6 text-[#FF5757]" />
-                </div>
-                <div className="text-Black font-medium">Share Journey</div>
-                <div className="text-gray-600 text-xs">Inspire others</div>
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <Button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="bg-[#FF5757] hover:bg-[#e64f4f] text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-              size="sm"
+      <div className={className}>
+        <div
+          className="flex flex-col items-center"
+          style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid #e8e8e8",
+            borderRadius: "20px",
+            padding: "64px 32px",
+            gap: "24px",
+          }}
+        >
+          {/* Concentric target rings — exact from design */}
+          <div
+            className="flex items-center justify-center"
+            style={{
+              width: "56px",
+              height: "56px",
+              borderRadius: "50%",
+              border: "2px solid #e8372c",
+            }}
+          >
+            <div
+              className="flex items-center justify-center"
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                border: "2px solid #e8372c",
+              }}
             >
-              <Plus className="w-5 h-5 mr-2" />
-              Create Your First Challenge
-            </Button>
-          </CardContent>
-        </Card>
+              <div
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  backgroundColor: "#e8372c",
+                }}
+              />
+            </div>
+          </div>
 
-        {/* Create Challenge Modal for no-challenges view */}
+          {/* Text */}
+          <div
+            className="text-center flex flex-col gap-1"
+            style={{ maxWidth: "384px" }}
+          >
+            <h3
+              className="font-semibold"
+              style={{ fontSize: "15px", color: "#111111" }}
+            >
+              No active challenges
+            </h3>
+            <p style={{ fontSize: "13px", color: "#8a8a8a" }}>
+              Start a challenge to track your interview prep progress
+            </p>
+          </div>
+
+          {/* CTA button */}
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 font-medium transition-colors"
+            style={{
+              padding: "10px 20px",
+              borderRadius: "12px",
+              backgroundColor: "#e8372c",
+              color: "#ffffff",
+              fontSize: "13px",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#d42e23")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#e8372c")
+            }
+          >
+            Start a Challenge
+            <PlusIcon />
+          </button>
+        </div>
+
         <CreateChallengeModal
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
-          onChallengeCreated={handleChallengeCreated}
+          onChallengeCreated={() => refetch()}
           userId={userId}
         />
       </div>
     );
   }
 
+  // Populated state
+  const metrics = [
+    { icon: <TrophyIcon />, value: challenges.length, label: "Total Goals" },
+    {
+      icon: <FlameIcon />,
+      value: activeChallenges.length,
+      label: "Active Now",
+    },
+    { icon: <CalendarIcon />, value: totalDaysCommitted, label: "Days Logged" },
+    { icon: <StarIcon />, value: `${completionRate}%`, label: "Success Rate" },
+  ];
+
   return (
-    <div className={`space-y-6 ${className}`}>
-      {/* Header with Stats */}
-      <div className="flex items-center justify-between">
+    <div className={`flex flex-col gap-5 ${className}`}>
+      {/* Header row */}
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2">
-            <Target className="w-6 h-6 text-[#FF5757]" />
+          <h3
+            className="font-semibold flex items-center gap-2"
+            style={{ fontSize: "15px", color: "#111111" }}
+          >
+            <span style={{ color: "#e8372c" }}>
+              <TargetRingsIcon />
+            </span>
             My Challenges
-          </h2>
-          <p className="text-gray-600 mt-1">
+          </h3>
+          <p className="mt-0.5" style={{ fontSize: "11px", color: "#8a8a8a" }}>
             {activeChallenges.length} active • {completedChallenges.length}{" "}
             completed
           </p>
         </div>
-        <Button
+        <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="text-sm h-8 bg-[#FF5757] hover:bg-[#e64f4f] text-white"
+          className="flex items-center gap-1.5 font-medium transition-colors"
+          style={{
+            padding: "8px 16px",
+            borderRadius: "12px",
+            backgroundColor: "#e8372c",
+            color: "#ffffff",
+            fontSize: "13px",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#d42e23")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#e8372c")
+          }
         >
+          <PlusIcon />
           New Challenge
-          <Plus className="w-1 h-1" />
-        </Button>
+        </button>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="glass border-greyLight hover:border-[#FF5757] transition-all hover:shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-[#FF5757]" />
-              <div>
-                <div className="text-xl font-bold text-contentLight">
-                  {challenges.length}
-                </div>
-                <div className="text-xs text-greyDark">Total Challenges</div>
+      {/* Metrics row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {metrics.map((m) => (
+          <div
+            key={m.label}
+            className="flex items-center gap-3"
+            style={{
+              backgroundColor: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: "12px",
+              padding: "16px",
+            }}
+          >
+            <div
+              className="flex items-center justify-center flex-shrink-0"
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "8px",
+                backgroundColor: "#fff0ef",
+                color: "#e8372c",
+              }}
+            >
+              {m.icon}
+            </div>
+            <div>
+              <div
+                className="font-bold leading-tight"
+                style={{ fontSize: "15px", color: "#111111" }}
+              >
+                {m.value}
+              </div>
+              <div
+                className="font-medium uppercase tracking-wider"
+                style={{ fontSize: "10px", color: "#8a8a8a" }}
+              >
+                {m.label}
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass border-greyLight  hover:border-[#FF5757] transition-all hover:shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Flame className="w-5 h-5 text-[#FF5757]" />
-              <div>
-                <div className="text-xl font-bold text-contentLight">
-                  {activeChallenges.length}
-                </div>
-                <div className="text-xs text-greyDark">Active Now</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass border-greyLight  hover:border-[#FF5757] transition-all hover:shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-[#FF5757]" />
-              <div>
-                <div className="text-xl font-bold text-contentLight">
-                  {totalDaysCommitted}
-                </div>
-                <div className="text-xs text-greyDark">Days Committed</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass border-greyLight  hover:border-[#FF5757] transition-all hover:shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-[#FF5757]" />
-              <div>
-                <div className="text-xl font-bold text-contentLight">
-                  {completionRate}%
-                </div>
-                <div className="text-xs text-greyDark">Success Rate</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        ))}
       </div>
 
-      {/* All Challenges Grid */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-black">All Challenges</h3>
-        <div className="grid gap-4 md:grid-cols-2">
+      {/* Challenge cards grid */}
+      <div>
+        <h4
+          className="font-semibold mb-3"
+          style={{ fontSize: "13px", color: "#111111" }}
+        >
+          All Active & Paused Challenges
+        </h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {challenges.map((challenge) => (
             <ChallengeCard
               key={challenge._id}
@@ -293,7 +444,7 @@ const ChallengeSection = ({
       <CreateChallengeModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onChallengeCreated={handleChallengeCreated}
+        onChallengeCreated={() => refetch()}
         userId={userId}
       />
 
@@ -306,7 +457,6 @@ const ChallengeSection = ({
             challenge={selectedChallenge}
             userId={userId}
           />
-
           <ChallengeLogsModal
             isOpen={isLogsModalOpen}
             onClose={() => setIsLogsModalOpen(false)}

@@ -1,25 +1,38 @@
 import type { UserProfile } from "@tbe/interface";
-import type { PrepLog } from "@tbe/types";
-import type { RecruiterContact } from "@tbe/types";
-import { Plus } from "lucide-react";
-import React, { Suspense } from "react";
+import type { PrepLog, RecruiterContact } from "@tbe/types";
+import React, { useState } from "react";
 
-import Button from "../../common/Buttons/Button";
-import LoadingSpinner from "../../common/LoadingSpinner";
-import Text from "../../common/Typography/Text";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import ChallengeSection from "../features/ChallengeSection";
+import PrepLogsList from "../features/PrepLogsList";
+import RecruiterContactsTable from "../features/RecruiterContactsTable";
+import UserSkillsShowcase from "../showcase/UserSkillsShowcase";
 
-// Lazy load components
-const PrepLogsList = React.lazy(() => import("../features/PrepLogsList"));
-const RecruiterContactsTable = React.lazy(
-  () => import("../features/RecruiterContactsTable"),
-);
-const ChallengeSection = React.lazy(
-  () => import("../features/ChallengeSection"),
-);
-const UserSkillsShowcase = React.lazy(
-  () => import("../showcase/UserSkillsShowcase"),
+type TabId = "challenges" | "prep-logs" | "recruiters" | "skills";
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: "challenges", label: "Challenges" },
+  { id: "prep-logs", label: "Prep Logs" },
+  { id: "recruiters", label: "Recruiters" },
+  { id: "skills", label: "Skills" },
+];
+
+const PlusIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+      d="M5 12h14m-7-7v14"
+    />
+  </svg>
 );
 
 interface DashboardTabsProps {
@@ -39,7 +52,7 @@ interface DashboardTabsProps {
   onContactDeleted: (deletedContactId: string) => void;
 }
 
-const DashboardTabs: React.FC<DashboardTabsProps> = ({
+export const DashboardTabs: React.FC<DashboardTabsProps> = ({
   prepLogs,
   recruiterContacts,
   user,
@@ -51,172 +64,238 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
   onLogDeleted,
   onContactDeleted,
 }) => {
+  const [activeTab, setActiveTab] = useState<TabId>("challenges");
+
   return (
-    <Tabs defaultValue="challenges" className="space-y-6">
-      <TabsList className="grid w-full gap-2 grid-cols-4">
-        <TabsTrigger
-          value="challenges"
-          className="
-                bg-primary text-white
-                border-2 border-primary
-                transition-all duration-300
+    <div className="flex flex-col gap-6">
+      {/* Tab navigation — active tab: solid red; inactive tabs: outlined white */}
+      <div className="flex gap-2 flex-wrap">
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="font-semibold transition-all duration-200"
+              style={{
+                padding: "10px 20px",
+                borderRadius: "12px",
+                fontSize: "13px",
+                backgroundColor: isActive ? "#e8372c" : "#ffffff",
+                color: isActive ? "#ffffff" : "#555555",
+                border: isActive ? "1px solid #e8372c" : "1px solid #e8e8e8",
+                boxShadow: isActive
+                  ? "0 4px 12px rgba(232,55,44,0.15)"
+                  : "none",
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = "#f5f5f5";
+                  e.currentTarget.style.color = "#111111";
+                  e.currentTarget.style.borderColor = "#dcdcdc";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = "#ffffff";
+                  e.currentTarget.style.color = "#555555";
+                  e.currentTarget.style.borderColor = "#e8e8e8";
+                }
+              }}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
-                data-[state=active]:bg-white
-                data-[state=active]:text-primary
-                data-[state=active]:border-primary
-                "
-        >
-          Challenges
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="prep-logs"
-          className="
-                bg-primary text-white
-                border-2 border-primary
-                transition-all duration-300
-
-                data-[state=active]:bg-white
-                data-[state=active]:text-primary
-                data-[state=active]:border-primary
-                "
-        >
-          Prep Logs
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="recruiters"
-          className="
-                bg-primary text-white
-                border-2 border-primary
-                transition-all duration-300
-
-                data-[state=active]:bg-white
-                data-[state=active]:text-primary
-                data-[state=active]:border-primary
-                "
-        >
-          Recruiters
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="skills"
-          className="
-                bg-primary text-white
-                border-2 border-primary
-                transition-all duration-300
-
-                data-[state=active]:bg-white
-                data-[state=active]:text-primary
-                data-[state=active]:border-primary
-                "
-        >
-          Skills
-        </TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="prep-logs" className="space-y-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4">
-            <div>
-              <Text level="h3" className="text-lg font-semibold">
-                Preparation Logs
-              </Text>
-              <Text level="p" className="text-sm text-muted-foreground">
-                Track your learning progress and preparation journey
-              </Text>
-            </div>
-            <Button
-              onClick={onPrepLogModalOpen}
-              variant="PRIMARY"
-              text="Add Log"
-              size="SMALL"
-              icon={<Plus className="w-4 h-4 mr-2" />}
-              className="rounded-1 text-sm px-3 py-1.5"
-            />
-          </CardHeader>
-          <CardContent className="p-4">
-            <Suspense fallback={<LoadingSpinner />}>
-              <PrepLogsList
-                logs={prepLogs}
-                onLogUpdated={() => {}}
-                onLogDeleted={onLogDeleted}
-                mongoUserId={user?.id || ""}
-              />
-            </Suspense>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      <TabsContent value="challenges" className="space-y-4">
-        <Suspense fallback={<LoadingSpinner />}>
+      {/* Tab content */}
+      <div>
+        {/* Challenges tab */}
+        {activeTab === "challenges" && (
           <ChallengeSection userId={user?.id || ""} />
-        </Suspense>
-      </TabsContent>
+        )}
 
-      <TabsContent value="recruiters" className="space-y-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4">
-            <div>
-              <Text level="h3" className="text-lg font-semibold">
-                Recruiter Contacts
-              </Text>
-              <Text level="p" className="text-sm text-muted-foreground">
-                Manage your network of recruiting professionals
-              </Text>
+        {/* Prep Logs tab */}
+        {activeTab === "prep-logs" && (
+          <div
+            className="flex flex-col"
+            style={{
+              backgroundColor: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: "20px",
+              padding: "20px",
+            }}
+          >
+            {/* Header */}
+            <div
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4"
+              style={{ borderBottom: "1px solid #e8e8e8" }}
+            >
+              <div>
+                <h3
+                  className="font-semibold"
+                  style={{ fontSize: "15px", color: "#111111" }}
+                >
+                  Preparation Logs
+                </h3>
+                <p
+                  className="mt-0.5"
+                  style={{ fontSize: "11px", color: "#8a8a8a" }}
+                >
+                  Track your learning progress and preparation milestones
+                </p>
+              </div>
+              <button
+                onClick={onPrepLogModalOpen}
+                className="flex items-center gap-1.5 font-medium transition-colors self-start sm:self-auto"
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "12px",
+                  backgroundColor: "#e8372c",
+                  color: "#ffffff",
+                  fontSize: "13px",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#d42e23")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#e8372c")
+                }
+              >
+                <PlusIcon />
+                Add Log
+              </button>
             </div>
-            <Button
-              onClick={onRecruiterModalOpen}
-              variant="PRIMARY"
-              text="Add Contact"
-              size="SMALL"
-              icon={<Plus className="w-4 h-4 mr-1" />}
-              className="text-sm h-5"
+            <PrepLogsList
+              logs={prepLogs}
+              onLogUpdated={() => {}}
+              onLogDeleted={onLogDeleted}
+              mongoUserId={user?.id || ""}
             />
-          </CardHeader>
-          <CardContent className="p-4">
-            <Suspense fallback={<LoadingSpinner />}>
-              <RecruiterContactsTable
-                contacts={recruiterContacts}
-                onContactUpdated={onContactUpdated}
-                onContactDeleted={onContactDeleted}
-              />
-            </Suspense>
-          </CardContent>
-        </Card>
-      </TabsContent>
+          </div>
+        )}
 
-      <TabsContent value="skills" className="space-y-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4">
-            <div>
-              <Text level="h3" className="text-lg font-semibold">
-                Skills & Technologies
-              </Text>
-              <Text level="p" className="text-sm text-muted-foreground">
-                Showcase your technical skills and expertise
-              </Text>
+        {/* Recruiters tab */}
+        {activeTab === "recruiters" && (
+          <div
+            className="flex flex-col"
+            style={{
+              backgroundColor: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: "20px",
+              padding: "20px",
+            }}
+          >
+            {/* Header */}
+            <div
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4"
+              style={{ borderBottom: "1px solid #e8e8e8" }}
+            >
+              <div>
+                <h3
+                  className="font-semibold"
+                  style={{ fontSize: "15px", color: "#111111" }}
+                >
+                  Recruiter Contacts
+                </h3>
+                <p
+                  className="mt-0.5"
+                  style={{ fontSize: "11px", color: "#8a8a8a" }}
+                >
+                  Manage your network of recruiting professionals and
+                  opportunities
+                </p>
+              </div>
+              <button
+                onClick={onRecruiterModalOpen}
+                className="flex items-center gap-1.5 font-medium transition-colors self-start sm:self-auto"
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "12px",
+                  backgroundColor: "#e8372c",
+                  color: "#ffffff",
+                  fontSize: "13px",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#d42e23")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#e8372c")
+                }
+              >
+                <PlusIcon />
+                Add Contact
+              </button>
             </div>
-            <Button
-              onClick={onSkillsModalOpen}
-              variant="PRIMARY"
-              text="Add Skills"
-              size="SMALL"
-              icon={<Plus className="w-4 h-4 mr-2" />}
-              className="text-sm h-5"
+            <RecruiterContactsTable
+              contacts={recruiterContacts}
+              onContactUpdated={onContactUpdated}
+              onContactDeleted={onContactDeleted}
+              mongoUserId={user?.id || ""}
             />
-          </CardHeader>
-          <CardContent className="p-4">
-            <Suspense fallback={<LoadingSpinner />}>
-              <UserSkillsShowcase
-                userSkills={userProfile?.userSkills || []}
-                lastUpdated={userProfile?.userSkillsLastUpdated}
-              />
-            </Suspense>
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
+          </div>
+        )}
+
+        {/* Skills tab */}
+        {activeTab === "skills" && (
+          <div
+            className="flex flex-col"
+            style={{
+              backgroundColor: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: "20px",
+              padding: "20px",
+            }}
+          >
+            {/* Header */}
+            <div
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4"
+              style={{ borderBottom: "1px solid #e8e8e8" }}
+            >
+              <div>
+                <h3
+                  className="font-semibold"
+                  style={{ fontSize: "15px", color: "#111111" }}
+                >
+                  Skills & Technologies
+                </h3>
+                <p
+                  className="mt-0.5"
+                  style={{ fontSize: "11px", color: "#8a8a8a" }}
+                >
+                  Manage and display your technical skillset and expertise
+                </p>
+              </div>
+              <button
+                onClick={onSkillsModalOpen}
+                className="flex items-center gap-1.5 font-medium transition-colors self-start sm:self-auto"
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "12px",
+                  backgroundColor: "#e8372c",
+                  color: "#ffffff",
+                  fontSize: "13px",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#d42e23")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#e8372c")
+                }
+              >
+                <PlusIcon />
+                Add Skills
+              </button>
+            </div>
+            <UserSkillsShowcase
+              userSkills={userProfile?.userSkills || []}
+              lastUpdated={userProfile?.userSkillsLastUpdated}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

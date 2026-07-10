@@ -1,12 +1,11 @@
 import "react-datepicker/dist/react-datepicker.css";
 
-import { useToast } from "@tbe/hooks";
 import type { RecruiterContact } from "@tbe/types";
-import { Edit2, ExternalLink, Mail, Phone, Trash2 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import { toast } from "sonner";
 
-import { AddRecruiterModal } from "../modals/AddRecruiterModal";
+import AddRecruiterModal from "../modals/AddRecruiterModal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,16 +17,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+  EditIcon,
+  ExternalLinkIcon,
+  MailIcon,
+  PhoneIcon,
+  Trash2Icon,
+} from "./SVGIcons";
 
 interface RecruiterContactsTableProps {
   contacts: RecruiterContact[];
@@ -37,14 +33,13 @@ interface RecruiterContactsTableProps {
   mongoUserId?: string;
 }
 
-const RecruiterContactsTable = ({
+export const RecruiterContactsTable = ({
   contacts,
   onContactAdded,
   onContactUpdated,
   onContactDeleted,
   mongoUserId,
 }: RecruiterContactsTableProps) => {
-  const { toast } = useToast();
   const [editingContact, setEditingContact] = useState<RecruiterContact | null>(
     null,
   );
@@ -61,18 +56,22 @@ const RecruiterContactsTable = ({
 
   const getStatusColor = (status?: string) => {
     switch (status) {
+      case "Screening":
       case "Screening in Process":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        return "bg-blue-50 text-blue-700 border-blue-100";
       case "Interviewing":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+        return "bg-amber-50 text-amber-700 border-amber-100";
+      case "Final Round Done":
       case "Final Round Offer":
-        return "bg-purple-500/20 text-purple-400 border-purple-500/30";
+        return "bg-purple-50 text-purple-700 border-purple-100";
       case "Offer Letter":
-        return "bg-green-500/20 text-green-400 border-green-500/30";
+        return "bg-emerald-50 text-emerald-700 border-emerald-100";
       case "Rejected":
-        return "bg-red-500/20 text-red-400 border-red-500/30";
+        return "bg-red-50 text-red-700 border-red-100";
+      case "Not Interested":
+        return "bg-slate-50 text-slate-600 border-slate-200";
       default:
-        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+        return "bg-slate-50 text-slate-600 border-slate-200";
     }
   };
 
@@ -86,28 +85,18 @@ const RecruiterContactsTable = ({
       );
 
       const result = await res.json();
-
       if (!res.ok) {
         throw new Error(result.message);
       }
 
-      toast({
-        title: "Deleted",
-        description: "Recruiter deleted successfully",
-      });
+      toast.success("Recruiter deleted successfully");
 
-      if (onContactDeleted) {
-        onContactDeleted(recruiterId);
-      }
-      if (onContactUpdated) {
-        onContactUpdated();
-      }
+      if (onContactDeleted) onContactDeleted(recruiterId);
+      if (onContactUpdated) onContactUpdated();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete recruiter",
-        variant: "destructive",
-      });
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete recruiter",
+      );
     }
   };
 
@@ -128,25 +117,17 @@ const RecruiterContactsTable = ({
       );
 
       const result = await res.json();
-
       if (!res.ok) {
         throw new Error(result.message);
       }
 
-      toast({
-        title: "Success",
-        description: "Status updated successfully",
-      });
+      toast.success("Status updated successfully");
 
-      if (onContactUpdated) {
-        onContactUpdated();
-      }
+      if (onContactUpdated) onContactUpdated();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update status",
-        variant: "destructive",
-      });
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update status",
+      );
     }
   };
 
@@ -165,31 +146,23 @@ const RecruiterContactsTable = ({
           },
           body: JSON.stringify({
             recruiterId,
-            [field]: newDate?.toISOString() || null,
+            [field]: newDate ? newDate.toISOString() : null,
           }),
         },
       );
 
       const result = await res.json();
-
       if (!res.ok) {
         throw new Error(result.message);
       }
 
-      toast({
-        title: "Success",
-        description: "Date updated successfully",
-      });
+      toast.success("Date updated successfully");
 
-      if (onContactUpdated) {
-        onContactUpdated();
-      }
+      if (onContactUpdated) onContactUpdated();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update date",
-        variant: "destructive",
-      });
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update date",
+      );
     }
   };
 
@@ -201,140 +174,318 @@ const RecruiterContactsTable = ({
   const handleModalClose = () => {
     setEditingContact(null);
     setIsModalOpen(false);
-    // Trigger parent refresh when modal closes
-    if (onContactUpdated) {
-      onContactUpdated();
-    }
-  };
-
-  const openEmail = (email?: string) => {
-    if (email) {
-      window.open(`mailto:${email}`, "_blank");
-    }
-  };
-
-  const openPhone = (phone?: string) => {
-    if (phone) {
-      window.open(`tel:${phone}`, "_blank");
-    }
-  };
-
-  const openLink = (link?: string) => {
-    if (link) {
-      window.open(link, "_blank");
-    }
+    if (onContactUpdated) onContactUpdated();
   };
 
   if (contacts.length === 0) {
     return (
-      <div className="glass rounded-2xl p-4 text-center border border-greyLight">
-        <div className="text-6xl mb-2">📞</div>
-        <h3 className="text-xl font-bold text-contentLight mb-2">
+      <div className="w-full bg-slate-50/50 border border-dashed border-slate-200 rounded-2xl p-8 text-center mt-2">
+        <span className="text-3xl mb-2.5 block select-none">📞</span>
+        <h3 className="text-base font-bold text-slate-800 mb-1">
           No Contacts Yet
         </h3>
-        <p className="text-greyDark">
-          Start building your recruiter network by adding your first contact!
+        <p className="text-slate-500 text-xs max-w-sm mx-auto">
+          Start building your professional recruiter network by adding your
+          first contact above!
         </p>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="glass rounded-2xl p-3 border border-greyLight">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-xl font-bold text-contentLight">
-            Your Recruiter Network
-          </h3>
-
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setHideInactiveContacts((prev) => !prev)}
-              variant="default"
-            >
-              {hideInactiveContacts
-                ? "Show All Contacts"
-                : "Hide Inactive Contacts"}
-            </Button>
-
-            <Badge variant="secondary" className="bg-primary/20 text-primary">
-              {visibleContacts.length} Contact
-              {visibleContacts.length !== 1 ? "s" : ""}
-            </Badge>
-          </div>
+    <div className="space-y-4">
+      {/* Network Header with Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+        <div className="flex items-center gap-2">
+          <span className="text-slate-700 font-bold text-sm">
+            Total Network size:
+          </span>
+          <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-bold">
+            {visibleContacts.length} Contact
+            {visibleContacts.length !== 1 ? "s" : ""}
+          </span>
         </div>
 
-        <div className="overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-greyLight hover:bg-transparent">
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Name
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Contact
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Status
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Follow Up
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Last Interview
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Company
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Comments
-                </TableHead>
-                <TableHead className="text-primary font-semibold px-1 py-1">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {visibleContacts.map((contact) => (
-                <TableRow
-                  key={contact._id}
-                  className="border-greyLight hover:bg-primary/5 transition-colors h-9"
+        <button
+          onClick={() => setHideInactiveContacts((prev) => !prev)}
+          className="inline-flex items-center justify-center px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold shadow-sm transition-all duration-200 active:scale-[0.98]"
+        >
+          {hideInactiveContacts
+            ? "Show All Contacts"
+            : "Hide Inactive Contacts"}
+        </button>
+      </div>
+
+      {/* MOBILE LIST VIEW (shown on screens < md) */}
+      <div className="md:hidden space-y-3.5">
+        {visibleContacts.map((contact) => (
+          <div
+            key={contact._id}
+            className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 space-y-4 hover:border-primary/20 transition-all duration-300"
+          >
+            {/* Header info: Name and Company */}
+            <div className="flex justify-between items-start">
+              <div>
+                <h4 className="text-sm font-bold text-slate-800 leading-tight">
+                  {contact.recruiterName}
+                </h4>
+                <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                  {contact.company || "No Company Specified"}
+                </p>
+              </div>
+
+              {/* Status Badge */}
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border capitalize ${getStatusColor(
+                  contact.applicationStatus,
+                )}`}
+              >
+                {contact.applicationStatus || "No Status"}
+              </span>
+            </div>
+
+            {/* Contact channels */}
+            {(contact.email || contact.phone) && (
+              <div className="text-xs space-y-1.5 bg-slate-50/50 p-2.5 rounded-xl border border-slate-100">
+                {contact.email && (
+                  <div className="flex items-center gap-2 text-slate-600 break-all">
+                    <MailIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="hover:underline"
+                    >
+                      {contact.email}
+                    </a>
+                  </div>
+                )}
+                {contact.phone && (
+                  <div className="flex items-center gap-2 text-slate-650">
+                    <PhoneIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <a
+                      href={`tel:${contact.phone}`}
+                      className="hover:underline"
+                    >
+                      {contact.phone}
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Quick selectors: Status, Follow Up */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              {/* Status change select */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Update Status
+                </label>
+                <select
+                  className="w-full bg-white border border-slate-200 text-slate-705 rounded-xl px-2 py-1.5 text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                  value={contact.applicationStatus || ""}
+                  onChange={(e) =>
+                    handleStatusChange(contact._id, e.target.value)
+                  }
                 >
-                  <TableCell className="text-contentLight font-medium px-2 py-1 leading-tight">
+                  <option value="" disabled>
+                    Select status
+                  </option>
+                  <option value="Screening">Screening</option>
+                  <option value="Interviewing">Interviewing</option>
+                  <option value="Final Round Done">Final Round Done</option>
+                  <option value="Offer Letter">Offer Letter</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Not Interested">Not Interested</option>
+                </select>
+              </div>
+
+              {/* Follow up date picker */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Follow Up Date
+                </label>
+                <div className="relative">
+                  <DatePicker
+                    selected={
+                      contact.follow_up_date
+                        ? new Date(contact.follow_up_date)
+                        : null
+                    }
+                    onChange={(date: Date | null) =>
+                      handleDateChange(contact._id, "follow_up_date", date)
+                    }
+                    className="w-full bg-white border border-slate-200 text-slate-750 rounded-xl px-2 py-1.5 text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                    dateFormat="MMM d, yyyy"
+                    placeholderText="Set date"
+                    isClearable
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Comments block if exists */}
+            {contact.comments && (
+              <div className="text-xs text-slate-500 bg-slate-50/20 border border-slate-100 p-2.5 rounded-xl leading-relaxed whitespace-pre-wrap">
+                {contact.comments}
+              </div>
+            )}
+
+            {/* Card Action footer panel */}
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100/80">
+              <div className="flex gap-2">
+                {contact.link && (
+                  <a
+                    href={contact.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-7 h-7 border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 rounded-lg transition-colors"
+                    title="External Link"
+                  >
+                    <ExternalLinkIcon className="w-3.5 h-3.5 text-slate-400" />
+                  </a>
+                )}
+                <button
+                  onClick={() => handleEdit(contact)}
+                  className="inline-flex items-center justify-center w-7 h-7 border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 rounded-lg transition-colors"
+                  title="Edit Recruiter"
+                >
+                  <EditIcon className="w-3.5 h-3.5 text-slate-400" />
+                </button>
+              </div>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:border-red-200 hover:bg-red-50 text-slate-500 hover:text-red-600 rounded-xl text-xs font-semibold transition-all duration-200">
+                    <Trash2Icon className="w-3.5 h-3.5" />
+                    <span>Delete</span>
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-white rounded-2xl p-6 max-w-sm md:max-w-md mx-auto">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-slate-800 text-base font-bold">
+                      Delete Recruiter
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-slate-500 text-xs mt-2 leading-relaxed">
+                      Are you sure you want to delete this contact? This action
+                      cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="mt-6 flex flex-row gap-3 justify-end">
+                    <AlertDialogCancel className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-semibold transition-all duration-200">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => handleDelete(contact._id)}
+                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-semibold transition-all duration-200"
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* DESKTOP TABULAR VIEW (shown on screens >= md) */}
+      <div className="hidden md:block bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200/85">
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Company
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Contact
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Follow Up
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Last Interview
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider">
+                  Comments
+                </th>
+                <th className="px-4 py-3.5 font-bold text-slate-700 text-xs uppercase tracking-wider text-right">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {visibleContacts.map((contact) => (
+                <tr
+                  key={contact._id}
+                  className="hover:bg-slate-50/50 transition-colors"
+                >
+                  {/* Name column */}
+                  <td className="px-4 py-3.5 font-semibold text-slate-900 whitespace-nowrap">
                     {contact.recruiterName}
-                  </TableCell>
-                  <TableCell className="text-greyDark">
-                    <div className="flex flex-col gap-1">
+                  </td>
+
+                  {/* Company column */}
+                  <td className="px-4 py-3.5 text-slate-500 whitespace-nowrap font-medium">
+                    {contact.company || "-"}
+                  </td>
+
+                  {/* Contact channels */}
+                  <td className="px-4 py-3.5 text-xs text-slate-500 max-w-[160px] truncate">
+                    <div className="space-y-0.5">
                       {contact.email && (
-                        <div className="text-sm">{contact.email}</div>
+                        <div className="flex items-center gap-1.5">
+                          <MailIcon className="w-3 h-3 text-slate-400 shrink-0" />
+                          <a
+                            href={`mailto:${contact.email}`}
+                            className="hover:underline text-slate-650 truncate"
+                          >
+                            {contact.email}
+                          </a>
+                        </div>
                       )}
                       {contact.phone && (
-                        <div className="text-sm text-greyDark">
-                          {contact.phone}
+                        <div className="flex items-center gap-1.5 text-slate-400">
+                          <PhoneIcon className="w-3 h-3 text-slate-400 shrink-0" />
+                          <a
+                            href={`tel:${contact.phone}`}
+                            className="hover:underline text-slate-650 font-medium"
+                          >
+                            {contact.phone}
+                          </a>
                         </div>
                       )}
                     </div>
-                  </TableCell>
-                  <TableCell>
+                  </td>
+
+                  {/* Status Dropdown */}
+                  <td className="px-4 py-3.5">
                     <select
-                      className="w-[130px] bg-white border border-greyLight text-contentLight rounded-md px-1 py-0.5 text-xs"
+                      className="bg-white border border-slate-200 text-slate-700 rounded-xl px-2 py-1 text-xs focus:outline-none focus:border-primary"
                       value={contact.applicationStatus || ""}
                       onChange={(e) =>
                         handleStatusChange(contact._id, e.target.value)
                       }
                     >
                       <option value="" disabled>
-                        Select status
+                        Status
                       </option>
-                      <option value="Screening">Screening in Process</option>
+                      <option value="Screening">Screening</option>
                       <option value="Interviewing">Interviewing</option>
                       <option value="Final Round Done">Final Round Done</option>
                       <option value="Offer Letter">Offer Letter</option>
                       <option value="Rejected">Rejected</option>
                       <option value="Not Interested">Not Interested</option>
                     </select>
-                  </TableCell>
-                  <TableCell>
+                  </td>
+
+                  {/* Follow Up Date Picker */}
+                  <td className="px-4 py-3.5">
                     <DatePicker
                       selected={
                         contact.follow_up_date
@@ -344,14 +495,15 @@ const RecruiterContactsTable = ({
                       onChange={(date: Date | null) =>
                         handleDateChange(contact._id, "follow_up_date", date)
                       }
-                      className="bg-white border border-greyLight rounded-md px-1 py-0.5 text-contentLight w-[110px] text-xs"
+                      className="bg-white border border-slate-200 rounded-xl px-2 py-1 text-slate-750 w-[110px] text-xs focus:outline-none focus:border-primary"
                       dateFormat="MMM d, yyyy"
-                      placeholderText="Select date"
+                      placeholderText="Set date"
                       isClearable
-                      portalId="recruiter-datepicker-portal"
                     />
-                  </TableCell>
-                  <TableCell>
+                  </td>
+
+                  {/* Last Interview Date Picker */}
+                  <td className="px-4 py-3.5">
                     <DatePicker
                       selected={
                         contact.last_interview_date
@@ -365,95 +517,69 @@ const RecruiterContactsTable = ({
                           date,
                         )
                       }
-                      className="bg-white border border-greyLight rounded-md px-1 py-0.5 text-contentLight w-[110px]"
-                      dateFormat="MM/dd/yy"
-                      placeholderText="Select date"
+                      className="bg-white border border-slate-200 rounded-xl px-2 py-1 text-slate-750 w-[110px] text-xs focus:outline-none focus:border-primary"
+                      dateFormat="MMM d, yyyy"
+                      placeholderText="Set date"
                       isClearable
-                      portalId="recruiter-datepicker-portal"
                     />
-                  </TableCell>
-                  <TableCell className="text-greyDark max-w-xs">
-                    <div className="line-clamp-2 whitespace-pre-line break-words">
-                      {contact.company || "-"}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-greyDark max-w-xs">
-                    <div className="line-clamp-2 whitespace-pre-line break-words">
-                      {contact.comments || "-"}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="mr-2 flex gap-1">
-                      {contact.email && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openEmail(contact.email)}
-                          className="h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2"
-                          title="Send Email"
-                        >
-                          <Mail className="text-red-500" />
-                        </Button>
-                      )}
-                      {contact.phone && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openPhone(contact.phone)}
-                          className="h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2"
-                          title="Call"
-                        >
-                          <Phone className="text-red-500" />
-                        </Button>
-                      )}
+                  </td>
+
+                  {/* Comments column */}
+                  <td
+                    className="px-4 py-3.5 text-xs text-slate-500 max-w-[150px] truncate"
+                    title={contact.comments}
+                  >
+                    {contact.comments || "-"}
+                  </td>
+
+                  {/* Actions Column */}
+                  <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                    <div className="flex items-center justify-end gap-1.5">
                       {contact.link && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openLink(contact.link)}
-                          className="h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2"
+                        <a
+                          href={contact.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-7 h-7 hover:bg-slate-100 text-slate-500 rounded-lg transition-colors"
                           title="Open Link"
                         >
-                          <ExternalLink className="text-red-500" />
-                        </Button>
+                          <ExternalLinkIcon className="w-3.5 h-3.5 text-slate-400 hover:text-slate-650" />
+                        </a>
                       )}
-                      <Button
-                        size="sm"
-                        variant="ghost"
+                      <button
                         onClick={() => handleEdit(contact)}
-                        className="h-4 w-4 p-0 hover:bg-primary/20 [&_svg]:size-2"
+                        className="inline-flex items-center justify-center w-7 h-7 hover:bg-slate-100 text-slate-500 rounded-lg transition-colors"
                         title="Edit Contact"
                       >
-                        <Edit2 className="text-red-500" />
-                      </Button>
+                        <EditIcon className="w-3.5 h-3.5 text-slate-400 hover:text-slate-650" />
+                      </button>
+
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-4 w-4 p-0 hover:bg-red-500/20 [&_svg]:size-2"
+                          <button
+                            className="inline-flex items-center justify-center w-7 h-7 hover:bg-red-50 text-slate-500 hover:text-red-650 rounded-lg transition-colors"
                             title="Delete Contact"
                           >
-                            <Trash2 className="text-red-500" />
-                          </Button>
+                            <Trash2Icon className="w-3.5 h-3.5 text-slate-400 hover:text-red-500" />
+                          </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="glass border-greyLight">
+                        <AlertDialogContent className="bg-white rounded-2xl p-6 max-w-sm md:max-w-md mx-auto">
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="text-contentLight">
-                              Delete Contact
+                            <AlertDialogTitle className="text-slate-800 text-base font-bold">
+                              Delete Recruiter
                             </AlertDialogTitle>
-                            <AlertDialogDescription className="text-greyDark">
+                            <AlertDialogDescription className="text-slate-500 text-xs mt-2 leading-relaxed">
                               Are you sure you want to delete this contact? This
                               action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="bg-white text-contentLight border-greyLight hover:bg-greyLight">
+                          <AlertDialogFooter className="mt-6 flex flex-row gap-3 justify-end">
+                            <AlertDialogCancel className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-semibold transition-all duration-200">
                               Cancel
                             </AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleDelete(contact._id)}
-                              className="bg-red-500 text-white hover:bg-red-600"
+                              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-semibold transition-all duration-200"
                             >
                               Delete
                             </AlertDialogAction>
@@ -461,11 +587,11 @@ const RecruiterContactsTable = ({
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -478,7 +604,7 @@ const RecruiterContactsTable = ({
         editContact={editingContact}
         mongoUserId={mongoUserId ?? ""}
       />
-    </>
+    </div>
   );
 };
 

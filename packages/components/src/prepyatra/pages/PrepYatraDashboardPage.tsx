@@ -4,9 +4,14 @@ import { usePrepLogs } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import { recruitersService, userService } from "@tbe/services";
 import type { RecruiterContact } from "@tbe/types";
-import { Menu, X } from "lucide-react";
 import { useRouter } from "next/router";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
 
 import LoadingSpinner from "../../common/LoadingSpinner";
@@ -17,15 +22,54 @@ import ProfileSection from "../dashboard/ProfileSection";
 import BuildYourStack from "../features/BuildYourStack";
 import DailyPrepEncouragement from "../features/DailyPrepEncouragement";
 import AddPrepLogModal from "../modals/AddPrepLogModal";
-import { AddRecruiterModal } from "../modals/AddRecruiterModal";
+import AddRecruiterModal from "../modals/AddRecruiterModal";
 import AddSkillsModal from "../modals/AddSkillsModal";
 import EditOnboardingModal from "../modals/EditOnboardingModal";
 
-/**
- * Prep Yatra authenticated dashboard — layout, data loading, and modals.
- * Rendered from `apps/prep-yatra/src/pages/dashboard.tsx`.
- */
-const PrepYatraDashboardPage = () => {
+// Mobile menu icons
+const MenuIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    style={{ display: "block" }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.5"
+    >
+      <path d="M3 12h18M3 6h18M3 18h18" />
+    </g>
+  </svg>
+);
+
+const XIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    style={{ display: "block" }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.5"
+      d="M18 6L6 18M6 6l12 12"
+    />
+  </svg>
+);
+
+// Navbar height constant (px) — adjust if Navbar variant changes
+const NAVBAR_HEIGHT = 64;
+
+export const PrepYatraDashboardPage = () => {
   const router = useRouter();
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
   const { triggerCelebration, showToast } = useGamificationContext();
@@ -38,7 +82,7 @@ const PrepYatraDashboardPage = () => {
     RecruiterContact[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const hasInitialized = useRef(false);
   const initializedUserId = useRef<string | null>(null);
@@ -67,13 +111,8 @@ const PrepYatraDashboardPage = () => {
   };
 
   const initializeData = useCallback(async () => {
-    if (!user?.id) {
-      return;
-    }
-
-    if (hasInitialized.current && initializedUserId.current === user.id) {
-      return;
-    }
+    if (!user?.id) return;
+    if (hasInitialized.current && initializedUserId.current === user.id) return;
 
     setLoading(true);
     try {
@@ -92,7 +131,6 @@ const PrepYatraDashboardPage = () => {
 
   useEffect(() => {
     if (authLoading) return;
-
     if (user?.id) {
       if (initializedUserId.current !== user.id) {
         hasInitialized.current = false;
@@ -134,14 +172,14 @@ const PrepYatraDashboardPage = () => {
     }
   };
 
-  const handleLogDeleted = (_deletedLogId: string) => {
+  const handleLogDeleted = () => {
     refetchPrepLogs();
     toast.success("Prep log deleted successfully!");
   };
 
   const handleContactDeleted = (deletedContactId: string) => {
-    setRecruiterContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact._id !== deletedContactId),
+    setRecruiterContacts((prev) =>
+      prev.filter((c) => c._id !== deletedContactId),
     );
     toast.success("Recruiter contact deleted successfully!");
   };
@@ -169,105 +207,120 @@ const PrepYatraDashboardPage = () => {
   }, [authLoading, isAuthenticated, router]);
 
   if (loading || authLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullPage label="Loading your dashboard..." />;
   }
 
   if (!user) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullPage label="Validating user..." />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div
+      className="flex flex-col"
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#fafafa",
+        fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+      }}
+    >
+      {/* Top Navbar */}
       <Suspense fallback={<LoadingSpinner />}>
         <Navbar variant="prepyatra" profileRoute="/profile" />
       </Suspense>
 
-      <main className="w-full px-2 md:px-4 pt-[72px] pb-6">
-        {!isSidebarCollapsed && (
+      {/* Below-navbar layout: Sidebar + Main */}
+      <div className="flex flex-1" style={{ paddingTop: `${NAVBAR_HEIGHT}px` }}>
+        {/* Mobile sidebar backdrop */}
+        {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-            onClick={() => setIsSidebarCollapsed(true)}
+            className="fixed inset-0 z-40 lg:hidden"
+            style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+            onClick={() => setIsSidebarOpen(false)}
           />
         )}
 
+        {/* Mobile FAB toggle */}
         <button
           type="button"
-          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className="fixed top-[78px] left-3 z-50 lg:hidden bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 flex items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110"
-          aria-label={isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed z-50 lg:hidden flex items-center justify-center"
+          style={{
+            bottom: "24px",
+            right: "24px",
+            width: "48px",
+            height: "48px",
+            borderRadius: "50%",
+            backgroundColor: "#e8372c",
+            color: "#ffffff",
+            boxShadow: "0 4px 14px rgba(232,55,44,0.4)",
+          }}
+          aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
-          {isSidebarCollapsed ? (
-            <Menu className="w-3.5 h-3.5" />
-          ) : (
-            <X className="w-3.5 h-3.5" />
-          )}
+          {isSidebarOpen ? <XIcon /> : <MenuIcon />}
         </button>
 
-        <button
-          type="button"
-          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className="hidden lg:flex fixed top-[78px] left-3 z-50 bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-primary/90 items-center justify-center h-9 w-9 rounded-full transition-all duration-200 hover:scale-110"
-          aria-label={isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
+        {/* LEFT SIDEBAR — fixed position with translate for mobile */}
+        <aside
+          className={`
+            fixed top-0 left-0 z-40 flex flex-col overflow-y-auto
+            transition-transform duration-300 ease-in-out
+            lg:sticky lg:top-[64px] lg:translate-x-0 lg:flex-shrink-0 lg:overflow-y-visible
+            w-[85vw] sm:w-[320px] lg:w-[384px]
+            h-screen lg:h-[calc(100vh-64px)]
+            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          `}
+          style={{
+            paddingTop: isSidebarOpen ? `${NAVBAR_HEIGHT}px` : "0px",
+            backgroundColor: "#ffffff",
+            borderRight: "1px solid #e8e8e8",
+          }}
         >
-          {isSidebarCollapsed ? (
-            <Menu className="w-3.5 h-3.5" />
-          ) : (
-            <X className="w-3.5 h-3.5" />
-          )}
-        </button>
+          <ProfileSection
+            user={user}
+            profile={profile}
+            onEditClick={() => {
+              setIsEditModalOpen(true);
+              setIsSidebarOpen(false);
+            }}
+          />
+          <BuildYourStack
+            userId={user.id || ""}
+            userSkills={profile?.userSkills || []}
+            lastUpdated={profile?.userSkillsLastUpdated}
+            onSkillsUpdated={handleSkillsUpdated}
+          />
+        </aside>
 
-        <div className="flex gap-6">
-          <div
-            className={`${isSidebarCollapsed ? "hidden" : "block"} w-full lg:w-1/3 transition-all duration-300`}
-          >
-            <ProfileSection
-              user={user}
-              profile={profile}
-              onEditClick={() => setIsEditModalOpen(true)}
-            />
+        {/* MAIN CONTENT AREA */}
+        <main className="flex flex-col flex-1 min-w-0 p-4 sm:p-6 lg:p-10 gap-6">
+          {/* Daily check-in card */}
+          <DailyPrepEncouragement
+            userId={user?.id || ""}
+            onAddPrepLog={() => setIsPrepLogModalOpen(true)}
+          />
 
-            <Suspense fallback={<LoadingSpinner />}>
-              <BuildYourStack
-                userId={user.id || ""}
-                userSkills={profile?.userSkills || []}
-                lastUpdated={profile?.userSkillsLastUpdated}
-                onSkillsUpdated={handleSkillsUpdated}
-              />
-            </Suspense>
-          </div>
+          {/* Tab navigation + tab content */}
+          <DashboardTabs
+            prepLogs={prepLogs}
+            recruiterContacts={recruiterContacts}
+            user={user}
+            userProfile={profile}
+            onPrepLogModalOpen={() => setIsPrepLogModalOpen(true)}
+            onRecruiterModalOpen={() => setIsRecruiterModalOpen(true)}
+            onSkillsModalOpen={() => setIsSkillsModalOpen(true)}
+            onContactUpdated={handleContactUpdated}
+            onLogDeleted={handleLogDeleted}
+            onContactDeleted={handleContactDeleted}
+          />
+        </main>
+      </div>
 
-          <div
-            className={`${isSidebarCollapsed ? "w-full" : "w-full lg:w-2/3"} transition-all duration-300`}
-          >
-            <Suspense fallback={<LoadingSpinner />}>
-              <div className="mb-4">
-                <DailyPrepEncouragement
-                  userId={user?.id || ""}
-                  onAddPrepLog={() => setIsPrepLogModalOpen(true)}
-                />
-              </div>
-            </Suspense>
-
-            <DashboardTabs
-              prepLogs={prepLogs}
-              recruiterContacts={recruiterContacts}
-              user={user}
-              userProfile={profile}
-              onPrepLogModalOpen={() => setIsPrepLogModalOpen(true)}
-              onRecruiterModalOpen={() => setIsRecruiterModalOpen(true)}
-              onSkillsModalOpen={() => setIsSkillsModalOpen(true)}
-              onContactUpdated={handleContactUpdated}
-              onLogDeleted={handleLogDeleted}
-              onContactDeleted={handleContactDeleted}
-            />
-          </div>
-        </div>
-      </main>
-
+      {/* Footer */}
       <Suspense fallback={<LoadingSpinner />}>
         <Footer />
       </Suspense>
 
+      {/* ── Modals ── */}
       <Suspense fallback={null}>
         <AddPrepLogModal
           isOpen={isPrepLogModalOpen}
@@ -282,6 +335,7 @@ const PrepYatraDashboardPage = () => {
           isOpen={isRecruiterModalOpen}
           onClose={() => setIsRecruiterModalOpen(false)}
           onContactAdded={handleContactAdded}
+          onContactUpdated={handleContactUpdated}
           mongoUserId={user?.id || ""}
         />
       </Suspense>
