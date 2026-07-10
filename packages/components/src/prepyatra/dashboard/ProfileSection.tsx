@@ -60,12 +60,16 @@ const withProtocol = (url: string) => {
 
 /** ✅ Safe initials fallback */
 const getInitials = (name?: string) => {
-  if (!name) return "NA";
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
+  if (!name?.trim()) return "NA";
+  return (
+    name
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase() || "NA"
+  );
 };
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({
