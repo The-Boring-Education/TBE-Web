@@ -243,12 +243,10 @@ export const PrepYatraDashboardPage = () => {
         <button
           type="button"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="fixed z-50 lg:hidden flex items-center justify-center"
+          className="fixed z-50 flex items-center justify-center w-12 h-12 lg:w-[1px] lg:h-[1px] lg:opacity-0 lg:overflow-hidden lg:pointer-events-none"
           style={{
             bottom: "24px",
             right: "24px",
-            width: "48px",
-            height: "48px",
             borderRadius: "50%",
             backgroundColor: "#e8372c",
             color: "#ffffff",
