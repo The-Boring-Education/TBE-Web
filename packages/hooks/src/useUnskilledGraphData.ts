@@ -1,17 +1,18 @@
 import { CACHE_TIMES, useQuery } from "@tbe/query";
-
-const UNSKILLED_API_URL = process.env.NEXT_PUBLIC_UNSKILLED_API_URL;
+import { sendRequest } from "@tbe/utils";
 
 const useUnskilledGraphData = () => {
   const { data, isLoading, error } = useQuery<any>({
     queryKey: ["unskilled", "graph"],
     queryFn: async () => {
-      const response = await fetch(`${UNSKILLED_API_URL}/graph`);
-      if (!response.ok) throw new Error("Failed to fetch graph data");
-      return response.json();
+      const response = await sendRequest({
+        method: "GET",
+        url: "/v1/unskilled",
+      });
+      if (!response.status) throw new Error("Failed to fetch graph data");
+      return response.data;
     },
     ...CACHE_TIMES.STATIC,
-    enabled: !!UNSKILLED_API_URL,
   });
 
   return {

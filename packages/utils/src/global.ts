@@ -418,9 +418,8 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
   const seoMeta = getSEOMeta(slug);
   const isDev = IN_DEV_PAGES.some((page) => page === slug);
 
-  // Fetch graph data directly from Unskilled Platform API
-  // Skip API call during build if URL is not available
-  if (!envConfig.UNSKILLED_API_URL) {
+  // Fetch graph data from TBE internal API (server-side)
+  if (!envConfig.API_URL) {
     return {
       props: {
         seoMeta,
@@ -432,9 +431,9 @@ const getUnskilledLandingPageProps = async ({ resolvedUrl }: any) => {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const response = await fetch(`${envConfig.UNSKILLED_API_URL}/graph`, {
+    const response = await fetch(`${envConfig.API_URL}/v1/unskilled`, {
       signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
