@@ -388,8 +388,8 @@ const MDXRenderer = ({
       theme === "dark" ? "hover:bg-[#1A1A1A]" : "hover:bg-greyLight";
 
     return (
-      `<div class="relative mb-4">` +
-      `<pre class="${codeBgClass} ${codeTextClass} overflow-x-auto ${hoverBgClass} transition border px-4 py-6 rounded">` +
+      `<div class="relative mb-4 -mx-2 sm:mx-0">` +
+      `<pre class="${codeBgClass} ${codeTextClass} overflow-x-auto ${hoverBgClass} transition border px-4 py-6 rounded max-sm:rounded-[6px] whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal text-[11px] sm:text-[13px]">` +
       `<code class="language-${lang}">${md.utils.escapeHtml(code)}</code>` +
       `</pre>` +
       `</div>`

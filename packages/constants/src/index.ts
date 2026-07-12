@@ -1,3 +1,4 @@
+export * from "./analyticsEvents";
 export * from "./apps";
 export * from "./campusPrep";
 export * from "./challenges";

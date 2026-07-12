@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useAnalytics } from "@tbe/hooks";
 import type { QuestionLinkProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
@@ -69,7 +70,7 @@ const QuestionLink = ({
         e.preventDefault(); // Prevent full page navigation to support shallow routing
 
         trackEvent({
-          action: "QUESTION_START",
+          action: ANALYTICS_EVENTS.QUESTION_START,
           category: "Learning",
           label: "Question Started",
           value: {
@@ -81,7 +82,7 @@ const QuestionLink = ({
         });
 
         try {
-          sendEvent("question_start", {
+          sendEvent(ANALYTICS_EVENTS.QUESTION_START, {
             category: "learning",
             questionId,
             title,

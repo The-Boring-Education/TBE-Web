@@ -397,7 +397,7 @@ function QuizContent() {
                         {String.fromCharCode(65 + index)}
                       </div>
 
-                      <div className="flex-1 text-lg">
+                      <div className="flex-1 text-lg min-w-0 overflow-hidden">
                         <CodeRenderer content={cleanOptionText(option)} />
                       </div>
                     </div>

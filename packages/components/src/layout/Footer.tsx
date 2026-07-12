@@ -74,11 +74,6 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
         description: "Resume Builder",
         external: true,
       },
-      {
-        name: "UnSkilled",
-        href: products.unskilled?.slug,
-        description: "Job Insights",
-      },
     ],
     company: [
       {

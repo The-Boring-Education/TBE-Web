@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { PrepLog, PrepLogsResponse } from "@tbe/types";
 import { trackEvent } from "@tbe/utils";
 
@@ -60,7 +61,7 @@ export const prepLogsService = {
 
       // Analytics
       try {
-        trackEvent("prep_log_create", {
+        trackEvent(ANALYTICS_EVENTS.PREP_LOG_CREATE, {
           category: "prep_log",
           value: data.timeSpent,
           title: data.title,
@@ -103,7 +104,7 @@ export const prepLogsService = {
       }
 
       try {
-        trackEvent("prep_log_update", {
+        trackEvent(ANALYTICS_EVENTS.PREP_LOG_UPDATE, {
           category: "prep_log",
           value: data.timeSpent,
           prepLogId: data.prepLogId,
@@ -140,7 +141,7 @@ export const prepLogsService = {
       }
 
       try {
-        trackEvent("prep_log_delete", {
+        trackEvent(ANALYTICS_EVENTS.PREP_LOG_DELETE, {
           category: "prep_log",
           prepLogId: id,
         });

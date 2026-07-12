@@ -44,7 +44,7 @@ export function MarkdownRenderer({
             return !isInline && language ? (
               <pre
                 className={[
-                  "p-4 rounded-lg text-sm overflow-x-auto mb-4 last:mb-0",
+                  "p-4 rounded-lg text-sm overflow-x-auto mb-4 last:mb-0 w-full max-w-full",
                   isDark
                     ? "bg-gray-950 text-gray-100 border border-gray-800"
                     : "bg-gray-900 text-gray-100",

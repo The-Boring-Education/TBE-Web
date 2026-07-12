@@ -1,107 +1,165 @@
-import { useDailyPrepEncouragement } from "@tbe/hooks";
-import { Calendar, Clock, Flame, Plus, TrendingUp } from "lucide-react";
+import { usePrepLogs } from "@tbe/hooks";
+import React from "react";
 
-import Button from "../../common/Buttons/Button";
-import Text from "../../common/Typography/Text";
-import FlexContainer from "../../containers/Page/common/FlexContainer";
-import { Card, CardContent } from "../ui/card";
+const ClockIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="13"
+    height="13"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.69"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    </g>
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="13"
+    height="13"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.69"
+    >
+      <path d="M8 2v4m8-4v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+    </g>
+  </svg>
+);
+
+const PlusIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+      d="M5 12h14m-7-7v14"
+    />
+  </svg>
+);
 
 interface DailyPrepEncouragementProps {
   userId: string;
   onAddPrepLog: () => void;
-  className?: string;
 }
 
-const DailyPrepEncouragement = ({
+const motivationalMessages = [
+  "Every expert was once a beginner. Start your journey today!",
+  "Consistency is the key to success. Keep pushing forward!",
+  "Small steps every day lead to big results. You've got this!",
+  "Practice makes perfect. Log your session and keep growing!",
+  "The best time to start was yesterday. The next best time is now!",
+  "Your future self will thank you for the effort you put in today.",
+  "Success is the sum of small efforts, repeated day in and day out.",
+];
+
+export const DailyPrepEncouragement: React.FC<DailyPrepEncouragementProps> = ({
   userId,
   onAddPrepLog,
-  className = "",
-}: DailyPrepEncouragementProps) => {
-  const {
-    hasLoggedToday,
-    streak,
-    totalTimeSpent,
-    encouragementMessage,
-    encouragementEmoji,
-    buttonText,
-    motivationalTip,
-  } = useDailyPrepEncouragement(userId);
+}) => {
+  const { logs } = usePrepLogs(userId);
+
+  const today = new Date().toDateString();
+  const hasLogToday = logs?.some(
+    (l) => new Date(l.createdAt).toDateString() === today,
+  );
+  const totalHours = logs?.reduce((acc, l) => acc + (l.timeSpent || 0), 0) ?? 0;
+  const message =
+    motivationalMessages[new Date().getDay() % motivationalMessages.length];
 
   return (
-    <Card
-      className={`mt-4 glass border-greyLight hover:border-primary/30 transition-all duration-200 ${className}`}
+    <div
+      className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+      style={{
+        backgroundColor: "#ffffff",
+        border: "1px solid #e8e8e8",
+        borderRadius: "20px",
+        padding: "20px 24px",
+      }}
     >
-      <CardContent className="p-1">
-        <div className="flex flex-col md:flex-row items-start justify-between gap-3">
-          {/* Main Content */}
-          <div className="flex-1 w-full">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">{encouragementEmoji}</span>
-              <Text
-                level="h3"
-                className="text-base font-semibold text-contentLight"
-              >
-                Daily Prep Check-in
-              </Text>
-            </div>
-
-            <Text level="p" className="text-contentLight text-sm mb-1">
-              {encouragementMessage}
-            </Text>
-
-            <Text level="p" className="text-greyDark text-xs mb-1">
-              {motivationalTip}
-            </Text>
-
-            {/* Stats Row */}
-            <div className="flex flex-wrap gap-3 text-xs text-greyDark justify-start">
-              {streak > 0 && (
-                <div className="flex items-center gap-1">
-                  <Flame className="h-3 w-3 text-orange-500" />
-                  <Text level="span">{streak} day streak</Text>
-                </div>
-              )}
-
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3 text-blue-500" />
-                <Text level="span">{totalTimeSpent}h total</Text>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3 text-green-500" />
-                <Text level="span">
-                  {hasLoggedToday ? "Logged today" : "No log today"}
-                </Text>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <FlexContainer direction="col" className="items-center gap-1.5">
-            <Button
-              onClick={onAddPrepLog}
-              variant="PRIMARY"
-              text={buttonText}
-              size="SMALL"
-              icon={<Plus className="h-2 w-2" />}
-              className={`
-                                 duration-200 text-sm
-                                ${hasLoggedToday ? "bg-green-600 hover:bg-green-700" : ""}
-                            `}
-            />
-
-            {!hasLoggedToday && streak > 0 && (
-              <FlexContainer className="items-center text-[11px] text-orange-500">
-                <TrendingUp className="h-3 w-3" />
-                <Text level="span" className="text-orange-600">
-                  Streak at risk!
-                </Text>
-              </FlexContainer>
-            )}
-          </FlexContainer>
+      {/* Left: text info */}
+      <div className="flex flex-col gap-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="select-none" style={{ fontSize: "17px" }}>
+            🚀
+          </span>
+          <span
+            className="font-semibold"
+            style={{ fontSize: "15px", color: "#111111" }}
+          >
+            Daily Prep Check-in
+          </span>
         </div>
-      </CardContent>
-    </Card>
+
+        <p className="mt-0.5" style={{ fontSize: "13px", color: "#8a8a8a" }}>
+          Ready to start your prep journey today?
+        </p>
+        <p style={{ fontSize: "11px", color: "#8a8a8a" }}>{message}</p>
+
+        <div className="flex items-center gap-5 mt-3">
+          <div
+            className="flex items-center gap-1.5"
+            style={{ fontSize: "11px", color: "#8a8a8a" }}
+          >
+            <ClockIcon />
+            <span>{totalHours}h total</span>
+          </div>
+          <div
+            className="flex items-center gap-1.5"
+            style={{ fontSize: "11px", color: "#8a8a8a" }}
+          >
+            <CalendarIcon />
+            <span>{hasLogToday ? "Logged today ✓" : "No log today"}</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        onClick={onAddPrepLog}
+        className="flex items-center gap-2 whitespace-nowrap flex-shrink-0 font-medium transition-colors w-full sm:w-auto justify-center sm:justify-start"
+        style={{
+          backgroundColor: "#e8372c",
+          color: "#ffffff",
+          padding: "10px 16px",
+          borderRadius: "12px",
+          fontSize: "13px",
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = "#d42e23")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "#e8372c")
+        }
+      >
+        {hasLogToday ? "Add Another Log" : "Log Your First Session"}
+        <PlusIcon />
+      </button>
+    </div>
   );
 };
 

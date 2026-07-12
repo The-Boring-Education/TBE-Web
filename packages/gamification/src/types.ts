@@ -1,3 +1,4 @@
+import type { AnalyticsCategory, LegacyAnalyticsAction } from "@tbe/constants";
 import type { UserPointsActionType } from "@tbe/interface";
 
 // ── Celebration & Toast ──
@@ -30,8 +31,8 @@ export interface GamificationContextType {
 export interface GamificationEvent {
   gamificationAction?: UserPointsActionType;
   analytics: {
-    action: string;
-    category: string;
+    action: LegacyAnalyticsAction | string;
+    category: AnalyticsCategory | string;
     label: string;
   };
   celebrationType?: CelebrationType;

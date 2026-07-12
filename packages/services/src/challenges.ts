@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type {
   Challenge,
   ChallengeLog,
@@ -75,7 +76,7 @@ export const challengesService = {
 
       // Analytics
       try {
-        trackEvent("challenge_create", {
+        trackEvent(ANALYTICS_EVENTS.CHALLENGE_CREATE, {
           category: "challenge",
           value: data.totalDays,
           challengeName: data.name,
@@ -121,7 +122,7 @@ export const challengesService = {
 
       // Analytics
       try {
-        trackEvent("challenge_update", {
+        trackEvent(ANALYTICS_EVENTS.CHALLENGE_UPDATE, {
           category: "challenge",
           challengeId: data.challengeId,
           updatedFields: Object.keys(data).filter(
@@ -162,7 +163,7 @@ export const challengesService = {
 
       // Analytics
       try {
-        trackEvent("challenge_delete", {
+        trackEvent(ANALYTICS_EVENTS.CHALLENGE_DELETE, {
           category: "challenge",
           challengeId,
         });
@@ -228,7 +229,7 @@ export const challengesService = {
 
       // Analytics
       try {
-        trackEvent("challenge_log_create", {
+        trackEvent(ANALYTICS_EVENTS.CHALLENGE_LOG_CREATE, {
           category: "challenge",
           challengeId: data.challengeId,
           day: data.day,

@@ -1,5 +1,5 @@
 import { useAuth } from "@tbe/auth";
-import { getLoginCardVariantConfig } from "@tbe/constants";
+import { ANALYTICS_EVENTS, getLoginCardVariantConfig } from "@tbe/constants";
 import { useAnalytics } from "@tbe/hooks";
 import type { LoginCardNewProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
@@ -170,12 +170,12 @@ const LoginCardNew = ({
 
   const handleSignIn = async () => {
     trackEvent({
-      action: "USER_LOGIN",
+      action: ANALYTICS_EVENTS.USER_LOGIN,
       category: "User",
       label: "User Logged In",
     });
     try {
-      sendEvent("login_click", {
+      sendEvent(ANALYTICS_EVENTS.LOGIN_CLICK, {
         category: "auth",
         label: "Continue with Google",
       });

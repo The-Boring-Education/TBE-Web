@@ -8,7 +8,9 @@ const GOOGLE_AUTH_CLIENT_SECRET = process.env
 const ADMIN_SECRET = process.env.ADMIN_SECRET as string;
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string;
 const GA_TRACKING_ID = (process.env.NEXT_PUBLIC_ANALYTICS_ID ||
-  process.env.NEXT_PUBLIC_ANALYTICS_ID) as string;
+  process.env.NEXT_PUBLIC_GA_TRACKING_ID ||
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||
+  "") as string;
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY as string;
 const ADMIN_BASE_URL = process.env.ADMIN_BASE_URL as string;
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN as string;

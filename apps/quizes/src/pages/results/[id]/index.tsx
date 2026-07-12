@@ -1,6 +1,7 @@
 import { useAuth } from "@tbe/auth";
 import { MarkdownRenderer } from "@tbe/components/quizes";
 import { ProtectedRoute } from "@tbe/components/quizes";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useQuery } from "@tbe/query";
 import { quizApi } from "@tbe/services";
 import type { Question } from "@tbe/types";
@@ -61,7 +62,7 @@ function ResultsContent() {
   // Analytics: results view
   useEffect(() => {
     try {
-      trackEvent("quiz_results_view", {
+      trackEvent(ANALYTICS_EVENTS.QUIZ_RESULTS_VIEW, {
         category: "quiz",
         quizId: id,
         timeTaken,
@@ -269,7 +270,7 @@ function ResultsContent() {
                           <span className="font-semibold mr-2 mt-1 flex-shrink-0">
                             {String.fromCharCode(65 + optionIndex)}.
                           </span>
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0 overflow-hidden">
                             <MarkdownRenderer
                               content={cleanOptionText(option)}
                               className="text-left"

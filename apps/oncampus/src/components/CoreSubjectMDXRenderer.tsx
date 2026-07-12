@@ -43,7 +43,7 @@ const TabbedCodeBlock = ({
   const codeLines = currentCode.split("\n");
 
   return (
-    <div className="bg-[#141414] border border-gray-800/80 rounded-lg overflow-hidden my-6">
+    <div className="bg-[#141414] border border-gray-800/80 rounded-lg overflow-hidden my-6 -mx-2 sm:mx-0 max-sm:rounded-[6px]">
       {/* Language tabs */}
       <div className="flex border-b border-gray-800/50 bg-[#111] overflow-x-auto">
         {availableLanguages.map((lang) => (
@@ -75,7 +75,7 @@ const TabbedCodeBlock = ({
         </button>
         <div className="flex bg-[#0d0d0d] overflow-x-auto">
           {/* Line numbers */}
-          <div className="py-3 pl-3 pr-2 select-none border-r border-gray-800/30 shrink-0">
+          <div className="py-3 pl-3 pr-2 select-none border-r border-gray-800/30 shrink-0 hidden sm:block">
             {codeLines.map((_, i) => (
               <div
                 key={i}
@@ -87,7 +87,7 @@ const TabbedCodeBlock = ({
           </div>
           {/* Code */}
           <div className="py-3 px-3 flex-1 min-w-0">
-            <pre className="font-mono text-[13px] text-gray-300 leading-relaxed whitespace-pre bg-transparent p-0 m-0 border-0 shadow-none">
+            <pre className="font-mono text-[11px] sm:text-[13px] text-gray-300 leading-relaxed whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal bg-transparent p-0 m-0 border-0 shadow-none">
               {currentCode}
             </pre>
           </div>
@@ -115,7 +115,7 @@ const PlainTextBlock = ({ content }: PlainTextBlockProps) => {
   };
 
   return (
-    <div className="relative group bg-[#0A0A0A] border border-gray-800/40 rounded-lg my-6 overflow-hidden">
+    <div className="relative group bg-[#0A0A0A] border border-gray-800/40 rounded-lg my-6 overflow-hidden -mx-2 sm:mx-0 max-sm:rounded-[6px]">
       <button
         onClick={handleCopy}
         className="absolute top-2.5 right-2.5 px-2 py-1 text-[10px] font-mono rounded border transition-all duration-200 opacity-0 group-hover:opacity-100 z-10 bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600 cursor-pointer"
@@ -123,7 +123,7 @@ const PlainTextBlock = ({ content }: PlainTextBlockProps) => {
         {copied ? "✓ Copied" : "Copy"}
       </button>
       <div className="overflow-x-auto p-4 scrollbar-thin-grey">
-        <pre className="font-mono text-[12.5px] text-gray-300 leading-relaxed whitespace-pre bg-transparent p-0 m-0 border-0 shadow-none">
+        <pre className="font-mono text-[11px] sm:text-[12.5px] text-gray-300 leading-relaxed whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal bg-transparent p-0 m-0 border-0 shadow-none">
           {content}
         </pre>
       </div>

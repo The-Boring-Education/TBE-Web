@@ -1,3 +1,5 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
+
 import { trackEvent } from "./analytics";
 import { sendRequest } from "./api";
 
@@ -71,7 +73,7 @@ export const prepLogsService = {
 
       // Analytics
       try {
-        trackEvent("prep_log_create", {
+        trackEvent(ANALYTICS_EVENTS.PREP_LOG_CREATE, {
           category: "prep_yatra",
           value: data.timeSpent,
           title: data.title,
@@ -107,7 +109,7 @@ export const prepLogsService = {
 
       // Analytics
       try {
-        trackEvent("prep_log_update", {
+        trackEvent(ANALYTICS_EVENTS.PREP_LOG_UPDATE, {
           category: "prep_yatra",
           logId: data.logId,
         });
@@ -136,7 +138,7 @@ export const prepLogsService = {
 
       // Analytics
       try {
-        trackEvent("prep_log_delete", {
+        trackEvent(ANALYTICS_EVENTS.PREP_LOG_DELETE, {
           category: "prep_yatra",
           logId,
         });

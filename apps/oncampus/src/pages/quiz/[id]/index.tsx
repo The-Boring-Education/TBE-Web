@@ -375,7 +375,7 @@ export default function QuizPage() {
                             </span>
 
                             {/* Option text */}
-                            <span className="flex-1 text-zinc-300 [&_p]:m-0 [&_p]:leading-normal leading-normal text-xs font-normal">
+                            <span className="flex-1 min-w-0 overflow-hidden text-zinc-300 [&_p]:m-0 [&_p]:leading-normal leading-normal text-xs font-normal">
                               <CodeRenderer
                                 content={cleanOptionText(opt)}
                                 theme="dark"

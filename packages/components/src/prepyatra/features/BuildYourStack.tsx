@@ -1,78 +1,178 @@
-import { AlertTriangle, Code, Plus } from "lucide-react";
 import React, { useState } from "react";
 
-import Button from "../../common/Buttons/Button";
-import Text from "../../common/Typography/Text";
-import FlexContainer from "../../containers/Page/common/FlexContainer";
 import AddSkillsModal from "../modals/AddSkillsModal";
-import { Badge } from "../ui/badge";
+
+const LayersIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.43"
+    >
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+      <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
+      <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
+    </g>
+  </svg>
+);
+
+const PlusIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="4"
+      d="M5 12h14m-7-7v14"
+    />
+  </svg>
+);
+
+const AlertTriangleIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    style={{ display: "block", flexShrink: 0 }}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.4"
+      d="m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01"
+    />
+  </svg>
+);
 
 interface BuildYourStackProps {
   userId: string;
   userSkills: string[];
-  onSkillsUpdated?: (updatedSkills: string[]) => void;
   lastUpdated?: string;
+  onSkillsUpdated?: (skills: string[]) => void;
 }
 
-const BuildYourStack = ({
+export const BuildYourStack: React.FC<BuildYourStackProps> = ({
   userId,
   userSkills,
   onSkillsUpdated,
-  lastUpdated,
-}: BuildYourStackProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Show warning only if no skills
-  const showWarning = userSkills.length === 0;
+  const handleSkillsUpdated = (skills: string[]) => {
+    onSkillsUpdated?.(skills);
+    setIsModalOpen(false);
+  };
 
   return (
-    <div className="mt-1 max-w-md mx-auto rounded-1 p-3 mb-4 shadow border border-greyLight hover:border-[#FF5757]/60 transition-all duration-200 bg-gradient-to-b from-white to-[#FF5757]/10">
-      <div className="flex items-center gap-2 mb-2 justify-start">
-        <Plus className="mt-1 w-4 h-4 text-primary" />
-        <Text level="h3" className="text-base font-semibold text-contentLight">
+    <div className="px-4 mt-1.5 pb-2">
+      {/* Section header */}
+      <div className="flex items-center gap-2 mb-2 px-2">
+        <span className="flex items-center" style={{ color: "#8a8a8a" }}>
+          <LayersIcon />
+        </span>
+        <span
+          className="font-semibold"
+          style={{ fontSize: "13px", color: "#111111" }}
+        >
           Build Your Stack
-        </Text>
+        </span>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="ml-auto flex items-center justify-center transition-colors hover:bg-[#e8e8e8]"
+          style={{
+            width: "24px",
+            height: "24px",
+            borderRadius: "8px",
+            backgroundColor: "#f0f0f0",
+            color: "#8a8a8a",
+          }}
+        >
+          <PlusIcon />
+        </button>
       </div>
-      {showWarning && (
-        <FlexContainer className="items-center gap-2 bg-yellow-900/80 border border-yellow-600 text-yellow-300 rounded-md px-3 py-1 mb-2">
-          <AlertTriangle className="w-4 h-4 text-yellow-400" />
-          <Text level="span">
-            You haven't added any skills yet. Please add your skills to build
-            your stack!
-          </Text>
-        </FlexContainer>
-      )}
-      <div className="flex flex-wrap gap-1.5 mb-2 justify-start items-start">
-        {userSkills.length === 0 && (
-          <Text level="span" className="text-greyDark text-xs">
-            No skills added yet. Start building your stack!
-          </Text>
-        )}
-        {userSkills.map((skill) => (
-          <Badge
-            key={skill}
-            className="flex items-center gap-1.5 bg-white text-[#FF5757] font-medium px-3 py-1 rounded-full border border-[#FF5757]/40 hover:bg-[#FF5757] hover:text-white hover:border-[#FF5757] transition-all duration-200 shadow-none text-xs"
+
+      {/* Skills empty state */}
+      {userSkills.length === 0 ? (
+        <div
+          className="rounded-lg p-4 flex flex-col items-center gap-2"
+          style={{
+            backgroundColor: "#fff0ef",
+            border: "1px solid #fdecea",
+          }}
+        >
+          <span className="flex items-center" style={{ color: "#e8372c" }}>
+            <AlertTriangleIcon />
+          </span>
+          <span
+            className="text-center"
+            style={{ fontSize: "11px", color: "#8a8a8a" }}
           >
-            <Code className="w-3.5 h-3.5 text-inherit transition-colors" />
-            <Text level="span">{skill}</Text>
-          </Badge>
-        ))}
-      </div>
-      <Button
-        onClick={() => setModalOpen(true)}
-        variant="PRIMARY"
-        size="SMALL"
-        text="Add Skills"
-        icon={<Plus className="w-3 h-3 -ml-1" />}
-        className="text-xs h-4 pr-1"
-      />
+            No skills added yet
+          </span>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="font-medium hover:underline"
+            style={{ fontSize: "11px", color: "#e8372c" }}
+          >
+            Add your first skill
+          </button>
+        </div>
+      ) : (
+        /* Skills populated state */
+        <div className="flex flex-wrap gap-1.5 px-2">
+          {userSkills.map((skill) => (
+            <span
+              key={skill}
+              className="rounded-md"
+              style={{
+                padding: "4px 10px",
+                fontSize: "11px",
+                backgroundColor: "#f0f0f0",
+                color: "#111111",
+              }}
+            >
+              {skill}
+            </span>
+          ))}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="rounded-md transition-colors hover:bg-[#f0f0f0]"
+            style={{
+              padding: "4px 10px",
+              fontSize: "11px",
+              color: "#8a8a8a",
+              border: "1px dashed #e8e8e8",
+            }}
+          >
+            + Add
+          </button>
+        </div>
+      )}
+
       <AddSkillsModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         userId={userId}
         userSkills={userSkills}
-        lastUpdated={lastUpdated}
-        onSkillsUpdated={onSkillsUpdated}
+        onSkillsUpdated={handleSkillsUpdated}
       />
     </div>
   );

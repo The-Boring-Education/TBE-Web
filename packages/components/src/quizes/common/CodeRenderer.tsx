@@ -114,8 +114,8 @@ export function CodeRenderer({
         : "copy-button absolute top-2 right-2 px-2 py-1 bg-white text-gray-800 text-xs rounded border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100 hidden";
 
       return (
-        `<div class="relative mb-0 group">` +
-        `<pre class="${preClass}">` +
+        `<div class="relative mb-0 group w-full max-w-full">` +
+        `<pre class="${preClass} w-full max-w-full">` +
         `<code class="${codeClass}">${escapedCode}</code>` +
         `</pre>` +
         `<button class="${buttonClass}">Copy</button>` +

@@ -1,4 +1,5 @@
 import type { protos } from "@google-analytics/data";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 
 import { formatGa4Date } from "./ga4Config";
 
@@ -78,9 +79,9 @@ export const transformActivationReport = (
     const users = readMetric(row, 0);
 
     const entry = cohortMap.get(date) ?? { signups: 0, activated: 0 };
-    if (eventName === "signup_success") {
+    if (eventName === ANALYTICS_EVENTS.SIGNUP_SUCCESS) {
       entry.signups += users;
-    } else if (eventName === "user_activated") {
+    } else if (eventName === ANALYTICS_EVENTS.USER_ACTIVATED) {
       entry.activated += users;
     }
     cohortMap.set(date, entry);

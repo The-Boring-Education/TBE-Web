@@ -1,4 +1,5 @@
 import { LoginWithGoogleButton } from "@tbe/components";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -61,7 +62,7 @@ describe("LoginWithGoogleButton", () => {
     fireEvent.click(btn);
 
     expect(mockTrackEvent).toHaveBeenCalledWith({
-      action: "USER_LOGIN",
+      action: ANALYTICS_EVENTS.USER_LOGIN,
       category: "User",
       label: "User Logged In",
     });
