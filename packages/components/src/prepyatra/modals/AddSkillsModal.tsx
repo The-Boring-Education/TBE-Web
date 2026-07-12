@@ -1,8 +1,5 @@
-import { ANALYTICS_EVENTS } from "@tbe/constants";
-import { useToast } from "@tbe/hooks";
-import { trackEvent } from "@tbe/utils";
-import { AlertTriangle, Plus, X } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -107,73 +104,15 @@ export const AddSkillsModal = ({
       toast.error("Skill already added");
       return;
     }
-    setLoading(true);
-    try {
-      const res = await fetch(`${NEXT_PUBLIC_API_URL}/prepyatra/userskills`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, userSkills: [skill] }),
-      });
-      const result = await res.json();
-      if (result.status) {
-        const updatedSkills = [...skills, skill];
-        setSkills(updatedSkills);
-        setInputValue("");
-        toast({
-          title: "Skill added!",
-          description: `${skill} added to your stack.`,
-        });
-        try {
-          trackEvent(ANALYTICS_EVENTS.SKILL_ADD, { category: "skills", skill });
-        } catch { }
-        if (onSkillsUpdated) {
-          onSkillsUpdated(updatedSkills);
-        }
-      } else {
-        toast({
-          title: "Error",
-          description: result.message || "Failed to add skill.",
-          variant: "destructive",
-        });
-      }
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: "Failed to add skill.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-      inputRef.current?.focus();
-    }
+    setSkillsList((prev) => [...prev, cleanSkill]);
+    setInputValue("");
   };
 
-  const handleRemoveSkill = async (skill: string) => {
-    if (removing) return;
-    setRemoving(skill);
-    try {
-      const res = await fetch(`${NEXT_PUBLIC_API_URL}/prepyatra/userskills`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, skill }),
-      });
-      const result = await res.json();
-      if (result.status) {
-        const updatedSkills = skills.filter((s) => s !== skill);
-        setSkills(updatedSkills);
-        toast({
-          title: "Skill removed",
-          description: `${skill} removed from your stack.`,
-        });
-        try {
-          trackEvent(ANALYTICS_EVENTS.SKILL_REMOVE, {
-            category: "skills",
-            skill,
-          });
-        } catch { }
-        if (onSkillsUpdated) {
-          onSkillsUpdated(updatedSkills);
-        }
+  const handleTogglePrebuiltSkill = (skill: string) => {
+    setSkillsList((prev) => {
+      const exists = prev.some((s) => s.toLowerCase() === skill.toLowerCase());
+      if (exists) {
+        return prev.filter((s) => s.toLowerCase() !== skill.toLowerCase());
       } else {
         return [...prev, skill];
       }
