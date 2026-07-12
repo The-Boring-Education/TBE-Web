@@ -1,4 +1,5 @@
 import { useAuth } from "@tbe/auth";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useAnalytics } from "@tbe/hooks";
 import type { LoginWithGoogleBtnProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
@@ -18,13 +19,16 @@ const LoginWithGoogleButton = ({ text = "Login" }: LoginWithGoogleBtnProps) => {
       suppressGlobalUiClick
       onClick={() => {
         trackEvent({
-          action: "USER_LOGIN",
+          action: ANALYTICS_EVENTS.USER_LOGIN,
           category: "User",
           label: "User Logged In",
         });
 
         try {
-          sendEvent("login_click", { category: "auth", label: text });
+          sendEvent(ANALYTICS_EVENTS.LOGIN_CLICK, {
+            category: "auth",
+            label: text,
+          });
         } catch {
           /* ignore analytics errors */
         }

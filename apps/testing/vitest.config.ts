@@ -100,6 +100,7 @@ export default defineConfig({
       ),
       // API app @ alias - must come first for proper resolution
       "@/lib/auth": path.resolve(__dirname, "../api/src/lib/auth"),
+      "@/lib/analytics": path.resolve(__dirname, "../api/src/lib/analytics"),
       "@/lib/constants": path.resolve(__dirname, "../api/src/lib/constants"),
       "@/lib/database": path.resolve(__dirname, "../api/src/lib/database"),
       "@/lib/interfaces": path.resolve(__dirname, "../api/src/lib/interfaces"),

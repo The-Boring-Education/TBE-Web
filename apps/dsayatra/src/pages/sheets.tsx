@@ -6,7 +6,12 @@ import {
   LoadingSpinner,
   SEO,
 } from "@tbe/components";
-import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
+import {
+  ANALYTICS_EVENTS,
+  DSA_STUDY_GUIDE_CONFIGS,
+  routes,
+  TOPIC_LABELS,
+} from "@tbe/constants";
 import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
   useDsaCompletedQuestions,
@@ -17,7 +22,7 @@ import {
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
-import { getPreFetchProps } from "@tbe/utils";
+import { getPreFetchProps, trackEvent } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
@@ -184,6 +189,14 @@ const SheetsPageClient = () => {
       return;
     }
     setShowPayment(false);
+    try {
+      trackEvent(ANALYTICS_EVENTS.DSA_QUESTION_VIEW, {
+        question_id: String(question._id ?? question.id),
+        topic: selectedTopic ?? undefined,
+      });
+    } catch {
+      /* ignore analytics errors */
+    }
     handleUrlSyncQuestionClick(question);
   };
 

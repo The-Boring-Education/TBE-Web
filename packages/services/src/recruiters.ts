@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { CreateRecruiterContact, RecruiterContact } from "@tbe/types";
 import { trackEvent } from "@tbe/utils";
 
@@ -18,7 +19,7 @@ export const recruitersService = {
       throw new Error(result.message);
     }
     try {
-      trackEvent("recruiter_contact_create", {
+      trackEvent(ANALYTICS_EVENTS.RECRUITER_CONTACT_CREATE, {
         category: "recruiter",
         name: data.name,
         company: data.company,
@@ -44,7 +45,7 @@ export const recruitersService = {
       throw new Error(result.message);
     }
     try {
-      trackEvent("recruiter_contact_update", {
+      trackEvent(ANALYTICS_EVENTS.RECRUITER_CONTACT_UPDATE, {
         category: "recruiter",
         recruiterId: id,
         status: (data as any).status,
@@ -66,7 +67,7 @@ export const recruitersService = {
       throw new Error(result.message);
     }
     try {
-      trackEvent("recruiter_contact_delete", {
+      trackEvent(ANALYTICS_EVENTS.RECRUITER_CONTACT_DELETE, {
         category: "recruiter",
         recruiterId: id,
       });

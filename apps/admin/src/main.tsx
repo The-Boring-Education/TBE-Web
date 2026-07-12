@@ -1,5 +1,5 @@
 import "./index.css";
-import "@/lib/httpToasts";
+import "./lib/httpToasts";
 
 import { AuthProvider } from "@tbe/auth";
 import { createRoot } from "react-dom/client";

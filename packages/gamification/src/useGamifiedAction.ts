@@ -1,4 +1,4 @@
-import { routes } from "@tbe/constants";
+import { ANALYTICS_EVENTS, routes } from "@tbe/constants";
 import { useAnalytics, useApi, useUser } from "@tbe/hooks";
 import { useCallback, useState } from "react";
 
@@ -67,7 +67,7 @@ const useGamifiedAction = () => {
             toastMessage = `Level Up! Welcome to ${newLevel.currentLevelName}!`;
 
             trackEvent({
-              action: "LEVEL_UP",
+              action: ANALYTICS_EVENTS.LEVEL_UP,
               category: "Gamification",
               label: "Level Up Achievement",
               value: {
@@ -104,7 +104,7 @@ const useGamifiedAction = () => {
           });
 
           trackEvent({
-            action: "POINTS_EARNED",
+            action: ANALYTICS_EVENTS.POINTS_EARNED,
             category: "Gamification",
             label: "Points Earned",
             value: {

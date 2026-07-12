@@ -1,6 +1,7 @@
 "use client";
 
 import { CopyButton } from "@tbe/components";
+import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useCopyLink } from "@tbe/hooks";
 import { trackEvent } from "@tbe/utils";
 import { useCallback, useState } from "react";
@@ -14,7 +15,7 @@ export function ShareButton({ pageUrl, title }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { copied, copyLink } = useCopyLink({
     onCopySuccess: () => {
-      trackEvent("share_resource", {
+      trackEvent(ANALYTICS_EVENTS.SHARE_RESOURCE, {
         method: "copy_link",
         resource_url: pageUrl,
         resource_title: title,
@@ -33,7 +34,7 @@ export function ShareButton({ pageUrl, title }: Props) {
       "_blank",
       "width=600,height=400",
     );
-    trackEvent("share_resource", {
+    trackEvent(ANALYTICS_EVENTS.SHARE_RESOURCE, {
       method: "twitter",
       resource_url: pageUrl,
       resource_title: title,
@@ -47,7 +48,7 @@ export function ShareButton({ pageUrl, title }: Props) {
       "_blank",
       "width=600,height=400",
     );
-    trackEvent("share_resource", {
+    trackEvent(ANALYTICS_EVENTS.SHARE_RESOURCE, {
       method: "linkedin",
       resource_url: pageUrl,
       resource_title: title,
@@ -61,7 +62,7 @@ export function ShareButton({ pageUrl, title }: Props) {
       "_blank",
       "width=600,height=400",
     );
-    trackEvent("share_resource", {
+    trackEvent(ANALYTICS_EVENTS.SHARE_RESOURCE, {
       method: "whatsapp",
       resource_url: pageUrl,
       resource_title: title,
@@ -72,7 +73,7 @@ export function ShareButton({ pageUrl, title }: Props) {
     if (navigator.share) {
       try {
         await navigator.share({ title, url: pageUrl });
-        trackEvent("share_resource", {
+        trackEvent(ANALYTICS_EVENTS.SHARE_RESOURCE, {
           method: "native",
           resource_url: pageUrl,
           resource_title: title,
