@@ -12,11 +12,11 @@ describe("ANALYTICS_EVENTS registry", () => {
   });
 
   it("uses snake_case for modern events", () => {
-    expect(ANALYTICS_EVENTS.LOGIN_SUCCESS).toBe("login_success");
-    expect(ANALYTICS_EVENTS.USER_ACTIVATED).toBe("user_activated");
-    expect(ANALYTICS_EVENTS.DSA_QUESTION_VIEW).toBe("dsa_question_view");
+    expect(ANALYTICS_EVENTS.LOGIN_SUCCESS).toBe("LOGIN_SUCCESS");
+    expect(ANALYTICS_EVENTS.USER_ACTIVATED).toBe("USER_ACTIVATED");
+    expect(ANALYTICS_EVENTS.DSA_QUESTION_VIEW).toBe("DSA_QUESTION_VIEW");
     expect(ANALYTICS_EVENTS.RESUME_BUILDER_COMPLETE).toBe(
-      "resume_builder_complete",
+      "RESUME_BUILDER_COMPLETE",
     );
   });
 

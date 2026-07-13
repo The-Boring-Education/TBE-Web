@@ -67,7 +67,7 @@ describe("prepLogsService", () => {
     });
     expect(out).toEqual(created);
     expect(mockTrackEvent).toHaveBeenCalledWith(
-      "prep_log_create",
+      "PREP_LOG_CREATE",
       expect.objectContaining({ category: "prep_log" }),
     );
   });
@@ -83,7 +83,7 @@ describe("prepLogsService", () => {
     const out = await prepLogsService.update({ prepLogId: "1", title: "X" });
     expect(out).toEqual(updated);
     expect(mockTrackEvent).toHaveBeenCalledWith(
-      "prep_log_update",
+      "PREP_LOG_UPDATE",
       expect.anything(),
     );
   });
@@ -101,7 +101,7 @@ describe("prepLogsService", () => {
       expect.objectContaining({ method: "DELETE" }),
     );
     expect(mockTrackEvent).toHaveBeenCalledWith(
-      "prep_log_delete",
+      "PREP_LOG_DELETE",
       expect.anything(),
     );
   });

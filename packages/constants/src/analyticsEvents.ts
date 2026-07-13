@@ -6,62 +6,62 @@
 /** Modern snake_case GA4 event names */
 export const ANALYTICS_EVENTS = {
   // UI (automatic via delegated listeners)
-  UI_CLICK: "ui_click",
-  UI_FORM_SUBMIT: "ui_form_submit",
+  UI_CLICK: "UI_CLICK",
+  UI_FORM_SUBMIT: "UI_FORM_SUBMIT",
 
   // Auth & lifecycle
-  LOGIN_CLICK: "login_click",
-  LOGIN_REDIRECT_CLICK: "login_redirect_click",
-  LOGIN_SUCCESS: "login_success",
-  SIGNUP_SUCCESS: "signup_success",
-  LOGOUT: "logout",
-  USER_ACTIVATED: "user_activated",
-  SIGNUP_CLICK: "signup_click",
+  LOGIN_CLICK: "LOGIN_CLICK",
+  LOGIN_REDIRECT_CLICK: "LOGIN_REDIRECT_CLICK",
+  LOGIN_SUCCESS: "LOGIN_SUCCESS",
+  SIGNUP_SUCCESS: "SIGNUP_SUCCESS",
+  LOGOUT: "LOGOUT",
+  USER_ACTIVATED: "USER_ACTIVATED",
+  SIGNUP_CLICK: "SIGNUP_CLICK",
 
   // Onboarding
-  ONBOARDING_NEXT: "onboarding_next",
-  ONBOARDING_PREVIOUS: "onboarding_previous",
-  ONBOARDING_SUBMIT: "onboarding_submit",
-  ONBOARDING_COMPLETE: "onboarding_complete",
-  ONBOARDING_ERROR: "onboarding_error",
+  ONBOARDING_NEXT: "ONBOARDING_NEXT",
+  ONBOARDING_PREVIOUS: "ONBOARDING_PREVIOUS",
+  ONBOARDING_SUBMIT: "ONBOARDING_SUBMIT",
+  ONBOARDING_COMPLETE: "ONBOARDING_COMPLETE",
+  ONBOARDING_ERROR: "ONBOARDING_ERROR",
 
   // Quiz
-  QUIZ_START: "quiz_start",
-  QUIZ_QUESTION_ANSWERED: "quiz_question_answered",
-  QUIZ_COMPLETE: "quiz_complete",
-  QUIZ_SCORE: "quiz_score",
-  QUIZ_SESSION_START: "quiz_session_start",
-  QUIZ_ANSWER_SUBMIT: "quiz_answer_submit",
-  QUIZ_SESSION_COMPLETE: "quiz_session_complete",
-  QUIZ_RESULTS_VIEW: "quiz_results_view",
+  QUIZ_START: "QUIZ_START",
+  QUIZ_QUESTION_ANSWERED: "QUIZ_QUESTION_ANSWERED",
+  QUIZ_COMPLETE: "QUIZ_COMPLETE",
+  QUIZ_SCORE: "QUIZ_SCORE",
+  QUIZ_SESSION_START: "QUIZ_SESSION_START",
+  QUIZ_ANSWER_SUBMIT: "QUIZ_ANSWER_SUBMIT",
+  QUIZ_SESSION_COMPLETE: "QUIZ_SESSION_COMPLETE",
+  QUIZ_RESULTS_VIEW: "QUIZ_RESULTS_VIEW",
 
   // Course & learning
-  COURSE_VIEW: "course_view",
-  ENROLL_CLICK: "enroll_click",
+  COURSE_VIEW: "COURSE_VIEW",
+  ENROLL_CLICK: "ENROLL_CLICK",
 
   // Prep Yatra
-  PREP_LOG_CREATE: "prep_log_create",
-  PREP_LOG_UPDATE: "prep_log_update",
-  PREP_LOG_DELETE: "prep_log_delete",
-  CHALLENGE_CREATE: "challenge_create",
-  CHALLENGE_UPDATE: "challenge_update",
-  CHALLENGE_DELETE: "challenge_delete",
-  CHALLENGE_LOG_CREATE: "challenge_log_create",
-  SKILL_ADD: "skill_add",
-  SKILL_REMOVE: "skill_remove",
-  RECRUITER_CONTACT_CREATE: "recruiter_contact_create",
-  RECRUITER_CONTACT_UPDATE: "recruiter_contact_update",
-  RECRUITER_CONTACT_DELETE: "recruiter_contact_delete",
+  PREP_LOG_CREATE: "PREP_LOG_CREATE",
+  PREP_LOG_UPDATE: "PREP_LOG_UPDATE",
+  PREP_LOG_DELETE: "PREP_LOG_DELETE",
+  CHALLENGE_CREATE: "CHALLENGE_CREATE",
+  CHALLENGE_UPDATE: "CHALLENGE_UPDATE",
+  CHALLENGE_DELETE: "CHALLENGE_DELETE",
+  CHALLENGE_LOG_CREATE: "CHALLENGE_LOG_CREATE",
+  SKILL_ADD: "SKILL_ADD",
+  SKILL_REMOVE: "SKILL_REMOVE",
+  RECRUITER_CONTACT_CREATE: "RECRUITER_CONTACT_CREATE",
+  RECRUITER_CONTACT_UPDATE: "RECRUITER_CONTACT_UPDATE",
+  RECRUITER_CONTACT_DELETE: "RECRUITER_CONTACT_DELETE",
 
   // Resources
-  SHARE_RESOURCE: "share_resource",
+  SHARE_RESOURCE: "SHARE_RESOURCE",
 
   // DSA Yatra (Phase 3)
-  DSA_QUESTION_VIEW: "dsa_question_view",
+  DSA_QUESTION_VIEW: "DSA_QUESTION_VIEW",
 
   // Resume Yatra (Phase 3)
-  RESUME_BUILDER_COMPLETE: "resume_builder_complete",
-  RESUME_SHARE: "resume_share",
+  RESUME_BUILDER_COMPLETE: "RESUME_BUILDER_COMPLETE",
+  RESUME_SHARE: "RESUME_SHARE",
 
   // Legacy SCREAMING_SNAKE events (retained for GA4 historical continuity)
   USER_LOGIN: "USER_LOGIN",

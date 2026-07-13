@@ -18,7 +18,8 @@
       "@/*": ["./src/*", "../api/src/*"],
       "@test-utils/*": ["./src/test-utils/*"],
       "@/lib/*": ["../api/src/lib/*"],
-      "@/middleware/*": ["../api/src/middleware/*"]
+      "@/middleware/*": ["../api/src/middleware/*"],
+      "@api/*": ["../api/src/*"]
     },
     "noEmit": true,
     "incremental": true,

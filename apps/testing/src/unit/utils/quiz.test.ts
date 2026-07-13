@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { cleanOptionText, quizService } from "@tbe/utils/quiz";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock dependencies
 vi.mock("@tbe/utils/api", () => ({
@@ -10,8 +10,8 @@ vi.mock("@tbe/utils/analytics", () => ({
   trackEvent: vi.fn(),
 }));
 
-import { sendRequest } from "@tbe/utils/api";
 import { trackEvent } from "@tbe/utils/analytics";
+import { sendRequest } from "@tbe/utils/api";
 
 const mockSendRequest = vi.mocked(sendRequest);
 const mockTrackEvent = vi.mocked(trackEvent);
@@ -179,7 +179,7 @@ describe("Quiz Utilities", () => {
         },
       });
       expect(result).toEqual(mockSession);
-      expect(mockTrackEvent).toHaveBeenCalledWith("quiz_session_start", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("QUIZ_SESSION_START", {
         action: "quiz_session_start",
         category: "quiz",
         label: "quiz-123",
@@ -249,7 +249,7 @@ describe("Quiz Utilities", () => {
         method: "POST",
       });
       expect(result).toEqual(mockResult);
-      expect(mockTrackEvent).toHaveBeenCalledWith("quiz_session_complete", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("QUIZ_SESSION_COMPLETE", {
         action: "quiz_session_complete",
         category: "quiz",
         sessionId: "session-123",

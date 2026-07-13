@@ -89,14 +89,14 @@ describe("ga4Transforms", () => {
         rows: [
           {
             dimensionValues: [
-              { value: "signup_success" },
+              { value: "SIGNUP_SUCCESS" },
               { value: "20260701" },
             ],
             metricValues: [{ value: "100" }],
           },
           {
             dimensionValues: [
-              { value: "user_activated" },
+              { value: "USER_ACTIVATED" },
               { value: "20260701" },
             ],
             metricValues: [{ value: "40" }],

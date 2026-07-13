@@ -17,7 +17,10 @@
     "./mdx": "./src/mdx/index.ts",
     "./content-id": "./src/content-id.ts",
     "./onboarding": "./src/onboarding.ts",
-    "./array": "./src/array.ts"
+    "./array": "./src/array.ts",
+    "./challenges": "./src/challenges.ts",
+    "./quiz": "./src/quiz.ts",
+    "./prepLogs": "./src/prepLogs.ts"
   },
   "scripts": {
     "lint": "eslint ."

@@ -92,7 +92,7 @@ describe("challengesService", () => {
       const result = await challengesService.create(createData);
 
       expect(result).toEqual(mockData);
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_create", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_CREATE", {
         category: "challenge",
         value: 30,
         challengeName: "New Challenge",
@@ -202,7 +202,7 @@ describe("challengesService", () => {
         totalDays: 60,
       });
 
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_update", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_UPDATE", {
         category: "challenge",
         challengeId: "ch-1",
         updatedFields: ["name", "totalDays"],
@@ -223,7 +223,7 @@ describe("challengesService", () => {
         "https://api.test.com/v1/prepyatra/challenges/ch-1",
         { method: "DELETE", headers: { "Content-Type": "application/json" } },
       );
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_delete", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_DELETE", {
         category: "challenge",
         challengeId: "ch-1",
       });
@@ -281,7 +281,7 @@ describe("challengesService", () => {
       const result = await challengesService.createLog(createData);
 
       expect(result).toEqual(mockLog);
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_log_create", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_LOG_CREATE", {
         category: "challenge",
         challengeId: "ch-1",
         day: 1,
