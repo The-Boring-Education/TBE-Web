@@ -98,7 +98,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "ui_click",
+        "UI_CLICK",
         expect.objectContaining({
           click_label: "Start",
           element_id: "hero-cta",
@@ -144,7 +144,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "quiz_start",
+        "QUIZ_START",
         expect.objectContaining({
           quiz_id: "quiz-123",
           app_id: "test-suite-app",
@@ -158,7 +158,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "quiz_question_answered",
+        "QUIZ_QUESTION_ANSWERED",
         expect.objectContaining({
           quiz_id: "quiz-123",
           question_id: "question-456",
@@ -172,7 +172,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "quiz_complete",
+        "QUIZ_COMPLETE",
         expect.objectContaining({
           quiz_id: "quiz-123",
         }),
@@ -184,7 +184,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "quiz_score",
+        "QUIZ_SCORE",
         expect.objectContaining({
           quiz_id: "quiz-123",
           score: 85,
@@ -199,7 +199,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "course_view",
+        "COURSE_VIEW",
         expect.objectContaining({
           course_id: "course-123",
         }),
@@ -211,7 +211,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "enroll_click",
+        "ENROLL_CLICK",
         expect.objectContaining({
           course_id: "course-123",
         }),
@@ -225,7 +225,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "login_success",
+        "LOGIN_SUCCESS",
         expect.objectContaining({
           user_id: "user-123",
         }),
@@ -237,7 +237,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "signup_success",
+        "SIGNUP_SUCCESS",
         expect.objectContaining({
           user_id: "user-123",
         }),
@@ -249,7 +249,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "logout",
+        "LOGOUT",
         expect.objectContaining({
           user_id: "user-123",
         }),
@@ -261,7 +261,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "user_activated",
+        "USER_ACTIVATED",
         expect.objectContaining({
           user_id: "user-123",
           product_id: "platform",
@@ -323,7 +323,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "ui_click",
+        "UI_CLICK",
         expect.objectContaining({
           element_tag: "button",
           element_id: "save-profile",
@@ -373,7 +373,7 @@ describe("Analytics Utilities", () => {
 
       expect(mockGtag).toHaveBeenCalledWith(
         "event",
-        "ui_form_submit",
+        "UI_FORM_SUBMIT",
         expect.objectContaining({
           form_name: "signup",
           interaction_type: "form_submit",

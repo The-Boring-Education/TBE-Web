@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { challengesService } from "@tbe/utils/challenges";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock dependencies
 vi.mock("@tbe/utils/api", () => ({
@@ -10,8 +10,8 @@ vi.mock("@tbe/utils/analytics", () => ({
   trackEvent: vi.fn(),
 }));
 
-import { sendRequest } from "@tbe/utils/api";
 import { trackEvent } from "@tbe/utils/analytics";
+import { sendRequest } from "@tbe/utils/api";
 
 const mockSendRequest = vi.mocked(sendRequest);
 const mockTrackEvent = vi.mocked(trackEvent);
@@ -93,7 +93,7 @@ describe("Challenges Utilities", () => {
         body: challengeData,
       });
       expect(result).toEqual(mockChallenge);
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_create", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_CREATE", {
         category: "challenge",
         value: 30,
         challengeName: "30 Day Challenge",
@@ -166,7 +166,7 @@ describe("Challenges Utilities", () => {
         url: "/prepyatra/challenges/challenge-123",
         method: "DELETE",
       });
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_delete", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_DELETE", {
         category: "challenge",
         challengeId: "challenge-123",
       });
@@ -217,7 +217,7 @@ describe("Challenges Utilities", () => {
         body: logData,
       });
       expect(result).toEqual(mockLog);
-      expect(mockTrackEvent).toHaveBeenCalledWith("challenge_log_create", {
+      expect(mockTrackEvent).toHaveBeenCalledWith("CHALLENGE_LOG_CREATE", {
         category: "challenge",
         challengeId: "challenge-123",
         day: 5,
