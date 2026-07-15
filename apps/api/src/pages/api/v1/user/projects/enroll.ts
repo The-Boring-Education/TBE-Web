@@ -11,13 +11,19 @@ import type { ProjectEnrollmentRequestProps } from "@/lib/interfaces";
 import { sendProjectEnrollmentEmail } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case "POST":
-        return handleProjectEnrollment(req, res);
+        return withUserAuth(
+          async (req, res) => handleProjectEnrollment(req, res),
+          {
+            ownerRequired: true,
+          },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({

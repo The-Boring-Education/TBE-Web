@@ -14,6 +14,7 @@ import type {
   PutDsaYatraProgressMergeProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
@@ -26,11 +27,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (method) {
       case "GET":
-        return handleGetProgress(req, res, authenticatedUserId);
+        return withUserAuth(async (req, res) => handleGetProgress(req, res, authenticatedUserId), {
+          ownerRequired: true,
+        })(req, res);
       case "PATCH":
-        return handlePatchQuestion(req, res, authenticatedUserId);
+        return withUserAuth(async (req, res) => handlePatchQuestion(req, res, authenticatedUserId), {
+          ownerRequired: true,
+        })(req, res);
       case "PUT":
-        return handleMergeProgress(req, res, authenticatedUserId);
+        return withUserAuth(async (req, res) => handleMergeProgress(req, res, authenticatedUserId), {
+          ownerRequired: true,
+        })(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({

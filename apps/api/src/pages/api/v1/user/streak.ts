@@ -5,14 +5,19 @@ import { getUserStreakFromDB, logUserActivityForStreak } from "@/lib/database";
 import type { TBEAppType, UserPointsActionType } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET":
-      return handleGetStreak(req, res);
+      return withUserAuth(async (req, res) => handleGetStreak(req, res), {
+        ownerRequired: true,
+      })(req, res);
     case "POST":
-      return handleLogActivity(req, res);
+      return withUserAuth(async (req, res) => handleLogActivity(req, res), {
+        ownerRequired: true,
+      })(req, res);
     default:
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({
@@ -36,14 +41,12 @@ const handleGetStreak = async (req: NextApiRequest, res: NextApiResponse) => {
   const { userId, app } = req.query;
 
   if (typeof userId !== "string" || !userId.trim()) {
-    return res
-      .status(apiStatusCodes.BAD_REQUEST)
-      .json(
-        sendAPIResponse({
-          status: false,
-          message: "Missing or invalid userId",
-        }),
-      );
+    return res.status(apiStatusCodes.BAD_REQUEST).json(
+      sendAPIResponse({
+        status: false,
+        message: "Missing or invalid userId",
+      }),
+    );
   }
 
   const appFilter =
@@ -95,14 +98,12 @@ const handleLogActivity = async (req: NextApiRequest, res: NextApiResponse) => {
     };
 
     if (typeof userId !== "string" || !userId.trim()) {
-      return res
-        .status(apiStatusCodes.BAD_REQUEST)
-        .json(
-          sendAPIResponse({
-            status: false,
-            message: "Missing or invalid userId",
-          }),
-        );
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Missing or invalid userId",
+        }),
+      );
     }
 
     if (!app || !TBE_APP.includes(app)) {

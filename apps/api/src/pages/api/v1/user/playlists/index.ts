@@ -6,6 +6,7 @@ import {
   getUserPlaylistsFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
@@ -22,14 +23,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "GET":
-      return handleGetUserPlaylists(req, res, authenticatedUserId);
+      return withUserAuth(
+        async (req, res) => handleGetUserPlaylists(req, res, userId),
+        { ownerRequired: true },
+      )(req, res);
     case "DELETE":
-      return handleDeleteUserPlaylist(
-        req,
-        res,
-        authenticatedUserId,
-        playlistId,
-      );
+      return withUserAuth(
+        async (req, res) =>
+          handleDeleteUserPlaylist(req, res, userId, playlistId),
+        { ownerRequired: true },
+      )(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json({
         success: false,

@@ -9,6 +9,7 @@ import {
   getUserPlaylistsFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
@@ -22,7 +23,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "GET":
-      return handleGetUserDashboard(req, res, authenticatedUserId);
+      return withUserAuth(
+        async (req, res) => handleGetUserDashboard(req, res, userId as string),
+        { ownerRequired: true },
+      )(req, res);
   }
 };
 
