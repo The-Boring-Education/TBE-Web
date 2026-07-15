@@ -11,6 +11,7 @@ import type {
   MarkQuestionCompletedRequestProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -19,9 +20,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (method) {
       case "PATCH":
-        return handleMarkQuestionCompleted(req, res);
+        return withUserAuth(
+          async (req, res) => handleMarkQuestionCompleted(req, res),
+          { ownerRequired: true },
+        )(req, res);
       case "GET":
-        return handleGetAllQuestions(req, res);
+        return withUserAuth(
+          async (req, res) => handleGetAllQuestions(req, res),
+          { ownerRequired: true },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({

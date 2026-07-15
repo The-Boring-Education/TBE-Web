@@ -19,6 +19,48 @@ const DEFAULT_OPTIONS: ApiHandlerOptions = {
   maxBodyLogSize: 2048,
 };
 
+const SENSITIVE_KEYS = new Set([
+  "password",
+  "token",
+  "secret",
+  "accesstoken",
+  "refreshtoken",
+  "clientsecret",
+  "newpassword",
+  "currentpassword",
+  "oldpassword",
+  "confirmpassword",
+  "apikey",
+  "cvv",
+  "cardnumber",
+  "x-admin-secret",
+]);
+
+function redactSensitiveData(data: unknown): unknown {
+  if (data === null || data === undefined) return data;
+
+  if (Array.isArray(data)) {
+    return data.map(redactSensitiveData);
+  }
+
+  if (typeof data === "object") {
+    const redacted: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(
+      data as Record<string, unknown>,
+    )) {
+      const lowerKey = key.toLowerCase();
+      if (SENSITIVE_KEYS.has(lowerKey)) {
+        redacted[key] = "[REDACTED]";
+      } else {
+        redacted[key] = redactSensitiveData(value);
+      }
+    }
+    return redacted;
+  }
+
+  return data;
+}
+
 function extractRequestId(req: NextApiRequest): string {
   return (
     (req.headers["x-request-id"] as string) ||
@@ -79,8 +121,8 @@ const withApiHandler = (
 
     logger.info(`→ ${method} ${url}`, {
       requestId,
-      query: req.query,
-      body: sanitizeBody(req.body, opts.maxBodyLogSize!),
+      query: redactSensitiveData(req.query),
+      body: sanitizeBody(redactSensitiveData(req.body), opts.maxBodyLogSize!),
       contentType: req.headers["content-type"],
     });
 
@@ -98,7 +140,10 @@ const withApiHandler = (
       const logMeta: Record<string, unknown> = { requestId };
 
       if (res.statusCode >= 400 && responseBody) {
-        logMeta.responseBody = sanitizeBody(responseBody, opts.maxBodyLogSize!);
+        logMeta.responseBody = sanitizeBody(
+          redactSensitiveData(responseBody),
+          opts.maxBodyLogSize!,
+        );
       }
 
       logger.request(method, url, res.statusCode, duration, logMeta);
@@ -125,8 +170,8 @@ const withApiHandler = (
         error: details.message,
         errorName: details.name,
         stack: details.stack,
-        body: sanitizeBody(req.body, opts.maxBodyLogSize!),
-        query: req.query,
+        body: sanitizeBody(redactSensitiveData(req.body), opts.maxBodyLogSize!),
+        query: redactSensitiveData(req.query),
       });
 
       captureAPIError(
@@ -134,7 +179,10 @@ const withApiHandler = (
         url,
         method,
         500,
-        { body: req.body, query: req.query },
+        {
+          body: redactSensitiveData(req.body),
+          query: redactSensitiveData(req.query),
+        },
       );
 
       if (!res.headersSent) {

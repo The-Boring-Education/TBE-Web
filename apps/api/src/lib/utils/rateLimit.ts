@@ -72,7 +72,9 @@ export function rateLimit(
 ): boolean {
   startCleanup();
 
-  const key = keyFn ? keyFn(req) : getClientIdentifier(req, req.url ?? "api");
+  const url = req.url ?? "api";
+  const pathname = url.split("?")[0] || "api";
+  const key = keyFn ? keyFn(req) : getClientIdentifier(req, pathname);
 
   const now = Date.now();
   const entry = store.get(key);

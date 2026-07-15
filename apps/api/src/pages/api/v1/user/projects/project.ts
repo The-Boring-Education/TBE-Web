@@ -7,6 +7,7 @@ import {
 } from "@/lib/database";
 import type { UpdateUserChapterInProjectRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -15,7 +16,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (method) {
       case "PATCH":
-        return handleUpdateChapterStatus(req, res);
+        return withUserAuth(
+          async (req, res) => handleUpdateChapterStatus(req, res),
+          { ownerRequired: true },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({

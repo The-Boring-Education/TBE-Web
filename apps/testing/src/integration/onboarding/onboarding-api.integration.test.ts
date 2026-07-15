@@ -15,6 +15,20 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (fn: NextApiHandler) => fn,
 }));
 
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  verifyAuthenticatedUser: vi.fn().mockImplementation((req) => {
+    const userId = req.query?.userId || req.body?.userId || "u1";
+    return {
+      sub: userId,
+      email: "test@example.com",
+      name: "Test User",
+      type: "access",
+    };
+  }),
+  withUserAuth: (handler: any) => handler,
+  isAdminEmail: vi.fn().mockResolvedValue(false),
+}));
+
 vi.mock("../../../../api/src/lib/database", () => ({
   getUserByUserNameFromDB: (...args: unknown[]) =>
     mockGetUserByUserNameFromDB(...args),

@@ -11,13 +11,19 @@ import type { CourseEnrollmentRequestProps } from "@/lib/interfaces";
 import { sendCourseEnrollmentEmail } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case "POST":
-        return handleCourseEnrollment(req, res);
+        return withUserAuth(
+          async (req, res) => handleCourseEnrollment(req, res),
+          {
+            ownerRequired: true,
+          },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({

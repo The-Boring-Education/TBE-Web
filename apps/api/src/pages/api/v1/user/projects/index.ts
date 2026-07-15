@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getAllEnrolledProjectsFromDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,7 +13,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (method) {
       case "GET":
-        return handleGetAllUserProjects(req, res, userId as string);
+        return withUserAuth(
+          async (req, res) =>
+            handleGetAllUserProjects(req, res, userId as string),
+          { ownerRequired: true },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
