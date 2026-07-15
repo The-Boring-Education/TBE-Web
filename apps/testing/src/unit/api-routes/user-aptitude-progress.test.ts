@@ -31,6 +31,26 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => fn,
 }));
 
+vi.mock("../../../../api/src/lib/services/admin-cache", () => ({
+  isAdminEmail: vi.fn().mockResolvedValue(false),
+  warmAdminEmailCache: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  verifyAuthenticatedUser: vi.fn().mockImplementation((req) => {
+    const userId =
+      req.query?.userId || req.body?.userId || "507f1f77bcf86cd799439011";
+    return {
+      sub: userId,
+      email: "test@example.com",
+      name: "Test User",
+      type: "access",
+    };
+  }),
+  withUserAuth: (handler: any) => handler,
+  isAdminEmail: vi.fn().mockResolvedValue(false),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/user/interview-prep/aptitude/progress";
 
 describe("PATCH /user/interview-prep/aptitude/progress", () => {
