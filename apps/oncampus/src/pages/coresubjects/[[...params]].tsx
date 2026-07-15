@@ -729,7 +729,18 @@ const CoreSubjectsPage = () => {
       backHref={routes.oncampus.dashboard}
       layoutMode="workspace"
     >
-      <div className="flex flex-col h-full w-full">
+      {selectedSubject?.chapters.some((ch) => ch.isLocked) && (
+        <FreemiumLockBanner
+          unlockedCount={
+            selectedSubject.chapters.filter((ch) => !ch.isLocked).length
+          }
+          message={`Freemium preview — ${
+            selectedSubject.chapters.filter((ch) => !ch.isLocked).length
+          } chapters unlocked. Subscribe to access all.`}
+          onUpgradeClick={() => router.push(routes.oncampus.pricing)}
+        />
+      )}
+      <div className="flex flex-col flex-1 min-h-0 w-full">
         {/* ── Top header bar & Mobile drawer (Hidden during study mode) ── */}
         {!selectedChapter && (
           <>
@@ -995,17 +1006,6 @@ const CoreSubjectsPage = () => {
           ) : (
             /* Chapter cards grid */
             <div className="flex-1 w-full overflow-y-auto bg-[#050505] p-4 lg:p-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 scrollbar-thin-grey">
-              {selectedSubject?.chapters.some((ch) => ch.isLocked) && (
-                <FreemiumLockBanner
-                  unlockedCount={
-                    selectedSubject.chapters.filter((ch) => !ch.isLocked).length
-                  }
-                  message={`Freemium preview — ${
-                    selectedSubject.chapters.filter((ch) => !ch.isLocked).length
-                  } chapters unlocked. Subscribe to access all.`}
-                  onUpgradeClick={() => router.push(routes.oncampus.pricing)}
-                />
-              )}
               {/* Subject header */}
               <div className="mb-6">
                 <h2 className="text-2xl font-extrabold text-white tracking-tight mb-1">
