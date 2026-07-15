@@ -55,6 +55,7 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
     message: string;
     type?: "success" | "error";
   } | null>(null);
+  const [touched, setTouched] = useState({ name: false, userName: false });
 
   const { data: profileResponse, isLoading: loadingProfile } = useQuery({
     queryKey: queryKeys.user.profile(user?.id ?? "__no_user__"),
@@ -71,8 +72,7 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
   });
 
   const profileRecord = profileResponse?.data as
-    | DsaProfilePageApiUser
-    | undefined;
+    DsaProfilePageApiUser | undefined;
   // The backend may return `username` (lowercase n) instead of `userName` depending
   // on which endpoint wrote the data. Cast to any so we can read both safely.
   const rawRecord = profileRecord as any;
@@ -80,6 +80,17 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
     profileRecord?.userName ?? rawRecord?.username ?? user?.userName ?? "";
 
   const savedUserName = resolvedUserName;
+
+  const isNameValid = form.name.trim().length > 0;
+  const isUserNameValid = /^[a-zA-Z0-9_]{3,}$/.test(form.userName.trim());
+  const hasUsernameChanged = form.userName !== savedUserName;
+  const showUsernameHelper =
+    isEditing && (touched.userName || hasUsernameChanged);
+
+  const nameError =
+    touched.name && !isNameValid ? "Full name is required." : "";
+
+  let usernameValidationText = "";
 
   const displayName = profileRecord?.name ?? user?.name ?? "User";
   const displayEmail = profileRecord?.email ?? user?.email ?? "";
@@ -153,9 +164,29 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
     },
   });
 
-  const { message: usernameMessage, isUsernameAvailable } = useUsername(
-    isEditing ? form.userName : "",
-  );
+  const {
+    message: usernameMessage,
+    isUsernameAvailable,
+    isChecking,
+  } = useUsername(isEditing ? form.userName : "");
+
+  usernameValidationText = showUsernameHelper
+    ? !form.userName.trim()
+      ? "Enter a username."
+      : form.userName.trim().length < 3
+        ? "Username must be at least 3 characters."
+        : /\s/.test(form.userName)
+          ? "Username cannot contain spaces."
+          : !isUserNameValid
+            ? "Username must only contain letters, numbers, and underscores."
+            : isChecking
+              ? "Checking availability..."
+              : hasUsernameChanged && isUsernameAvailable === false
+                ? usernameMessage || "Username is unavailable."
+                : hasUsernameChanged
+                  ? usernameMessage || "Username is available."
+                  : ""
+    : "";
 
   if (loadingUser)
     return <LoadingSpinner fullPage label="Loading profile..." />;
@@ -191,9 +222,10 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
   };
 
   const isFormValid = (): boolean => {
-    if (!form.name.trim()) return false;
-    if (!form.userName.trim() || form.userName.trim().length < 3) return false;
-    if (isEditing && form.userName !== savedUserName && !isUsernameAvailable)
+    if (!isNameValid) return false;
+    if (!form.userName.trim() || !isUserNameValid) return false;
+    if (isChecking && showUsernameHelper) return false;
+    if (isEditing && hasUsernameChanged && isUsernameAvailable === false)
       return false;
     return true;
   };
@@ -281,16 +313,37 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
               <div className="relative z-10 space-y-6 pt-4 border-t border-[#222] text-base px-5 sm:px-0">
                 {/* Full Name */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-slate-400">
+                  <label
+                    htmlFor="profile-name"
+                    className="text-sm font-bold text-slate-400"
+                  >
                     Full Name <span className="text-primary">*</span>
                   </label>
                   <input
+                    id="profile-name"
                     type="text"
-                    className="w-full max-w-md px-3 py-2 rounded-lg border border-[#2a2a2a] focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none text-sm font-medium text-slate-200 bg-[#0a0a0a] transition-all"
+                    aria-invalid={touched.name && !isNameValid}
+                    aria-describedby={nameError ? "name-error-text" : undefined}
+                    className={`w-full max-w-md px-3 py-2 rounded-lg border text-sm font-medium text-slate-200 bg-[#0a0a0a] transition-all focus:ring-2 outline-none ${
+                      touched.name && !isNameValid
+                        ? "border-[#FF5757] focus:border-[#FF5757] focus:ring-[#FF5757]/20"
+                        : "border-[#2a2a2a] focus:border-[#FF5757] focus:ring-[#FF5757]/20"
+                    }`}
                     value={form.name}
                     onChange={(e) => updateForm("name", e.target.value)}
+                    onBlur={() =>
+                      setTouched((prev) => ({ ...prev, name: true }))
+                    }
                     placeholder="Full Name"
                   />
+                  {nameError ? (
+                    <span
+                      id="name-error-text"
+                      className="text-xs font-semibold px-2 py-0.5 rounded self-start mt-0.5 bg-red-950/30 text-[#FF5757]"
+                    >
+                      {nameError}
+                    </span>
+                  ) : null}
                 </div>
 
                 {/* Username */}
@@ -303,24 +356,39 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
                       @
                     </span>
                     <input
+                      id="profile-username"
                       type="text"
-                      className="w-full pl-7 pr-4 py-2 rounded-lg border border-[#2a2a2a] focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none text-sm font-medium text-slate-200 bg-[#0a0a0a] transition-all"
+                      aria-invalid={touched.userName && !isUserNameValid}
+                      aria-describedby={
+                        usernameValidationText
+                          ? "username-helper-text"
+                          : undefined
+                      }
+                      className={`w-full pl-7 pr-4 py-2 rounded-lg border text-sm font-medium text-slate-200 bg-[#0a0a0a] transition-all focus:ring-2 outline-none ${
+                        touched.userName && !isUserNameValid
+                          ? "border-[#FF5757] focus:border-[#FF5757] focus:ring-[#FF5757]/20"
+                          : "border-[#2a2a2a] focus:border-[#FF5757] focus:ring-[#FF5757]/20"
+                      }`}
                       value={form.userName}
                       onChange={(e) => updateForm("userName", e.target.value)}
+                      onBlur={() =>
+                        setTouched((prev) => ({ ...prev, userName: true }))
+                      }
                       placeholder="username"
                     />
                   </div>
-                  {form.userName && form.userName !== savedUserName && (
+                  {usernameValidationText ? (
                     <span
+                      id="username-helper-text"
                       className={`text-xs font-semibold px-2 py-0.5 rounded self-start mt-0.5 ${
-                        isUsernameAvailable
-                          ? "bg-green-950/30 text-[#31ad6b]"
-                          : "bg-red-950/30 text-[#FF5757]"
+                        !isUserNameValid || isUsernameAvailable === false
+                          ? "bg-red-950/30 text-[#FF5757]"
+                          : "bg-green-950/30 text-[#31ad6b]"
                       }`}
                     >
-                      {usernameMessage}
+                      {usernameValidationText}
                     </span>
-                  )}
+                  ) : null}
                 </div>
 
                 {/* Email Address (Read-only locked format) */}
@@ -645,7 +713,7 @@ const DsaProfilePage = ({ seoMeta }: { seoMeta: GetSEOMetaResponseType }) => {
   );
 };
 
-const ProfilePage = ({ seoMeta, slug }: PageProps) => {
+const ProfilePage = ({ seoMeta }: PageProps) => {
   return (
     <ProtectedRoute redirectTo="/login">
       <Fragment>
