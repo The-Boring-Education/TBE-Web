@@ -39,6 +39,25 @@ vi.mock("../../../../api/src/middleware/api", () => ({
   connectDB: () => mockConnectDB(),
 }));
 
+vi.mock("../../../../api/src/lib/services/admin-cache", () => ({
+  isAdminEmail: vi.fn().mockResolvedValue(false),
+  warmAdminEmailCache: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  verifyAuthenticatedUser: vi.fn().mockImplementation((req) => {
+    const email = req.query?.email || "test@example.com";
+    return {
+      sub: "123",
+      email,
+      name: "Test User",
+      type: "access",
+    };
+  }),
+  withUserAuth: (handler: any) => handler,
+  isAdminEmail: vi.fn().mockResolvedValue(false),
+}));
+
 vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
   const actual =
     await importOriginal<typeof import("../../../../api/src/lib/constants")>();

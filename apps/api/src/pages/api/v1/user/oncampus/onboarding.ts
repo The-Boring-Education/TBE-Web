@@ -9,6 +9,7 @@ import {
   normalizeDsaDuration,
   ONCAMPUS_EXPERIENCE_LEVEL,
 } from "@/lib/validation";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -16,7 +17,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "POST":
-      return handleOnboarding(req, res);
+      return withUserAuth(async (req, res) => handleOnboarding(req, res), {
+        ownerRequired: true,
+      })(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({

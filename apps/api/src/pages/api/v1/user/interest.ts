@@ -10,8 +10,10 @@ import type {
   CreateUserInterestRequestProps,
   GetUserInterestsRequestProps,
 } from "@/lib/interfaces";
+import { isAdminEmail } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { verifyAuthenticatedUser, withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -25,9 +27,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "POST":
-      return handleCreateInterest(req, res);
+      return withUserAuth(async (req, res) => handleCreateInterest(req, res), {
+        ownerRequired: true,
+      })(req, res);
     case "GET":
-      return handleGetInterests(req, res);
+      return withUserAuth(async (req, res) => handleGetInterests(req, res), {
+        ownerRequired: true,
+      })(req, res);
     case "PATCH":
       return handleUpdateInterest(req, res);
     default:
@@ -195,7 +201,24 @@ const handleUpdateInterest = async (
       );
     }
 
-    const { data, error } = await updateUserInterestInDB(interestId, isActive);
+    const payload = verifyAuthenticatedUser(req);
+    if (!payload) {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          status: false,
+          message: "Authentication required",
+        }),
+      );
+    }
+
+    const userIsAdmin = await isAdminEmail(payload.email);
+    const ownerUserId = userIsAdmin ? undefined : payload.sub;
+
+    const { data, error } = await updateUserInterestInDB(
+      interestId,
+      isActive,
+      ownerUserId,
+    );
 
     if (error) {
       if (error === "Interest not found") {

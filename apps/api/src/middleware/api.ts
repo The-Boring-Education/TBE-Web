@@ -74,15 +74,34 @@ const adminMiddleware = async (
       return false;
     }
 
-    if (
-      !adminHeader ||
-      typeof adminHeader !== "string" ||
-      adminHeader.length !== expectedSecret.length ||
-      !crypto.timingSafeEqual(
-        Buffer.from(adminHeader),
-        Buffer.from(expectedSecret),
-      )
-    ) {
+    if (!adminHeader || typeof adminHeader !== "string") {
+      logger.warn("Admin auth failed", {
+        ip:
+          (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
+          "unknown",
+        timestamp: new Date().toISOString(),
+      });
+      res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          success: false,
+          status: apiStatusCodes.UNAUTHORIZED,
+          error: true,
+          message: "Unauthorized. Admin access required.",
+        }),
+      );
+      return false;
+    }
+
+    const hash1 = crypto
+      .createHash("sha256")
+      .update(Buffer.from(adminHeader, "utf-8"))
+      .digest();
+    const hash2 = crypto
+      .createHash("sha256")
+      .update(Buffer.from(expectedSecret, "utf-8"))
+      .digest();
+
+    if (!crypto.timingSafeEqual(hash1, hash2)) {
       logger.warn("Admin auth failed", {
         ip:
           (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||

@@ -144,3 +144,54 @@ export const verifyAuthenticatedUser = (
     return null;
   }
 };
+
+export const withUserAuth = (
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void,
+  options?: { ownerRequired?: boolean },
+): ((req: NextApiRequest, res: NextApiResponse) => Promise<void>) => {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const payload = verifyAuthenticatedUser(req);
+    if (!payload) {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          status: false,
+          message: "Authentication required",
+        }),
+      );
+    }
+
+    if (options?.ownerRequired) {
+      const queryUserId = req.query.userId as string | undefined;
+      const bodyUserId = req.body?.userId as string | undefined;
+      const userId = queryUserId || bodyUserId;
+
+      const queryEmail = req.query.email as string | undefined;
+      const bodyEmail = req.body?.email as string | undefined;
+      const email = queryEmail || bodyEmail;
+
+      const userIsAdmin = await isAdminEmail(payload.email);
+
+      if (!userIsAdmin) {
+        if (userId && payload.sub !== userId) {
+          return res.status(apiStatusCodes.FORBIDDEN).json(
+            sendAPIResponse({
+              status: false,
+              message: "Access denied: Cannot access another user's resource",
+            }),
+          );
+        }
+        if (email && payload.email !== email) {
+          return res.status(apiStatusCodes.FORBIDDEN).json(
+            sendAPIResponse({
+              status: false,
+              message: "Access denied: Cannot access another user's resource",
+            }),
+          );
+        }
+      }
+    }
+
+    (req as any).user = payload;
+    return handler(req, res);
+  };
+};

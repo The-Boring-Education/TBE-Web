@@ -7,15 +7,21 @@ import {
 } from "@/lib/database";
 import type { MarkQuestionStarredRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case "POST":
-        return handleStarQuestion(req, res);
+        return withUserAuth(async (req, res) => handleStarQuestion(req, res), {
+          ownerRequired: true,
+        })(req, res);
       case "GET":
-        return handleGetStarredQuestions(req, res);
+        return withUserAuth(
+          async (req, res) => handleGetStarredQuestions(req, res),
+          { ownerRequired: true },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
