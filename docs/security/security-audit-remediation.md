@@ -729,7 +729,7 @@ There is **no Content-Security-Policy anywhere** in TBE-Web or vidya-pod. HSTS i
 
 ### SEC-020 Next 15 apps below patched 15.5.16; vidya-pod on canary
 
-- [ ] **SEC-020 resolved**
+- [x] **SEC-020 resolved**
 
 - **Severity:** High
 - **Category:** Vulnerable dependencies
