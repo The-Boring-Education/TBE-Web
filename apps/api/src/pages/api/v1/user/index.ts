@@ -18,32 +18,28 @@ import { logger } from "@/lib/utils/logger";
 import { verifyAuthenticatedUser, withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
+const normalizeQueryParam = (param: string | string[] | undefined): string => {
+  if (Array.isArray(param)) {
+    return param[0] || "";
+  }
+  return param || "";
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
-  const { email, userId, username } = query;
+  const email = normalizeQueryParam(query.email);
+  const userId = normalizeQueryParam(query.userId);
+  const username = normalizeQueryParam(query.username);
 
   switch (method) {
     case "GET":
       if (email || userId) {
         return withUserAuth(
-          async (req, res) =>
-            handleGetUser(
-              req,
-              res,
-              email as string,
-              userId as string,
-              username as string,
-            ),
+          async (req, res) => handleGetUser(req, res, email, userId, username),
           { ownerRequired: true },
         )(req, res);
       }
-      return handleGetUser(
-        req,
-        res,
-        email as string,
-        userId as string,
-        username as string,
-      );
+      return handleGetUser(req, res, email, userId, username);
     case "POST":
       return handleCreateUser(req, res);
     case "PATCH":
