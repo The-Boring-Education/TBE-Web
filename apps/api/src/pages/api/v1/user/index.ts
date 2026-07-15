@@ -36,11 +36,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET":
       if (email || userId) {
         return withUserAuth(
-          async (req, res) => handleGetUser(req, res, email, userId, username),
+          async (req, res) =>
+            handleGetUser(
+              req,
+              res,
+              email as string,
+              userId as string,
+              username as string,
+            ),
           { ownerRequired: true },
         )(req, res);
       }
-      return handleGetUser(req, res, email, userId, username);
+      return handleGetUser(
+        req,
+        res,
+        email as string,
+        userId as string,
+        username as string,
+      );
     case "POST":
       return handleCreateUser(req, res);
     case "PATCH":

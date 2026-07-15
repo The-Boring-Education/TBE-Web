@@ -126,9 +126,9 @@ export const withAdminAuth: (
     res: NextApiResponse,
   ) => Promise<void> | void,
 ) => (req: NextApiRequest, res: NextApiResponse) => Promise<void> = (handler) =>
-  withVerifiedAdminAuth(async (req, res) =>
-    handler(req as AdminAuthenticatedRequest, res),
-  );
+    withVerifiedAdminAuth(async (req, res) =>
+      handler(req as AdminAuthenticatedRequest, res),
+    );
 
 export const verifyAuthenticatedUser = (
   req: NextApiRequest,
