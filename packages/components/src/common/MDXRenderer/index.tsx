@@ -362,8 +362,10 @@ const MDXRenderer = ({
       } else {
         let embedHref = href;
         if (href.includes("watch")) {
-          const videoId = href.split("v=")[1].split("&")[0];
-          embedHref = `https://www.youtube.com/embed/${videoId}`;
+          const videoIdMatch = href.match(/[?&]v=([a-zA-Z0-9_-]+)/);
+          if (videoIdMatch?.[1]) {
+            embedHref = `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+          }
         }
         return `<iframe width="100%" height="550" class="rounded" src="${embedHref}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
       }
