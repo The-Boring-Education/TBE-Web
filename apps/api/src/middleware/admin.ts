@@ -145,6 +145,17 @@ export const verifyAuthenticatedUser = (
   }
 };
 
+const normalizeStringVal = (val: unknown): string | undefined => {
+  if (typeof val === "string") {
+    return val.trim();
+  }
+  if (Array.isArray(val)) {
+    const first = val[0];
+    return typeof first === "string" ? first.trim() : undefined;
+  }
+  return undefined;
+};
+
 export const withUserAuth = (
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void,
   options?: { ownerRequired?: boolean },
@@ -161,13 +172,15 @@ export const withUserAuth = (
     }
 
     if (options?.ownerRequired) {
-      const queryUserId = req.query.userId as string | undefined;
-      const bodyUserId = req.body?.userId as string | undefined;
-      const userId = queryUserId || bodyUserId;
+      const queryUserId = req.query.userId;
+      const bodyUserId = req.body?.userId;
+      const userId =
+        normalizeStringVal(queryUserId) || normalizeStringVal(bodyUserId);
 
-      const queryEmail = req.query.email as string | undefined;
-      const bodyEmail = req.body?.email as string | undefined;
-      const email = queryEmail || bodyEmail;
+      const queryEmail = req.query.email;
+      const bodyEmail = req.body?.email;
+      const email =
+        normalizeStringVal(queryEmail) || normalizeStringVal(bodyEmail);
 
       const userIsAdmin = await isAdminEmail(payload.email);
 
@@ -180,13 +193,17 @@ export const withUserAuth = (
             }),
           );
         }
-        if (email && payload.email !== email) {
-          return res.status(apiStatusCodes.FORBIDDEN).json(
-            sendAPIResponse({
-              status: false,
-              message: "Access denied: Cannot access another user's resource",
-            }),
-          );
+        if (email) {
+          const normalizedPayloadEmail = payload.email.trim().toLowerCase();
+          const normalizedTargetEmail = email.trim().toLowerCase();
+          if (normalizedPayloadEmail !== normalizedTargetEmail) {
+            return res.status(apiStatusCodes.FORBIDDEN).json(
+              sendAPIResponse({
+                status: false,
+                message: "Access denied: Cannot access another user's resource",
+              }),
+            );
+          }
         }
       }
     }

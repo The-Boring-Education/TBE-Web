@@ -83,9 +83,7 @@ const adminMiddleware = async (
       });
       res.status(apiStatusCodes.UNAUTHORIZED).json(
         sendAPIResponse({
-          success: false,
-          status: apiStatusCodes.UNAUTHORIZED,
-          error: true,
+          status: false,
           message: "Unauthorized. Admin access required.",
         }),
       );
@@ -110,9 +108,7 @@ const adminMiddleware = async (
       });
       res.status(apiStatusCodes.UNAUTHORIZED).json(
         sendAPIResponse({
-          success: false,
-          status: apiStatusCodes.UNAUTHORIZED,
-          error: true,
+          status: false,
           message: "Unauthorized. Admin access required.",
         }),
       );
@@ -123,9 +119,7 @@ const adminMiddleware = async (
   } catch (error) {
     res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
-        success: false,
-        status: apiStatusCodes.INTERNAL_SERVER_ERROR,
-        error: true,
+        status: false,
         message: "Admin authentication error",
         data: error,
       }),
