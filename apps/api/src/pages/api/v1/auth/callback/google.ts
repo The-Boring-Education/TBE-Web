@@ -12,31 +12,31 @@ import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { connectDB } from "@/middleware/api";
 
+const DEFAULT_ERROR_URL =
+  process.env.AUTH_ERROR_REDIRECT_URL || "https://theboringeducation.com";
+
 function redirectWithError(
   res: NextApiResponse,
   state: string | undefined,
   errorCode: string,
 ) {
+  // Only trust redirect_uri from a verified state token — never raw-decode
   if (state) {
     try {
-      const payload = JSON.parse(
-        Buffer.from(state.split(".")[1] || "", "base64").toString(),
-      );
+      const payload = verifyToken<OAuthStatePayload>(state);
       if (payload.redirect_uri) {
         const redirectUrl = new URL(payload.redirect_uri);
         redirectUrl.searchParams.set("error", errorCode);
         return res.redirect(302, redirectUrl.toString());
       }
     } catch {
-      // Fall through to error response
+      // State signature invalid — fall through to safe default
     }
   }
-  return res.status(500).json(
-    sendAPIResponse({
-      status: false,
-      message: `Authentication failed: ${errorCode}`,
-    }),
-  );
+  // Redirect to fixed safe URL when state cannot be trusted
+  const safeUrl = new URL(DEFAULT_ERROR_URL);
+  safeUrl.searchParams.set("error", errorCode);
+  return res.redirect(302, safeUrl.toString());
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

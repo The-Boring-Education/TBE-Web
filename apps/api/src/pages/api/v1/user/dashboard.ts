@@ -10,14 +10,19 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
   const { userId } = query;
 
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+  if (!verifyOwnership(authenticatedUserId, userId as string, res)) return;
+
   switch (method) {
     case "GET":
-      return handleGetUserDashboard(req, res, userId as string);
+      return handleGetUserDashboard(req, res, authenticatedUserId);
   }
 };
 

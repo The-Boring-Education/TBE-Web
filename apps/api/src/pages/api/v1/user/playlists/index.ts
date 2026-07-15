@@ -7,6 +7,7 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
@@ -15,11 +16,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     playlistId: string;
   };
 
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
+
   switch (method) {
     case "GET":
-      return handleGetUserPlaylists(req, res, userId);
+      return handleGetUserPlaylists(req, res, authenticatedUserId);
     case "DELETE":
-      return handleDeleteUserPlaylist(req, res, userId, playlistId);
+      return handleDeleteUserPlaylist(
+        req,
+        res,
+        authenticatedUserId,
+        playlistId,
+      );
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json({
         success: false,

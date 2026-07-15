@@ -69,7 +69,7 @@ Per the workspace rule "for every line of testable code, there should be tests,"
 
 ### SEC-001 Hardcoded `"TBEAdmin"` admin-secret fallback
 
-- [ ] **SEC-001 resolved**
+- [x] **SEC-001 resolved**
 
 - **Severity:** Critical
 - **Category:** Broken access control / hardcoded credential
@@ -105,7 +105,7 @@ The mentor-feedback PATCH handler compares the `x-admin-secret` header against `
 
 ### SEC-002 Hardcoded `x-admin-secret` shipped in admin client bundle
 
-- [ ] **SEC-002 resolved**
+- [x] **SEC-002 resolved**
 
 - **Severity:** Critical
 - **Category:** Secret exposure in client / broken access control
@@ -141,7 +141,7 @@ The admin SPA embeds `"x-admin-secret": "TBEAdmin"` directly in bundled JavaScri
 
 ### SEC-003 Unauthenticated email relay & trigger endpoints
 
-- [ ] **SEC-003 resolved**
+- [x] **SEC-003 resolved**
 
 - **Severity:** Critical
 - **Category:** Broken access control / abuse (spam, phishing)
@@ -180,7 +180,7 @@ These POST handlers send email (arbitrary `to_email`, `subject`, `html_content`,
 
 ### SEC-004 Unauthenticated content-write endpoints
 
-- [ ] **SEC-004 resolved**
+- [x] **SEC-004 resolved**
 
 - **Severity:** Critical
 - **Category:** Broken access control / mass assignment
@@ -221,7 +221,7 @@ Multiple write endpoints publish content (interview sheets, DSA questions, quizz
 
 ### SEC-005 Systemic IDOR — user-scoped routes trust client-supplied `userId`
 
-- [ ] **SEC-005 resolved**
+- [x] **SEC-005 resolved**
 
 - **Severity:** Critical
 - **Category:** Broken object-level authorization (IDOR)
@@ -264,7 +264,7 @@ User-scoped read/write routes take `userId` from the request body/query and act 
 
 ### SEC-006 Unauthenticated PII enumeration
 
-- [ ] **SEC-006 resolved**
+- [x] **SEC-006 resolved**
 
 - **Severity:** Critical
 - **Category:** Sensitive data exposure
@@ -447,7 +447,7 @@ RLS is enabled but policies allow anonymous `SELECT` on `teachers`, `students`, 
 
 ### SEC-012 `@tbe/auth` `withAuth` decodes JWT without signature verification
 
-- [ ] **SEC-012 resolved**
+- [x] **SEC-012 resolved**
 
 - **Severity:** High
 - **Category:** Broken authentication (token forgery)
@@ -482,7 +482,7 @@ RLS is enabled but policies allow anonymous `SELECT` on `teachers`, `students`, 
 
 ### SEC-013 OAuth open-redirect + overly permissive redirect allowlist
 
-- [ ] **SEC-013 resolved**
+- [x] **SEC-013 resolved**
 
 - **Severity:** High
 - **Category:** OAuth / open redirect / token leakage
@@ -517,7 +517,7 @@ RLS is enabled but policies allow anonymous `SELECT` on `teachers`, `students`, 
 
 ### SEC-014 CORS allow-all fallback (TBE-Web API + FastAPI)
 
-- [ ] **SEC-014 resolved**
+- [x] **SEC-014 resolved**
 
 - **Severity:** High
 - **Category:** CORS misconfiguration
@@ -551,7 +551,7 @@ When `ALLOWED_ORIGINS` is unset/empty the TBE API reflects any origin (`origin: 
 
 ### SEC-015 NoSQL operator injection + user-controlled RegExp (ReDoS)
 
-- [ ] **SEC-015 resolved**
+- [x] **SEC-015 resolved**
 
 - **Severity:** High
 - **Category:** Injection
@@ -587,7 +587,7 @@ When `ALLOWED_ORIGINS` is unset/empty the TBE API reflects any origin (`origin: 
 
 ### SEC-016 Stored XSS — MDX/HTML rendered without sanitization
 
-- [ ] **SEC-016 resolved**
+- [x] **SEC-016 resolved**
 
 - **Severity:** High
 - **Category:** Cross-site scripting (XSS)
@@ -658,7 +658,7 @@ The sponsor order route reads `amount` from the client body and passes it to the
 
 ### SEC-018 Unauthenticated destructive delete (YouFocus)
 
-- [ ] **SEC-018 resolved**
+- [x] **SEC-018 resolved**
 
 - **Severity:** High
 - **Category:** Broken access control (destructive)
@@ -690,7 +690,7 @@ The sponsor order route reads `amount` from the client body and passes it to the
 
 ### SEC-019 Missing security headers (no CSP; HSTS only on API edge)
 
-- [ ] **SEC-019 resolved**
+- [x] **SEC-019 resolved**
 
 - **Severity:** High
 - **Category:** Security headers / hardening

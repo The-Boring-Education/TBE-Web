@@ -42,6 +42,11 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockReturnValue("test-user-id"),
+  verifyOwnership: vi.fn().mockReturnValue(true),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/user/dashboard";
 
 describe("User Dashboard API Route", () => {
@@ -49,7 +54,20 @@ describe("User Dashboard API Route", () => {
     vi.clearAllMocks();
   });
 
-  it("missing userId → 400", async () => {
+  it("missing auth token → 401", async () => {
+    const { getAuthenticatedUserId } =
+      await import("../../../../api/src/middleware/userAuth");
+    (getAuthenticatedUserId as ReturnType<typeof vi.fn>).mockImplementationOnce(
+      (_req: NextApiRequest, res: NextApiResponse) => {
+        res.statusCode = 401;
+        (res as any).json({
+          status: false,
+          message: "Authentication required",
+        });
+        return null;
+      },
+    );
+
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
       query: {},
@@ -57,10 +75,9 @@ describe("User Dashboard API Route", () => {
 
     await handler(req, res);
 
-    expect(res._getStatusCode()).toBe(400);
+    expect(res._getStatusCode()).toBe(401);
     const data = JSON.parse(res._getData());
     expect(data.status).toBe(false);
-    expect(data.message).toBe("Please provide Email or User id");
   });
 
   it("getUserByIdFromDB error → 500", async () => {

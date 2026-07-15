@@ -4,9 +4,13 @@ import { apiStatusCodes } from "@/lib/constants";
 import { DevRelLead } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const isAdmin = await adminMiddleware(req, res);
+  if (!isAdmin) return;
+
   if (req.method !== "GET") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({

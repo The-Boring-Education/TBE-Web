@@ -5,6 +5,7 @@ import MarkdownIt from "markdown-it";
 import { Fragment, useEffect, useRef } from "react";
 
 import { normalizeLatexDelimiters, registerMathPlugin } from "./mathPlugin";
+import { sanitizeHref, sanitizeHTML } from "./sanitize";
 
 const MDXRenderer = ({
   mdxSource,
@@ -354,10 +355,10 @@ const MDXRenderer = ({
 
   md.renderer.rules.link_open = (tokens: any, idx: any) => {
     const token = tokens[idx];
-    const href = token.attrGet("href");
+    const href = sanitizeHref(token.attrGet("href"));
     if (href.includes("youtube.com") || href.includes("youtu.be")) {
       if (href.includes("list=")) {
-        return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
       } else {
         let embedHref = href;
         if (href.includes("watch")) {
@@ -368,14 +369,14 @@ const MDXRenderer = ({
       }
     }
 
-    return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
   };
 
   md.renderer.rules.link_block = (tokens: any, idx: any) => {
     const token = tokens[idx];
-    const href = token.attrGet("href");
+    const href = sanitizeHref(token.attrGet("href"));
 
-    return `<a href=${href} target="_blank">${href}</a>`;
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${md.utils.escapeHtml(href)}</a>`;
   };
 
   md.renderer.rules.fence = (tokens, idx) => {
@@ -415,7 +416,7 @@ const MDXRenderer = ({
     });
   }
 
-  const processedHTML = mdxHTML;
+  const processedHTML = sanitizeHTML(mdxHTML);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

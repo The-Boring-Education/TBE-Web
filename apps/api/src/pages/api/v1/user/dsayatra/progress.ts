@@ -15,18 +15,22 @@ import type {
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const authenticatedUserId = getAuthenticatedUserId(req, res);
+    if (!authenticatedUserId) return;
+
     const { method } = req;
 
     switch (method) {
       case "GET":
-        return handleGetProgress(req, res);
+        return handleGetProgress(req, res, authenticatedUserId);
       case "PATCH":
-        return handlePatchQuestion(req, res);
+        return handlePatchQuestion(req, res, authenticatedUserId);
       case "PUT":
-        return handleMergeProgress(req, res);
+        return handleMergeProgress(req, res, authenticatedUserId);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
@@ -46,7 +50,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleGetProgress = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  authenticatedUserId: string,
+) => {
   const { userId } = req.query as unknown as GetDsaYatraProgressQueryProps;
 
   if (!userId) {
@@ -57,6 +65,8 @@ const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   try {
     const { data, error } = await getDsaYatraProgressFromDB(userId);
@@ -99,6 +109,7 @@ const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
 const handlePatchQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
+  authenticatedUserId: string,
 ) => {
   const { userId, questionId, isCompleted } =
     req.body as PatchDsaYatraQuestionCompletionProps;
@@ -111,6 +122,8 @@ const handlePatchQuestion = async (
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   if (typeof isCompleted !== "boolean") {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -178,6 +191,7 @@ const handlePatchQuestion = async (
 const handleMergeProgress = async (
   req: NextApiRequest,
   res: NextApiResponse,
+  authenticatedUserId: string,
 ) => {
   const { userId, addCompletedQuestionIds, todayStats } =
     req.body as PutDsaYatraProgressMergeProps;
@@ -190,6 +204,8 @@ const handleMergeProgress = async (
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   try {
     const { data, error } = await mergeDsaYatraProgressInDB(

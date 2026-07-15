@@ -15,6 +15,7 @@ import { sendAPIResponse } from "@/lib/utils";
 import { captureAPIError, captureAuthError } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
@@ -228,6 +229,9 @@ const handleUpdateUserProfile = async (
   res: NextApiResponse,
 ) => {
   try {
+    const authenticatedUserId = getAuthenticatedUserId(req, res);
+    if (!authenticatedUserId) return;
+
     const { userId, name, username, linkedInUrl, githubUrl, leetCodeUrl } =
       req.body;
 
@@ -239,6 +243,8 @@ const handleUpdateUserProfile = async (
         }),
       );
     }
+
+    if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
     if (
       name === undefined &&

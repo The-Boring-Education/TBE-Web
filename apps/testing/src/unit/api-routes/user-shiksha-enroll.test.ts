@@ -45,6 +45,11 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => fn,
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockReturnValue("test-user-id"),
+  verifyOwnership: vi.fn().mockReturnValue(true),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/user/shiksha/enroll";
 
 describe("User Shiksha Enroll API Route", () => {

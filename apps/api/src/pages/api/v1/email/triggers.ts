@@ -5,10 +5,14 @@ import type { EmailTriggerRequest } from "@/lib/interfaces";
 import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const isAdmin = await adminMiddleware(req, res);
+    if (!isAdmin) return;
+
     switch (req.method) {
       case "POST":
         return handleEmailTrigger(req, res);
