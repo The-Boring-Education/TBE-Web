@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git & GitHub Cheatsheet + Start Contributing to Open Source – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 500px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP / STEP CARDS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 10px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1px 0 14px 18px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .step-desc strong {
+            color: var(--dark);
+        }
+
+        .step-desc code,
+        .step-desc .inline-code {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--red);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── COMMAND CHIPS (reused link style) ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        .yt-link.plain::before {
+            content: '$';
+            font-size: 9px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS ROW (repurposed) ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── COMMAND / STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+            white-space: nowrap;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .resource-viewer {
+                padding: 0;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .print-bar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px 16px;
+                margin-bottom: 0;
+                background: #1a1a1a;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+                margin: 0;
+            }
+
+            .page + .page {
+                margin-top: 4px;
+            }
+
+            .cover {
+                min-height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 16px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 16px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .cover-quote-block {
+                padding: 20px 18px;
+                max-width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .inner-page {
+                min-height: auto;
+            }
+
+            .page-header {
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+            }
+
+            .page-body {
+                padding: 16px 16px;
+                overflow: visible;
+            }
+
+            .page-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 14px;
+            }
+
+            .step-content {
+                padding: 1px 0 12px 10px;
+            }
+
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .tip-block {
+                padding: 10px 12px;
+            }
+
+            .tip-text {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                min-height: 297mm;
+            }
+
+            .inner-page {
+                min-height: 297mm;
+            }
+
+            /* never split a card/question/table row across a page boundary */
+            .step,
+            .resource-card,
+            .tip-block,
+            .cta-block,
+            .social-card,
+            .stack-table tr,
+            .check-item,
+            .cover-quote-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">Every command, then your first real PR</div>
+
+                <h1 class="cover-title">
+                    Git &amp; GitHub<br><span>Contributor's</span><br>Playbook
+                </h1>
+
+                <p class="cover-subtitle">
+                    Every Git command you'll actually use, explained — then the complete path to finding a project, understanding a codebase, and getting your first pull request merged into a real open source repo.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Your first merged pull request teaches you more about real-world engineering than six months of solo tutorials. Open source is the only 'job' where you can start today, with zero interviews, and the commit history is the resume."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">40+</div>
+                        <div class="stat-label">Git commands covered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Steps to your first PR</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">150M+</div>
+                        <div class="stat-label">Repos on GitHub</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">1</div>
+                        <div class="stat-label">Weekend to your first merge</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — GIT BASICS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Git & GitHub Cheatsheet · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Foundation Layer</div>
+                <h2 class="section-title">Git Basics — The Commands You'll Type Every Single Day</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Setup & Config</div>
+                            <div class="step-heading">Tell Git Who You Are — Before Anything Else</div>
+                            <div class="step-desc">Run this once per machine before your first commit anywhere, so every commit is correctly attributed to you. Use <code>--global</code> to set it for every repo on your machine, or drop the flag inside a specific repo to override it for that project only (useful for keeping work and personal commits separate).</div>
+                            <div class="step-tags">
+                                <span class="tag red">Run once</span>
+                                <span class="tag">Identity</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git config --global user.name "Your Name"</a>
+                                <a class="yt-link plain">git config --global user.email "you@email.com"</a>
+                                <a class="yt-link plain">git config --list</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Starting a Repository</div>
+                            <div class="step-heading">Init a New Repo, or Clone an Existing One</div>
+                            <div class="step-desc"><code>git init</code> turns any folder into a Git repository, tracked from that point forward. <code>git clone</code> copies a full remote repository — history, branches, and all — onto your machine, and automatically wires it up as the <code>origin</code> remote so you can push and pull immediately.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Non-negotiable</span>
+                                <span class="tag">Day one commands</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git init</a>
+                                <a class="yt-link plain">git clone &lt;repo-url&gt;</a>
+                                <a class="yt-link plain">git clone &lt;repo-url&gt; my-folder-name</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">The Staging Cycle</div>
+                            <div class="step-heading">Stage, Check, and Commit — the Loop You Repeat Constantly</div>
+                            <div class="step-desc"><code>git status</code> shows what's changed, staged, or untracked — run it constantly, it's free and it prevents mistakes. <code>git add</code> stages files for the next commit; use <code>git add .</code> to stage everything in the current directory, or add files individually when you want a cleaner, more intentional commit. <code>git commit</code> saves the staged snapshot with a message describing what changed and why.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Used constantly</span>
+                                <span class="tag">Core workflow</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git status</a>
+                                <a class="yt-link plain">git add &lt;file&gt; / git add .</a>
+                                <a class="yt-link plain">git commit -m "message"</a>
+                                <a class="yt-link plain">git commit --amend</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Inspecting History</div>
+                            <div class="step-heading">Reading What Actually Happened — Diff & Log</div>
+                            <div class="step-desc"><code>git diff</code> shows exact line-by-line changes before you stage them — always read this before committing, it catches accidental debug code and leftover console logs. <code>git log</code> shows commit history; add <code>--oneline --graph</code> for a compact, visual view of branches and merges that's far easier to scan than the default verbose output.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Read before you commit</span>
+                                <span class="tag">History</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git diff</a>
+                                <a class="yt-link plain">git diff --staged</a>
+                                <a class="yt-link plain">git log --oneline --graph --all</a>
+                                <a class="yt-link plain">git show &lt;commit-hash&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:16px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">💡</div>
+                        <div class="tip-text"><strong>Write commit messages for the next person reading your history, not for right now.</strong> "fixed stuff" tells nobody anything six months later. Use the format <code>type: short description</code> — e.g. <code>fix: handle null user on login</code> or <code>feat: add pagination to search results</code>. This single habit makes code review and debugging dramatically faster for everyone on the project, including future-you.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — BRANCHING + REMOTES ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Git & GitHub Cheatsheet · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Working With Others</div>
+                <h2 class="section-title">Branching, Remotes & the Push/Pull Cycle</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Branching</div>
+                            <div class="step-heading">Never Work Directly on main</div>
+                            <div class="step-desc">Every change — a feature, a fix, an experiment — gets its own branch, keeping <code>main</code> always deployable and clean. <code>git switch -c</code> (or the older <code>git checkout -b</code>) creates and switches to a new branch in one step. Name branches descriptively: <code>fix/login-redirect</code> or <code>feat/dark-mode</code>, not <code>branch1</code>.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Golden rule</span>
+                                <span class="tag">Branching</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git branch</a>
+                                <a class="yt-link plain">git switch -c new-branch-name</a>
+                                <a class="yt-link plain">git switch main</a>
+                                <a class="yt-link plain">git branch -d old-branch</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Merging</div>
+                            <div class="step-heading">Bringing Branches Back Together</div>
+                            <div class="step-desc"><code>git merge</code> combines the history of another branch into your current one — usually run on <code>main</code> to bring in a finished feature branch. Merge conflicts happen when the same lines were changed on both sides; Git marks the conflicting sections directly in the file for you to resolve manually, then you stage and commit the resolution.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Combining work</span>
+                                <span class="tag">Conflict resolution</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git merge feature-branch</a>
+                                <a class="yt-link plain">git merge --abort</a>
+                                <a class="yt-link plain">git mergetool</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Remotes</div>
+                            <div class="step-heading">Syncing Your Local Repo With GitHub</div>
+                            <div class="step-desc"><code>git push</code> uploads your committed local changes to the remote repository; <code>git pull</code> downloads and merges the latest remote changes into your current branch (it's actually <code>fetch</code> + <code>merge</code> combined). <code>git fetch</code> alone downloads changes without merging — safer when you want to review what changed before integrating it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Sync commands</span>
+                                <span class="tag">Remote workflow</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git push origin branch-name</a>
+                                <a class="yt-link plain">git push -u origin branch-name</a>
+                                <a class="yt-link plain">git pull origin main</a>
+                                <a class="yt-link plain">git fetch --all</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Undoing Things</div>
+                            <div class="step-heading">Everyone Makes Mistakes — Here's How to Undo Them</div>
+                            <div class="step-desc"><code>git stash</code> temporarily shelves uncommitted changes so you can switch branches cleanly, then <code>git stash pop</code> brings them back. <code>git reset</code> moves your branch pointer backward (use <code>--soft</code> to keep changes staged, <code>--hard</code> to discard them entirely — be careful). <code>git revert</code> is the safe option for shared branches: it creates a new commit that undoes a previous one, without rewriting history.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Safety net</span>
+                                <span class="tag">Undo commands</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git stash / git stash pop</a>
+                                <a class="yt-link plain">git reset --soft HEAD~1</a>
+                                <a class="yt-link plain">git reset --hard HEAD~1</a>
+                                <a class="yt-link plain">git revert &lt;commit-hash&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">⚠️</div>
+                    <div class="tip-text"><strong>Never use <code>git reset --hard</code> or force-push on a shared branch.</strong> <code>--hard</code> permanently discards uncommitted work with no undo. <code>git push --force</code> overwrites remote history and can erase a teammate's commits. If you must force-push your own feature branch after a rebase, use <code>git push --force-with-lease</code> instead — it refuses to overwrite work you haven't seen yet.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Quick Reference — Core Commands by Purpose</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>What It Does</th>
+                                <th>When to Use It</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>git status</td>
+                                <td>Shows staged, unstaged, and untracked changes</td>
+                                <td>Constantly, before every add/commit</td>
+                            </tr>
+                            <tr>
+                                <td>git log --oneline</td>
+                                <td>Compact commit history</td>
+                                <td>Reviewing what's been done on a branch</td>
+                            </tr>
+                            <tr>
+                                <td>git switch -c</td>
+                                <td>Create + move to a new branch</td>
+                                <td>Starting any new feature or fix</td>
+                            </tr>
+                            <tr>
+                                <td>git pull --rebase</td>
+                                <td>Replay your commits on top of latest remote</td>
+                                <td>Keeping a clean, linear history</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — ADVANCED GIT ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Git & GitHub Cheatsheet · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Level Up</div>
+                <h2 class="section-title">Advanced Git — Rebase, Cherry-Pick & Recovery</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Rebasing</div>
+                            <div class="step-heading">A Cleaner Alternative to Merge Commits</div>
+                            <div class="step-desc"><code>git rebase</code> replays your branch's commits on top of another branch's latest history, producing a clean, linear timeline instead of a merge-commit web. <code>git rebase -i</code> (interactive) lets you reorder, edit, squash, or drop commits before opening a pull request — most maintainers prefer a tidy, squashed commit history over a dozen "wip" commits.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Clean history</span>
+                                <span class="tag">PR hygiene</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git rebase main</a>
+                                <a class="yt-link plain">git rebase -i HEAD~3</a>
+                                <a class="yt-link plain">git rebase --continue</a>
+                                <a class="yt-link plain">git rebase --abort</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Cherry-Picking & Tags</div>
+                            <div class="step-heading">Grabbing One Commit, Marking a Release</div>
+                            <div class="step-desc"><code>git cherry-pick</code> applies a single specific commit from another branch onto your current one — useful for backporting a fix without merging an entire branch. <code>git tag</code> marks a specific commit as a named release point (e.g. <code>v1.2.0</code>), which most projects use to track version history and generate changelogs.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Selective merging</span>
+                                <span class="tag">Releases</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git cherry-pick &lt;commit-hash&gt;</a>
+                                <a class="yt-link plain">git tag v1.0.0</a>
+                                <a class="yt-link plain">git push origin v1.0.0</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">The Panic-Button Command</div>
+                            <div class="step-heading">git reflog — Your Undo History for Undo Commands</div>
+                            <div class="step-desc">Accidentally deleted a branch or reset too far back? <code>git reflog</code> logs every place <code>HEAD</code> has pointed to, even commits that look "lost" after a hard reset. Find the commit hash you need in the reflog, then <code>git reset --hard &lt;hash&gt;</code> or <code>git checkout &lt;hash&gt;</code> to recover it. Almost nothing in Git is truly gone until garbage collection runs.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Recovery</span>
+                                <span class="tag">Know this exists</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git reflog</a>
+                                <a class="yt-link plain">git checkout &lt;hash-from-reflog&gt;</a>
+                                <a class="yt-link plain">git branch recovered-branch &lt;hash&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">.gitignore Essentials</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:8px;">Stop Committing Files That Don't Belong in History</div>
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Dependencies</div>
+                        <div class="skill-item">node_modules/</div>
+                        <div class="skill-item">venv/ or .venv/</div>
+                        <div class="skill-item">vendor/</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Secrets & config</div>
+                        <div class="skill-item">.env / .env.local</div>
+                        <div class="skill-item">*.pem / *.key</div>
+                        <div class="skill-item">config/secrets.yml</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Build & OS junk</div>
+                        <div class="skill-item">dist/ / build/</div>
+                        <div class="skill-item">.DS_Store</div>
+                        <div class="skill-item">*.log</div>
+                    </div>
+                </div>
+
+                <div class="tip-block">
+                    <div class="tip-icon">🔑</div>
+                    <div class="tip-text"><strong>Already committed a secret by accident?</strong> Adding it to <code>.gitignore</code> afterward doesn't remove it from history — anyone can still find it in an old commit. Rotate the leaked credential immediately, then use a tool like <code>git filter-repo</code> or BFG Repo-Cleaner to scrub it from history if it's genuinely sensitive.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — WHY & HOW TO START CONTRIBUTING ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Open Source Starter Guide · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Open Source · Getting Started</div>
+                <h2 class="section-title">Why Contribute, and How to Find the Right First Project</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Why It Matters</div>
+                            <div class="step-heading">Open Source Is the Fastest Way to Practice Real Engineering</div>
+                            <div class="step-desc">Tutorials teach syntax; open source teaches you how real production codebases are structured, reviewed, and maintained by teams you've never met. It builds a public portfolio that outlasts any single job, gives you direct exposure to senior engineers' code review feedback for free, and is one of the strongest signals recruiters look for on a resume with limited work experience.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Public portfolio</span>
+                                <span class="tag">Free mentorship</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Builds a public, verifiable portfolio</a>
+                                <a class="yt-link plain">Free code review from experienced devs</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Finding Beginner-Friendly Issues</div>
+                            <div class="step-heading">Look for the Labels That Signal "Start Here"</div>
+                            <div class="step-desc">Search GitHub for issues labeled <code>good first issue</code>, <code>help wanted</code>, or <code>beginner-friendly</code> — maintainers tag these specifically for newcomers, and they're usually scoped small enough to finish in a few hours. Use GitHub's own search filters (<code>is:issue is:open label:"good first issue"</code>) combined with a language filter to match your skill set.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Look for labels</span>
+                                <span class="tag">Scope matters</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">label:"good first issue"</a>
+                                <a class="yt-link plain">label:"help wanted"</a>
+                                <a class="yt-link plain">is:issue is:open</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Pick the Right Project</div>
+                            <div class="step-heading">Not Every Popular Repo Is a Good Starting Point</div>
+                            <div class="step-desc">Prioritize projects you already use or genuinely find interesting — motivation matters more than star count. Check the project's activity: recent commits, responsive maintainers on issues, and an active PR review cadence are better signals than raw popularity. A huge, slow-moving repo with maintainers who haven't replied to an issue in months is a frustrating first experience.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Check activity, not just stars</span>
+                                <span class="tag">Pick something you use</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Recent commit activity</a>
+                                <a class="yt-link plain">Responsive maintainers on issues/PRs</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Read Before You Write Any Code</div>
+                            <div class="step-heading">CONTRIBUTING.md Is Not Optional</div>
+                            <div class="step-desc">Almost every serious open source project has a <code>CONTRIBUTING.md</code> file outlining exact expectations: coding style, branch naming, commit conventions, how to run tests locally, and the PR review process. Skipping this is the single most common reason first-time PRs get rejected or sent back with change requests — read it fully before opening your editor.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Read this first</span>
+                                <span class="tag">Prevents rejected PRs</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">CONTRIBUTING.md</a>
+                                <a class="yt-link plain">CODE_OF_CONDUCT.md</a>
+                                <a class="yt-link plain">/docs or /wiki for architecture notes</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🎯</div>
+                    <div class="tip-text"><strong>Start with documentation, not code.</strong> Fixing a typo, clarifying a confusing setup step, or improving a README is a genuinely valuable, low-risk first contribution. It teaches you the entire PR workflow — fork, branch, commit, push, open PR, respond to review — without the pressure of shipping a feature on your very first attempt.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — MAKING YOUR FIRST PR ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Open Source Starter Guide · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">The Contribution Workflow</div>
+                <h2 class="section-title">Fork → Branch → Commit → PR → Review → Merge</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 1 · Fork & Clone</div>
+                            <div class="step-heading">Get Your Own Copy to Work In</div>
+                            <div class="step-desc">Since you don't have direct write access to most projects, click "Fork" on GitHub to create your own copy under your account, then clone <em>your fork</em> locally — not the original repo. Add the original as an <code>upstream</code> remote so you can pull in the latest changes from the real project as it evolves while you work.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Your own sandbox</span>
+                                <span class="tag">Fork workflow</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Fork on GitHub UI first</a>
+                                <a class="yt-link plain">git clone your-fork-url</a>
+                                <a class="yt-link plain">git remote add upstream original-repo-url</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 2 · Branch & Build</div>
+                            <div class="step-heading">One Branch Per Fix — Test It Locally First</div>
+                            <div class="step-desc">Create a clearly named branch off the latest <code>main</code>, and run the project's existing test suite before you touch anything, to confirm you're starting from a working baseline. Make focused, minimal changes — a PR that fixes one issue is far easier to review and merge than one that also refactors unrelated code "while you're in there."</div>
+                            <div class="step-tags">
+                                <span class="tag red">Keep PRs focused</span>
+                                <span class="tag">Test before and after</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git switch -c fix/issue-123-description</a>
+                                <a class="yt-link plain">npm test / pytest / go test ./...</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 3 · Commit & Push</div>
+                            <div class="step-heading">Clean Commits, Then Push to Your Fork</div>
+                            <div class="step-desc">Follow the project's commit message convention if one exists (many use Conventional Commits: <code>fix:</code>, <code>feat:</code>, <code>docs:</code>). Squash noisy work-in-progress commits into one clean commit with <code>git rebase -i</code> before pushing, then push the branch to <strong>your fork</strong>, not the original repository.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Squash before pushing</span>
+                                <span class="tag">Push to your fork</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">git rebase -i HEAD~3</a>
+                                <a class="yt-link plain">git push origin fix/issue-123-description</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 4 · Open the Pull Request</div>
+                            <div class="step-heading">Write a PR Description That Respects the Reviewer's Time</div>
+                            <div class="step-desc">Reference the issue number (e.g. <code>Closes #123</code>) so GitHub links and auto-closes it on merge. Explain <strong>what</strong> changed, <strong>why</strong>, and <strong>how you tested it</strong> — screenshots or short clips for UI changes are especially appreciated. Expect review comments; treat them as collaboration, not rejection, and respond to every comment even if just to confirm a change was made.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Link the issue</span>
+                                <span class="tag">Expect review rounds</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Closes #123</a>
+                                <a class="yt-link plain">What / Why / How tested</a>
+                                <a class="yt-link plain">Respond to every review comment</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🔄</div>
+                    <div class="tip-text"><strong>Keep your fork in sync as review drags on.</strong> Long-lived PRs often need a rebase before merge if <code>main</code> moved forward. Regularly <code>git fetch upstream && git rebase upstream/main</code> on your branch keeps conflicts small and manageable instead of one giant merge fight at the end.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Commit Message Conventions — Quick Reference</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Prefix</th>
+                                <th>Used For</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>feat:</td>
+                                <td>A new feature or capability</td>
+                                <td>feat: add dark mode toggle</td>
+                            </tr>
+                            <tr>
+                                <td>fix:</td>
+                                <td>A bug fix</td>
+                                <td>fix: prevent crash on empty input</td>
+                            </tr>
+                            <tr>
+                                <td>docs:</td>
+                                <td>Documentation-only changes</td>
+                                <td>docs: clarify install steps in README</td>
+                            </tr>
+                            <tr>
+                                <td>chore:</td>
+                                <td>Maintenance, deps, config</td>
+                                <td>chore: bump eslint to v9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — PLATFORMS + ETIQUETTE + ROUTINE ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Open Source Starter Guide · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Where to Look & How to Behave</div>
+                <h2 class="section-title">Platforms to Find Projects, and Community Etiquette</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🎯 Good First Issue (goodfirstissue.dev)</div>
+                        <div class="resource-card-desc">Aggregates beginner-friendly issues across GitHub by language and topic. The single fastest way to find a scoped, approachable task without manually searching dozens of repos.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://goodfirstissue.dev" target="_blank">goodfirstissue.dev</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🌱 Up For Grabs</div>
+                        <div class="resource-card-desc">A curated list of projects that actively maintain "up for grabs" style labels for newcomers, across nearly every language and framework.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://up-for-grabs.net" target="_blank">up-for-grabs.net</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧑‍🤝‍🧑 First Timers Only</div>
+                        <div class="resource-card-desc">Specifically targets people who have literally never contributed to open source before — extra patient maintainers and very low-stakes issues by design.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.firsttimersonly.com" target="_blank">firsttimersonly.com</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📬 CodeTriage</div>
+                        <div class="resource-card-desc">Emails you a small batch of open issues from projects you subscribe to, so you build a steady contribution habit without constantly searching manually.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.codetriage.com" target="_blank">codetriage.com</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🎃 Hacktoberfest</div>
+                        <div class="resource-card-desc">Annual event every October where thousands of projects welcome new contributors, with extra guidance, swag, and lower-pressure onboarding for first-timers.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://hacktoberfest.com" target="_blank">hacktoberfest.com</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🔍 GitHub Explore & Topics</div>
+                        <div class="resource-card-desc">Browse github.com/topics and github.com/trending filtered by your language to discover active projects you might genuinely want to use and improve.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://github.com/topics" target="_blank">github.com/topics</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Community Etiquette — What Separates Welcome Contributors From Ignored Ones</div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Comment on the issue and wait to be assigned before starting work — avoids duplicate effort with another contributor
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Ask clarifying questions on the issue itself rather than guessing silently for hours
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Keep pull requests small and focused on exactly one issue — never bundle unrelated changes
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Be patient with review turnaround — most maintainers are volunteers reviewing in their spare time
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Say thank you, even on a closed or rejected PR — maintainers remember contributors who handle feedback gracefully
+                    </div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🗓️</div>
+                        <div class="tip-text"><strong>Consistency beats intensity.</strong> One small, well-reviewed PR every week for three months builds a far stronger open source profile than a single large contribution followed by months of silence. Maintainers and future employers both notice a steady commit history more than a single impressive-looking spike.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Git & GitHub + Open Source Guide · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free YouTube Channels for Git, GitHub & Open Source</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 freeCodeCamp</div>
+                        <div class="resource-card-desc">Full-length Git and GitHub courses covering everything from first commit to advanced rebasing, plus dedicated open source contribution walkthroughs for beginners.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@freecodecamp" target="_blank">@freecodecamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 The Coding Train</div>
+                        <div class="resource-card-desc">Approachable, friendly explanations of Git fundamentals and a dedicated series specifically on making your first open source contribution.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@TheCodingTrain" target="_blank">@TheCodingTrain</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Fireship</div>
+                        <div class="resource-card-desc">Fast, dense explainers on Git internals, GitHub features, and workflow tricks — perfect for quickly filling specific knowledge gaps.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@Fireship" target="_blank">@Fireship</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 GitHub (Official Channel)</div>
+                        <div class="resource-card-desc">Straight from the source — feature walkthroughs, GitHub Actions, GitHub CLI, and official guidance on maintaining and contributing to projects.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@GitHub" target="_blank">@GitHub</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Tech With Tim</div>
+                        <div class="resource-card-desc">Clear, practical Git tutorials and a specific "how to contribute to open source as a beginner" series that mirrors this guide's workflow.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@TechWithTim" target="_blank">@TechWithTim</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Codevolution</div>
+                        <div class="resource-card-desc">In-depth Git and GitHub playlists covering branching strategies, rebasing, and collaborative workflows used in real engineering teams.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@Codevolution" target="_blank">@Codevolution</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag red">Community — Find contribution buddies</span>
+                    <span class="tag">DSA Yatra — Daily practice</span>
+                    <span class="tag">Prep Yatra — Interview tracker</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Your First Commit Is One Weekend Away 🌱</div>
+                    <div class="cta-sub">Every maintainer you'll ever look up to started with a typo fix in someone else's README.<br>Pick one issue, open one PR, and start today.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

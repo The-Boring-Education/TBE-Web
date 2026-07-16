@@ -787,22 +787,25 @@
         }
 
         /* ── MOBILE ── */
-        @media (max-width: 600px) {
-            body {
+        @media (max-width: 900px) {
+
+            /* ── WRAPPER ── */
+            .resource-viewer {
                 padding: 0;
+                align-items: stretch;
                 gap: 0;
-                background: #e8e5df;
             }
 
+            /* ── PRINT BAR ── */
             .print-bar {
                 width: 100%;
-                padding: 12px 16px;
+                box-sizing: border-box;
+                padding: 10px 16px;
                 margin-bottom: 0;
-                background: #e8e5df;
+                background: #1a1a1a;
                 position: sticky;
                 top: 0;
                 z-index: 100;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             }
 
             .print-btn {
@@ -810,43 +813,48 @@
                 justify-content: center;
             }
 
+            /* ── PAGES ── */
             .page {
                 width: 100%;
-                max-width: 100%;
+                box-sizing: border-box;
                 box-shadow: none;
                 border-radius: 0;
                 overflow: visible;
+                margin: 0;
             }
 
-            .page+.page {
-                margin-top: 8px;
+            .page + .page {
+                margin-top: 4px;
             }
 
+            /* ── COVER ── */
             .cover {
                 height: auto;
             }
 
             .cover-header {
-                padding: 20px 20px 0;
+                padding: 20px 16px 0;
             }
 
             .cover-hero {
-                padding: 28px 20px 28px;
+                padding: 24px 16px 24px;
                 justify-content: flex-start;
             }
 
             .cover-title {
-                font-size: 36px;
+                font-size: 38px;
             }
 
             .cover-subtitle {
                 font-size: 13px;
                 max-width: 100%;
+                margin-bottom: 24px;
             }
 
             .cover-quote-block {
-                padding: 20px;
+                padding: 20px 18px;
                 max-width: 100%;
+                margin-bottom: 28px;
             }
 
             .cover-quote-text {
@@ -854,7 +862,7 @@
             }
 
             .cover-stats {
-                gap: 16px;
+                gap: 14px;
                 flex-wrap: wrap;
             }
 
@@ -862,38 +870,69 @@
                 font-size: 24px;
             }
 
-            .cover-footer {
-                padding: 14px 20px;
-                flex-wrap: wrap;
+            .stat-label {
+                font-size: 10px;
             }
 
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            /* ── INNER PAGES ── */
             .inner-page {
                 height: auto;
             }
 
             .page-header {
-                padding: 14px 20px 12px;
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
             }
 
             .page-body {
-                padding: 20px 20px;
+                padding: 16px 16px;
+                overflow: visible;
             }
 
             .page-footer {
-                padding: 12px 20px;
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
             }
 
+            /* ── SECTION ── */
             .section-title {
                 font-size: 20px;
+                margin-bottom: 14px;
             }
 
+            /* ── STEPS ── */
             .step-content {
-                padding: 2px 0 16px 12px;
+                padding: 2px 0 14px 10px;
             }
 
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            /* ── GRIDS → single col ── */
             .skills-row {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 14px;
             }
 
             .resource-grid {
@@ -904,28 +943,47 @@
                 grid-template-columns: 1fr;
             }
 
+            /* ── TABLE ── */
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            /* ── CTA ── */
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            /* ── SOCIALS ── */
             .socials-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
             }
 
             .social-card {
-                padding: 10px 8px;
+                padding: 10px 6px;
             }
 
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            /* ── HIDE PAGE NUMBERS ── */
             .page-num {
                 display: none;
             }
 
-            .cover-decoration {
-                width: 140px;
-                height: 140px;
-                right: -30px;
-                top: 20px;
-                transform: none;
+            /* ── TIP BLOCK ── */
+            .tip-block {
+                padding: 10px 12px;
             }
 
-            .stack-table {
+            .tip-text {
                 font-size: 11px;
             }
         }
