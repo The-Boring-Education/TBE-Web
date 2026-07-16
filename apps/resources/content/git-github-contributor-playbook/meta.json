@@ -1,0 +1,18 @@
+{
+  "title": "Git & GitHub Contributor's Playbook",
+  "description": "Every Git command you'll actually use, explained — then the complete path to finding a project, understanding a codebase, and getting your first pull request merged into a real open source repo.",
+  "keywords": [
+    "git",
+    "github",
+    "open source",
+    "git commands",
+    "git cheatsheet",
+    "pull request",
+    "git rebase",
+    "git merge",
+    "version control",
+    "contributor playbook"
+  ],
+  "tags": ["git", "github", "open-source"],
+  "ogImage": "https://theboringeducation.com/images/git-github-contributor-playbook-og.png"
+}

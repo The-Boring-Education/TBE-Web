@@ -189,6 +189,41 @@
     "tags": ["roadmap", "genai"]
   },
   {
+    "slug": "git-github-contributor-playbook",
+    "title": "Git & GitHub Contributor's Playbook",
+    "description": "Every Git command you'll actually use, explained — then the complete path to finding a project, understanding a codebase, and getting your first pull request merged into a real open source repo.",
+    "keywords": [
+      "git",
+      "github",
+      "open source",
+      "git commands",
+      "git cheatsheet",
+      "pull request",
+      "git rebase",
+      "git merge",
+      "version control",
+      "contributor playbook"
+    ],
+    "tags": ["git", "github", "open-source"]
+  },
+  {
+    "slug": "hr-interview-questions",
+    "title": "30 HR Interview Questions You'll Actually Be Asked",
+    "description": "Not generic theory — the exact questions HR and hiring managers ask in real interviews, why they're asking it, and the framework top candidates use to answer without sounding rehearsed.",
+    "keywords": [
+      "hr interview questions",
+      "behavioral interview questions",
+      "star framework",
+      "job interview prep",
+      "recruitment questions",
+      "career advice",
+      "interview strategies",
+      "mock interview",
+      "hiring manager questions"
+    ],
+    "tags": ["interview", "career", "behavioral"]
+  },
+  {
     "slug": "javascript-interview-questions",
     "title": "41 JavaScript Interview Questions",
     "description": "A curated set of 41 essential JavaScript interview questions covering core concepts, closures, async/await, event loop, prototypes, DOM manipulation, and performance optimization.",

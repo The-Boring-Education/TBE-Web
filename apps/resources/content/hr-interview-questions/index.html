@@ -1,0 +1,2093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 HR Interview Questions You'll Actually Be Asked – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 60px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP / QUESTION STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 10px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1px 0 14px 18px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .step-desc strong {
+            color: var(--dark);
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── SAMPLE-ANSWER CHIPS (reused yt-link style) ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        .yt-link.plain::before {
+            content: '✔';
+            font-size: 8px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS TABLE (repurposed) ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .resource-viewer {
+                padding: 0;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .print-bar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px 16px;
+                margin-bottom: 0;
+                background: #1a1a1a;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+                margin: 0;
+            }
+
+            .page + .page {
+                margin-top: 4px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 16px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 16px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 36px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .cover-quote-block {
+                padding: 20px 18px;
+                max-width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+            }
+
+            .page-body {
+                padding: 16px 16px;
+                overflow: visible;
+            }
+
+            .page-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 14px;
+            }
+
+            .step-content {
+                padding: 1px 0 12px 10px;
+            }
+
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .tip-block {
+                padding: 10px 12px;
+            }
+
+            .tip-text {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                min-height: 297mm;
+            }
+
+            .inner-page {
+                min-height: 297mm;
+            }
+
+            /* never split a card/question/table row across a page boundary */
+            .step,
+            .resource-card,
+            .tip-block,
+            .cta-block,
+            .social-card,
+            .stack-table tr,
+            .check-item,
+            .cover-quote-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">The questions that decide the offer</div>
+
+                <h1 class="cover-title">
+                    30 HR<br>Interview<span> Questions</span><br>You'll Actually Face
+                </h1>
+
+                <p class="cover-subtitle">
+                    Not generic theory — the exact questions HR and hiring managers ask in real interviews, why they're asking it, and the framework top candidates use to answer without sounding rehearsed.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "HR interviews aren't a formality — they're a filter. Recruiters aren't testing what you know, they're testing how you think under pressure, whether you're self-aware, and whether you'll survive month three on the job."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">30</div>
+                        <div class="stat-label">Real questions covered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Question categories</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">1</div>
+                        <div class="stat-label">Framework — STAR</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">83%</div>
+                        <div class="stat-label">Of rejections trace to HR round</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — OPENING QUESTIONS (Q1–5) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Category 01 · Opening & Self-Positioning</div>
+                <h2 class="section-title">The First 5 Minutes Decide the Tone of Everything After</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q1 · The icebreaker that isn't</div>
+                            <div class="step-heading">"Tell me about yourself."</div>
+                            <div class="step-desc">This isn't small talk — it's the frame the recruiter uses to judge everything else you say. Use the <strong>Present → Past → Future</strong> structure: what you do now (1–2 lines), the relevant experience that got you here (2–3 lines), and why this specific role is the logical next step (1–2 lines). Keep it under 90 seconds. Never repeat your resume line by line — that signals you didn't prepare a narrative, just memorized a document.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Always asked first</span>
+                                <span class="tag">Sets the tone</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Structure: Present → Past → Future</a>
+                                <a class="yt-link plain">Keep it under 90 seconds</a>
+                                <a class="yt-link plain">Never just read your resume</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q2 · The confidence check</div>
+                            <div class="step-heading">"Why should we hire you?"</div>
+                            <div class="step-desc">HR is checking if you can connect your skills to their specific problem — not just list achievements. Name 2–3 concrete strengths that map directly to the job description, then back each with a one-line proof point (a result, a number, a project). Close by naming what makes you different from a typical candidate for this role — the "unfair advantage" only you bring.</div>
+                            <div class="step-tags">
+                                <span class="tag red">High-stakes</span>
+                                <span class="tag">Map skills to JD</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">2–3 strengths, each with proof</a>
+                                <a class="yt-link plain">Tie every point to the JD</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q3 · The trap question</div>
+                            <div class="step-heading">"What are your greatest strengths?"</div>
+                            <div class="step-desc">Generic answers ("I'm a hard worker," "I'm a team player") are instantly forgettable. Pick a strength that's actually relevant to the role, and prove it with a specific, brief story — not an adjective. One strong, well-evidenced strength beats three vague ones. If possible, tie it to a strength the job posting explicitly asked for.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Avoid clichés</span>
+                                <span class="tag">Show, don't tell</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">One strength + one story</a>
+                                <a class="yt-link plain">Match it to the job posting</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q4 · The self-awareness test</div>
+                            <div class="step-heading">"What's your biggest weakness?"</div>
+                            <div class="step-desc">The worst answer is a fake weakness disguised as a strength ("I work too hard"). Recruiters have heard it a thousand times and it reads as evasive. Name a <strong>real, minor</strong> weakness that isn't core to the job, then explain the concrete step you're taking to improve it — a course, a habit, a system you built. This shows self-awareness and growth mindset, which is what's actually being tested.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Self-awareness signal</span>
+                                <span class="tag">Never fake it</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Real weakness, not core to role</a>
+                                <a class="yt-link plain">Show the fix in progress</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q5 · The homework check</div>
+                            <div class="step-heading">"Why do you want to work here?"</div>
+                            <div class="step-desc">This question filters out candidates who are mass-applying versus candidates who did their research. Reference something specific — a product, a recent announcement, the company's mission, or their engineering culture — and connect it to your own goals. Never answer with generic reasons like "growth opportunities" or "good work culture" without specifics; it signals you'd say the same thing in any interview.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Filters mass applicants</span>
+                                <span class="tag">Research required</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Reference something specific</a>
+                                <a class="yt-link plain">Connect it to your own goals</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-text"><strong>Prepare your opening 5 answers word-for-word — literally everything else, only in bullet form.</strong> These five questions open almost every HR round, in some order. Nail these and you set a calm, confident tone that carries through the rest of the interview. Wing these and recruiters spend the rest of the call recalibrating their first impression instead of listening to you.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — CAREER TRAJECTORY (Q6–10) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Category 02 · Career Trajectory & Motivation</div>
+                <h2 class="section-title">Questions That Test Whether You're a Flight Risk</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q6 · The retention check</div>
+                            <div class="step-heading">"Where do you see yourself in 5 years?"</div>
+                            <div class="step-desc">Recruiters are checking if your goals are realistic and whether they align with the growth path this role actually offers — not testing your ambition in the abstract. Describe a progression that's plausible from this seat (more scope, more ownership, deeper expertise) rather than a fantasy job title. Avoid naming a completely unrelated goal (e.g. "start my own company") unless you can tie it back to why this role still makes sense now.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Retention signal</span>
+                                <span class="tag">Keep it plausible</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Growth path from this exact role</a>
+                                <a class="yt-link plain">Avoid unrelated dream jobs</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q7 · The red-flag detector</div>
+                            <div class="step-heading">"Why are you leaving your current job?"</div>
+                            <div class="step-desc">Never badmouth a former employer or manager, even if the situation was genuinely bad — it reads as a risk that you'll do the same about them later. Frame the answer around what you're moving <strong>toward</strong> (growth, scope, a specific kind of work) rather than what you're running <strong>from</strong>. If the real reason is compensation, layoffs, or a toxic environment, it's fine to be honest, but keep it brief, factual, and free of blame.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Never blame</span>
+                                <span class="tag">Move toward, not away</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Frame around what's next, not the past</a>
+                                <a class="yt-link plain">Facts only if it was negative</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q8 · The uncomfortable one</div>
+                            <div class="step-heading">"There's a gap in your resume — what happened?"</div>
+                            <div class="step-desc">Gaps are common and rarely disqualifying on their own — what matters is whether you address it directly and confidently instead of getting defensive. State the reason briefly and factually (upskilling, caregiving, health, layoffs, a job search that took longer than expected), then pivot to what you did with the time or what you learned. Don't over-apologize or spend more than 2–3 sentences on it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Be brief, be direct</span>
+                                <span class="tag">Pivot forward fast</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">State it plainly, no over-explaining</a>
+                                <a class="yt-link plain">Pivot to what you did with the time</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q9 · The negotiation opener</div>
+                            <div class="step-heading">"What are your salary expectations?"</div>
+                            <div class="step-desc">Research the market range for the role, location, and your experience level before the interview using sites like Glassdoor, Levels.fyi, or LinkedIn Salary. Give a <strong>range</strong>, not a single number, anchored slightly above your target so there's room to negotiate down. If pressed for a hard number early, it's fair to ask what the budgeted range for the role is first — this isn't rude, it's standard practice.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Research first</span>
+                                <span class="tag">Give a range, not one number</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Anchor slightly above target</a>
+                                <a class="yt-link plain">It's fine to ask their budget first</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q10 · The logistics check</div>
+                            <div class="step-heading">"What's your notice period, and when can you join?"</div>
+                            <div class="step-desc">This is often used to sequence multiple candidates in a hiring pipeline, so be accurate rather than optimistic — overpromising an early start date and then missing it damages trust before you've even started. State your actual contractual notice period, and mention clearly if there's any flexibility to negotiate a buyout or early release with your current employer.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Be accurate</span>
+                                <span class="tag">Don't overpromise</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">State your real contractual notice</a>
+                                <a class="yt-link plain">Mention buyout flexibility if any</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">💰</div>
+                    <div class="tip-text"><strong>Never be the first to name a number you haven't researched.</strong> Walking in without a market-rate range is the single most common salary-negotiation mistake. Five minutes on Glassdoor or Levels.fyi before the call puts you in a completely different negotiating position.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Salary Conversation — What to Say at Each Stage</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>What They're Really Asking</th>
+                                <th>Best Response Approach</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Screening call</td>
+                                <td>Are we in the same ballpark at all?</td>
+                                <td>Give a wide, researched range — don't over-commit yet</td>
+                            </tr>
+                            <tr>
+                                <td>Mid-process</td>
+                                <td>Should we keep investing interview time in you?</td>
+                                <td>Narrow the range slightly, note it's negotiable</td>
+                            </tr>
+                            <tr>
+                                <td>Offer stage</td>
+                                <td>Will you accept, and at what number?</td>
+                                <td>Anchor on total comp, not just base — negotiate once</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — BEHAVIORAL: CHALLENGES (Q11–15) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Category 03 · Behavioral — Conflict, Failure & Pressure</div>
+                <h2 class="section-title">Where the STAR Framework Becomes Non-Negotiable</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q11 · The interpersonal test</div>
+                            <div class="step-heading">"Tell me about a conflict you had with a coworker."</div>
+                            <div class="step-desc">HR wants proof you can disagree with someone professionally without it becoming personal or damaging the working relationship. Pick a real, moderate conflict — not a dramatic blow-up — and use STAR: the <strong>Situation</strong>, the specific disagreement (<strong>Task</strong>), the concrete steps you took to resolve it (<strong>Action</strong>), and the outcome, including what improved afterward (<strong>Result</strong>). End on collaboration, not "winning" the argument.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Use STAR</span>
+                                <span class="tag">End on collaboration</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pick a real, moderate example</a>
+                                <a class="yt-link plain">Never badmouth the coworker</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">12</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q12 · The honesty test</div>
+                            <div class="step-heading">"Describe a time you failed."</div>
+                            <div class="step-desc">Refusing to name a real failure ("I can't think of one") is a bigger red flag than the failure itself — it suggests low self-awareness or dishonesty. Choose a genuine failure with real stakes, own your part in it clearly without over-blaming external factors, and spend the most time on what you changed afterward. The lesson learned matters more than the mistake itself.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Own it fully</span>
+                                <span class="tag">Emphasize the lesson</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Real stakes, real ownership</a>
+                                <a class="yt-link plain">Most time on what changed after</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">13</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q13 · The resilience test</div>
+                            <div class="step-heading">"How do you handle stress or pressure?"</div>
+                            <div class="step-desc">Don't claim you "never" get stressed — it's unbelievable and undermines trust. Instead, describe your actual system: how you prioritize under a deadline, how you communicate early when something's at risk, and one concrete example where pressure led to a good outcome rather than a breakdown. Specific systems (a prioritization method, a habit of flagging blockers early) land far better than vague reassurances.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Show your system</span>
+                                <span class="tag">One concrete example</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Name your actual coping system</a>
+                                <a class="yt-link plain">Never claim to be unaffected</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">14</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q14 · The maturity test</div>
+                            <div class="step-heading">"How do you handle criticism?"</div>
+                            <div class="step-desc">This checks whether you're coachable — one of the highest predictors of on-the-job success that HR actually screens for. Give a specific example of feedback you received, how you responded in the moment (without defensiveness), and what you changed as a result. If you can show that the feedback led to a measurable improvement, even better.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Coachability signal</span>
+                                <span class="tag">Show the follow-through</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Specific feedback + your response</a>
+                                <a class="yt-link plain">Show what actually changed</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">15</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q15 · The manager-relationship test</div>
+                            <div class="step-heading">"Tell me about a time you disagreed with your manager."</div>
+                            <div class="step-desc">HR is checking whether you can push back respectfully and whether you know when to voice concerns versus when to align and execute. Describe how you raised the disagreement privately and professionally, backed it with reasoning or data, and — regardless of the outcome — respected the final call once it was made. Avoid any example where you went over someone's head or ignored a decision.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Respectful pushback</span>
+                                <span class="tag">Respect the final call</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Raise it privately, back it with data</a>
+                                <a class="yt-link plain">Show you respected the decision</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">⭐</div>
+                    <div class="tip-text"><strong>Every behavioral question above needs a STAR-shaped answer — memorize the shape, not the script.</strong> <strong>S</strong>ituation (context in 1–2 sentences), <strong>T</strong>ask (what you specifically needed to do), <strong>A</strong>ction (the concrete steps you took), <strong>R</strong>esult (the outcome, ideally with a number or a clear before/after). Prepare 4–5 flexible stories from your real experience that can each stretch to answer several different behavioral questions.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — BEHAVIORAL: TEAMWORK & INITIATIVE (Q16–20) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Category 04 · Teamwork, Ownership & Initiative</div>
+                <h2 class="section-title">Proving You're Someone People Want on Their Team</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">16</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q16 · The organization test</div>
+                            <div class="step-heading">"How do you prioritize your work when you have multiple deadlines?"</div>
+                            <div class="step-desc">Name an actual method — urgency vs. impact, a simple priority matrix, or a habit of confirming priorities with your manager when things conflict — rather than a vague "I just manage it." Give one real example where competing deadlines forced a trade-off, and explain how you communicated that trade-off to stakeholders instead of silently letting something slip.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Name a real method</span>
+                                <span class="tag">Show the trade-off example</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Urgency vs. impact framework</a>
+                                <a class="yt-link plain">Communicate trade-offs early</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">17</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q17 · The team-fit test</div>
+                            <div class="step-heading">"Tell me about a time you worked effectively in a team."</div>
+                            <div class="step-desc">Pick an example where your specific contribution is clear — not one where you take credit for the whole team's success. Describe your defined role, one moment of friction or challenge the team faced, and how the group's collective effort (including your part) led to the result. Interviewers are listening for how you talk about others' contributions, not just your own.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Clear individual contribution</span>
+                                <span class="tag">Credit the team too</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Define your specific role clearly</a>
+                                <a class="yt-link plain">Give credit where it's due</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">18</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q18 · The extra-mile test</div>
+                            <div class="step-heading">"Tell me about a time you went above and beyond."</div>
+                            <div class="step-desc">This checks for initiative beyond the minimum job description. Choose an example where you noticed a gap or opportunity nobody assigned to you, took ownership of it voluntarily, and it produced a measurable benefit — time saved, a process improved, a risk avoided. Avoid examples that are really just "I worked extra hours," which reads as poor time management rather than initiative.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Initiative, not just hours</span>
+                                <span class="tag">Show measurable benefit</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Unassigned gap you noticed</a>
+                                <a class="yt-link plain">Measurable benefit, not just effort</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">19</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q19 · The customer-facing test</div>
+                            <div class="step-heading">"How would you handle a difficult client or customer?"</div>
+                            <div class="step-desc">This tests emotional regulation and problem-solving under someone else's frustration. Describe staying calm, actively listening to understand the real underlying concern (not just the surface complaint), and working toward a concrete resolution — escalating appropriately when it's genuinely outside your authority to fix. If you have a real example, use it; if not, walk through the approach clearly.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Stay calm, listen first</span>
+                                <span class="tag">Know when to escalate</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Find the real underlying concern</a>
+                                <a class="yt-link plain">Escalate when appropriate</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">20</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q20 · The third-party validation</div>
+                            <div class="step-heading">"How would your previous manager describe you?"</div>
+                            <div class="step-desc">Answer as if the recruiter might actually call that manager — because sometimes they will. Choose 2–3 traits you're confident your manager would genuinely say, ideally traits you can also back with a quick example. Avoid an answer that's suspiciously flattering across the board; a believable answer often includes one honest growth area alongside the strengths.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Must be believable</span>
+                                <span class="tag">Back it with an example</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Answer as if they'll actually call</a>
+                                <a class="yt-link plain">Include one honest growth note</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🤝</div>
+                    <div class="tip-text"><strong>Every teamwork story should answer one unspoken question: "would I want to sit next to this person for 8 hours a day?"</strong> Technical skill gets you the interview; how you talk about other people — coworkers, managers, clients — is what actually gets you the offer in the HR round.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — SITUATIONAL & CULTURE FIT (Q21–25) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Category 05 · Situational & Culture Fit</div>
+                <h2 class="section-title">Where "Right Answer" Matters Less Than Reasoning</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">21</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q21 · The ambition check</div>
+                            <div class="step-heading">"What are your career goals?"</div>
+                            <div class="step-desc">Keep goals specific enough to be credible but flexible enough to fit multiple paths within the company. Name the type of skills or scope you want to grow into over the next 2–3 years, and explicitly connect that growth to what this role and this company can realistically offer. Vague answers ("I just want to grow") read as a lack of direction.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Specific but flexible</span>
+                                <span class="tag">Tie to this company</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">2–3 year horizon, not vague</a>
+                                <a class="yt-link plain">Connect to what this role offers</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">22</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q22 · The culture-fit probe</div>
+                            <div class="step-heading">"What do you do outside of work?"</div>
+                            <div class="step-desc">This isn't idle curiosity — teams that work well together often share compatible values around balance, curiosity, or how people recharge. Answer honestly rather than performing an image of the "ideal candidate." A genuine hobby, even an unusual one, is more memorable and more trustworthy than a rehearsed answer about "always learning and self-improving."</div>
+                            <div class="step-tags">
+                                <span class="tag red">Be genuinely yourself</span>
+                                <span class="tag">Not a performance</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Real answer beats "ideal candidate"</a>
+                                <a class="yt-link plain">Memorable is better than generic</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">23</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q23 · The environment fit</div>
+                            <div class="step-heading">"What's your ideal work environment?"</div>
+                            <div class="step-desc">Research the company's actual working style beforehand — remote, hybrid, fast-paced startup, structured enterprise — and be honest about what genuinely helps you do your best work, rather than just echoing back what you think they want to hear. A mismatch discovered here saves both sides from a bad fit three months into the job.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Research their actual style</span>
+                                <span class="tag">Be honest, not agreeable</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Know their real working style first</a>
+                                <a class="yt-link plain">Honesty prevents a bad-fit hire</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">24</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q24 · The reverse-weakness question</div>
+                            <div class="step-heading">"Why shouldn't we hire you?" / "What might concern you about this role?"</div>
+                            <div class="step-desc">This unusual phrasing tests whether you can be candid without talking yourself out of the job. Name one honest, real gap between your current experience and the role (a tool you haven't used yet, a domain you're newer to), then immediately follow with how quickly you typically close that kind of gap, backed by a past example of ramping up on something new.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Tests candor</span>
+                                <span class="tag">Pair gap with ramp-up proof</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">One honest, real gap</a>
+                                <a class="yt-link plain">Proof you close gaps quickly</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">25</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q25 · The company-knowledge check</div>
+                            <div class="step-heading">"What do you know about our company?"</div>
+                            <div class="step-desc">Go beyond the homepage — know the product, recent news, and ideally something about the team or role you're interviewing for. Mention one thing that specifically drew you in, not a generic compliment. This is one of the easiest questions to prepare for perfectly and one of the most common reasons candidates lose points for seeming unprepared.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Easiest to prepare</span>
+                                <span class="tag">Go beyond the homepage</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Know recent news, not just the site</a>
+                                <a class="yt-link plain">Name one specific draw, not a compliment</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Common Answer Mistakes to Avoid</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 The rehearsed-monologue trap</div>
+                        <div class="resource-card-desc">Answers that sound word-perfect and robotic read as inauthentic. Know your stories' structure, not a memorized script — natural pauses and small imperfections build more trust than polish.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Badmouthing anyone</div>
+                        <div class="resource-card-desc">Negative comments about a past manager, team, or company — even if deserved — signal a future risk to the interviewer, not empathy for your situation.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Vague, adjective-only answers</div>
+                        <div class="resource-card-desc">"I'm hardworking," "I'm a good communicator" without a specific story attached are instantly forgettable and indistinguishable from every other candidate.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 No questions at the end</div>
+                        <div class="resource-card-desc">Having zero questions for the interviewer reads as low genuine interest. Always have 2–3 thoughtful questions prepared about the team, role, or company direction.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — FINAL STRETCH (Q26–30) + STAR + ROUTINE ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Category 06 · Closing Questions & Final Impressions</div>
+                <h2 class="section-title">How the Interview Ends Is How It's Remembered</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">26</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q26 · The judgment test</div>
+                            <div class="step-heading">"Tell me about a mistake you made and how you fixed it."</div>
+                            <div class="step-desc">Different from the "failure" question — this one is specifically about damage control. Pick a mistake where the recovery process is the interesting part: how quickly you noticed it, how you communicated it to stakeholders, and the concrete fix. Owning the mistake plainly, without excessive self-criticism or blame-shifting, signals maturity.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Focus on the recovery</span>
+                                <span class="tag">Own it plainly</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Fast detection + clear communication</a>
+                                <a class="yt-link plain">No excessive self-criticism</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">27</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q27 · The leadership signal</div>
+                            <div class="step-heading">"Tell me about a time you showed leadership — even without a formal title."</div>
+                            <div class="step-desc">Leadership doesn't require a management title. Describe a moment you influenced a decision, coordinated others, or drove a project forward without being formally in charge. Interviewers are looking for evidence of initiative, communication, and the ability to get people aligned — regardless of your position on paper.</div>
+                            <div class="step-tags">
+                                <span class="tag red">No title required</span>
+                                <span class="tag">Show real influence</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Informal leadership counts fully</a>
+                                <a class="yt-link plain">Show how you aligned others</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">28</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q28 · The motivation probe</div>
+                            <div class="step-heading">"What motivates you?"</div>
+                            <div class="step-desc">Recruiters use this to predict what will make you stay engaged long-term. Be specific and honest — ownership of outcomes, solving hard problems, working with a strong team, learning new domains — rather than defaulting to "money" or generic phrases. Where possible, tie your motivator to something this specific role genuinely offers.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Predicts engagement</span>
+                                <span class="tag">Be specific and honest</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Specific motivator, not "money"</a>
+                                <a class="yt-link plain">Tie it to what this role offers</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">29</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q29 · The engagement test</div>
+                            <div class="step-heading">"Do you have any questions for us?"</div>
+                            <div class="step-desc">Always say yes — this is almost never optional in practice. Ask questions that show genuine strategic interest: what success looks like in the first 90 days, what the biggest challenge facing the team is right now, or how the team's priorities have shifted recently. Avoid questions you could've answered yourself with a quick search, and save compensation/logistics questions for later stages if not already covered.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Always ask something</span>
+                                <span class="tag">Ask strategic, not searchable</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">"What does success look like at 90 days?"</a>
+                                <a class="yt-link plain">"What's the team's biggest challenge now?"</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">30</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Q30 · The tie-breaker</div>
+                            <div class="step-heading">"Is there anything else you'd like us to know about you?"</div>
+                            <div class="step-desc">This is your last chance to close a gap or reinforce your strongest point — don't waste it with "no, I think we covered everything." If there's a strength the conversation didn't touch on, or a piece of context that clarifies something earlier in the interview, this is where it belongs. Close with genuine enthusiasm for the role, stated plainly rather than performed.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Your last chance</span>
+                                <span class="tag">Close with genuine enthusiasm</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Fill a gap the interview missed</a>
+                                <a class="yt-link plain">End on real enthusiasm, not a script</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">The Framework Behind Every Behavioral Answer</div>
+                <div style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:10px; letter-spacing:-0.01em;">
+                    STAR — Memorize the Shape, Not a Script</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Situation + Task</div>
+                        <div class="skill-item">Set context in 1–2 sentences</div>
+                        <div class="skill-item">Name what you specifically owned</div>
+                        <div class="skill-item">Keep it brief — this isn't the point</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Action</div>
+                        <div class="skill-item">The concrete steps you took</div>
+                        <div class="skill-item">Use "I," not just "we"</div>
+                        <div class="skill-item">This is where most of the time goes</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Result</div>
+                        <div class="skill-item">The outcome, ideally with a number</div>
+                        <div class="skill-item">What you learned or changed after</div>
+                        <div class="skill-item">Close in under 2 minutes total</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Daily Prep Routine</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">7 Days Before the Interview
+                </div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Write out 4–5 STAR stories from real experience that can flex across multiple behavioral questions
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Research the company: product, recent news, culture, and the specific team you're interviewing with
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Research market salary range for the role, level, and location before any compensation talk
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Prepare 2–3 strategic questions to ask the interviewer at the end
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Do one mock run out loud — for your opening pitch and your weakest-feeling question
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">30 HR Interview Questions · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free YouTube Channels for HR & Behavioral Interview Prep</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Self Made Millennial</div>
+                        <div class="resource-card-desc">Former recruiter breaking down exactly what interviewers listen for on common HR questions, with word-for-word sample answer structures. Excellent starting point for beginners.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@selfmademillennial" target="_blank">@selfmademillennial</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Linda Raynier</div>
+                        <div class="resource-card-desc">Career coach focused on how to position yourself confidently in interviews, negotiate salary, and answer tricky behavioral questions without sounding scripted.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@lindaraynier" target="_blank">@lindaraynier</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 CareerVidz</div>
+                        <div class="resource-card-desc">One of the largest interview-prep channels, covering top questions across industries with detailed sample answer breakdowns and mock interview walkthroughs.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@CareerVidz" target="_blank">@CareerVidz</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Don Georgevich (Job Interview Tools)</div>
+                        <div class="resource-card-desc">Deep dives into behavioral interview structure, STAR method execution, and how to handle stress questions and salary negotiation with real recorded examples.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@jobinterviewtools" target="_blank">@jobinterviewtools</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Jeff Su</div>
+                        <div class="resource-card-desc">Practical, no-fluff frameworks for interviews, resumes, and workplace communication — clear structures you can apply the same day you watch.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@JeffSu" target="_blank">@JeffSu</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Big Interview</div>
+                        <div class="resource-card-desc">Structured behavioral and HR interview coaching built by former recruiters, covering answer frameworks for the full range of standard corporate interview questions.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@biginterview" target="_blank">@biginterview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag red">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag red">Interview Prep — Question banks</span>
+                    <span class="tag">DSA Yatra — Daily practice</span>
+                    <span class="tag">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">Community — Peer mock interviews</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Walk In Prepared, Not Just Confident 🎯</div>
+                    <div class="cta-sub">Confidence without preparation is just noise. Every question in this guide has come up in a real HR round — know your answers before you need them.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
