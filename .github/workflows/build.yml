@@ -149,21 +149,31 @@ jobs:
           echo "## 🏗️ Build Check Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.build-packages.result }}" == "success" ] && [ "${{ needs.build-apps.result }}" == "success" ]; then
-            echo "### ✅ All Builds Passed!" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ Shared packages built successfully" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ All applications built successfully" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "🎉 Build completed successfully! Ready for merge." >> $GITHUB_STEP_SUMMARY
+          pkg="${{ needs.build-packages.result }}"
+          apps="${{ needs.build-apps.result }}"
+
+          pkg_ok=$([ "$pkg" == "success" ] || [ "$pkg" == "skipped" ] && echo true || echo false)
+          apps_ok=$([ "$apps" == "success" ] || [ "$apps" == "skipped" ] && echo true || echo false)
+
+          if [ "$pkg_ok" == "true" ] && [ "$apps_ok" == "true" ]; then
+            if [ "$pkg" == "skipped" ] && [ "$apps" == "skipped" ]; then
+              echo "### ⏭️ Builds Skipped (Draft PR)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ✅ All Builds Passed!" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ Shared packages built successfully" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ All applications built successfully" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "🎉 Build completed successfully! Ready for merge." >> $GITHUB_STEP_SUMMARY
+            fi
             exit 0
           else
             echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "${{ needs.build-packages.result }}" != "success" ]; then
+            if [ "$pkg" == "failure" ]; then
               echo "- ❌ Shared packages build failed" >> $GITHUB_STEP_SUMMARY
             fi
-            if [ "${{ needs.build-apps.result }}" != "success" ]; then
+            if [ "$apps" == "failure" ]; then
               echo "- ❌ One or more application builds failed" >> $GITHUB_STEP_SUMMARY
             fi
             echo "" >> $GITHUB_STEP_SUMMARY
