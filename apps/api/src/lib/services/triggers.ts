@@ -17,6 +17,7 @@ import {
   courseEnrollmentTemplate,
   interviewPrepEnrollmentTemplate,
   projectEnrollmentTemplate,
+  reactivationEmailTemplate,
   welcomeEmailTemplate,
 } from "./templates";
 
@@ -134,6 +135,14 @@ class EmailTriggerService {
           }! 🏆`,
         );
 
+      case "REACTIVATION":
+        return this.sendEmailWithTemplate(
+          trigger,
+          data,
+          reactivationEmailTemplate,
+          data.metadata?.subject || "Welcome back to your learning journey! 🚀",
+        );
+
       default:
         return {
           success: false,
@@ -235,6 +244,18 @@ class EmailTriggerService {
             courseName: additionalData.courseName,
             completionDate: additionalData.completionDate,
             certificateUrl: additionalData.certificateUrl,
+          };
+          break;
+
+        case "REACTIVATION":
+          emailData = {
+            ...baseData,
+            solvedCount: additionalData?.solvedCount || 0,
+            currentStreak: additionalData?.currentStreak || 0,
+            redirectUrl: additionalData?.redirectUrl || "",
+            redirectText: additionalData?.redirectText || "",
+            cohort: additionalData?.cohort || "1D",
+            app: additionalData?.app,
           };
           break;
 

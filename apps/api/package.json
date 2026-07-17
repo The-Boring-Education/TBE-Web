@@ -15,6 +15,7 @@
     "deploy": "./deploy.sh",
     "seed:study-guide": "tsx src/scripts/seed-study-guide.ts",
     "backfill": "tsx scripts/backfill-content-ids.ts",
+    "backfill:last-active": "tsx scripts/backfill-last-active.ts",
     "migrate": "tsx scripts/migrate-content.ts",
     "seed:subscription-plans": "tsx scripts/seed-subscription-plans.ts",
     "seed:subscription-plans:dev": "tsx scripts/seed-subscription-plans.ts --env development",

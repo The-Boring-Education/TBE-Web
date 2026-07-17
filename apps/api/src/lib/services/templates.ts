@@ -14,126 +14,199 @@ const getBaseTemplate = (content: string) => `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Boring Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #0a0a0b;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: #111111;
         }
         .container {
             max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
+            margin: 32px auto;
             background-color: #ffffff;
-            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 40px rgba(0,0,0,0.4);
         }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
+        .tbe-header {
+            background: #111111;
+            padding: 24px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #FF5757;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
+        .tbe-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
             font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.02em;
         }
-        .header p {
-            margin: 10px 0 0 0;
-            font-size: 16px;
-            opacity: 0.9;
+        .tbe-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #FF5757;
+            background: #1a0a0a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #3a1010;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
         .content {
-            padding: 40px 30px;
+            padding: 36px;
         }
         .greeting {
-            font-size: 18px;
-            color: #2d3748;
-            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 8px;
         }
         .main-text {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #4a5568;
-            margin-bottom: 30px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444444;
+            margin-bottom: 24px;
+        }
+        .main-text ul, .content ul {
+            padding-left: 20px;
+            margin: 16px 0;
+        }
+        .main-text li, .content li {
+            margin-bottom: 6px;
         }
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #FF5757;
+            color: #ffffff;
             text-decoration: none;
-            padding: 15px 30px;
+            padding: 13px 32px;
             border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 20px 0;
-            transition: transform 0.2s;
-        }
-        .cta-button:hover {
-            transform: translateY(-2px);
-        }
-        .social-links {
-            margin: 30px 0;
-            text-align: center;
-        }
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .footer {
-            background-color: #f7fafc;
-            padding: 30px;
-            text-align: center;
-            color: #718096;
+            font-weight: 700;
             font-size: 14px;
+            letter-spacing: 0.02em;
+        }
+        .tbe-footer {
+            background: #f9f8f6;
+            border-top: 1px solid #e5e5e5;
+            padding: 16px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tbe-footer-copy {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #888888;
+        }
+        .tbe-footer-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #FF5757;
+            text-decoration: none;
         }
         .signature {
-            margin-top: 40px;
+            margin-top: 28px;
             padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #e5e5e5;
         }
         .signature-name {
-            font-weight: 600;
-            color: #2d3748;
+            font-weight: 700;
+            color: #111111;
+            font-size: 15px;
         }
         .signature-title {
-            color: #718096;
-            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #888888;
+            margin-top: 2px;
+        }
+        .mono-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+        .social-links {
+            margin: 0 0 16px 0;
+        }
+        .social-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #FF5757;
+            background: #fff0f0;
+            border: 1px solid #ffe0e0;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 4px 4px 0;
+        }
+
+        /* Mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .tbe-header {
+                padding: 18px 20px !important;
+            }
+            .content {
+                padding: 24px 20px !important;
+            }
+            .greeting {
+                font-size: 17px !important;
+            }
+            .main-text {
+                font-size: 14px !important;
+                line-height: 1.6 !important;
+            }
+            .cta-button {
+                display: block !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+                padding: 14px 20px !important;
+                margin-bottom: 10px !important;
+            }
+            .tbe-footer {
+                padding: 14px 20px !important;
+                text-align: center !important;
+                justify-content: center !important;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎯 The Boring Education</h1>
-            <p>Building Open Source Tech Education for Bharat 🇮🇳</p>
+        <div class="tbe-header">
+            <span class="tbe-logo">The Boring Education</span>
         </div>
         <div class="content">
             ${content}
-            
             <div class="signature">
                 <div class="signature-name">Sachin</div>
                 <div class="signature-title">Co-founder, The Boring Education</div>
             </div>
         </div>
-        
-        <div class="footer">
-            <div class="social-links">
-                <a href="https://github.com/The-Boring-Education">GitHub</a>
-                <a href="https://www.instagram.com/theboringeducation">Instagram</a>
-                <a href="https://www.youtube.com/@TheBoringEducation">YouTube</a>
-                <a href="https://prepyatra.theboringeducation.com/">Prep Yatra</a>
-            </div>
-            <p>
-                © 2025 The Boring Education. Building the future of tech education in India.<br>
-                <a href="https://www.theboringeducation.com" style="color: #667eea;">www.theboringeducation.com</a>
-            </p>
+        <div class="tbe-footer">
+            <span class="tbe-footer-copy">© 2026 The Boring Education</span>
+            <a href="https://www.theboringeducation.com" class="tbe-footer-link">theboringeducation.com</a>
         </div>
     </div>
 </body>
@@ -145,29 +218,24 @@ export const welcomeEmailTemplate = (data: EmailTriggerData): string => {
     <div class="greeting">Hey ${data.userName}! 👋</div>
     
     <div class="main-text">
-        Welcome to The Boring Education family! 🎉
+        You just unlocked free access to skills most people pay lakhs for. No cap. 🎉
         
         <br><br>
         
-        I'm Sachin, and I'm thrilled to have you join our mission of making quality tech education accessible to everyone in Bharat. 
+        I'm Sachin — welcome to a community that's actually building, not just watching tutorials on 2x speed and closing the tab.
         
-        <br><br>
-        
-        We're not just another ed-tech platform - we're a community of learners, builders, and dreamers who believe that education should be:
         <ul>
-            <li>🆓 <strong>Free</strong> - Quality education shouldn't be behind paywalls</li>
-            <li>🌟 <strong>Practical</strong> - Learn by building real projects</li>
-            <li>🇮🇳 <strong>For Bharat</strong> - Designed specifically for Indian students</li>
+            <li>🆓 <strong>Zero paywalls</strong> — ever</li>
+            <li>🛠️ <strong>Build real stuff</strong>, not just theory</li>
+            <li>🇮🇳 <strong>Made for Bharat</strong>, by people who get it</li>
         </ul>
         
-        <br>
-        
-        Ready to start your journey? Explore our courses and begin building something amazing today!
+        Your dashboard is basically begging to be opened right now.
     </div>
     
     <div style="text-align: center;">
         <a href="https://www.theboringeducation.com" class="cta-button">
-            🚀 Start Learning Now
+            🚀 Take Me In
         </a>
     </div>
   `;
@@ -182,36 +250,31 @@ export const courseEnrollmentTemplate = (
     <div class="greeting">Hey ${data.userName}! 📚</div>
     
     <div class="main-text">
-        Congratulations on enrolling in <strong>${data.courseName}</strong>! 🎉
-        
-        <br><br>
-        
-        You've just taken a huge step towards mastering new skills. I'm genuinely excited to see you on this learning journey!
-        
-        <br><br>
+        You just enrolled in <strong>${data.courseName}</strong> — and future-you is already thanking you. 🎉
         
         ${
           data.courseDescription
-            ? `<em>"${data.courseDescription}"</em><br><br>`
+            ? `<br><br><em>"${data.courseDescription}"</em>`
             : ""
         }
         
-        Here's what I recommend to make the most of this course:
+        <br><br>
+        
+        Quick reality check before you start:
         <ul>
-            <li>📅 <strong>Set a schedule</strong> - Dedicate 30-60 minutes daily</li>
-            <li>💪 <strong>Practice actively</strong> - Code along with every example</li>
-            <li>🤝 <strong>Join the community</strong> - Connect with fellow learners</li>
-            <li>🎯 <strong>Build projects</strong> - Apply what you learn immediately</li>
+            <li>⏱️ <strong>15 mins a day</strong> beats 5 hours once a month</li>
+            <li>💻 <strong>Code along</strong> — don't just watch</li>
+            <li>🎯 <strong>Build something</strong> before the streak breaks</li>
         </ul>
         
-        Remember, the best way to learn is by doing. Don't just watch - build, experiment, and break things!
+        The best time to start was yesterday. The second best time is right now.
     </div>
     
     <div style="text-align: center;">
         <a href=${
           envConfig.PLATFORM_URL + routes.user.dashboard
         } class="cta-button">
-            📖 Continue Learning
+            📖 Jump Back In
         </a>
     </div>
   `;
@@ -226,32 +289,26 @@ export const projectEnrollmentTemplate = (
     <div class="greeting">Hey ${data.userName}! 🛠️</div>
     
     <div class="main-text">
-        Awesome! You've enrolled in the <strong>${
+        You just enrolled in <strong>${
           data.projectName
-        }</strong> project! 🚀
-        
-        <br><br>
-        
-        This is where the real magic happens - you're not just learning, you're building something that matters. 
-        
-        <br><br>
+        }</strong> — this is where "I know some coding" turns into "I built this." 🚀
         
         ${
           data.projectDescription
-            ? `<em>"${data.projectDescription}"</em><br><br>`
+            ? `<br><br><em>"${data.projectDescription}"</em>`
             : ""
         }
         
-        Here's how to ace this project:
+        <br><br>
+        
+        Cheat codes for shipping this project:
         <ul>
-            <li>🎯 <strong>Start small</strong> - Break the project into tiny, manageable tasks</li>
-            <li>📝 <strong>Document everything</strong> - Your future self will thank you</li>
-            <li>🐛 <strong>Embrace bugs</strong> - They're your best teachers</li>
-            <li>🔄 <strong>Iterate fast</strong> - Build, test, improve, repeat</li>
-            <li>🌟 <strong>Share your progress</strong> - The community loves to see your journey</li>
+            <li>🎯 <strong>Small tasks</strong> beat one giant scary one</li>
+            <li>🐛 <strong>Bugs are lessons</strong>, not disasters</li>
+            <li>🔄 <strong>Ship, then improve</strong> — not the other way</li>
         </ul>
         
-        Remember, every senior developer started with their first project. You're on the right path!
+        Every dev you admire once opened a blank file too.
     </div>
     
     <div style="text-align: center;">
@@ -268,38 +325,29 @@ export const interviewPrepEnrollmentTemplate = (
   data: InterviewPrepEnrollmentEmailData,
 ): string =>
   getBaseTemplate(`
-    <div class="greeting">Hello ${data.userName}! 👋</div>
+    <div class="greeting">Hey ${data.userName}! 🎯</div>
     
     <div class="main-text">
-      <p>Welcome to your Interview Prep journey! 🎯</p>
-      
-      <p>You've successfully enrolled in <strong>${data.sheetName}</strong>.</p>
+      <p>You just enrolled in <strong>${data.sheetName}</strong> — your interviewer won't know what hit them. 😎</p>
       
       ${data.sheetDescription ? `<p>${data.sheetDescription}</p>` : ""}
       
-      <p>This comprehensive interview preparation sheet will help you:</p>
-      <ul style="margin: 20px 0; padding-left: 20px;">
-        <li>Master key concepts and algorithms</li>
-        <li>Practice with real interview questions</li>
-        <li>Build confidence for technical interviews</li>
-        <li>Track your progress systematically</li>
+      <p>This sheet is built to make you dangerous at:</p>
+      <ul>
+        <li>Core concepts, minus the fluff</li>
+        <li>Real questions asked in real interviews</li>
+        <li>Confidence that doesn't crack under pressure</li>
       </ul>
     </div>
     
     <div style="text-align: center;">
       <a href=${envConfig.PLATFORM_URL + routes.user.dashboard} class="cta-button">
-        Start Your Interview Prep 🚀
+        Start Prepping 🚀
       </a>
     </div>
     
     <div class="main-text">
-      <p><strong>Pro Tips:</strong></p>
-      <ul style="margin: 20px 0; padding-left: 20px;">
-        <li>Set aside dedicated time daily for practice</li>
-        <li>Focus on understanding concepts, not just memorizing</li>
-        <li>Practice coding problems regularly</li>
-        <li>Review and revise completed topics</li>
-      </ul>
+      <p><strong>One rule:</strong> understand it, don't memorize it. That's the difference between passing and bombing.</p>
     </div>
     
     <div class="signature">
@@ -312,33 +360,30 @@ export const courseCompletionTemplate = (
   data: CourseCompletionEmailData,
 ): string =>
   getBaseTemplate(`
-    <div class="greeting">Congratulations ${data.userName}! 🎉</div>
+    <div class="greeting">You did it, ${data.userName}! 🎉</div>
     
     <div class="main-text">
-      <p>You've successfully completed <strong>${data.courseName}</strong>!</p>
-      
-      <p>This is a significant milestone in your learning journey. You've demonstrated dedication, persistence, and a commitment to growth.</p>
+      <p>You just finished <strong>${data.courseName}</strong> — and most people never even finish course #1. You're not most people.</p>
       
       <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h3 style="margin: 0 0 10px 0; color: #0369a1;">🎯 What You've Achieved:</h3>
+        <h3 style="margin: 0 0 10px 0; color: #0369a1; font-size: 15px;">🎯 What you just proved:</h3>
         <ul style="margin: 0; padding-left: 20px;">
-          <li>Mastered course concepts and practical applications</li>
-          <li>Completed all assignments and assessments</li>
-          <li>Built real-world projects and skills</li>
-          <li>Joined an elite group of course completers</li>
+          <li>You can finish what you start</li>
+          <li>You can build, not just watch</li>
+          <li>You're ready for the next level</li>
         </ul>
       </div>
     </div>
     
     <div style="text-align: center;">
       <a href=${envConfig.PLATFORM_URL + routes.user.dashboard} class="cta-button">
-        Review Your Course 📚
+        Review Course 📚
       </a>
       ${
         data.certificateUrl
           ? `
         <a href="${data.certificateUrl}" class="cta-button" style="margin-left: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%);">
-          Download Certificate 🏆
+          Grab Your Certificate 🏆
         </a>
       `
           : ""
@@ -346,19 +391,397 @@ export const courseCompletionTemplate = (
     </div>
     
     <div class="main-text">
-      <p><strong>What's Next?</strong></p>
-      <ul style="margin: 20px 0; padding-left: 20px;">
-        <li>Apply your new skills to real projects</li>
-        <li>Share your knowledge with the community</li>
-        <li>Explore advanced courses in related topics</li>
-        <li>Consider mentoring other learners</li>
-      </ul>
-      
-      <p>Remember, learning is a continuous journey. Keep building, keep growing, and keep pushing your boundaries!</p>
+      <p><strong>Don't stop now.</strong> The learners who go the furthest are the ones who take the next step right after this one — while the momentum's still hot.</p>
     </div>
     
     <div class="signature">
       <div class="signature-name">Sachin from The Boring Education</div>
-      <div class="signature-title">Proud of Your Achievement!</div>
+      <div class="signature-title">Proud of You. Genuinely.</div>
     </div>
   `);
+
+export const reactivationEmailTemplate = (data: {
+  userName: string;
+  solvedCount: number;
+  currentStreak: number;
+  redirectUrl: string;
+  redirectText: string;
+  cohort: "1D" | "7D" | "14D" | "30D";
+  app?: string;
+}): string => {
+  const isPlatform = !data.app || data.app === "platform";
+  const appName = data.app || "platform";
+
+  // Dynamic configurations per app
+  let badge = "CHECK-IN";
+  let hook = "KEEP LEARNING";
+  let title = "Ready to Continue?";
+  let titleAccent = "Learn Daily!";
+  let subtitle = "Consistency is the key to building a coding habit.";
+  let bodyText = "Return to your dashboard and pick up where you left off.";
+  let quoteText = "Spend 15 minutes today practicing and keep moving forward.";
+  const statsLabel = "Your Learning Snapshot";
+
+  if (appName === "platform") {
+    badge = `${data.cohort} CHECK-IN`;
+    hook = "EXPLORE FREE HUBS";
+    title = "Did You Forget Us";
+    titleAccent = "Just like your ex forgot you?";
+    subtitle = "Zero paywalls, 100% building — but you're missing out.";
+    bodyText =
+      "You unlocked free access to tech education most people pay lakhs for, but your account is sitting in the dark. We've got updated interview prep sheets and bite-sized courses waiting for you.";
+    quoteText =
+      "No subscription, no spam, no BS. Just return to theboringeducation.com and pick a sheet or course to start building.";
+  } else if (appName === "dsayatra") {
+    badge = `DSA YATRA – ${data.cohort}`;
+    hook = "SOLVE DSA PROBLEMS";
+    title = "Your DSA Streak is Dead";
+    titleAccent = "Deader than your last relationship?";
+    subtitle = "DFS, BFS, or just AFK? We miss you on DSA Yatra.";
+    bodyText = `You solved ${data.solvedCount} DSA problems, and then... absolute silence. Did a pointer exception delete your ambition? Top product companies won't wait for your algorithm muscles to wake up from their deep sleep.`;
+    quoteText =
+      "Your future interviewer is currently reading your code. Just kidding, but they will be. Keep practicing patterns and take a daily quiz before you forget what a Node is!";
+  } else if (appName === "oncampus") {
+    badge = `ONCAMPUS – ${data.cohort}`;
+    hook = "CRACK PLACEMENTS";
+    title = "Unemployed Vibes?";
+    titleAccent = "Or did your ex take that option too?";
+    subtitle = "CS fundamentals and aptitude won't study themselves.";
+    bodyText =
+      "Campus placement season is a brutal battle royale. While you are sleeping, your batchmates are mastering Operating Systems, DBMS, computer networks, and solving aptitude. Don't be the one left holding an empty resume.";
+    quoteText =
+      "Make your resume dangerous. Review curated interview sheets, practice aptitude quizzes, and master CS core subjects today.";
+  } else if (appName === "prepyatra") {
+    badge = `PREPYATRA – ${data.cohort}`;
+    hook = "LOG YOUR PROGRESS";
+    title = "Your Streak is Crying";
+    titleAccent = "Harder than you did post-breakup?";
+    subtitle = "Your dashboard is begging you to come back.";
+    bodyText = `You had a solid streak of ${data.currentStreak} days. Now it is on life support. Consistency is the only line between 'I want to be a dev' and actually being one. Log your mock interview practice or project building progress now.`;
+    quoteText =
+      "Restart the engine before it gets cold. Even a 5-minute log entry today keeps your momentum alive.";
+  }
+
+  let statsSection = "";
+  if (appName === "platform") {
+    statsSection = `
+          <!-- PLATFORM EXPLORE INFO -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:24px 28px 0 28px;border-bottom:1px solid #ebebeb;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 12px auto; width:100%; max-width:440px;">
+                <tr>
+                  <td align="center" style="font-family:Inter,sans-serif;font-size:13px;color:#6b6b6b;line-height:1.6;padding-bottom:16px;text-align:center;">
+                    Explore our learning hubs:
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <div style="margin-bottom:12px;text-align:center;">
+                      <a href="https://www.theboringeducation.com/interview-prep/explore" target="_blank" style="display:inline-block;background-color:#ffffff;border:1px solid #e8392a;border-radius:20px;padding:8px 20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#e8392a;text-decoration:none;white-space:nowrap;">
+                        Explore Interview Sheets
+                      </a>
+                    </div>
+                    <div style="margin-bottom:20px;text-align:center;">
+                      <a href="https://www.theboringeducation.com/shiksha/explore" target="_blank" style="display:inline-block;background-color:#ffffff;border:1px solid #e8392a;border-radius:20px;padding:8px 20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#e8392a;text-decoration:none;white-space:nowrap;">
+                        Explore Free Courses
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom:28px;">
+                <tr>
+                  <td>
+                    <a href="${data.redirectUrl}"
+                      style="display:block;background-color:#e8392a;border-radius:12px;padding:16px 20px;text-decoration:none;text-align:center;">
+                      <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                        <tr>
+                          <td align="center" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#ffffff;vertical-align:middle;text-align:center;white-space:nowrap;">${data.redirectText} →</td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+  } else if (appName === "oncampus") {
+    statsSection = `
+          <!-- ONCAMPUS EXPLORE INFO -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:24px 28px 0 28px;border-bottom:1px solid #ebebeb;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 12px auto; width:100%; max-width:440px;">
+                <tr>
+                  <td align="center" style="font-family:Inter,sans-serif;font-size:13px;color:#6b6b6b;line-height:1.6;padding-bottom:16px;text-align:center;">
+                    Explore our prep sections:
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <div style="margin-bottom:12px;text-align:center;">
+                      <a href="https://oncampus.theboringeducation.com/interview-sheets" target="_blank" style="display:inline-block;background-color:#ffffff;border:1px solid #e8392a;border-radius:20px;padding:8px 20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#e8392a;text-decoration:none;white-space:nowrap;">
+                        Interview Sheets
+                      </a>
+                    </div>
+                    <div style="margin-bottom:12px;text-align:center;">
+                      <a href="https://oncampus.theboringeducation.com/aptitude" target="_blank" style="display:inline-block;background-color:#ffffff;border:1px solid #e8392a;border-radius:20px;padding:8px 20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#e8392a;text-decoration:none;white-space:nowrap;">
+                        Aptitude Prep
+                      </a>
+                    </div>
+                    <div style="margin-bottom:20px;text-align:center;">
+                      <a href="https://oncampus.theboringeducation.com/coresubjects" target="_blank" style="display:inline-block;background-color:#ffffff;border:1px solid #e8392a;border-radius:20px;padding:8px 20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#e8392a;text-decoration:none;white-space:nowrap;">
+                        Core CS Subjects
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom:28px;">
+                <tr>
+                  <td>
+                    <a href="${data.redirectUrl}"
+                      style="display:block;background-color:#e8392a;border-radius:12px;padding:16px 20px;text-decoration:none;text-align:center;">
+                      <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                        <tr>
+                          <td align="center" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#ffffff;vertical-align:middle;text-align:center;white-space:nowrap;">${data.redirectText} →</td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+  } else if (appName === "dsayatra") {
+    statsSection = `
+          <!-- DSA YATRA STATS + CTA -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:24px 28px 0 28px;border-bottom:1px solid #ebebeb;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 18px auto;">
+                <tr>
+                  <td style="font-size:17px;vertical-align:middle;padding-right:8px;text-align:center;">📊</td>
+                  <td style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;
+                    text-transform:uppercase;letter-spacing:0.13em;color:#6b6b6b;vertical-align:middle;text-align:center;">${statsLabel}</td>
+                </tr>
+              </table>
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 18px auto; max-width:440px;">
+                <tr>
+                  <td class="stat-td" width="100%" align="center" style="vertical-align:top;">
+                    <div style="background-color:#f8f9fa;border:1px solid #e5e5e5;border-radius:12px;padding:18px;height:80px;text-align:center;">
+                      <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:#0a0a0a;line-height:1;margin:0 0 6px 0;text-align:center;">${data.solvedCount}</div>
+                      <div style="font-family:Inter,sans-serif;font-size:11px;color:#6b6b6b;text-align:center;font-weight:500;">DSA Problems Solved</div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom:28px;">
+                <tr>
+                  <td>
+                    <a href="${data.redirectUrl}"
+                      style="display:block;background-color:#e8392a;border-radius:12px;padding:16px 20px;text-decoration:none;text-align:center;">
+                      <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                        <tr>
+                          <td align="center" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#ffffff;vertical-align:middle;text-align:center;white-space:nowrap;">${data.redirectText} →</td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+  } else {
+    // prepyatra
+    statsSection = `
+          <!-- PREPYATRA STATS + CTA -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:24px 28px 0 28px;border-bottom:1px solid #ebebeb;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 18px auto;">
+                <tr>
+                  <td style="font-size:17px;vertical-align:middle;padding-right:8px;text-align:center;">📊</td>
+                  <td style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;
+                    text-transform:uppercase;letter-spacing:0.13em;color:#6b6b6b;vertical-align:middle;text-align:center;">${statsLabel}</td>
+                </tr>
+              </table>
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 18px auto; max-width:440px;">
+                <tr>
+                  <td class="stat-td" width="50%" align="center" style="padding-right:6px;vertical-align:top;">
+                    <div style="background-color:#f8f9fa;border:1px solid #e5e5e5;border-radius:12px;padding:18px;height:80px;text-align:center;">
+                      <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:#e8392a;line-height:1;margin:0 0 6px 0;text-align:center;">${data.currentStreak}</div>
+                      <div style="font-family:Inter,sans-serif;font-size:11px;color:#6b6b6b;text-align:center;font-weight:500;">Day Streak 🔥</div>
+                    </div>
+                  </td>
+                  <td class="stat-td" width="50%" align="center" style="padding-left:6px;vertical-align:top;">
+                    <div style="background-color:#f8f9fa;border:1px solid #e5e5e5;border-radius:12px;padding:18px;height:80px;text-align:center;">
+                      <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;color:#0a0a0a;line-height:1;margin:0 0 6px 0;text-align:center;">${data.solvedCount}</div>
+                      <div style="font-family:Inter,sans-serif;font-size:11px;color:#6b6b6b;text-align:center;font-weight:500;">Total Logs 📊</div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom:28px;">
+                <tr>
+                  <td>
+                    <a href="${data.redirectUrl}"
+                      style="display:block;background-color:#e8392a;border-radius:12px;padding:16px 20px;text-decoration:none;text-align:center;">
+                      <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                        <tr>
+                          <td align="center" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#ffffff;vertical-align:middle;text-align:center;white-space:nowrap;">${data.redirectText} →</td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+  }
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title} ${titleAccent} – The Boring Education</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body, html { margin:0; padding:0; background-color:#f4f4f6; }
+    * { box-sizing:border-box; }
+    a { text-decoration:none; color:inherit; }
+    img { display:block; border:0; max-width:100%; }
+    @media only screen and (max-width:540px) {
+      .outer-td { padding:0 !important; }
+      .email-card { border-radius:0 !important; box-shadow:none !important; }
+      .stat-td { display:block !important; width:100% !important; padding:0 0 10px 0 !important; }
+      .ig-btn-text { font-size:11px !important; }
+      .section-pad { padding-left:16px !important; padding-right:16px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f6;font-family:Inter,ui-sans-serif,system-ui,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color:#f4f4f6;">
+    <tr>
+      <td class="outer-td" align="center" style="padding:32px 16px;background-color:#f4f4f6;">
+
+        <table class="email-card" width="560" cellpadding="0" cellspacing="0" border="0" role="presentation"
+          style="max-width:560px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.10);">
+
+          <!-- HEADER -->
+          <tr>
+            <td class="section-pad" align="center" style="background-color:#ffffff;padding:24px 28px 16px 28px;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                <tr>
+                  <td align="center" style="vertical-align:middle;text-align:center;font-family:'Space Grotesk',Inter,sans-serif;font-size:16px;font-weight:800;color:#0a0a0a;letter-spacing:-0.5px;text-transform:uppercase;white-space:nowrap;">
+                    The Boring <span style="color:#e8392a;">Education</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- HERO -->
+          <tr>
+            <td class="section-pad" align="center" style="background-color:#ffffff;padding:16px 28px 32px 28px;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 12px auto;">
+                <tr>
+                  <td align="center" style="font-family:Inter,sans-serif;font-size:10px;font-weight:600;
+                    color:#e8392a;background-color:#fdf0ef;border:1px solid #f9d5d2;border-radius:20px;
+                    padding:6px 12px;text-transform:uppercase;letter-spacing:0.1em;display:inline-block;text-align:center;white-space:nowrap;">
+                    ${badge}
+                  </td>
+                </tr>
+              </table>
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 16px auto;">
+                <tr>
+                  <td align="center" style="font-family:Inter,sans-serif;font-size:10px;font-weight:600;
+                    color:#6b6b6b;text-transform:uppercase;letter-spacing:0.14em;text-align:center;white-space:nowrap;">${hook}</td>
+                </tr>
+              </table>
+              <h1 style="margin:0 0 14px 0;font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+                color:#0a0a0a;line-height:1.15;letter-spacing:-0.5px;text-align:center;">
+                ${title}<br/>
+                <span style="color:#e8392a;">${titleAccent}</span>
+              </h1>
+              <p style="margin:0;font-family:Inter,sans-serif;font-size:14px;color:#6b6b6b;line-height:1.6;text-align:center;">${subtitle}</p>
+            </td>
+          </tr>
+
+          <!-- GREETING + BODY -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:28px 28px 0 28px;border-bottom:1px solid #ebebeb;background-color:#ffffff;">
+              <p style="margin:0 0 10px 0;font-family:Inter,sans-serif;font-size:16px;color:#0a0a0a;line-height:1.65;text-align:center;">
+                Hey <strong style="font-family:'Space Grotesk',sans-serif;font-weight:700;white-space:nowrap;">${data.userName}!</strong>
+              </p>
+              <p style="margin:0 0 18px 0;font-family:Inter,sans-serif;font-size:14px;color:#555555;line-height:1.75;text-align:center;">${bodyText}</p>
+              <div style="background-color:#fdf0ef;border-left:4px solid #e8392a;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:28px;text-align:center;display:inline-block;width:100%;max-width:480px;">
+                <p style="margin:0;font-family:Inter,sans-serif;font-size:14px;color:#0a0a0a;line-height:1.7;font-weight:500;text-align:center;">${quoteText}</p>
+              </div>
+            </td>
+          </tr>
+
+          ${statsSection}
+
+          <!-- COMMUNITY -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:28px 28px 0 28px;border-bottom:1px solid #ebebeb;background-color:#ffffff;">
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto; max-width:440px;">
+                <tr>
+                  <td align="center" style="font-size:20px;padding-bottom:8px;text-align:center;">🤝</td>
+                </tr>
+                <tr>
+                  <td align="center" style="text-align:center;">
+                    <h3 style="margin:0 0 8px 0;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0a0a0a;line-height:1.3;text-align:center;">Don't learn in isolation</h3>
+                    <p style="margin:0 0 18px 0;font-family:Inter,sans-serif;font-size:13px;color:#6b6b6b;line-height:1.7;text-align:center;">
+                      Join 5,000+ peers. Share code, ask questions, find accountability partners.
+                    </p>
+                    <a href="https://www.instagram.com/theboringeducation" target="_blank"
+                      style="display:inline-block;border:2px solid #0a0a0a;border-radius:12px;padding:12px 18px;text-decoration:none;margin-bottom:28px;text-align:center;white-space:nowrap;">
+                      <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" style="margin:0 auto;">
+                        <tr>
+                          <td style="vertical-align:middle;padding-right:6px;line-height:0;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E1306C"
+                              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;">
+                              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                          </td>
+                          <td class="ig-btn-text" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#0a0a0a;vertical-align:middle;white-space:nowrap;letter-spacing:0.02em;">
+                            Join Instagram Community →
+                          </td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td align="center" style="padding:24px 28px;text-align:center;background-color:#ffffff;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 10px auto;">
+                <tr>
+                  <td style="vertical-align:middle; font-family:'Space Grotesk',Inter,sans-serif; font-size:12px; font-weight:800; color:#0a0a0a; opacity:0.35; letter-spacing:-0.5px; text-transform:uppercase; white-space:nowrap;">
+                    The Boring <span style="color:#e8392a;">Education</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 6px 0;font-family:Inter,sans-serif;font-size:11px;color:#999999;text-align:center;">© 2026 The Boring Education</p>
+              <a href="https://www.theboringeducation.com"
+                style="font-family:Inter,sans-serif;font-size:11px;color:#e8392a;text-decoration:none;text-align:center;">theboringeducation.com</a>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`;
+};

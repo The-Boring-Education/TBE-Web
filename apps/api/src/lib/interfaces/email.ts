@@ -50,7 +50,8 @@ export type EmailTriggerType =
   | "COURSE_ENROLLMENT"
   | "PROJECT_ENROLLMENT"
   | "INTERVIEW_PREP_ENROLLMENT"
-  | "COURSE_COMPLETION";
+  | "COURSE_COMPLETION"
+  | "REACTIVATION";
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;

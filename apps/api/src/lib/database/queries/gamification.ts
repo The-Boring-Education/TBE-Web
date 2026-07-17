@@ -7,7 +7,7 @@ import type {
 import { calculateUserPointsForAction } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { Gamification, UserActivityLog } from "../models";
+import { Gamification, User, UserActivityLog } from "../models";
 
 const addGamificationDocInDB = async (
   userId: string,
@@ -108,6 +108,22 @@ const logUserActivityForStreak = async (
   try {
     const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     await UserActivityLog.create({ userId, app, actionType, date, metadata });
+
+    // Update the lastActiveAt fields on User document
+    const updateObj: Record<string, any> = {
+      lastActiveAt: new Date(),
+    };
+
+    if (app === "DSA_YATRA") {
+      updateObj["dsaYatra.lastActiveAt"] = new Date();
+    } else if (app === "PREPYATRA") {
+      updateObj["prepYatra.lastActiveAt"] = new Date();
+    } else if (app === "ONCAMPUS") {
+      updateObj["oncampus.lastActiveAt"] = new Date();
+    }
+
+    await User.findByIdAndUpdate(userId, { $set: updateObj });
+
     return { data: { logged: true } };
   } catch (error: unknown) {
     const isDuplicateKey =
