@@ -53,7 +53,7 @@ const QuestionLink = ({
       analyticsId={`learning_question_${questionId}`}
       analyticsLabel={`question:${title}`}
       key={questionId}
-      className={`flex items-center gap-1 w-full p-2 mb-1 rounded border text-left pre-title ${
+      className={`flex items-center gap-1 w-full p-2 mb-1 rounded border text-left pre-title overflow-hidden ${
         isLocked
           ? isDark
             ? "text-gray-500 cursor-not-allowed border-transparent"
@@ -114,7 +114,7 @@ const QuestionLink = ({
           />
         )}
       </div>
-      {title}
+      <span className="truncate min-w-0">{title}</span>
     </LinkText>
   );
 };
