@@ -117,7 +117,7 @@ async function main() {
       { sort: { date: -1, createdAt: -1 } },
     );
 
-    const updateObj: Record<string, any> = {};
+    const updateObj: Record<string, unknown> = {};
 
     if (latestLog) {
       const activeDate = latestLog.createdAt || new Date(latestLog.date);
@@ -147,7 +147,7 @@ async function main() {
     }
 
     // Always ensure marketingEmails preferences are initialized
-    if (!user.preferences?.marketingEmails) {
+    if (typeof user.preferences?.marketingEmails !== "boolean") {
       updateObj["preferences.marketingEmails"] = true;
     }
 

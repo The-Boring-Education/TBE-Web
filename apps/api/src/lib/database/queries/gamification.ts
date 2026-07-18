@@ -110,16 +110,17 @@ const logUserActivityForStreak = async (
     await UserActivityLog.create({ userId, app, actionType, date, metadata });
 
     // Update the lastActiveAt fields on User document
-    const updateObj: Record<string, any> = {
-      lastActiveAt: new Date(),
+    const nowTimestamp = new Date();
+    const updateObj: Record<string, Date> = {
+      lastActiveAt: nowTimestamp,
     };
 
     if (app === "DSA_YATRA") {
-      updateObj["dsaYatra.lastActiveAt"] = new Date();
+      updateObj["dsaYatra.lastActiveAt"] = nowTimestamp;
     } else if (app === "PREPYATRA") {
-      updateObj["prepYatra.lastActiveAt"] = new Date();
+      updateObj["prepYatra.lastActiveAt"] = nowTimestamp;
     } else if (app === "ONCAMPUS") {
-      updateObj["oncampus.lastActiveAt"] = new Date();
+      updateObj["oncampus.lastActiveAt"] = nowTimestamp;
     }
 
     await User.findByIdAndUpdate(userId, { $set: updateObj });

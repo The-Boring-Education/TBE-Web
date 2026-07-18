@@ -5,7 +5,6 @@ import { User } from "@/lib/database/models";
 import { emailTriggerService } from "@/lib/services/triggers";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { connectDB } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -32,9 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    // 2. Connect DB
-    await connectDB();
-
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
 
@@ -160,7 +156,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Prepare email stats
         const solvedCount =
-          user.dsaYatra?.progress?.completedQuestionIds?.length || 0;
+          targetApp === "prepyatra"
+            ? user.prepYatra?.prepLog?.totalLogs || 0
+            : user.dsaYatra?.progress?.completedQuestionIds?.length || 0;
         const currentStreak = user.prepYatra?.prepLog?.currentStreak || 0;
 
         // Trigger the email
@@ -222,7 +220,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       sendAPIResponse({
         status: false,
         message: "Internal server error while running reactivation email job",
-        error,
+        error: error instanceof Error ? error.message : String(error),
       }),
     );
   }

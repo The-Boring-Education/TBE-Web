@@ -407,9 +407,8 @@ export const reactivationEmailTemplate = (data: {
   redirectUrl: string;
   redirectText: string;
   cohort: "1D" | "7D" | "14D" | "30D";
-  app?: string;
+  app?: "platform" | "dsayatra" | "prepyatra" | "oncampus";
 }): string => {
-  const isPlatform = !data.app || data.app === "platform";
   const appName = data.app || "platform";
 
   // Dynamic configurations per app
