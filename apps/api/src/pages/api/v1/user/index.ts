@@ -33,6 +33,13 @@ const normalizeQueryParam = (param: string | string[] | undefined): string => {
   return param || "";
 };
 
+const normalizeQueryParam = (param: string | string[] | undefined): string => {
+  if (Array.isArray(param)) {
+    return param[0] || "";
+  }
+  return param || "";
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
   const email = normalizeQueryParam(query.email);
