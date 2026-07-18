@@ -11,6 +11,7 @@ import type {
   AddPrepYatraOnboardingPayloadProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -24,9 +25,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET":
       return getUserByUsername(req, res, userName);
     case "POST":
-      return handleUserOnboarding(req, res, userId);
+      return withUserAuth(
+        async (req, res) => handleUserOnboarding(req, res, userId),
+        { ownerRequired: true },
+      )(req, res);
     case "PUT":
-      return handlePrepYatraOnboarding(req, res, userId);
+      return withUserAuth(
+        async (req, res) => handlePrepYatraOnboarding(req, res, userId),
+        { ownerRequired: true },
+      )(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({

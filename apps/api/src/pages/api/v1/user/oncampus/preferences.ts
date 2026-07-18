@@ -10,14 +10,22 @@ import {
   normalizeDsaDuration,
   ONCAMPUS_EXPERIENCE_LEVEL,
 } from "@/lib/validation";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET":
-      return handleGetPreferences(req, res);
+      return withUserAuth(async (req, res) => handleGetPreferences(req, res), {
+        ownerRequired: true,
+      })(req, res);
     case "PATCH":
-      return handlePatchPreferences(req, res);
+      return withUserAuth(
+        async (req, res) => handlePatchPreferences(req, res),
+        {
+          ownerRequired: true,
+        },
+      )(req, res);
     default:
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({

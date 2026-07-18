@@ -3,12 +3,15 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { getUserPrepLogStats } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET":
-      return handleGetProgress(req, res);
+      return withUserAuth(async (req, res) => handleGetProgress(req, res), {
+        ownerRequired: true,
+      })(req, res);
     default:
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({

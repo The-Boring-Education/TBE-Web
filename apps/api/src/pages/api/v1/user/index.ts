@@ -11,28 +11,42 @@ import {
 import User from "@/lib/database/models/User";
 import type { CreateUserRequestPayloadProps } from "@/lib/interfaces";
 import { sendWelcomeEmail } from "@/lib/services";
+import { isAdminEmail } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
 import { captureAPIError, captureAuthError } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { verifyAuthenticatedUser, withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+
+const normalizeQueryParam = (param: string | string[] | undefined): string => {
+  if (Array.isArray(param)) {
+    return param[0] || "";
+  }
+  return param || "";
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
-  const { email, userId, username } = query;
+  const email = normalizeQueryParam(query.email);
+  const userId = normalizeQueryParam(query.userId);
+  const username = normalizeQueryParam(query.username);
 
   switch (method) {
     case "GET":
-      return handleGetUser(
-        req,
-        res,
-        email as string,
-        userId as string,
-        username as string,
-      );
+      if (email || userId) {
+        return withUserAuth(
+          async (req, res) => handleGetUser(req, res, email, userId, username),
+          { ownerRequired: true },
+        )(req, res);
+      }
+      return handleGetUser(req, res, email, userId, username);
     case "POST":
       return handleCreateUser(req, res);
     case "PATCH":
-      return handleUpdateUserProfile(req, res);
+      return withUserAuth(
+        async (req, res) => handleUpdateUserProfile(req, res),
+        { ownerRequired: true },
+      )(req, res);
   }
 };
 
@@ -115,6 +129,27 @@ const handleGetUser = async (
             message: "Error while fetching user",
           }),
         );
+      }
+
+      const payload = verifyAuthenticatedUser(req);
+      let isSelf = false;
+      if (payload && data) {
+        const userIdStr = data._id ? data._id.toString() : "";
+        isSelf =
+          payload.sub === userIdStr ||
+          payload.email === data.email ||
+          (await isAdminEmail(payload.email));
+      }
+
+      if (!isSelf && data) {
+        const sanitized = data.toObject ? data.toObject() : { ...data };
+        delete sanitized.email;
+        delete sanitized.contactNo;
+        delete sanitized.provider;
+        delete sanitized.providerAccountId;
+        return res
+          .status(apiStatusCodes.OKAY)
+          .json(sendAPIResponse({ status: true, data: sanitized }));
       }
 
       return res

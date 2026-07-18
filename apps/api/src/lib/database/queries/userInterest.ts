@@ -135,10 +135,16 @@ const getUserInterestsFromDB = async (filters: {
 const updateUserInterestInDB = async (
   interestId: string,
   isActive: boolean,
+  userId?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const interest = await UserInterest.findByIdAndUpdate(
-      interestId,
+    const query: Record<string, unknown> = { _id: interestId };
+    if (userId) {
+      query.userId = userId;
+    }
+
+    const interest = await UserInterest.findOneAndUpdate(
+      query,
       { isActive },
       { new: true },
     ).populate("userId", "name email image");

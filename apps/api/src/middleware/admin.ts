@@ -144,3 +144,71 @@ export const verifyAuthenticatedUser = (
     return null;
   }
 };
+
+const normalizeStringVal = (val: unknown): string | undefined => {
+  if (typeof val === "string") {
+    return val.trim();
+  }
+  if (Array.isArray(val)) {
+    const first = val[0];
+    return typeof first === "string" ? first.trim() : undefined;
+  }
+  return undefined;
+};
+
+export const withUserAuth = (
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void,
+  options?: { ownerRequired?: boolean },
+): ((req: NextApiRequest, res: NextApiResponse) => Promise<void>) => {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const payload = verifyAuthenticatedUser(req);
+    if (!payload) {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          status: false,
+          message: "Authentication required",
+        }),
+      );
+    }
+
+    if (options?.ownerRequired) {
+      const queryUserId = req.query.userId;
+      const bodyUserId = req.body?.userId;
+      const userId =
+        normalizeStringVal(queryUserId) || normalizeStringVal(bodyUserId);
+
+      const queryEmail = req.query.email;
+      const bodyEmail = req.body?.email;
+      const email =
+        normalizeStringVal(queryEmail) || normalizeStringVal(bodyEmail);
+
+      const userIsAdmin = await isAdminEmail(payload.email);
+
+      if (!userIsAdmin) {
+        if (userId && payload.sub !== userId) {
+          return res.status(apiStatusCodes.FORBIDDEN).json(
+            sendAPIResponse({
+              status: false,
+              message: "Access denied: Cannot access another user's resource",
+            }),
+          );
+        }
+        if (email) {
+          const normalizedPayloadEmail = payload.email.trim().toLowerCase();
+          const normalizedTargetEmail = email.trim().toLowerCase();
+          if (normalizedPayloadEmail !== normalizedTargetEmail) {
+            return res.status(apiStatusCodes.FORBIDDEN).json(
+              sendAPIResponse({
+                status: false,
+                message: "Access denied: Cannot access another user's resource",
+              }),
+            );
+          }
+        }
+      }
+    }
+
+    (req as any).user = payload;
+    return handler(req, res);
+  };
+};
