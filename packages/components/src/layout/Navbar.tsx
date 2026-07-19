@@ -200,6 +200,7 @@ const Navbar = ({
                   : "text-black hover:bg-gray-100"
               }`}
               type="button"
+              aria-label="Open learning menu"
               onClick={() => setLearningSidebarOpen(true)}
             >
               <Bars3Icon
@@ -221,6 +222,7 @@ const Navbar = ({
               <button
                 className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
                 type="button"
+                aria-label="Open menu"
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <Bars3Icon
@@ -261,6 +263,7 @@ const Navbar = ({
               <button
                 className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
                 type="button"
+                aria-label="Open menu"
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <Bars3Icon
