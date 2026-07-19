@@ -196,20 +196,26 @@ export const CoreSubjectMDXRenderer = ({
 
     instance.renderer.rules.link_open = (tokens: any, idx: any) => {
       const token = tokens[idx];
-      const href = token.attrGet("href");
+      const href = token.attrGet("href") || "";
+      if (!href) {
+        return `<a class="text-primary underline strong-text">`;
+      }
       if (href.includes("youtube.com") || href.includes("youtu.be")) {
         if (href.includes("list=")) {
-          return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
-        } else {
-          let embedHref = href;
-          if (href.includes("watch")) {
-            const videoId = href.split("v=")[1].split("&")[0];
-            embedHref = `https://www.youtube.com/embed/${videoId}`;
-          }
-          return `<iframe width="100%" height="550" class="rounded" src="${embedHref}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
+        }
+        let videoId: string | undefined;
+        if (href.includes("v=")) {
+          videoId = href.split("v=")[1]?.split("&")[0];
+        } else if (href.includes("youtu.be/")) {
+          videoId = href.split("youtu.be/")[1]?.split(/[?&#]/)[0];
+        }
+        if (videoId) {
+          const embedHref = `https://www.youtube.com/embed/${videoId}`;
+          return `<div class="relative w-full max-w-full overflow-hidden rounded aspect-video my-4"><iframe class="absolute inset-0 w-full h-full rounded" src="${embedHref}" title="YouTube video" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
         }
       }
-      return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
     };
 
     // Explicit image renderer
