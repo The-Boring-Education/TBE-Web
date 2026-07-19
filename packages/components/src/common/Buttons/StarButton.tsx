@@ -17,8 +17,13 @@ const StarButton = ({
     onClick={onToggle}
     disabled={isLoading}
     type="button"
+    aria-label={isStarred ? "Unstar question" : "Star question"}
+    aria-pressed={isStarred}
   >
-    <FaStar className={`${isStarred ? "text-yellow-500" : "text-gray-400"}`} />
+    <FaStar
+      aria-hidden="true"
+      className={`${isStarred ? "text-yellow-500" : "text-gray-400"}`}
+    />
   </Button>
 );
 
