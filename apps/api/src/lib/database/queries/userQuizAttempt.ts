@@ -22,6 +22,8 @@ interface UserPerformanceStats {
   averageScore: number;
   bestScore: number;
   totalTimeSpent: number;
+  /** Consecutive calendar days with at least one completed attempt */
+  streakDays: number;
   categoryBreakdown: {
     categoryName: string;
     attempts: number;
@@ -37,6 +39,49 @@ interface UserPerformanceStats {
     totalTimeSpent: number;
   }[];
 }
+
+/** Count consecutive active days ending at the most recent attempt day. */
+const calculateStreakDays = (completedAtDates: Date[]): number => {
+  if (completedAtDates.length === 0) return 0;
+
+  const dayKeys = [
+    ...new Set(
+      completedAtDates.map((d) => {
+        const year = d.getUTCFullYear();
+        const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(d.getUTCDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }),
+    ),
+  ].sort();
+
+  if (dayKeys.length === 0) return 0;
+
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const toUtcDate = (key: string) => new Date(`${key}T00:00:00.000Z`);
+
+  // Streak is only active if the user attempted today or yesterday (UTC).
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const mostRecentKey = dayKeys[dayKeys.length - 1]!;
+  const daysSinceLast = Math.round(
+    (toUtcDate(todayKey).getTime() - toUtcDate(mostRecentKey).getTime()) /
+      msPerDay,
+  );
+  if (daysSinceLast > 1) return 0;
+
+  let streak = 1;
+  for (let i = dayKeys.length - 2; i >= 0; i--) {
+    const curr = toUtcDate(dayKeys[i + 1]!);
+    const prev = toUtcDate(dayKeys[i]!);
+    const diff = Math.round((curr.getTime() - prev.getTime()) / msPerDay);
+    if (diff === 1) {
+      streak += 1;
+    } else {
+      break;
+    }
+  }
+  return streak;
+};
 
 interface LeaderboardEntry {
   userId: string;
@@ -107,6 +152,7 @@ export const getUserQuizPerformanceFromDB = async (
           averageScore: 0,
           bestScore: 0,
           totalTimeSpent: 0,
+          streakDays: 0,
           categoryBreakdown: [],
           recentAttempts: [],
         },
@@ -166,12 +212,23 @@ export const getUserQuizPerformanceFromDB = async (
       totalTimeSpent: attempt.timeTaken || 0,
     }));
 
+    const streakDays = calculateStreakDays(
+      userAttempts
+        .map((attempt) =>
+          attempt.completedAt ? new Date(attempt.completedAt) : null,
+        )
+        .filter(
+          (d): d is Date => d instanceof Date && !Number.isNaN(d.getTime()),
+        ),
+    );
+
     const performanceStats: UserPerformanceStats = {
       totalAttempts,
       totalQuizzes: uniqueQuizzes,
       averageScore,
       bestScore,
       totalTimeSpent,
+      streakDays,
       categoryBreakdown,
       recentAttempts,
     };
@@ -189,6 +246,7 @@ export const getUserQuizPerformanceFromDB = async (
         averageScore: 0,
         bestScore: 0,
         totalTimeSpent: 0,
+        streakDays: 0,
         categoryBreakdown: [],
         recentAttempts: [],
       },
