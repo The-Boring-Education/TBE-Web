@@ -80,6 +80,7 @@
     "dompurify": "^3.4.12",
     "framer-motion": "^12.4.2",
     "input-otp": "^1.2.4",
+    "jsdom": "^25.0.1",
     "katex": "^0.16.38",
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
@@ -102,7 +103,6 @@
   },
   "devDependencies": {
     "@tbe/eslint-config": "workspace:*",
-    "@types/dompurify": "^3.2.0",
     "@types/katex": "^0.16.8",
     "@types/markdown-it": "^14.1.2",
     "@types/react": "^18.3.24",

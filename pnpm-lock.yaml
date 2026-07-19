@@ -2113,6 +2113,9 @@ importers:
       input-otp:
         specifier: ^1.2.4
         version: 1.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      jsdom:
+        specifier: ^25.0.1
+        version: 25.0.1
       katex:
         specifier: ^0.16.38
         version: 0.16.47
@@ -2183,9 +2186,6 @@ importers:
       "@tbe/eslint-config":
         specifier: workspace:*
         version: link:../eslint-config
-      "@types/dompurify":
-        specifier: ^3.2.0
-        version: 3.2.0
       "@types/katex":
         specifier: ^0.16.8
         version: 0.16.8
@@ -7531,13 +7531,6 @@ packages:
       {
         integrity: sha512-KSVgmQmzMwPlmtljOomayoR89W4FynCAi3E8PPs7vmDVPe84hT+vGPKkJfThkmXs0x0jAaa9U8uW8bbfyS2fWw==,
       }
-
-  "@types/dompurify@3.2.0":
-    resolution:
-      {
-        integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==,
-      }
-    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
 
   "@types/estree-jsx@1.0.5":
     resolution:
@@ -20268,10 +20261,6 @@ snapshots:
   "@types/debug@4.1.13":
     dependencies:
       "@types/ms": 2.1.0
-
-  "@types/dompurify@3.2.0":
-    dependencies:
-      dompurify: 3.4.12
 
   "@types/estree-jsx@1.0.5":
     dependencies:

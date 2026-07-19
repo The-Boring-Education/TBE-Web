@@ -2,27 +2,22 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { AccessTokenPayload } from "@/lib/auth/jwt";
 import { verifyToken } from "@/lib/auth/jwt";
+import { extractBearerToken } from "@/lib/auth/token";
 import { apiStatusCodes } from "@/lib/constants";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
 /**
- * Extracts and verifies the authenticated user from the Bearer token.
+ * Extracts and verifies the authenticated user from the request.
+ * Accepts both the `Authorization: Bearer` header and the `tbe_access_token`
+ * cookie set by @tbe/auth, so existing cookie-based sessions keep working.
  * Returns the userId (sub) on success, or null after sending a 401 response.
  */
 export const getAuthenticatedUserId = (
   req: NextApiRequest,
   res: NextApiResponse,
 ): string | null => {
-  const authHeader = req.headers.authorization;
-  const raw =
-    typeof authHeader === "string"
-      ? authHeader
-      : Array.isArray(authHeader)
-        ? authHeader[0]
-        : undefined;
-
-  const token = raw?.startsWith("Bearer ") ? raw.slice(7) : null;
+  const token = extractBearerToken(req);
 
   if (!token) {
     res.status(apiStatusCodes.UNAUTHORIZED).json(

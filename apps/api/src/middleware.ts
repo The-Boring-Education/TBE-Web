@@ -22,8 +22,11 @@ const ALLOWED_HEADERS =
 function resolveOrigin(request: NextRequest): string | undefined {
   const origin = request.headers.get("origin");
   if (!origin) return undefined;
-  // Fail closed: reject cross-origin requests when no allowlist is configured
-  if (ALLOWED_ORIGINS.length === 0) return undefined;
+  if (ALLOWED_ORIGINS.length === 0) {
+    // Reflect the origin in development for convenience, but fail closed in
+    // production/preview when no allowlist is configured.
+    return process.env.NODE_ENV === "production" ? undefined : origin;
+  }
   return ALLOWED_ORIGINS.includes(origin) ? origin : undefined;
 }
 

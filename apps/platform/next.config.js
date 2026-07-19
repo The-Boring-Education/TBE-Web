@@ -31,6 +31,15 @@ const nextConfig = {
   compress: true,
 
   async headers() {
+    // Next.js dev (HMR/React Refresh) requires 'unsafe-eval'; keep it out of
+    // production so the CSP meets the 'self' script-src acceptance criteria.
+    const isDev = process.env.NODE_ENV !== 'production';
+    const scriptSrc = [
+      "script-src 'self' 'unsafe-inline'",
+      isDev ? " 'unsafe-eval'" : '',
+      ' https://www.googletagmanager.com https://www.google-analytics.com https://sdk.cashfree.com',
+    ].join('');
+
     return [
       {
         source: '/(.*)',
@@ -51,7 +60,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://sdk.cashfree.com",
+              scriptSrc,
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' https://fonts.gstatic.com",
@@ -137,6 +146,15 @@ const nextConfig = {
       } else {
         config.externals = [config.externals, 'pdfjs-dist'];
       }
+    }
+
+    // jsdom is only used for server-side HTML sanitization (@tbe/components).
+    // Keep it out of the client bundle.
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
     }
 
     // Add comprehensive fallbacks for Node.js modules in both client and server
