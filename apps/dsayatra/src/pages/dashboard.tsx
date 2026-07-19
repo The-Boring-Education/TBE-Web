@@ -132,9 +132,13 @@ const DsaClient = () => {
                     ) : (
                       <div className="flex size-full items-center justify-center bg-gradient-to-br from-[#ff5757] to-[#cc4444] text-2xl font-black text-white sm:text-3xl">
                         {user?.name
-                          ?.split(" ")
+                          ?.trim()
+                          .split(/\s+/)
+                          .filter(Boolean)
                           .map((n) => n[0])
-                          .join("") || "SJ"}
+                          .join("")
+                          .toUpperCase()
+                          .slice(0, 2) || "SJ"}
                       </div>
                     )}
                   </div>
