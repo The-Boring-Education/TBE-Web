@@ -2,7 +2,7 @@ import '@tbe/components/styles/common.css';
 import '@/styles/globals.css';
 import '@/styles/colors.css';
 
-import { AuthProvider } from '@tbe/auth';
+import { AuthProvider, getAccessToken } from '@tbe/auth';
 import { Layout } from '@tbe/components';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
@@ -86,6 +86,16 @@ const AppContent = ({
           });
           if (user && (user as any).token) {
             params.append('token', (user as any).token);
+          } else {
+            // Fallback: the JWT-based `AuthUser` (see @tbe/auth AuthProvider)
+            // has no `token` field, so read the access token from the cookie.
+            // Without this, the cross-origin onboarding app cannot send an
+            // Authorization header and every submit hits `withUserAuth` and
+            // returns 401 (see apps/api /user/onboarding).
+            const accessToken = getAccessToken();
+            if (accessToken) {
+              params.append('token', accessToken);
+            }
           }
           window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
           return;
