@@ -91,12 +91,7 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 type ButtonVariant =
-  | "OUTLINE"
-  | "PRIMARY"
-  | "SECONDARY"
-  | "GHOST"
-  | "SUCCESS"
-  | "NEUTRAL";
+  "OUTLINE" | "PRIMARY" | "SECONDARY" | "GHOST" | "SUCCESS" | "NEUTRAL";
 
 export interface ButtonProps extends DelegatedInteractiveAnalyticsProps {
   variant: ButtonVariant;
@@ -491,6 +486,8 @@ export interface AlertProps {
 export interface LinerProgressBarProps {
   totalChapters: number;
   completedChapters: number;
+  /** Label for progress units, e.g. "Chapters" or "Questions". Defaults to "Chapters". */
+  itemLabel?: string;
 }
 
 export interface LearningSidebarPanelProps {

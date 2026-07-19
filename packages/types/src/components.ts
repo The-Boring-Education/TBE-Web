@@ -67,12 +67,7 @@ export interface LogoProps {
 
 export interface ButtonProps {
   variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+    "PRIMARY" | "OUTLINE" | "GHOST" | "SUCCESS" | "SECONDARY" | "NEUTRAL";
   className?: string;
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -493,6 +488,8 @@ export interface LoadingSpinnerProps {
 export interface LinerProgressBarProps {
   totalChapters: number;
   completedChapters: number;
+  /** Label for progress units, e.g. "Chapters" or "Questions". Defaults to "Chapters". */
+  itemLabel?: string;
 }
 
 export interface ProgressRingProps {

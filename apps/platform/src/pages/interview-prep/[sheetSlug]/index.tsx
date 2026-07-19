@@ -292,6 +292,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                   <LinerProgressBar
                     completedChapters={completedQuestions}
                     totalChapters={totalQuestions}
+                    itemLabel='Questions'
                   />
                 )}
               </div>

@@ -3,6 +3,7 @@ import type { LinerProgressBarProps } from "@tbe/interface";
 const LinerProgressBar = ({
   totalChapters,
   completedChapters,
+  itemLabel = "Chapters",
 }: LinerProgressBarProps) => {
   const completionPercentage =
     totalChapters > 0
@@ -18,7 +19,7 @@ const LinerProgressBar = ({
         />
       </div>
       <div className="text-sm mt-1">
-        {completedChapters} / {totalChapters} Chapters Completed (
+        {completedChapters} / {totalChapters} {itemLabel} Completed (
         {completionPercentage}%)
       </div>
     </div>
