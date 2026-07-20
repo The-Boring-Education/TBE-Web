@@ -38,9 +38,8 @@ const getUserPointsFromDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const queryUserId = getMongoUserId(userId);
     const gamification = await Gamification.findOne({
-      $or: [{ userId }, { userId: queryUserId }],
+      userId: { $eq: userId },
     })
       .select("-actions")
       .lean();
@@ -73,10 +72,10 @@ const updateUserPointsInDB = async (
       ...(app ? { app } : {}),
     };
 
-    const queryUserId = getMongoUserId(userId);
+    const filterId = getMongoUserId(userId);
 
     let updatedGamification = await Gamification.findOneAndUpdate(
-      { $or: [{ userId }, { userId: queryUserId }] },
+      { userId: filterId },
       {
         $push: { actions: action },
         $inc: { points: pointsEarned },
@@ -86,7 +85,7 @@ const updateUserPointsInDB = async (
 
     if (!updatedGamification) {
       updatedGamification = await Gamification.create({
-        userId: queryUserId,
+        userId: filterId,
         points: pointsEarned,
         actions: [action],
       });
@@ -148,10 +147,10 @@ const deductUserPointsFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const pointsToDeduct = calculateUserPointsForAction(actionType);
-    const queryUserId = getMongoUserId(userId);
+    const filterId = getMongoUserId(userId);
 
     const updatedGamification = await Gamification.findOneAndUpdate(
-      { $or: [{ userId }, { userId: queryUserId }] },
+      { userId: filterId },
       [
         {
           $set: {
