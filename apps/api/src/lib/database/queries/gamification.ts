@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import type {
   DatabaseQueryResponseType,
   TBEAppType,
@@ -9,11 +11,16 @@ import { logger } from "@/lib/utils/logger";
 
 import { Gamification, UserActivityLog } from "../models";
 
+const getMongoUserId = (userId: string) =>
+  mongoose.isValidObjectId(userId)
+    ? new mongoose.Types.ObjectId(userId)
+    : userId;
+
 const addGamificationDocInDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const gamification = new Gamification({ userId });
+    const gamification = new Gamification({ userId: getMongoUserId(userId) });
     await gamification.save();
     const doc = gamification.toObject();
     const { actions: _actions, ...data } = doc;
@@ -31,7 +38,10 @@ const getUserPointsFromDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const gamification = await Gamification.findOne({ userId: { $eq: userId } })
+    const queryUserId = getMongoUserId(userId);
+    const gamification = await Gamification.findOne({
+      $or: [{ userId }, { userId: queryUserId }],
+    })
       .select("-actions")
       .lean();
 
@@ -63,8 +73,10 @@ const updateUserPointsInDB = async (
       ...(app ? { app } : {}),
     };
 
-    const updatedGamification = await Gamification.findOneAndUpdate(
-      { userId },
+    const queryUserId = getMongoUserId(userId);
+
+    let updatedGamification = await Gamification.findOneAndUpdate(
+      { $or: [{ userId }, { userId: queryUserId }] },
       {
         $push: { actions: action },
         $inc: { points: pointsEarned },
@@ -73,7 +85,11 @@ const updateUserPointsInDB = async (
     );
 
     if (!updatedGamification) {
-      return { error: "User not found" };
+      updatedGamification = await Gamification.create({
+        userId: queryUserId,
+        points: pointsEarned,
+        actions: [action],
+      });
     }
 
     // Log activity for streak tracking (intentionally unawaited, best-effort)
@@ -132,9 +148,10 @@ const deductUserPointsFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const pointsToDeduct = calculateUserPointsForAction(actionType);
+    const queryUserId = getMongoUserId(userId);
 
     const updatedGamification = await Gamification.findOneAndUpdate(
-      { userId },
+      { $or: [{ userId }, { userId: queryUserId }] },
       [
         {
           $set: {

@@ -18,6 +18,7 @@ import {
   useGamificationContext,
 } from "@tbe/gamification";
 import {
+  useAnalytics,
   useDsaCompletedQuestions,
   useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
@@ -26,13 +27,14 @@ import {
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
-import { getPreFetchProps, trackEvent } from "@tbe/utils";
+import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
 const SheetsPageClient = () => {
   const router = useRouter();
   const { loading: userLoading, isAuth, user } = useUser();
+  const { trackEvent } = useAnalytics();
 
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
@@ -127,10 +129,10 @@ const SheetsPageClient = () => {
   const unlockedCount = topicQuestions.filter((q) => !q.isLocked).length;
 
   const handleToggleComplete = useCallback(
-    (questionId: string | number) => {
+    async (questionId: string | number) => {
       const idStr = String(questionId);
       const willComplete = !completedIds.includes(questionId);
-      toggleComplete(questionId);
+      await toggleComplete(questionId);
 
       if (willComplete) {
         const pointsEarned = calculateUserPointsForAction("COMPLETE_QUESTION");
@@ -149,9 +151,16 @@ const SheetsPageClient = () => {
         });
       }
 
-      void refetchGamification();
+      await refetchGamification();
     },
-    [completedIds, toggleComplete, refetchGamification, triggerCelebration, showToast, trackEvent],
+    [
+      completedIds,
+      toggleComplete,
+      refetchGamification,
+      triggerCelebration,
+      showToast,
+      trackEvent,
+    ],
   );
 
   const questions = topicQuestions;
@@ -192,7 +201,8 @@ const SheetsPageClient = () => {
     }
     setShowPayment(false);
     try {
-      trackEvent(ANALYTICS_EVENTS.DSA_QUESTION_VIEW, {
+      trackEvent({
+        action: ANALYTICS_EVENTS.DSA_QUESTION_VIEW,
         question_id: String(question._id ?? question.id),
         topic: selectedTopic ?? undefined,
       });
