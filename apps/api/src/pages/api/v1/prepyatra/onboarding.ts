@@ -7,6 +7,7 @@ import {
   updatePYUserByIdInDB,
 } from "@/lib/database";
 import type { PrepYatraOnboardingPayload } from "@/lib/interfaces";
+import { emailTriggerService } from "@/lib/services/triggers";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { normalizeCompanyTypeArray } from "@/lib/validation";
@@ -127,6 +128,28 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       "prepYatra.experienceLevel": experienceLevel,
       "prepYatra.workDomain": workDomain,
     });
+
+    if (updateResult.data) {
+      emailTriggerService
+        .sendExternalEmail({
+          emailType: "ONBOARDING",
+          userData: {
+            email: updateResult.data.email,
+            name: updateResult.data.name,
+            id: updateResult.data._id.toString(),
+          },
+          additionalData: {
+            app: "prepyatra",
+            subject: "PrepYatra Onboarding Completed! 🚀",
+          },
+        })
+        .catch((err) => {
+          logger.error("Failed to send PrepYatra onboarding email", {
+            error: err,
+          });
+        });
+    }
+
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,

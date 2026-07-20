@@ -6,7 +6,9 @@ import {
   getUserByIdFromDB,
 } from "@/lib/database";
 import User from "@/lib/database/models/User";
+import { emailTriggerService } from "@/lib/services/triggers";
 import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
@@ -79,7 +81,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           );
         }
 
-        const existingUser = userResult.data as { from?: string };
+        const existingUser = userResult.data;
+        const alreadyOnboarded = (existingUser as any)?.resumeYatra
+          ?.ryOnboarded;
         const updateData: Record<string, unknown> = {
           "resumeYatra.ryOnboarded": true,
         };
@@ -88,7 +92,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           updateData["resumeYatra.experienceBand"] = experienceBand;
         }
 
-        if (from && !existingUser.from) {
+        if (from && !(existingUser as any).from) {
           updateData.from = from;
         }
 
@@ -112,6 +116,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               message: "Failed to update user",
             }),
           );
+        }
+
+        if (!alreadyOnboarded) {
+          emailTriggerService
+            .sendExternalEmail({
+              emailType: "ONBOARDING",
+              userData: {
+                email: updated.email,
+                name: updated.name,
+                id: updated._id.toString(),
+              },
+              additionalData: {
+                app: "resumeyatra",
+                subject: "ResumeYatra Onboarding Completed! 📄",
+              },
+            })
+            .catch((err) => {
+              logger.error("Failed to send ResumeYatra onboarding email", {
+                error: err,
+              });
+            });
         }
 
         return res.status(apiStatusCodes.OKAY).json(

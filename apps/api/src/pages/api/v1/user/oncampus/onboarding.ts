@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { User } from "@/lib/database/models";
 import { toObjectId } from "@/lib/database/queries/common";
+import { emailTriggerService } from "@/lib/services/triggers";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import {
@@ -69,11 +70,22 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       "oncampus.experienceLevel": ONCAMPUS_EXPERIENCE_LEVEL,
     };
 
+    const existingUser = await User.findById(toObjectId(userId));
+    if (!existingUser) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: "User not found",
+        }),
+      );
+    }
+    const alreadyOnboarded = existingUser.oncampus?.onboardingCompleted;
+
     const updated = await User.findByIdAndUpdate(
       toObjectId(userId),
       { $set: updatePayload },
       { new: true },
-    ).select("oncampus");
+    );
 
     if (!updated) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
@@ -82,6 +94,27 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
           message: "User not found",
         }),
       );
+    }
+
+    if (!alreadyOnboarded) {
+      emailTriggerService
+        .sendExternalEmail({
+          emailType: "ONBOARDING",
+          userData: {
+            email: updated.email,
+            name: updated.name,
+            id: updated._id.toString(),
+          },
+          additionalData: {
+            app: "oncampus",
+            subject: "OnCampus Onboarding Completed! 🎓",
+          },
+        })
+        .catch((err) => {
+          logger.error("Failed to send OnCampus onboarding email", {
+            error: err,
+          });
+        });
     }
 
     return res.status(apiStatusCodes.OKAY).json(

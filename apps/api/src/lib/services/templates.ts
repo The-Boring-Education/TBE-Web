@@ -784,3 +784,218 @@ export const reactivationEmailTemplate = (data: {
 </body>
 </html>`;
 };
+
+export const onboardingEmailTemplate = (data: {
+  userName: string;
+  app: "platform" | "dsayatra" | "prepyatra" | "oncampus" | "resumeyatra";
+}): string => {
+  const appName = data.app || "platform";
+
+  let title = "Welcome to";
+  let titleAccent = "The Boring Education";
+  let subtitle = "Your tech learning workspace is officially set up and ready.";
+  let bodyText =
+    "Welcome to a community of developers who actually build instead of passively consuming tutorials on 2x speed. Your central learning hub gives you access to zero-cost interview sheets, developer roadmaps, and hands-on projects designed to turn you into a top 1% engineer.";
+  let quoteText =
+    "Zero paywalls, zero fluff. Just pure engineering learning built by developers, for developers.";
+  let redirectUrl = "https://www.theboringeducation.com/";
+  let redirectText = "Explore Platform Dashboard";
+
+  if (appName === "platform") {
+    title = "Welcome to";
+    titleAccent = "The Boring Education";
+    subtitle = "Your tech learning workspace is officially set up and ready.";
+    bodyText =
+      "Welcome to a community of developers who actually build instead of passively consuming tutorials on 2x speed. Your central learning hub gives you access to zero-cost interview sheets, developer roadmaps, and hands-on projects designed to turn you into a top 1% engineer.";
+    quoteText =
+      "Zero paywalls, zero fluff. Just pure engineering learning built by developers, for developers.";
+    redirectUrl = "https://www.theboringeducation.com/";
+    redirectText = "Explore The Boring Education";
+  } else if (appName === "dsayatra") {
+    title = "Welcome to";
+    titleAccent = "DSA Yatra";
+    subtitle = "Master problem-solving and conquer coding interviews.";
+    bodyText =
+      "Welcome to DSA Yatra. Your path to mastering Data Structures and Algorithms is set up. Access curated problem patterns, daily challenges, and topic-wise sheets designed to help you think like a software architect.";
+    quoteText =
+      "Don't just memorize solutions—master the underlying patterns that solve hundreds of problems.";
+    redirectUrl = "https://dsayatra.theboringeducation.com/";
+    redirectText = "Open DSA Yatra";
+  } else if (appName === "prepyatra") {
+    title = "Welcome to";
+    titleAccent = "PrepYatra";
+    subtitle = "Your journey to daily interview consistency starts today.";
+    bodyText =
+      "You are officially onboarded to PrepYatra. Track your interview practice, set daily goals, and turn preparation into a daily habit. Consistency is the secret weapon that separates successful candidates from the rest.";
+    quoteText =
+      "Small daily efforts, repeated consistently over time, lead to extraordinary career breakthroughs.";
+    redirectUrl = "https://prepyatra.theboringeducation.com/";
+    redirectText = "Open PrepYatra";
+  } else if (appName === "oncampus") {
+    title = "Welcome to";
+    titleAccent = "OnCampus";
+    subtitle = "Your complete roadmap to cracking campus placement drives.";
+    bodyText =
+      "Welcome to OnCampus. Get placement-ready with comprehensive CS fundamental guides (DBMS, OS, Computer Networks, System Design), aptitude sheets, and company-specific interview cheatsheets compiled from top recruiters.";
+    quoteText =
+      "A rock-solid foundation in core CS fundamentals is your highest-leverage asset during placement season.";
+    redirectUrl = "https://oncampus.theboringeducation.com/";
+    redirectText = "Open OnCampus";
+  } else if (appName === "resumeyatra") {
+    title = "Welcome to";
+    titleAccent = "ResumeYatra";
+    subtitle = "Craft an elite, ATS-friendly developer resume.";
+    bodyText =
+      "Welcome to ResumeYatra. Your resume is your personal product landing page. Get ready to design a clean, ATS-compliant single-page developer resume that highlights your real projects and makes recruiters reach out.";
+    quoteText =
+      "Great developers ship great projects. A great resume ensures the world gets to see what you built.";
+    redirectUrl = "https://resumeyatra.theboringeducation.com/";
+    redirectText = "Open ResumeYatra Workspace";
+  }
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title} ${titleAccent} – The Boring Education</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body, html { margin:0; padding:0; background-color:#f4f4f6; }
+    * { box-sizing:border-box; }
+    a { text-decoration:none; color:inherit; }
+    img { display:block; border:0; max-width:100%; }
+    @media only screen and (max-width:540px) {
+      .outer-td { padding:0 !important; }
+      .email-card { border-radius:0 !important; box-shadow:none !important; }
+      .ig-btn-text { font-size:11px !important; }
+      .section-pad { padding-left:16px !important; padding-right:16px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f6;font-family:Inter,ui-sans-serif,system-ui,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color:#f4f4f6;">
+    <tr>
+      <td class="outer-td" align="center" style="padding:32px 16px;background-color:#f4f4f6;">
+
+        <table class="email-card" width="560" cellpadding="0" cellspacing="0" border="0" role="presentation"
+          style="max-width:560px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.10);">
+
+          <!-- HEADER -->
+          <tr>
+            <td class="section-pad" align="center" style="background-color:#ffffff;padding:24px 28px 16px 28px;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                <tr>
+                  <td align="center" style="vertical-align:middle;text-align:center;font-family:'Space Grotesk',Inter,sans-serif;font-size:16px;font-weight:800;color:#0a0a0a;letter-spacing:-0.5px;text-transform:uppercase;white-space:nowrap;">
+                    The Boring <span style="color:#e8392a;">Education</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- HERO -->
+          <tr>
+            <td class="section-pad" align="center" style="background-color:#ffffff;padding:16px 28px 32px 28px;">
+              <h1 style="margin:0 0 14px 0;font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+                color:#0a0a0a;line-height:1.15;letter-spacing:-0.5px;text-align:center;">
+                ${title}<br/>
+                <span style="color:#e8392a;">${titleAccent}</span>
+              </h1>
+              <p style="margin:0;font-family:Inter,sans-serif;font-size:14px;color:#6b6b6b;line-height:1.6;text-align:center;">${subtitle}</p>
+            </td>
+          </tr>
+
+          <!-- GREETING + BODY -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:28px 28px 0 28px;border-bottom:1px solid #ebebeb;background-color:#ffffff;">
+              <p style="margin:0 0 10px 0;font-family:Inter,sans-serif;font-size:16px;color:#0a0a0a;line-height:1.65;text-align:center;">
+                Hey <strong style="font-family:'Space Grotesk',sans-serif;font-weight:700;white-space:nowrap;">${data.userName}!</strong>
+              </p>
+              <p style="margin:0 0 18px 0;font-family:Inter,sans-serif;font-size:14px;color:#555555;line-height:1.75;text-align:center;">${bodyText}</p>
+              <div style="background-color:#fdf0ef;border-left:4px solid #e8392a;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:28px;text-align:center;display:inline-block;width:100%;max-width:480px;">
+                <p style="margin:0;font-family:Inter,sans-serif;font-size:14px;color:#0a0a0a;line-height:1.7;font-weight:500;text-align:center;">${quoteText}</p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CTA BUTTON -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:28px 28px 28px 28px;border-bottom:1px solid #ebebeb;background-color:#ffffff;">
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom:0;">
+                <tr>
+                  <td>
+                    <a href="${redirectUrl}"
+                      style="display:block;background-color:#e8392a;border-radius:12px;padding:16px 20px;text-decoration:none;text-align:center;">
+                      <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto;">
+                        <tr>
+                          <td align="center" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#ffffff;vertical-align:middle;text-align:center;white-space:nowrap;">${redirectText} →</td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- COMMUNITY -->
+          <tr>
+            <td class="section-pad" align="center" style="padding:28px 28px 0 28px;border-bottom:1px solid #ebebeb;background-color:#ffffff;">
+              <table align="center" width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto; max-width:440px;">
+                <tr>
+                  <td align="center" style="font-size:20px;padding-bottom:8px;text-align:center;">🤝</td>
+                </tr>
+                <tr>
+                  <td align="center" style="text-align:center;">
+                    <h3 style="margin:0 0 8px 0;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0a0a0a;line-height:1.3;text-align:center;">Join our Developer Community</h3>
+                    <p style="margin:0 0 18px 0;font-family:Inter,sans-serif;font-size:13px;color:#6b6b6b;line-height:1.7;text-align:center;">
+                      Follow us online and stay connected with a community of builders.
+                    </p>
+                    <div style="margin-bottom:28px;text-align:center;">
+                      <a href="https://www.linkedin.com/company/theboringeducation" target="_blank"
+                        style="display:inline-block;border:1px solid #d1d1d6;border-radius:8px;padding:8px 12px;text-decoration:none;margin-right:6px;margin-bottom:6px;white-space:nowrap;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#0a0a0a;">
+                        LinkedIn
+                      </a>
+                      <a href="https://www.instagram.com/theboringeducation" target="_blank"
+                        style="display:inline-block;border:1px solid #d1d1d6;border-radius:8px;padding:8px 12px;text-decoration:none;margin-right:6px;margin-bottom:6px;white-space:nowrap;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#0a0a0a;">
+                        Instagram
+                      </a>
+                      <a href="https://github.com/The-Boring-Education" target="_blank"
+                        style="display:inline-block;border:1px solid #d1d1d6;border-radius:8px;padding:8px 12px;text-decoration:none;margin-bottom:6px;white-space:nowrap;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#0a0a0a;">
+                        GitHub
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td align="center" style="padding:24px 28px;text-align:center;background-color:#ffffff;">
+              <table align="center" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin:0 auto 10px auto;">
+                <tr>
+                  <td style="vertical-align:middle; font-family:'Space Grotesk',Inter,sans-serif; font-size:12px; font-weight:800; color:#0a0a0a; opacity:0.35; letter-spacing:-0.5px; text-transform:uppercase; white-space:nowrap;">
+                    The Boring <span style="color:#e8392a;">Education</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 6px 0;font-family:Inter,sans-serif;font-size:11px;color:#999999;text-align:center;">© 2026 The Boring Education</p>
+              <a href="https://www.theboringeducation.com"
+                style="font-family:Inter,sans-serif;font-size:11px;color:#e8392a;text-decoration:none;text-align:center;">theboringeducation.com</a>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`;
+};

@@ -16,6 +16,7 @@ import {
   courseCompletionTemplate,
   courseEnrollmentTemplate,
   interviewPrepEnrollmentTemplate,
+  onboardingEmailTemplate,
   projectEnrollmentTemplate,
   reactivationEmailTemplate,
   welcomeEmailTemplate,
@@ -143,6 +144,14 @@ class EmailTriggerService {
           data.metadata?.subject || "Welcome back to your learning journey! 🚀",
         );
 
+      case "ONBOARDING":
+        return this.sendEmailWithTemplate(
+          trigger,
+          data,
+          onboardingEmailTemplate,
+          data.metadata?.subject || "Welcome to The Boring Education! 🎉",
+        );
+
       default:
         return {
           success: false,
@@ -256,6 +265,13 @@ class EmailTriggerService {
             redirectText: additionalData?.redirectText || "",
             cohort: additionalData?.cohort || "1D",
             app: additionalData?.app,
+          };
+          break;
+
+        case "ONBOARDING":
+          emailData = {
+            ...baseData,
+            app: additionalData?.app || "platform",
           };
           break;
 

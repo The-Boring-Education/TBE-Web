@@ -6,11 +6,14 @@ import {
   onboardPrepYatraUserTODB,
   onboardUserToDB,
 } from "@/lib/database";
+import { User } from "@/lib/database/models";
 import type {
   AddOnboardingPayloadProps,
   AddPrepYatraOnboardingPayloadProps,
 } from "@/lib/interfaces";
+import { emailTriggerService } from "@/lib/services/triggers";
 import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
@@ -127,6 +130,27 @@ const handleUserOnboarding = async (
       );
     }
 
+    if (data) {
+      emailTriggerService
+        .sendExternalEmail({
+          emailType: "ONBOARDING",
+          userData: {
+            email: data.email,
+            name: data.name,
+            id: data._id.toString(),
+          },
+          additionalData: {
+            app: "platform",
+            subject: "Your tech education is now unlocked! 🛠️",
+          },
+        })
+        .catch((err) => {
+          logger.error("Failed to send platform onboarding email", {
+            error: err,
+          });
+        });
+    }
+
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
@@ -164,6 +188,9 @@ const handlePrepYatraOnboarding = async (
       );
     }
 
+    const existingUser = await User.findById(userId);
+    const alreadyOnboarded = existingUser?.prepYatra?.pyOnboarded;
+
     const { data, error: onboardUserError } = await onboardPrepYatraUserTODB(
       userId,
       workDomain,
@@ -179,6 +206,27 @@ const handlePrepYatraOnboarding = async (
           message: "Error while onboarding user",
         }),
       );
+    }
+
+    if (data && !alreadyOnboarded) {
+      emailTriggerService
+        .sendExternalEmail({
+          emailType: "ONBOARDING",
+          userData: {
+            email: data.email,
+            name: data.name,
+            id: data._id.toString(),
+          },
+          additionalData: {
+            app: "prepyatra",
+            subject: "PrepYatra Onboarding Completed! 🚀",
+          },
+        })
+        .catch((err) => {
+          logger.error("Failed to send PrepYatra onboarding email", {
+            error: err,
+          });
+        });
     }
 
     return res.status(apiStatusCodes.OKAY).json(
