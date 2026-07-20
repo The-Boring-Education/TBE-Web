@@ -13,7 +13,11 @@ import {
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import { useGamifiedAction } from '@tbe/gamification';
+import {
+  calculateUserPointsForAction,
+  useGamificationContext,
+  useGamifiedAction,
+} from '@tbe/gamification';
 import {
   useAnalytics,
   usePaymentAccess,
@@ -21,7 +25,7 @@ import {
   useUser,
 } from '@tbe/hooks';
 import type { SheetPageProps } from '@tbe/interface';
-import { useMutation } from '@tbe/query';
+import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
 import { getSheetPageProps, sendRequest } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
@@ -109,6 +113,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+  const queryClient = useQueryClient();
+  const { triggerCelebration, showToast } = useGamificationContext();
 
   // Universal payment access hook - handles all payment status and locked logic
   const { isLocked, isPurchased } = usePaymentAccess({
@@ -166,23 +172,34 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 
       // Only proceed if the API call was successful
       if (response?.status) {
-        // Fire gamified action on completion
         if (newCompletionStatus) {
-          await gamifiedAction.triggerGamifiedAction({
-            gamificationAction: 'COMPLETE_QUESTION',
-            analytics: {
-              action: 'QUESTION_COMPLETE',
-              category: 'Learning',
-              label: 'Question Completed',
-            },
-            customMessage: 'Question solved! Great work!',
-            metadata: {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ''),
+          });
+          const pointsEarned = calculateUserPointsForAction('COMPLETE_QUESTION');
+          const intensity =
+            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
+          triggerCelebration({ type: 'points', intensity });
+          showToast({
+            type: 'points',
+            message: 'Question solved! Great work!',
+            points: pointsEarned,
+          });
+          trackEvent({
+            action: 'QUESTION_COMPLETE',
+            category: 'Learning',
+            label: 'Question Completed',
+            value: {
+              userId: user?.id,
               sheetId: sheet._id,
               questionId: currentQuestionId,
               sheetName: sheet.name,
             },
           });
         } else {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ''),
+          });
           trackEvent({
             action: 'INTERVIEW_SHEET_PROGRESS',
             category: 'InterviewSheet',

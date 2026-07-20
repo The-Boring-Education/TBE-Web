@@ -109,7 +109,7 @@ describe("gamification DB queries — client payloads omit actions", () => {
       const result = await updateUserPointsInDB("u1", "ENROLL_COURSE");
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
-        { userId: "u1" },
+        { userId: { $eq: "u1" } },
         expect.objectContaining({
           $push: expect.objectContaining({
             actions: expect.objectContaining({
@@ -137,7 +137,7 @@ describe("gamification DB queries — client payloads omit actions", () => {
       );
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
-        { userId: "u1" },
+        { userId: { $eq: "u1" } },
         expect.any(Array),
         { new: true, select: "-actions" },
       );
