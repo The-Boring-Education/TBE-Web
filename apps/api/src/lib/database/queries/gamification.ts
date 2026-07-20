@@ -11,10 +11,12 @@ import { logger } from "@/lib/utils/logger";
 
 import { Gamification, UserActivityLog } from "../models";
 
-const getMongoUserId = (userId: string) =>
-  mongoose.isValidObjectId(userId)
-    ? new mongoose.Types.ObjectId(userId)
-    : userId;
+const getMongoUserId = (userId: string) => {
+  const cleanId = typeof userId === "string" ? userId.trim() : String(userId);
+  return mongoose.isValidObjectId(cleanId)
+    ? new mongoose.Types.ObjectId(cleanId)
+    : cleanId;
+};
 
 const addGamificationDocInDB = async (
   userId: string,
@@ -38,8 +40,9 @@ const getUserPointsFromDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
+    const filterId = getMongoUserId(userId);
     const gamification = await Gamification.findOne({
-      userId: { $eq: userId },
+      userId: { $eq: filterId },
     })
       .select("-actions")
       .lean();
@@ -75,7 +78,7 @@ const updateUserPointsInDB = async (
     const filterId = getMongoUserId(userId);
 
     let updatedGamification = await Gamification.findOneAndUpdate(
-      { userId: filterId },
+      { userId: { $eq: filterId } },
       {
         $push: { actions: action },
         $inc: { points: pointsEarned },
@@ -150,7 +153,7 @@ const deductUserPointsFromDB = async (
     const filterId = getMongoUserId(userId);
 
     const updatedGamification = await Gamification.findOneAndUpdate(
-      { userId: filterId },
+      { userId: { $eq: filterId } },
       [
         {
           $set: {
