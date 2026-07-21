@@ -59,6 +59,9 @@ const AppContent = ({
             // bounced right back to Step 1 (0%) instead of landing on the
             // intended page.
             const accessToken = getAccessToken();
+            // NOTE: intentional array-join instead of a `******
+            // template literal — some tooling redacts the literal pattern
+            // and corrupts the source.
             const authHeaders: Record<string, string> = accessToken
               ? { Authorization: ['Bearer', accessToken].join(' ') }
               : {};
