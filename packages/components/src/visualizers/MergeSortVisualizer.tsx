@@ -261,29 +261,30 @@ export default function MergeSortVisualizer() {
   const transMs = currentSpeed.transitionMs;
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#09090b] border border-gray-800 shadow-xl min-h-[380px]">
-      {/* ══ LEFT SIDEBAR / TOP CONTROLS ON MOBILE ══ */}
-      <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[190px] border-b md:border-b-0 md:border-r border-gray-800 bg-[#070709]">
-        <div>
-          <p className="text-[9px] font-black uppercase tracking-widest mb-2 text-gray-500">
+    <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#0a0a0b] border border-zinc-800/80 shadow-2xl min-h-[500px] md:h-[520px]">
+      {/* ══ LEFT SIDEBAR / TOP CONTROLS ══ */}
+      <div className="flex flex-col gap-3.5 p-4 md:p-5 shrink-0 w-full md:w-[210px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#0A0A0B]">
+        {/* Array Size Block */}
+        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-[#0A0A0B]">
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Array Size
           </p>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-mono text-gray-400">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-zinc-400">
               {MIN_SIZE}
             </span>
-            <span className="text-lg md:text-xl font-black tabular-nums text-red-500">
+            <span className="text-xl font-bold tabular-nums text-[#FF5757]">
               {arraySize}
             </span>
-            <span className="text-[11px] font-mono text-gray-400">
+            <span className="text-xs font-medium text-zinc-400">
               {MAX_SIZE}
             </span>
           </div>
 
           <div className="relative flex items-center" style={{ height: 20 }}>
-            <div className="absolute w-full rounded-full h-1 bg-gray-800" />
+            <div className="absolute w-full rounded-full h-1 bg-zinc-800" />
             <div
-              className="absolute rounded-full h-1 bg-red-500 transition-all duration-150"
+              className="absolute rounded-full h-1 bg-[#FF5757] transition-all duration-150"
               style={{
                 width: `${((arraySize - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)) * 100}%`,
               }}
@@ -303,26 +304,27 @@ export default function MergeSortVisualizer() {
           id="msv-generate"
           type="button"
           onClick={() => generate(arraySize)}
-          className="w-full rounded-lg text-xs font-bold py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 transition-all active:scale-95 cursor-pointer"
+          className="w-full rounded-xl text-xs font-semibold py-2.5 bg-[#111113] hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-zinc-700/60 text-zinc-200 transition-all active:scale-[0.98] cursor-pointer"
         >
           ↻ Randomize
         </button>
 
-        <div>
-          <p className="text-[9px] font-black uppercase tracking-widest mb-2 text-gray-500">
+        {/* Speed Block */}
+        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-[#0A0A0B]">
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Speed
           </p>
-          <div className="flex flex-row md:flex-col gap-1 overflow-x-auto scrollbar-none pb-1 md:pb-0">
+          <div className="flex flex-row md:flex-col gap-1.5 overflow-x-auto scrollbar-none">
             {SPEEDS.map(({ label }, i) => (
               <button
                 key={label}
                 id={`msv-speed-${i}`}
                 type="button"
                 onClick={() => setSpeedIdx(i)}
-                className={`flex-1 md:w-full rounded-md text-[11px] font-bold transition-all active:scale-95 cursor-pointer text-center md:text-left px-2.5 py-1.5 whitespace-nowrap ${
+                className={`flex-1 md:w-full rounded-lg text-xs transition-all active:scale-[0.98] cursor-pointer text-center md:text-left px-3 py-1.5 whitespace-nowrap ${
                   speedIdx === i
-                    ? "bg-gray-800 text-white border border-gray-700"
-                    : "bg-transparent text-gray-500 border border-transparent hover:text-gray-300"
+                    ? "bg-[#FF5757]/15 text-[#FF5757] border border-[#FF5757]/40 font-semibold shadow-sm"
+                    : "bg-[#111113] text-zinc-400 border border-zinc-800/80 hover:text-zinc-200 hover:border-zinc-700/60 font-medium"
                 }`}
               >
                 {label}
@@ -330,20 +332,14 @@ export default function MergeSortVisualizer() {
             ))}
           </div>
         </div>
-
-        <div className="hidden md:block border-t border-gray-800" />
-
-        <div className="flex flex-row md:flex-col justify-between md:justify-start gap-4 md:gap-2 border-t md:border-t-0 border-gray-800 pt-3 md:pt-0">
-          <StatRow label="Steps" value={steps.length - 1} />
-          <StatRow label="Step" value={`${idx} / ${steps.length - 1}`} />
-        </div>
       </div>
 
       {/* ══ RIGHT — CHART + CONTROLS ══ */}
-      <div className="flex flex-col flex-1 min-w-0">
-        <div className="flex items-center justify-center px-4 md:px-6 py-2.5 min-h-[44px] border-b border-[#111113]">
+      <div className="flex flex-col flex-1 min-w-0 justify-between h-full">
+        {/* Status bar */}
+        <div className="h-[48px] shrink-0 flex items-center justify-center px-4 md:px-6 border-b border-zinc-800/80 bg-[#0a0a0b]">
           <span
-            className="text-xs md:text-[13px] font-semibold tracking-wide text-center leading-tight transition-colors duration-150"
+            className="text-xs md:text-[13px] font-semibold tracking-tight text-center leading-tight transition-colors duration-150 truncate max-w-full"
             style={{
               color: finished
                 ? "#10b981"
@@ -353,14 +349,15 @@ export default function MergeSortVisualizer() {
                     ? "#fbbf24"
                     : step.activeRange !== null
                       ? "#60a5fa"
-                      : "#6b7280",
+                      : "#a1a1aa",
             }}
           >
             {step.description}
           </span>
         </div>
 
-        <div className="flex items-end justify-center px-2 sm:px-6 pt-5 pb-4 overflow-x-auto scrollbar-none flex-1 min-h-[200px]">
+        {/* Bar chart container */}
+        <div className="flex items-end justify-center px-2 sm:px-6 pt-6 pb-4 overflow-x-auto scrollbar-none flex-1 min-h-[220px]">
           <div
             className="relative flex items-end justify-center max-w-full"
             style={{
@@ -400,7 +397,7 @@ export default function MergeSortVisualizer() {
                       width: "100%",
                       height: barH,
                       background: color,
-                      borderRadius: "5px 5px 2px 2px",
+                      borderRadius: "6px 6px 2px 2px",
                       transition: `background-color ${transMs}ms ease, height ${transMs}ms cubic-bezier(0.4,0,0.2,1)`,
                       boxShadow:
                         step.writingIndex === i || step.comparing?.includes(i)
@@ -414,9 +411,10 @@ export default function MergeSortVisualizer() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 py-2.5 px-3 border-t border-b border-gray-800/80">
+        {/* Legend */}
+        <div className="h-[40px] shrink-0 flex flex-wrap items-center justify-center gap-3 sm:gap-4 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/50">
           {[
-            { color: "#374151", label: "Unsorted" },
+            { color: "#3f3f46", label: "Unsorted" },
             { color: "#60a5fa", label: "Active Subarray" },
             { color: "#fbbf24", label: "Comparing" },
             { color: "#06b6d4", label: "Writing Merged" },
@@ -427,20 +425,23 @@ export default function MergeSortVisualizer() {
                 className="rounded-sm inline-block w-2 h-2"
                 style={{ background: color }}
               />
-              <span className="text-[10px] text-gray-500">{label}</span>
+              <span className="text-[10px] font-medium text-zinc-400">
+                {label}
+              </span>
             </div>
           ))}
         </div>
 
-        <div className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4">
+        {/* Play controls */}
+        <div className="h-[56px] shrink-0 flex items-center gap-3 px-4 sm:px-6 py-2.5">
           <button
             id="msv-play"
             type="button"
             onClick={() => (finished ? reset() : setPlaying((p) => !p))}
-            className="flex items-center gap-2 rounded-lg text-white text-xs font-bold tracking-wide cursor-pointer active:scale-95 transition-all shadow-md"
+            className="flex items-center gap-2 rounded-xl text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shadow-[0_4px_14px_rgba(255,87,87,0.25)]"
             style={{
-              padding: "8px 18px",
-              background: finished ? "#059669" : "#ef4444",
+              padding: "9px 20px",
+              background: finished ? "#059669" : "#FF5757",
             }}
           >
             {finished ? <IconReset /> : playing ? <IconPause /> : <IconPlay />}
@@ -457,35 +458,39 @@ export default function MergeSortVisualizer() {
             <button
               type="button"
               onClick={reset}
-              className="rounded-lg text-xs font-bold cursor-pointer active:scale-95 transition-all px-3.5 py-2 border border-gray-700 text-gray-400 hover:text-white bg-transparent"
+              className="flex items-center gap-2 rounded-xl text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all border border-zinc-800/80 text-zinc-300 hover:text-white bg-[#111113] hover:bg-zinc-800/80"
+              style={{
+                padding: "9px 20px",
+              }}
             >
               Reset
             </button>
           )}
         </div>
 
-        <div className="mx-4 sm:mx-6 mb-4 sm:mb-6 rounded-xl border border-gray-800 bg-[#050507] overflow-hidden flex-1">
-          <div className="px-4 py-2 border-b border-[#111113]">
-            <span className="text-[9px] font-black uppercase tracking-widest text-gray-600">
+        {/* Step log container - fixed height prevents screen shifting */}
+        <div className="h-[135px] shrink-0 mx-4 sm:mx-6 mb-4 rounded-xl border border-zinc-800/80 bg-[#111113] overflow-hidden flex flex-col">
+          <div className="px-4 py-2 border-b border-zinc-800/80 shrink-0 bg-[#0a0a0b]">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
               Step log
             </span>
           </div>
-          <div>
+          <div className="flex-1 overflow-y-auto scrollbar-thin-grey">
             {log.map((s, i) => (
               <div
                 key={i}
                 className={`flex items-center gap-3 px-4 py-1.5 ${
-                  i === 0 ? "bg-white/[0.02]" : "bg-transparent"
-                } ${i < log.length - 1 ? "border-b border-[#0d0d0f]" : ""}`}
+                  i === 0 ? "bg-white/[0.03]" : "bg-transparent"
+                } ${i < log.length - 1 ? "border-b border-zinc-900" : ""}`}
               >
                 <span
                   className={`rounded-full shrink-0 w-1.5 h-1.5 inline-block ${
-                    i === 0 ? "bg-red-500" : "bg-gray-800"
+                    i === 0 ? "bg-[#FF5757]" : "bg-zinc-800"
                   }`}
                 />
                 <span
                   className={`text-[11px] font-mono ${
-                    i === 0 ? "text-gray-300 font-semibold" : "text-gray-600"
+                    i === 0 ? "text-zinc-200 font-semibold" : "text-zinc-500"
                   }`}
                 >
                   {s.description}
@@ -502,10 +507,8 @@ export default function MergeSortVisualizer() {
 function StatRow({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[10px] text-gray-500">{label}</span>
-      <span className="text-[11px] font-mono font-bold text-gray-400">
-        {value}
-      </span>
+      <span className="text-xs font-medium text-zinc-400">{label}</span>
+      <span className="text-xs font-semibold text-zinc-200">{value}</span>
     </div>
   );
 }
