@@ -46,6 +46,7 @@ const LinkButton = ({
       className={className}
       href={href}
       target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
     >
       <Button {...themedButtonProps} isLoading={false} suppressGlobalUiClick />
     </Link>
