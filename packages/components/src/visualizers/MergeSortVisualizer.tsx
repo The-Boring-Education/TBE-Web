@@ -261,11 +261,10 @@ export default function MergeSortVisualizer() {
   const transMs = currentSpeed.transitionMs;
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#0a0a0b] border border-zinc-800/80 shadow-2xl min-h-[500px] md:h-[520px]">
-      {/* ══ LEFT SIDEBAR / TOP CONTROLS ══ */}
-      <div className="flex flex-col gap-3.5 p-4 md:p-5 shrink-0 w-full md:w-[210px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#0A0A0B]">
-        {/* Array Size Block */}
-        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-[#0A0A0B]">
+    <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#0a0a0b] border border-zinc-800/80 shadow-2xl md:h-[520px]">
+      {/* ══ LEFT SIDEBAR / TOP CONTROLS ON MOBILE ══ */}
+      <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[200px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#070709]">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Array Size
           </p>
@@ -304,17 +303,16 @@ export default function MergeSortVisualizer() {
           id="msv-generate"
           type="button"
           onClick={() => generate(arraySize)}
-          className="w-full rounded-xl text-xs font-semibold py-2.5 bg-[#111113] hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-zinc-700/60 text-zinc-200 transition-all active:scale-[0.98] cursor-pointer"
+          className="w-full rounded-xl text-xs font-semibold py-2 bg-[#111113] hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-zinc-700/60 text-zinc-200 transition-all active:scale-[0.98] cursor-pointer"
         >
           ↻ Randomize
         </button>
 
-        {/* Speed Block */}
-        <div className="p-3.5 rounded-xl border border-zinc-800/80 bg-[#0A0A0B]">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Speed
           </p>
-          <div className="flex flex-row md:flex-col gap-1.5 overflow-x-auto scrollbar-none">
+          <div className="flex flex-row md:flex-col gap-1.5 overflow-x-auto scrollbar-none pb-1 md:pb-0">
             {SPEEDS.map(({ label }, i) => (
               <button
                 key={label}
@@ -335,11 +333,11 @@ export default function MergeSortVisualizer() {
       </div>
 
       {/* ══ RIGHT — CHART + CONTROLS ══ */}
-      <div className="flex flex-col flex-1 min-w-0 justify-between h-full">
+      <div className="flex flex-col flex-1 min-w-0 justify-between md:h-full">
         {/* Status bar */}
-        <div className="h-[48px] shrink-0 flex items-center justify-center px-4 md:px-6 border-b border-zinc-800/80 bg-[#0a0a0b]">
+        <div className="min-h-[44px] md:h-[48px] shrink-0 flex items-center justify-center px-4 md:px-6 py-2 border-b border-zinc-800/80 bg-[#0a0a0b]">
           <span
-            className="text-xs md:text-[13px] font-semibold tracking-tight text-center leading-tight transition-colors duration-150 truncate max-w-full"
+            className="text-xs md:text-[13px] font-semibold tracking-tight text-center leading-tight transition-colors duration-150"
             style={{
               color: finished
                 ? "#10b981"
@@ -357,7 +355,7 @@ export default function MergeSortVisualizer() {
         </div>
 
         {/* Bar chart container */}
-        <div className="flex items-end justify-center px-2 sm:px-6 pt-6 pb-4 overflow-x-auto scrollbar-none flex-1 min-h-[220px]">
+        <div className="flex items-end justify-center px-2 sm:px-6 pt-5 pb-4 overflow-x-auto scrollbar-none flex-1 min-h-[180px] md:min-h-[220px]">
           <div
             className="relative flex items-end justify-center max-w-full"
             style={{
@@ -412,7 +410,7 @@ export default function MergeSortVisualizer() {
         </div>
 
         {/* Legend */}
-        <div className="h-[40px] shrink-0 flex flex-wrap items-center justify-center gap-3 sm:gap-4 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/50">
+        <div className="min-h-[38px] shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/50">
           {[
             { color: "#3f3f46", label: "Unsorted" },
             { color: "#60a5fa", label: "Active Subarray" },
@@ -422,10 +420,10 @@ export default function MergeSortVisualizer() {
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span
-                className="rounded-sm inline-block w-2 h-2"
+                className="rounded-sm inline-block w-2 h-2 shrink-0"
                 style={{ background: color }}
               />
-              <span className="text-[10px] font-medium text-zinc-400">
+              <span className="text-[10px] font-medium text-zinc-400 whitespace-nowrap">
                 {label}
               </span>
             </div>
@@ -433,14 +431,13 @@ export default function MergeSortVisualizer() {
         </div>
 
         {/* Play controls */}
-        <div className="h-[56px] shrink-0 flex items-center gap-3 px-4 sm:px-6 py-2.5">
+        <div className="min-h-[52px] shrink-0 flex items-center gap-3 px-4 sm:px-6 py-2.5">
           <button
             id="msv-play"
             type="button"
             onClick={() => (finished ? reset() : setPlaying((p) => !p))}
-            className="flex items-center gap-2 rounded-xl text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shadow-[0_4px_14px_rgba(255,87,87,0.25)]"
+            className="flex items-center gap-2 rounded-xl text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-4 py-2 shadow-[0_4px_14px_rgba(255,87,87,0.25)]"
             style={{
-              padding: "9px 20px",
               background: finished ? "#059669" : "#FF5757",
             }}
           >
@@ -458,10 +455,7 @@ export default function MergeSortVisualizer() {
             <button
               type="button"
               onClick={reset}
-              className="flex items-center gap-2 rounded-xl text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all border border-zinc-800/80 text-zinc-300 hover:text-white bg-[#111113] hover:bg-zinc-800/80"
-              style={{
-                padding: "9px 20px",
-              }}
+              className="flex items-center gap-2 rounded-xl text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-4 py-2 border border-zinc-800/80 text-zinc-300 hover:text-white bg-[#111113] hover:bg-zinc-800/80"
             >
               Reset
             </button>
