@@ -368,6 +368,10 @@ const DsaPrepWorkspace = ({
                           ._priorityScore ?? 0) > 0;
                       const hasNotes =
                         !!question.notes || !!(localNotes && localNotes[qId]);
+                      const hasVisualizer = Boolean(
+                        question.visualizerId ||
+                        question.answer?.includes("```visualizer"),
+                      );
 
                       return {
                         name: question.name,
@@ -376,6 +380,7 @@ const DsaPrepWorkspace = ({
                         isRecommended,
                         hasNotes,
                         isRealWorldProblem: question.isRealWorldProblem,
+                        hasVisualizer,
                       };
                     }}
                     onItemClick={(question) => {

@@ -5,64 +5,91 @@ import { useCallback, useEffect, useRef, useState } from "react";
 ────────────────────────────────────────────────── */
 interface SortStep {
   array: number[];
-  comparing: [number, number] | null;
-  swapped: boolean;
-  sortedValues: number[];
+  comparing: number | null;
+  currentMinIndex: number | null;
+  swapping: [number, number] | null;
+  sortedIndices: number[];
+  currentI: number | null;
   description: string;
 }
 
 /* ──────────────────────────────────────────────────
-   Step generator
+   Step generator for Selection Sort
 ────────────────────────────────────────────────── */
-function generateSteps(input: number[]): SortStep[] {
+function generateSelectionSortSteps(input: number[]): SortStep[] {
   const steps: SortStep[] = [];
   const arr = [...input];
   const n = arr.length;
   const sortedSet = new Set<number>();
 
   const snap = (
-    comparing: [number, number] | null,
-    swapped: boolean,
+    comparing: number | null,
+    currentMinIndex: number | null,
+    swapping: [number, number] | null,
+    currentI: number | null,
     description: string,
   ) =>
     steps.push({
       array: [...arr],
       comparing,
-      swapped,
-      sortedValues: Array.from(sortedSet),
+      currentMinIndex,
+      swapping,
+      sortedIndices: Array.from(sortedSet),
+      currentI,
       description,
     });
 
-  snap(null, false, "Ready — press Start");
+  snap(null, null, null, null, "Ready — press Start");
 
   for (let i = 0; i < n - 1; i++) {
-    let didSwap = false;
-    for (let j = 0; j < n - i - 1; j++) {
-      const val1 = arr[j];
-      const val2 = arr[j + 1];
-      if (val1 !== undefined && val2 !== undefined) {
-        snap([j, j + 1], false, `Comparing  ${val1}  and  ${val2}`);
-        if (val1 > val2) {
-          arr[j] = val2;
-          arr[j + 1] = val1;
-          didSwap = true;
-          snap([j, j + 1], true, `Swap  ${val2}  ↔  ${val1}`);
-        }
+    let minIdx = i;
+    snap(
+      null,
+      minIdx,
+      null,
+      i,
+      `Pass ${i + 1}: Assume minimum is ${arr[i]} at index ${i}`,
+    );
+
+    for (let j = i + 1; j < n; j++) {
+      snap(
+        j,
+        minIdx,
+        null,
+        i,
+        `Comparing ${arr[j]} with current min ${arr[minIdx]}`,
+      );
+      if (arr[j]! < arr[minIdx]!) {
+        minIdx = j;
+        snap(
+          null,
+          minIdx,
+          null,
+          i,
+          `New minimum found: ${arr[minIdx]} at index ${minIdx}`,
+        );
       }
     }
-    const finalVal = arr[n - 1 - i];
-    if (finalVal !== undefined) {
-      sortedSet.add(finalVal);
-      snap(null, false, `${finalVal} is in its final position`);
+
+    if (minIdx !== i) {
+      snap(
+        null,
+        minIdx,
+        [i, minIdx],
+        i,
+        `Swapping min ${arr[minIdx]} (index ${minIdx}) with ${arr[i]} (index ${i})`,
+      );
+      const temp = arr[i]!;
+      arr[i] = arr[minIdx]!;
+      arr[minIdx] = temp;
     }
-    if (!didSwap) {
-      arr.forEach((v) => sortedSet.add(v));
-      break;
-    }
+
+    sortedSet.add(i);
+    snap(null, null, null, i, `${arr[i]} is now in its final position`);
   }
 
-  arr.forEach((v) => sortedSet.add(v));
-  snap(null, false, "✓  Array sorted!");
+  sortedSet.add(n - 1);
+  snap(null, null, null, null, "✓ Array sorted!");
   return steps;
 }
 
@@ -82,13 +109,15 @@ const SPEEDS: { label: string; stepMs: number; transitionMs: number }[] = [
   { label: "4×", stepMs: 130, transitionMs: 80 },
 ];
 
-const CHART_H = 180; // px
+const CHART_H = 180;
 
-function barColor(value: number, index: number, step: SortStep): string {
-  if (step.sortedValues.includes(value)) return "#10b981";
-  if (step.comparing?.includes(index))
-    return step.swapped ? "#f87171" : "#fbbf24";
-  return "#374151";
+function barColor(index: number, step: SortStep): string {
+  if (step.sortedIndices.includes(index)) return "#10b981"; // Sorted: Green
+  if (step.swapping?.includes(index)) return "#f87171"; // Swapping: Red
+  if (step.currentMinIndex === index) return "#a855f7"; // Min Element: Purple
+  if (step.comparing === index) return "#fbbf24"; // Comparing: Yellow
+  if (step.currentI === index) return "#60a5fa"; // Current Pass Target: Blue
+  return "#374151"; // Unsorted: Gray
 }
 
 const MIN_SIZE = 4;
@@ -98,13 +127,13 @@ const DEFAULT_SIZE = 7;
 /* ──────────────────────────────────────────────────
    Component
 ────────────────────────────────────────────────── */
-export default function BubbleSortVisualizer() {
+export default function SelectionSortVisualizer() {
   const [arraySize, setArraySize] = useState(DEFAULT_SIZE);
   const [baseArray, setBaseArray] = useState<number[]>(() =>
     randomArray(DEFAULT_SIZE),
   );
   const [steps, setSteps] = useState<SortStep[]>(() =>
-    generateSteps(randomArray(DEFAULT_SIZE)),
+    generateSelectionSortSteps(randomArray(DEFAULT_SIZE)),
   );
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -116,11 +145,9 @@ export default function BubbleSortVisualizer() {
   const n = step.array.length;
   const maxVal = Math.max(...step.array);
 
-  /* bar geometry — shrink bar width for large arrays */
-  const barW = Math.max(20, Math.min(48, Math.floor(300 / n)));
-  const barGap = Math.max(4, Math.min(12, Math.floor(40 / n)));
+  const barW = Math.max(14, Math.min(44, Math.floor(260 / n)));
+  const barGap = Math.max(2, Math.min(10, Math.floor(30 / n)));
 
-  /* advance */
   const advance = useCallback(() => {
     setIdx((prev) => {
       if (prev >= steps.length - 1) {
@@ -131,7 +158,6 @@ export default function BubbleSortVisualizer() {
     });
   }, [steps.length]);
 
-  /* autoplay */
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     if (!playing) return;
@@ -146,23 +172,20 @@ export default function BubbleSortVisualizer() {
     if (finished) setPlaying(false);
   }, [finished]);
 
-  /* reset to current base array */
   const reset = useCallback(() => {
     setPlaying(false);
-    setSteps(generateSteps(baseArray));
+    setSteps(generateSelectionSortSteps(baseArray));
     setIdx(0);
   }, [baseArray]);
 
-  /* generate a fresh random array of given size */
   const generate = useCallback((size: number) => {
     setPlaying(false);
     const arr = randomArray(size);
     setBaseArray(arr);
-    setSteps(generateSteps(arr));
+    setSteps(generateSelectionSortSteps(arr));
     setIdx(0);
   }, []);
 
-  /* when size changes regenerate */
   const handleSizeChange = (size: number) => {
     setArraySize(size);
     generate(size);
@@ -179,7 +202,6 @@ export default function BubbleSortVisualizer() {
     <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#09090b] border border-gray-800 shadow-xl min-h-[380px]">
       {/* ══ LEFT SIDEBAR / TOP CONTROLS ON MOBILE ══ */}
       <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[190px] border-b md:border-b-0 md:border-r border-gray-800 bg-[#070709]">
-        {/* Array Size */}
         <div>
           <p className="text-[9px] font-black uppercase tracking-widest mb-2 text-gray-500">
             Array Size
@@ -196,7 +218,6 @@ export default function BubbleSortVisualizer() {
             </span>
           </div>
 
-          {/* Custom styled range slider */}
           <div className="relative flex items-center" style={{ height: 20 }}>
             <div className="absolute w-full rounded-full h-1 bg-gray-800" />
             <div
@@ -216,9 +237,8 @@ export default function BubbleSortVisualizer() {
           </div>
         </div>
 
-        {/* Generate button */}
         <button
-          id="bsv-generate"
+          id="ssv-generate"
           type="button"
           onClick={() => generate(arraySize)}
           className="w-full rounded-lg text-xs font-bold py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 transition-all active:scale-95 cursor-pointer"
@@ -226,7 +246,6 @@ export default function BubbleSortVisualizer() {
           ↻ Randomize
         </button>
 
-        {/* Speed */}
         <div>
           <p className="text-[9px] font-black uppercase tracking-widest mb-2 text-gray-500">
             Speed
@@ -235,7 +254,7 @@ export default function BubbleSortVisualizer() {
             {SPEEDS.map(({ label }, i) => (
               <button
                 key={label}
-                id={`bsv-speed-${i}`}
+                id={`ssv-speed-${i}`}
                 type="button"
                 onClick={() => setSpeedIdx(i)}
                 className={`flex-1 md:w-full rounded-md text-[11px] font-bold transition-all active:scale-95 cursor-pointer text-center md:text-left px-2.5 py-1.5 whitespace-nowrap ${
@@ -250,10 +269,8 @@ export default function BubbleSortVisualizer() {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="hidden md:block border-t border-gray-800" />
 
-        {/* Stats */}
         <div className="flex flex-row md:flex-col justify-between md:justify-start gap-4 md:gap-2 border-t md:border-t-0 border-gray-800 pt-3 md:pt-0">
           <StatRow label="Steps" value={steps.length - 1} />
           <StatRow label="Step" value={`${idx} / ${steps.length - 1}`} />
@@ -262,25 +279,25 @@ export default function BubbleSortVisualizer() {
 
       {/* ══ RIGHT — CHART + CONTROLS ══ */}
       <div className="flex flex-col flex-1 min-w-0">
-        {/* Status bar */}
         <div className="flex items-center justify-center px-4 md:px-6 py-2.5 min-h-[44px] border-b border-[#111113]">
           <span
             className="text-xs md:text-[13px] font-semibold tracking-wide text-center leading-tight transition-colors duration-150"
             style={{
               color: finished
                 ? "#10b981"
-                : step.swapped
+                : step.swapping
                   ? "#f87171"
-                  : step.comparing
-                    ? "#fbbf24"
-                    : "#6b7280",
+                  : step.currentMinIndex !== null
+                    ? "#a855f7"
+                    : step.comparing !== null
+                      ? "#fbbf24"
+                      : "#6b7280",
             }}
           >
             {step.description}
           </span>
         </div>
 
-        {/* Bar chart */}
         <div className="flex items-end justify-center px-2 sm:px-6 pt-5 pb-4 overflow-x-auto scrollbar-none flex-1 min-h-[200px]">
           <div
             className="relative flex items-end justify-center max-w-full"
@@ -294,7 +311,7 @@ export default function BubbleSortVisualizer() {
                 14,
                 Math.round((val / maxVal) * (CHART_H - 30)),
               );
-              const color = barColor(val, i, step);
+              const color = barColor(i, step);
 
               return (
                 <div
@@ -324,7 +341,7 @@ export default function BubbleSortVisualizer() {
                       borderRadius: "5px 5px 2px 2px",
                       transition: `background-color ${transMs}ms ease, height ${transMs}ms cubic-bezier(0.4,0,0.2,1)`,
                       boxShadow:
-                        step.swapped && step.comparing?.includes(i)
+                        step.swapping?.includes(i) || step.currentMinIndex === i
                           ? `0 0 12px ${color}80`
                           : "none",
                     }}
@@ -335,11 +352,12 @@ export default function BubbleSortVisualizer() {
           </div>
         </div>
 
-        {/* Legend */}
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 py-2.5 px-3 border-t border-b border-gray-800/80">
           {[
             { color: "#374151", label: "Unsorted" },
+            { color: "#60a5fa", label: "Target Pos" },
             { color: "#fbbf24", label: "Comparing" },
+            { color: "#a855f7", label: "Current Min" },
             { color: "#f87171", label: "Swapping" },
             { color: "#10b981", label: "Sorted" },
           ].map(({ color, label }) => (
@@ -353,10 +371,9 @@ export default function BubbleSortVisualizer() {
           ))}
         </div>
 
-        {/* Play controls */}
         <div className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4">
           <button
-            id="bsv-play"
+            id="ssv-play"
             type="button"
             onClick={() => (finished ? reset() : setPlaying((p) => !p))}
             className="flex items-center gap-2 rounded-lg text-white text-xs font-bold tracking-wide cursor-pointer active:scale-95 transition-all shadow-md"
@@ -386,7 +403,6 @@ export default function BubbleSortVisualizer() {
           )}
         </div>
 
-        {/* Step log */}
         <div className="mx-4 sm:mx-6 mb-4 sm:mb-6 rounded-xl border border-gray-800 bg-[#050507] overflow-hidden flex-1">
           <div className="px-4 py-2 border-b border-[#111113]">
             <span className="text-[9px] font-black uppercase tracking-widest text-gray-600">
@@ -422,19 +438,11 @@ export default function BubbleSortVisualizer() {
   );
 }
 
-/* ──────────────────────────────────────────────────
-   Sub-components
-────────────────────────────────────────────────── */
 function StatRow({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[10px]" style={{ color: "#4b5563" }}>
-        {label}
-      </span>
-      <span
-        className="text-[11px] font-mono font-bold"
-        style={{ color: "#9ca3af" }}
-      >
+      <span className="text-[10px] text-gray-500">{label}</span>
+      <span className="text-[11px] font-mono font-bold text-gray-400">
         {value}
       </span>
     </div>
