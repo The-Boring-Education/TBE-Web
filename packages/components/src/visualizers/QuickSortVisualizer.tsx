@@ -259,7 +259,7 @@ export default function QuickSortVisualizer() {
   return (
     <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#0a0a0b] border border-zinc-800/80 shadow-2xl md:h-[520px]">
       {/* ══ LEFT SIDEBAR / TOP CONTROLS ON MOBILE ══ */}
-      <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[200px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#070709]">
+      <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[200px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#0A0A0B]">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Array Size
@@ -406,7 +406,7 @@ export default function QuickSortVisualizer() {
         </div>
 
         {/* Legend */}
-        <div className="min-h-[38px] shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/50">
+        <div className="shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/60">
           {[
             { color: "#3f3f46", label: "Active Partition" },
             { color: "#a855f7", label: "Pivot" },
@@ -417,10 +417,10 @@ export default function QuickSortVisualizer() {
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span
-                className="rounded-sm inline-block w-2 h-2 shrink-0"
+                className="rounded-full inline-block w-1.5 h-1.5 shrink-0"
                 style={{ background: color }}
               />
-              <span className="text-[10px] font-medium text-zinc-400 whitespace-nowrap">
+              <span className="text-[11px] font-medium text-zinc-400 whitespace-nowrap">
                 {label}
               </span>
             </div>
@@ -428,12 +428,12 @@ export default function QuickSortVisualizer() {
         </div>
 
         {/* Play controls */}
-        <div className="min-h-[52px] shrink-0 flex items-center gap-3 px-4 sm:px-6 py-2.5">
+        <div className="shrink-0 flex items-center gap-2.5 px-3 sm:px-6 py-2">
           <button
             id="qsv-play"
             type="button"
             onClick={() => (finished ? reset() : setPlaying((p) => !p))}
-            className="flex items-center gap-2 rounded-xl text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-4 py-2 shadow-[0_4px_14px_rgba(255,87,87,0.25)]"
+            className="flex items-center gap-1.5 rounded-lg text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-3.5 py-1.5 shadow-[0_2px_10px_rgba(255,87,87,0.25)]"
             style={{
               background: finished ? "#059669" : "#FF5757",
             }}
@@ -452,7 +452,7 @@ export default function QuickSortVisualizer() {
             <button
               type="button"
               onClick={reset}
-              className="flex items-center gap-2 rounded-xl text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-4 py-2 border border-zinc-800/80 text-zinc-300 hover:text-white bg-[#111113] hover:bg-zinc-800/80"
+              className="flex items-center gap-1.5 rounded-lg text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-3.5 py-1.5 border border-zinc-800/80 text-zinc-300 hover:text-white bg-[#111113] hover:bg-zinc-800/80"
             >
               Reset
             </button>
