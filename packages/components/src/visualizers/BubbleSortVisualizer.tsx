@@ -100,11 +100,12 @@ const DEFAULT_SIZE = 7;
 ────────────────────────────────────────────────── */
 export default function BubbleSortVisualizer() {
   const [arraySize, setArraySize] = useState(DEFAULT_SIZE);
-  const [baseArray, setBaseArray] = useState<number[]>(() =>
-    randomArray(DEFAULT_SIZE),
+  const initialArray = useRef<number[]>(randomArray(DEFAULT_SIZE));
+  const [baseArray, setBaseArray] = useState<number[]>(
+    () => initialArray.current,
   );
   const [steps, setSteps] = useState<SortStep[]>(() =>
-    generateSteps(randomArray(DEFAULT_SIZE)),
+    generateSteps(initialArray.current),
   );
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -414,21 +415,6 @@ export default function BubbleSortVisualizer() {
 /* ──────────────────────────────────────────────────
    Sub-components
 ────────────────────────────────────────────────── */
-function StatRow({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-[10px]" style={{ color: "#4b5563" }}>
-        {label}
-      </span>
-      <span
-        className="text-[11px] font-mono font-bold"
-        style={{ color: "#9ca3af" }}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
 
 function IconPlay() {
   return (

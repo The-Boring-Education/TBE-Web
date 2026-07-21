@@ -80,7 +80,6 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
     visualizerId: {
       type: String,
       required: false,
-      default: null,
     },
   },
   {

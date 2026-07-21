@@ -64,7 +64,7 @@ const dsaQuestionCreateSchema = z
     topics: z.union([z.array(topicEnum), topicEnum]),
     sections: z.unknown().optional(),
     isRealWorldProblem: z.boolean().optional(),
-    visualizerId: z.string().optional(),
+    visualizerId: z.string().trim().min(1).optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.answer?.trim() && !data.content?.trim()) {

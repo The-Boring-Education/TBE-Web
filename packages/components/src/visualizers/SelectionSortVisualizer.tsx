@@ -129,11 +129,12 @@ const DEFAULT_SIZE = 7;
 ────────────────────────────────────────────────── */
 export default function SelectionSortVisualizer() {
   const [arraySize, setArraySize] = useState(DEFAULT_SIZE);
-  const [baseArray, setBaseArray] = useState<number[]>(() =>
-    randomArray(DEFAULT_SIZE),
+  const initialArray = useRef<number[]>(randomArray(DEFAULT_SIZE));
+  const [baseArray, setBaseArray] = useState<number[]>(
+    () => initialArray.current,
   );
   const [steps, setSteps] = useState<SortStep[]>(() =>
-    generateSelectionSortSteps(randomArray(DEFAULT_SIZE)),
+    generateSelectionSortSteps(initialArray.current),
   );
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -434,15 +435,6 @@ export default function SelectionSortVisualizer() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function StatRow({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-xs font-medium text-zinc-400">{label}</span>
-      <span className="text-xs font-semibold text-zinc-200">{value}</span>
     </div>
   );
 }
