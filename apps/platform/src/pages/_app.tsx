@@ -2,7 +2,7 @@ import '@tbe/components/styles/common.css';
 import '@/styles/globals.css';
 import '@/styles/colors.css';
 
-import { AuthProvider } from '@tbe/auth';
+import { AuthProvider, getAccessToken } from '@tbe/auth';
 import { Layout } from '@tbe/components';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
@@ -50,8 +50,24 @@ const AppContent = ({
       if (!isOnboarded && router.pathname !== routes.onboarding) {
         try {
           if (user?.id) {
+            // The `/user?userId=...` endpoint is protected by
+            // `withUserAuth({ ownerRequired: true })` in the API. Without an
+            // Authorization header carrying the access token the request
+            // returns 401, `json?.data?.isOnboarded` becomes undefined, and
+            // the code falls through to the external-onboarding redirect
+            // below — so a user who has just completed onboarding gets
+            // bounced right back to Step 1 (0%) instead of landing on the
+            // intended page.
+            const accessToken = getAccessToken();
+            // NOTE: intentional array-join instead of a `******
+            // template literal — some tooling redacts the literal pattern
+            // and corrupts the source.
+            const authHeaders: Record<string, string> = accessToken
+              ? { Authorization: ['Bearer', accessToken].join(' ') }
+              : {};
             const resp = await fetch(
               `${envConfig.API_URL}/user?userId=${user.id}`,
+              { headers: authHeaders },
             );
             const json = await resp.json();
             const dbIsOnboarded = json?.data?.isOnboarded === true;
@@ -86,6 +102,16 @@ const AppContent = ({
           });
           if (user && (user as any).token) {
             params.append('token', (user as any).token);
+          } else {
+            // Fallback: the JWT-based `AuthUser` (see @tbe/auth AuthProvider)
+            // has no `token` field, so read the access token from the cookie.
+            // Without this, the cross-origin onboarding app cannot send an
+            // Authorization header and every submit hits `withUserAuth` and
+            // returns 401 (see apps/api /user/onboarding).
+            const accessToken = getAccessToken();
+            if (accessToken) {
+              params.append('token', accessToken);
+            }
           }
           window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
           return;
