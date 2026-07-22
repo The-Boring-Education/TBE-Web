@@ -64,6 +64,7 @@ const dsaQuestionCreateSchema = z
     topics: z.union([z.array(topicEnum), topicEnum]),
     sections: z.unknown().optional(),
     isRealWorldProblem: z.boolean().optional(),
+    visualizerId: z.string().trim().min(1).optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.answer?.trim() && !data.content?.trim()) {
@@ -84,6 +85,7 @@ export type DsaSheetCreateBody = {
   topics: DSATopicType[];
   sections?: unknown;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
 };
 
 export function parseDsaSheetCreateBody(
@@ -122,6 +124,7 @@ export function parseDsaSheetCreateBody(
       ...(d.isRealWorldProblem !== undefined
         ? { isRealWorldProblem: d.isRealWorldProblem }
         : {}),
+      ...(d.visualizerId !== undefined ? { visualizerId: d.visualizerId } : {}),
     },
   };
 }

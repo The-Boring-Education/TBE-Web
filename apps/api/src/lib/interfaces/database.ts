@@ -344,6 +344,7 @@ export interface DSAQuestionModel extends Document {
   sections?: DSAQuestionSections;
   order?: number;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -907,6 +908,7 @@ export interface UpdateDSAQuestionRequestPayloadProps {
   sections?: DSAQuestionSections;
   order?: number;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
 }
 
 export interface AddOnboardingPayloadProps {

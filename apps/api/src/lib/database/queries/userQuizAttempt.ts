@@ -22,6 +22,7 @@ interface UserPerformanceStats {
   averageScore: number;
   bestScore: number;
   totalTimeSpent: number;
+  streakDays: number;
   categoryBreakdown: {
     categoryName: string;
     attempts: number;
@@ -37,6 +38,36 @@ interface UserPerformanceStats {
     totalTimeSpent: number;
   }[];
 }
+
+// Compute consecutive active days ending at today (or, if today has no
+// attempt, at the most recent attempt date). Dates are compared as UTC
+// calendar days (YYYY-MM-DD) to match the ISO serialization used elsewhere.
+const computeStreakDays = (completedDates: (Date | undefined)[]): number => {
+  const dateSet = new Set<string>();
+  for (const d of completedDates) {
+    if (d) dateSet.add(d.toISOString().slice(0, 10));
+  }
+  if (dateSet.size === 0) return 0;
+
+  const toKey = (d: Date) => d.toISOString().slice(0, 10);
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  let cursor = new Date(today);
+  if (!dateSet.has(toKey(cursor))) {
+    // Start from the most recent attempt date instead of today.
+    const sortedKeys = Array.from(dateSet).sort();
+    const mostRecent = sortedKeys[sortedKeys.length - 1];
+    cursor = new Date(`${mostRecent}T00:00:00.000Z`);
+  }
+
+  let streak = 0;
+  while (dateSet.has(toKey(cursor))) {
+    streak++;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+  return streak;
+};
 
 interface LeaderboardEntry {
   userId: string;
@@ -107,6 +138,7 @@ export const getUserQuizPerformanceFromDB = async (
           averageScore: 0,
           bestScore: 0,
           totalTimeSpent: 0,
+          streakDays: 0,
           categoryBreakdown: [],
           recentAttempts: [],
         },
@@ -172,6 +204,7 @@ export const getUserQuizPerformanceFromDB = async (
       averageScore,
       bestScore,
       totalTimeSpent,
+      streakDays: computeStreakDays(userAttempts.map((a) => a.completedAt)),
       categoryBreakdown,
       recentAttempts,
     };
@@ -189,6 +222,7 @@ export const getUserQuizPerformanceFromDB = async (
         averageScore: 0,
         bestScore: 0,
         totalTimeSpent: 0,
+        streakDays: 0,
         categoryBreakdown: [],
         recentAttempts: [],
       },

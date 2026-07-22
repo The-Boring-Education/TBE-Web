@@ -26,6 +26,7 @@ import markdownit from "markdown-it";
 import { useEffect, useState } from "react";
 
 import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
+import { VISUALIZER_MAP } from "../../visualizers";
 
 const md = markdownit();
 
@@ -37,6 +38,22 @@ const QUESTION_DETAIL_TABS: readonly DsaSectionTabs[] = [
   "companies",
   "notes",
 ] as const;
+
+function getQuestionVisualizerId(question: DsaQuestion): string | null {
+  if (question.visualizerId && VISUALIZER_MAP[question.visualizerId]) {
+    return question.visualizerId;
+  }
+  if (question.answer) {
+    const match = question.answer.match(/```visualizer\s*([\s\S]*?)```/);
+    if (match && match[1]) {
+      const idMatch = match[1].match(/id:\s*([^\s\n]+)/);
+      if (idMatch && idMatch[1] && VISUALIZER_MAP[idMatch[1]]) {
+        return idMatch[1];
+      }
+    }
+  }
+  return null;
+}
 
 /** Same key as DsaPrepWorkspace `localNotes[String(id || name)]`. */
 function getQuestionStableId(question: DsaQuestion): string {
@@ -313,12 +330,15 @@ const QuestionDetailPanel = ({
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  const qStableId = question ? getQuestionStableId(question) : null;
+
   useEffect(() => {
     if (question) {
       setNoteText(question.notes ?? "");
       setSaveSuccess(false);
+      setActiveTab("description");
     }
-  }, [question]);
+  }, [qStableId]);
 
   if (!question) {
     return (
@@ -332,6 +352,19 @@ const QuestionDetailPanel = ({
   const hasStructured = hasStructuredSections(structured);
   const isRecommended = (question._priorityScore ?? 0) > 0;
   const showNotesTabDot = noteText.trim().length > 0;
+
+  const visualizerId = getQuestionVisualizerId(question);
+  const VisualizerComponent = visualizerId
+    ? VISUALIZER_MAP[visualizerId]
+    : null;
+
+  const detailTabs: readonly DsaSectionTabs[] = VisualizerComponent
+    ? ["description", "visualizer", "topics", "companies", "notes"]
+    : QUESTION_DETAIL_TABS;
+
+  const effectiveTab = detailTabs.includes(activeTab)
+    ? activeTab
+    : "description";
 
   const handleSaveNote = async () => {
     if (!isAuth || !user?.id) return;
@@ -414,19 +447,21 @@ const QuestionDetailPanel = ({
         {question.isRealWorldProblem && <RealWorldBanner />}
 
         <div className="flex flex-wrap gap-1.5 pb-1">
-          {QUESTION_DETAIL_TABS.map((tab) => (
+          {detailTabs.map((tab) => (
             <button
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
               className={cn(
                 "px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap",
-                activeTab === tab
+                effectiveTab === tab
                   ? "border-red-500 text-red-400 bg-red-950/30"
                   : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200",
               )}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === "visualizer"
+                ? "Visualizer"
+                : tab.charAt(0).toUpperCase() + tab.slice(1)}
               {tab === "notes" && showNotesTabDot && (
                 <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
               )}
@@ -436,12 +471,28 @@ const QuestionDetailPanel = ({
       </div>
 
       <div className="space-y-4">
-        {activeTab === "description" && (
-          <div className="space-y-4 w-full">
+        {effectiveTab === "description" && (
+          <div className="space-y-6 w-full">
             {hasStructured && structured ? (
               <StructuredSections sections={structured} />
             ) : (
               <FallbackMarkdownDescription question={question} />
+            )}
+
+            {VisualizerComponent && (
+              <div className="space-y-3 pt-6 border-t border-gray-800/80">
+                <div className="flex items-center gap-2">
+                  <Text level="h2" className="text-red-500 font-bold text-sm">
+                    Interactive Visualizer
+                  </Text>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-950/40 border border-red-900/50 text-red-400 uppercase tracking-wider">
+                    Interactive
+                  </span>
+                </div>
+                <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
+                  <VisualizerComponent />
+                </div>
+              </div>
             )}
 
             {!hasStructured && !question.isRealWorldProblem && (
@@ -460,7 +511,20 @@ const QuestionDetailPanel = ({
           </div>
         )}
 
-        {activeTab === "topics" && (
+        {effectiveTab === "visualizer" && VisualizerComponent && (
+          <div className="space-y-4 w-full">
+            <div className="flex items-center justify-between">
+              <Text level="h2" className="text-red-500 font-bold text-sm">
+                Interactive Algorithm Visualizer
+              </Text>
+            </div>
+            <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
+              <VisualizerComponent />
+            </div>
+          </div>
+        )}
+
+        {effectiveTab === "topics" && (
           <div>
             <Text level="h2" className="text-red-500 font-semibold mb-3">
               TOPICS
@@ -483,7 +547,7 @@ const QuestionDetailPanel = ({
           </div>
         )}
 
-        {activeTab === "companies" && (
+        {effectiveTab === "companies" && (
           <div>
             <Text level="h2" className="text-red-500 font-semibold mb-3">
               COMPANIES
@@ -506,7 +570,7 @@ const QuestionDetailPanel = ({
           </div>
         )}
 
-        {activeTab === "notes" && (
+        {effectiveTab === "notes" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Text level="h2" className="text-red-500 font-semibold">

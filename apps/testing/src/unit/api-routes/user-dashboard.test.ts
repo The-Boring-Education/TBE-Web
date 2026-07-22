@@ -61,6 +61,13 @@ vi.mock("../../../../api/src/middleware/admin", () => ({
   isAdminEmail: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockImplementation((req) => {
+    return req.query?.userId || req.body?.userId || "u1";
+  }),
+  verifyOwnership: vi.fn().mockReturnValue(true),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/user/dashboard";
 
 describe("User Dashboard API Route", () => {

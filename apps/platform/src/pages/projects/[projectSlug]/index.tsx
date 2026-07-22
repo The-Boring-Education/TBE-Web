@@ -12,10 +12,14 @@ import {
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import { useGamifiedAction } from '@tbe/gamification';
+import {
+  calculateUserPointsForAction,
+  useGamificationContext,
+  useGamifiedAction,
+} from '@tbe/gamification';
 import { useAnalytics, useUser } from '@tbe/hooks';
 import type { ProjectPageProps } from '@tbe/interface';
-import { useMutation } from '@tbe/query';
+import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
 import {
   getProjectPageProps,
   getSelectedProjectChapterMeta,
@@ -67,6 +71,8 @@ const ProjectPage = ({
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+  const queryClient = useQueryClient();
+  const { triggerCelebration, showToast } = useGamificationContext();
 
   useEffect(() => {
     const currentChapter = sections
@@ -184,23 +190,36 @@ const ProjectPage = ({
 
       // Only proceed if the API call was successful
       if (response?.status) {
-        // Fire gamified action on completion
         if (newCompletionStatus) {
-          await gamifiedAction.triggerGamifiedAction({
-            gamificationAction: 'COMPLETE_PROJECT_CHAPTER',
-            analytics: {
-              action: 'PROJECT_CHAPTER_COMPLETE',
-              category: 'Learning',
-              label: 'Project Chapter Completed',
-            },
-            customMessage: 'Project chapter completed! Keep building!',
-            metadata: {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ''),
+          });
+          const pointsEarned = calculateUserPointsForAction(
+            'COMPLETE_PROJECT_CHAPTER',
+          );
+          const intensity =
+            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
+          triggerCelebration({ type: 'points', intensity });
+          showToast({
+            type: 'points',
+            message: 'Project chapter completed! Keep building!',
+            points: pointsEarned,
+          });
+          trackEvent({
+            action: 'PROJECT_CHAPTER_COMPLETE',
+            category: 'Learning',
+            label: 'Project Chapter Completed',
+            value: {
+              userId: user?.id,
               projectId: project._id,
               chapterId: currentChapterIdState,
               projectName: project.name,
             },
           });
         } else {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ''),
+          });
           trackEvent({
             action: 'PROJECT_PROGRESS',
             category: 'Project',

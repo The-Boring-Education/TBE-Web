@@ -32,6 +32,10 @@ const nextConfig = {
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Handle Canvas for client-side (if using any Canvas libraries)
     if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
       config.resolve.fallback = {
         ...config.resolve.fallback,
         canvas: false,
