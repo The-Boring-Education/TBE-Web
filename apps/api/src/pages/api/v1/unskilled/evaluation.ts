@@ -29,6 +29,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    // Validate experience values are numbers to prevent NoSQL operator injection
+    if (
+      typeof experience.min !== "number" ||
+      typeof experience.max !== "number" ||
+      !Number.isFinite(experience.min) ||
+      !Number.isFinite(experience.max)
+    ) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "experience.min and experience.max must be valid numbers",
+        }),
+      );
+    }
+
     const { data, error } = await getResumeEvaluationResultsFromDB({
       skills,
       domains,

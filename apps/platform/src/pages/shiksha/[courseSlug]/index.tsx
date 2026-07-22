@@ -232,7 +232,9 @@ const CoursePage = ({
           await queryClient.invalidateQueries({
             queryKey: queryKeys.gamification.points(user?.id ?? ''),
           });
-          const pointsEarned = calculateUserPointsForAction('COMPLETE_COURSE_CHAPTER');
+          const pointsEarned = calculateUserPointsForAction(
+            'COMPLETE_COURSE_CHAPTER',
+          );
           const intensity =
             pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
           triggerCelebration({ type: 'points', intensity });

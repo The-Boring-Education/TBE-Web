@@ -1,26 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 import { getBaseUrlForPlatformEnv } from "@/hooks/useEnvironment";
+import api from "@/lib/axios";
 import type {
   PrepLogsResponse,
   PrepLogsSummary,
   UserWithPrepLogs,
 } from "@/types";
 
-const prepLogsApi = axios.create({
-  baseURL: getBaseUrlForPlatformEnv(),
-  headers: {
-    "Content-Type": "application/json",
-    "x-admin-secret": "TBEAdmin",
-  },
-});
-
 export const usePrepLogs = () => {
   const query = useQuery<PrepLogsResponse>({
     queryKey: ["prep-logs", getBaseUrlForPlatformEnv()],
     queryFn: async () => {
-      const response = await prepLogsApi.get("/admin/prepyatra/userlogs");
+      const response = await api.get("/admin/prepyatra/userlogs");
       return response.data;
     },
     refetchInterval: 30000, // Refetch every 30 seconds
@@ -42,14 +34,7 @@ export const addMentorFeedback = async (params: {
   userName?: string;
   userEmail?: string;
 }) => {
-  const client = axios.create({
-    baseURL: getBaseUrlForPlatformEnv(),
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-secret": "TBEAdmin",
-    },
-  });
-  const response = await client.patch("/prepyatra/prep-log", params);
+  const response = await api.patch("/prepyatra/prep-log", params);
   return response.data;
 };
 

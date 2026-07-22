@@ -138,13 +138,25 @@ const handleGetJobs = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { page = "1", limit = "10", role, location, skills } = req.query;
 
-    const pageNumber = parseInt(page as string, 10) || 1;
-    const pageSize = parseInt(limit as string, 10) || 10;
+    const pageNumber = Math.max(
+      1,
+      Math.min(parseInt(page as string, 10) || 1, 100),
+    );
+    const pageSize = Math.max(
+      1,
+      Math.min(parseInt(limit as string, 10) || 10, 50),
+    );
 
     const query: any = {};
 
-    if (role) query.role = new RegExp(role as string, "i");
-    if (location) query.location = new RegExp(location as string, "i");
+    // Escape regex metacharacters and cap length to prevent ReDoS
+    const escapeRegex = (str: string) =>
+      str.slice(0, 100).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    if (role && typeof role === "string")
+      query.role = new RegExp(escapeRegex(role), "i");
+    if (location && typeof location === "string")
+      query.location = new RegExp(escapeRegex(location), "i");
     if (skills) query.skills = { $in: (skills as string).split(",") };
 
     const { data, error } = await getAllJobsFromDB(query, pageNumber, pageSize);

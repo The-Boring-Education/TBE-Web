@@ -176,7 +176,8 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           await queryClient.invalidateQueries({
             queryKey: queryKeys.gamification.points(user?.id ?? ''),
           });
-          const pointsEarned = calculateUserPointsForAction('COMPLETE_QUESTION');
+          const pointsEarned =
+            calculateUserPointsForAction('COMPLETE_QUESTION');
           const intensity =
             pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
           triggerCelebration({ type: 'points', intensity });

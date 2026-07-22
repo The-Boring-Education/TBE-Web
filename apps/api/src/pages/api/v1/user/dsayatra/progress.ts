@@ -16,22 +16,26 @@ import type {
 import { sendAPIResponse } from "@/lib/utils";
 import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const authenticatedUserId = getAuthenticatedUserId(req, res);
+    if (!authenticatedUserId) return;
+
     const { method } = req;
 
     switch (method) {
       case "GET":
-        return withUserAuth(async (req, res) => handleGetProgress(req, res), {
+        return withUserAuth(async (req, res) => handleGetProgress(req, res, authenticatedUserId), {
           ownerRequired: true,
         })(req, res);
       case "PATCH":
-        return withUserAuth(async (req, res) => handlePatchQuestion(req, res), {
+        return withUserAuth(async (req, res) => handlePatchQuestion(req, res, authenticatedUserId), {
           ownerRequired: true,
         })(req, res);
       case "PUT":
-        return withUserAuth(async (req, res) => handleMergeProgress(req, res), {
+        return withUserAuth(async (req, res) => handleMergeProgress(req, res, authenticatedUserId), {
           ownerRequired: true,
         })(req, res);
       default:
@@ -53,7 +57,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleGetProgress = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  authenticatedUserId: string,
+) => {
   const { userId } = req.query as unknown as GetDsaYatraProgressQueryProps;
 
   if (!userId) {
@@ -64,6 +72,8 @@ const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   try {
     const { data, error } = await getDsaYatraProgressFromDB(userId);
@@ -106,6 +116,7 @@ const handleGetProgress = async (req: NextApiRequest, res: NextApiResponse) => {
 const handlePatchQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
+  authenticatedUserId: string,
 ) => {
   const { userId, questionId, isCompleted } =
     req.body as PatchDsaYatraQuestionCompletionProps;
@@ -118,6 +129,8 @@ const handlePatchQuestion = async (
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   if (typeof isCompleted !== "boolean") {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -185,6 +198,7 @@ const handlePatchQuestion = async (
 const handleMergeProgress = async (
   req: NextApiRequest,
   res: NextApiResponse,
+  authenticatedUserId: string,
 ) => {
   const { userId, addCompletedQuestionIds, todayStats } =
     req.body as PutDsaYatraProgressMergeProps;
@@ -197,6 +211,8 @@ const handleMergeProgress = async (
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   try {
     const { data, error } = await mergeDsaYatraProgressInDB(

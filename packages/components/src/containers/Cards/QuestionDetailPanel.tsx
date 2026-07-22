@@ -25,6 +25,7 @@ import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
 import { useEffect, useState } from "react";
 
+import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
 import { VISUALIZER_MAP } from "../../visualizers";
 
 const md = markdownit();
@@ -264,7 +265,7 @@ function FallbackMarkdownDescription({ question }: { question: DsaQuestion }) {
         <div
           className="text-gray-300 leading-relaxed text-sm prose prose-invert max-w-none prose-p:my-1 prose-headings:mt-4 prose-headings:mb-2 prose-headings:text-white prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
           dangerouslySetInnerHTML={{
-            __html: md.render(question.answer || ""),
+            __html: sanitizeHTML(md.render(question.answer || "")),
           }}
         />
       </div>

@@ -39,6 +39,18 @@ const nextConfig = {
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 60,
   },
+
+  webpack(config, { isServer }) {
+    // jsdom is only used for server-side HTML sanitization (@tbe/components).
+    // Keep it out of the client bundle.
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;

@@ -6,9 +6,15 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
   : [];
 
+// When no allowlist is configured, reflect all origins in development for
+// convenience but fail closed everywhere else (production/preview).
+const isDev = process.env.NODE_ENV !== "production";
+const originConfig =
+  allowedOrigins.length > 0 ? allowedOrigins : isDev ? true : false;
+
 export const cors = initMiddleware(
   Cors({
-    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    origin: originConfig,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: false,
     allowedHeaders: [

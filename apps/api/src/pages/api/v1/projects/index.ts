@@ -9,6 +9,7 @@ import {
 } from "@/lib/database";
 import type { AddProjectRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,6 +29,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handleAddProject = async (req: NextApiRequest, res: NextApiResponse) => {
+  const isAdmin = await adminMiddleware(req, res);
+  if (!isAdmin) return;
+
   const {
     name,
     slug,
