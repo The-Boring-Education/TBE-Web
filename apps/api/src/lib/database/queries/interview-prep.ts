@@ -85,7 +85,7 @@ const getAllInterviewSheetsFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
       const sheet = await InterviewSheet.find()
-        .select(modelSelectParams.coursePreview)
+        .select(`${modelSelectParams.coursePreview} questions._id`)
         .exec();
 
       if (!sheet) {
