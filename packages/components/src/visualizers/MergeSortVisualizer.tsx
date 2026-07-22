@@ -5,64 +5,148 @@ import { useCallback, useEffect, useRef, useState } from "react";
 ────────────────────────────────────────────────── */
 interface SortStep {
   array: number[];
+  activeRange: [number, number] | null;
   comparing: [number, number] | null;
-  swapped: boolean;
-  sortedValues: number[];
+  writingIndex: number | null;
+  sortedIndices: number[];
   description: string;
 }
 
 /* ──────────────────────────────────────────────────
-   Step generator
+   Step generator for Merge Sort
 ────────────────────────────────────────────────── */
-function generateSteps(input: number[]): SortStep[] {
+function generateMergeSortSteps(input: number[]): SortStep[] {
   const steps: SortStep[] = [];
   const arr = [...input];
-  const n = arr.length;
   const sortedSet = new Set<number>();
 
   const snap = (
+    activeRange: [number, number] | null,
     comparing: [number, number] | null,
-    swapped: boolean,
+    writingIndex: number | null,
     description: string,
   ) =>
     steps.push({
       array: [...arr],
+      activeRange,
       comparing,
-      swapped,
-      sortedValues: Array.from(sortedSet),
+      writingIndex,
+      sortedIndices: Array.from(sortedSet),
       description,
     });
 
-  snap(null, false, "Ready — press Start");
+  snap(null, null, null, "Ready — press Start");
 
-  for (let i = 0; i < n - 1; i++) {
-    let didSwap = false;
-    for (let j = 0; j < n - i - 1; j++) {
-      const val1 = arr[j];
-      const val2 = arr[j + 1];
-      if (val1 !== undefined && val2 !== undefined) {
-        snap([j, j + 1], false, `Comparing  ${val1}  and  ${val2}`);
-        if (val1 > val2) {
-          arr[j] = val2;
-          arr[j + 1] = val1;
-          didSwap = true;
-          snap([j, j + 1], true, `Swap  ${val2}  ↔  ${val1}`);
-        }
+  function merge(left: number, mid: number, right: number) {
+    const leftArr = arr.slice(left, mid + 1);
+    const rightArr = arr.slice(mid + 1, right + 1);
+
+    snap(
+      [left, right],
+      null,
+      null,
+      `Merging subarray [${left}..${mid}] and [${mid + 1}..${right}]`,
+    );
+
+    let i = 0;
+    let j = 0;
+    let k = left;
+
+    while (i < leftArr.length && j < rightArr.length) {
+      const leftVal = leftArr[i]!;
+      const rightVal = rightArr[j]!;
+      const actualLeftIdx = left + i;
+      const actualRightIdx = mid + 1 + j;
+
+      snap(
+        [left, right],
+        [actualLeftIdx, actualRightIdx],
+        k,
+        `Comparing left element ${leftVal} with right element ${rightVal}`,
+      );
+
+      if (leftVal <= rightVal) {
+        snap(
+          [left, right],
+          [actualLeftIdx, actualRightIdx],
+          k,
+          `Writing smaller element ${leftVal} to position ${k}`,
+        );
+        arr[k] = leftVal;
+        i++;
+      } else {
+        snap(
+          [left, right],
+          [actualLeftIdx, actualRightIdx],
+          k,
+          `Writing smaller element ${rightVal} to position ${k}`,
+        );
+        arr[k] = rightVal;
+        j++;
       }
+      k++;
     }
-    const finalVal = arr[n - 1 - i];
-    if (finalVal !== undefined) {
-      sortedSet.add(finalVal);
-      snap(null, false, `${finalVal} is in its final position`);
+
+    while (i < leftArr.length) {
+      const leftVal = leftArr[i]!;
+      snap(
+        [left, right],
+        null,
+        k,
+        `Copying remaining left element ${leftVal} to position ${k}`,
+      );
+      arr[k] = leftVal;
+      i++;
+      k++;
     }
-    if (!didSwap) {
-      arr.forEach((v) => sortedSet.add(v));
-      break;
+
+    while (j < rightArr.length) {
+      const rightVal = rightArr[j]!;
+      snap(
+        [left, right],
+        null,
+        k,
+        `Copying remaining right element ${rightVal} to position ${k}`,
+      );
+      arr[k] = rightVal;
+      j++;
+      k++;
+    }
+
+    // Mark sub-range as temporary sorted if it's full merge step
+    if (left === 0 && right === input.length - 1) {
+      for (let m = left; m <= right; m++) sortedSet.add(m);
+      snap(null, null, null, "Entire array is now merged and sorted!");
+    } else {
+      snap(
+        [left, right],
+        null,
+        null,
+        `Subarray [${left}..${right}] merged successfully`,
+      );
     }
   }
 
-  arr.forEach((v) => sortedSet.add(v));
-  snap(null, false, "✓  Array sorted!");
+  function mergeSort(left: number, right: number) {
+    if (left >= right) return;
+
+    const mid = Math.floor((left + right) / 2);
+    snap(
+      [left, right],
+      null,
+      null,
+      `Dividing [${left}..${right}] at mid index ${mid}`,
+    );
+
+    mergeSort(left, mid);
+    mergeSort(mid + 1, right);
+    merge(left, mid, right);
+  }
+
+  mergeSort(0, arr.length - 1);
+  for (let k = 0; k < arr.length; k++) sortedSet.add(k);
+  snap(null, null, null, "✓ Array sorted!");
+
   return steps;
 }
 
@@ -82,13 +166,20 @@ const SPEEDS: { label: string; stepMs: number; transitionMs: number }[] = [
   { label: "4×", stepMs: 130, transitionMs: 80 },
 ];
 
-const CHART_H = 180; // px
+const CHART_H = 180;
 
-function barColor(value: number, index: number, step: SortStep): string {
-  if (step.sortedValues.includes(value)) return "#10b981";
-  if (step.comparing?.includes(index))
-    return step.swapped ? "#f87171" : "#fbbf24";
-  return "#374151";
+function barColor(index: number, step: SortStep): string {
+  if (step.sortedIndices.includes(index)) return "#10b981"; // Sorted: Green
+  if (step.writingIndex === index) return "#06b6d4"; // Writing/Overwriting: Cyan
+  if (step.comparing?.includes(index)) return "#fbbf24"; // Comparing: Yellow
+  if (
+    step.activeRange &&
+    index >= step.activeRange[0] &&
+    index <= step.activeRange[1]
+  ) {
+    return "#60a5fa"; // Active Subarray Range: Blue
+  }
+  return "#374151"; // Inactive: Dark Gray
 }
 
 const MIN_SIZE = 4;
@@ -98,14 +189,14 @@ const DEFAULT_SIZE = 7;
 /* ──────────────────────────────────────────────────
    Component
 ────────────────────────────────────────────────── */
-export default function BubbleSortVisualizer() {
+export default function MergeSortVisualizer() {
   const [arraySize, setArraySize] = useState(DEFAULT_SIZE);
   const initialArray = useRef<number[]>(randomArray(DEFAULT_SIZE));
   const [baseArray, setBaseArray] = useState<number[]>(
     () => initialArray.current,
   );
   const [steps, setSteps] = useState<SortStep[]>(() =>
-    generateSteps(initialArray.current),
+    generateMergeSortSteps(initialArray.current),
   );
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -117,11 +208,9 @@ export default function BubbleSortVisualizer() {
   const n = step.array.length;
   const maxVal = Math.max(...step.array);
 
-  /* bar geometry — shrink bar width for large arrays */
-  const barW = Math.max(20, Math.min(48, Math.floor(300 / n)));
-  const barGap = Math.max(4, Math.min(12, Math.floor(40 / n)));
+  const barW = Math.max(14, Math.min(44, Math.floor(260 / n)));
+  const barGap = Math.max(2, Math.min(10, Math.floor(30 / n)));
 
-  /* advance */
   const advance = useCallback(() => {
     setIdx((prev) => {
       if (prev >= steps.length - 1) {
@@ -132,7 +221,6 @@ export default function BubbleSortVisualizer() {
     });
   }, [steps.length]);
 
-  /* autoplay */
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     if (!playing) return;
@@ -149,7 +237,7 @@ export default function BubbleSortVisualizer() {
 
   const reset = useCallback(() => {
     setPlaying(false);
-    setSteps(generateSteps(baseArray));
+    setSteps(generateMergeSortSteps(baseArray));
     setIdx(0);
   }, [baseArray]);
 
@@ -157,7 +245,7 @@ export default function BubbleSortVisualizer() {
     setPlaying(false);
     const arr = randomArray(size);
     setBaseArray(arr);
-    setSteps(generateSteps(arr));
+    setSteps(generateMergeSortSteps(arr));
     setIdx(0);
   }, []);
 
@@ -177,7 +265,6 @@ export default function BubbleSortVisualizer() {
     <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#0a0a0b] border border-zinc-800/80 shadow-2xl md:h-[520px]">
       {/* ══ LEFT SIDEBAR / TOP CONTROLS ON MOBILE ══ */}
       <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[200px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#0A0A0B]">
-        {/* Array Size */}
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Array Size
@@ -194,7 +281,6 @@ export default function BubbleSortVisualizer() {
             </span>
           </div>
 
-          {/* Custom styled range slider */}
           <div className="relative flex items-center" style={{ height: 20 }}>
             <div className="absolute w-full rounded-full h-1 bg-zinc-800" />
             <div
@@ -214,9 +300,8 @@ export default function BubbleSortVisualizer() {
           </div>
         </div>
 
-        {/* Generate button */}
         <button
-          id="bsv-generate"
+          id="msv-generate"
           type="button"
           onClick={() => generate(arraySize)}
           className="w-full rounded-xl text-xs font-semibold py-2 bg-[#111113] hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-zinc-700/60 text-zinc-200 transition-all active:scale-[0.98] cursor-pointer"
@@ -224,7 +309,6 @@ export default function BubbleSortVisualizer() {
           ↻ Randomize
         </button>
 
-        {/* Speed */}
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Speed
@@ -233,7 +317,7 @@ export default function BubbleSortVisualizer() {
             {SPEEDS.map(({ label }, i) => (
               <button
                 key={label}
-                id={`bsv-speed-${i}`}
+                id={`msv-speed-${i}`}
                 type="button"
                 onClick={() => setSpeedIdx(i)}
                 className={`flex-1 md:w-full rounded-lg text-xs transition-all active:scale-[0.98] cursor-pointer text-center md:text-left px-3 py-1.5 whitespace-nowrap ${
@@ -258,11 +342,13 @@ export default function BubbleSortVisualizer() {
             style={{
               color: finished
                 ? "#10b981"
-                : step.swapped
-                  ? "#f87171"
-                  : step.comparing
+                : step.writingIndex !== null
+                  ? "#06b6d4"
+                  : step.comparing !== null
                     ? "#fbbf24"
-                    : "#a1a1aa",
+                    : step.activeRange !== null
+                      ? "#60a5fa"
+                      : "#a1a1aa",
             }}
           >
             {step.description}
@@ -283,7 +369,7 @@ export default function BubbleSortVisualizer() {
                 14,
                 Math.round((val / maxVal) * (CHART_H - 30)),
               );
-              const color = barColor(val, i, step);
+              const color = barColor(i, step);
 
               return (
                 <div
@@ -313,7 +399,7 @@ export default function BubbleSortVisualizer() {
                       borderRadius: "6px 6px 2px 2px",
                       transition: `background-color ${transMs}ms ease, height ${transMs}ms cubic-bezier(0.4,0,0.2,1)`,
                       boxShadow:
-                        step.swapped && step.comparing?.includes(i)
+                        step.writingIndex === i || step.comparing?.includes(i)
                           ? `0 0 12px ${color}80`
                           : "none",
                     }}
@@ -328,8 +414,9 @@ export default function BubbleSortVisualizer() {
         <div className="shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/60">
           {[
             { color: "#3f3f46", label: "Unsorted" },
+            { color: "#60a5fa", label: "Active Subarray" },
             { color: "#fbbf24", label: "Comparing" },
-            { color: "#f87171", label: "Swapping" },
+            { color: "#06b6d4", label: "Writing Merged" },
             { color: "#10b981", label: "Sorted" },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-1.5">
@@ -347,7 +434,7 @@ export default function BubbleSortVisualizer() {
         {/* Play controls */}
         <div className="shrink-0 flex items-center gap-2.5 px-3 sm:px-6 py-2">
           <button
-            id="bsv-play"
+            id="msv-play"
             type="button"
             onClick={() => (finished ? reset() : setPlaying((p) => !p))}
             className="flex items-center gap-1.5 rounded-lg text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-3.5 py-1.5 shadow-[0_2px_10px_rgba(255,87,87,0.25)]"
@@ -376,8 +463,8 @@ export default function BubbleSortVisualizer() {
           )}
         </div>
 
-        {/* Step log container */}
-        <div className="h-[135px] shrink-0 mx-3 sm:mx-6 mb-3 sm:mb-4 rounded-xl border border-zinc-800/80 bg-[#111113] overflow-hidden flex flex-col">
+        {/* Step log container - fixed height prevents screen shifting */}
+        <div className="h-[135px] shrink-0 mx-4 sm:mx-6 mb-4 rounded-xl border border-zinc-800/80 bg-[#111113] overflow-hidden flex flex-col">
           <div className="px-4 py-2 border-b border-zinc-800/80 shrink-0 bg-[#0a0a0b]">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
               Step log
@@ -411,10 +498,6 @@ export default function BubbleSortVisualizer() {
     </div>
   );
 }
-
-/* ──────────────────────────────────────────────────
-   Sub-components
-────────────────────────────────────────────────── */
 
 function IconPlay() {
   return (

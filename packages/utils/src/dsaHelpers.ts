@@ -14,6 +14,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
       companyType: question.companyTypes,
       isRealWorldProblem: Boolean(question.isRealWorldProblem),
       isLocked: true,
+      visualizerId: question.visualizerId ?? undefined,
     };
   }
 
@@ -59,6 +60,7 @@ export const transformDsaQuestion = (question: any): DsaQuestion => {
     _priorityScore: question._priorityScore,
     isRealWorldProblem: Boolean(question.isRealWorldProblem),
     isLocked: false,
+    visualizerId: question.visualizerId ?? undefined,
   };
 };
 
