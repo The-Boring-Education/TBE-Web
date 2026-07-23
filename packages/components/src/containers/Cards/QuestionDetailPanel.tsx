@@ -25,6 +25,8 @@ import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
 import { useEffect, useState } from "react";
 
+import ContentFeedback from "../../common/ContentFeedback";
+
 const md = markdownit();
 
 const LOCAL_NOTES_STORAGE_KEY = "dsayatra_question_notes";
@@ -559,6 +561,11 @@ const QuestionDetailPanel = ({
           </div>
         )}
       </div>
+
+      <ContentFeedback
+        contentType="DSA_QUESTION"
+        contentId={getQuestionStableId(question)}
+      />
     </FlexContainer>
   );
 };

@@ -44,6 +44,7 @@ export { default as CertificateBanner } from "./common/Certificate/CertificateBa
 export { default as CertificateContent } from "./common/Certificate/CertificateContent";
 export { default as CertificateModal } from "./common/CertificateModal";
 export { default as ComingSoon } from "./common/ComingSoon";
+export { default as ContentFeedback } from "./common/ContentFeedback";
 export { default as CheckboxButton } from "./common/Form/CheckboxButton";
 export { default as InputFieldContainer } from "./common/Form/InputFieldContainer";
 export { default as RadioButton } from "./common/Form/RadioButton";

@@ -4,6 +4,7 @@ export * from "./aptitude";
 export * from "./certificate";
 export * from "./common";
 export * from "./content-sync";
+export * from "./contentFeedback";
 export * from "./core-subjects";
 export * from "./coupon";
 export * from "./dsayatra";

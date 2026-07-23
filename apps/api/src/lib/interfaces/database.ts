@@ -5,6 +5,9 @@ import type {
   ApplicationStatusType,
   CertificateType,
   CompanyType,
+  ContentFeedbackKind,
+  ContentFeedbackStatus,
+  ContentFeedbackType,
   DifficultyType,
   DSADifficultyType,
   DSADomainType,
@@ -633,6 +636,20 @@ export interface FeedbackModel extends Document {
   updatedAt: Date;
 }
 
+export interface ContentFeedbackModel extends Document {
+  _id: typeof Schema.Types.ObjectId;
+  userId: typeof Schema.Types.ObjectId;
+  contentType: ContentFeedbackType;
+  contentId: string;
+  feedbackKind: ContentFeedbackKind;
+  rating?: number;
+  message: string;
+  suggestedEdit?: string;
+  status: ContentFeedbackStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PrepYatraUserModel extends Document {
   _id: Types.ObjectId;
   userId: string;
@@ -1088,6 +1105,25 @@ export interface UpdateFeedbackRequestProps {
   feedbackId: string;
   userId: string;
   feedback: string;
+}
+
+export interface CreateContentFeedbackRequestProps {
+  userId: string;
+  contentType: ContentFeedbackType;
+  contentId: string;
+  feedbackKind: ContentFeedbackKind;
+  message: string;
+  rating?: number;
+  suggestedEdit?: string;
+}
+
+export interface GetContentFeedbackFilterProps {
+  contentType: ContentFeedbackType;
+  contentId: string;
+}
+
+export interface GetContentFeedbackByUserFilterProps extends GetContentFeedbackFilterProps {
+  userId: string;
 }
 
 export interface UnSkilledEvaluationRequestBody {

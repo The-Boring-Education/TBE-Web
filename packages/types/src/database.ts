@@ -12,9 +12,7 @@
 export type CertificateType = "WEBINAR" | "SHIKSHA";
 
 export type QuestionFrequencyType =
-  | "Most Asked"
-  | "Asked Frequently"
-  | "Asked Sometimes";
+  "Most Asked" | "Asked Frequently" | "Asked Sometimes";
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
@@ -42,10 +40,7 @@ export type UserRoleType =
   | "DEVREL_LEAD";
 
 export type PlatformUsageType =
-  | "LEARNING_TECH"
-  | "BUILDING_PROJECTS"
-  | "INTERVIEW_PREP"
-  | "JOB_SEARCH";
+  "LEARNING_TECH" | "BUILDING_PROJECTS" | "INTERVIEW_PREP" | "JOB_SEARCH";
 
 export type WorkDomainType =
   | "MERN Full-stack"
@@ -316,3 +311,40 @@ const UserPointsActionType = [
 ] as const;
 
 export type UserPointsActionType = (typeof UserPointsActionType)[number];
+
+// ================================
+// CONTENT FEEDBACK
+// ================================
+
+export type ContentFeedbackType =
+  | "DSA_QUESTION"
+  | "DSA_TOPIC"
+  | "COURSE"
+  | "COURSE_CHAPTER"
+  | "INTERVIEW_SHEET"
+  | "APTITUDE_QUESTION"
+  | "APTITUDE_TOPIC"
+  | "STUDY_GUIDE"
+  | "QUIZ"
+  | "QUIZ_QUESTION"
+  | "WEBINAR"
+  | "PROJECT";
+
+export type ContentFeedbackKind = "EXISTING_CONTENT" | "NEW_CONTENT_SUGGESTION";
+
+export type ContentFeedbackStatus =
+  "PENDING" | "REVIEWED" | "ACCEPTED" | "REJECTED";
+
+export interface ContentFeedbackModel {
+  _id: string;
+  userId: string;
+  contentType: ContentFeedbackType;
+  contentId: string;
+  feedbackKind: ContentFeedbackKind;
+  rating?: number;
+  message: string;
+  suggestedEdit?: string;
+  status: ContentFeedbackStatus;
+  createdAt: string;
+  updatedAt: string;
+}

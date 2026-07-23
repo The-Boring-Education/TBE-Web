@@ -593,3 +593,26 @@ export interface UserInterestResponseProps {
 export interface UpdateGamificationRecordBody {
   gamificationRecordId: string;
 }
+
+// ================================
+// CONTENT FEEDBACK
+// ================================
+
+import type {
+  ContentFeedbackKind,
+  ContentFeedbackModel,
+  ContentFeedbackType,
+} from "./database";
+
+export interface CreateContentFeedbackRequestPayloadProps {
+  contentType: ContentFeedbackType;
+  contentId: string;
+  feedbackKind: ContentFeedbackKind;
+  message: string;
+  rating?: number;
+  suggestedEdit?: string;
+}
+
+export interface GetContentFeedbackResponsePayloadProps {
+  items: ContentFeedbackModel[];
+}
