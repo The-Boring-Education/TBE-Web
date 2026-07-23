@@ -148,3 +148,87 @@ export function compareDsaTopicKeysForApi(a: string, b: string): number {
   }
   return a.localeCompare(b);
 }
+
+/** Maps a DSA topic slug to the visualizer keys (see @tbe/components VISUALIZER_MAP) available for it. */
+export const DSA_TOPIC_VISUALIZERS = {
+  ARRAY: ["array-basics"],
+  STRING: ["string-basics"],
+  HASHMAP: ["hashmap-operations"],
+  TWO_POINTERS: ["two-pointers"],
+  SLIDING_WINDOW: ["sliding-window"],
+  BINARY_SEARCH: ["binary-search"],
+  RECURSION: ["recursion-tree"],
+  LINKED_LIST: ["linked-list-basics"],
+  STACK: ["stack-operations"],
+  SORTING: ["bubble-sort"],
+} as const satisfies Partial<Record<DSATopicSlug, readonly string[]>>;
+
+export type DSAVisualizerSlug =
+  (typeof DSA_TOPIC_VISUALIZERS)[keyof typeof DSA_TOPIC_VISUALIZERS][number];
+
+/** Human titles for visualizer slugs used in listings + SEO. */
+export const DSA_VISUALIZER_META: Record<
+  string,
+  { title: string; description: string; topic: DSATopicSlug }
+> = {
+  "bubble-sort": {
+    title: "Bubble Sort",
+    description:
+      "Watch bubble sort compare and swap adjacent elements step by step.",
+    topic: "SORTING",
+  },
+  "array-basics": {
+    title: "Array Operations",
+    description:
+      "Insert, delete, and access elements to see how arrays shift in memory.",
+    topic: "ARRAY",
+  },
+  "string-basics": {
+    title: "String Palindrome",
+    description:
+      "Two-pointer walk to check if a string reads the same forwards and backwards.",
+    topic: "STRING",
+  },
+  "hashmap-operations": {
+    title: "HashMap Buckets",
+    description:
+      "See how keys are hashed to buckets and how collisions chain together.",
+    topic: "HASHMAP",
+  },
+  "two-pointers": {
+    title: "Two Pointers — Pair Sum",
+    description:
+      "Move two pointers inward on a sorted array to find a target sum.",
+    topic: "TWO_POINTERS",
+  },
+  "sliding-window": {
+    title: "Sliding Window — Longest Substring",
+    description:
+      "Expand and contract a window to find the longest substring without repeats.",
+    topic: "SLIDING_WINDOW",
+  },
+  "binary-search": {
+    title: "Binary Search",
+    description:
+      "Narrow a sorted range by half at each step to find a target in O(log n).",
+    topic: "BINARY_SEARCH",
+  },
+  "recursion-tree": {
+    title: "Recursion — Fibonacci Tree",
+    description:
+      "Expand the recursive call tree for fib(n) and watch values bubble up.",
+    topic: "RECURSION",
+  },
+  "linked-list-basics": {
+    title: "Linked List Operations",
+    description:
+      "Insert, delete, and reverse a singly linked list one pointer at a time.",
+    topic: "LINKED_LIST",
+  },
+  "stack-operations": {
+    title: "Stack — Push, Pop & Balanced Parentheses",
+    description:
+      "Push and pop on a LIFO stack, or watch it validate balanced brackets.",
+    topic: "STACK",
+  },
+};

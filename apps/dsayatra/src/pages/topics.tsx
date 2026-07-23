@@ -13,6 +13,7 @@ import type { PageProps, RoadmapNode } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import { Code } from "lucide-react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 
@@ -131,29 +132,39 @@ function TopicsClient() {
   };
 
   return (
-    <InteractiveRoadmap
-      className={cn(
-        /* Match DsaDashboardLayout inset so the roadmap is not a darker “card”. */
-        "!bg-[#0f0f0f]",
-        /* Bleed past shell horizontal padding (px-3 sm:px-5 lg:px-6 xl:px-8). */
-        "-mx-3 max-w-none sm:-mx-5 lg:-mx-6 xl:-mx-8",
-      )}
-      nodes={nodes}
-      onNodeClick={handleNodeClick}
-      title={
-        <>
-          DATA
-          <br />
-          <span className="text-[#ff5757]">STRUCTURES</span>
-        </>
-      }
-      subtitle="Master the fundamentals of computer science through a structured and interactive milestone journey."
-      stats={stats}
-      overallProgress={overallProgress}
-      accentColor="#ff5757"
-      iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
-      defaultIcon={Code}
-    />
+    <Fragment>
+      <InteractiveRoadmap
+        className={cn(
+          /* Match DsaDashboardLayout inset so the roadmap is not a darker “card”. */
+          "!bg-[#0f0f0f]",
+          /* Bleed past shell horizontal padding (px-3 sm:px-5 lg:px-6 xl:px-8). */
+          "-mx-3 max-w-none sm:-mx-5 lg:-mx-6 xl:-mx-8",
+        )}
+        nodes={nodes}
+        onNodeClick={handleNodeClick}
+        title={
+          <>
+            DATA
+            <br />
+            <span className="text-[#ff5757]">STRUCTURES</span>
+          </>
+        }
+        subtitle="Master the fundamentals of computer science through a structured and interactive milestone journey."
+        stats={stats}
+        overallProgress={overallProgress}
+        accentColor="#ff5757"
+        iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
+        defaultIcon={Code}
+      />
+      <div className="mt-4 flex justify-center">
+        <Link
+          href={routes.dsayatra.visualizers}
+          className="text-xs text-[#9ca3af] transition-colors hover:text-[#ff5757]"
+        >
+          Explore visualizers →
+        </Link>
+      </div>
+    </Fragment>
   );
 }
 
