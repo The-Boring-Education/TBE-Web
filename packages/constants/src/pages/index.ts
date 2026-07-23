@@ -59,6 +59,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: "https://oncampus.theboringeducation.com/",
       target: "_blank",
     },
+    {
+      id: "tool-quizes",
+      name: "Boring Quizes",
+      description: "Test your tech knowledge with quick quizzes",
+      href: LINKS.quizApp,
+      target: "_blank",
+    },
   ],
   products: [
     {
