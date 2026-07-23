@@ -60,10 +60,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const response = await fetch(`${emailServiceUrl}/send-email`, {
+    const baseUrl = emailServiceUrl.replace(/\/+$/, "");
+    const response = await fetch(`${baseUrl}/send-email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Chitthi-API-Key": emailApiKey,
+        Authorization: `Bearer ${emailApiKey}`,
         "X-Breevo-API-Key": emailApiKey,
       },
       body: JSON.stringify(body),
