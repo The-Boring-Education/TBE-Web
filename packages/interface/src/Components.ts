@@ -332,6 +332,7 @@ export interface LandingPageHeroProps {
   backgroundImageUrl: string;
   heroText: string;
   theme?: "light" | "dark";
+  eyebrow?: string;
 }
 
 interface BaseCardContainerProps {

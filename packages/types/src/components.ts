@@ -541,6 +541,8 @@ export interface LandingPageHeroProps {
   secondaryButton?: ReactNode;
   backgroundImageUrl: string;
   heroText: string;
+  theme?: "light" | "dark";
+  eyebrow?: string;
 }
 
 export interface ProjectHeroContainerProps {
