@@ -62,7 +62,6 @@ export function PointsDisplay({
 
         {showCard && (
           <GamificationCard
-            userId={userId}
             isOpen={showCard}
             onClose={handleCloseCard}
             variant="popup"
@@ -86,11 +85,7 @@ export function PointsDisplay({
         </button>
 
         {showCard && (
-          <GamificationCard
-            userId={userId}
-            isOpen={showCard}
-            onClose={handleCloseCard}
-          />
+          <GamificationCard isOpen={showCard} onClose={handleCloseCard} />
         )}
       </div>
     </>
