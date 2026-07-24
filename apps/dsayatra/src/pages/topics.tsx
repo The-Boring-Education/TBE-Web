@@ -1,4 +1,3 @@
-import { useAuth } from "@tbe/auth";
 import type { RoadmapStatItem } from "@tbe/components";
 import { InteractiveRoadmap, SEO } from "@tbe/components";
 import {
@@ -8,10 +7,11 @@ import {
   routes,
   TOPIC_LABELS,
 } from "@tbe/constants";
-import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
+import { useDsaTopicSummaries } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import { Code } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Code } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -54,31 +54,77 @@ const EXPLANATIONS: Record<string, string> = {
     "Stack maintaining order for next-greater and span problems.",
 };
 
+function VisualizerTopBanner() {
+  return (
+    <Link
+      href={routes.dsayatra.visualizers}
+      className="group relative mb-4 mx-auto max-w-fit flex items-center justify-center gap-3.5 rounded-xl px-3 py-2.5 transition-all duration-300 hover:bg-white/[0.04] sm:px-4"
+    >
+      <div className="flex items-center gap-3.5 sm:gap-4">
+        {/* Slim squarish mini-visualizer preview box with moving element bars */}
+        <div className="relative flex h-10 w-10 shrink-0 items-end justify-between overflow-hidden rounded-lg border border-white/10 bg-[#0a0a0c] p-1.5 transition-colors group-hover:border-[#ff5757]/60">
+          {/* Moving element bars */}
+          <div className="relative flex h-full w-full items-end justify-between gap-0.5">
+            {[
+              {
+                initial: "40%",
+                animate: ["30%", "85%", "45%", "95%", "30%"],
+                duration: 3.4,
+              },
+              {
+                initial: "75%",
+                animate: ["75%", "25%", "90%", "40%", "75%"],
+                duration: 2.9,
+              },
+              {
+                initial: "50%",
+                animate: ["50%", "95%", "35%", "70%", "50%"],
+                duration: 3.8,
+              },
+              {
+                initial: "90%",
+                animate: ["90%", "40%", "80%", "20%", "90%"],
+                duration: 3.2,
+              },
+            ].map((bar, idx) => (
+              <motion.div
+                key={idx}
+                className="w-full rounded-xs bg-gradient-to-t from-[#ff5757]/40 to-[#ff5757]"
+                style={{ height: bar.initial }}
+                animate={{ height: bar.animate }}
+                transition={{
+                  duration: bar.duration,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Text Content */}
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <span className="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+            Explore Interactive Algorithm Visualizers
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff5757] group-hover:text-[#ff7777] transition-colors shrink-0">
+            <span>Explore</span>
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function TopicsClient() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { questions: allQuestions } = useDsaQuestions();
-  const { completedIds: completedQuestions } = useDsaCompletedQuestions({
-    userId: user?.id,
-  });
+  const { data: topicRows } = useDsaTopicSummaries("DSA_YATRA");
 
   const nodes: RoadmapNode[] = useMemo(() => {
     const topicMap = new Map<string, { total: number; solved: number }>();
-    allQuestions.forEach((q: any) => {
-      // Only count unlocked questions so locked-only topics don't appear
-      if (q.isLocked) return;
-      const primaryTopic = q.topics?.[0];
-      if (primaryTopic) {
-        if (!topicMap.has(primaryTopic)) {
-          topicMap.set(primaryTopic, { total: 0, solved: 0 });
-        }
-        const entry = topicMap.get(primaryTopic)!;
-        entry.total += 1;
-        const qId = q._id || q.id;
-        if (qId && completedQuestions.includes(String(qId))) {
-          entry.solved += 1;
-        }
-      }
+    (topicRows || []).forEach((row) => {
+      topicMap.set(row.topic, { total: row.count, solved: row.solved ?? 0 });
     });
 
     const sortedKeys = Object.keys(TOPIC_LABELS).sort(compareDsaTopicKeys);
@@ -86,20 +132,19 @@ function TopicsClient() {
     return sortedKeys.map((topicKey, idx) => {
       const data = topicMap.get(topicKey) || { total: 0, solved: 0 };
       const name = TOPIC_LABELS[topicKey] || topicKey;
-      const topicIsLocked = data.total === 0;
 
       return {
         id: topicKey,
         name,
         total: data.total,
         solved: data.solved,
-        isLocked: topicIsLocked,
+        isLocked: false,
         explanation:
           EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
         difficulty: 1 + (idx % 5),
       };
     });
-  }, [allQuestions, completedQuestions]);
+  }, [topicRows]);
 
   const stats: RoadmapStatItem[] = useMemo(() => {
     const topicsTotal = nodes.filter((n) => !n.isLocked).length;
@@ -133,12 +178,15 @@ function TopicsClient() {
 
   return (
     <Fragment>
+      <VisualizerTopBanner />
       <InteractiveRoadmap
         className={cn(
           /* Match DsaDashboardLayout inset so the roadmap is not a darker “card”. */
           "!bg-[#0f0f0f]",
           /* Bleed past shell horizontal padding (px-3 sm:px-5 lg:px-6 xl:px-8). */
           "-mx-3 max-w-none sm:-mx-5 lg:-mx-6 xl:-mx-8",
+          /* Hide the top blackish divider line from InteractiveRoadmap */
+          "[&>div.-top-px]:hidden",
         )}
         nodes={nodes}
         onNodeClick={handleNodeClick}
@@ -156,14 +204,6 @@ function TopicsClient() {
         iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
         defaultIcon={Code}
       />
-      <div className="mt-4 flex justify-center">
-        <Link
-          href={routes.dsayatra.visualizers}
-          className="text-xs text-[#9ca3af] transition-colors hover:text-[#ff5757]"
-        >
-          Explore visualizers →
-        </Link>
-      </div>
     </Fragment>
   );
 }
