@@ -6,14 +6,10 @@ import { useGamificationContext } from "./context/GamificationContext";
 import { GamificationCard } from "./GamificationCard";
 
 interface PointsDisplayProps {
-  userId?: string;
   variant?: "navbar" | "dashboard";
 }
 
-export function PointsDisplay({
-  userId,
-  variant = "navbar",
-}: PointsDisplayProps) {
+export function PointsDisplay({ variant = "navbar" }: PointsDisplayProps) {
   const { points, loading, currentLevel, pointsToNextLevel } =
     useGamificationContext();
   const [showCard, setShowCard] = useState(false);
