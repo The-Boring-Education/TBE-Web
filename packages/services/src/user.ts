@@ -4,13 +4,11 @@ import { sendRequest } from "@tbe/utils";
 export const userService = {
   async getProfile(userId: string): Promise<UserProfile | null> {
     try {
-      const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
       const url = `/user?userId=${encodeURIComponent(userId)}`;
 
       const response = await sendRequest({
         method: "GET",
         url,
-        baseURL: base,
       });
 
       if (response.status && response.data) {

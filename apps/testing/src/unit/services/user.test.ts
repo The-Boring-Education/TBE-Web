@@ -31,7 +31,6 @@ describe("userService", () => {
       expect.objectContaining({
         method: "GET",
         url: "/user?userId=u1",
-        baseURL: "http://localhost:3004/api/v1",
       }),
     );
     expect(profile).toEqual({ id: "u1", name: "Ada" });
