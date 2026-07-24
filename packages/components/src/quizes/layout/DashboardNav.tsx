@@ -61,7 +61,7 @@ export function DashboardNav() {
           </div>
 
           {/* Points Display */}
-          <PointsDisplay userId={user?.id} variant="dashboard" />
+          <PointsDisplay variant="dashboard" />
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">

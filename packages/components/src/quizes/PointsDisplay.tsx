@@ -6,14 +6,10 @@ import { useGamificationContext } from "./context/GamificationContext";
 import { GamificationCard } from "./GamificationCard";
 
 interface PointsDisplayProps {
-  userId?: string;
   variant?: "navbar" | "dashboard";
 }
 
-export function PointsDisplay({
-  userId,
-  variant = "navbar",
-}: PointsDisplayProps) {
+export function PointsDisplay({ variant = "navbar" }: PointsDisplayProps) {
   const { points, loading, currentLevel, pointsToNextLevel } =
     useGamificationContext();
   const [showCard, setShowCard] = useState(false);
@@ -62,7 +58,6 @@ export function PointsDisplay({
 
         {showCard && (
           <GamificationCard
-            userId={userId}
             isOpen={showCard}
             onClose={handleCloseCard}
             variant="popup"
@@ -86,11 +81,7 @@ export function PointsDisplay({
         </button>
 
         {showCard && (
-          <GamificationCard
-            userId={userId}
-            isOpen={showCard}
-            onClose={handleCloseCard}
-          />
+          <GamificationCard isOpen={showCard} onClose={handleCloseCard} />
         )}
       </div>
     </>
