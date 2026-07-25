@@ -8,6 +8,7 @@ import {
   HowToApproachSection,
   LeetCodeIcon,
   PseudoCodeSection,
+  StarRatingCard,
   Text,
   WaysToSolveSection,
   WorkingCodeSection,
@@ -37,6 +38,7 @@ const QUESTION_DETAIL_TABS: readonly DsaSectionTabs[] = [
   "topics",
   "companies",
   "notes",
+  "feedback",
 ] as const;
 
 function getQuestionVisualizerId(question: DsaQuestion): string | null {
@@ -330,6 +332,15 @@ const QuestionDetailPanel = ({
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  // Feedback (private per-user rating + optional review text)
+  const [feedbackRating, setFeedbackRating] = useState(0);
+  const [feedbackReview, setFeedbackReview] = useState("");
+  const [hasReviewed, setHasReviewed] = useState(false);
+  const [isLoadingFeedback, setIsLoadingFeedback] = useState(false);
+  const [isSavingFeedback, setIsSavingFeedback] = useState(false);
+  const [feedbackSaveSuccess, setFeedbackSaveSuccess] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+
   const qStableId = question ? getQuestionStableId(question) : null;
 
   useEffect(() => {
@@ -337,8 +348,62 @@ const QuestionDetailPanel = ({
       setNoteText(question.notes ?? "");
       setSaveSuccess(false);
       setActiveTab("description");
+      // Reset feedback state whenever the selected question changes.
+      setFeedbackRating(0);
+      setFeedbackReview("");
+      setHasReviewed(false);
+      setFeedbackSaveSuccess(false);
+      setFeedbackError(null);
     }
   }, [qStableId]);
+
+  // Fetch the current user's private feedback for this question (owner-only).
+  useEffect(() => {
+    if (!isAuth || !user?.id || !qStableId) return;
+
+    let cancelled = false;
+    setIsLoadingFeedback(true);
+    setFeedbackError(null);
+
+    (async () => {
+      try {
+        const response = await sendRequest({
+          url: `${routes.api.base}${routes.api.dsaYatraFeedback}?userId=${encodeURIComponent(
+            user.id,
+          )}&questionId=${encodeURIComponent(qStableId)}`,
+          method: "GET",
+        });
+
+        if (cancelled) return;
+
+        if (response?.status && response.data) {
+          const data = response.data as {
+            hasReviewed?: boolean;
+            rating?: number | null;
+            reviewText?: string;
+          };
+          setHasReviewed(Boolean(data.hasReviewed));
+          setFeedbackRating(
+            typeof data.rating === "number" && data.rating >= 1
+              ? data.rating
+              : 0,
+          );
+          setFeedbackReview(data.reviewText ?? "");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Failed to load feedback", error);
+          setFeedbackError("Could not load your feedback.");
+        }
+      } finally {
+        if (!cancelled) setIsLoadingFeedback(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuth, user?.id, qStableId]);
 
   if (!question) {
     return (
@@ -359,7 +424,7 @@ const QuestionDetailPanel = ({
     : null;
 
   const detailTabs: readonly DsaSectionTabs[] = VisualizerComponent
-    ? ["description", "visualizer", "topics", "companies", "notes"]
+    ? ["description", "visualizer", "topics", "companies", "notes", "feedback"]
     : QUESTION_DETAIL_TABS;
 
   const effectiveTab = detailTabs.includes(activeTab)
@@ -399,6 +464,50 @@ const QuestionDetailPanel = ({
       console.error("Failed to save note", error);
     } finally {
       setIsSavingNote(false);
+    }
+  };
+
+  const handleSaveFeedback = async () => {
+    if (!isAuth || !user?.id || !question) return;
+    if (feedbackRating < 1 || feedbackRating > 5) {
+      setFeedbackError("Please select a rating between 1 and 5 stars.");
+      return;
+    }
+
+    const qId = getQuestionStableId(question);
+
+    setIsSavingFeedback(true);
+    setFeedbackSaveSuccess(false);
+    setFeedbackError(null);
+
+    try {
+      const response = await sendRequest({
+        url: `${routes.api.base}${routes.api.dsaYatraFeedback}`,
+        method: "POST",
+        body: {
+          userId: user.id,
+          questionId: qId,
+          rating: feedbackRating,
+          reviewText: feedbackReview,
+        },
+      });
+
+      if (response?.status) {
+        setHasReviewed(true);
+        setFeedbackSaveSuccess(true);
+        setTimeout(() => setFeedbackSaveSuccess(false), 3000);
+      } else {
+        setFeedbackError(
+          typeof response?.message === "string"
+            ? response.message
+            : "Could not save your feedback.",
+        );
+      }
+    } catch (error) {
+      console.error("Failed to save feedback", error);
+      setFeedbackError("Could not save your feedback.");
+    } finally {
+      setIsSavingFeedback(false);
     }
   };
 
@@ -464,6 +573,9 @@ const QuestionDetailPanel = ({
                 : tab.charAt(0).toUpperCase() + tab.slice(1)}
               {tab === "notes" && showNotesTabDot && (
                 <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
+              )}
+              {tab === "feedback" && hasReviewed && (
+                <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-yellow-400 inline-block" />
               )}
             </button>
           ))}
@@ -619,6 +731,110 @@ const QuestionDetailPanel = ({
                   <strong>Wait!</strong> You need to be logged in to sync your
                   notes across devices. Otherwise, they won&apos;t be saved
                   permanently.
+                </Text>
+              </div>
+            )}
+          </div>
+        )}
+
+        {effectiveTab === "feedback" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Text level="h2" className="text-red-500 font-semibold">
+                YOUR FEEDBACK
+              </Text>
+              {isAuth ? (
+                <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                  {hasReviewed ? "Reviewed" : "Not reviewed yet"}
+                </div>
+              ) : (
+                <div className="text-[10px] text-gray-500 font-bold uppercase">
+                  Login to rate this question
+                </div>
+              )}
+            </div>
+
+            {isAuth ? (
+              <>
+                <div className="space-y-2">
+                  <Text
+                    level="p"
+                    className="text-xs text-gray-400 uppercase tracking-wider"
+                  >
+                    Rating
+                  </Text>
+                  <StarRatingCard
+                    rating={feedbackRating}
+                    onClick={(star: number) => {
+                      setFeedbackRating(star);
+                      setFeedbackError(null);
+                    }}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Text
+                    level="p"
+                    className="text-xs text-gray-400 uppercase tracking-wider"
+                  >
+                    Review (optional)
+                  </Text>
+                  <textarea
+                    value={feedbackReview}
+                    onChange={(e) => setFeedbackReview(e.target.value)}
+                    placeholder="Share what you thought of this question. Only you can see this."
+                    className="w-full h-40 bg-[#111] border border-gray-800 rounded-xl p-4 text-gray-300 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 outline-none transition-all resize-none scrollbar-thin-grey placeholder:text-gray-700"
+                  />
+                </div>
+
+                {feedbackError && (
+                  <Text level="p" className="text-xs text-red-400">
+                    {feedbackError}
+                  </Text>
+                )}
+
+                <div className="flex items-center justify-between gap-3">
+                  <Text
+                    level="p"
+                    className="text-[10px] text-gray-500 leading-relaxed"
+                  >
+                    Your feedback is private. Only you can see it.
+                  </Text>
+                  <button
+                    type="button"
+                    onClick={handleSaveFeedback}
+                    disabled={
+                      isSavingFeedback ||
+                      isLoadingFeedback ||
+                      feedbackRating < 1
+                    }
+                    className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 disabled:text-gray-500 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
+                  >
+                    {isSavingFeedback ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : feedbackSaveSuccess ? (
+                      <Check className="w-3 h-3" />
+                    ) : (
+                      <Save className="w-3 h-3" />
+                    )}
+                    {isSavingFeedback
+                      ? "Saving..."
+                      : feedbackSaveSuccess
+                        ? "Saved!"
+                        : hasReviewed
+                          ? "Update Feedback"
+                          : "Submit Feedback"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
+                <Text
+                  level="p"
+                  className="text-xs text-red-400 leading-relaxed"
+                >
+                  <strong>Log in</strong> to leave a private rating and review
+                  for this question.
                 </Text>
               </div>
             )}

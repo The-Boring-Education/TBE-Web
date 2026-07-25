@@ -5,7 +5,7 @@ import type {
 } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
-import { User } from "../models";
+import { DsaYatraFeedback, User } from "../models";
 
 const normalizeDsaQuestionId = (questionId: string | number): string =>
   String(questionId);
@@ -203,10 +203,82 @@ const mergeDsaYatraProgressInDB = async (
   }
 };
 
+const getDsaYatraFeedbackFromDB = async (
+  userId: string,
+  questionId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const doc = await DsaYatraFeedback.findOne({
+      userId: normalizeDsaQuestionId(userId),
+      questionId: normalizeDsaQuestionId(questionId),
+    }).lean();
+
+    if (!doc) {
+      return {
+        data: {
+          hasReviewed: false,
+          rating: null,
+          reviewText: "",
+          updatedAt: null,
+        },
+      };
+    }
+
+    return {
+      data: {
+        hasReviewed: true,
+        rating: doc.rating,
+        reviewText: doc.reviewText ?? "",
+        updatedAt: doc.updatedAt
+          ? new Date(doc.updatedAt as unknown as Date).toISOString()
+          : null,
+      },
+    };
+  } catch (error) {
+    logger.error("DB: getDsaYatraFeedbackFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to fetch DSA Yatra feedback", details: error };
+  }
+};
+
+const upsertDsaYatraFeedbackInDB = async (
+  userId: string,
+  questionId: string,
+  rating: number,
+  reviewText?: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const uid = normalizeDsaQuestionId(userId);
+    const qid = normalizeDsaQuestionId(questionId);
+    const text = typeof reviewText === "string" ? reviewText : "";
+
+    await DsaYatraFeedback.findOneAndUpdate(
+      { userId: uid, questionId: qid },
+      {
+        $set: { rating, reviewText: text },
+        $setOnInsert: { userId: uid, questionId: qid },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+
+    return getDsaYatraFeedbackFromDB(uid, qid);
+  } catch (error) {
+    logger.error("DB: upsertDsaYatraFeedbackInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to save DSA Yatra feedback", details: error };
+  }
+};
+
 export {
+  getDsaYatraFeedbackFromDB,
   getDsaYatraProgressFromDB,
   getDYUserByIdFromDB,
   mergeDsaYatraProgressInDB,
   patchDsaYatraQuestionCompletionInDB,
   updateDYUserByIdInDB,
+  upsertDsaYatraFeedbackInDB,
 };

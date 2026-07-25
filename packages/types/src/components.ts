@@ -1153,4 +1153,4 @@ export interface MainNavbarProps {
 export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
 
 export type DsaSectionTabs =
-  "description" | "visualizer" | "topics" | "companies" | "notes";
+  "description" | "visualizer" | "topics" | "companies" | "notes" | "feedback";

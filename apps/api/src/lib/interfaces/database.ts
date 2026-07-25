@@ -634,6 +634,16 @@ export interface FeedbackModel extends Document {
   updatedAt: Date;
 }
 
+export interface DsaYatraFeedbackModel extends Document {
+  _id: typeof Schema.Types.ObjectId;
+  userId: string;
+  questionId: string;
+  rating: number;
+  reviewText?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PrepYatraUserModel extends Document {
   _id: Types.ObjectId;
   userId: string;

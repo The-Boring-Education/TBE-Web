@@ -41,6 +41,7 @@ const DATABASE_MODELS = {
   SUBSCRIPTION_PLAN: "SubscriptionPlan",
   USER_ACTIVITY_LOG: "UserActivityLog",
   ADMIN_USER: "AdminUser",
+  DSA_YATRA_FEEDBACK: "DsaYatraFeedback",
 };
 
 export const FEEDBACK_TYPES = [

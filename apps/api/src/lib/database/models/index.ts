@@ -1,6 +1,7 @@
 export { default as AdminUser } from "./AdminUser";
 export { default as Certificate } from "./Certificate";
 export { default as Coupon } from "./Coupon";
+export { default as DsaYatraFeedback } from "./DsaYatraFeedback";
 export { default as Feedback } from "./Feedback";
 export { default as Gamification } from "./Gamification";
 export { default as Leaderboard } from "./Leaderboard";
