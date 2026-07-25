@@ -1,3 +1,6 @@
+const readEnv = (name: string): string | undefined =>
+  typeof process !== "undefined" ? process.env?.[name] : undefined;
+
 /**
  * Chitthi (email service) configuration.
  *
@@ -10,23 +13,13 @@
  * accepted as fallbacks so existing deployments keep working.
  */
 export const getChitthiConfig = () => {
-  const url =
-    (typeof process !== "undefined" && process.env?.CHITTHI_URL) ||
-    (typeof process !== "undefined" && process.env?.EMAIL_SERVICE_URL) ||
-    "";
-
-  const apiKey =
-    (typeof process !== "undefined" && process.env?.CHITTHI_API_KEY) ||
-    (typeof process !== "undefined" && process.env?.EMAIL_API_KEY) ||
-    "";
-
+  const url = readEnv("CHITTHI_URL") || readEnv("EMAIL_SERVICE_URL") || "";
+  const apiKey = readEnv("CHITTHI_API_KEY") || readEnv("EMAIL_API_KEY") || "";
   const fromEmail =
-    (typeof process !== "undefined" && process.env?.CHITTHI_FROM_EMAIL) ||
-    (typeof process !== "undefined" && process.env?.FROM_EMAIL) ||
+    readEnv("CHITTHI_FROM_EMAIL") ||
+    readEnv("FROM_EMAIL") ||
     "theboringeducation@gmail.com";
-
-  const fromName =
-    (typeof process !== "undefined" && process.env?.CHITTHI_FROM_NAME) || "TBE";
+  const fromName = readEnv("CHITTHI_FROM_NAME") || "TBE";
 
   return { url, apiKey, fromEmail, fromName };
 };

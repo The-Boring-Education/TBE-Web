@@ -47,6 +47,11 @@ const nextConfig = {
    * Chitthi URL / API key are never exposed to browser clients. Any TBE app
    * or admin tool that needs to talk to Chitthi should call
    * `/api/chitthi/*` on this backend and let the rewrite forward it.
+   *
+   * Note: `next.config.js` reads env vars at build/start time, so changing
+   * `CHITTHI_URL` requires a restart (standard Next.js behavior). Runtime
+   * callers of the email service should use `getChitthiConfig()` from
+   * `@tbe/email` which is re-evaluated on every call.
    */
   async rewrites() {
     const chitthiUrl = (
