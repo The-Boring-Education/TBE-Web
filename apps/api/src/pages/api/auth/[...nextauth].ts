@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { routes } from "@/lib/constants";
 import { createUserInDB, getUserByEmailFromDB } from "@/lib/database";
-import { User } from "@/lib/database/models";
 import { logger } from "@/lib/utils/logger";
 import { connectDB } from "@/middleware/api";
 
@@ -86,9 +85,6 @@ const authOptions: NextAuthOptions = {
           // If the user exists, attach the MongoDB _id to the user object
           user.id = existingUser._id.toString();
         }
-
-        // Update the lastActiveAt timestamp
-        await User.findByIdAndUpdate(user.id, { lastActiveAt: new Date() });
 
         return true; // Allow the sign in
       } catch (error) {

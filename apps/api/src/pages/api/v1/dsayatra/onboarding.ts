@@ -1,3 +1,4 @@
+import { emailTriggerService } from "@tbe/email";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
@@ -7,7 +8,6 @@ import {
   updateDYUserByIdInDB,
 } from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
-import { emailTriggerService } from "@/lib/services/triggers";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { normalizeDsaDuration } from "@/lib/validation";

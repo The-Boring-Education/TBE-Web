@@ -1,5 +1,7 @@
-import { envConfig } from "@/lib/constants";
-import { emailLogger } from "@/lib/constants";
+import { emailLogger } from "@tbe/constants";
+
+import { emailClient } from "./client";
+import { getChitthiConfig } from "./config";
 import type {
   CourseCompletionEmailData,
   CourseEnrollmentEmailData,
@@ -9,47 +11,49 @@ import type {
   ExternalEmailResponse,
   InterviewPrepEnrollmentEmailData,
   ProjectEnrollmentEmailData,
-} from "@/lib/interfaces";
-
-import { emailClient } from "./client";
+} from "./interfaces";
 import {
   courseCompletionTemplate,
   courseEnrollmentTemplate,
   interviewPrepEnrollmentTemplate,
   onboardingEmailTemplate,
   projectEnrollmentTemplate,
-  reactivationEmailTemplate,
   welcomeEmailTemplate,
 } from "./templates";
 
-class EmailTriggerService {
-  private getDefaultFromEmail(): string {
-    return envConfig.FROM_EMAIL || "theboringeducation@gmail.com";
-  }
+type AnyEmailData =
+  | EmailTriggerData
+  | CourseEnrollmentEmailData
+  | ProjectEnrollmentEmailData
+  | InterviewPrepEnrollmentEmailData
+  | CourseCompletionEmailData;
 
-  private getDefaultFromName(): string {
-    return "TBE";
+/**
+ * EmailTriggerService is the single extension point for sending emails
+ * across all TBE apps. New app onboarding flows should call
+ * `sendExternalEmail({ emailType: "ONBOARDING", ..., additionalData: { app } })`
+ * — no per-app plumbing is required.
+ */
+class EmailTriggerService {
+  private getDefaults() {
+    const { fromEmail, fromName } = getChitthiConfig();
+    return { from_email: fromEmail, from_name: fromName };
   }
 
   private async sendEmailWithTemplate(
     emailType: EmailTriggerType,
-    data:
-      | EmailTriggerData
-      | CourseEnrollmentEmailData
-      | ProjectEnrollmentEmailData
-      | InterviewPrepEnrollmentEmailData
-      | CourseCompletionEmailData,
-    templateFunction: (data: any) => string,
+    data: AnyEmailData,
+    templateFunction: (data: AnyEmailData) => string,
     subject: string,
   ) {
     const requestId = emailLogger.generateRequestId();
 
     try {
       const htmlContent = templateFunction(data);
+      const defaults = this.getDefaults();
 
       const emailData = {
-        from_email: this.getDefaultFromEmail(),
-        from_name: this.getDefaultFromName(),
+        ...defaults,
         to_email: data.userEmail,
         to_name: data.userName,
         subject,
@@ -66,7 +70,8 @@ class EmailTriggerService {
         requestId: result.requestId,
         error: result.error,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       emailLogger.logError(
         requestId,
         data.userEmail,
@@ -77,26 +82,18 @@ class EmailTriggerService {
         success: false,
         message: "Failed to send email",
         requestId,
-        error: error.message || "Unknown error",
+        error: err.message || "Unknown error",
       };
     }
   }
 
-  async sendTriggerEmail(
-    trigger: EmailTriggerType,
-    data:
-      | EmailTriggerData
-      | CourseEnrollmentEmailData
-      | ProjectEnrollmentEmailData
-      | InterviewPrepEnrollmentEmailData
-      | CourseCompletionEmailData,
-  ) {
+  async sendTriggerEmail(trigger: EmailTriggerType, data: AnyEmailData) {
     switch (trigger) {
       case "WELCOME":
         return this.sendEmailWithTemplate(
           trigger,
           data as EmailTriggerData,
-          welcomeEmailTemplate,
+          welcomeEmailTemplate as (d: AnyEmailData) => string,
           "Welcome to The Boring Education! 🎉",
         );
 
@@ -104,7 +101,7 @@ class EmailTriggerService {
         return this.sendEmailWithTemplate(
           trigger,
           data as CourseEnrollmentEmailData,
-          courseEnrollmentTemplate,
+          courseEnrollmentTemplate as (d: AnyEmailData) => string,
           `Welcome to ${(data as CourseEnrollmentEmailData).courseName}! 🚀`,
         );
 
@@ -112,7 +109,7 @@ class EmailTriggerService {
         return this.sendEmailWithTemplate(
           trigger,
           data as ProjectEnrollmentEmailData,
-          projectEnrollmentTemplate,
+          projectEnrollmentTemplate as (d: AnyEmailData) => string,
           `Welcome to ${(data as ProjectEnrollmentEmailData).projectName}! 🛠️`,
         );
 
@@ -120,7 +117,7 @@ class EmailTriggerService {
         return this.sendEmailWithTemplate(
           trigger,
           data as InterviewPrepEnrollmentEmailData,
-          interviewPrepEnrollmentTemplate,
+          interviewPrepEnrollmentTemplate as (d: AnyEmailData) => string,
           `Welcome to ${
             (data as InterviewPrepEnrollmentEmailData).sheetName
           }! 🎯`,
@@ -130,27 +127,23 @@ class EmailTriggerService {
         return this.sendEmailWithTemplate(
           trigger,
           data as CourseCompletionEmailData,
-          courseCompletionTemplate,
+          courseCompletionTemplate as (d: AnyEmailData) => string,
           `Congratulations! You've completed ${
             (data as CourseCompletionEmailData).courseName
           }! 🏆`,
         );
 
-      case "REACTIVATION":
+      case "ONBOARDING": {
+        const subject =
+          (data.metadata?.subject as string | undefined) ||
+          "Welcome to The Boring Education! 🎉";
         return this.sendEmailWithTemplate(
           trigger,
           data,
-          reactivationEmailTemplate,
-          data.metadata?.subject || "Welcome back to your learning journey! 🚀",
+          onboardingEmailTemplate as unknown as (d: AnyEmailData) => string,
+          subject,
         );
-
-      case "ONBOARDING":
-        return this.sendEmailWithTemplate(
-          trigger,
-          data,
-          onboardingEmailTemplate,
-          data.metadata?.subject || "Welcome to The Boring Education! 🎉",
-        );
+      }
 
       default:
         return {
@@ -162,14 +155,12 @@ class EmailTriggerService {
     }
   }
 
-  // New method for external API usage
   async sendExternalEmail(
     request: ExternalEmailRequest,
   ): Promise<ExternalEmailResponse> {
     const { emailType, userData, additionalData } = request;
 
     try {
-      // Validate required data
       if (!userData.email || !userData.name || !userData.id) {
         return {
           success: false,
@@ -178,16 +169,14 @@ class EmailTriggerService {
         };
       }
 
-      // Create base data object
-      const baseData = {
+      const baseData: EmailTriggerData = {
         userEmail: userData.email,
         userName: userData.name,
         userId: userData.id,
         metadata: additionalData || {},
       };
 
-      // Create specific data object based on email type
-      let emailData: any = baseData;
+      let emailData: AnyEmailData = baseData;
 
       switch (emailType) {
         case "WELCOME":
@@ -204,8 +193,9 @@ class EmailTriggerService {
           }
           emailData = {
             ...baseData,
-            courseName: additionalData.courseName,
-            courseDescription: additionalData.courseDescription,
+            courseName: additionalData.courseName as string,
+            courseDescription: additionalData.courseDescription as
+              string | undefined,
           };
           break;
 
@@ -219,8 +209,9 @@ class EmailTriggerService {
           }
           emailData = {
             ...baseData,
-            projectName: additionalData.projectName,
-            projectDescription: additionalData.projectDescription,
+            projectName: additionalData.projectName as string,
+            projectDescription: additionalData.projectDescription as
+              string | undefined,
           };
           break;
 
@@ -234,8 +225,9 @@ class EmailTriggerService {
           }
           emailData = {
             ...baseData,
-            sheetName: additionalData.sheetName,
-            sheetDescription: additionalData.sheetDescription,
+            sheetName: additionalData.sheetName as string,
+            sheetDescription: additionalData.sheetDescription as
+              string | undefined,
           };
           break;
 
@@ -250,29 +242,18 @@ class EmailTriggerService {
           }
           emailData = {
             ...baseData,
-            courseName: additionalData.courseName,
-            completionDate: additionalData.completionDate,
-            certificateUrl: additionalData.certificateUrl,
-          };
-          break;
-
-        case "REACTIVATION":
-          emailData = {
-            ...baseData,
-            solvedCount: additionalData?.solvedCount || 0,
-            currentStreak: additionalData?.currentStreak || 0,
-            redirectUrl: additionalData?.redirectUrl || "",
-            redirectText: additionalData?.redirectText || "",
-            cohort: additionalData?.cohort || "1D",
-            app: additionalData?.app,
+            courseName: additionalData.courseName as string,
+            completionDate: additionalData.completionDate as string,
+            certificateUrl: additionalData.certificateUrl as string | undefined,
           };
           break;
 
         case "ONBOARDING":
           emailData = {
             ...baseData,
+            // `app` is consumed by the onboarding template as a top-level field.
             app: additionalData?.app || "platform",
-          };
+          } as EmailTriggerData & { app: string };
           break;
 
         default:
@@ -283,7 +264,6 @@ class EmailTriggerService {
           };
       }
 
-      // Send the email
       const result = await this.sendTriggerEmail(emailType, emailData);
 
       return {
@@ -292,11 +272,12 @@ class EmailTriggerService {
         requestId: result.requestId || undefined,
         error: result.error,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       return {
         success: false,
         message: "Failed to process email request",
-        error: error.message || "Unknown error",
+        error: err.message || "Unknown error",
       };
     }
   }

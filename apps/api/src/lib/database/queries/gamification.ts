@@ -7,7 +7,7 @@ import type {
 import { calculateUserPointsForAction } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
-import { Gamification, User, UserActivityLog } from "../models";
+import { Gamification, UserActivityLog } from "../models";
 
 const addGamificationDocInDB = async (
   userId: string,
@@ -108,22 +108,6 @@ const logUserActivityForStreak = async (
   try {
     const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     await UserActivityLog.create({ userId, app, actionType, date, metadata });
-
-    // Update the lastActiveAt fields on User document
-    const nowTimestamp = new Date();
-    const updateObj: Record<string, Date> = {
-      lastActiveAt: nowTimestamp,
-    };
-
-    if (app === "DSA_YATRA") {
-      updateObj["dsaYatra.lastActiveAt"] = nowTimestamp;
-    } else if (app === "PREPYATRA") {
-      updateObj["prepYatra.lastActiveAt"] = nowTimestamp;
-    } else if (app === "ONCAMPUS") {
-      updateObj["oncampus.lastActiveAt"] = nowTimestamp;
-    }
-
-    await User.findByIdAndUpdate(userId, { $set: updateObj });
 
     return { data: { logged: true } };
   } catch (error: unknown) {

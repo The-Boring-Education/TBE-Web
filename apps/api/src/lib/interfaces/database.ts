@@ -64,7 +64,6 @@ export interface UserModel {
       lastLoggedDate?: Date;
       totalLogs?: number;
     };
-    lastActiveAt?: Date;
   };
   dsaYatra?: {
     dyOnboarded?: boolean;
@@ -80,14 +79,12 @@ export interface UserModel {
         solvedCount?: number;
       };
     };
-    lastActiveAt?: Date;
   };
   oncampus?: {
     onboardingCompleted?: boolean;
     experienceLevel?: string;
     duration?: "1Month" | "3Months" | "6Months" | "1Year";
     offCampus?: boolean;
-    lastActiveAt?: Date;
   };
   techYatra?: {
     tyOnboarded?: boolean;
@@ -96,16 +93,6 @@ export interface UserModel {
   resumeYatra?: {
     ryOnboarded?: boolean;
     experienceBand?: string;
-  };
-  lastActiveAt?: Date;
-  reactivationEmails?: {
-    lastSent1DAt?: Date;
-    lastSent7DAt?: Date;
-    lastSent14DAt?: Date;
-    lastSent30DAt?: Date;
-  };
-  preferences?: {
-    marketingEmails?: boolean;
   };
 }
 

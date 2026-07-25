@@ -63,9 +63,6 @@ const PrepYatraSchema = new Schema({
       default: 0,
     },
   },
-  lastActiveAt: {
-    type: Date,
-  },
 });
 
 const OncampusSchema = new Schema({
@@ -84,9 +81,6 @@ const OncampusSchema = new Schema({
   offCampus: {
     type: Boolean,
     default: false,
-  },
-  lastActiveAt: {
-    type: Date,
   },
 });
 
@@ -146,9 +140,6 @@ const DSAYatraSchema = new Schema({
         default: 0,
       },
     },
-  },
-  lastActiveAt: {
-    type: Date,
   },
 });
 
@@ -225,23 +216,6 @@ const UserSchema: Schema<UserModel> = new Schema(
     oncampus: OncampusSchema,
     techYatra: TechYatraSchema,
     resumeYatra: ResumeYatraSchema,
-    lastActiveAt: {
-      type: Date,
-      default: Date.now,
-      index: true,
-    },
-    reactivationEmails: {
-      lastSent1DAt: { type: Date, default: null },
-      lastSent7DAt: { type: Date, default: null },
-      lastSent14DAt: { type: Date, default: null },
-      lastSent30DAt: { type: Date, default: null },
-    },
-    preferences: {
-      marketingEmails: {
-        type: Boolean,
-        default: true,
-      },
-    },
   },
   { timestamps: true },
 );

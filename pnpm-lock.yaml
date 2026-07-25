@@ -270,6 +270,9 @@ importers:
       "@tbe/constants":
         specifier: workspace:*
         version: link:../../packages/constants
+      "@tbe/email":
+        specifier: workspace:*
+        version: link:../../packages/email
       "@tbe/utils":
         specifier: workspace:*
         version: link:../../packages/utils
@@ -574,7 +577,7 @@ importers:
         version: 9.39.4(jiti@1.21.7)
       next-sitemap:
         specifier: ^4.2.3
-        version: 4.2.3(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 4.2.3(next@14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       postcss:
         specifier: ^8.4.35
         version: 8.5.16
@@ -922,7 +925,7 @@ importers:
         version: 2.0.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint@8.57.1)(typescript@5.9.2))(eslint@8.57.1)
       next-sitemap:
         specifier: ^4.2.3
-        version: 4.2.3(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 4.2.3(next@14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       postcss:
         specifier: ^8.4.21
         version: 8.5.16
@@ -1332,7 +1335,7 @@ importers:
         version: 9.39.4(jiti@1.21.7)
       next-sitemap:
         specifier: ^4.2.3
-        version: 4.2.3(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 4.2.3(next@14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       postcss:
         specifier: ^8.4.35
         version: 8.5.16
@@ -2264,6 +2267,28 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  packages/email:
+    dependencies:
+      "@tbe/constants":
+        specifier: workspace:*
+        version: link:../constants
+      axios:
+        specifier: ^1.4.0
+        version: 1.18.1
+    devDependencies:
+      "@tbe/eslint-config":
+        specifier: workspace:*
+        version: link:../eslint-config
+      "@tbe/typescript-config":
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.34.0
+        version: 9.39.4(jiti@1.21.7)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
   packages/eslint-config:
     devDependencies:
       "@eslint/js":
@@ -2473,6 +2498,9 @@ importers:
       "@tbe/constants":
         specifier: workspace:*
         version: link:../constants
+      "@tbe/email":
+        specifier: workspace:*
+        version: link:../email
       "@tbe/interface":
         specifier: workspace:*
         version: link:../interface
@@ -22126,7 +22154,7 @@ snapshots:
       tinyglobby: 0.2.17
       unrs-resolver: 1.12.2
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.2))(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -24582,7 +24610,7 @@ snapshots:
       minimist: 1.2.8
       next: 13.5.6(@opentelemetry/api@1.9.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  next-sitemap@4.2.3(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
+  next-sitemap@4.2.3(next@14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
       "@corex/deepmerge": 4.0.43
       "@next/env": 13.5.11

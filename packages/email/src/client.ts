@@ -1,16 +1,19 @@
+import { emailLogger } from "@tbe/constants";
 import axios from "axios";
 
-import { envConfig } from "@/lib/constants";
-import { emailLogger } from "@/lib/constants";
-import type { EmailRequest, EmailResponse } from "@/lib/interfaces";
+import { getChitthiConfig } from "./config";
+import type { EmailRequest, EmailResponse } from "./interfaces";
 
-class EmailClient {
-  private apiUrl: string;
-  private apiKey: string;
-
-  constructor() {
-    this.apiUrl = envConfig.EMAIL_SERVICE_URL;
-    this.apiKey = envConfig.EMAIL_API_KEY;
+/**
+ * Chitthi email dispatcher client.
+ *
+ * All third-party email provider integration lives here. The rest of the
+ * codebase talks to this client through the `emailTriggerService` and never
+ * hits Chitthi directly, so provider details stay in one place.
+ */
+class ChitthiClient {
+  private get config() {
+    return getChitthiConfig();
   }
 
   async sendEmail(
@@ -19,11 +22,11 @@ class EmailClient {
   ): Promise<EmailResponse> {
     const currentRequestId = requestId || emailLogger.generateRequestId();
     const startTime = Date.now();
+    const { url, apiKey } = this.config;
 
     try {
-      // Validate configuration
-      if (!this.apiKey) {
-        const error = new Error("Email API key not configured");
+      if (!apiKey) {
+        const error = new Error("Chitthi API key not configured");
         emailLogger.logError(
           currentRequestId,
           emailData.to_email,
@@ -33,8 +36,8 @@ class EmailClient {
         throw error;
       }
 
-      if (!this.apiUrl) {
-        const error = new Error("Email service URL not configured");
+      if (!url) {
+        const error = new Error("Chitthi service URL not configured");
         emailLogger.logError(
           currentRequestId,
           emailData.to_email,
@@ -44,33 +47,26 @@ class EmailClient {
         throw error;
       }
 
-      // Log API call
       emailLogger.logApiCall(currentRequestId, emailData.to_email, {
-        apiUrl: this.apiUrl,
+        apiUrl: url,
         subject: emailData.subject,
-        hasApiKey: !!this.apiKey,
+        hasApiKey: !!apiKey,
       });
 
-      const baseUrl = this.apiUrl.replace(/\/+$/, "");
+      const baseUrl = url.replace(/\/+$/, "");
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
-        "X-Chitthi-API-Key": this.apiKey,
-        Authorization: `Bearer ${this.apiKey}`,
+        "X-Chitthi-API-Key": apiKey,
       };
-      if (this.apiKey.startsWith("SG.")) {
-        headers["X-SendGrid-API-Key"] = this.apiKey;
-      } else if (this.apiKey.startsWith("xkeysib-")) {
-        headers["X-Breevo-API-Key"] = this.apiKey;
-      }
+      headers["Authorization"] = "Bearer " + apiKey;
 
       const response = await axios.post(`${baseUrl}/send-email`, emailData, {
         headers,
-        timeout: 10000, // 10 second timeout
+        timeout: 10000,
       });
 
       const duration = Date.now() - startTime;
 
-      // Log success with response details
       emailLogger.logSuccess(currentRequestId, emailData.to_email, duration, {
         httpStatus: response.status,
         responseData: response.data,
@@ -82,10 +78,14 @@ class EmailClient {
         message: "Email sent successfully",
         requestId: currentRequestId,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       const duration = Date.now() - startTime;
+      const err = error as {
+        response?: { status?: number; statusText?: string; data?: unknown };
+        message?: string;
+        code?: string;
+      };
 
-      // Enhanced error logging
       emailLogger.logError(
         currentRequestId,
         emailData.to_email,
@@ -93,21 +93,21 @@ class EmailClient {
         "API_CALL",
         {
           duration,
-          httpStatus: error.response?.status,
-          httpStatusText: error.response?.statusText,
-          responseData: error.response?.data,
+          httpStatus: err.response?.status,
+          httpStatusText: err.response?.statusText,
+          responseData: err.response?.data,
           subject: emailData.subject,
-          apiUrl: this.apiUrl,
-          isTimeout: error.code === "ECONNABORTED",
-          isNetworkError: !error.response,
+          apiUrl: url,
+          isTimeout: err.code === "ECONNABORTED",
+          isNetworkError: !err.response,
         },
       );
 
       return {
         success: false,
         error:
-          error.response?.data?.message ||
-          error.message ||
+          (err.response?.data as { message?: string } | undefined)?.message ||
+          err.message ||
           "Failed to send email",
         requestId: currentRequestId,
       };
@@ -127,4 +127,4 @@ class EmailClient {
   }
 }
 
-export const emailClient = new EmailClient();
+export const emailClient = new ChitthiClient();

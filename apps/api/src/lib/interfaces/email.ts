@@ -1,58 +1,28 @@
-export interface EmailRequest {
-  from_email: string;
-  from_name?: string;
-  to_email: string;
-  to_name?: string;
-  subject: string;
-  html_content: string;
-}
+// Re-exports from the shared @tbe/email package. The email domain lives
+// entirely in that package so all TBE apps consume the same types and no
+// duplicate copies drift out of sync.
+import type {
+  CourseCompletionEmailData,
+  CourseEnrollmentEmailData,
+  EmailTriggerData,
+  EmailTriggerType,
+  InterviewPrepEnrollmentEmailData,
+  ProjectEnrollmentEmailData,
+} from "@tbe/email";
 
-export interface EmailResponse {
-  success: boolean;
-  message?: string;
-  error?: string;
-  requestId?: string;
-}
-
-export interface EmailTriggerData {
-  userEmail: string;
-  userName: string;
-  userId: string;
-  metadata?: Record<string, any>;
-}
-
-export interface CourseEnrollmentEmailData extends EmailTriggerData {
-  courseName: string;
-  courseDescription?: string;
-  courseUrl: string;
-}
-
-export interface ProjectEnrollmentEmailData extends EmailTriggerData {
-  projectName: string;
-  projectDescription?: string;
-  projectUrl: string;
-}
-
-export interface InterviewPrepEnrollmentEmailData extends EmailTriggerData {
-  sheetName: string;
-  sheetDescription?: string;
-}
-
-export interface CourseCompletionEmailData extends EmailTriggerData {
-  courseName: string;
-  courseUrl: string;
-  completionDate: string;
-  certificateUrl?: string;
-}
-
-export type EmailTriggerType =
-  | "WELCOME"
-  | "COURSE_ENROLLMENT"
-  | "PROJECT_ENROLLMENT"
-  | "INTERVIEW_PREP_ENROLLMENT"
-  | "COURSE_COMPLETION"
-  | "REACTIVATION"
-  | "ONBOARDING";
+export type {
+  CourseCompletionEmailData,
+  CourseEnrollmentEmailData,
+  EmailRequest,
+  EmailResponse,
+  EmailTriggerData,
+  EmailTriggerType,
+  ExternalEmailRequest,
+  ExternalEmailResponse,
+  InterviewPrepEnrollmentEmailData,
+  OnboardingApp,
+  ProjectEnrollmentEmailData,
+} from "@tbe/email";
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;
@@ -62,22 +32,4 @@ export interface EmailTriggerRequest {
     | ProjectEnrollmentEmailData
     | InterviewPrepEnrollmentEmailData
     | CourseCompletionEmailData;
-}
-
-// New interfaces for external API usage
-export interface ExternalEmailRequest {
-  emailType: EmailTriggerType;
-  userData: {
-    email: string;
-    name: string;
-    id: string;
-  };
-  additionalData?: Record<string, any>;
-}
-
-export interface ExternalEmailResponse {
-  success: boolean;
-  message: string;
-  requestId?: string;
-  error?: string;
 }
