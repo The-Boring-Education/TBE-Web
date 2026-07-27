@@ -99,23 +99,34 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+type TooltipPayloadItem = {
+  dataKey?: string | number;
+  name?: string;
+  value?: number | string;
+  color?: string;
+  payload?: Record<string, unknown> & { fill?: string };
+};
+
 type CustomTooltipProps = React.ComponentProps<"div"> & {
   active?: boolean;
-  payload?: any[];
-  label?: any;
+  payload?: TooltipPayloadItem[];
+  label?: string | number;
   hideLabel?: boolean;
   hideIndicator?: boolean;
   indicator?: "line" | "dot" | "dashed";
   nameKey?: string;
   labelKey?: string;
-  labelFormatter?: (value: any, payload?: any[]) => React.ReactNode;
+  labelFormatter?: (
+    value: React.ReactNode,
+    payload?: TooltipPayloadItem[],
+  ) => React.ReactNode;
   labelClassName?: string;
   formatter?: (
-    value: any,
-    name: any,
-    item: any,
+    value: number | string | undefined,
+    name: string | undefined,
+    item: TooltipPayloadItem,
     index: number,
-    raw: any,
+    raw: Record<string, unknown> | undefined,
   ) => React.ReactNode;
 };
 
@@ -149,6 +160,7 @@ const ChartTooltipContent = React.forwardRef<
       }
 
       const [item] = payload;
+      if (!item) return null;
       const key = `${labelKey || item.dataKey || item.name || "value"}`;
       const itemConfig = getPayloadConfigFromPayload(config, item, key);
       const value =
@@ -195,10 +207,10 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {payload.map((item: any, index: number) => {
+          {payload.map((item: TooltipPayloadItem, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
-            const indicatorColor = color || item.payload.fill || item.color;
+            const indicatorColor = color || item.payload?.fill || item.color;
 
             return (
               <div
@@ -274,7 +286,7 @@ type LegendPayloadItem = {
   type?: string;
   color?: string;
   dataKey?: string | number;
-  payload?: any;
+  payload?: Record<string, unknown>;
 };
 
 const ChartLegendContent = React.forwardRef<

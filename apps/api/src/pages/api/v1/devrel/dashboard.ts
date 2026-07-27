@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 
 import { apiStatusCodes } from "@/lib/constants";
+
+type StatusCount = { status: string; count: number };
 import { DevRelLead, DevRelTask, User } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
@@ -142,24 +144,28 @@ const handleAdvocateDashboard = async (
     const applicationCounts = {
       total: stats.total,
       pending:
-        stats.statusCounts.find((s: any) => s.status === "applied")?.count || 0,
+        stats.statusCounts.find((s: StatusCount) => s.status === "applied")
+          ?.count || 0,
       approved:
-        stats.statusCounts.find((s: any) => s.status === "approved")?.count ||
-        0,
+        stats.statusCounts.find((s: StatusCount) => s.status === "approved")
+          ?.count || 0,
       rejected:
-        stats.statusCounts.find((s: any) => s.status === "rejected")?.count ||
-        0,
+        stats.statusCounts.find((s: StatusCount) => s.status === "rejected")
+          ?.count || 0,
     };
 
     const taskStatsData = taskStats[0] || { statusCounts: [], total: 0 };
     const taskCounts = {
       total: taskStatsData.total,
       active: taskStatsData.statusCounts
-        .filter((s: any) => ["pending", "in_progress"].includes(s.status))
-        .reduce((sum: number, s: any) => sum + s.count, 0),
+        .filter((s: StatusCount) =>
+          ["pending", "in_progress"].includes(s.status),
+        )
+        .reduce((sum: number, s: StatusCount) => sum + s.count, 0),
       completed:
-        taskStatsData.statusCounts.find((s: any) => s.status === "completed")
-          ?.count || 0,
+        taskStatsData.statusCounts.find(
+          (s: StatusCount) => s.status === "completed",
+        )?.count || 0,
       overdue: overdueTasks.length,
     };
 
@@ -255,17 +261,22 @@ const handleLeadDashboard = async (
       isActive: true,
     }).sort({ createdAt: 1 });
 
+    type DevRelTaskDoc = {
+      getLeadStatus: (leadId: string) => { status?: string | null };
+      isOverdue: boolean;
+      type: string;
+    };
+    type TaskBuckets = {
+      pending: DevRelTaskDoc[];
+      inProgress: DevRelTaskDoc[];
+      completed: DevRelTaskDoc[];
+      overdue: DevRelTaskDoc[];
+    };
+    const typedAllTasks = allTasks as DevRelTaskDoc[];
+
     // Categorize tasks by status for this lead
-    const tasks = allTasks.reduce(
-      (
-        acc: {
-          pending: any[];
-          inProgress: any[];
-          completed: any[];
-          overdue: any[];
-        },
-        task: any,
-      ) => {
+    const tasks = typedAllTasks.reduce<TaskBuckets>(
+      (acc, task) => {
         const leadStatus = task.getLeadStatus(lead._id.toString());
         const status = leadStatus.status || "pending";
 
@@ -290,10 +301,10 @@ const handleLeadDashboard = async (
         return acc;
       },
       {
-        pending: [] as any[],
-        inProgress: [] as any[],
-        completed: [] as any[],
-        overdue: [] as any[],
+        pending: [],
+        inProgress: [],
+        completed: [],
+        overdue: [],
       },
     );
 
@@ -309,7 +320,7 @@ const handleLeadDashboard = async (
           ? Math.round((completedOnboardingTasks / totalOnboardingTasks) * 100)
           : 0,
       nextTask:
-        tasks.pending.find((task: any) => task.type === "onboarding") || null,
+        tasks.pending.find((task) => task.type === "onboarding") || null,
     };
 
     const dashboardData = {

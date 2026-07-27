@@ -862,7 +862,14 @@ export interface BaseProductProps {
   features?: string[];
   isPremium?: boolean;
   isEnrolled?: boolean;
-  [key: string]: any;
+  // Pricing/coupon fields added at runtime before passing to PaymentCard
+  originalPrice?: number;
+  discountAmount?: number;
+  savings?: number;
+  appliedCoupon?: {
+    code: string;
+    description?: string;
+  };
 }
 
 export interface ResumeEvaluationData {
@@ -888,11 +895,20 @@ export interface ResumeEvaluationData {
   }[];
 }
 
+interface CourseWithPricingDetails {
+  originalPrice?: number;
+  discountAmount?: number;
+  savings?: number;
+  appliedCoupon?: { code: string; description?: string };
+}
+
 export interface PaymentCardProps {
-  course:
+  course: (
     | BaseShikshaCourseResponseProps
     | BaseInterviewSheetResponseProps
-    | BaseProductProps;
+    | BaseProductProps
+  ) &
+    CourseWithPricingDetails;
   onClose: () => void;
   productType: string;
 }

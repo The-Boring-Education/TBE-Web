@@ -52,7 +52,7 @@ const addRecruiterToDB = async (
 
 const updateRecruiterInDB = async (
   recruiterId: string,
-  updatePayload: Partial<Record<string, any>>,
+  updatePayload: Partial<Record<string, unknown>>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const updatedRecruiter = await Recruiter.findByIdAndUpdate(
@@ -66,7 +66,7 @@ const updateRecruiterInDB = async (
     }
 
     return { data: updatedRecruiter };
-  } catch (error: any) {
+  } catch {
     return { error: "Failed to update recruiter" };
   }
 };
@@ -105,8 +105,8 @@ const addPrepLogToDB = async ({
     await updateUserPrepLogStreak(userId);
 
     return { data: newLog };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -116,12 +116,15 @@ const getPrepLogsByUserFromDB = async (userId: string) => {
       createdAt: 1,
     });
     return { data: logs };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
-const updatePrepLogInDB = async (prepLogId: string, updateData: any) => {
+const updatePrepLogInDB = async (
+  prepLogId: string,
+  updateData: Record<string, unknown>,
+) => {
   try {
     const updatedLog = await PrepLog.findByIdAndUpdate(prepLogId, updateData, {
       new: true,
@@ -130,8 +133,8 @@ const updatePrepLogInDB = async (prepLogId: string, updateData: any) => {
     if (!updatedLog) return { error: "Prep log not found" };
 
     return { data: updatedLog };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -154,8 +157,8 @@ const deletePrepLogInDB = async (prepLogId: string) => {
     }
 
     return { data: deletedLog };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -247,8 +250,8 @@ const getPYUserByIdFromDB = async (
 
 const updatePYUserByIdInDB = async (
   userId: string,
-  update: Record<string, any>,
-  options: Record<string, any> = { new: true },
+  update: Record<string, unknown>,
+  options: Record<string, unknown> = { new: true },
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const updatedUser = await User.findByIdAndUpdate(userId, update, options);
@@ -326,7 +329,9 @@ const updateUserPrepLogStreak = async (
           await handleGamificationPoints(
             true,
             userId,
-            `PREPLOG_STREAK_${milestone}` as any,
+            `PREPLOG_STREAK_${milestone}` as Parameters<
+              typeof handleGamificationPoints
+            >[2],
           );
         } catch (gamificationError) {
           logger.error("Gamification streak reward failed", {
@@ -347,8 +352,8 @@ const updateUserPrepLogStreak = async (
         streakMilestone: currentStreak,
       },
     };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -393,8 +398,8 @@ const getUserPrepLogStats = async (
         weeklyLogs: recentLogs,
       },
     };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -429,7 +434,7 @@ const recalculateUserPrepLogStats = async (
     // Group logs by date to calculate streaks
     const logsByDate = new Map<string, number>();
     allLogs.forEach((log) => {
-      const createdAt = (log as any).createdAt;
+      const createdAt = (log as { createdAt?: Date }).createdAt;
       if (createdAt) {
         const dateKey = new Date(createdAt).toISOString().split("T")[0];
         if (dateKey) {
@@ -534,8 +539,8 @@ const recalculateUserPrepLogStats = async (
         lastLoggedDate,
       },
     };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -552,7 +557,7 @@ const getAllUsersWithLogsFromDB =
       const logs = await PrepLog.find().sort({ createdAt: -1 }).lean();
 
       // Map userId to logs
-      const logsMap: Record<string, any[]> = {};
+      const logsMap: Record<string, (typeof logs)[number][]> = {};
       for (const log of logs) {
         const uid = String(log.user);
         if (!logsMap[uid]) logsMap[uid] = [];
@@ -578,8 +583,8 @@ const getAllUsersWithLogsFromDB =
           totalUsers: usersWithLogs.length,
         },
       };
-    } catch (error: any) {
-      return { error: error.message };
+    } catch (error: unknown) {
+      return { error: error instanceof Error ? error.message : String(error) };
     }
   };
 
@@ -591,19 +596,29 @@ const getAllMenteesFromDB = async (): Promise<DatabaseQueryResponseType> => {
       .sort({ createdAt: -1 })
       .lean();
 
-    const userIds = mentees.map((m: any) => String(m.user._id));
+    type MenteeDoc = (typeof mentees)[number] & {
+      user: {
+        _id: unknown;
+        prepYatra?: { prepLog?: Record<string, unknown> };
+        [key: string]: unknown;
+      };
+      selectedAt?: Date;
+      note?: string;
+    };
+
+    const userIds = (mentees as MenteeDoc[]).map((m) => String(m.user._id));
     const logs = await PrepLog.find({ user: { $in: userIds } })
       .sort({ createdAt: -1 })
       .lean();
 
-    const logsMap: Record<string, any[]> = {};
+    const logsMap: Record<string, (typeof logs)[number][]> = {};
     for (const log of logs) {
       const uid = String(log.user);
       if (!logsMap[uid]) logsMap[uid] = [];
       logsMap[uid]!.push(log);
     }
 
-    const menteesWithDetails = mentees.map((m: any) => {
+    const menteesWithDetails = (mentees as MenteeDoc[]).map((m) => {
       const user = m.user;
       return {
         ...user,
@@ -626,8 +641,8 @@ const getAllMenteesFromDB = async (): Promise<DatabaseQueryResponseType> => {
         totalMentees: menteesWithDetails.length,
       },
     };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -637,8 +652,8 @@ const isUserMenteeInDB = async (
   try {
     const existing = await Mentorship.findOne({ user: userId });
     return { data: { isMentee: !!existing } };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -662,8 +677,8 @@ const toggleMentorshipInDB = async (
       const deleted = await Mentorship.findOneAndDelete({ user: userId });
       return { data: deleted };
     }
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) };
   }
 };
 
@@ -704,16 +719,19 @@ const createChallengeInDB = async (payload: {
     const newChallenge = new Challenge(challengeData);
     await newChallenge.save();
     return { data: newChallenge };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
-      error: error.message || "Error while creating challenge in DB",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Error while creating challenge in DB",
     };
   }
 };
 
 const updateChallengeInDB = async (
   challengeId: string,
-  updatePayload: Partial<Record<string, any>>,
+  updatePayload: Partial<Record<string, unknown>>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const updatedChallenge = await Challenge.findByIdAndUpdate(
@@ -727,7 +745,7 @@ const updateChallengeInDB = async (
     }
 
     return { data: updatedChallenge };
-  } catch (error: any) {
+  } catch {
     return { error: "Failed to update challenge" };
   }
 };
@@ -833,9 +851,12 @@ const createChallengeLogInDB = async (payload: {
     }
 
     return { data: newLog };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
-      error: error.message || "Error while creating challenge log in DB",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Error while creating challenge log in DB",
     };
   }
 };
@@ -891,8 +912,13 @@ const getChallengeProgressFromDB = async (
     };
 
     return { data: progressData };
-  } catch (error: any) {
-    return { error: error.message || "Failed to fetch challenge progress" };
+  } catch (error: unknown) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch challenge progress",
+    };
   }
 };
 
@@ -941,8 +967,13 @@ const getChallengeStatsFromDB =
       };
 
       return { data: stats };
-    } catch (error: any) {
-      return { error: error.message || "Failed to fetch challenge stats" };
+    } catch (error: unknown) {
+      return {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch challenge stats",
+      };
     }
   };
 
