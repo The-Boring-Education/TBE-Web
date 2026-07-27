@@ -18,9 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "POST":
-      return withUserAuth(async (req, res) => handleOnboarding(req, res), {
-        ownerRequired: true,
-      })(req, res);
+      return handleOnboarding(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({

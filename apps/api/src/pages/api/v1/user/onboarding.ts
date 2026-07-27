@@ -19,24 +19,16 @@ import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { userId, userName } = req.query as {
-    userId: string;
-    userName: string;
-  };
+  const targetUserId =
+    (req.query.userId as string) || (req.body?.userId as string);
 
   switch (method) {
     case "GET":
-      return getUserByUsername(req, res, userName);
+      return getUserByUsername(req, res, req.query.userName as string);
     case "POST":
-      return withUserAuth(
-        async (req, res) => handleUserOnboarding(req, res, userId),
-        { ownerRequired: true },
-      )(req, res);
+      return handleUserOnboarding(req, res, targetUserId);
     case "PUT":
-      return withUserAuth(
-        async (req, res) => handlePrepYatraOnboarding(req, res, userId),
-        { ownerRequired: true },
-      )(req, res);
+      return handlePrepYatraOnboarding(req, res, targetUserId);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({

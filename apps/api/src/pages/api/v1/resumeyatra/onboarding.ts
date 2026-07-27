@@ -9,7 +9,6 @@ import User from "@/lib/database/models/User";
 import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -22,144 +21,139 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  return withUserAuth(
-    async (req: NextApiRequest, res: NextApiResponse) => {
-      try {
-        const {
-          userId,
-          experienceBand,
-          from,
-          name,
-          username,
-          linkedInUrl,
-          githubUrl,
-          leetCodeUrl,
-        } = req.body as {
-          userId?: string;
-          experienceBand?: string;
-          from?: string;
-          name?: string;
-          username?: string;
-          linkedInUrl?: string;
-          githubUrl?: string;
-          leetCodeUrl?: string;
-        };
+  try {
+    const {
+      userId,
+      experienceBand,
+      from,
+      name,
+      username,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
+    } = req.body as {
+      userId?: string;
+      experienceBand?: string;
+      from?: string;
+      name?: string;
+      username?: string;
+      linkedInUrl?: string;
+      githubUrl?: string;
+      leetCodeUrl?: string;
+    };
 
-        if (!userId) {
-          return res.status(apiStatusCodes.BAD_REQUEST).json(
-            sendAPIResponse({
-              status: false,
-              message: "Required fields: userId",
-            }),
-          );
-        }
+    if (!userId) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Required fields: userId",
+        }),
+      );
+    }
 
-        if (
-          experienceBand === undefined &&
-          name === undefined &&
-          username === undefined &&
-          linkedInUrl === undefined &&
-          githubUrl === undefined &&
-          leetCodeUrl === undefined
-        ) {
-          return res.status(apiStatusCodes.BAD_REQUEST).json(
-            sendAPIResponse({
-              status: false,
-              message:
-                "Required field: experienceBand or at least one profile field to update",
-            }),
-          );
-        }
+    if (
+      experienceBand === undefined &&
+      name === undefined &&
+      username === undefined &&
+      linkedInUrl === undefined &&
+      githubUrl === undefined &&
+      leetCodeUrl === undefined
+    ) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message:
+            "Required field: experienceBand or at least one profile field to update",
+        }),
+      );
+    }
 
-        const userResult = await getUserByIdFromDB(userId);
-        if (userResult.error || !userResult.data) {
-          return res.status(apiStatusCodes.NOT_FOUND).json(
-            sendAPIResponse({
-              status: false,
-              message: "User not found",
-            }),
-          );
-        }
+    const userResult = await getUserByIdFromDB(userId);
+    if (userResult.error || !userResult.data) {
+      return res.status(apiStatusCodes.NOT_FOUND).json(
+        sendAPIResponse({
+          status: false,
+          message: "User not found",
+        }),
+      );
+    }
 
-        const existingUser = userResult.data;
-        const alreadyOnboarded = (existingUser as any)?.resumeYatra
-          ?.ryOnboarded;
-        const updateData: Record<string, unknown> = {
-          "resumeYatra.ryOnboarded": true,
-        };
+    const existingUser = userResult.data;
+    const alreadyOnboarded = (existingUser as any)?.resumeYatra
+      ?.ryOnboarded;
+    const updateData: Record<string, unknown> = {
+      "resumeYatra.ryOnboarded": true,
+    };
 
-        if (experienceBand !== undefined) {
-          updateData["resumeYatra.experienceBand"] = experienceBand;
-        }
+    if (experienceBand !== undefined) {
+      updateData["resumeYatra.experienceBand"] = experienceBand;
+    }
 
-        if (from && !(existingUser as any).from) {
-          updateData.from = from;
-        }
+    if (from && !(existingUser as any).from) {
+      updateData.from = from;
+    }
 
-        const socialUpdates = buildUserSocialProfileUpdate({
-          name,
-          userName: username,
-          linkedInUrl,
-          githubUrl,
-          leetCodeUrl,
+    const socialUpdates = buildUserSocialProfileUpdate({
+      name,
+      userName: username,
+      linkedInUrl,
+      githubUrl,
+      leetCodeUrl,
+    });
+    Object.assign(updateData, socialUpdates);
+
+    const updated = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
+
+    if (!updated) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "Failed to update user",
+        }),
+      );
+    }
+
+    if (!alreadyOnboarded) {
+      emailTriggerService
+        .sendExternalEmail({
+          emailType: "ONBOARDING",
+          userData: {
+            email: updated.email,
+            name: updated.name,
+            id: updated._id.toString(),
+          },
+          additionalData: {
+            app: "resumeyatra",
+            subject: "ResumeYatra Onboarding Completed! 📄",
+          },
+        })
+        .catch((err) => {
+          logger.error("Failed to send ResumeYatra onboarding email", {
+            error: err,
+          });
         });
-        Object.assign(updateData, socialUpdates);
+    }
 
-        const updated = await User.findByIdAndUpdate(userId, updateData, {
-          new: true,
-        });
-
-        if (!updated) {
-          return res.status(apiStatusCodes.BAD_REQUEST).json(
-            sendAPIResponse({
-              status: false,
-              message: "Failed to update user",
-            }),
-          );
-        }
-
-        if (!alreadyOnboarded) {
-          emailTriggerService
-            .sendExternalEmail({
-              emailType: "ONBOARDING",
-              userData: {
-                email: updated.email,
-                name: updated.name,
-                id: updated._id.toString(),
-              },
-              additionalData: {
-                app: "resumeyatra",
-                subject: "ResumeYatra Onboarding Completed! 📄",
-              },
-            })
-            .catch((err) => {
-              logger.error("Failed to send ResumeYatra onboarding email", {
-                error: err,
-              });
-            });
-        }
-
-        return res.status(apiStatusCodes.OKAY).json(
-          sendAPIResponse({
-            status: true,
-            data: { user: updated },
-            message: "Resume Yatra onboarding/profile updated",
-          }),
-        );
-      } catch (error: unknown) {
-        const message =
-          error instanceof Error ? error.message : "Unknown error";
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed during onboarding update",
-            error: message,
-          }),
-        );
-      }
-    },
-    { ownerRequired: true },
-  )(req, res);
+    return res.status(apiStatusCodes.OKAY).json(
+      sendAPIResponse({
+        status: true,
+        data: { user: updated },
+        message: "Resume Yatra onboarding/profile updated",
+      }),
+    );
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
+      sendAPIResponse({
+        status: false,
+        message: "Failed during onboarding update",
+        error: message,
+      }),
+    );
+  }
 };
 
 export default withApiHandler(handler);
