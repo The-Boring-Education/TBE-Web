@@ -4,21 +4,214 @@ import {
   PopoverPanel,
   Transition,
 } from "@headlessui/react";
-import { BellIcon, LinkIcon } from "@heroicons/react/20/solid";
-import { FlexContainer, Link, Text } from "@tbe/components";
-import { useNotifications } from "@tbe/hooks";
+import { BellIcon } from "@heroicons/react/20/solid";
+import { ArrowRightIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useNotifications, useUser } from "@tbe/hooks";
+import { AnimatePresence, motion } from "framer-motion";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
 
-const NotificationPopover = () => {
-  const { notifications } = useNotifications();
+const PANEL_CLASSES =
+  "fixed z-30 top-16 right-2 w-72 sm:w-80 shadow-xl rounded-xl bg-white border border-gray-100 overflow-hidden md:absolute md:top-auto md:mt-2 md:w-80 md:right-0 md:left-auto md:mx-0";
 
-  if (!notifications || !notifications.length) return <></>;
+const BellButton = ({
+  hasUnread,
+  ariaLabel,
+}: {
+  hasUnread: boolean;
+  ariaLabel: string;
+}) => (
+  <PopoverButton
+    aria-label={ariaLabel}
+    className="relative flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary transition-colors outline-none font-bold"
+  >
+    <BellIcon aria-hidden="true" className="h-6 w-6" color="primary" />
+    {hasUnread && (
+      <span
+        aria-hidden="true"
+        className="absolute top-0 right-0 flex h-2.5 w-2.5"
+      >
+        <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
+        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-white" />
+      </span>
+    )}
+  </PopoverButton>
+);
+
+const PanelHeader = ({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle: string;
+}) => (
+  <div className="px-3 py-2 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
+    <p className="text-xs font-semibold text-gray-900">{title}</p>
+    <p className="text-[11px] text-gray-500 mt-0.5">{subtitle}</p>
+  </div>
+);
+
+const LoggedOutView = ({ onLoginClick }: { onLoginClick: () => void }) => (
+  <Fragment>
+    <PanelHeader
+      title="Stay in the loop"
+      subtitle="Sign in to see personalized updates"
+    />
+    <div className="px-3 py-4 flex flex-col items-center text-center gap-2">
+      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+        <BellIcon aria-hidden="true" className="h-3.5 w-3.5 text-primary" />
+      </div>
+      <div className="flex flex-col gap-0.5">
+        <p className="text-xs font-semibold text-gray-900">
+          You&apos;re missing out on updates
+        </p>
+        <p className="text-[11px] text-gray-500 leading-snug">
+          Log in to get notified about webinars, cohorts, courses and career
+          opportunities tailored for you.
+        </p>
+      </div>
+      <button
+        className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-primary/90 transition-colors"
+        type="button"
+        onClick={onLoginClick}
+      >
+        Login to continue
+        <ArrowRightIcon aria-hidden="true" className="h-3 w-3" />
+      </button>
+    </div>
+  </Fragment>
+);
+
+const EmptyLoggedInView = () => (
+  <div className="px-3 py-5 flex flex-col items-center text-center gap-1.5">
+    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-50">
+      <CheckCircleIcon aria-hidden="true" className="h-4 w-4 text-green-500" />
+    </div>
+    <p className="text-xs font-semibold text-gray-900">
+      You&apos;re all caught up
+    </p>
+    <p className="text-[11px] text-gray-500">
+      We&apos;ll notify you here when there&apos;s something new.
+    </p>
+  </div>
+);
+
+const LoadingView = () => (
+  <div className="p-2 flex flex-col gap-1.5">
+    {[0, 1, 2].map((i) => (
+      <div
+        key={i}
+        className="w-full h-10 rounded-lg bg-gray-100 animate-pulse"
+      />
+    ))}
+  </div>
+);
+
+type Notification = {
+  type?: string;
+  text?: string;
+  link?: string;
+  isExternalLink?: boolean;
+};
+
+const NotificationItem = ({
+  notification,
+  index,
+}: {
+  notification: Notification;
+  index: number;
+}) => {
+  const { type, text, link, isExternalLink } = notification;
+
+  const content = (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className="group p-2.5 rounded-lg border border-gray-100/80 bg-gray-50/40 hover:bg-primary/5 hover:border-primary/30 transition-colors"
+      initial={{ opacity: 0, y: 4 }}
+      transition={{ duration: 0.15, delay: index * 0.03 }}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex flex-col gap-1 min-w-0 flex-1">
+          {type && (
+            <span className="inline-flex items-center w-max rounded bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary">
+              {type}
+            </span>
+          )}
+          {text && (
+            <p className="text-xs text-gray-700 leading-snug text-left break-words">
+              {text}
+            </p>
+          )}
+        </div>
+        {link && (
+          <ArrowRightIcon
+            aria-hidden="true"
+            className="h-3.5 w-3.5 text-gray-400 group-hover:text-primary transition-colors flex-shrink-0 mt-0.5"
+          />
+        )}
+      </div>
+    </motion.div>
+  );
+
+  if (!link) return content;
+
+  if (isExternalLink) {
+    return (
+      <a
+        href={link}
+        rel="noopener noreferrer"
+        target="_blank"
+        className="block outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <NextLink
+      className="block outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
+      href={link}
+    >
+      {content}
+    </NextLink>
+  );
+};
+
+const NotificationsList = ({
+  notifications,
+}: {
+  notifications: Notification[];
+}) => (
+  <div className="max-h-80 overflow-y-auto p-1.5 flex flex-col gap-1.5">
+    <AnimatePresence>
+      {notifications.map((notification, index) => (
+        <NotificationItem
+          key={index}
+          index={index}
+          notification={notification}
+        />
+      ))}
+    </AnimatePresence>
+  </div>
+);
+
+const NotificationPopover = () => {
+  const { isAuth, loading: authLoading } = useUser();
+  const { notifications, loading } = useNotifications({ enabled: isAuth });
+  const router = useRouter();
+
+  const hasUnread = isAuth && notifications && notifications.length > 0;
+
+  const handleLoginClick = () => {
+    const redirect = encodeURIComponent(router.asPath || "/");
+    router.push(`/login?redirect=${redirect}`);
+  };
 
   return (
     <Popover className="relative">
-      <PopoverButton className="flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary outline-none font-bold">
-        <BellIcon aria-hidden="true" className="h-6 w-6" color="primary" />
-      </PopoverButton>
+      <BellButton ariaLabel="Open notifications" hasUnread={!!hasUnread} />
 
       <Transition
         as={Fragment}
@@ -29,50 +222,31 @@ const NotificationPopover = () => {
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 translate-y-1"
       >
-        <PopoverPanel
-          className="
-          fixed z-10 top-18 right-2 w-80 shadow-lg rounded-2xl p-1
-          md:absolute md:top-auto md:mt-2 md:w-96 md:right-0 md:left-auto md:mx-0
-          overflow-x-auto
-        "
-        >
-          {notifications && (
-            <FlexContainer className="gap-1" direction="col">
-              {notifications.map((notification, index) => {
-                const { type, text, isExternalLink, link } = notification;
-
-                return (
-                  <FlexContainer
-                    key={index}
-                    className="p-2 w-full bg-lightBG rounded-2 border border-secondary gap-2.5"
-                    direction="col"
-                  >
-                    <FlexContainer
-                      className="gap-1 w-full items-center"
-                      justifyCenter={false}
-                    >
-                      <Text
-                        className="pre-title text-primary text-left"
-                        level="span"
-                      >
-                        {type}
-                      </Text>
-                      {link && (
-                        <Link
-                          href={link}
-                          target={`${isExternalLink ? "_blank" : ""}`}
-                        >
-                          <LinkIcon className="w-2 text-primary" />
-                        </Link>
-                      )}
-                    </FlexContainer>
-                    <Text className="pre-title text-left w-full" level="p">
-                      {text}
-                    </Text>
-                  </FlexContainer>
-                );
-              })}
-            </FlexContainer>
+        <PopoverPanel className={PANEL_CLASSES}>
+          {!isAuth && !authLoading ? (
+            <LoggedOutView onLoginClick={handleLoginClick} />
+          ) : (
+            <Fragment>
+              <PanelHeader
+                title="Notifications"
+                subtitle={
+                  notifications && notifications.length > 0
+                    ? `You have ${notifications.length} update${
+                        notifications.length === 1 ? "" : "s"
+                      }`
+                    : "Latest updates for you"
+                }
+              />
+              {loading || authLoading ? (
+                <LoadingView />
+              ) : notifications && notifications.length > 0 ? (
+                <NotificationsList
+                  notifications={notifications as Notification[]}
+                />
+              ) : (
+                <EmptyLoggedInView />
+              )}
+            </Fragment>
           )}
         </PopoverPanel>
       </Transition>
