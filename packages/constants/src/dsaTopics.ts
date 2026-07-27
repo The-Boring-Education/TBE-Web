@@ -160,7 +160,7 @@ export const DSA_TOPIC_VISUALIZERS = {
   RECURSION: ["recursion-tree"],
   LINKED_LIST: ["linked-list-basics"],
   STACK: ["stack-operations"],
-  SORTING: ["bubble-sort"],
+  SORTING: ["bubble-sort", "selection-sort", "quick-sort", "merge-sort"],
 } as const satisfies Partial<Record<DSATopicSlug, readonly string[]>>;
 
 export type DSAVisualizerSlug =
@@ -175,6 +175,24 @@ export const DSA_VISUALIZER_META: Record<
     title: "Bubble Sort",
     description:
       "Watch bubble sort compare and swap adjacent elements step by step.",
+    topic: "SORTING",
+  },
+  "selection-sort": {
+    title: "Selection Sort",
+    description:
+      "Repeatedly pick the smallest remaining element and place it at the front.",
+    topic: "SORTING",
+  },
+  "quick-sort": {
+    title: "Quick Sort",
+    description:
+      "Partition around a pivot and recursively sort the left and right halves.",
+    topic: "SORTING",
+  },
+  "merge-sort": {
+    title: "Merge Sort",
+    description:
+      "Divide the array in halves, sort each side, then merge them back together.",
     topic: "SORTING",
   },
   "array-basics": {
