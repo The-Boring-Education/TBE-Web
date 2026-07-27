@@ -9,6 +9,13 @@ import userOnboardingHandler from "../../../../api/src/pages/api/v1/user/onboard
 const mockGetDYUserByIdFromDB = vi.fn();
 const mockUpdateDYUserByIdInDB = vi.fn();
 const mockOnboardPrepYatraUserTODB = vi.fn();
+const mockUserFindById = vi.fn();
+
+vi.mock("../../../../api/src/lib/database/models/User", () => ({
+  default: {
+    findById: (...args: unknown[]) => mockUserFindById(...args),
+  },
+}));
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (fn: NextApiHandler) => fn,

@@ -398,11 +398,16 @@ const SheetLandingPage = ({
                       key={q._id.toString()}
                       className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                     >
-                      <div className="flex items-start justify-between mb-2">
-                        <Text level="p" className="font-semibold text-gray-900">
-                          {index + 1}. {q.title}
-                        </Text>
-                        <span className="px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="min-w-0 flex-1" title={q.title}>
+                          <Text
+                            level="p"
+                            className="font-semibold text-gray-900 line-clamp-2"
+                          >
+                            {index + 1}. {q.title}
+                          </Text>
+                        </div>
+                        <span className="shrink-0 px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
                           {q.frequency} Frequency
                         </span>
                       </div>

@@ -9,6 +9,7 @@ import userOnboardingHandler from "../../../../api/src/pages/api/v1/user/onboard
 
 const mockGetUserByUserNameFromDB = vi.fn();
 const mockGetUserByIdFromDB = vi.fn();
+const mockFindById = vi.fn();
 const mockFindByIdAndUpdate = vi.fn();
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
@@ -37,18 +38,25 @@ vi.mock("../../../../api/src/lib/database", () => ({
 
 vi.mock("../../../../api/src/lib/database/models/User", () => ({
   default: {
+    findById: (...args: unknown[]) => mockFindById(...args),
     findByIdAndUpdate: (...args: unknown[]) => mockFindByIdAndUpdate(...args),
   },
 }));
 
-vi.mock("../../../../api/src/lib/constants", () => ({
-  apiStatusCodes: {
-    OKAY: 200,
-    BAD_REQUEST: 400,
-    NOT_FOUND: 404,
-    INTERNAL_SERVER_ERROR: 500,
-  },
-}));
+vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/constants")>();
+  return {
+    ...actual,
+    apiStatusCodes: {
+      ...actual.apiStatusCodes,
+      OKAY: 200,
+      BAD_REQUEST: 400,
+      NOT_FOUND: 404,
+      INTERNAL_SERVER_ERROR: 500,
+    },
+  };
+});
 
 describe("onboarding API routes (integration)", () => {
   beforeEach(() => {

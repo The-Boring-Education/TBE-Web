@@ -39,6 +39,7 @@ const LearningNavbar = ({
             <button
               className={`flex items-center justify-center rounded-md p-[6px] ${theme === "dark" ? "text-white hover:bg-gray-800" : "text-black hover:bg-gray-100"}`}
               type="button"
+              aria-label="Open learning menu"
               onClick={onMenuToggle}
             >
               <Bars3Icon

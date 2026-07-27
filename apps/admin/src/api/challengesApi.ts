@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
-import { getBaseUrlForPlatformEnv } from "@/hooks/useEnvironment";
+import api from "@/lib/axios";
 import { logApiError } from "@/utils/errorLogger";
 
 // Challenge Statistics Interface
@@ -25,21 +24,13 @@ interface ChallengeStatsResponse {
   data: ChallengeStats;
 }
 
-const challengesApi = axios.create({
-  baseURL: getBaseUrlForPlatformEnv(),
-  headers: {
-    "Content-Type": "application/json",
-    "x-admin-secret": "TBEAdmin",
-  },
-});
-
 // Fetch challenge statistics
 export const useChallengeStats = () => {
   return useQuery({
     queryKey: ["challengeStats"],
     queryFn: async (): Promise<ChallengeStats> => {
       try {
-        const response = await challengesApi.get("/admin/prepyatra/challenges");
+        const response = await api.get("/admin/prepyatra/challenges");
 
         const result: ChallengeStatsResponse = response.data;
 

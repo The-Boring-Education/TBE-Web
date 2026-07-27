@@ -1,6 +1,6 @@
 import type { QuestionRowProps } from "@tbe/interface";
 import { cn } from "@tbe/utils";
-import { CheckCircle2, Circle, Globe, Lock, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, Eye, Globe, Lock, Sparkles } from "lucide-react";
 
 /**
  * Checklist row: completion toggle, title, optional "real world" badge, notes indicator.
@@ -15,6 +15,7 @@ export const QuestionRow = ({
   isRealWorldProblem = false,
   realWorldBadgeLabel = "Real World",
   isLocked = false,
+  hasVisualizer = false,
   className,
   onClick,
   onToggleComplete,
@@ -83,18 +84,31 @@ export const QuestionRow = ({
             <span className="min-w-0 break-words">{name}</span>
           </p>
 
-          {isRealWorldProblem && (
-            <span
-              data-testid="tbe-question-row-real-world"
-              className="inline-flex items-center gap-1 text-blue-400"
-              title="Real-world style problem"
-            >
-              <Globe className="w-2 h-2 shrink-0" />
-              <span className="text-[8px] font-bold uppercase tracking-wide">
-                {realWorldBadgeLabel}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {isRealWorldProblem && (
+              <span
+                data-testid="tbe-question-row-real-world"
+                className="inline-flex items-center gap-1 text-blue-400"
+                title="Real-world style problem"
+              >
+                <Globe className="w-2 h-2 shrink-0" />
+                <span className="text-[8px] font-bold uppercase tracking-wide">
+                  {realWorldBadgeLabel}
+                </span>
               </span>
-            </span>
-          )}
+            )}
+
+            {hasVisualizer && (
+              <span
+                data-testid="tbe-question-row-visualizer"
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[9px] font-semibold tracking-widest uppercase text-[#FF5757] bg-[#FF5757]/10 ring-1 ring-[#FF5757]/30 shrink-0 transition-colors duration-200 group-hover:bg-[#FF5757]/15 group-hover:ring-[#FF5757]/45"
+                title="Interactive visualizer available"
+              >
+                <Eye className="w-2.5 h-2.5 text-[#FF5757] shrink-0" />
+                <span>Visualizer</span>
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

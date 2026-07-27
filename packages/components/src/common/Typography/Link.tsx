@@ -40,6 +40,7 @@ const LinkText = ({
       href={href}
       scroll={scroll}
       target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
       onClick={onClick}
       {...delegated}
     >

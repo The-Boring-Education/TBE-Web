@@ -30,6 +30,15 @@ const nextConfig = {
   experimental: {
     esmExternals: "loose",
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;

@@ -12,8 +12,13 @@ import {
   routes,
   TOPIC_LABELS,
 } from "@tbe/constants";
-import { useGamification, useGamifiedAction } from "@tbe/gamification";
 import {
+  calculateUserPointsForAction,
+  useGamification,
+  useGamificationContext,
+} from "@tbe/gamification";
+import {
+  useAnalytics,
   useDsaCompletedQuestions,
   useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
@@ -22,18 +27,14 @@ import {
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
-import { getPreFetchProps, trackEvent } from "@tbe/utils";
+import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-
-import {
-  persistAwardedQuestionId,
-  readAwardedQuestionIds,
-} from "@/utils/dsaGamificationAward";
 
 const SheetsPageClient = () => {
   const router = useRouter();
   const { loading: userLoading, isAuth, user } = useUser();
+  const { trackEvent } = useAnalytics();
 
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
@@ -106,8 +107,8 @@ const SheetsPageClient = () => {
     saveNote: onSaveNote,
     isProgressLoading,
   } = useDsaCompletedQuestions({ userId: user?.id });
-  const { triggerGamifiedAction } = useGamifiedAction();
   const { refetch: refetchGamification } = useGamification();
+  const { triggerCelebration, showToast } = useGamificationContext();
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
@@ -128,28 +129,38 @@ const SheetsPageClient = () => {
   const unlockedCount = topicQuestions.filter((q) => !q.isLocked).length;
 
   const handleToggleComplete = useCallback(
-    (questionId: string | number) => {
+    async (questionId: string | number) => {
       const idStr = String(questionId);
       const willComplete = !completedIds.includes(questionId);
-      toggleComplete(questionId);
+      await toggleComplete(questionId);
 
-      if (!willComplete) return;
-      if (readAwardedQuestionIds().has(idStr)) return;
-
-      void (async () => {
-        await triggerGamifiedAction({
-          gamificationAction: "COMPLETE_DSA_QUESTION",
-          analytics: {
-            action: "DSA_QUESTION_COMPLETED",
-            category: "DSA Yatra",
-            label: idStr,
-          },
+      if (willComplete) {
+        const pointsEarned = calculateUserPointsForAction("COMPLETE_QUESTION");
+        const intensity =
+          pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
+        triggerCelebration({ type: "points", intensity });
+        showToast({
+          type: "points",
+          message: "DSA question solved! Great work!",
+          points: pointsEarned,
         });
-        persistAwardedQuestionId(idStr);
-        await refetchGamification();
-      })();
+        trackEvent({
+          action: "DSA_QUESTION_COMPLETED",
+          category: "DSA Yatra",
+          label: idStr,
+        });
+      }
+
+      await refetchGamification();
     },
-    [completedIds, toggleComplete, triggerGamifiedAction, refetchGamification],
+    [
+      completedIds,
+      toggleComplete,
+      refetchGamification,
+      triggerCelebration,
+      showToast,
+      trackEvent,
+    ],
   );
 
   const questions = topicQuestions;
@@ -190,7 +201,8 @@ const SheetsPageClient = () => {
     }
     setShowPayment(false);
     try {
-      trackEvent(ANALYTICS_EVENTS.DSA_QUESTION_VIEW, {
+      trackEvent({
+        action: ANALYTICS_EVENTS.DSA_QUESTION_VIEW,
         question_id: String(question._id ?? question.id),
         topic: selectedTopic ?? undefined,
       });

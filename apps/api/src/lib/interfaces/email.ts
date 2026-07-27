@@ -45,12 +45,16 @@ export interface CourseCompletionEmailData extends EmailTriggerData {
   certificateUrl?: string;
 }
 
+export type OnboardingApp =
+  "platform" | "dsayatra" | "prepyatra" | "oncampus" | "resumeyatra";
+
 export type EmailTriggerType =
   | "WELCOME"
   | "COURSE_ENROLLMENT"
   | "PROJECT_ENROLLMENT"
   | "INTERVIEW_PREP_ENROLLMENT"
-  | "COURSE_COMPLETION";
+  | "COURSE_COMPLETION"
+  | "ONBOARDING";
 
 export interface EmailTriggerRequest {
   trigger: EmailTriggerType;

@@ -27,8 +27,14 @@ export const decodeJwtPayload = (
 };
 
 /**
- * Lightweight API route middleware — decodes JWT from cookie or Authorization header.
- * Does NOT verify signature (the centralized API does that on data-mutating calls).
+ * @deprecated WARNING: This middleware does NOT verify JWT signatures.
+ * It only base64-decodes the payload. An attacker can forge any user identity.
+ * DO NOT use on API routes that protect data or perform mutations.
+ * Use `getAuthenticatedUserId` from `apps/api/src/middleware/userAuth.ts` instead,
+ * which calls `verifyToken` with full signature verification.
+ *
+ * This function is kept only for non-sensitive client-side rendering hints
+ * (e.g. showing UI based on decoded token claims before server verification).
  */
 export const withAuth = (
   handler: (

@@ -1,4 +1,4 @@
-import type { ExternalEmailRequest } from "@/lib/interfaces";
+import type { ExternalEmailRequest, OnboardingApp } from "@/lib/interfaces";
 
 import { emailTriggerService } from "./triggers";
 
@@ -109,6 +109,29 @@ export const sendCourseCompletionEmail = async (data: {
       courseUrl: data.courseUrl,
       completionDate: data.completionDate,
       certificateUrl: data.certificateUrl,
+    },
+  };
+
+  return emailTriggerService.sendExternalEmail(request);
+};
+
+export const sendOnboardingEmail = async (data: {
+  email: string;
+  name: string;
+  id: string;
+  app: OnboardingApp;
+  subject?: string;
+}) => {
+  const request: ExternalEmailRequest = {
+    emailType: "ONBOARDING",
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
+    additionalData: {
+      app: data.app,
+      subject: data.subject,
     },
   };
 
