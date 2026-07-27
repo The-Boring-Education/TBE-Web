@@ -36,11 +36,7 @@ const envChecks: EnvVarCheck[] = [
   { name: 'NEXT_PUBLIC_SENTRY_DSN', optional: true },
   { name: 'SENTRY_AUTH_TOKEN', optional: true },
 
-  // Email service (Chitthi). Legacy EMAIL_* names remain optional so older
-  // deployments continue to pass the health check while migrating.
-  { name: 'CHITTHI_URL', optional: true },
-  { name: 'CHITTHI_API_KEY', optional: true },
-  { name: 'CHITTHI_FROM_EMAIL', optional: true },
+  // Email service
   { name: 'EMAIL_SERVICE_URL', optional: true },
   { name: 'EMAIL_API_KEY', optional: true },
   { name: 'FROM_EMAIL', optional: true },

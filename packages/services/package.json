@@ -12,7 +12,6 @@
   "dependencies": {
     "@tbe/config": "workspace:*",
     "@tbe/constants": "workspace:*",
-    "@tbe/email": "workspace:*",
     "@tbe/interface": "workspace:*",
     "@tbe/utils": "workspace:*",
     "@tbe/types": "workspace:*",

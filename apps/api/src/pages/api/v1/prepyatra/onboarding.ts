@@ -1,4 +1,3 @@
-import { emailTriggerService } from "@tbe/email";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
@@ -8,6 +7,7 @@ import {
   updatePYUserByIdInDB,
 } from "@/lib/database";
 import type { PrepYatraOnboardingPayload } from "@/lib/interfaces";
+import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { normalizeCompanyTypeArray } from "@/lib/validation";

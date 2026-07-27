@@ -1,4 +1,3 @@
-import { emailTriggerService } from "@tbe/email";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
@@ -7,6 +6,7 @@ import {
   getUserByIdFromDB,
 } from "@/lib/database";
 import User from "@/lib/database/models/User";
+import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withUserAuth } from "@/middleware/admin";

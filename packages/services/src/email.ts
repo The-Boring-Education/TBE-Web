@@ -1,108 +1,137 @@
-import type { ExternalEmailRequest, OnboardingApp } from "./interfaces";
+import type { ExternalEmailRequest } from "@tbe/interface";
+
 import { emailTriggerService } from "./triggers";
 
-/** Send a welcome email to a new user. */
+/**
+ * Send a welcome email to a new user
+ */
 export const sendWelcomeEmail = async (data: {
   email: string;
   name: string;
   id: string;
-}) =>
-  emailTriggerService.sendExternalEmail({
+}) => {
+  const request: ExternalEmailRequest = {
     emailType: "WELCOME",
-    userData: { email: data.email, name: data.name, id: data.id },
-  });
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
+  };
+
+  return emailTriggerService.sendExternalEmail(request);
+};
 
 /**
- * Send an onboarding email. This is the primary trigger used by all TBE apps
- * once a user completes their onboarding flow. Extending onboarding to a new
- * app is a matter of adding it to the `OnboardingApp` union — no changes
- * elsewhere are required.
+ * Send a course enrollment email
  */
-export const sendOnboardingEmail = async (data: {
-  email: string;
-  name: string;
-  id: string;
-  app: OnboardingApp;
-  subject?: string;
-}) =>
-  emailTriggerService.sendExternalEmail({
-    emailType: "ONBOARDING",
-    userData: { email: data.email, name: data.name, id: data.id },
-    additionalData: { app: data.app, subject: data.subject },
-  });
-
-/** Send a course enrollment email. */
 export const sendCourseEnrollmentEmail = async (data: {
   email: string;
   name: string;
   id: string;
   courseName: string;
   courseDescription?: string;
-}) =>
-  emailTriggerService.sendExternalEmail({
+}) => {
+  const request: ExternalEmailRequest = {
     emailType: "COURSE_ENROLLMENT",
-    userData: { email: data.email, name: data.name, id: data.id },
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
     additionalData: {
       courseName: data.courseName,
       courseDescription: data.courseDescription,
     },
-  });
+  };
 
-/** Send a project enrollment email. */
+  return emailTriggerService.sendExternalEmail(request);
+};
+
+/**
+ * Send a project enrollment email
+ */
 export const sendProjectEnrollmentEmail = async (data: {
   email: string;
   name: string;
   id: string;
   projectName: string;
   projectDescription?: string;
-}) =>
-  emailTriggerService.sendExternalEmail({
+}) => {
+  const request: ExternalEmailRequest = {
     emailType: "PROJECT_ENROLLMENT",
-    userData: { email: data.email, name: data.name, id: data.id },
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
     additionalData: {
       projectName: data.projectName,
       projectDescription: data.projectDescription,
     },
-  });
+  };
 
-/** Send an interview prep enrollment email. */
+  return emailTriggerService.sendExternalEmail(request);
+};
+
+/**
+ * Send an interview prep enrollment email
+ */
 export const sendInterviewPrepEnrollmentEmail = async (data: {
   email: string;
   name: string;
   id: string;
   sheetName: string;
   sheetDescription?: string;
-}) =>
-  emailTriggerService.sendExternalEmail({
+}) => {
+  const request: ExternalEmailRequest = {
     emailType: "INTERVIEW_PREP_ENROLLMENT",
-    userData: { email: data.email, name: data.name, id: data.id },
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
     additionalData: {
       sheetName: data.sheetName,
       sheetDescription: data.sheetDescription,
     },
-  });
+  };
 
-/** Send a course completion email. */
+  return emailTriggerService.sendExternalEmail(request);
+};
+
+/**
+ * Send a course completion email
+ */
 export const sendCourseCompletionEmail = async (data: {
   email: string;
   name: string;
   id: string;
   courseName: string;
-  courseUrl?: string;
+  courseUrl: string;
   completionDate: string;
   certificateUrl?: string;
-}) =>
-  emailTriggerService.sendExternalEmail({
+}) => {
+  const request: ExternalEmailRequest = {
     emailType: "COURSE_COMPLETION",
-    userData: { email: data.email, name: data.name, id: data.id },
+    userData: {
+      email: data.email,
+      name: data.name,
+      id: data.id,
+    },
     additionalData: {
       courseName: data.courseName,
       courseUrl: data.courseUrl,
       completionDate: data.completionDate,
       certificateUrl: data.certificateUrl,
     },
-  });
+  };
 
-/** Generic escape hatch for callers that already have an ExternalEmailRequest. */
+  return emailTriggerService.sendExternalEmail(request);
+};
+
+/**
+ * Generic function to send any type of email
+ */
 export const sendEmail = async (request: ExternalEmailRequest) =>
   emailTriggerService.sendExternalEmail(request);

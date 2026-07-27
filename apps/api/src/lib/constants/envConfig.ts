@@ -15,9 +15,9 @@ const OPTIONAL_VARS = [
   "PREPYATRA_APP_URL",
   "NEXT_PUBLIC_ONBOARDING_APP_URL",
   "QUIZ_APP_URL",
-  "CHITTHI_URL",
-  "CHITTHI_API_KEY",
-  "CHITTHI_FROM_EMAIL",
+  "EMAIL_SERVICE_URL",
+  "EMAIL_API_KEY",
+  "FROM_EMAIL",
   "GOOGLE_AUTH_CLIENT_ID",
   "GOOGLE_AUTH_CLIENT_SECRET",
 ] as const;
@@ -52,16 +52,9 @@ const envConfig = {
   ADMIN_BASE_URL: process.env.ADMIN_BASE_URL || "",
   SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN || "",
   PREPYATRA_APP_URL: process.env.PREPYATRA_APP_URL || "",
-  CHITTHI_URL: process.env.CHITTHI_URL || process.env.EMAIL_SERVICE_URL || "",
-  CHITTHI_API_KEY:
-    process.env.CHITTHI_API_KEY || process.env.EMAIL_API_KEY || "",
-  CHITTHI_FROM_EMAIL:
-    process.env.CHITTHI_FROM_EMAIL || process.env.FROM_EMAIL || "",
-  // Deprecated aliases – kept for backward compatibility with older callers.
-  EMAIL_SERVICE_URL:
-    process.env.CHITTHI_URL || process.env.EMAIL_SERVICE_URL || "",
-  EMAIL_API_KEY: process.env.CHITTHI_API_KEY || process.env.EMAIL_API_KEY || "",
-  FROM_EMAIL: process.env.CHITTHI_FROM_EMAIL || process.env.FROM_EMAIL || "",
+  EMAIL_SERVICE_URL: process.env.EMAIL_SERVICE_URL || "",
+  EMAIL_API_KEY: process.env.EMAIL_API_KEY || "",
+  FROM_EMAIL: process.env.FROM_EMAIL || "",
   ONBOARDING_URL: process.env.NEXT_PUBLIC_ONBOARDING_APP_URL || "",
   QUIZ_APP_URL: process.env.QUIZ_APP_URL || "",
   GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID || "",
