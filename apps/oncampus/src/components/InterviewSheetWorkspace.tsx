@@ -345,6 +345,9 @@ export const InterviewSheetWorkspace = ({
             },
           });
         } else {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ""),
+          });
           trackEvent({
             action: "INTERVIEW_SHEET_PROGRESS",
             category: "InterviewSheet",

@@ -20,10 +20,11 @@ const nextConfig = {
   },
   // Disable static optimization for pages that use client-side only features
   output: "standalone",
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       "@ui": path.resolve(__dirname, "../../packages/components/src/ui"),
+      ...(isServer ? {} : { jsdom: false }),
     };
     return config;
   },

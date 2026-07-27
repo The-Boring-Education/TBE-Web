@@ -34,6 +34,13 @@ const nextConfig = {
     esmExternals: "loose",
   },
   webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
+    }
+
     // Ensure webpack resolves from the app's node_modules first
     // This ensures date-fns v3 from app is used instead of v2 from components package
     const appNodeModules = path.resolve(__dirname, "node_modules");

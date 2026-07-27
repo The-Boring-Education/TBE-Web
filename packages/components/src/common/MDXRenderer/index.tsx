@@ -5,6 +5,7 @@ import MarkdownIt from "markdown-it";
 import { Fragment, useEffect, useRef } from "react";
 
 import { normalizeLatexDelimiters, registerMathPlugin } from "./mathPlugin";
+import { parseYouTubeLink, sanitizeHref, sanitizeHTML } from "./sanitize";
 
 const MDXRenderer = ({
   mdxSource,
@@ -354,28 +355,26 @@ const MDXRenderer = ({
 
   md.renderer.rules.link_open = (tokens: any, idx: any) => {
     const token = tokens[idx];
-    const href = token.attrGet("href");
-    if (href.includes("youtube.com") || href.includes("youtu.be")) {
-      if (href.includes("list=")) {
-        return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
-      } else {
-        let embedHref = href;
-        if (href.includes("watch")) {
-          const videoId = href.split("v=")[1].split("&")[0];
-          embedHref = `https://www.youtube.com/embed/${videoId}`;
-        }
-        return `<iframe width="100%" height="550" class="rounded" src="${embedHref}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-      }
+    const href = sanitizeHref(token.attrGet("href"));
+    const safeHref = md.utils.escapeHtml(href);
+
+    const youtube = parseYouTubeLink(href);
+    if (youtube && youtube.type === "video") {
+      const embedSrc = md.utils.escapeHtml(
+        `https://www.youtube.com/embed/${youtube.videoId}`,
+      );
+      return `<iframe width="100%" height="550" class="rounded" src="${embedSrc}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
     }
 
-    return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+    return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
   };
 
   md.renderer.rules.link_block = (tokens: any, idx: any) => {
     const token = tokens[idx];
-    const href = token.attrGet("href");
+    const href = sanitizeHref(token.attrGet("href"));
+    const safeHref = md.utils.escapeHtml(href);
 
-    return `<a href=${href} target="_blank">${href}</a>`;
+    return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer">${safeHref}</a>`;
   };
 
   md.renderer.rules.fence = (tokens, idx) => {
@@ -415,7 +414,7 @@ const MDXRenderer = ({
     });
   }
 
-  const processedHTML = mdxHTML;
+  const processedHTML = sanitizeHTML(mdxHTML);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -430,6 +429,7 @@ const MDXRenderer = ({
       const btn = document.createElement("button");
       btn.innerText = "Copy";
       btn.type = "button";
+      btn.setAttribute("aria-label", "Copy code");
       btn.className =
         theme === "dark"
           ? "copy-button absolute top-2 right-2 px-2 py-1 bg-gray-800 text-white text-sm rounded border border-gray-700 hover:bg-gray-700 hover:scale-105 transition-all z-10 max-sm:top-1 max-sm:right-1 max-sm:px-1 max-sm:py-0.5 max-sm:text-xs"
@@ -438,8 +438,10 @@ const MDXRenderer = ({
         const textToCopy = codeElem.textContent || "";
         navigator.clipboard.writeText(textToCopy).then(() => {
           btn.innerText = "Copied!";
+          btn.setAttribute("aria-label", "Code copied");
           setTimeout(() => {
             btn.innerText = "Copy";
+            btn.setAttribute("aria-label", "Copy code");
           }, 1500);
         });
       };

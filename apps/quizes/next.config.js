@@ -43,6 +43,10 @@ const nextConfig = {
     });
 
     if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,

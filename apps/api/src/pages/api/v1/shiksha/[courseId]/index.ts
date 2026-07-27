@@ -9,6 +9,7 @@ import {
 } from "@/lib/database";
 import type { AddCourseRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -38,6 +39,9 @@ const handleDeleteCourse = async (
   courseId: string,
 ) => {
   try {
+    const isAdmin = await adminMiddleware(req, res);
+    if (!isAdmin) return;
+
     const { error } = await deleteACourseFromDBById(courseId);
 
     if (error)
@@ -71,6 +75,9 @@ const handleUpdateCourse = async (
   res: NextApiResponse,
   courseId: string,
 ) => {
+  const isAdmin = await adminMiddleware(req, res);
+  if (!isAdmin) return;
+
   const updatedData = req.body as Partial<AddCourseRequestPayloadProps>;
 
   const { error } = await getACourseFromDBById(courseId);

@@ -29,6 +29,7 @@ vi.mock("../../../../api/src/lib/utils", () => ({
 
 vi.mock("../../../../api/src/middleware/api", () => ({
   connectDB: () => mockConnectDB(),
+  adminMiddleware: vi.fn().mockResolvedValue(true),
 }));
 
 describe("Quiz API Route", () => {

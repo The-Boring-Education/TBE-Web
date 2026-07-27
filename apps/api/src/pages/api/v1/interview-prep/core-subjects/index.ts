@@ -1,5 +1,4 @@
-import { type AuthenticatedRequest, withAuth } from "@tbe/auth";
-import type { NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
@@ -8,8 +7,9 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
-const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
@@ -19,7 +19,9 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
     );
   }
 
-  const userId = req.user.id;
+  const userId = getAuthenticatedUserId(req, res);
+  if (!userId) return;
+
   const isPaidUser =
     (await checkPaymentStatusFromDB(userId, "oncampus", "ONCAMPUS")).data
       ?.purchased === true;
@@ -41,4 +43,4 @@ const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
     .json(sendAPIResponse({ status: true, data }));
 };
 
-export default withApiHandler(withAuth(handler));
+export default withApiHandler(handler);

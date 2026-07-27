@@ -87,15 +87,6 @@ const Home = ({ seoMeta }: PageProps) => {
 
       <CollegeEventsSection />
 
-      <Banner
-        buttonLink={routes.cohort.bringYourIdea}
-        buttonText='Register Now'
-        description='Join our Cohort and learn how to Build Tech Products.'
-        imageSrc={`${STATIC_FILE_PATH.svg}/laptop.svg`}
-        title='Bring Your Idea Cohort 2 Starts Soon'
-        variant='VARIANT_A'
-      />
-
       <Community />
       <CardContainerA
         cards={USP}

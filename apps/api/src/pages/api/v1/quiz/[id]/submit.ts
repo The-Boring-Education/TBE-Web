@@ -5,6 +5,7 @@ import { updateUserAnalyticsInDB } from "@/lib/database/queries/enhancedQuiz";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 interface QuizAnswer {
   questionIndex: number;
@@ -53,6 +54,9 @@ async function handleSubmitQuiz(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+
   const { userId, answers, totalTimeSpent }: SubmitQuizRequest = req.body;
 
   // Validation
@@ -61,6 +65,8 @@ async function handleSubmitQuiz(
       .status(400)
       .json(sendAPIResponse({ status: false, message: "userId is required" }));
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   if (!Array.isArray(answers) || answers.length === 0) {
     return res.status(400).json(

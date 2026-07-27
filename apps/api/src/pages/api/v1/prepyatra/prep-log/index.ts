@@ -10,6 +10,7 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -181,7 +182,9 @@ const handleAddMentorFeedback = async (
   res: NextApiResponse,
 ) => {
   try {
-    const adminHeader = req.headers["x-admin-secret"];
+    const isAdmin = await adminMiddleware(req, res);
+    if (!isAdmin) return;
+
     const {
       prepLogId,
       mentorFeedback,
@@ -190,13 +193,6 @@ const handleAddMentorFeedback = async (
       userName,
       userEmail,
     } = req.body;
-
-    const expectedSecret = process.env.ADMIN_SECRET || "TBEAdmin";
-    if (!adminHeader || adminHeader !== expectedSecret) {
-      return res
-        .status(apiStatusCodes.UNAUTHORIZED)
-        .json(sendAPIResponse({ status: false, message: "Unauthorized" }));
-    }
 
     if (!prepLogId || !mentorFeedback) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(

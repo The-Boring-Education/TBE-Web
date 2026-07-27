@@ -18,6 +18,7 @@ import {
 } from "../../common/GroupedList";
 import { DifficultyQuestionList } from "../../common/QuestionList";
 import Text from "../../common/Typography/Text";
+import { VISUALIZER_MAP } from "../../visualizers";
 import FlexContainer from "../Page/common/FlexContainer";
 import DsaTopicSidebar from "./DsaTopicSidebar";
 import QuestionDetailPanel from "./QuestionDetailPanel";
@@ -368,6 +369,21 @@ const DsaPrepWorkspace = ({
                           ._priorityScore ?? 0) > 0;
                       const hasNotes =
                         !!question.notes || !!(localNotes && localNotes[qId]);
+                      const hasVisualizer = (() => {
+                        if (
+                          question.visualizerId &&
+                          VISUALIZER_MAP[question.visualizerId]
+                        ) {
+                          return true;
+                        }
+                        const match = question.answer?.match(
+                          /```visualizer\s*([\s\S]*?)```/,
+                        );
+                        const idMatch = match?.[1]?.match(/id:\s*([^\s\n]+)/);
+                        return Boolean(
+                          idMatch?.[1] && VISUALIZER_MAP[idMatch[1]],
+                        );
+                      })();
 
                       return {
                         name: question.name,
@@ -376,6 +392,7 @@ const DsaPrepWorkspace = ({
                         isRecommended,
                         hasNotes,
                         isRealWorldProblem: question.isRealWorldProblem,
+                        hasVisualizer,
                       };
                     }}
                     onItemClick={(question) => {

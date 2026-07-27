@@ -17,6 +17,7 @@ import { captureAPIError, captureAuthError } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { verifyAuthenticatedUser, withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const normalizeQueryParam = (param: string | string[] | undefined): string => {
   if (Array.isArray(param)) {
@@ -263,6 +264,9 @@ const handleUpdateUserProfile = async (
   res: NextApiResponse,
 ) => {
   try {
+    const authenticatedUserId = getAuthenticatedUserId(req, res);
+    if (!authenticatedUserId) return;
+
     const { userId, name, username, linkedInUrl, githubUrl, leetCodeUrl } =
       req.body;
 
@@ -274,6 +278,8 @@ const handleUpdateUserProfile = async (
         }),
       );
     }
+
+    if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
     if (
       name === undefined &&
