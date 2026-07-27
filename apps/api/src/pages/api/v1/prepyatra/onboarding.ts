@@ -42,6 +42,8 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       linkedInUrl,
       githubUrl,
       leetCodeUrl,
+      occupation,
+      purpose,
     }: PrepYatraOnboardingPayload = req.body;
 
     if (!userId || !name || !username || !goal) {
@@ -84,22 +86,31 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     const existingUser = userResult.data;
 
+    const pyUpdateFields: Record<string, any> = {
+      ...buildUserSocialProfileUpdate({
+        name,
+        userName: username,
+        linkedInUrl,
+        githubUrl,
+        leetCodeUrl,
+      }),
+      "prepYatra.goal": goal,
+      "prepYatra.targetCompanies": normalizedTargetCompanies,
+      "prepYatra.preferences.interviewCategories": preferredCategories,
+      "prepYatra.preferences.focusAreas": normalizedTargetCompanies,
+      "prepYatra.experienceLevel": experienceLevel,
+      "prepYatra.workDomain": workDomain,
+    };
+
+    if (occupation) {
+      pyUpdateFields.occupation = occupation;
+    }
+    if (purpose) {
+      pyUpdateFields.purpose = Array.isArray(purpose) ? purpose : [purpose];
+    }
+
     if (existingUser.prepYatra?.pyOnboarded) {
-      const updateResult = await updatePYUserByIdInDB(userId, {
-        ...buildUserSocialProfileUpdate({
-          name,
-          userName: username,
-          linkedInUrl,
-          githubUrl,
-          leetCodeUrl,
-        }),
-        "prepYatra.goal": goal,
-        "prepYatra.targetCompanies": normalizedTargetCompanies,
-        "prepYatra.preferences.interviewCategories": preferredCategories,
-        "prepYatra.preferences.focusAreas": normalizedTargetCompanies,
-        "prepYatra.experienceLevel": experienceLevel,
-        "prepYatra.workDomain": workDomain,
-      });
+      const updateResult = await updatePYUserByIdInDB(userId, pyUpdateFields);
       return res.status(apiStatusCodes.OKAY).json(
         sendAPIResponse({
           status: true,
@@ -111,22 +122,8 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const updateResult = await updatePYUserByIdInDB(userId, {
-      ...buildUserSocialProfileUpdate({
-        name,
-        userName: username,
-        linkedInUrl,
-        githubUrl,
-        leetCodeUrl,
-      }),
-      "prepYatra.pyOnboarded": true,
-      "prepYatra.goal": goal,
-      "prepYatra.targetCompanies": normalizedTargetCompanies,
-      "prepYatra.preferences.interviewCategories": preferredCategories,
-      "prepYatra.preferences.focusAreas": normalizedTargetCompanies,
-      "prepYatra.experienceLevel": experienceLevel,
-      "prepYatra.workDomain": workDomain,
-    });
+    pyUpdateFields["prepYatra.pyOnboarded"] = true;
+    const updateResult = await updatePYUserByIdInDB(userId, pyUpdateFields);
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
