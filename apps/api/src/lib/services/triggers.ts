@@ -16,6 +16,7 @@ import {
   courseCompletionTemplate,
   courseEnrollmentTemplate,
   interviewPrepEnrollmentTemplate,
+  onboardingEmailTemplate,
   projectEnrollmentTemplate,
   welcomeEmailTemplate,
 } from "./templates";
@@ -134,6 +135,14 @@ class EmailTriggerService {
           }! 🏆`,
         );
 
+      case "ONBOARDING":
+        return this.sendEmailWithTemplate(
+          trigger,
+          data,
+          onboardingEmailTemplate,
+          data.metadata?.subject || "Welcome to The Boring Education! 🎉",
+        );
+
       default:
         return {
           success: false,
@@ -144,7 +153,6 @@ class EmailTriggerService {
     }
   }
 
-  // New method for external API usage
   async sendExternalEmail(
     request: ExternalEmailRequest,
   ): Promise<ExternalEmailResponse> {
@@ -235,6 +243,13 @@ class EmailTriggerService {
             courseName: additionalData.courseName,
             completionDate: additionalData.completionDate,
             certificateUrl: additionalData.certificateUrl,
+          };
+          break;
+
+        case "ONBOARDING":
+          emailData = {
+            ...baseData,
+            app: additionalData?.app || "platform",
           };
           break;
 

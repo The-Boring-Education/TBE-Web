@@ -13,9 +13,10 @@ import { Gamification, UserActivityLog } from "../models";
 
 const getMongoUserId = (userId: string) => {
   const cleanId = typeof userId === "string" ? userId.trim() : String(userId);
-  return mongoose.isValidObjectId(cleanId)
-    ? new mongoose.Types.ObjectId(cleanId)
-    : cleanId;
+  if (!mongoose.isValidObjectId(cleanId)) {
+    throw new Error("Invalid userId");
+  }
+  return new mongoose.Types.ObjectId(cleanId);
 };
 
 const addGamificationDocInDB = async (

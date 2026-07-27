@@ -60,12 +60,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const response = await fetch(`${emailServiceUrl}/send-email`, {
+    const baseUrl = emailServiceUrl.replace(/\/+$/, "");
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "X-Chitthi-API-Key": emailApiKey,
+      Authorization: `Bearer ${emailApiKey}`,
+    };
+    if (emailApiKey.startsWith("SG.")) {
+      headers["X-SendGrid-API-Key"] = emailApiKey;
+    } else if (emailApiKey.startsWith("xkeysib-")) {
+      headers["X-Breevo-API-Key"] = emailApiKey;
+    }
+
+    const response = await fetch(`${baseUrl}/send-email`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Breevo-API-Key": emailApiKey,
-      },
+      headers,
       body: JSON.stringify(body),
     });
 

@@ -148,11 +148,14 @@ const normalizeStringVal = (val: unknown): string | undefined => {
 
 export const withUserAuth = (
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void,
-  options?: { ownerRequired?: boolean },
+  options?: { ownerRequired?: boolean; allowUnauthenticated?: boolean },
 ): ((req: NextApiRequest, res: NextApiResponse) => Promise<void>) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const payload = verifyAuthenticatedUser(req);
     if (!payload) {
+      if (options?.allowUnauthenticated) {
+        return handler(req, res);
+      }
       return res.status(apiStatusCodes.UNAUTHORIZED).json(
         sendAPIResponse({
           status: false,
