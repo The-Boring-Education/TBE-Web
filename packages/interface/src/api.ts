@@ -207,9 +207,7 @@ export type SkillsType =
 
 export type RoadmapsType = "Frontend" | "Backend" | "Fullstack" | "Tech";
 export type QuestionFrequencyType =
-  | "Most Asked"
-  | "Asked Frequently"
-  | "Asked Sometimes";
+  "Most Asked" | "Asked Frequently" | "Asked Sometimes";
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
@@ -435,12 +433,7 @@ export type GoalType = "3Months" | "6Months" | "1Year";
 export type SubscriptionStatus = "Active" | "Expired" | "Trial" | "Cancelled";
 export type SubscriptionType = "3Months" | "5Months" | "Lifetime";
 export type InterviewCategoryType =
-  | "MNC"
-  | "MERN"
-  | "CollegePlacement"
-  | "DSA"
-  | "SystemDesign"
-  | "GeneralTech";
+  "MNC" | "MERN" | "CollegePlacement" | "DSA" | "SystemDesign" | "GeneralTech";
 export type SubscriptionFeature =
   | "InterviewQuestions"
   | "SystemDesignResources"
@@ -463,6 +456,8 @@ export interface PrepYatraOnboardingPayload {
   goal: GoalType;
   targetCompanies: CompanyType[];
   preferredCategories: InterviewCategoryType[];
+  occupation?: UserRoleType | string;
+  purpose?: PlatformUsageType[] | string[];
 }
 
 export interface UpdateCompanyTypePayload {

@@ -221,6 +221,43 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
     }
   };
 
+  const formatOccupation = (occ?: string) => {
+    if (!occ) return undefined;
+    const map: Record<string, string> = {
+      TECH_STUDENT: "Tech Student",
+      NON_TECH_STUDENT: "Non-Tech Student",
+      WORKING_PROFESSIONAL: "Working Professional",
+      STUDENT: "Student",
+      FREELANCER: "Freelancer",
+      JOB_SEEKER: "Job Seeker",
+      ENTREPRENEUR: "Entrepreneur",
+      OTHER: "Other",
+    };
+    if (map[occ]) return map[occ];
+    return occ.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+
+  const formatPurpose = (purposes?: string[]) => {
+    if (!purposes || purposes.length === 0) return undefined;
+    const map: Record<string, string> = {
+      LEARNING_TECH: "Learning Tech",
+      BUILDING_PROJECTS: "Building Projects",
+      INTERVIEW_PREP: "Interview Prep",
+      JOB_SEARCH: "Job Search",
+      LEARNING: "Learning",
+      NETWORKING: "Networking",
+    };
+    return purposes
+      .map(
+        (p) =>
+          map[p] ||
+          String(p)
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase()),
+      )
+      .join(", ");
+  };
+
   const infoRows = [
     {
       icon: <BriefcaseIcon />,
@@ -235,16 +272,12 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
     {
       icon: <BuildingIcon />,
       label: "Occupation",
-      value: profile?.occupation
-        ? profile.occupation.replace(/_/g, " ")
-        : "Not set",
+      value: formatOccupation(profile?.occupation) || "Not set",
     },
     {
       icon: <CompassIcon />,
       label: "Purpose",
-      value: profile?.purpose?.length
-        ? profile.purpose.map((p) => String(p).replace(/_/g, " ")).join(", ")
-        : "Not set",
+      value: formatPurpose(profile?.purpose) || "Not set",
     },
     {
       icon: <CalendarIcon />,

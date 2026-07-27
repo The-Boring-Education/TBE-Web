@@ -47,22 +47,13 @@ export type SkillsType =
   | "NextJS";
 
 export type RoadmapsType =
-  | "Frontend"
-  | "Backend"
-  | "Fullstack"
-  | "Tech"
-  | "DSA";
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA";
 
 export type QuestionFrequencyType =
-  | "Most Asked"
-  | "Asked Frequently"
-  | "Asked Sometimes";
+  "Most Asked" | "Asked Frequently" | "Asked Sometimes";
 
 export type PlatformUsageType =
-  | "LEARNING_TECH"
-  | "BUILDING_PROJECTS"
-  | "INTERVIEW_PREP"
-  | "JOB_SEARCH";
+  "LEARNING_TECH" | "BUILDING_PROJECTS" | "INTERVIEW_PREP" | "JOB_SEARCH";
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
@@ -82,12 +73,7 @@ export type GoalType = "3Months" | "6Months" | "1Year";
 export type SubscriptionStatus = "Active" | "Expired" | "Trial" | "Cancelled";
 export type SubscriptionType = "3Months" | "5Months" | "Lifetime";
 export type InterviewCategoryType =
-  | "MNC"
-  | "MERN"
-  | "CollegePlacement"
-  | "DSA"
-  | "SystemDesign"
-  | "GeneralTech";
+  "MNC" | "MERN" | "CollegePlacement" | "DSA" | "SystemDesign" | "GeneralTech";
 export type SubscriptionFeature =
   | "InterviewQuestions"
   | "SystemDesignResources"
@@ -98,11 +84,7 @@ export type SubscriptionFeature =
   | "LinkedInAutomation";
 
 export type TBEAppType =
-  | "PLATFORM"
-  | "PREPYATRA"
-  | "DSA_YATRA"
-  | "ONCAMPUS"
-  | "QUIZ";
+  "PLATFORM" | "PREPYATRA" | "DSA_YATRA" | "ONCAMPUS" | "QUIZ";
 
 export type UserPointsActionType =
   | "ENROLL_COURSE"
@@ -151,11 +133,7 @@ export type WorkDomainType =
 export type CertificateType = "WEBINAR" | "SHIKSHA";
 
 export type ApplicationStatusType =
-  | "Applied"
-  | "Interview"
-  | "Rejected"
-  | "Offer"
-  | "Joined";
+  "Applied" | "Interview" | "Rejected" | "Offer" | "Joined";
 
 export type FeedbackType =
   | "GENERAL"
@@ -167,9 +145,7 @@ export type FeedbackType =
 export type { PaymentStatusType, ProductType } from "@/lib/constants/database";
 
 export type InterestEventType =
-  | "SUBSCRIPTION_INTEREST"
-  | "FEATURE_REQUEST"
-  | "BETA_ACCESS";
+  "SUBSCRIPTION_INTEREST" | "FEATURE_REQUEST" | "BETA_ACCESS";
 
 export type LeaderboardEnum = "DAILY" | "WEEKLY" | "MONTHLY";
 
@@ -198,6 +174,8 @@ export interface PrepYatraOnboardingPayload {
   goal: GoalType;
   targetCompanies: CompanyType[];
   preferredCategories: InterviewCategoryType[];
+  occupation?: UserRoleType | string;
+  purpose?: PlatformUsageType[] | string[];
 }
 
 export interface DSAYatraOnboardingPayload {
@@ -255,19 +233,12 @@ export interface CreateSubscriptionPayload {
 export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
 
 export type DSADomainType =
-  | "FRONTEND"
-  | "BACKEND"
-  | "GENERAL"
-  | "FULLSTACK"
-  | "DSA";
+  "FRONTEND" | "BACKEND" | "GENERAL" | "FULLSTACK" | "DSA";
 
 export type { DSADifficultyType } from "@tbe/constants";
 
 export type AptitudeCategoryType =
-  | "QUANTITATIVE"
-  | "VERBAL"
-  | "REASONING"
-  | "INTERVIEW";
+  "QUANTITATIVE" | "VERBAL" | "REASONING" | "INTERVIEW";
 
 export type AptitudeSubCategoryType =
   | "ARITHMETIC_APTITUDE"
@@ -278,10 +249,7 @@ export type AptitudeSubCategoryType =
   | "HR_INTERVIEW";
 
 export type AptitudeAnswerFormatType =
-  | "SPEED"
-  | "RULES"
-  | "PERSPECTIVE"
-  | "BEHAVIORAL";
+  "SPEED" | "RULES" | "PERSPECTIVE" | "BEHAVIORAL";
 
 export interface AptitudeTopicDefinition {
   name: string;

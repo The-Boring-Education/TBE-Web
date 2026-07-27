@@ -110,7 +110,30 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
           fromUser: (user: BaseUser) => user.userName || '',
         },
       }),
-      createField('goal', 'Career Goal Timeline', 'select', 3, {
+      createField('occupation', 'Occupation', 'select', 3, {
+        placeholder: 'Select your occupation',
+        options: [
+          { value: 'TECH_STUDENT', label: 'Tech Student' },
+          { value: 'NON_TECH_STUDENT', label: 'Non-Tech Student' },
+          { value: 'WORKING_PROFESSIONAL', label: 'Working Professional' },
+        ],
+        prefill: {
+          fromUser: (user: BaseUser) => user.occupation || '',
+        },
+      }),
+      createField('purpose', 'Purpose', 'multiselect', 4, {
+        placeholder: 'Select your purpose(s)',
+        options: [
+          { value: 'LEARNING_TECH', label: 'Learning Tech' },
+          { value: 'BUILDING_PROJECTS', label: 'Building Projects' },
+          { value: 'INTERVIEW_PREP', label: 'Interview Prep' },
+          { value: 'JOB_SEARCH', label: 'Job Search' },
+        ],
+        prefill: {
+          fromUser: (user: BaseUser) => user.purpose || [],
+        },
+      }),
+      createField('goal', 'Career Goal Timeline', 'select', 5, {
         placeholder: 'Select your goal timeline',
         options: [
           { value: '3_months', label: '3 Months' },
@@ -118,7 +141,7 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
           { value: '1_year', label: '1 Year' },
         ],
       }),
-      createField('targetCompanies', 'Target Company Types', 'multiselect', 4, {
+      createField('targetCompanies', 'Target Company Types', 'multiselect', 6, {
         placeholder: 'Select target company types',
         options: [
           { value: 'startup', label: 'Startup' },
@@ -127,7 +150,7 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
           { value: 'midsize', label: 'Mid-Size' },
         ],
       }),
-      createField('preferredCategories', 'Interview Categories', 'multiselect', 5, {
+      createField('preferredCategories', 'Interview Categories', 'multiselect', 7, {
         placeholder: 'Select preferred interview categories',
         options: [
           { value: 'mnc', label: 'MNC Interviews' },
@@ -138,7 +161,7 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
           { value: 'general', label: 'General Tech' },
         ],
       }),
-      createField('experienceLevel', 'Experience Level', 'select', 6, {
+      createField('experienceLevel', 'Experience Level', 'select', 8, {
         placeholder: 'Select your experience level',
         options: [
           { value: 'fresher', label: 'Fresher (0-1 yr)' },
@@ -147,15 +170,15 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
           { value: 'senior', label: 'Senior (5+ yrs)' },
         ],
       }),
-      createField('linkedInUrl', 'LinkedIn URL', 'url', 7, {
+      createField('linkedInUrl', 'LinkedIn URL', 'url', 9, {
         required: false,
         placeholder: 'Paste your LinkedIn profile URL',
       }),
-      createField('githubUrl', 'GitHub URL', 'url', 7, {
+      createField('githubUrl', 'GitHub URL', 'url', 9, {
         required: false,
         placeholder: 'Paste your GitHub profile URL',
       }),
-      createField('leetCodeUrl', 'LeetCode URL', 'url', 7, {
+      createField('leetCodeUrl', 'LeetCode URL', 'url', 9, {
         required: false,
         placeholder: 'Paste your LeetCode profile URL',
       }),
@@ -171,6 +194,8 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
         targetCompanies: form.targetCompanies,
         preferredCategories: form.preferredCategories,
         experienceLevel: form.experienceLevel,
+        ...(form.occupation ? { occupation: form.occupation } : {}),
+        ...(form.purpose ? { purpose: form.purpose } : {}),
         ...(form.linkedInUrl ? { linkedInUrl: form.linkedInUrl } : {}),
         ...(form.githubUrl ? { githubUrl: form.githubUrl } : {}),
         ...(form.leetCodeUrl ? { leetCodeUrl: form.leetCodeUrl } : {}),
