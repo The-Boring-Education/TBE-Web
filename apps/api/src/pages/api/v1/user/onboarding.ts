@@ -19,16 +19,34 @@ import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const targetUserId =
-    (req.query.userId as string) || (req.body?.userId as string);
+  const { userId, userName } = req.query as {
+    userId: string;
+    userName: string;
+  };
 
   switch (method) {
     case "GET":
-      return getUserByUsername(req, res, req.query.userName as string);
+      return getUserByUsername(req, res, userName);
     case "POST":
-      return handleUserOnboarding(req, res, targetUserId);
+      return withUserAuth(
+        async (req, res) =>
+          handleUserOnboarding(
+            req,
+            res,
+            userId || (req.body?.userId as string),
+          ),
+        { ownerRequired: true, allowUnauthenticated: true },
+      )(req, res);
     case "PUT":
-      return handlePrepYatraOnboarding(req, res, targetUserId);
+      return withUserAuth(
+        async (req, res) =>
+          handlePrepYatraOnboarding(
+            req,
+            res,
+            userId || (req.body?.userId as string),
+          ),
+        { ownerRequired: true, allowUnauthenticated: true },
+      )(req, res);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
@@ -103,6 +121,9 @@ const handleUserOnboarding = async (
       );
     }
 
+    const existingUser = await User.findById(userId);
+    const alreadyOnboarded = existingUser?.isOnboarded;
+
     const { data, error: updateUserError } = await onboardUserToDB(
       userId,
       userName,
@@ -122,7 +143,7 @@ const handleUserOnboarding = async (
       );
     }
 
-    if (data) {
+    if (data && !alreadyOnboarded) {
       emailTriggerService
         .sendExternalEmail({
           emailType: "ONBOARDING",

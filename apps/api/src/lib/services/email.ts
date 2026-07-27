@@ -140,5 +140,3 @@ export const sendOnboardingEmail = async (data: {
 
 export const sendEmail = async (request: ExternalEmailRequest) =>
   emailTriggerService.sendExternalEmail(request);
-
-export { emailTriggerService };
