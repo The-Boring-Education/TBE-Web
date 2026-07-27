@@ -4,11 +4,8 @@ import {
   PopoverPanel,
   Transition,
 } from "@headlessui/react";
-import {
-  ArrowRightIcon,
-  BellIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/24/outline";
+import { BellIcon } from "@heroicons/react/20/solid";
+import { ArrowRightIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useNotifications, useUser } from "@tbe/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
@@ -16,7 +13,7 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 const PANEL_CLASSES =
-  "fixed z-30 top-16 right-2 w-[22rem] shadow-2xl rounded-2xl bg-white border border-gray-100 overflow-hidden md:absolute md:top-auto md:mt-3 md:w-96 md:right-0 md:left-auto md:mx-0";
+  "fixed z-30 top-16 right-2 w-72 sm:w-80 shadow-xl rounded-xl bg-white border border-gray-100 overflow-hidden md:absolute md:top-auto md:mt-2 md:w-80 md:right-0 md:left-auto md:mx-0";
 
 const BellButton = ({
   hasUnread,
@@ -27,16 +24,16 @@ const BellButton = ({
 }) => (
   <PopoverButton
     aria-label={ariaLabel}
-    className="relative flex w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary transition-colors outline-none"
+    className="relative flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary transition-colors outline-none font-bold"
   >
-    <BellIcon aria-hidden="true" className="h-5 w-5" />
+    <BellIcon aria-hidden="true" className="h-6 w-6" color="primary" />
     {hasUnread && (
       <span
         aria-hidden="true"
-        className="absolute top-1 right-1 flex h-2.5 w-2.5"
+        className="absolute top-0 right-0 flex h-2.5 w-2.5"
       >
         <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
-        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-white" />
+        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-white" />
       </span>
     )}
   </PopoverButton>
@@ -49,9 +46,9 @@ const PanelHeader = ({
   title: string;
   subtitle: string;
 }) => (
-  <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
-    <p className="text-sm font-semibold text-gray-900">{title}</p>
-    <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
+  <div className="px-3 py-2 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
+    <p className="text-xs font-semibold text-gray-900">{title}</p>
+    <p className="text-[11px] text-gray-500 mt-0.5">{subtitle}</p>
   </div>
 );
 
@@ -61,51 +58,51 @@ const LoggedOutView = ({ onLoginClick }: { onLoginClick: () => void }) => (
       title="Stay in the loop"
       subtitle="Sign in to see personalized updates"
     />
-    <div className="px-4 py-6 flex flex-col items-center text-center gap-3">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-        <BellIcon aria-hidden="true" className="h-7 w-7 text-primary" />
+    <div className="px-3 py-4 flex flex-col items-center text-center gap-2">
+      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+        <BellIcon aria-hidden="true" className="h-3.5 w-3.5 text-primary" />
       </div>
-      <div className="flex flex-col gap-1">
-        <p className="text-sm font-semibold text-gray-900">
+      <div className="flex flex-col gap-0.5">
+        <p className="text-xs font-semibold text-gray-900">
           You&apos;re missing out on updates
         </p>
-        <p className="text-xs text-gray-500 leading-relaxed">
-          Log in to get notified about new webinars, cohorts, courses and career
+        <p className="text-[11px] text-gray-500 leading-snug">
+          Log in to get notified about webinars, cohorts, courses and career
           opportunities tailored for you.
         </p>
       </div>
       <button
-        className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white hover:bg-primary/90 transition-colors"
+        className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-primary/90 transition-colors"
         type="button"
         onClick={onLoginClick}
       >
         Login to continue
-        <ArrowRightIcon aria-hidden="true" className="h-3.5 w-3.5" />
+        <ArrowRightIcon aria-hidden="true" className="h-3 w-3" />
       </button>
     </div>
   </Fragment>
 );
 
 const EmptyLoggedInView = () => (
-  <div className="px-4 py-8 flex flex-col items-center text-center gap-2">
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
-      <CheckCircleIcon aria-hidden="true" className="h-6 w-6 text-green-500" />
+  <div className="px-3 py-5 flex flex-col items-center text-center gap-1.5">
+    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-50">
+      <CheckCircleIcon aria-hidden="true" className="h-4 w-4 text-green-500" />
     </div>
-    <p className="text-sm font-semibold text-gray-900">
+    <p className="text-xs font-semibold text-gray-900">
       You&apos;re all caught up
     </p>
-    <p className="text-xs text-gray-500">
+    <p className="text-[11px] text-gray-500">
       We&apos;ll notify you here when there&apos;s something new.
     </p>
   </div>
 );
 
 const LoadingView = () => (
-  <div className="p-3 flex flex-col gap-2">
+  <div className="p-2 flex flex-col gap-1.5">
     {[0, 1, 2].map((i) => (
       <div
         key={i}
-        className="w-full h-16 rounded-xl bg-gray-100 animate-pulse"
+        className="w-full h-10 rounded-lg bg-gray-100 animate-pulse"
       />
     ))}
   </div>
@@ -130,28 +127,30 @@ const NotificationItem = ({
   const content = (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="group p-3 rounded-xl border border-gray-100 bg-white hover:border-primary/40 hover:bg-primary/5 transition-colors"
-      initial={{ opacity: 0, y: 6 }}
-      transition={{ duration: 0.2, delay: index * 0.04 }}
+      className="group p-2.5 rounded-lg border border-gray-100/80 bg-gray-50/40 hover:bg-primary/5 hover:border-primary/30 transition-colors"
+      initial={{ opacity: 0, y: 4 }}
+      transition={{ duration: 0.15, delay: index * 0.03 }}
     >
       <div className="flex items-start justify-between gap-2">
-        {type && (
-          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
-            {type}
-          </span>
-        )}
+        <div className="flex flex-col gap-1 min-w-0 flex-1">
+          {type && (
+            <span className="inline-flex items-center w-max rounded bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary">
+              {type}
+            </span>
+          )}
+          {text && (
+            <p className="text-xs text-gray-700 leading-snug text-left break-words">
+              {text}
+            </p>
+          )}
+        </div>
         {link && (
           <ArrowRightIcon
             aria-hidden="true"
-            className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors flex-shrink-0"
+            className="h-3.5 w-3.5 text-gray-400 group-hover:text-primary transition-colors flex-shrink-0 mt-0.5"
           />
         )}
       </div>
-      {text && (
-        <p className="mt-2 text-sm text-gray-700 leading-snug text-left">
-          {text}
-        </p>
-      )}
     </motion.div>
   );
 
@@ -163,7 +162,7 @@ const NotificationItem = ({
         href={link}
         rel="noopener noreferrer"
         target="_blank"
-        className="block outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+        className="block outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
       >
         {content}
       </a>
@@ -172,7 +171,7 @@ const NotificationItem = ({
 
   return (
     <NextLink
-      className="block outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+      className="block outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
       href={link}
     >
       {content}
@@ -185,7 +184,7 @@ const NotificationsList = ({
 }: {
   notifications: Notification[];
 }) => (
-  <div className="max-h-96 overflow-y-auto p-3 flex flex-col gap-2">
+  <div className="max-h-80 overflow-y-auto p-1.5 flex flex-col gap-1.5">
     <AnimatePresence>
       {notifications.map((notification, index) => (
         <NotificationItem
