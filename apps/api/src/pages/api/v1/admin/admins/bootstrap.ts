@@ -9,7 +9,7 @@ import { invalidateAdminCache } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
 import { isValidEmail } from "@/lib/utils/email";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 interface BootstrapAdminRequest {
@@ -27,9 +27,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
-
-  const authorized = await adminMiddleware(req, res);
-  if (!authorized) return;
 
   try {
     const { data: totalCount, error: countError } =
@@ -106,4 +103,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

@@ -8,9 +8,20 @@ vi.mock("@/middleware/requestLogger", () => ({
   ) => handler,
 }));
 
-vi.mock("@/middleware/api", () => ({
-  connectDB: vi.fn(),
-  adminMiddleware: vi.fn(),
+const mockEnsureAdminAccess = vi.fn();
+vi.mock("@/middleware/admin", () => ({
+  withVerifiedAdminAuth:
+    (
+      handler: (
+        req: NextApiRequest,
+        res: NextApiResponse,
+      ) => Promise<void> | void,
+    ) =>
+    async (req: NextApiRequest, res: NextApiResponse) => {
+      const authorized = await mockEnsureAdminAccess(req, res);
+      if (!authorized) return;
+      return handler(req, res);
+    },
 }));
 
 vi.mock("@/lib/utils/logger", () => ({
@@ -37,14 +48,12 @@ vi.mock("@/lib/services/admin-cache", () => ({
     mockInvalidateAdminCache(...args),
 }));
 
-import { adminMiddleware } from "@/middleware/api";
-
 import bootstrapHandler from "../../../api/src/pages/api/v1/admin/admins/bootstrap";
 
 describe("Admin Bootstrap Integration", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(adminMiddleware).mockResolvedValue(true);
+    mockEnsureAdminAccess.mockResolvedValue(true);
   });
 
   it("creates first admin when collection is empty", async () => {
@@ -59,7 +68,7 @@ describe("Admin Bootstrap Integration", () => {
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      headers: { "x-admin-secret": "secret" },
+      headers: { authorization: "******" },
       body: {
         email: "admin@example.com",
         name: "Admin",
@@ -78,7 +87,7 @@ describe("Admin Bootstrap Integration", () => {
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      headers: { "x-admin-secret": "secret" },
+      headers: { authorization: "******" },
       body: { email: "another@example.com" },
     });
 
@@ -88,8 +97,8 @@ describe("Admin Bootstrap Integration", () => {
     expect(mockCreateAdminUserFromDB).not.toHaveBeenCalled();
   });
 
-  it("rejects bootstrap without admin secret", async () => {
-    vi.mocked(adminMiddleware).mockImplementation(async (_req, res) => {
+  it("rejects bootstrap without admin JWT", async () => {
+    mockEnsureAdminAccess.mockImplementation(async (_req, res) => {
       res.status(401).json({ message: "Unauthorized" });
       return false;
     });

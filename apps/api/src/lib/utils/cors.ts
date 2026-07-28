@@ -26,7 +26,6 @@ export const cors = initMiddleware(
       "Accept-Encoding",
 
       // Custom headers
-      "x-admin-secret",
       "cache",
 
       // Browser security headers (Client Hints)

@@ -2246,8 +2246,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2273,8 +2273,8 @@
                         "method": "POST",
                         "header": [
                           {
-                            "key": "x-admin-secret",
-                            "value": "{{ADMIN_SECRET}}",
+                            "key": "Authorization",
+                            "value": "{{ADMIN_JWT}}",
                             "type": "text"
                           }
                         ],
@@ -2341,8 +2341,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2373,8 +2373,8 @@
                         "method": "POST",
                         "header": [
                           {
-                            "key": "x-admin-secret",
-                            "value": "{{ADMIN_SECRET}}",
+                            "key": "Authorization",
+                            "value": "{{ADMIN_JWT}}",
                             "type": "text"
                           }
                         ],
@@ -2441,8 +2441,8 @@
                     "method": "PATCH",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2474,8 +2474,8 @@
                     "method": "DELETE",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2500,8 +2500,8 @@
                 "method": "POST",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -2527,8 +2527,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2589,8 +2589,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2672,8 +2672,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2780,8 +2780,8 @@
                 "method": "PATCH",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -2807,8 +2807,8 @@
                     "method": "PATCH",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2869,8 +2869,8 @@
                     "method": "PATCH",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -2933,8 +2933,8 @@
                 "method": "PATCH",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -2960,8 +2960,8 @@
                     "method": "PATCH",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -3022,8 +3022,8 @@
                     "method": "PATCH",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -3486,8 +3486,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -3518,8 +3518,8 @@
                         "method": "POST",
                         "header": [
                           {
-                            "key": "x-admin-secret",
-                            "value": "{{ADMIN_SECRET}}",
+                            "key": "Authorization",
+                            "value": "{{ADMIN_JWT}}",
                             "type": "text"
                           }
                         ],
@@ -3580,8 +3580,8 @@
                         "method": "POST",
                         "header": [
                           {
-                            "key": "x-admin-secret",
-                            "value": "{{ADMIN_SECRET}}",
+                            "key": "Authorization",
+                            "value": "{{ADMIN_JWT}}",
                             "type": "text"
                           }
                         ],
@@ -3804,8 +3804,8 @@
                     "method": "DELETE",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -3829,8 +3829,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -3856,8 +3856,8 @@
                 "method": "POST",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -3883,8 +3883,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -3945,8 +3945,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4009,8 +4009,8 @@
                 "method": "PATCH",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -4036,8 +4036,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4098,8 +4098,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4300,8 +4300,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -4350,8 +4350,8 @@
                 "method": "POST",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -4377,8 +4377,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4439,8 +4439,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4501,8 +4501,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4567,8 +4567,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4633,8 +4633,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4704,8 +4704,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -4735,8 +4735,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -4765,8 +4765,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4827,8 +4827,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4889,8 +4889,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -4955,8 +4955,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5021,8 +5021,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5092,8 +5092,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -5128,8 +5128,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5196,8 +5196,8 @@
                     "method": "GET",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5266,8 +5266,8 @@
                 "method": "DELETE",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -5296,8 +5296,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5358,8 +5358,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5420,8 +5420,8 @@
                     "method": "DELETE",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -5488,8 +5488,8 @@
                     "method": "DELETE",
                     "header": [
                       {
-                        "key": "x-admin-secret",
-                        "value": "{{ADMIN_SECRET}}",
+                        "key": "Authorization",
+                        "value": "{{ADMIN_JWT}}",
                         "type": "text"
                       }
                     ],
@@ -7366,8 +7366,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -7395,8 +7395,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -7425,8 +7425,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -7455,8 +7455,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -7485,8 +7485,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -7515,8 +7515,8 @@
                 "method": "GET",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -7546,8 +7546,8 @@
                 "method": "POST",
                 "header": [
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}",
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}",
                     "type": "text"
                   }
                 ],
@@ -8190,8 +8190,8 @@
                     "value": "en-GB,en-US;q=0.9,en;q=0.8,hi;q=0.7"
                   },
                   {
-                    "key": "x-admin-secret",
-                    "value": "{{ADMIN_SECRET}}"
+                    "key": "Authorization",
+                    "value": "{{ADMIN_JWT}}"
                   }
                 ],
                 "body": {

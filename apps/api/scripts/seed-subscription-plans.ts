@@ -4,10 +4,10 @@
  * 1. Copy subscription-plans.example.json → subscription-plans.json (gitignored).
  * 2. Fill real INR amounts (amountInr).
  * 3. Ensure API is running (or use deployed API URL).
- * 4. Set ADMIN_SECRET in env (same as the API).
+ * 4. Set ADMIN_JWT (or ADMIN_JWT_PROD for --env production) in env.
  * 5. Run: pnpm seed:subscription-plans (from apps/api)
  *
- * Uses POST /api/v1/admin/subscription-plans with x-admin-secret — never commit secrets or local JSON.
+ * Uses POST /api/v1/admin/subscription-plans with an Authorization header — never commit secrets or local JSON.
  *
  * Each plan in JSON should include the full catalog (displayName, features, etc.). Optional `planUuid`
  * must be a valid RFC 4122 id; if omitted, the API derives a stable UUID v5 from (productType, planKey).
@@ -84,15 +84,15 @@ async function main() {
     process.exit(1);
   }
 
-  const secret =
+  const adminJwt =
     targetEnv === "production"
-      ? process.env.ADMIN_SECRET_PROD || process.env.ADMIN_SECRET
-      : process.env.ADMIN_SECRET;
+      ? process.env.ADMIN_JWT_PROD || process.env.ADMIN_JWT
+      : process.env.ADMIN_JWT;
 
-  if (!secret) {
+  if (!adminJwt) {
     console.error(
       `[seed-subscription-plans] ${
-        targetEnv === "production" ? "ADMIN_SECRET_PROD" : "ADMIN_SECRET"
+        targetEnv === "production" ? "ADMIN_JWT_PROD" : "ADMIN_JWT"
       } is required in environment for --env ${targetEnv}.`,
     );
     process.exit(1);
@@ -140,7 +140,7 @@ async function main() {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-admin-secret": secret,
+      Authorization: "Bearer " + adminJwt,
     },
     body: JSON.stringify({ plans: parsed.plans }),
   });

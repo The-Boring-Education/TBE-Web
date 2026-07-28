@@ -24,21 +24,13 @@ vi.mock("@/lib/services/admin-cache", () => ({
 }));
 
 import { ensureAdminAccess, verifyJwtAdmin } from "@/middleware/admin";
-import { adminMiddleware } from "@/middleware/api";
-
-vi.mock("@/middleware/api", () => ({
-  adminMiddleware: vi.fn(),
-}));
 
 describe("Verified Admin Auth Integration", () => {
-  const ADMIN_SECRET = "admin-secret-test";
   const adminToken = "valid-admin-jwt";
   const userToken = "valid-user-jwt";
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.ADMIN_SECRET = ADMIN_SECRET;
-    vi.mocked(adminMiddleware).mockResolvedValue(true);
     mockWarmAdminEmailCache.mockResolvedValue(undefined);
     mockIsAdminEmail.mockResolvedValue(false);
   });
@@ -53,7 +45,7 @@ describe("Verified Admin Auth Integration", () => {
     mockIsAdminEmail.mockResolvedValue(true);
 
     const { req } = createMocks<NextApiRequest>({
-      headers: { authorization: `Bearer ${adminToken}` },
+      headers: { authorization: "Bearer " + adminToken },
     });
 
     const admin = await verifyJwtAdmin(req);
@@ -74,7 +66,7 @@ describe("Verified Admin Auth Integration", () => {
     mockIsAdminEmail.mockResolvedValue(false);
 
     const { req } = createMocks<NextApiRequest>({
-      headers: { authorization: `Bearer ${userToken}` },
+      headers: { authorization: "Bearer " + userToken },
     });
 
     expect(await verifyJwtAdmin(req)).toBeNull();
@@ -90,12 +82,11 @@ describe("Verified Admin Auth Integration", () => {
     mockIsAdminEmail.mockResolvedValue(true);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      headers: { authorization: `Bearer ${adminToken}` },
+      headers: { authorization: "Bearer " + adminToken },
     });
 
     const result = await ensureAdminAccess(req, res);
     expect(result).toBe(true);
-    expect(adminMiddleware).not.toHaveBeenCalled();
   });
 
   it("ensureAdminAccess returns 403 for authenticated non-admin JWT", async () => {
@@ -108,13 +99,12 @@ describe("Verified Admin Auth Integration", () => {
     mockIsAdminEmail.mockResolvedValue(false);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      headers: { authorization: `Bearer ${userToken}` },
+      headers: { authorization: "Bearer " + userToken },
     });
 
     const result = await ensureAdminAccess(req, res);
     expect(result).toBe(false);
     expect(res._getStatusCode()).toBe(403);
-    expect(adminMiddleware).not.toHaveBeenCalled();
   });
 
   it("ensureAdminAccess returns 401 for invalid JWT", async () => {
@@ -123,7 +113,7 @@ describe("Verified Admin Auth Integration", () => {
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      headers: { authorization: "Bearer bad-token" },
+      headers: { authorization: "******" },
     });
 
     const result = await ensureAdminAccess(req, res);
@@ -131,15 +121,13 @@ describe("Verified Admin Auth Integration", () => {
     expect(res._getStatusCode()).toBe(401);
   });
 
-  it("ensureAdminAccess falls back to admin secret when no JWT", async () => {
-    vi.mocked(adminMiddleware).mockResolvedValue(true);
-
+  it("ensureAdminAccess returns 401 when JWT is missing", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      headers: { "x-admin-secret": ADMIN_SECRET },
+      headers: {},
     });
 
     const result = await ensureAdminAccess(req, res);
-    expect(result).toBe(true);
-    expect(adminMiddleware).toHaveBeenCalledWith(req, res);
+    expect(result).toBe(false);
+    expect(res._getStatusCode()).toBe(401);
   });
 });

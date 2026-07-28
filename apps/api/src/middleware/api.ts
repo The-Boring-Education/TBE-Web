@@ -1,10 +1,9 @@
-import crypto from "crypto";
 import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { apiStatusCodes, envConfig } from "@/lib/constants";
-import { sendAPIResponse } from "@/lib/utils";
+import { envConfig } from "@/lib/constants";
 import { logger } from "@/lib/utils/logger";
+import { ensureAdminAccess } from "@/middleware/admin";
 
 let indexesSynced = false;
 
@@ -52,80 +51,12 @@ const connectDB = async () => {
   }
 };
 
-// Admin authentication middleware
+// Deprecated compatibility wrapper. Admin auth now requires JWT + RBAC.
 const adminMiddleware = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<boolean> => {
-  try {
-    const adminHeader = req.headers["x-admin-secret"];
-    const expectedSecret = process.env.ADMIN_SECRET;
-
-    if (!expectedSecret) {
-      logger.error("ADMIN_SECRET environment variable is not set");
-      res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-        sendAPIResponse({
-          success: false,
-          status: apiStatusCodes.INTERNAL_SERVER_ERROR,
-          error: true,
-          message: "Server configuration error",
-        }),
-      );
-      return false;
-    }
-
-    if (!adminHeader || typeof adminHeader !== "string") {
-      logger.warn("Admin auth failed", {
-        ip:
-          (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
-          "unknown",
-        timestamp: new Date().toISOString(),
-      });
-      res.status(apiStatusCodes.UNAUTHORIZED).json(
-        sendAPIResponse({
-          status: false,
-          message: "Unauthorized. Admin access required.",
-        }),
-      );
-      return false;
-    }
-
-    const hash1 = crypto
-      .createHash("sha256")
-      .update(Buffer.from(adminHeader, "utf-8"))
-      .digest();
-    const hash2 = crypto
-      .createHash("sha256")
-      .update(Buffer.from(expectedSecret, "utf-8"))
-      .digest();
-
-    if (!crypto.timingSafeEqual(hash1, hash2)) {
-      logger.warn("Admin auth failed", {
-        ip:
-          (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
-          "unknown",
-        timestamp: new Date().toISOString(),
-      });
-      res.status(apiStatusCodes.UNAUTHORIZED).json(
-        sendAPIResponse({
-          status: false,
-          message: "Unauthorized. Admin access required.",
-        }),
-      );
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-      sendAPIResponse({
-        status: false,
-        message: "Admin authentication error",
-        data: error,
-      }),
-    );
-    return false;
-  }
+  return ensureAdminAccess(req, res);
 };
 
 export { adminMiddleware, connectDB };
