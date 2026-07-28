@@ -7,7 +7,7 @@ export {
 export {
   type AccessTokenPayload,
   type AuthCodePayload,
-  decodeToken,
+  decodeTokenUnsafe,
   type OAuthStatePayload,
   type RefreshTokenPayload,
   signAccessToken,

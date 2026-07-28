@@ -90,7 +90,11 @@ export const verifyToken = <T = Record<string, unknown>>(token: string): T => {
   return jwt.verify(token, getSecret()) as T;
 };
 
-export const decodeToken = <T = Record<string, unknown>>(
+/**
+ * UNSAFE: Decodes JWT payload without signature verification.
+ * Never use for authentication or authorization decisions.
+ */
+export const decodeTokenUnsafe = <T = Record<string, unknown>>(
   token: string,
 ): T | null => {
   try {
