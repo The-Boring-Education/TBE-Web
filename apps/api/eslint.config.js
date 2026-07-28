@@ -11,7 +11,7 @@ export default [
           paths: [
             {
               name: "@/lib/auth",
-              importNames: ["decodeToken"],
+              importNames: ["decodeToken", "decodeTokenUnsafe"],
               message:
                 "Do not use unverified JWT decode in API code. Use verifyToken() for all auth/security checks.",
             },
