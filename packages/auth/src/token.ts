@@ -23,11 +23,20 @@ export const clearTokens = (): void => {
   document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
 };
 
-// ── JWT decoding (no verification — server does that) ──
+// ── JWT payload decoding (client-side only, no signature verification) ──
 
+/**
+ * Client-side convenience helper for reading JWT payload fields in the browser.
+ *
+ * SECURITY: This function does NOT verify JWT signatures and must never be used
+ * for authentication, authorization, or trust decisions.
+ *
+ * @returns Decoded payload in browser contexts; `null` on server or invalid token.
+ */
 export const decodeToken = <T = Record<string, unknown>>(
   token: string,
 ): T | null => {
+  if (typeof window === "undefined") return null;
   try {
     const parts = token.split(".");
     if (parts.length !== 3 || !parts[1]) return null;
