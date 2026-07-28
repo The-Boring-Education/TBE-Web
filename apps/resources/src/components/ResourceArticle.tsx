@@ -1,3 +1,5 @@
+import { sanitizeHTML } from "@tbe/components";
+
 import type { ResourceMeta } from "@/lib/types";
 
 type Props = {
@@ -33,6 +35,10 @@ export function ResourceArticle({
       name: "The Boring Education",
     },
   };
+  const sanitizedStyleTags = styleTags
+    ? (styleTags.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi) || []).join("\n")
+    : null;
+  const sanitizedBodyHtml = sanitizeHTML(bodyHtml);
 
   return (
     <>
@@ -46,12 +52,12 @@ export function ResourceArticle({
         {styleTags ? (
           <div
             className="resource-embed-styles"
-            dangerouslySetInnerHTML={{ __html: styleTags }}
+            dangerouslySetInnerHTML={{ __html: sanitizedStyleTags || "" }}
           />
         ) : null}
         <div
           className="resource-embed-body"
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          dangerouslySetInnerHTML={{ __html: sanitizedBodyHtml }}
         />
       </article>
     </>

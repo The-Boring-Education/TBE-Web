@@ -84,6 +84,7 @@ export { default as LoadingIndicator } from "./common/LoadingIndicator";
 export { default as LoadingSpinner } from "./common/LoadingSpinner";
 export { default as Marquee } from "./common/Marquee";
 export { default as MDXRenderer } from "./common/MDXRenderer";
+export { sanitizeHTML } from "./common/MDXRenderer/sanitize";
 export { default as Modal } from "./common/Modal";
 export { default as NotificationPopover } from "./common/Notification";
 export { default as Pill } from "./common/Pill";

@@ -163,8 +163,8 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
               <div
                 className="flex-1 text-[14px] leading-snug prose prose-invert prose-p:my-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0"
                 dangerouslySetInnerHTML={{
-                  __html: md.renderInline(
-                    normalizeLatexDelimiters(opt.text || ""),
+                  __html: sanitizeHTML(
+                    md.renderInline(normalizeLatexDelimiters(opt.text || "")),
                   ),
                 }}
               />
