@@ -35,7 +35,9 @@ export function ResourceArticle({
       name: "The Boring Education",
     },
   };
-  const sanitizedStyleTags = styleTags ? sanitizeHTML(styleTags) : null;
+  const sanitizedStyleTags = styleTags
+    ? (styleTags.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi) || []).join("\n")
+    : null;
   const sanitizedBodyHtml = sanitizeHTML(bodyHtml);
 
   return (
