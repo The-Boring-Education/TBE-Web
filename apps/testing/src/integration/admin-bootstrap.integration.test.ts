@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/middleware/requestLogger", () => ({
   withApiHandler: (
@@ -8,9 +8,12 @@ vi.mock("@/middleware/requestLogger", () => ({
   ) => handler,
 }));
 
-vi.mock("@/middleware/api", () => ({
-  connectDB: vi.fn(),
-  adminMiddleware: vi.fn(),
+const mockEnsureAdminAccess = vi.fn();
+const mockVerifyAuthenticatedUser = vi.fn();
+vi.mock("@/middleware/admin", () => ({
+  ensureAdminAccess: (...args: unknown[]) => mockEnsureAdminAccess(...args),
+  verifyAuthenticatedUser: (...args: unknown[]) =>
+    mockVerifyAuthenticatedUser(...args),
 }));
 
 vi.mock("@/lib/utils/logger", () => ({
@@ -37,14 +40,20 @@ vi.mock("@/lib/services/admin-cache", () => ({
     mockInvalidateAdminCache(...args),
 }));
 
-import { adminMiddleware } from "@/middleware/api";
-
 import bootstrapHandler from "../../../api/src/pages/api/v1/admin/admins/bootstrap";
 
 describe("Admin Bootstrap Integration", () => {
+  const originalBootstrapEmails = process.env.ADMIN_BOOTSTRAP_EMAILS;
+
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(adminMiddleware).mockResolvedValue(true);
+    mockEnsureAdminAccess.mockResolvedValue(true);
+    process.env.ADMIN_BOOTSTRAP_EMAILS = "admin@example.com";
+    mockVerifyAuthenticatedUser.mockReturnValue({
+      sub: "user-id",
+      email: "admin@example.com",
+      type: "access",
+    });
   });
 
   it("creates first admin when collection is empty", async () => {
@@ -59,7 +68,6 @@ describe("Admin Bootstrap Integration", () => {
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      headers: { "x-admin-secret": "secret" },
       body: {
         email: "admin@example.com",
         name: "Admin",
@@ -78,21 +86,18 @@ describe("Admin Bootstrap Integration", () => {
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      headers: { "x-admin-secret": "secret" },
       body: { email: "another@example.com" },
     });
 
     await bootstrapHandler(req, res);
 
+    expect(mockEnsureAdminAccess).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(409);
     expect(mockCreateAdminUserFromDB).not.toHaveBeenCalled();
   });
 
-  it("rejects bootstrap without admin secret", async () => {
-    vi.mocked(adminMiddleware).mockImplementation(async (_req, res) => {
-      res.status(401).json({ message: "Unauthorized" });
-      return false;
-    });
+  it("rejects bootstrap without authentication", async () => {
+    mockVerifyAuthenticatedUser.mockReturnValue(null);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
@@ -103,5 +108,24 @@ describe("Admin Bootstrap Integration", () => {
 
     expect(res._getStatusCode()).toBe(401);
     expect(mockCreateAdminUserFromDB).not.toHaveBeenCalled();
+  });
+
+  it("rejects bootstrap when user is not allowlisted", async () => {
+    process.env.ADMIN_BOOTSTRAP_EMAILS = "other@example.com";
+    mockCountAllAdminUsersFromDB.mockResolvedValue({ data: 0 });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { email: "admin@example.com" },
+    });
+
+    await bootstrapHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(403);
+    expect(mockCreateAdminUserFromDB).not.toHaveBeenCalled();
+  });
+
+  afterAll(() => {
+    process.env.ADMIN_BOOTSTRAP_EMAILS = originalBootstrapEmails;
   });
 });

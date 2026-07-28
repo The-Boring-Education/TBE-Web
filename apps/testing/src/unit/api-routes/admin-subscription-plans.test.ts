@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockListSubscriptionPlansFromDB = vi.fn();
 const mockUpsertSubscriptionPlansInDB = vi.fn();
@@ -33,10 +33,25 @@ vi.mock("../../../../api/src/lib/constants/products", () => ({
     ["DSA_YATRA", "PREPYATRA", "ONCAMPUS"].includes(t),
 }));
 
-const mockAdminMiddleware = vi.fn();
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: (...args: unknown[]) => mockAdminMiddleware(...args),
-  connectDB: vi.fn().mockResolvedValue(undefined),
+const mockEnsureAdminAccess = vi.fn();
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  withVerifiedAdminAuth:
+    (
+      wrappedHandler: (
+        req: NextApiRequest,
+        res: NextApiResponse,
+      ) => Promise<void> | void,
+    ) =>
+    async (req: NextApiRequest, res: NextApiResponse) => {
+      const authorized = await mockEnsureAdminAccess(req, res);
+      if (!authorized) {
+        res
+          .status(401)
+          .json({ status: false, message: "Authentication required" });
+        return;
+      }
+      return wrappedHandler(req, res);
+    },
 }));
 
 vi.mock("../../../../api/src/lib/utils/logger", () => ({
@@ -58,23 +73,13 @@ vi.mock("../../../../api/src/lib/utils", () => ({
 import handler from "../../../../api/src/pages/api/v1/admin/subscription-plans/index";
 
 describe("Admin subscription-plans API", () => {
-  const OLD_ENV = process.env.ADMIN_SECRET;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.ADMIN_SECRET = "test-admin-secret";
-    mockAdminMiddleware.mockImplementation(async (req: NextApiRequest) => {
-      const h = req.headers["x-admin-secret"];
-      return h === process.env.ADMIN_SECRET;
-    });
-  });
-
-  afterAll(() => {
-    process.env.ADMIN_SECRET = OLD_ENV;
+    mockEnsureAdminAccess.mockResolvedValue(true);
   });
 
   it("GET does not list plans when admin middleware denies", async () => {
-    mockAdminMiddleware.mockResolvedValueOnce(false);
+    mockEnsureAdminAccess.mockResolvedValueOnce(false);
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
     });

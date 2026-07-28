@@ -5,14 +5,25 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import handler from "../../../../api/src/pages/api/v1/admin/quiz/[id]";
 
 const mockGetQuizByIdFromDB = vi.fn();
-const mockAdminMiddleware = vi.fn();
+const mockEnsureAdminAccess = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   getQuizByIdFromDB: (...args: unknown[]) => mockGetQuizByIdFromDB(...args),
 }));
 
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: (...args: unknown[]) => mockAdminMiddleware(...args),
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  withVerifiedAdminAuth:
+    (
+      wrappedHandler: (
+        req: NextApiRequest,
+        res: NextApiResponse,
+      ) => Promise<void> | void,
+    ) =>
+    async (req: NextApiRequest, res: NextApiResponse) => {
+      const authorized = await mockEnsureAdminAccess(req, res);
+      if (!authorized) return;
+      return wrappedHandler(req, res);
+    },
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -26,7 +37,7 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
 describe("GET /api/v1/admin/quiz/[id]", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAdminMiddleware.mockResolvedValue(true);
+    mockEnsureAdminAccess.mockResolvedValue(true);
   });
 
   it("returns all questions (no 10-cap) for admin", async () => {
@@ -58,7 +69,7 @@ describe("GET /api/v1/admin/quiz/[id]", () => {
 
     await handler(req, res);
 
-    expect(mockAdminMiddleware).toHaveBeenCalled();
+    expect(mockEnsureAdminAccess).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
     const body = JSON.parse(res._getData());
     expect(body.data.questions).toHaveLength(32);

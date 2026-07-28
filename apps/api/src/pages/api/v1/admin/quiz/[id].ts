@@ -4,7 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { getQuizByIdFromDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -12,9 +12,6 @@ import { withApiHandler } from "@/middleware/requestLogger";
  * Public GET /api/v1/quiz/[id] limits to 10 questions for play mode.
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const adminCheck = await adminMiddleware(req, res);
-  if (!adminCheck) return;
-
   if (req.method !== "GET") {
     return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
       sendAPIResponse({
@@ -92,4 +89,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(withVerifiedAdminAuth(handler));

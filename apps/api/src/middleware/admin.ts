@@ -5,7 +5,6 @@ import { extractBearerToken } from "@/lib/auth/token";
 import { apiStatusCodes } from "@/lib/constants";
 import { isAdminEmail, warmAdminEmailCache } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 
 export interface AdminAuthenticatedUser {
   id: string;
@@ -47,8 +46,8 @@ export const verifyJwtAdmin = async (
 };
 
 /**
- * Ensures the request is from an admin user (JWT) or holds a valid x-admin-secret.
- * JWT present but non-admin returns 403; invalid JWT returns 401.
+ * Ensures the request is from an authenticated admin user (JWT + RBAC).
+ * Non-admin JWT returns 403; invalid/missing JWT returns 401.
  */
 export const ensureAdminAccess = async (
   req: NextApiRequest,
@@ -97,7 +96,13 @@ export const ensureAdminAccess = async (
     }
   }
 
-  return adminMiddleware(req, res);
+  res.status(apiStatusCodes.UNAUTHORIZED).json(
+    sendAPIResponse({
+      status: false,
+      message: "Authentication required",
+    }),
+  );
+  return false;
 };
 
 export const withVerifiedAdminAuth = (
