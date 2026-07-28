@@ -5,7 +5,9 @@ import { toast } from "sonner";
 const getInitials = (name?: string): string => {
   if (!name) return "PY";
   return name
-    .split(" ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
     .map((p) => p[0])
     .join("")
     .toUpperCase()

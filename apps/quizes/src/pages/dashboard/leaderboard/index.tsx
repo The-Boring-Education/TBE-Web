@@ -85,7 +85,9 @@ function LeaderboardEntry({
 }: LeaderboardEntryProps) {
   const getInitials = (name: string) => {
     return name
-      .split(" ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
       .map((n) => n[0])
       .join("")
       .toUpperCase()
@@ -180,7 +182,9 @@ function UserProfileModal({ profile, isOpen, onClose }: UserProfileModalProps) {
 
   const getInitials = (name: string) => {
     return name
-      .split(" ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
       .map((n) => n[0])
       .join("")
       .toUpperCase()
