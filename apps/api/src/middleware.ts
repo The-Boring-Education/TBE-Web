@@ -17,7 +17,7 @@ const SECURITY_HEADERS = {
 
 const ALLOWED_METHODS = "GET, POST, PUT, DELETE, PATCH, OPTIONS";
 const ALLOWED_HEADERS =
-  "Content-Type, Authorization, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control";
+  "Content-Type, Authorization, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control, x-admin-secret";
 
 function resolveOrigin(request: NextRequest): string | undefined {
   const origin = request.headers.get("origin");

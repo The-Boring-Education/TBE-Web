@@ -9,7 +9,7 @@ import { invalidateAdminCache } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
 import { isValidEmail } from "@/lib/utils/email";
 import { logger } from "@/lib/utils/logger";
-import { withVerifiedAdminAuth } from "@/middleware/admin";
+import { ensureAdminAccess, verifyAuthenticatedUser } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 interface BootstrapAdminRequest {
@@ -29,6 +29,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
+    const authenticatedUser = verifyAuthenticatedUser(req);
+    if (!authenticatedUser) {
+      return res.status(apiStatusCodes.UNAUTHORIZED).json(
+        sendAPIResponse({
+          status: false,
+          message: "Authentication required",
+        }),
+      );
+    }
+
+    const body = req.body as BootstrapAdminRequest;
+    if (!body?.email || !isValidEmail(body.email)) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          message: "A valid email is required",
+        }),
+      );
+    }
+
     const { data: totalCount, error: countError } =
       await countAllAdminUsersFromDB();
 
@@ -42,6 +62,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (typeof totalCount === "number" && totalCount > 0) {
+      const authorized = await ensureAdminAccess(req, res);
+      if (!authorized) return;
+
       return res.status(409).json(
         sendAPIResponse({
           status: false,
@@ -51,12 +74,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const body = req.body as BootstrapAdminRequest;
-    if (!body?.email || !isValidEmail(body.email)) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
+    const normalizedAuthenticatedEmail = authenticatedUser.email
+      .trim()
+      .toLowerCase();
+    const normalizedRequestedEmail = body.email.trim().toLowerCase();
+    const bootstrapEmails = (process.env.ADMIN_BOOTSTRAP_EMAILS || "")
+      .split(",")
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (!bootstrapEmails.includes(normalizedAuthenticatedEmail)) {
+      return res.status(apiStatusCodes.FORBIDDEN).json(
         sendAPIResponse({
           status: false,
-          message: "A valid email is required",
+          message: "Authenticated user is not allowlisted for bootstrap",
+        }),
+      );
+    }
+
+    if (normalizedAuthenticatedEmail !== normalizedRequestedEmail) {
+      return res.status(apiStatusCodes.FORBIDDEN).json(
+        sendAPIResponse({
+          status: false,
+          message:
+            "Bootstrap is only allowed for the authenticated user's email",
         }),
       );
     }
@@ -103,4 +144,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(withVerifiedAdminAuth(handler));
+export default withApiHandler(handler);
