@@ -211,9 +211,11 @@ export { default as SectionHeaderContainer } from "./containers/Page/common/Sect
 export { default as CourseHeroContainer } from "./containers/Page/Course/CourseHeroContainer";
 export { default as SheetHeroContainer } from "./containers/Page/Interview-sheet/SheetHeroContainer";
 export { default as SheetLandingPage } from "./containers/Page/Interview-sheet/SheetLandingPage";
+export { default as AppShowcaseSections } from "./containers/Page/Landing/AppShowcaseSections";
 export { default as CollegeEventsSection } from "./containers/Page/Landing/CollegeEventsSection";
 export { default as Community } from "./containers/Page/Landing/Community";
 export { default as MentorshipPlans } from "./containers/Page/Landing/MentorshipPlans";
+export { default as SolarEcosystem } from "./containers/Page/Landing/SolarEcosystem";
 export { default as OnboardingLayout } from "./containers/Page/Onboarding/OnboardingLayout";
 export { default as OnboardingProgressBar } from "./containers/Page/Onboarding/OnboardingProgressBar";
 export { default as StepNavigation } from "./containers/Page/Onboarding/StepNavigation";

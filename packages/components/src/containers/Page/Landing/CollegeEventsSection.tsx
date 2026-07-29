@@ -1,52 +1,44 @@
-import { FlexContainer, LinkButton, Section, Text } from "@tbe/components";
+import { SectionHeaderContainer, Text } from "@tbe/components";
 import { LINKS } from "@tbe/constants";
+import { ExternalLink } from "lucide-react";
 
 const CollegeEventsSection = () => (
-  <Section className="md:px-8 md:py-8 px-2 py-4">
-    <FlexContainer justifyCenter={false}>
-      <FlexContainer className="w-full rounded-2 gradient-7 gap-4 md:px-12 md:py-12 px-4 py-4 shadow-lg sm:px-12 sm:py-12 lg:px-8 lg:py-12">
-        <FlexContainer
-          direction="col"
-          itemCenter
-          className="w-full max-w-4xl gap-2"
-        >
-          <Text className="heading-3 text-contentLight" level="h3" textCenter>
-            Host TBE at Your College
-          </Text>
+  <section className="mx-auto max-w-5xl px-4 py-8 text-center sm:px-6 md:py-12 select-none">
+    <div className="mx-auto max-w-3xl space-y-3.5">
+      <SectionHeaderContainer
+        heading="Host TBE at Your"
+        focusText="College"
+        headingLevel={3}
+        textCenter
+      />
 
-          <Text className="paragraph text-contentLight" level="p" textCenter>
-            Bring cutting-edge tech education to your campus! Join our network
-            of college partners and host exciting tech events, workshops, and
-            learning sessions.
-          </Text>
-        </FlexContainer>
-        <FlexContainer className="w-full gap-6 flex-wrap justify-center" wrap>
-          <LinkButton
-            buttonProps={{
-              variant: "PRIMARY",
-              text: "Apply to Host Events",
-              className: "w-full sm:w-auto",
-              animationType: "GLOW",
-            }}
-            className="w-full sm:w-auto"
-            href={LINKS.hostTBEAtYourCollege}
-            target="_blank"
-          />
-          <LinkButton
-            buttonProps={{
-              variant: "OUTLINE",
-              text: "View Session Details",
-              className: "w-full sm:w-auto",
-              animationType: "BOUNCE",
-            }}
-            className="w-full sm:w-auto"
-            href={LINKS.viewSessionDetails}
-            target="_blank"
-          />
-        </FlexContainer>
-      </FlexContainer>
-    </FlexContainer>
-  </Section>
+      <Text className="paragraph text-grey max-w-2xl mx-auto" level="p">
+        Bring cutting-edge tech education to your campus! Join our network of
+        college partners and host exciting tech events, workshops, and learning
+        sessions.
+      </Text>
+
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a
+          href={LINKS.hostTBEAtYourCollege}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-lg bg-[#FF5757] px-5 py-2.5 text-xs font-bold sm:text-sm text-white transition-colors duration-200 hover:bg-[#e04343]"
+        >
+          Apply to Host Events <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+
+        <a
+          href={LINKS.viewSessionDetails}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-xs font-bold sm:text-sm text-zinc-800 transition-colors duration-200 hover:bg-zinc-50"
+        >
+          View Session Details
+        </a>
+      </div>
+    </div>
+  </section>
 );
 
 export default CollegeEventsSection;

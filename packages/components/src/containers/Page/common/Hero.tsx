@@ -39,40 +39,34 @@ const LandingPageHero = ({
 
   return (
     <Section
-      className={`relative overflow-hidden ${isDark ? "bg-[#0A0A0A]" : ""}`}
+      className={`relative ${isDark ? "bg-[#0A0A0A] overflow-hidden" : "bg-transparent"}`}
     >
-      {/* Decorative background — theme-aware, non-interactive */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          aria-hidden
-          className={`absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl ${
-            isDark ? "bg-primary/20" : "bg-primary/10"
-          }`}
-          animate={{ y: [0, 18, 0], x: [0, 10, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          aria-hidden
-          className={`absolute -bottom-32 right-[-6rem] h-80 w-80 rounded-full blur-3xl ${
-            isDark ? "bg-primary/10" : "bg-primary/10"
-          }`}
-          animate={{ y: [0, -20, 0], x: [0, -12, 0] }}
-          transition={{
-            duration: 11,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-        <div
-          aria-hidden
-          className={`absolute inset-0 ${
-            isDark
-              ? "bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.06),transparent_60%)]"
-              : "bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.04),transparent_60%)]"
-          }`}
-        />
-      </div>
+      {/* Decorative background — only active in dark mode to prevent double gradient seams in light mode */}
+      {isDark && (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <motion.div
+            aria-hidden
+            className="absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-primary/20"
+            animate={{ y: [0, 18, 0], x: [0, 10, 0] }}
+            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            aria-hidden
+            className="absolute -bottom-32 right-[-6rem] h-80 w-80 rounded-full blur-3xl bg-primary/10"
+            animate={{ y: [0, -20, 0], x: [0, -12, 0] }}
+            transition={{
+              duration: 11,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.06),transparent_60%)]"
+          />
+        </div>
+      )}
 
       <FlexContainer
         className="relative z-10 py-8 sm:py-12 lg:py-16"
