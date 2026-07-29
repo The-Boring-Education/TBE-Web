@@ -142,7 +142,13 @@ export type FeedbackType =
   | "INTERVIEW_SHEET"
   | "CERTIFICATE";
 
-export type { PaymentStatusType, ProductType } from "@/lib/constants/database";
+export type {
+  ContentFeedbackKind,
+  ContentFeedbackStatus,
+  ContentFeedbackType,
+  PaymentStatusType,
+  ProductType,
+} from "@/lib/constants/database";
 
 export type InterestEventType =
   "SUBSCRIPTION_INTEREST" | "FEATURE_REQUEST" | "BETA_ACCESS";

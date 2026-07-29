@@ -1,4 +1,4 @@
-import type { FeedbackType } from "@tbe/constants";
+import type { ContentFeedbackType, FeedbackType } from "@tbe/constants";
 import type {
   ChangeEvent,
   ElementType,
@@ -91,12 +91,7 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 type ButtonVariant =
-  | "OUTLINE"
-  | "PRIMARY"
-  | "SECONDARY"
-  | "GHOST"
-  | "SUCCESS"
-  | "NEUTRAL";
+  "OUTLINE" | "PRIMARY" | "SECONDARY" | "GHOST" | "SUCCESS" | "NEUTRAL";
 
 export interface ButtonProps extends DelegatedInteractiveAnalyticsProps {
   variant: ButtonVariant;
@@ -1258,4 +1253,12 @@ export interface PatternQuizBannerProps {
   onStart?: () => void;
   className?: string;
   compact?: boolean;
+}
+
+export interface ContentFeedbackProps {
+  contentType: ContentFeedbackType;
+  contentId: string;
+  /** Optional heading, defaults to "Was this helpful?". */
+  title?: string;
+  className?: string;
 }

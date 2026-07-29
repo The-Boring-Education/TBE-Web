@@ -34,7 +34,41 @@ const DATABASE_MODELS = {
   COUPON: "Coupon",
   USER_ACTIVITY_LOG: "UserActivityLog",
   ADMIN_USER: "AdminUser",
+  CONTENT_FEEDBACK: "ContentFeedback",
 };
+
+export const CONTENT_FEEDBACK_TYPES = [
+  "DSA_QUESTION",
+  "DSA_TOPIC",
+  "COURSE",
+  "COURSE_CHAPTER",
+  "INTERVIEW_SHEET",
+  "APTITUDE_QUESTION",
+  "APTITUDE_TOPIC",
+  "STUDY_GUIDE",
+  "QUIZ",
+  "QUIZ_QUESTION",
+  "WEBINAR",
+  "PROJECT",
+] as const;
+
+export type ContentFeedbackType = (typeof CONTENT_FEEDBACK_TYPES)[number];
+
+export const CONTENT_FEEDBACK_KINDS = [
+  "EXISTING_CONTENT",
+  "NEW_CONTENT_SUGGESTION",
+] as const;
+
+export type ContentFeedbackKind = (typeof CONTENT_FEEDBACK_KINDS)[number];
+
+export const CONTENT_FEEDBACK_STATUSES = [
+  "PENDING",
+  "REVIEWED",
+  "ACCEPTED",
+  "REJECTED",
+] as const;
+
+export type ContentFeedbackStatus = (typeof CONTENT_FEEDBACK_STATUSES)[number];
 
 export const FEEDBACK_TYPES = [
   "GENERAL",
