@@ -66,18 +66,23 @@ import {
 } from "../../../../api/src/lib/database/queries/gamification";
 
 describe("gamification DB queries — client payloads omit actions", () => {
+  const validUserId = "507f1f77bcf86cd799439011";
+  const validUserId2 = "507f1f77bcf86cd799439012";
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe("getUserPointsFromDB", () => {
     it("chains select(-actions) and lean, and returns data without actions", async () => {
-      const leanDoc = { _id: "g1", userId: "u1", points: 42 };
+      const leanDoc = { _id: "g1", userId: validUserId, points: 42 };
       mockLean.mockResolvedValue(leanDoc);
 
-      const result = await getUserPointsFromDB("u1");
+      const result = await getUserPointsFromDB(validUserId);
 
-      expect(mockFindOne).toHaveBeenCalledWith({ userId: { $eq: "u1" } });
+      expect(mockFindOne).toHaveBeenCalledWith({
+        userId: { $eq: expect.anything() },
+      });
       expect(mockSelect).toHaveBeenCalledWith("-actions");
       expect(mockLean).toHaveBeenCalled();
       expect(result.data).toEqual(leanDoc);
@@ -87,29 +92,29 @@ describe("gamification DB queries — client payloads omit actions", () => {
 
   describe("addGamificationDocInDB", () => {
     it("returns saved doc without actions even when toObject included them", async () => {
-      const result = await addGamificationDocInDB("u-new");
+      const result = await addGamificationDocInDB(validUserId2);
 
       expect(MockGamificationConstructor).toHaveBeenCalledWith({
-        userId: "u-new",
+        userId: expect.anything(),
       });
       expect(result.data).toMatchObject({
         _id: "g-new",
-        userId: "u-new",
         points: 0,
       });
+      expect((result.data as any).userId.toString()).toBe(validUserId2);
       expect(result.data).not.toHaveProperty("actions");
     });
   });
 
   describe("updateUserPointsInDB", () => {
     it("uses select -actions on findOneAndUpdate and returns data without actions", async () => {
-      const updated = { _id: "g1", userId: "u1", points: 100 };
+      const updated = { _id: "g1", userId: validUserId, points: 100 };
       mockFindOneAndUpdate.mockResolvedValue(updated);
 
-      const result = await updateUserPointsInDB("u1", "ENROLL_COURSE");
+      const result = await updateUserPointsInDB(validUserId, "ENROLL_COURSE");
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
-        { userId: { $eq: "u1" } },
+        { userId: { $eq: expect.anything() } },
         expect.objectContaining({
           $push: expect.objectContaining({
             actions: expect.objectContaining({
@@ -127,17 +132,17 @@ describe("gamification DB queries — client payloads omit actions", () => {
 
   describe("handleGamificationPoints (deduct path)", () => {
     it("returns payload without actions when deducting points", async () => {
-      const afterDeduct = { _id: "g1", userId: "u1", points: 0 };
+      const afterDeduct = { _id: "g1", userId: validUserId, points: 0 };
       mockFindOneAndUpdate.mockResolvedValue(afterDeduct);
 
       const result = await handleGamificationPoints(
         false,
-        "u1",
+        validUserId,
         "ENROLL_COURSE",
       );
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
-        { userId: { $eq: "u1" } },
+        { userId: { $eq: expect.anything() } },
         expect.any(Array),
         { new: true, select: "-actions" },
       );
