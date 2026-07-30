@@ -26,7 +26,13 @@ export interface TrackingEventParams {
  *   const { trackEvent } = useTracking();
  */
 const useTracking = () => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // RouterContext is not mounted (e.g., App Router apps)
+  }
 
   useAuthAnalytics();
 
@@ -35,12 +41,15 @@ const useTracking = () => {
     initGA();
     installGlobalAnalyticsListeners();
     // Track the initial page view on mount
-    trackPageview(router.asPath);
+    if (router?.asPath) {
+      trackPageview(router.asPath);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Track page views on route changes
   useEffect(() => {
+    if (!router?.events) return;
     const handleRouteChange = (url: string) => {
       trackPageview(url);
     };
@@ -49,7 +58,7 @@ const useTracking = () => {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events]);
+  }, [router?.events]);
 
   // Expose a typed trackEvent helper
   const trackEvent = useCallback(

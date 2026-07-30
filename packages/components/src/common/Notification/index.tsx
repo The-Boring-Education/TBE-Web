@@ -9,7 +9,6 @@ import { ArrowRightIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useNotifications, useUser } from "@tbe/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 const PANEL_CLASSES =
@@ -200,13 +199,17 @@ const NotificationsList = ({
 const NotificationPopover = () => {
   const { isAuth, loading: authLoading } = useUser();
   const { notifications, loading } = useNotifications({ enabled: isAuth });
-  const router = useRouter();
-
   const hasUnread = isAuth && notifications && notifications.length > 0;
 
   const handleLoginClick = () => {
-    const redirect = encodeURIComponent(router.asPath || "/");
-    router.push(`/login?redirect=${redirect}`);
+    const currentPath =
+      typeof window !== "undefined"
+        ? window.location.pathname + window.location.search
+        : "/";
+    const redirect = encodeURIComponent(currentPath);
+    if (typeof window !== "undefined") {
+      window.location.href = `/login?redirect=${redirect}`;
+    }
   };
 
   return (

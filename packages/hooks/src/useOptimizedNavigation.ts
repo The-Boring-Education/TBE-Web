@@ -6,7 +6,13 @@ import { useCallback, useState } from "react";
  * Reduces perceived loading time by showing immediate visual feedback
  */
 const useOptimizedNavigation = () => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // RouterContext is not mounted (e.g. App Router apps)
+  }
   const [isNavigating, setIsNavigating] = useState(false);
 
   const navigateTo = useCallback(

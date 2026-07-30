@@ -89,9 +89,10 @@ export const GamificationProvider = ({
 export const useGamificationContext = () => {
   const context = useContext(GamificationContext);
   if (!context) {
-    throw new Error(
-      "useGamificationContext must be used within a GamificationProvider",
-    );
+    return {
+      triggerCelebration: () => {},
+      showToast: () => {},
+    };
   }
   return context;
 };

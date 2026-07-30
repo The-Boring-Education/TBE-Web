@@ -3,14 +3,13 @@ import { Button } from "@tbe/components";
 import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { LoginRedirectButtonProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const LoginRedirectButton = ({
   text = "Login to Start",
   className = "",
 }: LoginRedirectButtonProps) => {
-  const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
   const [isClient, setIsClient] = useState(false);
@@ -25,9 +24,9 @@ const LoginRedirectButton = ({
     // Check if we're in prep-yatra app (has /auth route)
     if (
       pathname === "/auth" ||
-      pathname.startsWith("/dashboard") ||
-      pathname.startsWith("/pricing") ||
-      pathname.startsWith("/journey")
+      pathname?.startsWith("/dashboard") ||
+      pathname?.startsWith("/pricing") ||
+      pathname?.startsWith("/journey")
     ) {
       return "/auth";
     }
@@ -47,9 +46,13 @@ const LoginRedirectButton = ({
       }
       const authRoute = getAuthRoute();
       const redirectParam = authRoute === "/auth" ? "callbackUrl" : "redirect";
-      router.push(
-        `${authRoute}?${redirectParam}=${encodeURIComponent(pathname)}`,
-      );
+      const currentPath =
+        pathname ||
+        (typeof window !== "undefined" ? window.location.pathname : "/");
+      const targetUrl = `${authRoute}?${redirectParam}=${encodeURIComponent(currentPath)}`;
+      if (typeof window !== "undefined") {
+        window.location.href = targetUrl;
+      }
     }
   };
 
