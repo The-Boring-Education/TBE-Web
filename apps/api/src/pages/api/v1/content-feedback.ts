@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       case "POST":
         return await handleUpsertContentFeedback(req, res);
       default:
-        return res.status(apiStatusCodes.BAD_REQUEST).json(
+        return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
           sendAPIResponse({
             status: false,
             message: `Method ${req.method} Not Allowed`,
@@ -147,7 +147,9 @@ const handleUpsertContentFeedback = async (
     contentId.trim(),
     parsedRating,
     typeof reviewText === "string" ? reviewText : "",
-    meta && typeof meta === "object" ? meta : undefined,
+    meta && typeof meta === "object" && !Array.isArray(meta)
+      ? (meta as Record<string, unknown>)
+      : undefined,
   );
 
   if (error) {

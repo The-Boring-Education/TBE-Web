@@ -641,7 +641,7 @@ export interface ContentFeedbackModel extends Document {
   contentId: string;
   rating: number;
   reviewText: string;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }

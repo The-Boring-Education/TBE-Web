@@ -8,7 +8,7 @@ export interface ContentFeedbackData {
   hasReviewed: boolean;
   rating: number | null;
   reviewText: string;
-  meta?: Record<string, any> | null;
+  meta?: Record<string, unknown> | null;
   updatedAt: Date | null;
 }
 
@@ -66,7 +66,7 @@ const upsertContentFeedbackInDB = async (
   contentId: string,
   rating: number,
   reviewText: string = "",
-  meta?: Record<string, any>,
+  meta?: Record<string, unknown>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const updatePayload: Record<string, any> = { rating, reviewText };

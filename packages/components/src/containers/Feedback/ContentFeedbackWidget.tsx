@@ -12,7 +12,7 @@ import { FaStar } from "react-icons/fa";
 export interface ContentFeedbackWidgetProps {
   contentType: FeedbackType;
   contentId: string;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   /** Label shown on the FAB button. Defaults to "Rate this" */
   title?: string;
   /** Theme style: "dark" or "light". Defaults to "dark" */
@@ -52,7 +52,7 @@ function InteractiveStarRow({
             <button
               key={star}
               type="button"
-              className="focus:outline-none p-0.5 transition-transform duration-150 hover:scale-120 active:scale-95 cursor-pointer"
+              className="focus:outline-none p-0.5 transition-transform duration-150 hover:scale-[1.2] active:scale-95 cursor-pointer"
               onClick={() => onSelect(star)}
               onMouseEnter={() => setHovered(star)}
               onMouseLeave={() => setHovered(0)}
@@ -367,7 +367,7 @@ const ContentFeedbackWidget = ({
                       : "bg-white/[0.04] border border-white/10 text-white focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30"
                   }`}
                   placeholder="What did you like or think could be improved?"
-                  rows={2.5}
+                  rows={3}
                   maxLength={500}
                   value={reviewText}
                   onChange={(e) => setReviewText(e.target.value)}

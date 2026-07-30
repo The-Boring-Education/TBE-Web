@@ -9,7 +9,7 @@ export interface ContentFeedbackState {
   hasReviewed: boolean;
   existingRating: number | null;
   existingReviewText: string;
-  existingMeta?: Record<string, any> | null;
+  existingMeta?: Record<string, unknown> | null;
   isFetching: boolean;
   isSubmitting: boolean;
 }
@@ -17,7 +17,7 @@ export interface ContentFeedbackState {
 export interface UseContentFeedbackProps {
   contentType: FeedbackType;
   contentId: string;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   /** Set to false to skip the initial fetch (e.g. widget not yet open) */
   enabled?: boolean;
 }
@@ -79,7 +79,7 @@ const useContentFeedback = ({
   const submitFeedback = async (
     rating: number,
     reviewText: string = "",
-    overrideMeta?: Record<string, any>,
+    overrideMeta?: Record<string, unknown>,
   ): Promise<boolean> => {
     if (!isAuth || !user?.id) return false;
 

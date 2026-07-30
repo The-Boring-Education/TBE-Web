@@ -50,7 +50,7 @@ ContentFeedbackSchema.index(
 );
 
 const ContentFeedback: Model<ContentFeedbackModel> =
-  models?.ContentFeedback ||
+  (models[DATABASE_MODELS.CONTENT_FEEDBACK] as Model<ContentFeedbackModel>) ||
   model<ContentFeedbackModel>(
     DATABASE_MODELS.CONTENT_FEEDBACK,
     ContentFeedbackSchema,
