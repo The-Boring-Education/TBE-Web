@@ -1,4 +1,4 @@
-import { PatternQuizPanel, SEO } from "@tbe/components";
+import { ContentFeedbackWidget, PatternQuizPanel, SEO } from "@tbe/components";
 import type { PageProps } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
 import Head from "next/head";
@@ -16,6 +16,16 @@ export default function PatternQuizPage({ seoMeta }: PageProps) {
           <PatternQuizPanel questionsPerRound={5} />
         </div>
       </div>
+      <ContentFeedbackWidget
+        contentType="QUIZ"
+        contentId="pattern-quiz"
+        title="Rate this quiz"
+        meta={{
+          quizId: "pattern-quiz",
+          quizName: "Pattern Quiz",
+        }}
+        theme="dark"
+      />
     </Fragment>
   );
 }

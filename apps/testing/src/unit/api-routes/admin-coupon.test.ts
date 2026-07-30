@@ -21,6 +21,26 @@ vi.mock("@/middleware/api", async () => {
   };
 });
 
+const mockEnsureAdminAccess = vi.fn().mockResolvedValue(true);
+
+vi.mock("@/middleware/admin", () => ({
+  ensureAdminAccess: (...args: any[]) => mockEnsureAdminAccess(...args),
+  withVerifiedAdminAuth: (fn: any) => async (req: any, res: any) => {
+    const ok = await mockEnsureAdminAccess(req, res);
+    if (!ok) return;
+    return fn(req, res);
+  },
+}));
+
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  ensureAdminAccess: (...args: any[]) => mockEnsureAdminAccess(...args),
+  withVerifiedAdminAuth: (fn: any) => async (req: any, res: any) => {
+    const ok = await mockEnsureAdminAccess(req, res);
+    if (!ok) return;
+    return fn(req, res);
+  },
+}));
+
 vi.mock("@/lib/utils/logger", () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
@@ -50,8 +70,6 @@ vi.mock("@/lib/database", () => ({
 /* ------------------------------------------------------------------ */
 /*  Import handlers (after mocks are registered)                       */
 /* ------------------------------------------------------------------ */
-
-import { adminMiddleware } from "@/middleware/api";
 
 import couponIdHandler from "../../../../api/src/pages/api/v1/admin/coupon/[couponId]";
 import bulkApplyHandler from "../../../../api/src/pages/api/v1/admin/coupon/[couponId]/bulk-apply";
@@ -125,7 +143,7 @@ describe("Admin Coupon Index – GET /admin/coupon", () => {
   });
 
   it("rejects when admin middleware fails", async () => {
-    (adminMiddleware as any).mockResolvedValueOnce(false);
+    mockEnsureAdminAccess.mockResolvedValueOnce(false);
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
     });

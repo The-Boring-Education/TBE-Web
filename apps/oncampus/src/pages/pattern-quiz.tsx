@@ -1,4 +1,4 @@
-import { PatternQuizPanel } from "@tbe/components";
+import { ContentFeedbackWidget, PatternQuizPanel } from "@tbe/components";
 import Head from "next/head";
 import { Fragment } from "react";
 
@@ -13,6 +13,16 @@ export default function PatternQuizPage() {
           <PatternQuizPanel questionsPerRound={5} />
         </div>
       </div>
+      <ContentFeedbackWidget
+        contentType="QUIZ"
+        contentId="pattern-quiz"
+        title="Rate this quiz"
+        meta={{
+          quizId: "pattern-quiz",
+          quizName: "Pattern Quiz",
+        }}
+        theme="dark"
+      />
     </Fragment>
   );
 }

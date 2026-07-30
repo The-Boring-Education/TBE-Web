@@ -39,7 +39,13 @@ interface SEOWrapperProps {
  * @param domain - Custom domain override (optional)
  */
 const SEOWrapper = ({ appId, slug, customMeta, domain }: SEOWrapperProps) => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // App Router or RouterContext not mounted
+  }
 
   // Auto-detect app ID from domain if not provided
   const detectedAppId =
@@ -49,7 +55,8 @@ const SEOWrapper = ({ appId, slug, customMeta, domain }: SEOWrapperProps) => {
     );
 
   // Use provided slug or fallback to router path
-  const routePath = slug || router.asPath.split("?")[0];
+  const routePath =
+    slug || (router?.asPath ? router.asPath.split("?")[0] : "/");
 
   // Get SEO metadata
   const baseMeta = getSEOMeta(routePath, detectedAppId);
