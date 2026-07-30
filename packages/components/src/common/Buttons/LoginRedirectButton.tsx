@@ -3,13 +3,20 @@ import { Button } from "@tbe/components";
 import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { LoginRedirectButtonProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const LoginRedirectButton = ({
   text = "Login to Start",
   className = "",
 }: LoginRedirectButtonProps) => {
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // RouterContext not available in static export / SSR
+  }
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
   const [isClient, setIsClient] = useState(false);
@@ -46,11 +53,10 @@ const LoginRedirectButton = ({
       }
       const authRoute = getAuthRoute();
       const redirectParam = authRoute === "/auth" ? "callbackUrl" : "redirect";
-      const currentPath =
-        pathname ||
-        (typeof window !== "undefined" ? window.location.pathname : "/");
-      const targetUrl = `${authRoute}?${redirectParam}=${encodeURIComponent(currentPath)}`;
-      if (typeof window !== "undefined") {
+      const targetUrl = `${authRoute}?${redirectParam}=${encodeURIComponent(pathname || "/")}`;
+      if (router?.push) {
+        router.push(targetUrl);
+      } else if (typeof window !== "undefined") {
         window.location.href = targetUrl;
       }
     }
