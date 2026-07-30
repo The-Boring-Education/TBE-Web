@@ -1,5 +1,6 @@
 import {
   Button,
+  ContentFeedbackWidget,
   FeedbackPopup,
   FlexContainer,
   LinerProgressBar,
@@ -462,6 +463,34 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
+      )}
+
+      {/* Content feedback widget (per-question or per-sheet, always-on FAB) */}
+      {sheet.isEnrolled && (
+        <ContentFeedbackWidget
+          contentType='INTERVIEW_SHEET'
+          contentId={
+            currentQuestionId
+              ? `${sheet._id.toString()}:${currentQuestionId}`
+              : sheet._id.toString()
+          }
+          title={currentQuestionId ? 'Rate this question' : 'Rate this sheet'}
+          meta={
+            currentQuestionId
+              ? {
+                  sheetId: sheet._id.toString(),
+                  sheetName: sheet.title || sheet.name || '',
+                  questionId: currentQuestionId,
+                  questionName:
+                    currentQuestion?.title || currentQuestion?.question || '',
+                }
+              : {
+                  sheetId: sheet._id.toString(),
+                  sheetName: sheet.title || sheet.name || '',
+                }
+          }
+          theme='light'
+        />
       )}
     </Fragment>
   );

@@ -158,6 +158,8 @@ export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";
 export { default as WebinarCard } from "./containers/Cards/WebinarCard";
+export type { ContentFeedbackWidgetProps } from "./containers/Feedback/ContentFeedbackWidget";
+export { default as ContentFeedbackWidget } from "./containers/Feedback/ContentFeedbackWidget";
 
 // Container Components - Card Items
 export { default as ContactCard } from "./containers/Cards/Items/ContactCard";

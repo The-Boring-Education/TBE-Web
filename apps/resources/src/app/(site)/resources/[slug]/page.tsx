@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import ResourceFeedbackButton from "@/components/ResourceFeedbackButton";
 import { ResourceView } from "@/components/ResourceView";
 import {
   listResourceSlugs,
@@ -99,6 +100,8 @@ export default async function ResourcePage(props: Props) {
         quiz={quiz ?? undefined}
         game={game ?? undefined}
       />
+      {/* Per-resource feedback widget (client component) */}
+      <ResourceFeedbackButton slug={slug} title={meta.title} />
     </div>
   );
 }

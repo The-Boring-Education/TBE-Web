@@ -17,6 +17,7 @@ const DATABASE_MODELS = {
   GAMIFICATION: "Gamification",
   JOB: "Job",
   FEEDBACK: "Feedback",
+  CONTENT_FEEDBACK: "ContentFeedback",
   JOB_AGGREGATE: "JobAggregate",
   PAYMENT: "Payment",
   SUBSCRIPTIONS: "Subscriptions",
@@ -45,9 +46,17 @@ const DATABASE_MODELS = {
 
 export const FEEDBACK_TYPES = [
   "GENERAL",
-  "SHIKSHA_CHAPTER",
-  "SHIKSHA_COURSE",
+  "DSA_QUESTION",
   "INTERVIEW_SHEET",
+  "INTERVIEW_SHEET_QUESTION",
+  "SHIKSHA_COURSE",
+  "SHIKSHA_CHAPTER",
+  "CORE_SUBJECT",
+  "CORE_SUBJECT_CHAPTER",
+  "APTITUDE_TOPIC",
+  "RESOURCE_GUIDE",
+  "QUIZ",
+  "PREP_CHALLENGE",
   "CERTIFICATE",
 ] as const;
 
