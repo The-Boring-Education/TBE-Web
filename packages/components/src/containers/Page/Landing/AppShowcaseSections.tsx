@@ -58,7 +58,7 @@ export function AppShowcaseSections({
 
   return (
     <div
-      id="app-showcases"
+      id="products"
       className="relative space-y-10 pt-2 pb-8 sm:space-y-12 md:space-y-16 md:pt-4 md:pb-16 bg-transparent select-none overflow-hidden"
     >
       {/* ─────────────────────────────────────────────────────────────
