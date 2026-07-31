@@ -205,6 +205,7 @@ export { default as MobileNavbarLinksContainer } from "./containers/Page/common/
 export { default as ModernLandingHero } from "./containers/Page/common/ModernLandingHero";
 export { default as NavbarDropdownContainer } from "./containers/Page/common/NavbarDropdownContainer";
 export { default as PageHeroMetaContainer } from "./containers/Page/common/PageHeroMetaContainer";
+export { default as PlatformLandingHero } from "./containers/Page/common/PlatformLandingHero";
 export { default as PopoverContainer } from "./containers/Page/common/PopoverContainer";
 export { default as RevenueTransparency } from "./containers/Page/common/RevenueTransparency";
 export { default as SectionHeaderContainer } from "./containers/Page/common/SectionHeaderContainer";
