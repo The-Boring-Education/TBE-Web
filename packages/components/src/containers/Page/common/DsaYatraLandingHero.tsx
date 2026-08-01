@@ -278,7 +278,7 @@ export const DsaYatraLandingHero: React.FC<DsaYatraLandingHeroProps> = ({
               }}
               className="pointer-events-auto absolute -top-[245px] left-10 xl:left-14 bg-[#141416]/95 backdrop-blur-md rounded-2xl border border-white/10 p-3.5 shadow-xl shadow-black/80 z-20 transform rotate-4"
             >
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-[#FF4D4D]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#FF4D4D]">
                 <Code2 className="w-5 h-5" />
               </div>
             </motion.div>
@@ -361,7 +361,7 @@ export const DsaYatraLandingHero: React.FC<DsaYatraLandingHeroProps> = ({
               }}
               className="pointer-events-auto absolute -top-[420px] right-12 xl:right-18 bg-[#141416]/95 backdrop-blur-md rounded-2xl border border-white/10 p-3.5 shadow-xl shadow-black/80 z-20 transform -rotate-4"
             >
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-[#FF4D4D]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#FF4D4D]">
                 <LineChart className="w-5 h-5" />
               </div>
             </motion.div>
@@ -460,7 +460,7 @@ export const DsaYatraLandingHero: React.FC<DsaYatraLandingHeroProps> = ({
               }}
               className="pointer-events-auto absolute top-[30px] right-2 xl:right-6 bg-[#141416]/95 backdrop-blur-md rounded-2xl border border-white/10 p-3.5 shadow-xl shadow-black/80 z-20 transform rotate-4"
             >
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-[#FF4D4D]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#FF4D4D]">
                 <Brain className="w-5 h-5" />
               </div>
             </motion.div>

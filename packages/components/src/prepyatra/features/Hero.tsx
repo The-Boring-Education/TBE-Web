@@ -120,9 +120,13 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
             }}
             className="lg:hidden absolute top-[210px] -left-3 sm:-left-8 pointer-events-none z-30 drop-shadow-md"
           >
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 border border-slate-200 shadow-sm text-xs font-semibold text-slate-700">
-              <Clock className="w-3.5 h-3.5 text-primary" />
-              <span>Prep Log</span>
+            <div className="bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/80 px-2.5 py-1.5 shadow-md flex items-center gap-2">
+              <div className="w-6 h-6 rounded-md bg-amber-500/10 flex items-center justify-center text-amber-600">
+                <Clock className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-[11px] font-bold text-slate-800">
+                Prep Log
+              </span>
             </div>
           </motion.div>
 
@@ -165,7 +169,7 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
           </motion.div>
         </div>
 
-        {/* Clean Floating Language Icons & Preparation Nodes (Clock, Book, Target) */}
+        {/* Clean Floating Language Icons & Micro Prep Cards */}
         <div className="relative w-full max-w-6xl mx-auto mt-4 hidden lg:block pointer-events-none">
           {/* Left Side Floating Group */}
           <div>
@@ -186,7 +190,7 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
               />
             </motion.div>
 
-            {/* Floating Clock / Study Tracker Node */}
+            {/* Daily Prep Log Card */}
             <motion.div
               animate={{ y: [0, -7, 0], rotate: [-2, 2, -2] }}
               transition={{
@@ -197,9 +201,18 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
               }}
               className="pointer-events-auto absolute -top-[270px] left-[-40px] xl:left-[0px] z-20 hover:scale-105 transition-transform duration-200"
             >
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-sm text-xs font-medium text-slate-700">
-                <Clock className="w-4 h-4 text-primary" />
-                <span>Daily Prep Log</span>
+              <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-3 shadow-xl shadow-slate-200/50 flex items-center gap-3 min-w-[190px]">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 shrink-0">
+                  <Clock className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-900 leading-tight">
+                    Daily Prep Log
+                  </div>
+                  <div className="text-[11px] text-amber-600 font-semibold leading-tight mt-0.5">
+                    Streak Active 🔥
+                  </div>
+                </div>
               </div>
             </motion.div>
 
@@ -296,7 +309,7 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
               />
             </motion.div>
 
-            {/* Floating Book / Preparation Notes Node */}
+            {/* Interview Sheets Card */}
             <motion.div
               animate={{ y: [0, 7, 0], rotate: [3, 0, 3] }}
               transition={{
@@ -307,9 +320,18 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
               }}
               className="pointer-events-auto absolute -top-[160px] right-[-30px] xl:right-[10px] z-20 hover:scale-105 transition-transform duration-200"
             >
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-sm text-xs font-medium text-slate-700">
-                <BookOpen className="w-4 h-4 text-primary" />
-                <span>Interview Sheets</span>
+              <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-3 shadow-xl shadow-slate-200/50 flex items-center gap-3 min-w-[190px]">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 shrink-0">
+                  <BookOpen className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-900 leading-tight">
+                    Interview Sheets
+                  </div>
+                  <div className="text-[11px] text-slate-500 font-medium leading-tight mt-0.5">
+                    Curated Top Qs
+                  </div>
+                </div>
               </div>
             </motion.div>
 
@@ -331,7 +353,7 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
               />
             </motion.div>
 
-            {/* Floating Target Goal Node */}
+            {/* Goal Milestones Card */}
             <motion.div
               animate={{ y: [0, -6, 0], rotate: [-3, 1, -3] }}
               transition={{
@@ -342,9 +364,18 @@ export const PrepYatraHero: React.FC<PrepYatraHeroProps> = ({
               }}
               className="pointer-events-auto absolute top-[30px] right-[120px] xl:right-[150px] z-20 hover:scale-105 transition-transform duration-200"
             >
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/80 shadow-sm text-xs font-medium text-slate-700">
-                <Target className="w-4 h-4 text-emerald-500" />
-                <span>Goal Tracking</span>
+              <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-3 shadow-xl shadow-slate-200/50 flex items-center gap-3 min-w-[180px]">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
+                  <Target className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-900 leading-tight">
+                    Goal Milestones
+                  </div>
+                  <div className="text-[11px] text-emerald-600 font-semibold leading-tight mt-0.5">
+                    On Track 🎯
+                  </div>
+                </div>
               </div>
             </motion.div>
 
