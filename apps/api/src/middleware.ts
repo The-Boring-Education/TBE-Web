@@ -3,10 +3,6 @@ import "./edge-polyfill";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-  : [];
-
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
@@ -19,15 +15,42 @@ const ALLOWED_METHODS = "GET, POST, PUT, DELETE, PATCH, OPTIONS";
 const ALLOWED_HEADERS =
   "Content-Type, Authorization, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control, x-admin-secret";
 
+/**
+ * Checks if the origin is allowed based on known TBE domain patterns.
+ * Allows:
+ * - localhost / 127.0.0.1 (development)
+ * - *.theboringeducation.com (production domains)
+ * - *-tbe.vercel.app (Vercel preview deployments)
+ */
 function resolveOrigin(request: NextRequest): string | undefined {
   const origin = request.headers.get("origin");
   if (!origin) return undefined;
-  if (ALLOWED_ORIGINS.length === 0) {
-    // Reflect the origin in development for convenience, but fail closed in
-    // production/preview when no allowlist is configured.
-    return process.env.NODE_ENV === "production" ? undefined : origin;
+
+  try {
+    const { hostname } = new URL(origin);
+
+    // Allow localhost for development
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return origin;
+    }
+
+    // Allow production TBE domains
+    if (
+      hostname === "theboringeducation.com" ||
+      hostname.endsWith(".theboringeducation.com")
+    ) {
+      return origin;
+    }
+
+    // Allow Vercel preview deployments (*-tbe.vercel.app)
+    if (hostname.endsWith("-tbe.vercel.app")) {
+      return origin;
+    }
+
+    return undefined;
+  } catch {
+    return undefined;
   }
-  return ALLOWED_ORIGINS.includes(origin) ? origin : undefined;
 }
 
 function generateRequestId(): string {
