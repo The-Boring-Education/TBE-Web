@@ -39,6 +39,11 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await page.context().clearCookies();
     await mockAuthRefreshUnavailable(page);
 
+    // `ProtectedRoute` sends unauthenticated visitors to `/`. Warm that route first:
+    // the URL only settles once the dev server has compiled it, and a cold compile
+    // under parallel CI workers can outlast the assertion timeout.
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(
       (url) => {
@@ -46,7 +51,7 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
         const { pathname } = new URL(str);
         return pathname === "/" || pathname === "";
       },
-      { timeout: 30_000 },
+      { timeout: 60_000 },
     );
   });
 

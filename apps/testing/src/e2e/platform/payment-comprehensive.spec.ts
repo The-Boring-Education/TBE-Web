@@ -1,3 +1,5 @@
+import type { Page } from "@playwright/test";
+
 import {
   buildE2EAccessJwt,
   ONBOARDING_GATE_E2E_USER,
@@ -5,6 +7,37 @@ import {
 import { expect, test } from "../fixtures/platform.fixture";
 
 const TBE_ACCESS_COOKIE = "tbe_access_token";
+
+/**
+ * Signs the browser in as the E2E user.
+ *
+ * Checkout only renders the order summary (and therefore the price) once a user
+ * is resolved — signed-out visitors get a "Sign in to continue" panel instead.
+ * The payment status page is gated the same way.
+ */
+const signInAsE2EUser = async (page: Page) => {
+  const token = buildE2EAccessJwt();
+
+  await page.context().addCookies(
+    ["localhost", "127.0.0.1"].map((domain) => ({
+      name: TBE_ACCESS_COOKIE,
+      value: token,
+      domain,
+      path: "/",
+      sameSite: "Lax" as const,
+      httpOnly: false,
+      secure: false,
+      expires: Math.floor(Date.now() / 1000) + 86400,
+    })),
+  );
+
+  await page.addInitScript(
+    ([key, value]) => {
+      document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
+    },
+    [TBE_ACCESS_COOKIE, token] as [string, string],
+  );
+};
 
 // Mock payment data
 const mockPaymentQuote = {
@@ -67,6 +100,8 @@ test.describe("Payment Checkout E2E Tests", () => {
     test("checkout page shows product details and pricing", async ({
       platformPage: page,
     }) => {
+      await signInAsE2EUser(page);
+
       await page.route("**/api/proxy/payment/quote**", (route) =>
         route.fulfill({
           status: 200,
@@ -349,88 +384,71 @@ test.describe("Payment Checkout E2E Tests", () => {
         "/checkout?productType=INTERVIEW_SHEET&productId=sheet_123",
       );
 
-      // Look for login prompt or redirect
-      const loginPrompt = page.getByRole("button", {
-        name: /login|sign in|get started/i,
-      });
-      const payButton = page.getByRole("button", { name: /pay|purchase/i });
+      // `isVisible()` resolves immediately, so it would race the auth-loading
+      // skeleton — assert with a web-first expectation instead.
+      await expect(
+        page.getByRole("button", { name: /login|sign in|get started/i }),
+      ).toBeVisible({ timeout: 15_000 });
 
-      // Either show login prompt or pay button (but pay should require auth)
-      const loginVisible = await loginPrompt
-        .isVisible({ timeout: 5000 })
-        .catch(() => false);
-      const payVisible = await payButton
-        .isVisible({ timeout: 5000 })
-        .catch(() => false);
-
-      expect(loginVisible || payVisible).toBe(true);
+      // Payment cannot be started until the visitor signs in.
+      await expect(
+        page.getByRole("button", { name: /^pay |purchase/i }),
+      ).toHaveCount(0);
     });
   });
 
   test.describe("Payment Status Flow", () => {
-    test("redirects to success page after successful payment", async ({
+    // Cashfree returns the user to `/payment/status?order_id=…`, which verifies
+    // the order server-side before rendering.
+    test("shows confirmation after a successful payment", async ({
       platformPage: page,
     }) => {
-      const token = buildE2EAccessJwt();
+      await signInAsE2EUser(page);
 
-      await page.context().addCookies([
-        {
-          name: TBE_ACCESS_COOKIE,
-          value: token,
-          domain: "localhost",
-          path: "/",
-          sameSite: "Lax",
-          httpOnly: false,
-          secure: false,
-        },
-      ]);
-
-      await page.route("**/api/proxy/payment/checkstatus**", (route) =>
+      await page.route("**/api/proxy/payment/order-status**", (route) =>
         route.fulfill({
           status: 200,
           json: {
             status: true,
             data: {
-              purchased: true,
-              accessType: "DIRECT_PAYMENT",
+              paymentStatus: "SUCCESS",
+              productType: "INTERVIEW_SHEET",
             },
           },
         }),
       );
 
-      // Navigate to a payment success callback URL pattern
-      await page.goto(
-        "/checkout/success?orderId=TBE_ORDER_123&productType=INTERVIEW_SHEET",
-        { waitUntil: "domcontentloaded" },
-      );
+      await page.goto("/payment/status?order_id=TBE_ORDER_123", {
+        waitUntil: "domcontentloaded",
+      });
 
-      // Should show success message or redirect to purchased content
       await expect(page.locator("body")).toContainText(
-        /success|congratulations|purchased|enrolled|thank/i,
+        /payment confirmed|purchase is confirmed/i,
       );
     });
 
     test("shows error for failed payment", async ({ platformPage: page }) => {
-      await page.route("**/api/proxy/payment/checkstatus**", (route) =>
+      await signInAsE2EUser(page);
+
+      await page.route("**/api/proxy/payment/order-status**", (route) =>
         route.fulfill({
           status: 200,
           json: {
             status: true,
             data: {
-              purchased: false,
-              error: "Payment failed",
+              paymentStatus: "FAILED",
+              productType: "INTERVIEW_SHEET",
             },
           },
         }),
       );
 
-      await page.goto("/checkout/failed?orderId=TBE_ORDER_FAIL", {
+      await page.goto("/payment/status?order_id=TBE_ORDER_FAIL", {
         waitUntil: "domcontentloaded",
       });
 
-      // Should show error or retry message
       await expect(page.locator("body")).toContainText(
-        /failed|error|try again|retry/i,
+        /could not verify payment|was not completed/i,
       );
     });
   });
@@ -439,6 +457,8 @@ test.describe("Payment Checkout E2E Tests", () => {
     test("prices are displayed in INR format", async ({
       platformPage: page,
     }) => {
+      await signInAsE2EUser(page);
+
       await page.route("**/api/proxy/payment/quote**", (route) =>
         route.fulfill({
           status: 200,
@@ -460,6 +480,8 @@ test.describe("Payment Checkout E2E Tests", () => {
     test("strikethrough pricing shown when coupon applied", async ({
       platformPage: page,
     }) => {
+      await signInAsE2EUser(page);
+
       await page.route("**/api/proxy/payment/quote**", (route) =>
         route.fulfill({
           status: 200,
@@ -471,7 +493,7 @@ test.describe("Payment Checkout E2E Tests", () => {
       );
 
       await page.goto(
-        "/checkout?productType=INTERVIEW_SHEET&productId=sheet_123&couponCode=SAVE20",
+        "/checkout?productType=INTERVIEW_SHEET&productId=sheet_123&coupon=SAVE20",
       );
 
       // Should show both original and discounted prices
