@@ -191,6 +191,7 @@ export { default as InterviewPrepSection } from "./containers/Page/Cohort/Interv
 export { default as PrevCohortProjects } from "./containers/Page/Cohort/PrevCohortProjects";
 export { default as SessionDetailsSection } from "./containers/Page/Cohort/SessionDetailsSection";
 export { default as CardSectionContainer } from "./containers/Page/common/CardSectionContainer";
+export { default as DsaYatraLandingHero } from "./containers/Page/common/DsaYatraLandingHero";
 export { default as FlexContainer } from "./containers/Page/common/FlexContainer";
 export { default as GradientContainer } from "./containers/Page/common/GradientContainer";
 export { default as GridContainer } from "./containers/Page/common/GridContainer";

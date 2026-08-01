@@ -3,15 +3,13 @@ import {
   DSA_YATRA_FEATURE_SPOTLIGHTS,
   DSA_YATRA_FEATURES,
   routes,
-  STATIC_FILE_PATH,
 } from "@tbe/constants";
 import type { PageProps } from "@tbe/interface";
 
-import LinkButton from "../../common/Buttons/LinkButton";
 import FAQSection from "../../common/FAQSection";
 import TailorYourJourney from "../../common/TailorYourJourney";
 import CardContainerA from "../../containers/Cards/CardContainerA";
-import LandingPageHero from "../../containers/Page/common/Hero";
+import DsaYatraLandingHero from "../../containers/Page/common/DsaYatraLandingHero";
 import SEO from "../../layout/SEO";
 import { DsaYatraFeatureSpotlights } from "../sections/DsaYatraFeatureSpotlights";
 
@@ -23,7 +21,7 @@ export type DsaYatraLandingPageProps = Pick<PageProps, "seoMeta">;
 export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
   return (
     <main
-      className="dark min-h-screen w-full bg-dark text-contentDark
+      className="dark min-h-screen w-full bg-[#0A0A0C] text-contentDark
       [&_.bg-white]:!bg-[#19191B]
       [&_.border-gray-200]:!border-[#333333]
       [&_.text-gray-800]:!text-contentDark
@@ -33,7 +31,7 @@ export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
       [&_.from-white]:!from-dark
       [&_.to-\\[\\#f0faff\\]]:!to-[#19191B]
       [&_section]:!bg-transparent
-      [&_h1]:!text-contentDark
+      [&_h1]:!text-[#FFFFFF]
       [&_h2.text-primary]:!text-primary
       [&_h2:not(.text-primary)]:!text-contentDark
       [&_h3]:!text-contentDark
@@ -45,25 +43,9 @@ export function DsaYatraLandingPage({ seoMeta }: DsaYatraLandingPageProps) {
     >
       <SEO seoMeta={seoMeta} />
 
-      <LandingPageHero
-        backgroundImageUrl={`${STATIC_FILE_PATH.svg}/dsa-yatra.svg`}
-        heroText="Stop grinding random LeetCode questions. Follow a structured path tailored to your goals and timeline."
-        primaryButton={
-          <LinkButton
-            buttonProps={{
-              variant: "PRIMARY",
-              text: "Get Started",
-              className: "w-full",
-            }}
-            className="w-11/12 sm:w-fit"
-            href={routes.dsayatra.dashboard}
-          />
-        }
-        sectionHeaderProps={{
-          heading: "Stop Grinding Random",
-          focusText: "LeetCode Questions",
-        }}
-        theme="dark"
+      <DsaYatraLandingHero
+        ctaText="Get Started →"
+        ctaHref={routes.dsayatra.dashboard}
       />
 
       <TailorYourJourney

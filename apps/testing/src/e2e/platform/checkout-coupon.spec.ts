@@ -70,7 +70,9 @@ test.describe("Checkout coupon flow", () => {
   test("checkout page loads with price displayed", async ({
     platformPage: page,
   }) => {
-    const response = await page.goto(CHECKOUT_URL);
+    const response = await page.goto(CHECKOUT_URL, {
+      waitUntil: "domcontentloaded",
+    });
     expect(response?.status()).toBe(200);
 
     // The page should load without errors
@@ -80,7 +82,7 @@ test.describe("Checkout coupon flow", () => {
   test("coupon input field exists on checkout", async ({
     platformPage: page,
   }) => {
-    await page.goto(CHECKOUT_URL);
+    await page.goto(CHECKOUT_URL, { waitUntil: "domcontentloaded" });
 
     // Coupon input may or may not be present depending on the product
     // This test verifies the page loads without error
@@ -90,7 +92,9 @@ test.describe("Checkout coupon flow", () => {
   test("invalid checkout params show error state", async ({
     platformPage: page,
   }) => {
-    await page.goto("/checkout?productType=INVALID");
+    await page.goto("/checkout?productType=INVALID", {
+      waitUntil: "domcontentloaded",
+    });
     await expect(page.locator("body")).toBeVisible();
   });
 });
@@ -101,6 +105,7 @@ test.describe("Checkout security", () => {
   }) => {
     const response = await page.goto(
       "/checkout?productType=DSA_YATRA&productId=lifetime",
+      { waitUntil: "domcontentloaded" },
     );
 
     // Verify key security headers from Phase 1 middleware changes
