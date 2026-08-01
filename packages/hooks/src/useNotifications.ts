@@ -4,14 +4,21 @@ import { useEffect, useState } from "react";
 
 import useApi from "./useApi";
 
-const useNotifications = () => {
+const useNotifications = ({ enabled = true }: { enabled?: boolean } = {}) => {
   const [notifications, setNotifications] = useState<NotificationItemProps[]>(
     [],
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const { makeRequest } = useApi("notifications");
 
   useEffect(() => {
+    if (!enabled) {
+      setNotifications([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     makeRequest({
       method: "GET",
       url: routes.api.notification,
@@ -23,7 +30,7 @@ const useNotifications = () => {
       .catch(() => {
         setLoading(false);
       });
-  }, []);
+  }, [enabled]);
 
   return { notifications, loading };
 };

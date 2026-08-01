@@ -9,7 +9,7 @@ test.describe("OnCampus smoke flow", () => {
       page.getByRole("heading", { name: /Advance Your Career with/i }),
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Get Started for Free" }),
+      page.getByRole("link", { name: /Get Started for Free/i }),
     ).toBeVisible();
   });
 
@@ -18,7 +18,7 @@ test.describe("OnCampus smoke flow", () => {
   }) => {
     await page.goto("/");
 
-    const startCTA = page.getByRole("button", { name: "Get Started for Free" });
+    const startCTA = page.getByRole("link", { name: /Get Started for Free/i });
     await expect(startCTA).toBeVisible();
 
     await Promise.all([

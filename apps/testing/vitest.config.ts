@@ -98,6 +98,12 @@ export default defineConfig({
         __dirname,
         "./src/test-utils/next-navigation-mock.ts",
       ),
+      // Stable Pages Router stub for unit tests (workspace packages import `next/router` from source);
+      // specs must vi.mock("next/router", ...) locally — see next-router-mock.ts for why.
+      "next/router": path.resolve(
+        __dirname,
+        "./src/test-utils/next-router-mock.ts",
+      ),
       // API app @ alias - must come first for proper resolution
       "@/lib/auth": path.resolve(__dirname, "../api/src/lib/auth"),
       "@/lib/analytics": path.resolve(__dirname, "../api/src/lib/analytics"),

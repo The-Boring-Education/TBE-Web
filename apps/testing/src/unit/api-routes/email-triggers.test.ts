@@ -36,6 +36,10 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/api", () => ({
+  adminMiddleware: vi.fn().mockResolvedValue(true),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/email/triggers";
 
 describe("Email Triggers API Route", () => {

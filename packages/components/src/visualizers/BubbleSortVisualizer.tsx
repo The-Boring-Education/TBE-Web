@@ -100,11 +100,12 @@ const DEFAULT_SIZE = 7;
 ────────────────────────────────────────────────── */
 export default function BubbleSortVisualizer() {
   const [arraySize, setArraySize] = useState(DEFAULT_SIZE);
-  const [baseArray, setBaseArray] = useState<number[]>(() =>
-    randomArray(DEFAULT_SIZE),
+  const initialArray = useRef<number[]>(randomArray(DEFAULT_SIZE));
+  const [baseArray, setBaseArray] = useState<number[]>(
+    () => initialArray.current,
   );
   const [steps, setSteps] = useState<SortStep[]>(() =>
-    generateSteps(randomArray(DEFAULT_SIZE)),
+    generateSteps(initialArray.current),
   );
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -146,14 +147,12 @@ export default function BubbleSortVisualizer() {
     if (finished) setPlaying(false);
   }, [finished]);
 
-  /* reset to current base array */
   const reset = useCallback(() => {
     setPlaying(false);
     setSteps(generateSteps(baseArray));
     setIdx(0);
   }, [baseArray]);
 
-  /* generate a fresh random array of given size */
   const generate = useCallback((size: number) => {
     setPlaying(false);
     const arr = randomArray(size);
@@ -162,7 +161,6 @@ export default function BubbleSortVisualizer() {
     setIdx(0);
   }, []);
 
-  /* when size changes regenerate */
   const handleSizeChange = (size: number) => {
     setArraySize(size);
     generate(size);
@@ -176,65 +174,33 @@ export default function BubbleSortVisualizer() {
   const transMs = currentSpeed.transitionMs;
 
   return (
-    <div
-      className="w-full rounded-2xl overflow-hidden flex"
-      style={{
-        background: "#09090b",
-        border: "1px solid #1f2937",
-        minHeight: 400,
-      }}
-    >
-      {/* ══ LEFT SIDEBAR ══ */}
-      <div
-        className="flex flex-col gap-5 p-5 shrink-0"
-        style={{
-          width: 180,
-          borderRight: "1px solid #1f2937",
-          background: "#070709",
-        }}
-      >
+    <div className="w-full rounded-2xl overflow-hidden flex flex-col md:flex-row bg-[#0a0a0b] border border-zinc-800/80 shadow-2xl md:h-[520px]">
+      {/* ══ LEFT SIDEBAR / TOP CONTROLS ON MOBILE ══ */}
+      <div className="flex flex-col gap-4 md:gap-5 p-4 md:p-5 shrink-0 w-full md:w-[200px] border-b md:border-b-0 md:border-r border-zinc-800/80 bg-[#0A0A0B]">
         {/* Array Size */}
         <div>
-          <p
-            className="text-[9px] font-black uppercase tracking-widest mb-3"
-            style={{ color: "#4b5563" }}
-          >
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Array Size
           </p>
           <div className="flex items-center justify-between mb-2">
-            <span
-              className="text-[11px] font-mono"
-              style={{ color: "#9ca3af" }}
-            >
+            <span className="text-xs font-medium text-zinc-400">
               {MIN_SIZE}
             </span>
-            <span
-              className="text-xl font-black tabular-nums"
-              style={{ color: "#ef4444" }}
-            >
+            <span className="text-xl font-bold tabular-nums text-[#FF5757]">
               {arraySize}
             </span>
-            <span
-              className="text-[11px] font-mono"
-              style={{ color: "#9ca3af" }}
-            >
+            <span className="text-xs font-medium text-zinc-400">
               {MAX_SIZE}
             </span>
           </div>
 
           {/* Custom styled range slider */}
           <div className="relative flex items-center" style={{ height: 20 }}>
+            <div className="absolute w-full rounded-full h-1 bg-zinc-800" />
             <div
-              className="absolute w-full rounded-full"
-              style={{ height: 4, background: "#1f2937" }}
-            />
-            <div
-              className="absolute rounded-full"
+              className="absolute rounded-full h-1 bg-[#FF5757] transition-all duration-150"
               style={{
-                height: 4,
-                background: "#ef4444",
                 width: `${((arraySize - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)) * 100}%`,
-                transition: "width 0.15s ease",
               }}
             />
             <input
@@ -243,8 +209,7 @@ export default function BubbleSortVisualizer() {
               max={MAX_SIZE}
               value={arraySize}
               onChange={(e) => handleSizeChange(Number(e.target.value))}
-              className="absolute w-full cursor-pointer appearance-none bg-transparent"
-              style={{ height: 20 }}
+              className="absolute w-full cursor-pointer appearance-none bg-transparent h-5"
             />
           </div>
         </div>
@@ -252,76 +217,44 @@ export default function BubbleSortVisualizer() {
         {/* Generate button */}
         <button
           id="bsv-generate"
+          type="button"
           onClick={() => generate(arraySize)}
-          className="w-full rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer"
-          style={{
-            padding: "9px 0",
-            background: "#1f2937",
-            color: "#e5e7eb",
-            border: "1px solid #374151",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#374151";
-            e.currentTarget.style.borderColor = "#4b5563";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#1f2937";
-            e.currentTarget.style.borderColor = "#374151";
-          }}
+          className="w-full rounded-xl text-xs font-semibold py-2 bg-[#111113] hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-zinc-700/60 text-zinc-200 transition-all active:scale-[0.98] cursor-pointer"
         >
           ↻ Randomize
         </button>
 
         {/* Speed */}
         <div>
-          <p
-            className="text-[9px] font-black uppercase tracking-widest mb-2"
-            style={{ color: "#4b5563" }}
-          >
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-zinc-400">
             Speed
           </p>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-row md:flex-col gap-1.5 overflow-x-auto scrollbar-none pb-1 md:pb-0">
             {SPEEDS.map(({ label }, i) => (
               <button
                 key={label}
                 id={`bsv-speed-${i}`}
+                type="button"
                 onClick={() => setSpeedIdx(i)}
-                className="w-full rounded-md text-[11px] font-bold transition-all active:scale-95 cursor-pointer text-left px-3"
-                style={{
-                  padding: "6px 10px",
-                  background: speedIdx === i ? "#1f2937" : "transparent",
-                  color: speedIdx === i ? "#fff" : "#4b5563",
-                  border:
-                    speedIdx === i
-                      ? "1px solid #374151"
-                      : "1px solid transparent",
-                }}
+                className={`flex-1 md:w-full rounded-lg text-xs transition-all active:scale-[0.98] cursor-pointer text-center md:text-left px-3 py-1.5 whitespace-nowrap ${
+                  speedIdx === i
+                    ? "bg-[#FF5757]/15 text-[#FF5757] border border-[#FF5757]/40 font-semibold shadow-sm"
+                    : "bg-[#111113] text-zinc-400 border border-zinc-800/80 hover:text-zinc-200 hover:border-zinc-700/60 font-medium"
+                }`}
               >
                 {label}
               </button>
             ))}
           </div>
         </div>
-
-        {/* Divider */}
-        <div style={{ borderTop: "1px solid #1f2937" }} />
-
-        {/* Stats */}
-        <div className="space-y-2">
-          <StatRow label="Steps" value={steps.length - 1} />
-          <StatRow label="Step" value={`${idx} / ${steps.length - 1}`} />
-        </div>
       </div>
 
       {/* ══ RIGHT — CHART + CONTROLS ══ */}
-      <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex flex-col flex-1 min-w-0 justify-between md:h-full">
         {/* Status bar */}
-        <div
-          className="flex items-center justify-center px-6"
-          style={{ minHeight: 44, borderBottom: "1px solid #111113" }}
-        >
+        <div className="min-h-[44px] md:h-[48px] shrink-0 flex items-center justify-center px-4 md:px-6 py-2 border-b border-zinc-800/80 bg-[#0a0a0b]">
           <span
-            className="text-[13px] font-semibold tracking-wide text-center"
+            className="text-xs md:text-[13px] font-semibold tracking-tight text-center leading-tight transition-colors duration-150"
             style={{
               color: finished
                 ? "#10b981"
@@ -329,21 +262,17 @@ export default function BubbleSortVisualizer() {
                   ? "#f87171"
                   : step.comparing
                     ? "#fbbf24"
-                    : "#6b7280",
-              transition: "color 0.15s",
+                    : "#a1a1aa",
             }}
           >
             {step.description}
           </span>
         </div>
 
-        {/* Bar chart */}
-        <div
-          className="flex items-end justify-center px-6 pt-6 pb-4"
-          style={{ flex: "0 0 auto" }}
-        >
+        {/* Bar chart container */}
+        <div className="flex items-end justify-center px-2 sm:px-6 pt-5 pb-4 overflow-x-auto scrollbar-none flex-1 min-h-[180px] md:min-h-[220px]">
           <div
-            className="relative flex items-end"
+            className="relative flex items-end justify-center max-w-full"
             style={{
               height: CHART_H,
               gap: barGap,
@@ -357,9 +286,6 @@ export default function BubbleSortVisualizer() {
               const color = barColor(val, i, step);
 
               return (
-                /* Key by value — the DOM element persists across swaps,
-                   its flex-order changes → we animate with `order` + a wrapper trick.
-                   Actually, for absolute positioning approach: */
                 <div
                   key={val}
                   className="flex flex-col items-center justify-end"
@@ -367,16 +293,14 @@ export default function BubbleSortVisualizer() {
                     width: barW,
                     height: CHART_H,
                     flexShrink: 0,
-                    // Use order to move bars — CSS flex order transitions via margin trick
-                    // Instead we use transform translateX calculated from position delta
                   }}
                 >
                   <span
-                    className="font-bold mb-1 tabular-nums"
+                    className="font-bold mb-1 tabular-nums transition-colors"
                     style={{
-                      fontSize: barW < 30 ? 9 : 11,
+                      fontSize: barW < 24 ? 9 : 11,
                       color,
-                      transition: `color ${transMs}ms`,
+                      transitionDuration: `${transMs}ms`,
                     }}
                   >
                     {val}
@@ -386,7 +310,7 @@ export default function BubbleSortVisualizer() {
                       width: "100%",
                       height: barH,
                       background: color,
-                      borderRadius: "5px 5px 2px 2px",
+                      borderRadius: "6px 6px 2px 2px",
                       transition: `background-color ${transMs}ms ease, height ${transMs}ms cubic-bezier(0.4,0,0.2,1)`,
                       boxShadow:
                         step.swapped && step.comparing?.includes(i)
@@ -401,27 +325,19 @@ export default function BubbleSortVisualizer() {
         </div>
 
         {/* Legend */}
-        <div
-          className="flex items-center justify-center gap-4 pb-3"
-          style={{ borderBottom: "1px solid #1f2937" }}
-        >
+        <div className="shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 py-2 px-3 border-t border-b border-zinc-800/80 bg-[#111113]/60">
           {[
-            { color: "#374151", label: "Unsorted" },
+            { color: "#3f3f46", label: "Unsorted" },
             { color: "#fbbf24", label: "Comparing" },
             { color: "#f87171", label: "Swapping" },
             { color: "#10b981", label: "Sorted" },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span
-                className="rounded-sm"
-                style={{
-                  width: 8,
-                  height: 8,
-                  background: color,
-                  display: "inline-block",
-                }}
+                className="rounded-full inline-block w-1.5 h-1.5 shrink-0"
+                style={{ background: color }}
               />
-              <span className="text-[10px]" style={{ color: "#4b5563" }}>
+              <span className="text-[11px] font-medium text-zinc-400 whitespace-nowrap">
                 {label}
               </span>
             </div>
@@ -429,14 +345,14 @@ export default function BubbleSortVisualizer() {
         </div>
 
         {/* Play controls */}
-        <div className="flex items-center gap-3 px-6 py-4">
+        <div className="shrink-0 flex items-center gap-2.5 px-3 sm:px-6 py-2">
           <button
             id="bsv-play"
+            type="button"
             onClick={() => (finished ? reset() : setPlaying((p) => !p))}
-            className="flex items-center gap-2 rounded-lg text-white text-xs font-bold tracking-wide cursor-pointer active:scale-95 transition-all"
+            className="flex items-center gap-1.5 rounded-lg text-white text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-3.5 py-1.5 shadow-[0_2px_10px_rgba(255,87,87,0.25)]"
             style={{
-              padding: "8px 18px",
-              background: finished ? "#059669" : "#ef4444",
+              background: finished ? "#059669" : "#FF5757",
             }}
           >
             {finished ? <IconReset /> : playing ? <IconPause /> : <IconPlay />}
@@ -451,66 +367,39 @@ export default function BubbleSortVisualizer() {
 
           {idx > 0 && !finished && (
             <button
+              type="button"
               onClick={reset}
-              className="rounded-lg text-xs font-bold cursor-pointer active:scale-95 transition-all"
-              style={{
-                padding: "8px 14px",
-                border: "1px solid #374151",
-                color: "#6b7280",
-                background: "transparent",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
+              className="flex items-center gap-1.5 rounded-lg text-xs font-semibold tracking-wide cursor-pointer active:scale-[0.98] transition-all shrink-0 px-3.5 py-1.5 border border-zinc-800/80 text-zinc-300 hover:text-white bg-[#111113] hover:bg-zinc-800/80"
             >
               Reset
             </button>
           )}
         </div>
 
-        {/* Step log */}
-        <div
-          className="mx-6 mb-6 rounded-xl overflow-hidden flex-1"
-          style={{
-            border: "1px solid #1f2937",
-            background: "#050507",
-            minHeight: 80,
-          }}
-        >
-          <div
-            className="px-4 py-2"
-            style={{ borderBottom: "1px solid #111113" }}
-          >
-            <span
-              className="text-[9px] font-black uppercase tracking-widest"
-              style={{ color: "#374151" }}
-            >
+        {/* Step log container */}
+        <div className="h-[135px] shrink-0 mx-3 sm:mx-6 mb-3 sm:mb-4 rounded-xl border border-zinc-800/80 bg-[#111113] overflow-hidden flex flex-col">
+          <div className="px-4 py-2 border-b border-zinc-800/80 shrink-0 bg-[#0a0a0b]">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
               Step log
             </span>
           </div>
-          <div>
+          <div className="flex-1 overflow-y-auto scrollbar-thin-grey">
             {log.map((s, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 px-4 py-2"
-                style={{
-                  background:
-                    i === 0 ? "rgba(255,255,255,0.02)" : "transparent",
-                  borderBottom:
-                    i < log.length - 1 ? "1px solid #0d0d0f" : "none",
-                }}
+                className={`flex items-center gap-3 px-4 py-1.5 ${
+                  i === 0 ? "bg-white/[0.03]" : "bg-transparent"
+                } ${i < log.length - 1 ? "border-b border-zinc-900" : ""}`}
               >
                 <span
-                  className="rounded-full shrink-0"
-                  style={{
-                    width: 5,
-                    height: 5,
-                    background: i === 0 ? "#ef4444" : "#1f2937",
-                    display: "inline-block",
-                  }}
+                  className={`rounded-full shrink-0 w-1.5 h-1.5 inline-block ${
+                    i === 0 ? "bg-[#FF5757]" : "bg-zinc-800"
+                  }`}
                 />
                 <span
-                  className="text-[11px] font-mono"
-                  style={{ color: i === 0 ? "#d1d5db" : "#374151" }}
+                  className={`text-[11px] font-mono ${
+                    i === 0 ? "text-zinc-200 font-semibold" : "text-zinc-500"
+                  }`}
                 >
                   {s.description}
                 </span>
@@ -526,21 +415,6 @@ export default function BubbleSortVisualizer() {
 /* ──────────────────────────────────────────────────
    Sub-components
 ────────────────────────────────────────────────── */
-function StatRow({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-[10px]" style={{ color: "#4b5563" }}>
-        {label}
-      </span>
-      <span
-        className="text-[11px] font-mono font-bold"
-        style={{ color: "#9ca3af" }}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
 
 function IconPlay() {
   return (

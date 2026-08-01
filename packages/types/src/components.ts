@@ -67,12 +67,7 @@ export interface LogoProps {
 
 export interface ButtonProps {
   variant:
-    | "PRIMARY"
-    | "OUTLINE"
-    | "GHOST"
-    | "SUCCESS"
-    | "SECONDARY"
-    | "NEUTRAL";
+    "PRIMARY" | "OUTLINE" | "GHOST" | "SUCCESS" | "SECONDARY" | "NEUTRAL";
   className?: string;
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -546,6 +541,8 @@ export interface LandingPageHeroProps {
   secondaryButton?: ReactNode;
   backgroundImageUrl: string;
   heroText: string;
+  theme?: "light" | "dark";
+  eyebrow?: string;
 }
 
 export interface ProjectHeroContainerProps {
@@ -1018,6 +1015,7 @@ export interface DSAQuestion {
   leetcodeLink?: string;
   youtubeSearchLink?: string;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
 }
 
 export interface DSAQuestionSidebarProps {
@@ -1156,4 +1154,5 @@ export interface MainNavbarProps {
 
 export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
 
-export type DsaSectionTabs = "description" | "topics" | "companies" | "notes";
+export type DsaSectionTabs =
+  "description" | "visualizer" | "topics" | "companies" | "notes";

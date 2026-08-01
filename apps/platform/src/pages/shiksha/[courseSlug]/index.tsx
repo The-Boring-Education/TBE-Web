@@ -4,6 +4,7 @@ import {
   Button,
   CertificateBanner,
   ChapterLink,
+  ContentFeedbackWidget,
   CourseHeroContainer,
   FeedbackPopup,
   FlexContainer,
@@ -15,13 +16,17 @@ import {
   Text,
 } from '@tbe/components';
 import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
-import { useGamificationContext, useGamifiedAction } from '@tbe/gamification';
+import {
+  calculateUserPointsForAction,
+  useGamificationContext,
+  useGamifiedAction,
+} from '@tbe/gamification';
 import { useAnalytics, useMediaQuery, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
 } from '@tbe/interface';
-import { useMutation } from '@tbe/query';
+import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
 import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
 import router from 'next/router';
 import { Fragment, useEffect, useRef, useState } from 'react';
@@ -173,6 +178,7 @@ const CoursePage = ({
   });
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
+  const queryClient = useQueryClient();
   const { triggerCelebration, showToast } = useGamificationContext();
 
   if (!course) return null;
@@ -223,23 +229,36 @@ const CoursePage = ({
 
       // Only proceed if the API call was successful
       if (response?.status) {
-        // Fire gamified action on completion
         if (newCompletionStatus) {
-          await gamifiedAction.triggerGamifiedAction({
-            gamificationAction: 'COMPLETE_COURSE_CHAPTER',
-            analytics: {
-              action: 'COURSE_CHAPTER_COMPLETE',
-              category: 'Learning',
-              label: 'Chapter Completed',
-            },
-            customMessage: 'Chapter completed! Keep learning!',
-            metadata: {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ''),
+          });
+          const pointsEarned = calculateUserPointsForAction(
+            'COMPLETE_COURSE_CHAPTER',
+          );
+          const intensity =
+            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
+          triggerCelebration({ type: 'points', intensity });
+          showToast({
+            type: 'points',
+            message: 'Chapter completed! Keep learning!',
+            points: pointsEarned,
+          });
+          trackEvent({
+            action: 'COURSE_CHAPTER_COMPLETE',
+            category: 'Learning',
+            label: 'Chapter Completed',
+            value: {
+              userId: user?.id,
               courseId: course._id,
               chapterId: currentChapterIdState,
               courseName: course.name,
             },
           });
         } else {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(user?.id ?? ''),
+          });
           trackEvent({
             action: 'COURSE_PROGRESS',
             category: 'Course',
@@ -570,6 +589,24 @@ const CoursePage = ({
 
       {showCourseFeedback && (
         <FeedbackPopup refId={course._id} type='SHIKSHA_COURSE' />
+      )}
+
+      {/* Per-chapter feedback widget (always-on FAB) */}
+      {currentChapterIdState && course.isEnrolled && (
+        <ContentFeedbackWidget
+          contentType='SHIKSHA_CHAPTER'
+          contentId={currentChapterIdState}
+          title='Rate this chapter'
+          meta={{
+            courseId: course._id.toString(),
+            courseName: course.name || course.title || '',
+            chapterId: currentChapterIdState,
+            chapterName:
+              chapters.find((c) => c._id.toString() === currentChapterIdState)
+                ?.title || '',
+          }}
+          theme='light'
+        />
       )}
     </Fragment>
   );

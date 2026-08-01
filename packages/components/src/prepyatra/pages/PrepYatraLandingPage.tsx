@@ -2,8 +2,6 @@ import {
   FAQSection,
   FlexContainer,
   Footer,
-  LandingPageHero,
-  LinkButton,
   Marquee,
   Navbar,
   Section,
@@ -18,6 +16,7 @@ import type { PageProps } from "@tbe/interface";
 import { Fragment } from "react";
 
 import SEO from "../../layout/SEO";
+import PrepYatraHero from "../features/Hero";
 import InstallButton from "../features/InstallButton";
 import { PrepYatraFeatureSpotlights } from "../sections/PrepYatraFeatureSpotlights";
 
@@ -37,27 +36,8 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
         <Navbar variant="prepyatra" profileRoute="/profile" />
         <InstallButton />
 
-        <div className="pt-24">
-          <LandingPageHero
-            backgroundImageUrl="/landing.png"
-            heroText="The ultimate community platform for job hunters to store recruiter contacts, share prep logs, and crowdsource resources together."
-            primaryButton={
-              <LinkButton
-                buttonProps={{
-                  variant: "PRIMARY",
-                  text: "Start Your Prep Journey",
-                  className: "w-full",
-                }}
-                className="w-11/12 sm:w-fit"
-                href="/login"
-              />
-            }
-            sectionHeaderProps={{
-              heading: "Master Your",
-              focusText: "Interview Prep",
-            }}
-            theme="light"
-          />
+        <div className="pt-16">
+          <PrepYatraHero />
         </div>
 
         <PrepYatraFeatureSpotlights items={PREP_YATRA_FEATURE_SPOTLIGHTS} />
@@ -77,11 +57,12 @@ export function PrepYatraLandingPage({ seoMeta }: PrepYatraLandingPageProps) {
                     title: item.title,
                     description: item.content,
                   }))}
+                  theme="light"
                 />
 
                 {/* Add a fade effect on edges for a better marquee look */}
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-white dark:from-background" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-white dark:from-background" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-white to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-white to-transparent" />
               </div>
             </FlexContainer>
           </Section>

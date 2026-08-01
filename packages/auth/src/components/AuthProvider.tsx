@@ -64,12 +64,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!refreshToken || isTokenExpired(refreshToken)) return false;
 
     try {
-      const apiUrl = getAuthApiUrl();
-      const response = await fetch(`${apiUrl}/auth/refresh`, {
+      let response = await fetch("/api/proxy/auth/refresh", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refreshToken }),
       });
+
+      // If proxy doesn't exist (404), fall back to direct API call (Vite apps)
+      if (response.status === 404) {
+        const apiUrl = getAuthApiUrl();
+        response = await fetch(`${apiUrl}/auth/refresh`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken }),
+        });
+      }
 
       if (!response.ok) return false;
 

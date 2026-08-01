@@ -7,6 +7,11 @@ import {
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import {
+  calculateUserPointsForAction,
+  useGamificationContext,
+} from "@tbe/gamification";
+import {
+  useAnalytics,
   useDsaCompletedQuestions,
   useDsaPrepUrlSync,
   useDsaQuestionsForTopic,
@@ -15,13 +20,15 @@ import {
 } from "@tbe/hooks";
 import type { DsaQuestion } from "@tbe/interface";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
 const DSAPrepPage = () => {
   const router = useRouter();
   const { loading: userLoading, isAuth, user } = useUser();
+  const { triggerCelebration, showToast } = useGamificationContext();
+  const { trackEvent } = useAnalytics();
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
   );
@@ -67,6 +74,43 @@ const DSAPrepPage = () => {
 
   const { completedIds, toggleComplete, localNotes, saveNote } =
     useDsaCompletedQuestions({ userId: user?.id });
+
+  const handleToggleComplete = useCallback(
+    async (questionId: string | number) => {
+      const idStr = String(questionId);
+      const willComplete = !completedIds.some((cid) => String(cid) === idStr);
+      await toggleComplete(questionId);
+
+      if (willComplete) {
+        const pointsEarned = calculateUserPointsForAction("COMPLETE_QUESTION");
+        const intensity =
+          pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
+        triggerCelebration({ type: "points", intensity });
+        showToast({
+          type: "points",
+          message: "Question solved! Great work!",
+          points: pointsEarned,
+        });
+        trackEvent({
+          action: "QUESTION_COMPLETE",
+          category: "Learning",
+          label: "DSA Question Solved",
+          value: {
+            userId: user?.id,
+            questionId: idStr,
+          },
+        });
+      }
+    },
+    [
+      completedIds,
+      toggleComplete,
+      triggerCelebration,
+      showToast,
+      trackEvent,
+      user?.id,
+    ],
+  );
 
   // Freemium state mirrors DSA Yatra sheets: rely on API `isLocked` flags.
   const [showPayment, setShowPayment] = useState(false);
@@ -194,7 +238,7 @@ const DSAPrepPage = () => {
         onBackToTopics={handleBackToTopics}
         completionMap={topicsCompletionMap}
         completedQuestionIds={completedIds}
-        onToggleComplete={toggleComplete}
+        onToggleComplete={handleToggleComplete}
         localNotes={localNotes}
         onSaveNote={saveNote}
         studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}

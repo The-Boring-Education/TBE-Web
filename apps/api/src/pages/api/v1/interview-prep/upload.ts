@@ -11,6 +11,7 @@ import type {
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils/functions";
 import { logger } from "@/lib/utils/logger";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -26,6 +27,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
   }
+
+  const isAdmin = await adminMiddleware(req, res);
+  if (!isAdmin) return;
 
   try {
     const {

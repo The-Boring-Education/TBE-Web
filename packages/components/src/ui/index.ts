@@ -41,6 +41,7 @@ export * from "./table";
 export * from "./tabs";
 export * from "./toast";
 // Note: Toaster from toaster.tsx is old radix implementation, using sonner instead
+export * from "./terminal";
 export { Toaster as RadixToaster } from "./toaster";
 export * from "./toggle";
 export * from "./toggle-group";

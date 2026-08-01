@@ -77,6 +77,10 @@ const DSAQuestionSchema = new Schema<DSAQuestionModel>(
       default: false,
       index: true,
     },
+    visualizerId: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true,

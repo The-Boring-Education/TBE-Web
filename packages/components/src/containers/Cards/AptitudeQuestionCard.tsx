@@ -11,6 +11,7 @@ import {
   normalizeLatexDelimiters,
   registerMathPlugin,
 } from "../../common/MDXRenderer/mathPlugin";
+import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
 
 const md = markdownit({ html: true, breaks: true });
 registerMathPlugin(md);
@@ -102,8 +103,8 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
           <div
             className="text-white text-[15px] leading-relaxed font-semibold prose prose-invert prose-p:my-0 prose-pre:bg-[#111] prose-pre:border prose-pre:border-gray-800"
             dangerouslySetInnerHTML={{
-              __html: md.render(
-                normalizeLatexDelimiters(question.question || ""),
+              __html: sanitizeHTML(
+                md.render(normalizeLatexDelimiters(question.question || "")),
               ),
             }}
           />
@@ -162,8 +163,8 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
               <div
                 className="flex-1 text-[14px] leading-snug prose prose-invert prose-p:my-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0"
                 dangerouslySetInnerHTML={{
-                  __html: md.renderInline(
-                    normalizeLatexDelimiters(opt.text || ""),
+                  __html: sanitizeHTML(
+                    md.renderInline(normalizeLatexDelimiters(opt.text || "")),
                   ),
                 }}
               />

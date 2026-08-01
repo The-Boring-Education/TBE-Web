@@ -6,6 +6,34 @@ import { getAuthApiUrl } from "../config";
 import { PENDING_AUTH_ANALYTICS_KEY } from "../constants";
 import { setTokens } from "../token";
 
+/**
+ * Exchange the auth code for tokens.
+ * Tries same-origin proxy first (for Next.js apps with CSP), falls back to
+ * direct API call (for Vite apps without proxy route).
+ */
+async function exchangeCodeForTokens(code: string): Promise<Response> {
+  // Try same-origin proxy first — avoids CSP issues in Next.js apps
+  const proxyUrl = "/api/proxy/auth/token";
+  const proxyResponse = await fetch(proxyUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+
+  // If proxy works or returns a real error (not 404), use that response
+  if (proxyResponse.status !== 404) {
+    return proxyResponse;
+  }
+
+  // Proxy route doesn't exist (Vite apps) — call API directly
+  const apiUrl = getAuthApiUrl();
+  return fetch(`${apiUrl}/auth/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+}
+
 export const AuthCallback = () => {
   const [status, setStatus] = useState("Completing sign in...");
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +60,10 @@ export const AuthCallback = () => {
       return;
     }
 
-    const exchangeCode = async () => {
+    const doExchange = async () => {
       try {
         setStatus("Completing sign in...");
-        const apiUrl = getAuthApiUrl();
-        const response = await fetch(`${apiUrl}/auth/token`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code }),
-        });
+        const response = await exchangeCodeForTokens(code);
 
         if (!response.ok) {
           const result = await response.json().catch(() => null);
@@ -74,7 +97,7 @@ export const AuthCallback = () => {
       }
     };
 
-    exchangeCode();
+    doExchange();
   }, []);
 
   return (

@@ -9,8 +9,8 @@ const isAllowedRedirect = (url: string): boolean => {
   try {
     const { hostname } = new URL(url);
     if (hostname === "localhost" || hostname === "127.0.0.1") return true;
-    if (hostname.endsWith(".vercel.app")) return true;
     if (hostname.endsWith(".theboringeducation.com")) return true;
+    if (hostname.endsWith("-tbe.vercel.app")) return true;
 
     const allowed = (process.env.ALLOWED_AUTH_ORIGINS || "")
       .split(",")

@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Integration test: Admin authentication middleware
- * Tests the full admin auth flow including the timing-safe comparison fix.
+ * Verifies JWT + RBAC behavior via adminMiddleware compatibility wrapper.
  */
 
 vi.mock("@/lib/utils", () => ({
@@ -15,107 +15,75 @@ vi.mock("@/lib/utils/logger", () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
+const mockVerifyToken = vi.fn();
+vi.mock("@/lib/auth/jwt", () => ({
+  verifyToken: (...args: unknown[]) => mockVerifyToken(...args),
+}));
+
+const mockIsAdminEmail = vi.fn();
+const mockWarmAdminEmailCache = vi.fn();
+vi.mock("@/lib/services/admin-cache", () => ({
+  isAdminEmail: (...args: unknown[]) => mockIsAdminEmail(...args),
+  warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
+}));
+
 import { adminMiddleware } from "@/middleware/api";
 
 describe("Admin Middleware Integration", () => {
-  const REAL_SECRET = "admin-secret-test"; // matches setup.ts env
+  const adminToken = "valid-admin-jwt";
+  const userToken = "valid-user-jwt";
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.ADMIN_SECRET = REAL_SECRET;
+    mockWarmAdminEmailCache.mockResolvedValue(undefined);
+    mockIsAdminEmail.mockResolvedValue(false);
   });
 
-  it("returns true for valid admin secret", async () => {
+  it("returns true for valid admin JWT", async () => {
+    mockVerifyToken.mockReturnValue({
+      sub: "admin-id",
+      email: "admin@example.com",
+      name: "Admin",
+      type: "access",
+    });
+    mockIsAdminEmail.mockResolvedValue(true);
+
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
-      headers: { "x-admin-secret": REAL_SECRET },
+      headers: { authorization: "Bearer " + adminToken },
     });
 
     const result = await adminMiddleware(req, res);
-
     expect(result).toBe(true);
-    // No error response sent
-    expect(res._getStatusCode()).toBe(200);
   });
 
-  it("returns false and 401 for invalid admin secret", async () => {
+  it("returns false and 403 for authenticated non-admin JWT", async () => {
+    mockVerifyToken.mockReturnValue({
+      sub: "user-id",
+      email: "user@example.com",
+      name: "User",
+      type: "access",
+    });
+    mockIsAdminEmail.mockResolvedValue(false);
+
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
-      headers: { "x-admin-secret": "wrong-secret" },
+      headers: { authorization: "Bearer " + userToken },
     });
 
     const result = await adminMiddleware(req, res);
-
     expect(result).toBe(false);
-    expect(res._getStatusCode()).toBe(401);
+    expect(res._getStatusCode()).toBe(403);
   });
 
-  it("returns false and 401 when x-admin-secret header is missing", async () => {
+  it("returns false and 401 when JWT is missing", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
       headers: {},
     });
 
     const result = await adminMiddleware(req, res);
-
     expect(result).toBe(false);
     expect(res._getStatusCode()).toBe(401);
-  });
-
-  it("returns false and 500 when ADMIN_SECRET env var is not set", async () => {
-    delete process.env.ADMIN_SECRET;
-
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "GET",
-      headers: { "x-admin-secret": "any-value" },
-    });
-
-    const result = await adminMiddleware(req, res);
-
-    expect(result).toBe(false);
-    expect(res._getStatusCode()).toBe(500);
-    const body = JSON.parse(res._getData());
-    expect(body.message).toContain("configuration error");
-
-    // Restore for other tests
-    process.env.ADMIN_SECRET = REAL_SECRET;
-  });
-
-  it("rejects secrets with different lengths (timing-safe)", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "GET",
-      headers: { "x-admin-secret": "short" },
-    });
-
-    const result = await adminMiddleware(req, res);
-
-    expect(result).toBe(false);
-    expect(res._getStatusCode()).toBe(401);
-  });
-
-  it("rejects empty string secret", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "GET",
-      headers: { "x-admin-secret": "" },
-    });
-
-    const result = await adminMiddleware(req, res);
-
-    expect(result).toBe(false);
-    expect(res._getStatusCode()).toBe(401);
-  });
-
-  it("is case-sensitive", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "GET",
-      headers: { "x-admin-secret": REAL_SECRET.toUpperCase() },
-    });
-
-    const result = await adminMiddleware(req, res);
-
-    // Only if the real secret is not already uppercase, this should fail
-    if (REAL_SECRET !== REAL_SECRET.toUpperCase()) {
-      expect(result).toBe(false);
-    }
   });
 });

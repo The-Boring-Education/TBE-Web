@@ -30,6 +30,52 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
 
+  async headers() {
+    // Next.js dev (HMR/React Refresh) requires 'unsafe-eval'; keep it out of
+    // production so the CSP meets the 'self' script-src acceptance criteria.
+    const isDev = process.env.NODE_ENV !== 'production';
+    const scriptSrc = [
+      "script-src 'self' 'unsafe-inline'",
+      isDev ? " 'unsafe-eval'" : '',
+      ' https://www.googletagmanager.com https://www.google-analytics.com https://sdk.cashfree.com',
+    ].join('');
+
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '0' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              scriptSrc,
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' https://fonts.gstatic.com",
+              "connect-src 'self' https://*.theboringeducation.com https://www.google-analytics.com https://*.sentry.io https://sdk.cashfree.com",
+              "frame-src 'self' https://www.youtube.com https://sdk.cashfree.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join('; '),
+          },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     optimizePackageImports: ['framer-motion'],
     scrollRestoration: true,
@@ -100,6 +146,15 @@ const nextConfig = {
       } else {
         config.externals = [config.externals, 'pdfjs-dist'];
       }
+    }
+
+    // jsdom is only used for server-side HTML sanitization (@tbe/components).
+    // Keep it out of the client bundle.
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
     }
 
     // Add comprehensive fallbacks for Node.js modules in both client and server

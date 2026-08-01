@@ -1,3 +1,4 @@
+import { sanitizeHTML } from "@tbe/components";
 import MarkdownIt from "markdown-it";
 import { useMemo, useState } from "react";
 
@@ -377,7 +378,7 @@ export const CoreSubjectMDXRenderer = ({
         return `<strong class="font-bold text-contentDark">${text.trim()}</strong>`;
       });
     }
-    return html;
+    return sanitizeHTML(html);
   };
 
   return (

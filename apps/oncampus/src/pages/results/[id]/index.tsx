@@ -1,5 +1,10 @@
 import { useAuth } from "@tbe/auth";
-import { CelebrationAnimation, Progress, Text } from "@tbe/components";
+import {
+  CelebrationAnimation,
+  ContentFeedbackWidget,
+  Progress,
+  Text,
+} from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
@@ -504,6 +509,18 @@ export default function ResultsPage() {
           </div>
         </div>
       </div>
+      {quizId && (
+        <ContentFeedbackWidget
+          contentType="QUIZ"
+          contentId={quizId}
+          title="Rate this quiz"
+          meta={{
+            quizId,
+            quizName: quiz?.categoryName || "Quiz",
+          }}
+          theme="dark"
+        />
+      )}
     </OnCampusLearningLayout>
   );
 }

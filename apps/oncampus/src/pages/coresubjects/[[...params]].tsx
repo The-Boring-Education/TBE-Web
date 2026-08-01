@@ -1,4 +1,5 @@
 import {
+  ContentFeedbackWidget,
   DsaUpsellModal,
   FlexContainer,
   FreemiumLockBanner,
@@ -607,7 +608,8 @@ const slugify = (text: string) =>
 const CoreSubjectsPage = () => {
   const router = useRouter();
   const { params } = router.query;
-  const { user, loading: userLoading } = useUser();
+  const { user, loading: userLoading, isAuth } = useUser();
+
   const userId = user?.id;
   const [showPayment, setShowPayment] = useState(false);
 
@@ -1039,6 +1041,32 @@ const CoreSubjectsPage = () => {
         description="Subscribe to OnCampus to access all core subject chapters, key notes, code snippets, and interview questions."
         dismissLabel="Continue with free chapters"
       />
+
+      {/* Core subject / chapter feedback widget */}
+      {isAuth && selectedSubjectId && (
+        <ContentFeedbackWidget
+          contentType="CORE_SUBJECT"
+          contentId={
+            selectedChapter
+              ? `${selectedSubjectId}:${selectedChapter.id}`
+              : selectedSubjectId
+          }
+          title={selectedChapter ? "Rate this chapter" : "Rate this subject"}
+          meta={
+            selectedChapter
+              ? {
+                  subjectId: selectedSubjectId,
+                  subjectName: selectedSubject?.label || selectedSubjectId,
+                  chapterId: selectedChapter.id,
+                  chapterName: selectedChapter.title,
+                }
+              : {
+                  subjectId: selectedSubjectId,
+                  subjectName: selectedSubject?.label || selectedSubjectId,
+                }
+          }
+        />
+      )}
     </OnCampusLearningLayout>
   );
 };

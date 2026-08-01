@@ -26,6 +26,10 @@ vi.mock("../../../../api/src/lib/utils/logger", () => ({
   },
 }));
 
+vi.mock("../../../../api/src/middleware/api", () => ({
+  adminMiddleware: vi.fn().mockResolvedValue(true),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/interview-prep/upload";
 
 describe("Interview Prep Upload API — POST /api/v1/interview-prep/upload", () => {

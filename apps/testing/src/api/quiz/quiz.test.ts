@@ -17,6 +17,11 @@ vi.mock("@/lib/database", () => ({
 // Mock middleware
 vi.mock("@/middleware/api", () => ({
   connectDB: vi.fn().mockResolvedValue(undefined),
+  adminMiddleware: vi.fn().mockResolvedValue(true),
+}));
+
+vi.mock("@/middleware/admin", () => ({
+  ensureAdminAccess: vi.fn().mockResolvedValue(true),
 }));
 
 // Mock CORS

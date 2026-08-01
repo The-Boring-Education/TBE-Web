@@ -51,17 +51,22 @@ class EmailClient {
         hasApiKey: !!this.apiKey,
       });
 
-      const response = await axios.post(
-        `${this.apiUrl}/send-email`,
-        emailData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Breevo-API-Key": this.apiKey,
-          },
-          timeout: 10000, // 10 second timeout
-        },
-      );
+      const baseUrl = this.apiUrl.replace(/\/+$/, "");
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "X-Chitthi-API-Key": this.apiKey,
+        Authorization: `Bearer ${this.apiKey}`,
+      };
+      if (this.apiKey.startsWith("SG.")) {
+        headers["X-SendGrid-API-Key"] = this.apiKey;
+      } else if (this.apiKey.startsWith("xkeysib-")) {
+        headers["X-Breevo-API-Key"] = this.apiKey;
+      }
+
+      const response = await axios.post(`${baseUrl}/send-email`, emailData, {
+        headers,
+        timeout: 10000, // 10 second timeout
+      });
 
       const duration = Date.now() - startTime;
 

@@ -1,3 +1,4 @@
+import { sanitizeHTML } from '@tbe/components';
 import MarkdownIt from 'markdown-it';
 import { useMemo, useState } from 'react';
 
@@ -441,7 +442,7 @@ export const InterviewSheetMDXRenderer = ({
         return `<strong class="font-bold ${textColorClass}">${text.trim()}</strong>`;
       });
     }
-    return html;
+    return sanitizeHTML(html);
   };
 
   const containerClass = isDark

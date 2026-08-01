@@ -164,6 +164,7 @@ const routes = {
     dsaYatraProgress: "/user/dsayatra/progress",
     oncampusPrefs: "/user/oncampus/preferences",
     submitUserFeedback: "/feedback",
+    contentFeedback: "/content-feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",
     paymentQuote: "/payment/quote",

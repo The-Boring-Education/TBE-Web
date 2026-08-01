@@ -3,10 +3,8 @@ import { PAGE_REFRESH_TIMEOUT, routes } from "@tbe/constants";
 import type { PageProps } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
 
-import Hero from "@/components/landing/Hero";
-
 export default function Index({ seoMeta }: PageProps) {
-  return <ResumeYatraLandingPage heroComponent={<Hero />} seoMeta={seoMeta} />;
+  return <ResumeYatraLandingPage seoMeta={seoMeta} />;
 }
 
 export const getStaticProps = async () => ({
