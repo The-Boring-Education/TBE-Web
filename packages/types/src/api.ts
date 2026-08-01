@@ -355,6 +355,8 @@ export interface PrepYatraOnboardingPayload {
   goal: GoalType;
   targetCompanies: CompanyType[];
   preferredCategories: InterviewCategoryTypeImport[];
+  occupation?: UserRoleType | string;
+  purpose?: PlatformUsageType[] | string[];
 }
 
 // ================================

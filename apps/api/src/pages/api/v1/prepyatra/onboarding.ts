@@ -43,6 +43,8 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
       linkedInUrl,
       githubUrl,
       leetCodeUrl,
+      occupation,
+      purpose,
     }: PrepYatraOnboardingPayload = req.body;
 
     if (!userId || !name || !username || !goal) {
@@ -85,34 +87,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     const existingUser = userResult.data;
 
-    if (existingUser.prepYatra?.pyOnboarded) {
-      const updateResult = await updatePYUserByIdInDB(userId, {
-        ...buildUserSocialProfileUpdate({
-          name,
-          userName: username,
-          linkedInUrl,
-          githubUrl,
-          leetCodeUrl,
-        }),
-        "prepYatra.goal": goal,
-        "prepYatra.targetCompanies": normalizedTargetCompanies,
-        "prepYatra.preferences.interviewCategories": preferredCategories,
-        "prepYatra.preferences.focusAreas": normalizedTargetCompanies,
-        "prepYatra.experienceLevel": experienceLevel,
-        "prepYatra.workDomain": workDomain,
-      });
-      return res.status(apiStatusCodes.OKAY).json(
-        sendAPIResponse({
-          status: true,
-          data: {
-            user: updateResult.data,
-          },
-          message: "Onboarding preferences updated successfully",
-        }),
-      );
-    }
-
-    const updateResult = await updatePYUserByIdInDB(userId, {
+    const pyUpdateFields: Record<string, any> = {
       ...buildUserSocialProfileUpdate({
         name,
         userName: username,
@@ -120,7 +95,6 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         githubUrl,
         leetCodeUrl,
       }),
-      "prepYatra.pyOnboarded": true,
       "prepYatra.goal": goal,
       "prepYatra.targetCompanies": normalizedTargetCompanies,
       "prepYatra.preferences.interviewCategories": preferredCategories,

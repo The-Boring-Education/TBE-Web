@@ -106,7 +106,8 @@ export const EditOnboardingModal = ({
     userName: "",
     experienceLevel: "fresher",
     goal: "SWITCH_CAREER",
-    occupation: "STUDENT",
+    occupation: "TECH_STUDENT",
+    purpose: [] as string[],
     preferredCategories: [] as string[],
     targetCompanies: [] as string[],
     linkedInUrl: "",
@@ -115,11 +116,19 @@ export const EditOnboardingModal = ({
   });
 
   const occupationOptions = [
-    { value: "STUDENT", label: "Student" },
+    { value: "TECH_STUDENT", label: "Tech Student" },
+    { value: "NON_TECH_STUDENT", label: "Non-Tech Student" },
     { value: "WORKING_PROFESSIONAL", label: "Working Professional" },
+    { value: "STUDENT", label: "Student" },
     { value: "FREELANCER", label: "Freelancer" },
-    { value: "JOB_SEEKER", label: "Job Seeker" },
     { value: "OTHER", label: "Other" },
+  ];
+
+  const purposeOptions = [
+    { value: "LEARNING_TECH", label: "Learning Tech 📚" },
+    { value: "BUILDING_PROJECTS", label: "Building Projects 🛠️" },
+    { value: "INTERVIEW_PREP", label: "Interview Prep 🎯" },
+    { value: "JOB_SEARCH", label: "Job Search 💼" },
   ];
 
   const experienceOptions = [
@@ -158,7 +167,8 @@ export const EditOnboardingModal = ({
         userName: currentData.userName || "",
         experienceLevel: currentData.prepYatra?.experienceLevel || "fresher",
         goal: currentData.prepYatra?.goal || "SWITCH_CAREER",
-        occupation: currentData.occupation || "STUDENT",
+        occupation: currentData.occupation || "TECH_STUDENT",
+        purpose: currentData.purpose || [],
         preferredCategories:
           currentData.prepYatra?.preferences?.interviewCategories || [],
         targetCompanies: currentData.prepYatra?.targetCompanies || [],
@@ -201,6 +211,9 @@ export const EditOnboardingModal = ({
         name: formData.name,
         username: formData.userName,
         goal: formData.goal,
+        experienceLevel: formData.experienceLevel,
+        occupation: formData.occupation,
+        purpose: formData.purpose,
         targetCompanies: formData.targetCompanies,
         preferredCategories: formData.preferredCategories,
         linkedInUrl: withProtocol(formData.linkedInUrl),
@@ -379,6 +392,36 @@ export const EditOnboardingModal = ({
                 }
                 placeholder="leetcode.com/..."
               />
+            </div>
+          </div>
+
+          <div>
+            <ModalLabel>Purpose</ModalLabel>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+              {purposeOptions.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex items-center gap-2.5 cursor-pointer p-2.5 rounded-lg border border-[#e8e8e8] hover:bg-slate-50 transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.purpose.includes(opt.value)}
+                    onChange={() => {
+                      setFormData((prev) => {
+                        const current = prev.purpose;
+                        const updated = current.includes(opt.value)
+                          ? current.filter((v) => v !== opt.value)
+                          : [...current, opt.value];
+                        return { ...prev, purpose: updated };
+                      });
+                    }}
+                    className="accent-[#e8372c] h-4 w-4"
+                  />
+                  <span style={{ fontSize: "12px", color: "#111111" }}>
+                    {opt.label}
+                  </span>
+                </label>
+              ))}
             </div>
           </div>
 

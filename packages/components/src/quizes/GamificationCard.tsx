@@ -3,7 +3,6 @@
 import { useGamificationContext } from "./context/GamificationContext";
 
 interface GamificationCardProps {
-  userId?: string;
   isOpen: boolean;
   onClose: () => void;
   variant?: "popup" | "dashboard";

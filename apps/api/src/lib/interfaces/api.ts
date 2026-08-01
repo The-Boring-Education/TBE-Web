@@ -180,6 +180,8 @@ export interface PrepYatraOnboardingPayload {
   goal: GoalType;
   targetCompanies: CompanyType[];
   preferredCategories: InterviewCategoryType[];
+  occupation?: UserRoleType | string;
+  purpose?: PlatformUsageType[] | string[];
 }
 
 export interface DSAYatraOnboardingPayload {
