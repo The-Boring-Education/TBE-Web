@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -91,10 +91,15 @@ export const AddSkillsModal = ({
   const [loading, setLoading] = useState(false);
   const [skillsList, setSkillsList] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const prevIsOpenRef = useRef(false);
 
+  // Only sync skillsList from props when modal transitions from closed → open
   useEffect(() => {
-    setSkillsList(userSkills || []);
-  }, [userSkills, isOpen]);
+    if (isOpen && !prevIsOpenRef.current) {
+      setSkillsList(userSkills || []);
+    }
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen, userSkills]);
 
   const handleAddSkill = (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,7 +134,7 @@ export const AddSkillsModal = ({
       const addedSkills = skillsList.filter((s) => !userSkills.includes(s));
       const removedSkills = userSkills.filter((s) => !skillsList.includes(s));
 
-      const promises = [];
+      const promises: Promise<{ status: boolean; message?: string }>[] = [];
 
       if (addedSkills.length > 0) {
         promises.push(
@@ -151,12 +156,21 @@ export const AddSkillsModal = ({
         );
       }
 
-      await Promise.all(promises);
+      const results = await Promise.all(promises);
+
+      // Check if any API call returned a failure status
+      const failedResult = results.find((result) => !result.status);
+      if (failedResult) {
+        throw new Error(failedResult.message || "Failed to save tech stack");
+      }
+
       toast.success("Tech stack saved successfully!");
       onSkillsUpdated(skillsList);
       onClose();
-    } catch {
-      toast.error("Failed to save tech stack");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to save tech stack",
+      );
     } finally {
       setLoading(false);
     }
