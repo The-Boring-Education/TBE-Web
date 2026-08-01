@@ -20,6 +20,10 @@ vi.mock("@/middleware/api", () => ({
   adminMiddleware: vi.fn().mockResolvedValue(true),
 }));
 
+vi.mock("@/middleware/admin", () => ({
+  ensureAdminAccess: vi.fn().mockResolvedValue(true),
+}));
+
 // Mock CORS
 vi.mock("@/lib/utils", () => ({
   cors: vi.fn().mockResolvedValue(undefined),

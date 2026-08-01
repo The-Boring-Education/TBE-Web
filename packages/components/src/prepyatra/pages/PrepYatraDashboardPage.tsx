@@ -15,6 +15,7 @@ import React, {
 import { toast } from "sonner";
 
 import LoadingSpinner from "../../common/LoadingSpinner";
+import ContentFeedbackWidget from "../../containers/Feedback/ContentFeedbackWidget";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
 import DashboardTabs from "../dashboard/DashboardTabs";
@@ -357,6 +358,18 @@ export const PrepYatraDashboardPage = () => {
           onSkillsUpdated={handleSkillsUpdated}
         />
       </Suspense>
+
+      {/* PrepYatra Challenge / Goal feedback widget */}
+      <ContentFeedbackWidget
+        contentType="PREP_CHALLENGE"
+        contentId={user?.id ? `prep-challenge-${user.id}` : "prep-challenge"}
+        title="Rate PrepYatra"
+        meta={{
+          programName: "PrepYatra",
+          goal: (profile as any)?.goal || "",
+        }}
+        theme="light"
+      />
     </div>
   );
 };

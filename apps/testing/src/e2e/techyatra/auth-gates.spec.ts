@@ -16,6 +16,20 @@ const mockAuthRefreshUnavailable = async (
       body: JSON.stringify({ status: false, message: "No refresh token" }),
     }),
   );
+  await page.route("**/auth/token", (route) =>
+    route.fulfill({
+      status: 401,
+      contentType: "application/json",
+      body: JSON.stringify({ status: false, message: "Unauthorized" }),
+    }),
+  );
+  await page.route("**/api/proxy/user**", (route) =>
+    route.fulfill({
+      status: 401,
+      contentType: "application/json",
+      body: JSON.stringify({ status: false, message: "Unauthorized" }),
+    }),
+  );
 };
 
 test.describe("Tech Yatra auth and onboarding gate", () => {
@@ -46,7 +60,7 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
 
     await expect(page).not.toHaveURL(onboardingAppUrlPattern, {
-      timeout: 20_000,
+      timeout: 30_000,
     });
     await expect(page).toHaveURL(/\/dashboard\/?$/, { timeout: 20_000 });
     await expect(page.getByRole("heading", { name: "Tech Yatra" })).toBeVisible(

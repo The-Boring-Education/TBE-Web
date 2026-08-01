@@ -1,4 +1,5 @@
 import { useAuth } from "@tbe/auth";
+import { ContentFeedbackWidget } from "@tbe/components";
 import { MarkdownRenderer } from "@tbe/components/quizes";
 import { ProtectedRoute } from "@tbe/components/quizes";
 import { ANALYTICS_EVENTS } from "@tbe/constants";
@@ -306,6 +307,21 @@ function ResultsContent() {
           </div>
         </div>
       </div>
+      {id && (
+        <ContentFeedbackWidget
+          contentType="QUIZ"
+          contentId={id}
+          title="Rate this quiz"
+          meta={{
+            quizId: id,
+            quizName:
+              (quizData?.data as any)?.categoryName ||
+              (quizData?.data as any)?.title ||
+              id,
+          }}
+          theme="light"
+        />
+      )}
     </div>
   );
 }

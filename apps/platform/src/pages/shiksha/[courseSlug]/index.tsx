@@ -4,6 +4,7 @@ import {
   Button,
   CertificateBanner,
   ChapterLink,
+  ContentFeedbackWidget,
   CourseHeroContainer,
   FeedbackPopup,
   FlexContainer,
@@ -588,6 +589,24 @@ const CoursePage = ({
 
       {showCourseFeedback && (
         <FeedbackPopup refId={course._id} type='SHIKSHA_COURSE' />
+      )}
+
+      {/* Per-chapter feedback widget (always-on FAB) */}
+      {currentChapterIdState && course.isEnrolled && (
+        <ContentFeedbackWidget
+          contentType='SHIKSHA_CHAPTER'
+          contentId={currentChapterIdState}
+          title='Rate this chapter'
+          meta={{
+            courseId: course._id.toString(),
+            courseName: course.name || course.title || '',
+            chapterId: currentChapterIdState,
+            chapterName:
+              chapters.find((c) => c._id.toString() === currentChapterIdState)
+                ?.title || '',
+          }}
+          theme='light'
+        />
       )}
     </Fragment>
   );

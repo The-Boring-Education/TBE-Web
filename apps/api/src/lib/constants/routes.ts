@@ -100,6 +100,7 @@ const routes = {
     markAptitudeQuestionProgress: "/user/interview-prep/aptitude/progress",
     dsaYatraProgress: "/user/dsayatra/progress",
     submitUserFeedback: "/feedback",
+    contentFeedback: "/content-feedback",
     createOrder: "/payment/create-order",
     checkStatus: "/payment/checkstatus",
     validateCoupon: "/coupon/validate",

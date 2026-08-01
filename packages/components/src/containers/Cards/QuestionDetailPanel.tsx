@@ -1,6 +1,7 @@
 import {
   CommonMistakesSection,
   ConstraintsSection,
+  ContentFeedbackWidget,
   EnhancedExamplesSection,
   ExampleCard,
   FirstPrinciplesSection,
@@ -23,7 +24,7 @@ import type {
 import { cn, sendRequest } from "@tbe/utils";
 import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
 import { VISUALIZER_MAP } from "../../visualizers";
@@ -403,229 +404,244 @@ const QuestionDetailPanel = ({
   };
 
   return (
-    <FlexContainer
-      direction="col"
-      className="text-white space-y-5 h-full relative"
-      fullWidth
-      itemCenter={false}
-      justifyCenter={false}
-      wrap={false}
-    >
-      <div className="space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="flex flex-col gap-1">
-              {isRecommended && (
-                <div className="flex items-center gap-1 text-[9px] font-black text-red-500 uppercase tracking-widest">
-                  <Sparkles className="w-3 h-3" /> Recommended for you
-                </div>
-              )}
-              <Text level="h1" className="text-2xl font-bold tracking-tight">
-                {question.name}
-              </Text>
+    <>
+      <FlexContainer
+        direction="col"
+        className="text-white space-y-5 h-full relative"
+        fullWidth
+        itemCenter={false}
+        justifyCenter={false}
+        wrap={false}
+      >
+        <div className="space-y-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <div className="flex flex-col gap-1">
+                {isRecommended && (
+                  <div className="flex items-center gap-1 text-[9px] font-black text-red-500 uppercase tracking-widest">
+                    <Sparkles className="w-3 h-3" /> Recommended for you
+                  </div>
+                )}
+                <Text level="h1" className="text-2xl font-bold tracking-tight">
+                  {question.name}
+                </Text>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0",
+                    difficultyBadgeClass(question.difficultyLevel),
+                  )}
+                >
+                  {question.difficultyLevel}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span
+
+            {!question.isRealWorldProblem && (
+              <ExternalResourceIcons
+                resources={question.resources}
+                className="shrink-0 pt-1"
+              />
+            )}
+          </div>
+
+          {question.isRealWorldProblem && <RealWorldBanner />}
+
+          <div className="flex flex-wrap gap-1.5 pb-1">
+            {detailTabs.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0",
-                  difficultyBadgeClass(question.difficultyLevel),
+                  "px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap",
+                  effectiveTab === tab
+                    ? "border-red-500 text-red-400 bg-red-950/30"
+                    : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200",
                 )}
               >
-                {question.difficultyLevel}
-              </span>
-            </div>
+                {tab === "visualizer"
+                  ? "Visualizer"
+                  : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === "notes" && showNotesTabDot && (
+                  <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
+                )}
+              </button>
+            ))}
           </div>
+        </div>
 
-          {!question.isRealWorldProblem && (
-            <ExternalResourceIcons
-              resources={question.resources}
-              className="shrink-0 pt-1"
-            />
+        <div className="space-y-4">
+          {effectiveTab === "description" && (
+            <div className="space-y-6 w-full">
+              {hasStructured && structured ? (
+                <StructuredSections sections={structured} />
+              ) : (
+                <FallbackMarkdownDescription question={question} />
+              )}
+
+              {VisualizerComponent && (
+                <div className="space-y-3 pt-6 border-t border-gray-800/80">
+                  <div className="flex items-center gap-2">
+                    <Text level="h2" className="text-red-500 font-bold text-sm">
+                      Interactive Visualizer
+                    </Text>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-950/40 border border-red-900/50 text-red-400 uppercase tracking-wider">
+                      Interactive
+                    </span>
+                  </div>
+                  <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
+                    <VisualizerComponent />
+                  </div>
+                </div>
+              )}
+
+              {!hasStructured && !question.isRealWorldProblem && (
+                <div className="space-y-1.5 pt-1">
+                  <Text level="h2" className="text-red-500 font-bold text-sm">
+                    Resources
+                  </Text>
+                  <div className="bg-[#111] border border-gray-800 rounded-lg p-1.5 flex gap-4 items-center justify-center w-fit min-w-[120px]">
+                    <ExternalResourceIcons
+                      resources={question.resources}
+                      className="gap-4 justify-center"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {effectiveTab === "visualizer" && VisualizerComponent && (
+            <div className="space-y-4 w-full">
+              <div className="flex items-center justify-between">
+                <Text level="h2" className="text-red-500 font-bold text-sm">
+                  Interactive Algorithm Visualizer
+                </Text>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
+                <VisualizerComponent />
+              </div>
+            </div>
+          )}
+
+          {effectiveTab === "topics" && (
+            <div>
+              <Text level="h2" className="text-red-500 font-semibold mb-3">
+                TOPICS
+              </Text>
+              <div className="flex flex-wrap gap-2">
+                {question.topics?.map((topic) => (
+                  <Text
+                    level="span"
+                    key={topic}
+                    className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
+                  >
+                    {topic}
+                  </Text>
+                )) ?? (
+                  <Text level="p" className="text-gray-500 text-sm">
+                    No topics available.
+                  </Text>
+                )}
+              </div>
+            </div>
+          )}
+
+          {effectiveTab === "companies" && (
+            <div>
+              <Text level="h2" className="text-red-500 font-semibold mb-3">
+                COMPANIES
+              </Text>
+              <div className="flex flex-wrap gap-2">
+                {question.companyType?.map((company) => (
+                  <Text
+                    level="span"
+                    key={company}
+                    className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
+                  >
+                    {company}
+                  </Text>
+                )) ?? (
+                  <Text level="p" className="text-gray-500 text-sm">
+                    No companies available.
+                  </Text>
+                )}
+              </div>
+            </div>
+          )}
+
+          {effectiveTab === "notes" && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Text level="h2" className="text-red-500 font-semibold">
+                  YOUR NOTES
+                </Text>
+                {isAuth ? (
+                  <button
+                    type="button"
+                    onClick={handleSaveNote}
+                    disabled={isSavingNote}
+                    className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
+                  >
+                    {isSavingNote ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : saveSuccess ? (
+                      <Check className="w-3 h-3" />
+                    ) : (
+                      <Save className="w-3 h-3" />
+                    )}
+                    {isSavingNote
+                      ? "Saving..."
+                      : saveSuccess
+                        ? "Saved!"
+                        : "Save Note"}
+                  </button>
+                ) : (
+                  <div className="text-[10px] text-gray-500 font-bold uppercase">
+                    Login to save notes
+                  </div>
+                )}
+              </div>
+
+              <textarea
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+                placeholder="Jot down your logic, edge cases, or anything you want to remember about this problem..."
+                className="w-full h-64 bg-[#111] border border-gray-800 rounded-xl p-4 text-gray-300 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 outline-none transition-all resize-none scrollbar-thin-grey placeholder:text-gray-700"
+              />
+
+              {!isAuth && (
+                <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
+                  <Text
+                    level="p"
+                    className="text-xs text-red-400 leading-relaxed"
+                  >
+                    <strong>Wait!</strong> You need to be logged in to sync your
+                    notes across devices. Otherwise, they won&apos;t be saved
+                    permanently.
+                  </Text>
+                </div>
+              )}
+            </div>
           )}
         </div>
+      </FlexContainer>
 
-        {question.isRealWorldProblem && <RealWorldBanner />}
-
-        <div className="flex flex-wrap gap-1.5 pb-1">
-          {detailTabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={cn(
-                "px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap",
-                effectiveTab === tab
-                  ? "border-red-500 text-red-400 bg-red-950/30"
-                  : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200",
-              )}
-            >
-              {tab === "visualizer"
-                ? "Visualizer"
-                : tab.charAt(0).toUpperCase() + tab.slice(1)}
-              {tab === "notes" && showNotesTabDot && (
-                <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {effectiveTab === "description" && (
-          <div className="space-y-6 w-full">
-            {hasStructured && structured ? (
-              <StructuredSections sections={structured} />
-            ) : (
-              <FallbackMarkdownDescription question={question} />
-            )}
-
-            {VisualizerComponent && (
-              <div className="space-y-3 pt-6 border-t border-gray-800/80">
-                <div className="flex items-center gap-2">
-                  <Text level="h2" className="text-red-500 font-bold text-sm">
-                    Interactive Visualizer
-                  </Text>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-950/40 border border-red-900/50 text-red-400 uppercase tracking-wider">
-                    Interactive
-                  </span>
-                </div>
-                <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
-                  <VisualizerComponent />
-                </div>
-              </div>
-            )}
-
-            {!hasStructured && !question.isRealWorldProblem && (
-              <div className="space-y-1.5 pt-1">
-                <Text level="h2" className="text-red-500 font-bold text-sm">
-                  Resources
-                </Text>
-                <div className="bg-[#111] border border-gray-800 rounded-lg p-1.5 flex gap-4 items-center justify-center w-fit min-w-[120px]">
-                  <ExternalResourceIcons
-                    resources={question.resources}
-                    className="gap-4 justify-center"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {effectiveTab === "visualizer" && VisualizerComponent && (
-          <div className="space-y-4 w-full">
-            <div className="flex items-center justify-between">
-              <Text level="h2" className="text-red-500 font-bold text-sm">
-                Interactive Algorithm Visualizer
-              </Text>
-            </div>
-            <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
-              <VisualizerComponent />
-            </div>
-          </div>
-        )}
-
-        {effectiveTab === "topics" && (
-          <div>
-            <Text level="h2" className="text-red-500 font-semibold mb-3">
-              TOPICS
-            </Text>
-            <div className="flex flex-wrap gap-2">
-              {question.topics?.map((topic) => (
-                <Text
-                  level="span"
-                  key={topic}
-                  className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
-                >
-                  {topic}
-                </Text>
-              )) ?? (
-                <Text level="p" className="text-gray-500 text-sm">
-                  No topics available.
-                </Text>
-              )}
-            </div>
-          </div>
-        )}
-
-        {effectiveTab === "companies" && (
-          <div>
-            <Text level="h2" className="text-red-500 font-semibold mb-3">
-              COMPANIES
-            </Text>
-            <div className="flex flex-wrap gap-2">
-              {question.companyType?.map((company) => (
-                <Text
-                  level="span"
-                  key={company}
-                  className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
-                >
-                  {company}
-                </Text>
-              )) ?? (
-                <Text level="p" className="text-gray-500 text-sm">
-                  No companies available.
-                </Text>
-              )}
-            </div>
-          </div>
-        )}
-
-        {effectiveTab === "notes" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Text level="h2" className="text-red-500 font-semibold">
-                YOUR NOTES
-              </Text>
-              {isAuth ? (
-                <button
-                  type="button"
-                  onClick={handleSaveNote}
-                  disabled={isSavingNote}
-                  className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
-                >
-                  {isSavingNote ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                  ) : saveSuccess ? (
-                    <Check className="w-3 h-3" />
-                  ) : (
-                    <Save className="w-3 h-3" />
-                  )}
-                  {isSavingNote
-                    ? "Saving..."
-                    : saveSuccess
-                      ? "Saved!"
-                      : "Save Note"}
-                </button>
-              ) : (
-                <div className="text-[10px] text-gray-500 font-bold uppercase">
-                  Login to save notes
-                </div>
-              )}
-            </div>
-
-            <textarea
-              value={noteText}
-              onChange={(e) => setNoteText(e.target.value)}
-              placeholder="Jot down your logic, edge cases, or anything you want to remember about this problem..."
-              className="w-full h-64 bg-[#111] border border-gray-800 rounded-xl p-4 text-gray-300 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 outline-none transition-all resize-none scrollbar-thin-grey placeholder:text-gray-700"
-            />
-
-            {!isAuth && (
-              <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
-                <Text
-                  level="p"
-                  className="text-xs text-red-400 leading-relaxed"
-                >
-                  <strong>Wait!</strong> You need to be logged in to sync your
-                  notes across devices. Otherwise, they won&apos;t be saved
-                  permanently.
-                </Text>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </FlexContainer>
+      {/* Per-question feedback widget (authenticated users only) */}
+      {isAuth && (
+        <ContentFeedbackWidget
+          contentType="DSA_QUESTION"
+          contentId={getQuestionStableId(question)}
+          title="Rate this question"
+          meta={{
+            questionId: getQuestionStableId(question),
+            questionName: question.name,
+          }}
+        />
+      )}
+    </>
   );
 };
 

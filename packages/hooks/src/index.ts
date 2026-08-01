@@ -7,7 +7,13 @@ export { default as useAPIResponseMapper } from "./useAPIResponseMapper";
 export { default as useAuthAnalytics } from "./useAuthAnalytics";
 export { default as useCashfreePayment } from "./useCashfreePayment";
 export { default as useCertificate } from "./useCertificate";
+export type {
+  ContentFeedbackState,
+  UseContentFeedbackProps,
+} from "./useContentFeedback";
+export { default as useContentFeedback } from "./useContentFeedback";
 export { default as useFeedback } from "./useFeedback";
+
 /** @deprecated Use `useGamification` from `@tbe/gamification` instead */
 export { default as useGamification } from "./useGamification";
 // useGamifiedAction → @tbe/gamification

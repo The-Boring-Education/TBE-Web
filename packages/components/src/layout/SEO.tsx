@@ -246,16 +246,23 @@ const SEO = ({
   domain,
   schema,
 }: EnhancedSEOProps) => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // App Router or RouterContext not mounted
+  }
   const appConfig = getAppConfig(appId);
   const baseDomain = domain || appConfig.domain;
 
   // Build canonical URL
-  const path = router.asPath === "/" ? "" : router.asPath.split("?")[0];
+  const asPath = router?.asPath || "/";
+  const path = asPath === "/" ? "" : asPath.split("?")[0];
   const canonicalUrl = `${baseDomain}${path}`;
 
   // Build OG URL (can include query params for tracking)
-  const ogUrl = `${baseDomain}${router.asPath === "/" ? "" : router.asPath}`;
+  const ogUrl = `${baseDomain}${asPath === "/" ? "" : asPath}`;
 
   // Build JSON-LD schemas
   const jsonLdSchemas: object[] = [];
