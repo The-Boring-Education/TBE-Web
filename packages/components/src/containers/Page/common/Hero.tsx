@@ -17,7 +17,7 @@ const LandingPageHero = ({
   const { heading, focusText } = sectionHeaderProps;
   const isDark = theme === "dark";
   return (
-    <Section className={isDark ? "bg-[#0A0A0A]" : ""}>
+    <Section className={isDark ? "bg-[#0A0A0A]" : undefined}>
       <FlexContainer className="py-2 sm:py-6" direction="col" justifyCenter>
         <FlexContainer
           className="wrap-reverse flex-col-reverse gap-6 lg:flex-row"

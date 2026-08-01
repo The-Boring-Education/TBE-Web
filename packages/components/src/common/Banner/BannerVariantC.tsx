@@ -14,7 +14,7 @@ const BannerVariantC = ({
   buttonLink,
   imageSrc,
 }: BannerProps) => (
-  <Section className="md:px-8 md:py-4 px-2 py-4">
+  <Section className="md:px-8 md:py-8 px-2 py-4">
     <FlexContainer justifyCenter={false}>
       <FlexContainer className="w-full gap-4 rounded-2 bg-gradient-to-br from-orange-500 via-pink-500 to-rose-600 md:px-8 md:py-8 px-2 py-4 shadow-xl shadow-orange-500/25 sm:px-8 sm:py-8 lg:px-4 lg:py-4 relative overflow-hidden">
         {/* Background decorative elements */}
