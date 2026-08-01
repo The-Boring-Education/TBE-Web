@@ -38,7 +38,8 @@ export type ProductLabelType =
   | "Prep Yatra"
   | "Tech Yatra"
   | "DSA Yatra"
-  | "Resume Yatra";
+  | "Resume Yatra"
+  | "On Campus";
 
 export type CohortLabelType = "Bring Your Idea";
 

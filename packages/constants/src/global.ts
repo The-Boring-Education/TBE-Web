@@ -100,6 +100,11 @@ const products: ProductDataProps = {
     slug: "https://resumeyatra.theboringeducation.com/",
     description: "Professional Resume Builder and Optimizer",
   },
+  oncampus: {
+    label: "On Campus",
+    slug: "https://oncampus.theboringeducation.com/",
+    description: "Campus-focused learning platform for students",
+  },
 };
 
 const cohorts: CohortDataProps = {
