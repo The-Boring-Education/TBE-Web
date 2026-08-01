@@ -10,10 +10,10 @@ test.describe("Resume Yatra smoke flow", () => {
     }
 
     const hero = page.getByRole("heading", { level: 1 });
-    await expect(hero).toContainText(/Resume Building for/);
-    await expect(hero).toContainText(/Developers/);
+    await expect(hero).toContainText(/Stop Sending Resumes/i);
+    await expect(hero).toContainText(/That Get Ignored/i);
     await expect(
-      page.getByRole("button", { name: "Start Building My Resume" }),
+      page.locator("a, button", { hasText: /Start Building My Resume/i }),
     ).toBeVisible();
   });
 

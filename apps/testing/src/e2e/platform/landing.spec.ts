@@ -4,23 +4,24 @@ test.describe("Platform Landing Page", () => {
   test("loads successfully and exposes hero CTAs", async ({
     platformPage: page,
   }) => {
-    const response = await page.goto("/");
+    const response = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
 
-    await expect(page.getByRole("link", { name: "Get Started" })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Book Free Session" }),
+      page.getByRole("link", { name: /Start Learning Now/i }),
     ).toBeVisible();
   });
 
   test("displays primary and secondary CTAs", async ({
     platformPage: page,
   }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("link", { name: "Get Started" })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Book Free Session" }),
+      page.getByRole("link", { name: /Start Learning Now/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Bite Size Courses/i }).first(),
     ).toBeVisible();
   });
 
@@ -45,9 +46,10 @@ test.describe("Platform Landing Page", () => {
   test("navigation contains key links", async ({ platformPage: page }) => {
     await page.goto("/");
 
-    const nav = page.locator("nav");
+    const nav = page.locator("nav").first();
     if ((await nav.count()) > 0) {
       const navLinks = nav.getByRole("link");
+      await expect(navLinks.first()).toBeVisible({ timeout: 15_000 });
       expect(await navLinks.count()).toBeGreaterThan(0);
     }
   });

@@ -1,11 +1,10 @@
 import { CAMPUS_PREP_RESOURCES } from "@tbe/constants";
 import { usePaymentStatus, useUser } from "@tbe/hooks";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 
-import Button from "../../common/Buttons/Button";
 import Marquee from "../../common/Marquee";
+import OnCampusLandingHero from "../../containers/Page/common/OnCampusLandingHero";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
 import {
@@ -37,10 +36,6 @@ export default function OnCampusLandingPage() {
     description: item.desc,
   }));
 
-  const handleGetStarted = () => {
-    router.push("/login");
-  };
-
   return (
     <Fragment>
       <Navbar
@@ -49,46 +44,11 @@ export default function OnCampusLandingPage() {
         hidePricingLink={isPurchased === true}
         profileRoute="/profile"
       />
-      <main className="dark min-h-screen bg-[#0A0A0A] pt-20 text-white">
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 md:py-24">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-            <div className="space-y-3 text-left">
-              <h1 className="text-4xl font-bold leading-tight md:text-4xl lg:text-4xl">
-                <span className="text-white">Advance Your Career with </span>
-                <span className="text-[#FF5757]">OnCampus</span>
-              </h1>
-              <p className="text-sm leading-relaxed text-white/70">
-                Prepare smarter for placements with guided aptitude, quizzes,
-                interview prep, and resume resources in one focused dashboard.
-              </p>
-              <div className="flex flex-col gap-4 pt-4 sm:flex-row">
-                <Button
-                  text="Get Started for Free"
-                  onClick={handleGetStarted}
-                  variant="PRIMARY"
-                  className="bg-[#FF5757] text-sm font-semibold text-white hover:bg-[#FF5757]/90"
-                  size="MEDIUM"
-                  animationType="BOUNCE"
-                />
-              </div>
-              <p className="text-xs text-white/40">
-                Built for campus schedules
-              </p>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="w-full max-w-xl">
-                <Image
-                  src="/landing.svg"
-                  alt="Students studying with laptops"
-                  width={650}
-                  height={560}
-                  className="h-auto w-full"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+      <main className="dark min-h-screen bg-[#0A0A0C] pt-20 text-white">
+        <OnCampusLandingHero
+          ctaText="Get Started for Free →"
+          ctaHref="/login"
+        />
 
         <OnCampusFeatureSection
           eyebrow="Interview Sheets"
