@@ -179,13 +179,13 @@ export const DsaYatraLandingHero: React.FC<DsaYatraLandingHeroProps> = ({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-6 sm:mt-8 w-full sm:w-auto"
+            className="mt-6 sm:mt-8 w-full sm:w-auto flex justify-center transform-none rotate-0"
           >
             <Link
               href={ctaHref}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#FF4D4D] hover:bg-[#EE3B3B] text-white font-bold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/25 hover:shadow-red-500/35 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#FF4D4D] hover:bg-[#EE3B3B] text-white font-bold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/25 hover:shadow-red-500/35 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] transform-none rotate-0"
             >
-              {ctaText}
+              <span>{ctaText}</span>
             </Link>
           </motion.div>
         </div>

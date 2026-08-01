@@ -205,6 +205,7 @@ export { default as InteractiveRoadmap } from "./containers/Page/common/Interact
 export { default as MobileNavbarLinksContainer } from "./containers/Page/common/MobileNavbarLinksContainer";
 export { default as ModernLandingHero } from "./containers/Page/common/ModernLandingHero";
 export { default as NavbarDropdownContainer } from "./containers/Page/common/NavbarDropdownContainer";
+export { default as OnCampusLandingHero } from "./containers/Page/common/OnCampusLandingHero";
 export { default as PageHeroMetaContainer } from "./containers/Page/common/PageHeroMetaContainer";
 export { default as PlatformLandingHero } from "./containers/Page/common/PlatformLandingHero";
 export { default as PopoverContainer } from "./containers/Page/common/PopoverContainer";
