@@ -242,9 +242,21 @@ test.describe("Authentication Flow E2E Tests", () => {
         const [request] = await Promise.all([
           page
             .waitForRequest(
-              (req) =>
-                req.url().includes("accounts.google.com") ||
-                req.url().includes("/api/v1/auth/login"),
+              (req) => {
+                const url = req.url();
+                // Use URL constructor for proper hostname validation to prevent bypass attacks
+                try {
+                  const parsedUrl = new URL(url);
+                  return (
+                    parsedUrl.hostname === "accounts.google.com" ||
+                    parsedUrl.hostname.endsWith(".google.com") ||
+                    url.includes("/api/v1/auth/login")
+                  );
+                } catch {
+                  // If URL parsing fails, fall back to path check only
+                  return url.includes("/api/v1/auth/login");
+                }
+              },
               { timeout: 5000 },
             )
             .catch(() => null),

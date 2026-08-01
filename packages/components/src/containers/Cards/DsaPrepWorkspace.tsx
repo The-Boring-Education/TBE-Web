@@ -376,10 +376,19 @@ const DsaPrepWorkspace = ({
                         ) {
                           return true;
                         }
-                        const match = question.answer?.match(
-                          /```visualizer\s*([\s\S]*?)```/,
-                        );
-                        const idMatch = match?.[1]?.match(/id:\s*([^\s\n]+)/);
+                        // Use a safer regex pattern to avoid ReDoS vulnerability
+                        // Split on the code fence boundaries instead of using greedy/lazy quantifiers
+                        const answer = question.answer;
+                        if (!answer) return false;
+                        const startMarker = "```visualizer";
+                        const endMarker = "```";
+                        const startIdx = answer.indexOf(startMarker);
+                        if (startIdx === -1) return false;
+                        const contentStart = startIdx + startMarker.length;
+                        const endIdx = answer.indexOf(endMarker, contentStart);
+                        if (endIdx === -1) return false;
+                        const content = answer.slice(contentStart, endIdx);
+                        const idMatch = content.match(/id:\s*([^\s\n]+)/);
                         return Boolean(
                           idMatch?.[1] && VISUALIZER_MAP[idMatch[1]],
                         );

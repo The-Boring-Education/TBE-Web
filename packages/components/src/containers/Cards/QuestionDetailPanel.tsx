@@ -45,12 +45,20 @@ function getQuestionVisualizerId(question: DsaQuestion): string | null {
     return question.visualizerId;
   }
   if (question.answer) {
-    const match = question.answer.match(/```visualizer\s*([\s\S]*?)```/);
-    if (match && match[1]) {
-      const idMatch = match[1].match(/id:\s*([^\s\n]+)/);
-      if (idMatch && idMatch[1] && VISUALIZER_MAP[idMatch[1]]) {
-        return idMatch[1];
-      }
+    // Use a safer string-based approach to avoid ReDoS vulnerability
+    // Split on the code fence boundaries instead of using greedy/lazy quantifiers
+    const answer = question.answer;
+    const startMarker = "```visualizer";
+    const endMarker = "```";
+    const startIdx = answer.indexOf(startMarker);
+    if (startIdx === -1) return null;
+    const contentStart = startIdx + startMarker.length;
+    const endIdx = answer.indexOf(endMarker, contentStart);
+    if (endIdx === -1) return null;
+    const content = answer.slice(contentStart, endIdx);
+    const idMatch = content.match(/id:\s*([^\s\n]+)/);
+    if (idMatch && idMatch[1] && VISUALIZER_MAP[idMatch[1]]) {
+      return idMatch[1];
     }
   }
   return null;

@@ -14,6 +14,7 @@ import type {
 import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { isMongoObjectIdString } from "@/lib/validation/mongodb";
 import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
@@ -121,6 +122,17 @@ const handleUserOnboarding = async (
       );
     }
 
+    // Validate userId is a valid MongoDB ObjectId to prevent NoSQL injection
+    if (!isMongoObjectIdString(userId)) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: "Invalid userId format",
+          message: "Please provide a valid userId",
+        }),
+      );
+    }
+
     const existingUser = await User.findById(userId);
     const alreadyOnboarded = existingUser?.isOnboarded;
 
@@ -197,6 +209,17 @@ const handlePrepYatraOnboarding = async (
           status: false,
           error: "Missing required fields",
           message: "Please provide all required fields",
+        }),
+      );
+    }
+
+    // Validate userId is a valid MongoDB ObjectId to prevent NoSQL injection
+    if (!isMongoObjectIdString(userId)) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: "Invalid userId format",
+          message: "Please provide a valid userId",
         }),
       );
     }
