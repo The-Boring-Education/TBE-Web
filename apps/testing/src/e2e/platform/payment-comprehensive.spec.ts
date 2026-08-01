@@ -9,6 +9,13 @@ import { expect, test } from "../fixtures/platform.fixture";
 const TBE_ACCESS_COOKIE = "tbe_access_token";
 
 /**
+ * These specs are the first visitor to their route, so the assertion also waits
+ * on the dev server's cold compile — the 5s default expect timeout is not enough
+ * under parallel CI workers.
+ */
+const RENDER_TIMEOUT = 30_000;
+
+/**
  * Signs the browser in as the E2E user.
  *
  * Checkout only renders the order summary (and therefore the price) once a user
@@ -117,7 +124,9 @@ test.describe("Payment Checkout E2E Tests", () => {
       );
 
       // Should display price
-      await expect(page.locator("body")).toContainText("999");
+      await expect(page.locator("body")).toContainText("999", {
+        timeout: RENDER_TIMEOUT,
+      });
     });
   });
 
@@ -388,7 +397,7 @@ test.describe("Payment Checkout E2E Tests", () => {
       // skeleton — assert with a web-first expectation instead.
       await expect(
         page.getByRole("button", { name: /login|sign in|get started/i }),
-      ).toBeVisible({ timeout: 15_000 });
+      ).toBeVisible({ timeout: RENDER_TIMEOUT });
 
       // Payment cannot be started until the visitor signs in.
       await expect(
@@ -424,6 +433,7 @@ test.describe("Payment Checkout E2E Tests", () => {
 
       await expect(page.locator("body")).toContainText(
         /payment confirmed|purchase is confirmed/i,
+        { timeout: RENDER_TIMEOUT },
       );
     });
 
@@ -449,6 +459,7 @@ test.describe("Payment Checkout E2E Tests", () => {
 
       await expect(page.locator("body")).toContainText(
         /could not verify payment|was not completed/i,
+        { timeout: RENDER_TIMEOUT },
       );
     });
   });
@@ -474,7 +485,9 @@ test.describe("Payment Checkout E2E Tests", () => {
       );
 
       // Price should be displayed (either ₹999 or 999 or Rs. 999)
-      await expect(page.locator("body")).toContainText(/₹|Rs\.?|INR/);
+      await expect(page.locator("body")).toContainText(/₹|Rs\.?|INR/, {
+        timeout: RENDER_TIMEOUT,
+      });
     });
 
     test("strikethrough pricing shown when coupon applied", async ({
@@ -497,8 +510,12 @@ test.describe("Payment Checkout E2E Tests", () => {
       );
 
       // Should show both original and discounted prices
-      await expect(page.locator("body")).toContainText("999");
-      await expect(page.locator("body")).toContainText("799");
+      await expect(page.locator("body")).toContainText("999", {
+        timeout: RENDER_TIMEOUT,
+      });
+      await expect(page.locator("body")).toContainText("799", {
+        timeout: RENDER_TIMEOUT,
+      });
     });
   });
 
