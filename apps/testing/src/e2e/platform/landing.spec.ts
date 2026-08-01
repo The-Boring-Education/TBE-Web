@@ -46,9 +46,10 @@ test.describe("Platform Landing Page", () => {
   test("navigation contains key links", async ({ platformPage: page }) => {
     await page.goto("/");
 
-    const nav = page.locator("nav");
+    const nav = page.locator("nav").first();
     if ((await nav.count()) > 0) {
       const navLinks = nav.getByRole("link");
+      await expect(navLinks.first()).toBeVisible({ timeout: 15_000 });
       expect(await navLinks.count()).toBeGreaterThan(0);
     }
   });
