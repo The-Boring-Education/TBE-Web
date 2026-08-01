@@ -40,7 +40,10 @@ const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
         />
       </svg>
       {/* Display Progress Percentage */}
-      <Text className="p-3 text-base md:text-lg font-bold" level="span">
+      <Text
+        className="p-3 text-base md:text-lg font-bold text-gray-900 dark:text-gray-900"
+        level="span"
+      >
         {point}
       </Text>
     </div>
