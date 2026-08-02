@@ -3,7 +3,7 @@ import React from "react";
 import { toast } from "sonner";
 
 const getInitials = (name?: string): string => {
-  if (!name) return "PY";
+  if (!name?.trim()) return "PY";
   return name
     .trim()
     .split(/\s+/)
