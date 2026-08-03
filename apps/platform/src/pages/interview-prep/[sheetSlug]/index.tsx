@@ -298,8 +298,10 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           <FlexContainer className='w-full gap-4' itemCenter={false}>
             {/* Left Sidebar (Questions) */}
             <FlexContainer
-              className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[80vh] overflow-y-auto bg-white'
+              className='border md:w-3/12 w-full px-3 rounded self-baseline max-h-[80vh] overflow-y-auto overflow-x-hidden bg-white flex-col'
               itemCenter={false}
+              direction='col'
+              wrap={false}
             >
               <div className='w-full sticky top-0 z-10 bg-white py-2'>
                 <Text className='heading-5' level='h5'>
@@ -316,7 +318,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
               </div>
 
               {/* Sidebar: use button for question navigation, not <Link> */}
-              <FlexContainer className='gap-px flex-grow' justifyCenter={false}>
+              <div className='flex flex-col gap-px w-full pb-2'>
                 {questions?.map(
                   ({
                     _id,
@@ -355,7 +357,7 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                     );
                   },
                 )}
-              </FlexContainer>
+              </div>
             </FlexContainer>
 
             {/* Main Content Area */}
