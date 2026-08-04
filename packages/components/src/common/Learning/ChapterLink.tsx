@@ -31,7 +31,7 @@ const ChapterLink = ({
       analyticsId={`course_chapter_${chapterId}`}
       analyticsLabel={`chapter:${name}`}
       key={chapterId}
-      className={`flex items-center gap-1 w-full p-2 rounded text-left pre-title ${
+      className={`flex items-center gap-2 w-full px-3 py-2.5 rounded-md text-left pre-title transition-colors duration-150 ${
         isLocked
           ? "text-gray-700 cursor-not-allowed"
           : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`

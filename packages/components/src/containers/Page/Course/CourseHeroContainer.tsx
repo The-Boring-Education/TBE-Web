@@ -1,6 +1,7 @@
 import {
   Button,
   LinkButton,
+  LinerProgressBar,
   LoginRedirectButton,
   Section,
   Text,
@@ -16,6 +17,8 @@ const CourseHeroContainer = ({
   name,
   isEnrolled,
   isPremium,
+  completedChapters = 0,
+  totalChapters = 0,
 }: CourseHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -174,31 +177,53 @@ const CourseHeroContainer = ({
           {/* Right: Progress Card */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-xl p-6 text-gray-900">
-              <div className="text-center space-y-3">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-                  <FaPlay className="text-2xl text-emerald-600" />
-                </div>
-                <Text level="p" className="font-semibold text-lg">
-                  Start Learning
-                </Text>
-                <Text level="p" className="text-sm text-gray-600">
-                  Begin your journey with bite-sized lessons
-                </Text>
-                {isEnrolled ? (
-                  <Button
-                    text="Continue Learning"
-                    variant="PRIMARY"
-                    className="w-full bg-emerald-600 "
-                  />
-                ) : (
-                  <Text
-                    level="p"
-                    className="text-emerald-600 text-sm font-medium"
-                  >
-                    Enroll to get started
+              {isEnrolled && totalChapters > 0 ? (
+                <div className="space-y-4">
+                  <Text level="p" className="font-semibold text-lg text-center">
+                    Your Progress
                   </Text>
-                )}
-              </div>
+                  <LinerProgressBar
+                    completedChapters={completedChapters}
+                    totalChapters={totalChapters}
+                  />
+                  <Button
+                    text={completedChapters > 0 ? "Continue Learning" : "Start Learning"}
+                    variant="PRIMARY"
+                    className="w-full bg-emerald-600"
+                    onClick={() => {
+                      const contentSection =
+                        document.getElementById("course-content");
+                      if (contentSection) {
+                        const offset = 80;
+                        window.scrollTo({
+                          top: contentSection.offsetTop - offset,
+                          behavior: "smooth",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                    <FaPlay className="text-2xl text-emerald-600" />
+                  </div>
+                  <Text level="p" className="font-semibold text-lg">
+                    Start Learning
+                  </Text>
+                  <Text level="p" className="text-sm text-gray-600">
+                    Begin your journey with bite-sized lessons
+                  </Text>
+                  {!isEnrolled && (
+                    <Text
+                      level="p"
+                      className="text-emerald-600 text-sm font-medium"
+                    >
+                      Enroll to get started
+                    </Text>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

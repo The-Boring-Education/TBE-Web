@@ -411,6 +411,8 @@ export interface CourseHeroContainerProps {
   isEnrolled?: boolean;
   id: string;
   isPremium?: boolean;
+  completedChapters?: number;
+  totalChapters?: number;
 }
 
 export interface SheetHeroContainerProps {

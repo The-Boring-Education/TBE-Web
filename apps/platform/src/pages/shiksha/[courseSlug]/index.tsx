@@ -391,6 +391,8 @@ const CoursePage = ({
           isEnrolled={course.isEnrolled}
           isPremium={false}
           name={course.name ?? ''}
+          completedChapters={completedChapters}
+          totalChapters={totalChapters}
         />
       </Section>
 
@@ -431,7 +433,7 @@ const CoursePage = ({
 
                 {/* Sidebar: use button for chapter navigation, not <Link> */}
                 <FlexContainer
-                  className='gap-px flex-grow'
+                  className='gap-1 flex-grow'
                   justifyCenter={false}
                 >
                   {chapters?.map(

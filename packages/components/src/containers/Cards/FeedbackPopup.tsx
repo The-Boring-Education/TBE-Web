@@ -66,13 +66,13 @@ const FeedbackPopup = ({
   const positionClasses =
     position === "bottom-center"
       ? "fixed bottom-3 left-1/2 -translate-x-1/2"
-      : "fixed bottom-3 right-3";
+      : "fixed bottom-3 right-3 sm:right-3 left-3 sm:left-auto";
 
   return (
     <Fragment>
       {feedbackModal.rating && (
         <FlexContainer
-          className={`${positionClasses} bg-white shadow-lg rounded-2xl p-2 flex flex-col items-center z-50 w-[280px] transition-all duration-300`}
+          className={`${positionClasses} bg-white shadow-lg rounded-2xl p-2 flex flex-col items-center z-50 w-full sm:w-[280px] transition-all duration-300`}
         >
           <FlexContainer
             className="w-full"
