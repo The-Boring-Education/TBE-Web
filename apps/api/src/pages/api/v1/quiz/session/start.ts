@@ -5,6 +5,7 @@ import { Quiz, QuizSession } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 interface StartSessionBody {
   userId: string;
@@ -23,6 +24,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+
   const {
     userId,
     quizId,
@@ -39,6 +43,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   if (difficulty && !["easy", "medium", "hard", "mixed"].includes(difficulty)) {
     return res.status(400).json(

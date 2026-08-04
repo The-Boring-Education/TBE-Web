@@ -6,6 +6,7 @@ import { Subscription } from "@/lib/database";
 import { type CreateSubscriptionPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { ensureAdminAccess } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -18,6 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "POST":
+      if (!(await ensureAdminAccess(req, res))) return;
       return handleCreateSubscription(req, res);
     case "GET":
       return handleGetSubscription(req, res);

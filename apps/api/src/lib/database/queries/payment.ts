@@ -91,6 +91,47 @@ const updatePaymentStatusToDB = async ({
   }
 };
 
+const claimPaymentCouponUsageFromDB = async (
+  orderId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const payment = await Payment.findOneAndUpdate(
+      { orderId, couponUsageApplied: { $ne: true } },
+      { $set: { couponUsageApplied: true } },
+      { new: true },
+    );
+    return { data: payment };
+  } catch (error) {
+    logger.error("DB: claimPaymentCouponUsageFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to claim payment coupon usage", details: error };
+  }
+};
+
+const markPaymentEnrollmentCompletedInDB = async (
+  orderId: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const payment = await Payment.findOneAndUpdate(
+      { orderId },
+      { $set: { enrollmentCompleted: true } },
+      { new: true },
+    );
+    return { data: payment };
+  } catch (error) {
+    logger.error("DB: markPaymentEnrollmentCompletedInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to mark payment enrollment completed",
+      details: error,
+    };
+  }
+};
+
 const checkPaymentStatusFromDB = async (
   userId: string,
   productId: string,
@@ -168,6 +209,8 @@ const checkPaymentStatusFromDB = async (
 export {
   addPaymentToDB,
   checkPaymentStatusFromDB,
+  claimPaymentCouponUsageFromDB,
   getPaymentByOrderIdFromDB,
+  markPaymentEnrollmentCompletedInDB,
   updatePaymentStatusToDB,
 };

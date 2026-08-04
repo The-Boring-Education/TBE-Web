@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import {
   getPaymentByOrderIdFromDB,
+  markPaymentEnrollmentCompletedInDB,
   updatePaymentStatusToDB,
 } from "@/lib/database";
 import type { PaymentModel } from "@/lib/interfaces";
@@ -30,6 +31,17 @@ const syncPaymentStatusIfPending = async (
   payment: PaymentModel,
 ): Promise<PaymentModel> => {
   if (payment.status !== "PENDING") {
+    if (payment.status === "SUCCESS" && !payment.enrollmentCompleted) {
+      const enrollmentResult = await processPostPaymentEnrollment(payment);
+      if (!enrollmentResult.success) {
+        logger.error("order-status: successful payment reconciliation failed", {
+          orderId: payment.orderId,
+          error: enrollmentResult.error,
+        });
+      } else {
+        await markPaymentEnrollmentCompletedInDB(payment.orderId);
+      }
+    }
     return payment;
   }
 
@@ -69,6 +81,8 @@ const syncPaymentStatusIfPending = async (
         orderId: payment.orderId,
         error: enrollmentResult.error,
       });
+    } else {
+      await markPaymentEnrollmentCompletedInDB(updatedPayment.orderId);
     }
   }
 

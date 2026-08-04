@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { QuizSessionQuestion } from "@/lib/database";
-import { completeQuizSessionInDB } from "@/lib/database";
+import { completeQuizSessionInDB, QuizSession } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -12,6 +13,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       .status(405)
       .json(sendAPIResponse({ status: false, message: "Method not allowed" }));
   }
+
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
 
   const { sessionId } = req.query;
 
@@ -25,6 +29,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    const sessionOwner = await QuizSession.findById(sessionId).select("userId");
+    if (!sessionOwner) {
+      return res
+        .status(404)
+        .json(sendAPIResponse({ status: false, message: "Session not found" }));
+    }
+    if (sessionOwner.userId.toString() !== authenticatedUserId) {
+      return res
+        .status(403)
+        .json(sendAPIResponse({ status: false, message: "Forbidden" }));
+    }
+
     const { data: session, error } = await completeQuizSessionInDB(sessionId);
 
     if (error || !session) {
@@ -75,7 +91,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           questionIndex: index,
           question: q.question,
           options: q.options,
-          correctAnswer: q.correctAnswer,
           userAnswer: q.userAnswer,
           isCorrect: q.isCorrect,
           timeSpent: q.timeSpent,

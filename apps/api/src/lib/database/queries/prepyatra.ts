@@ -162,11 +162,13 @@ const deletePrepLogInDB = async (prepLogId: string) => {
 const getActiveSubscriptionByUserFromDB = async (
   userId: string,
   subscriptionType: string,
+  productType?: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const subscription = await Subscription.findOne({
       userId: new mongoose.Types.ObjectId(userId),
       type: subscriptionType,
+      ...(productType && { productType }),
       isActive: true,
       expiryDate: { $gt: new Date() },
     });
@@ -208,6 +210,31 @@ const createSubscriptionInDB = async ({
     return { data: subscription };
   } catch (error) {
     return { error: "Failed to create subscription in DB" };
+  }
+};
+
+const extendSubscriptionInDB = async ({
+  subscriptionId,
+  expiryDate,
+  amount,
+  duration,
+}: {
+  subscriptionId: string;
+  expiryDate: Date;
+  amount: number;
+  duration: number;
+}): Promise<DatabaseQueryResponseType> => {
+  try {
+    const subscription = await Subscription.findByIdAndUpdate(
+      subscriptionId,
+      { $set: { expiryDate, amount, duration, isActive: true } },
+      { new: true, runValidators: true },
+    );
+    return subscription
+      ? { data: subscription }
+      : { error: "Subscription not found" };
+  } catch (error) {
+    return { error: "Failed to extend subscription", details: error };
   }
 };
 
@@ -955,6 +982,7 @@ export {
   deleteChallengeInDB,
   deletePrepLogInDB,
   deleteRecruiterInDB,
+  extendSubscriptionInDB,
   getActiveSubscriptionByUserFromDB,
   getAllMenteesFromDB,
   getAllUsersWithLogsFromDB,

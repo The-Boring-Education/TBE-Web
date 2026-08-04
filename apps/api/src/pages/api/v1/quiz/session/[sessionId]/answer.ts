@@ -5,6 +5,7 @@ import { QuizSession } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
 interface SubmitAnswerBody {
   questionIndex: number;
@@ -18,6 +19,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       .status(405)
       .json(sendAPIResponse({ status: false, message: "Method not allowed" }));
   }
+
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
 
   const { sessionId } = req.query;
   const { questionIndex, answer, timeSpent }: SubmitAnswerBody = req.body;
@@ -65,6 +69,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    const sessionOwner = await QuizSession.findById(sessionId).select("userId");
+    if (!sessionOwner) {
+      return res
+        .status(404)
+        .json(sendAPIResponse({ status: false, message: "Session not found" }));
+    }
+    if (sessionOwner.userId.toString() !== authenticatedUserId) {
+      return res
+        .status(403)
+        .json(sendAPIResponse({ status: false, message: "Forbidden" }));
+    }
+
     // Submit the answer
     const { data: result, error } = await submitAnswerInDB({
       sessionId,

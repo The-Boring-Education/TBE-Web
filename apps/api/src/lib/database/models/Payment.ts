@@ -54,6 +54,14 @@ const PaymentSchema: Schema<PaymentModel> = new Schema(
       type: String,
       default: null,
     },
+    couponUsageApplied: {
+      type: Boolean,
+      default: false,
+    },
+    enrollmentCompleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

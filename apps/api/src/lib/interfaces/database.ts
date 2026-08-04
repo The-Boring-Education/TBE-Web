@@ -431,6 +431,8 @@ export interface PaymentModel extends Document {
   gateway: string;
   appliedCoupon?: typeof Schema.Types.ObjectId;
   couponCode?: string;
+  couponUsageApplied?: boolean;
+  enrollmentCompleted?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

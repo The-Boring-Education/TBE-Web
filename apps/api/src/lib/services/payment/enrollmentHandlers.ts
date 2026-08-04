@@ -4,6 +4,7 @@ import {
   createSubscriptionInDB,
   enrollInACourse,
   enrollInASheet,
+  extendSubscriptionInDB,
   getActiveSubscriptionByUserFromDB,
   getEnrolledCourseFromDB,
   getEnrolledSheetFromDB,
@@ -100,12 +101,30 @@ const createSubscription: EnrollmentHandler = async (payment) => {
       await getActiveSubscriptionByUserFromDB(
         payment.user.toString(),
         plan.type,
+        payment.productType,
       );
 
     if (existingSubscription) {
+      const baseDate =
+        existingSubscription.expiryDate > new Date()
+          ? existingSubscription.expiryDate
+          : new Date();
+      const extendedExpiryDate =
+        plan.type === "Lifetime"
+          ? new Date("2099-12-31")
+          : new Date(
+              baseDate.getTime() + plan.duration * 30 * 24 * 60 * 60 * 1000,
+            );
+      const { error: extendError } = await extendSubscriptionInDB({
+        subscriptionId: existingSubscription._id.toString(),
+        expiryDate: extendedExpiryDate,
+        amount: payment.amount,
+        duration: plan.duration,
+      });
+      if (extendError) return { success: false, error: extendError };
       return {
         success: true,
-        data: { alreadyEnrolled: true, existingSubscription },
+        data: { extended: true, expiryDate: extendedExpiryDate },
       };
     }
 

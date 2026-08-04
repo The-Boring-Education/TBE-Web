@@ -4,7 +4,10 @@ import getRawBody from "raw-body";
 
 import { apiStatusCodes, isDevelopmentEnv } from "@/lib/constants";
 import {
+  claimPaymentCouponUsageFromDB,
   getPaymentByOrderIdFromDB,
+  incrementCouponUsageFromDB,
+  markPaymentEnrollmentCompletedInDB,
   updatePaymentStatusToDB,
 } from "@/lib/database";
 import { processPostPaymentEnrollment } from "@/lib/services/payment";
@@ -48,8 +51,7 @@ const validateAndExtract = (
 
   const order_id = order.order_id || order.orderId || null;
   const payment_status = (payment.payment_status || payment.status || null) as
-    | string
-    | null;
+    string | null;
   const payment_id =
     payment.cf_payment_id ||
     payment.gateway_payment_id ||
@@ -170,18 +172,36 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (webhookEvent.payment_status === "SUCCESS") {
-      const enrollmentResult = await processPostPaymentEnrollment(_payment);
-      if (!enrollmentResult.success) {
-        logger.error("Post-payment enrollment failed", {
-          productType: _payment.productType,
-          error: enrollmentResult.error ?? "Unknown enrollment error",
-        });
-        // do not fail webhook
-      } else {
-        logger.info("Successfully processed enrollment", {
-          productType: _payment.productType,
-          orderId: webhookEvent.order_id,
-        });
+      const { data: couponClaim } = await claimPaymentCouponUsageFromDB(
+        webhookEvent.order_id,
+      );
+      if (couponClaim?.appliedCoupon) {
+        const { error: couponError } = await incrementCouponUsageFromDB(
+          couponClaim.appliedCoupon.toString(),
+        );
+        if (couponError) {
+          logger.error("Coupon usage increment failed after payment", {
+            orderId: webhookEvent.order_id,
+            error: couponError,
+          });
+        }
+      }
+
+      if (!_payment.enrollmentCompleted) {
+        const enrollmentResult = await processPostPaymentEnrollment(_payment);
+        if (!enrollmentResult.success) {
+          logger.error("Post-payment enrollment failed", {
+            productType: _payment.productType,
+            error: enrollmentResult.error ?? "Unknown enrollment error",
+          });
+          // Keep the payment eligible for reconciliation retries.
+        } else {
+          await markPaymentEnrollmentCompletedInDB(webhookEvent.order_id);
+          logger.info("Successfully processed enrollment", {
+            productType: _payment.productType,
+            orderId: webhookEvent.order_id,
+          });
+        }
       }
     }
 
