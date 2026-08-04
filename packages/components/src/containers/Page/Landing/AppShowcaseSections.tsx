@@ -59,7 +59,7 @@ export function AppShowcaseSections({
   return (
     <div
       id="products"
-      className="relative space-y-10 pt-2 pb-8 sm:space-y-12 md:space-y-16 md:pt-4 md:pb-16 bg-transparent select-none overflow-hidden"
+      className="relative space-y-16 pt-8 pb-12 sm:space-y-20 md:space-y-24 md:pt-12 md:pb-20 bg-transparent select-none overflow-hidden"
     >
       {/* ─────────────────────────────────────────────────────────────
           1. DSA YATRA SHOWCASE
