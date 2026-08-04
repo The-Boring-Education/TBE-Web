@@ -153,16 +153,20 @@ const DevIconTile: React.FC<DevIconTileProps> = ({
   className = "",
 }) => (
   <div
-    className={`w-11 h-11 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_20px_-4px_rgba(0,0,0,0.1)] border border-slate-100/90 flex items-center justify-center p-0.5 sm:p-1 hover:scale-110 transition-transform duration-300 ${className}`}
+    className={`w-6 h-6 sm:w-12 sm:h-12 lg:w-16 lg:h-16 flex items-center justify-center p-0.5 hover:scale-110 transition-transform duration-300 ${className}`}
   >
-    <img src={src} alt={alt} className="w-full h-full object-contain" />
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-contain filter drop-shadow-sm"
+    />
   </div>
 );
 
 const CodeTagBadge = () => (
-  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_20px_-4px_rgba(0,0,0,0.1)] border border-slate-100/90 flex items-center justify-center p-0.5 sm:p-1">
+  <div className="w-6 h-6 sm:w-12 sm:h-12 lg:w-16 lg:h-16 flex items-center justify-center p-0.5">
     <svg
-      className="w-6 h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9 text-[#EF4444]"
+      className="w-4 h-4 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-[#EF4444] filter drop-shadow-sm"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -247,7 +251,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
     });
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#FAFAFC] py-8 sm:py-12 md:py-16 lg:py-24">
+    <section className="relative w-full overflow-hidden bg-[#FAFAFC] py-6 sm:py-12 md:py-16 lg:py-24">
       {/* --- Responsive Ambient Background Lights & Orbit Rings --- */}
       <div
         aria-hidden
@@ -293,14 +297,14 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
 
       <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* --- Main Content Grid Layout --- */}
-        <div className="relative flex flex-col items-center min-h-[520px] lg:min-h-[640px]">
+        <div className="relative flex flex-col items-center min-h-0 sm:min-h-[520px] lg:min-h-[640px]">
           {/* --- Responsive Language Badges (Orbiting around title on mobile & outer desktop) --- */}
           <div className="w-full">
             {/* Top Center Badge */}
             <motion.div
               animate={{ y: [0, -5, 0], rotate: [0, -3, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[-10px] sm:top-[-16px] left-1/2 lg:left-[32%] -translate-x-1/2 z-10"
+              className="absolute top-[-14px] sm:top-[-16px] left-1/2 lg:left-[32%] -translate-x-1/2 z-10"
             >
               <CodeTagBadge />
             </motion.div>
@@ -314,7 +318,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
                 ease: "easeInOut",
                 delay: 0.5,
               }}
-              className="absolute top-2 sm:top-4 left-1 sm:left-4 lg:left-[-10px] xl:left-2 z-10"
+              className="absolute top-0 -left-1 sm:top-4 sm:left-4 lg:left-[-10px] xl:left-2 z-10"
             >
               <DevIconTile src={DEVICONS.javascript} alt="JavaScript" />
             </motion.div>
@@ -328,7 +332,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
                 ease: "easeInOut",
                 delay: 1,
               }}
-              className="absolute top-[28%] sm:top-[32%] left-0 sm:left-2 lg:left-[-16px] xl:left-[-4px] z-10"
+              className="absolute top-[25%] -left-2 sm:left-2 lg:left-[-16px] xl:left-[-4px] z-10"
             >
               <DevIconTile src={DEVICONS.cplusplus} alt="C++" />
             </motion.div>
@@ -342,7 +346,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
                 ease: "easeInOut",
                 delay: 1.5,
               }}
-              className="absolute top-[52%] sm:top-[56%] left-1 sm:left-4 lg:left-[-22px] xl:left-[-8px] z-10"
+              className="absolute top-[54%] -left-1 sm:left-4 lg:left-[-22px] xl:left-[-8px] z-10"
             >
               <DevIconTile src={DEVICONS.java} alt="Java" />
             </motion.div>
@@ -370,7 +374,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
                 ease: "easeInOut",
                 delay: 0.8,
               }}
-              className="absolute top-2 sm:top-4 right-1 sm:right-4 lg:right-[-10px] xl:right-2 z-10"
+              className="absolute top-0 -right-1 sm:top-4 sm:right-4 lg:right-[-10px] xl:right-2 z-10"
             >
               <DevIconTile src={DEVICONS.typescript} alt="TypeScript" />
             </motion.div>
@@ -384,7 +388,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
                 ease: "easeInOut",
                 delay: 1.2,
               }}
-              className="absolute top-[28%] sm:top-[32%] right-0 sm:right-2 lg:right-[-16px] xl:right-[-4px] z-10"
+              className="absolute top-[25%] -right-2 sm:right-2 lg:right-[-16px] xl:right-[-4px] z-10"
             >
               <DevIconTile src={DEVICONS.python} alt="Python" />
             </motion.div>
@@ -398,7 +402,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
                 ease: "easeInOut",
                 delay: 1.8,
               }}
-              className="absolute top-[52%] sm:top-[56%] right-1 sm:right-4 lg:right-[-22px] xl:right-[-8px] z-10"
+              className="absolute top-[54%] -right-1 sm:right-4 lg:right-[-22px] xl:right-[-8px] z-10"
             >
               <DevIconTile src={DEVICONS.postgresql} alt="PostgreSQL" />
             </motion.div>
@@ -620,11 +624,11 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-5 sm:mt-6 w-full sm:w-auto"
+              className="mt-4 sm:mt-6 w-auto flex justify-center"
             >
               <Link
                 href={defaultCtaHref}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#FF4D4D] hover:bg-[#EE3B3B] text-white font-bold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/25 hover:shadow-red-500/35 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-1.5 bg-[#FF4D4D] hover:bg-[#EE3B3B] text-white font-bold text-xs sm:text-base px-5 sm:px-8 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl shadow-md sm:shadow-lg shadow-red-500/25 hover:shadow-red-500/35 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
               >
                 {ctaText}
               </Link>
@@ -636,7 +640,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="relative z-30 w-full max-w-[340px] sm:max-w-[580px] md:max-w-[760px] lg:max-w-[930px] mt-1 sm:mt-2 mb-6 px-2 sm:px-4"
+            className="hidden sm:block relative z-30 w-full max-w-[340px] sm:max-w-[580px] md:max-w-[760px] lg:max-w-[930px] mt-1 sm:mt-2 mb-6 px-2 sm:px-4"
           >
             <Terminal
               windowTitle="the-boring-education.sh"
@@ -666,8 +670,8 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             />
           </motion.div>
 
-          {/* --- Mobile/Tablet Responsive Cards Grid --- */}
-          <div className="lg:hidden w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 px-1 sm:px-2 z-30">
+          {/* --- Tablet Responsive Cards Grid (Hidden on Mobile < 640px) --- */}
+          <div className="hidden sm:grid lg:hidden w-full max-w-xl grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 px-1 sm:px-2 z-30">
             <FeatureCard
               icon={<ReactCardIcon />}
               title="React Interview Questions"
