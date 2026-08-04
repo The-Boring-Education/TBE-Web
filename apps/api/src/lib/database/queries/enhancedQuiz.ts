@@ -233,6 +233,11 @@ const completeQuizSessionInDB = async (
       return { error: "Session not found" };
     }
 
+    // Completion is intentionally idempotent because clients may retry the request.
+    if (session.status === "completed") {
+      return { data: session };
+    }
+
     const answeredQuestions = session.questions.filter(
       (q) => q.userAnswer !== undefined,
     );
@@ -241,7 +246,9 @@ const completeQuizSessionInDB = async (
       (sum, q) => sum + (q.timeSpent || 0),
       0,
     );
-    const score = Math.round((correctAnswers / answeredQuestions.length) * 100);
+    const score = answeredQuestions.length
+      ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+      : 0;
 
     // Update session
     session.status = "completed";
