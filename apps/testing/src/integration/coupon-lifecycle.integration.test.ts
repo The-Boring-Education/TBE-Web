@@ -15,18 +15,21 @@ const {
   mockFindOne,
   mockFindById,
   mockFindByIdAndUpdate,
+  mockFindOneAndUpdate,
   mockFindByIdAndDelete,
   MockCoupon,
 } = vi.hoisted(() => {
   const mockFindOneInner = vi.fn();
   const mockFindByIdInner = vi.fn();
   const mockFindByIdAndUpdateInner = vi.fn();
+  const mockFindOneAndUpdateInner = vi.fn();
   const mockFindByIdAndDeleteInner = vi.fn();
   const mockSaveInner = vi.fn();
 
   (mockFindOneInner as any)._result = null;
   (mockFindByIdInner as any)._result = null;
   (mockFindByIdAndUpdateInner as any)._result = null;
+  (mockFindOneAndUpdateInner as any)._result = null;
   (mockFindByIdAndDeleteInner as any)._result = null;
 
   const MockCouponInner = vi.fn(function (this: any, doc: any) {
@@ -52,6 +55,10 @@ const {
       mockFindByIdAndUpdateInner(...args);
       return (mockFindByIdAndUpdateInner as any)._result;
     },
+    findOneAndUpdate: (...args: any[]) => {
+      mockFindOneAndUpdateInner(...args);
+      return (mockFindOneAndUpdateInner as any)._result;
+    },
     findByIdAndDelete: (...args: any[]) => {
       mockFindByIdAndDeleteInner(...args);
       return (mockFindByIdAndDeleteInner as any)._result;
@@ -67,6 +74,7 @@ const {
     mockFindOne: mockFindOneInner,
     mockFindById: mockFindByIdInner,
     mockFindByIdAndUpdate: mockFindByIdAndUpdateInner,
+    mockFindOneAndUpdate: mockFindOneAndUpdateInner,
     mockFindByIdAndDelete: mockFindByIdAndDeleteInner,
     MockCoupon: MockCouponInner,
   };
@@ -137,11 +145,11 @@ describe("Coupon Lifecycle Integration", () => {
 
     // STEP 2: Use coupon — increment usage
     const afterFirstUse = { ...couponDoc, currentUsage: 1 };
-    (mockFindByIdAndUpdate as any)._result = afterFirstUse;
+    (mockFindOneAndUpdate as any)._result = afterFirstUse;
 
     await incrementCouponUsageFromDB("coupon_lifecycle");
-    expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
-      "coupon_lifecycle",
+    expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ _id: "coupon_lifecycle" }),
       { $inc: { currentUsage: 1 } },
       { new: true },
     );
@@ -152,7 +160,7 @@ describe("Coupon Lifecycle Integration", () => {
       currentUsage: 2,
       isUsageLimitReached: true,
     };
-    (mockFindByIdAndUpdate as any)._result = afterSecondUse;
+    (mockFindOneAndUpdate as any)._result = afterSecondUse;
 
     await incrementCouponUsageFromDB("coupon_lifecycle");
 

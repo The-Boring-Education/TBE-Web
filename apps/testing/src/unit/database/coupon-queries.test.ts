@@ -8,6 +8,7 @@ const {
   mockFindOne,
   mockFindById,
   mockFindByIdAndUpdate,
+  mockFindOneAndUpdate,
   mockFindByIdAndDelete,
   mockSave,
   mockSort,
@@ -17,6 +18,7 @@ const {
   const mockFindOneInner = vi.fn();
   const mockFindByIdInner = vi.fn();
   const mockFindByIdAndUpdateInner = vi.fn();
+  const mockFindOneAndUpdateInner = vi.fn();
   const mockFindByIdAndDeleteInner = vi.fn();
   const mockSaveInner = vi.fn();
   const mockPopulateInner = vi.fn();
@@ -67,6 +69,8 @@ const {
     },
     findByIdAndUpdate: (...args: unknown[]) =>
       mockFindByIdAndUpdateInner(...args),
+    findOneAndUpdate: (...args: unknown[]) =>
+      mockFindOneAndUpdateInner(...args),
     findByIdAndDelete: (...args: unknown[]) => {
       mockFindByIdAndDeleteInner(...args);
       return mockFindByIdAndDeleteInner._mockReturn;
@@ -83,6 +87,7 @@ const {
     mockFindOne: mockFindOneInner,
     mockFindById: mockFindByIdInner,
     mockFindByIdAndUpdate: mockFindByIdAndUpdateInner,
+    mockFindOneAndUpdate: mockFindOneAndUpdateInner,
     mockFindByIdAndDelete: mockFindByIdAndDeleteInner,
     mockSave: mockSaveInner,
     mockPopulate: mockPopulateInner,
@@ -387,25 +392,25 @@ describe("incrementCouponUsageFromDB", () => {
 
   it("atomically increments currentUsage", async () => {
     const updated = makeCouponDoc({ currentUsage: 6 });
-    mockFindByIdAndUpdate.mockReturnValue(updated);
+    mockFindOneAndUpdate.mockReturnValue(updated);
 
     // The actual function calls findByIdAndUpdate directly (no populate chain)
     await incrementCouponUsageFromDB("coupon_abc");
 
-    expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
-      "coupon_abc",
+    expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ _id: "coupon_abc" }),
       { $inc: { currentUsage: 1 } },
       { new: true },
     );
   });
 
   it("returns error when coupon not found", async () => {
-    mockFindByIdAndUpdate.mockReturnValue(null);
+    mockFindOneAndUpdate.mockReturnValue(null);
 
     const result = await incrementCouponUsageFromDB("nonexistent");
 
-    expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
-      "nonexistent",
+    expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ _id: "nonexistent" }),
       { $inc: { currentUsage: 1 } },
       { new: true },
     );
