@@ -48,6 +48,10 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  withVerifiedAdminAuth: (handler: unknown) => handler,
+}));
+
 import handler from "../../../../api/src/pages/api/v1/prepyatra/subscription";
 
 describe("PrepYatra Subscription API Route", () => {
