@@ -7,6 +7,11 @@ const mockCompleteQuizSessionInDB = vi.fn();
 vi.mock("../../../../api/src/lib/database", () => ({
   completeQuizSessionInDB: (...args: unknown[]) =>
     mockCompleteQuizSessionInDB(...args),
+  QuizSession: {
+    findById: () => ({
+      select: () => ({ lean: () => ({ userId: "u1" }) }),
+    }),
+  },
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -24,6 +29,14 @@ vi.mock("../../../../api/src/lib/utils/logger", () => ({
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: unknown) => handler,
+}));
+
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  withUserAuth: (handler: unknown) => handler,
+}));
+
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: () => "u1",
 }));
 
 import handler from "../../../../api/src/pages/api/v1/quiz/session/[sessionId]/complete";

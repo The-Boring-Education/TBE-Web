@@ -9,6 +9,7 @@ import { withApiHandler } from "@/middleware/requestLogger";
 import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
 interface StartSessionBody {
+  userId?: string;
   quizId: string;
   difficulty?: "easy" | "medium" | "hard" | "mixed";
   questionCount?: number;
@@ -25,6 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const {
+    userId: requestedUserId,
     quizId,
     difficulty = "mixed",
     questionCount = 10,
@@ -33,7 +35,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!userId) return;
 
   // Validation
-  if (!userId || !quizId) {
+  if (!requestedUserId || !quizId) {
     return res.status(400).json(
       sendAPIResponse({
         status: false,

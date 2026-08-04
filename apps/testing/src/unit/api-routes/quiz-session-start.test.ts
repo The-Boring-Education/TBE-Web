@@ -35,6 +35,14 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: unknown) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  withUserAuth: (handler: unknown) => handler,
+}));
+
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: () => "u1",
+}));
+
 vi.mock("mongoose", () => ({
   Types: {
     ObjectId: vi.fn((id?: string) => id || "generated-id"),
