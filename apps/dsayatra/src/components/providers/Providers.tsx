@@ -14,7 +14,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <GamificationProvider>{children}</GamificationProvider>
+          <GamificationProvider theme="dark">{children}</GamificationProvider>
         </TooltipProvider>
       </TBEQueryProvider>
     </AuthProvider>

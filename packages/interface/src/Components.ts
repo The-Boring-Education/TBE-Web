@@ -744,6 +744,7 @@ export interface TabProps {
 export interface ProgressRingProps {
   progress: number;
   point: number;
+  theme?: "light" | "dark";
 }
 
 export interface LevelProgressCardProps {
@@ -753,6 +754,7 @@ export interface LevelProgressCardProps {
   nextLevelName?: string;
   pointsLeftToNextLevel: number;
   percentageProgress: number;
+  theme?: "light" | "dark";
 }
 
 export interface LoginRedirectButtonProps {

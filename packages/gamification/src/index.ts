@@ -54,5 +54,6 @@ export type {
   LeaderboardEntry,
   LevelProgress,
   PointsBadgeProps,
+  ThemeType,
   ToastData,
 } from "./types";

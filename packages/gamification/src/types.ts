@@ -1,6 +1,10 @@
 import type { AnalyticsCategory, LegacyAnalyticsAction } from "@tbe/constants";
 import type { UserPointsActionType } from "@tbe/interface";
 
+// ── Theme ──
+
+export type ThemeType = "light" | "dark";
+
 // ── Celebration & Toast ──
 
 export type CelebrationType = "points" | "levelup" | "achievement";
@@ -24,6 +28,7 @@ export interface ToastData {
 export interface GamificationContextType {
   triggerCelebration: (data: CelebrationData) => void;
   showToast: (data: ToastData) => void;
+  theme: ThemeType;
 }
 
 // ── Gamified Action ──
@@ -89,4 +94,5 @@ export interface GamificationToastProps {
   levelName?: string;
   onClose: () => void;
   duration?: number;
+  theme?: ThemeType;
 }
