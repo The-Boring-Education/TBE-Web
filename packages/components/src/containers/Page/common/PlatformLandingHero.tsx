@@ -636,7 +636,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="relative z-30 w-full max-w-[340px] sm:max-w-[580px] md:max-w-[760px] lg:max-w-[930px] mt-1 sm:mt-2 mb-6 px-2 sm:px-4"
+            className="hidden sm:block relative z-30 w-full max-w-[340px] sm:max-w-[580px] md:max-w-[760px] lg:max-w-[930px] mt-1 sm:mt-2 mb-6 px-2 sm:px-4"
           >
             <Terminal
               windowTitle="the-boring-education.sh"
