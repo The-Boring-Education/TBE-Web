@@ -84,12 +84,16 @@ const enrollInCourse: EnrollmentHandler = async (payment) => {
 
 const createSubscription: EnrollmentHandler = async (payment) => {
   try {
-    const plan = planTypeMap[
-      String(payment.productId) as keyof typeof planTypeMap
-    ] || {
-      type: "3Months" as const,
-      duration: 1,
-    };
+    const plan =
+      planTypeMap[
+        String(payment.productId).toLowerCase() as keyof typeof planTypeMap
+      ];
+    if (!plan) {
+      return {
+        success: false,
+        error: `Unknown subscription plan: ${payment.productId}`,
+      };
+    }
 
     const expiryDate =
       plan.type === "Lifetime"
@@ -103,9 +107,23 @@ const createSubscription: EnrollmentHandler = async (payment) => {
       );
 
     if (existingSubscription) {
+      if (plan.type !== "Lifetime") {
+        const currentExpiry = existingSubscription.expiryDate.getTime();
+        const extensionStart = Math.max(currentExpiry, Date.now());
+        existingSubscription.expiryDate = new Date(
+          extensionStart + plan.duration * 30 * 24 * 60 * 60 * 1000,
+        );
+        existingSubscription.duration += plan.duration;
+        await existingSubscription.save();
+        await updateUserSubscriptionStatusInDB({
+          userId: payment.user.toString(),
+          subscriptionStatus: "Active",
+          subscriptionExpiry: existingSubscription.expiryDate,
+        });
+      }
       return {
         success: true,
-        data: { alreadyEnrolled: true, existingSubscription },
+        data: { renewed: true, existingSubscription },
       };
     }
 
