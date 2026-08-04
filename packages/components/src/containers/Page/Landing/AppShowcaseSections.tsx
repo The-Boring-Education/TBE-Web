@@ -1,6 +1,7 @@
 import { SectionHeaderContainer, Text } from "@tbe/components";
 import { motion } from "framer-motion";
 import {
+  BookOpen,
   CheckCircle2,
   Clock,
   ExternalLink,
@@ -11,6 +12,8 @@ import {
   GraduationCap,
   Layers,
   Lock,
+  MessageSquare,
+  PlayCircle,
   UserCheck,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -62,7 +65,274 @@ export function AppShowcaseSections({
       className="relative space-y-10 pt-2 pb-8 sm:space-y-12 md:space-y-16 md:pt-4 md:pb-16 bg-transparent select-none overflow-hidden"
     >
       {/* ─────────────────────────────────────────────────────────────
-          1. DSA YATRA SHOWCASE
+          1. SHIKSHA SHOWCASE
+      ───────────────────────────────────────────────────────────── */}
+      <section
+        id="showcase-shiksha"
+        className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6"
+      >
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10 lg:items-center">
+          {/* Text — always first on mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5 }}
+            className="space-y-3 sm:space-y-4"
+          >
+            <SectionHeaderContainer
+              heading="Shiksha:"
+              focusText="Learn Full-Stack Development the Right Way."
+              headingLevel={3}
+              textCenter={false}
+            />
+            <Text className="paragraph text-grey" level="p">
+              Structured, project-based courses covering Frontend, Backend, and
+              Full-Stack development — taught by engineers who work in the
+              industry, not just talk about it.
+            </Text>
+
+            <ul className="space-y-2 pt-1">
+              {[
+                "Beginner-to-advanced roadmaps for JS, React, Node & more",
+                "Hands-on projects you can add directly to your portfolio",
+                "Community-supported learning with peer & mentor reviews",
+              ].map((bullet) => (
+                <li key={bullet} className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                    {bullet}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="pt-1">
+              <a
+                href="https://www.theboringeducation.com/shiksha"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#FF5757] px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#e04343] hover:shadow-lg"
+              >
+                Explore Shiksha <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Widget */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full"
+          >
+            <WidgetCard>
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
+                    <BookOpen className="h-3.5 w-3.5 text-[#FF5757]" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                      My Learning Path
+                    </h4>
+                    <p className="text-[10px] text-zinc-500 font-medium">
+                      Zero to One Frontend Development
+                    </p>
+                  </div>
+                </div>
+                <span className="flex items-center gap-1 shrink-0 rounded-full bg-[rgba(255,87,87,0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
+                  68% Done
+                </span>
+              </div>
+
+              {/* Module list */}
+              <div className="space-y-1.5">
+                {[
+                  {
+                    name: "HTML & CSS Fundamentals",
+                    status: "Completed",
+                    icon: CheckCircle2,
+                    color: "text-[#FF5757]",
+                  },
+                  {
+                    name: "JavaScript ES6+ Essentials",
+                    status: "Completed",
+                    icon: CheckCircle2,
+                    color: "text-[#FF5757]",
+                  },
+                  {
+                    name: "React — Component Architecture",
+                    status: "In Progress",
+                    icon: PlayCircle,
+                    color: "text-[#FF5757]",
+                  },
+                  {
+                    name: "Node.js & REST APIs",
+                    status: "Upcoming",
+                    icon: Lock,
+                    color: "text-zinc-300",
+                  },
+                  {
+                    name: "Full-Stack Capstone Project",
+                    status: "Locked",
+                    icon: Lock,
+                    color: "text-zinc-300",
+                  },
+                ].map((mod) => (
+                  <RowItem key={mod.name}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <mod.icon
+                        className={`h-3.5 w-3.5 shrink-0 ${mod.color}`}
+                      />
+                      <span className="text-xs font-semibold text-zinc-800 truncate">
+                        {mod.name}
+                      </span>
+                    </div>
+                    <span className="hidden sm:block text-[10px] font-medium text-zinc-400 shrink-0">
+                      {mod.status}
+                    </span>
+                  </RowItem>
+                ))}
+              </div>
+            </WidgetCard>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          2. INTERVIEW PREP SHOWCASE
+      ───────────────────────────────────────────────────────────── */}
+      <section
+        id="showcase-interviewprep"
+        className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6"
+      >
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10 lg:items-center">
+          {/* Widget — second on mobile, first on desktop */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full order-2 lg:order-1"
+          >
+            <WidgetCard>
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
+                    <MessageSquare className="h-3.5 w-3.5 text-[#FF5757]" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                      Interview Question Bank
+                    </h4>
+                    <p className="text-[10px] text-zinc-500 font-medium">
+                      JavaScript · React · Node · System Design
+                    </p>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-[rgba(255,87,87,0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
+                  500+ Qs
+                </span>
+              </div>
+
+              <div className="space-y-1.5">
+                {[
+                  {
+                    question: "Explain event loop in JavaScript",
+                    topic: "JavaScript",
+                    level: "Mid",
+                  },
+                  {
+                    question: "Virtual DOM vs Real DOM",
+                    topic: "React",
+                    level: "Junior",
+                  },
+                  {
+                    question: "What is closure & hoisting?",
+                    topic: "JavaScript",
+                    level: "Junior",
+                  },
+                  {
+                    question: "Design a URL shortener",
+                    topic: "System Design",
+                    level: "Senior",
+                  },
+                ].map((q) => (
+                  <RowItem key={q.question}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <MessageSquare className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
+                      <div className="min-w-0">
+                        <h5 className="text-xs font-semibold text-zinc-800 truncate">
+                          {q.question}
+                        </h5>
+                        <p className="text-[10px] text-zinc-400 font-medium">
+                          {q.topic}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="shrink-0 rounded-md bg-[rgba(255,87,87,0.10)] px-2 py-0.5 text-[9px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.15)]">
+                      {q.level}
+                    </span>
+                  </RowItem>
+                ))}
+              </div>
+            </WidgetCard>
+          </motion.div>
+
+          {/* Text — first on mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5 }}
+            className="space-y-3 sm:space-y-4 order-1 lg:order-2"
+          >
+            <SectionHeaderContainer
+              heading="Interview Prep:"
+              focusText="Crack Tech Interviews with Curated Question Banks."
+              headingLevel={3}
+              textCenter={false}
+            />
+            <Text className="paragraph text-grey" level="p">
+              Access structured interview question sheets for JavaScript, React,
+              Node.js, Python, Java, and System Design — organised by role level
+              so you always practise what matters most.
+            </Text>
+
+            <ul className="space-y-2 pt-1">
+              {[
+                "Role-level filtered questions (Junior, Mid, Senior)",
+                "Topic-wise sheets for JS, React, Node, Python & more",
+                "System Design primers with diagrams & examples",
+              ].map((bullet) => (
+                <li key={bullet} className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                    {bullet}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="pt-1">
+              <a
+                href="https://www.theboringeducation.com/interview-prep"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#FF5757] px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#e04343] hover:shadow-lg"
+              >
+                Start Interview Prep <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          3. DSA YATRA SHOWCASE
       ───────────────────────────────────────────────────────────── */}
       <section
         id="showcase-dsayatra"
@@ -238,7 +508,7 @@ export function AppShowcaseSections({
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          2. ONCAMPUS SHOWCASE
+          4. ONCAMPUS SHOWCASE
       ───────────────────────────────────────────────────────────── */}
       <section
         id="showcase-oncampus"
@@ -374,10 +644,10 @@ export function AppShowcaseSections({
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          3. RESOURCE APP SHOWCASE
+          5. RESUMEYATRA SHOWCASE
       ───────────────────────────────────────────────────────────── */}
       <section
-        id="showcase-resources"
+        id="showcase-resumeyatra"
         className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6"
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10 lg:items-center">
@@ -386,26 +656,26 @@ export function AppShowcaseSections({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.45 }}
+            transition={{ duration: 0.5 }}
             className="space-y-3 sm:space-y-4"
           >
             <SectionHeaderContainer
-              heading="Resource App:"
-              focusText="Free Open-Source Tech Vault for Developers."
+              heading="ResumeYatra:"
+              focusText="Build ATS-Friendly Resumes That Get Calls."
               headingLevel={3}
               textCenter={false}
             />
             <Text className="paragraph text-grey" level="p">
-              Access curated developer roadmaps, tech interview cheatsheets,
-              system design primers, and open-source project guides — 100% free
-              forever.
+              Score your resume against ATS screeners, optimize bullet points
+              with action verbs, and export recruiter-approved tech resume
+              templates instantly.
             </Text>
 
             <ul className="space-y-2 pt-1">
               {[
-                "High-quality tech cheatsheets (JS, React, Node, Python, SQL)",
-                "Handpicked GitHub repositories & open-source projects",
-                "No paywalls or hidden subscriptions",
+                "Instant ATS compatibility score scanner (0 to 100)",
+                "Action verb & metric impact keyword suggestions",
+                "Modern single-column LaTeX templates for developers",
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -418,12 +688,12 @@ export function AppShowcaseSections({
 
             <div className="pt-1">
               <a
-                href="https://resources.theboringeducation.com"
+                href="https://resumeyatra.theboringeducation.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#FF5757] px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#e04343] hover:shadow-lg"
               >
-                Access Free Resources <ExternalLink className="h-3.5 w-3.5" />
+                Build Resume Now <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
           </motion.div>
@@ -440,63 +710,51 @@ export function AppShowcaseSections({
               <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
-                    <FolderGit2 className="h-3.5 w-3.5 text-[#FF5757]" />
+                    <FileCheck className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-xs font-bold text-zinc-900">
-                      Developer Vault
+                      Live ATS Score Inspector
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
-                      Cheatsheets & Study Guides
+                      Software Engineer Template
                     </p>
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full bg-[rgba(255,87,87,0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
-                  50+ Free
+                <div className="text-right shrink-0">
+                  <span className="text-base font-extrabold text-[#FF5757]">
+                    92/100
+                  </span>
+                  <p className="text-[9px] font-bold text-zinc-400 tracking-wide uppercase">
+                    ATS Score
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-2.5 flex items-center gap-2">
+                <div className="h-px flex-1 bg-zinc-100" />
+                <span className="text-[10px] text-zinc-400 font-medium">
+                  Score Breakdown
                 </span>
+                <div className="h-px flex-1 bg-zinc-100" />
               </div>
 
               <div className="space-y-1.5">
                 {[
-                  {
-                    title: "JavaScript ES6+ Cheatsheet",
-                    type: "PDF & Web",
-                    reads: "14.2k",
-                    tag: "Popular",
-                  },
-                  {
-                    title: "React Interview 50 Questions",
-                    type: "Interview Sheet",
-                    reads: "22.8k",
-                    tag: "Featured",
-                  },
-                  {
-                    title: "System Design for Beginners",
-                    type: "Guide",
-                    reads: "9.5k",
-                    tag: "Essential",
-                  },
-                  {
-                    title: "SQL & DB Queries Handbook",
-                    type: "Handbook",
-                    reads: "11.1k",
-                    tag: "Free",
-                  },
-                ].map((res) => (
-                  <RowItem key={res.title}>
+                  { label: "Action Verbs & Impact Metrics", score: "+30 pts" },
+                  { label: "Developer Keyword Match", score: "+25 pts" },
+                  { label: "Single Column Clean Formatting", score: "+20 pts" },
+                  { label: "GitHub & Project Links", score: "+17 pts" },
+                ].map((item) => (
+                  <RowItem key={item.label}>
                     <div className="flex items-center gap-2 min-w-0">
-                      <FileText className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
-                      <div className="min-w-0">
-                        <h5 className="text-xs font-semibold text-zinc-800 truncate">
-                          {res.title}
-                        </h5>
-                        <p className="text-[10px] text-zinc-400 font-medium">
-                          {res.type} · {res.reads}
-                        </p>
-                      </div>
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
+                      <span className="text-xs font-semibold text-zinc-800 truncate">
+                        {item.label}
+                      </span>
                     </div>
-                    <span className="shrink-0 rounded-md bg-[rgba(255,87,87,0.10)] px-2 py-0.5 text-[9px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.15)]">
-                      {res.tag}
+                    <span className="shrink-0 text-[10px] font-extrabold text-[#FF5757] bg-[rgba(255,87,87,0.10)] px-1.5 py-0.5 rounded-md ring-1 ring-[rgba(255,87,87,0.15)]">
+                      {item.score}
                     </span>
                   </RowItem>
                 ))}
@@ -507,7 +765,7 @@ export function AppShowcaseSections({
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          4. PREPYATRA SHOWCASE
+          6. PREPYATRA SHOWCASE
       ───────────────────────────────────────────────────────────── */}
       <section
         id="showcase-prepyatra"
@@ -633,10 +891,10 @@ export function AppShowcaseSections({
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          5. RESUMEYATRA SHOWCASE
+          7. RESOURCE APP SHOWCASE
       ───────────────────────────────────────────────────────────── */}
       <section
-        id="showcase-resumeyatra"
+        id="showcase-resources"
         className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6"
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10 lg:items-center">
@@ -645,26 +903,26 @@ export function AppShowcaseSections({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.45 }}
             className="space-y-3 sm:space-y-4"
           >
             <SectionHeaderContainer
-              heading="ResumeYatra:"
-              focusText="Build ATS-Friendly Resumes That Get Calls."
+              heading="Resource App:"
+              focusText="Free Open-Source Tech Vault for Developers."
               headingLevel={3}
               textCenter={false}
             />
             <Text className="paragraph text-grey" level="p">
-              Score your resume against ATS screeners, optimize bullet points
-              with action verbs, and export recruiter-approved tech resume
-              templates instantly.
+              Access curated developer roadmaps, tech interview cheatsheets,
+              system design primers, and open-source project guides — 100% free
+              forever.
             </Text>
 
             <ul className="space-y-2 pt-1">
               {[
-                "Instant ATS compatibility score scanner (0 to 100)",
-                "Action verb & metric impact keyword suggestions",
-                "Modern single-column LaTeX templates for developers",
+                "High-quality tech cheatsheets (JS, React, Node, Python, SQL)",
+                "Handpicked GitHub repositories & open-source projects",
+                "No paywalls or hidden subscriptions",
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -677,12 +935,12 @@ export function AppShowcaseSections({
 
             <div className="pt-1">
               <a
-                href="https://resumeyatra.theboringeducation.com"
+                href="https://resources.theboringeducation.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#FF5757] px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#e04343] hover:shadow-lg"
               >
-                Build Resume Now <ExternalLink className="h-3.5 w-3.5" />
+                Access Free Resources <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
           </motion.div>
@@ -699,51 +957,63 @@ export function AppShowcaseSections({
               <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
-                    <FileCheck className="h-3.5 w-3.5 text-[#FF5757]" />
+                    <FolderGit2 className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-xs font-bold text-zinc-900">
-                      Live ATS Score Inspector
+                      Developer Vault
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
-                      Software Engineer Template
+                      Cheatsheets & Study Guides
                     </p>
                   </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <span className="text-base font-extrabold text-[#FF5757]">
-                    92/100
-                  </span>
-                  <p className="text-[9px] font-bold text-zinc-400 tracking-wide uppercase">
-                    ATS Score
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-2.5 flex items-center gap-2">
-                <div className="h-px flex-1 bg-zinc-100" />
-                <span className="text-[10px] text-zinc-400 font-medium">
-                  Score Breakdown
+                <span className="shrink-0 rounded-full bg-[rgba(255,87,87,0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
+                  50+ Free
                 </span>
-                <div className="h-px flex-1 bg-zinc-100" />
               </div>
 
               <div className="space-y-1.5">
                 {[
-                  { label: "Action Verbs & Impact Metrics", score: "+30 pts" },
-                  { label: "Developer Keyword Match", score: "+25 pts" },
-                  { label: "Single Column Clean Formatting", score: "+20 pts" },
-                  { label: "GitHub & Project Links", score: "+17 pts" },
-                ].map((item) => (
-                  <RowItem key={item.label}>
+                  {
+                    title: "JavaScript ES6+ Cheatsheet",
+                    type: "PDF & Web",
+                    reads: "14.2k",
+                    tag: "Popular",
+                  },
+                  {
+                    title: "React Interview 50 Questions",
+                    type: "Interview Sheet",
+                    reads: "22.8k",
+                    tag: "Featured",
+                  },
+                  {
+                    title: "System Design for Beginners",
+                    type: "Guide",
+                    reads: "9.5k",
+                    tag: "Essential",
+                  },
+                  {
+                    title: "SQL & DB Queries Handbook",
+                    type: "Handbook",
+                    reads: "11.1k",
+                    tag: "Free",
+                  },
+                ].map((res) => (
+                  <RowItem key={res.title}>
                     <div className="flex items-center gap-2 min-w-0">
-                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
-                      <span className="text-xs font-semibold text-zinc-800 truncate">
-                        {item.label}
-                      </span>
+                      <FileText className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
+                      <div className="min-w-0">
+                        <h5 className="text-xs font-semibold text-zinc-800 truncate">
+                          {res.title}
+                        </h5>
+                        <p className="text-[10px] text-zinc-400 font-medium">
+                          {res.type} · {res.reads}
+                        </p>
+                      </div>
                     </div>
-                    <span className="shrink-0 text-[10px] font-extrabold text-[#FF5757] bg-[rgba(255,87,87,0.10)] px-1.5 py-0.5 rounded-md ring-1 ring-[rgba(255,87,87,0.15)]">
-                      {item.score}
+                    <span className="shrink-0 rounded-md bg-[rgba(255,87,87,0.10)] px-2 py-0.5 text-[9px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.15)]">
+                      {res.tag}
                     </span>
                   </RowItem>
                 ))}
