@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { QuizSessionQuestion } from "@/lib/database";
-import { completeQuizSessionInDB } from "@/lib/database";
+import { completeQuizSessionInDB, QuizSession } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -25,6 +27,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    const userId = getAuthenticatedUserId(req, res);
+    if (!userId) return;
+
+    const ownedSession = await QuizSession.findById(sessionId)
+      .select("userId")
+      .lean();
+    if (!ownedSession) {
+      return res
+        .status(404)
+        .json(sendAPIResponse({ status: false, message: "Session not found" }));
+    }
+    if (ownedSession.userId.toString() !== userId) {
+      return res
+        .status(403)
+        .json(sendAPIResponse({ status: false, message: "Access denied" }));
+    }
+
     const { data: session, error } = await completeQuizSessionInDB(sessionId);
 
     if (error || !session) {
@@ -75,7 +94,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           questionIndex: index,
           question: q.question,
           options: q.options,
-          correctAnswer: q.correctAnswer,
           userAnswer: q.userAnswer,
           isCorrect: q.isCorrect,
           timeSpent: q.timeSpent,
@@ -142,4 +160,4 @@ function calculateDifficultyPerformance(
   };
 }
 
-export default withApiHandler(handler);
+export default withApiHandler(withUserAuth(handler));

@@ -4,7 +4,9 @@ import { submitAnswerInDB } from "@/lib/database";
 import { QuizSession } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
 interface SubmitAnswerBody {
   questionIndex: number;
@@ -65,6 +67,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    const userId = getAuthenticatedUserId(req, res);
+    if (!userId) return;
+
+    const ownedSession = await QuizSession.findById(sessionId)
+      .select("userId")
+      .lean();
+    if (!ownedSession) {
+      return res
+        .status(404)
+        .json(sendAPIResponse({ status: false, message: "Session not found" }));
+    }
+    if (ownedSession.userId.toString() !== userId) {
+      return res
+        .status(403)
+        .json(sendAPIResponse({ status: false, message: "Access denied" }));
+    }
+
     // Submit the answer
     const { data: result, error } = await submitAnswerInDB({
       sessionId,
@@ -138,4 +157,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withApiHandler(handler);
+export default withApiHandler(withUserAuth(handler));

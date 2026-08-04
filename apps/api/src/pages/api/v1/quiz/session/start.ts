@@ -4,10 +4,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Quiz, QuizSession } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId } from "@/middleware/userAuth";
 
 interface StartSessionBody {
-  userId: string;
   quizId: string;
   difficulty?: "easy" | "medium" | "hard" | "mixed";
   questionCount?: number;
@@ -24,11 +25,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const {
-    userId,
     quizId,
     difficulty = "mixed",
     questionCount = 10,
   }: StartSessionBody = req.body;
+  const userId = getAuthenticatedUserId(req, res);
+  if (!userId) return;
 
   // Validation
   if (!userId || !quizId) {
@@ -169,4 +171,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withApiHandler(handler);
+export default withApiHandler(withUserAuth(handler));
