@@ -15,6 +15,8 @@ import {
   MessageSquare,
   PlayCircle,
   UserCheck,
+  Users,
+  Zap,
 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -82,30 +84,33 @@ export function AppShowcaseSections({
           >
             <SectionHeaderContainer
               heading="Shiksha:"
-              focusText="Learn Full-Stack Development the Right Way."
+              focusText="Learn Tech with Mini Courses."
               headingLevel={3}
               textCenter={false}
             />
             <Text className="paragraph text-grey" level="p">
-              Structured, project-based courses covering Frontend, Backend, and
-              Full-Stack development — taught by engineers who work in the
-              industry, not just talk about it.
+              Master complex tech topics through bite-sized, free courses
+              designed for busy professionals and students.
             </Text>
 
-            <ul className="space-y-2 pt-1">
+            <div className="grid grid-cols-2 gap-2.5 pt-1">
               {[
-                "Beginner-to-advanced roadmaps for JS, React, Node & more",
-                "Hands-on projects you can add directly to your portfolio",
-                "Community-supported learning with peer & mentor reviews",
-              ].map((bullet) => (
-                <li key={bullet} className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
-                    {bullet}
-                  </span>
-                </li>
+                { label: "4+ Free Courses", icon: BookOpen },
+                { label: "Bite-sized Learning", icon: Zap },
+                { label: "10K+ Students", icon: Users },
+                { label: "Free Certificates", icon: FileCheck },
+              ].map(({ label, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-white/70 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm backdrop-blur-sm transition-all hover:border-zinc-300 hover:bg-white"
+                >
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.12)] text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
+                    <Icon className="h-3.5 w-3.5" />
+                  </div>
+                  <span className="leading-tight">{label}</span>
+                </div>
               ))}
-            </ul>
+            </div>
 
             <div className="pt-1">
               <a
@@ -114,7 +119,7 @@ export function AppShowcaseSections({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#FF5757] px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#e04343] hover:shadow-lg"
               >
-                Explore Shiksha <ExternalLink className="h-3.5 w-3.5" />
+                Explore Courses <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
           </motion.div>
@@ -136,50 +141,44 @@ export function AppShowcaseSections({
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-xs font-bold text-zinc-900 truncate">
-                      My Learning Path
+                      Free Mini Courses
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
-                      Zero to One Frontend Development
+                      Bite-sized learning paths
                     </p>
                   </div>
                 </div>
                 <span className="flex items-center gap-1 shrink-0 rounded-full bg-[rgba(255,87,87,0.12)] px-2 py-0.5 text-[10px] font-extrabold text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
-                  68% Done
+                  4+ Courses
                 </span>
               </div>
 
-              {/* Module list */}
+              {/* Course list */}
               <div className="space-y-1.5">
                 {[
                   {
-                    name: "HTML & CSS Fundamentals",
+                    name: "Logic Building for Everyone",
                     status: "Completed",
                     icon: CheckCircle2,
                     color: "text-[#FF5757]",
                   },
                   {
-                    name: "JavaScript ES6+ Essentials",
+                    name: "Basics of Programming with JS",
                     status: "Completed",
                     icon: CheckCircle2,
                     color: "text-[#FF5757]",
                   },
                   {
-                    name: "React — Component Architecture",
+                    name: "Zero to One Frontend Development",
                     status: "In Progress",
                     icon: PlayCircle,
                     color: "text-[#FF5757]",
                   },
                   {
-                    name: "Node.js & REST APIs",
-                    status: "Upcoming",
-                    icon: Lock,
-                    color: "text-zinc-300",
-                  },
-                  {
-                    name: "Full-Stack Capstone Project",
-                    status: "Locked",
-                    icon: Lock,
-                    color: "text-zinc-300",
+                    name: "Zero to One Backend Development",
+                    status: "Enrolled",
+                    icon: BookOpen,
+                    color: "text-[#FF5757]",
                   },
                 ].map((mod) => (
                   <RowItem key={mod.name}>
