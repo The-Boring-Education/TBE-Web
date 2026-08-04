@@ -86,7 +86,7 @@ const PointsBadge = ({
             initial={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
-            <div className="bg-white rounded-2xl shadow-xl p-5 w-80 border border-gray-200">
+            <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-2xl shadow-xl p-5 w-80 border border-gray-200/60 dark:border-zinc-700/60">
               <div className="flex items-center gap-4">
                 {/* Progress ring */}
                 <div className="flex-shrink-0 relative">
@@ -98,10 +98,11 @@ const PointsBadge = ({
                     <circle
                       cx={radius + 8}
                       cy={radius + 8}
-                      fill="white"
+                      fill="transparent"
                       r={radius}
-                      stroke="#f3f4f6"
+                      stroke="currentColor"
                       strokeWidth="7"
+                      className="text-gray-200 dark:text-zinc-700"
                     />
                     <circle
                       cx={radius + 8}
@@ -117,7 +118,7 @@ const PointsBadge = ({
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="text-xl font-bold text-gray-900">
+                    <span className="text-xl font-bold text-gray-900 dark:text-zinc-100">
                       {points}
                     </span>
                   </div>
@@ -125,7 +126,7 @@ const PointsBadge = ({
 
                 {/* Level info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] uppercase text-gray-400 font-semibold tracking-widest">
+                  <p className="text-[10px] uppercase text-gray-400 dark:text-zinc-400 font-semibold tracking-widest">
                     YOU&apos;RE AT
                   </p>
                   <p className="text-lg font-bold text-[#ef4444] leading-tight mt-0.5">
