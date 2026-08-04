@@ -6,6 +6,7 @@ import { Subscription } from "@/lib/database";
 import { type CreateSubscriptionPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -163,4 +164,5 @@ const handleGetSubscription = async (
   }
 };
 
-export default withApiHandler(handler);
+// Subscription records are entitlements and may only be created by admins.
+export default withApiHandler(withVerifiedAdminAuth(handler));
