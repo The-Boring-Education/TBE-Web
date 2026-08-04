@@ -9,7 +9,7 @@ const BannerVariantC = ({
   buttonLink,
   imageSrc,
 }: BannerProps) => (
-  <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 md:py-12 select-none">
+  <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16 select-none">
     <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center">
       {imageSrc ? (
         <div className="md:col-span-4 flex justify-center">
