@@ -441,8 +441,15 @@ const incrementCouponUsageFromDB = async (
   couponId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const updatedCoupon = await Coupon.findByIdAndUpdate(
-      couponId,
+    const updatedCoupon = await Coupon.findOneAndUpdate(
+      {
+        _id: couponId,
+        $or: [
+          { maxUsage: { $exists: false } },
+          { maxUsage: null },
+          { $expr: { $lt: ["$currentUsage", "$maxUsage"] } },
+        ],
+      },
       { $inc: { currentUsage: 1 } },
       { new: true },
     );

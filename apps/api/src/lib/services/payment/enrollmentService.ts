@@ -1,4 +1,5 @@
 import { getProductConfig } from "@/lib/constants/products";
+import { incrementCouponUsageFromDB } from "@/lib/database";
 import type { PaymentModel } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
@@ -29,6 +30,17 @@ const processPostPaymentEnrollment = async (
         error: result.error,
       });
     } else {
+      if (payment.appliedCoupon && !result.data?.alreadyEnrolled) {
+        const { error: couponError } = await incrementCouponUsageFromDB(
+          payment.appliedCoupon.toString(),
+        );
+        if (couponError) {
+          logger.error("Coupon usage update failed", {
+            orderId: payment.orderId,
+            error: couponError,
+          });
+        }
+      }
       logger.info("Post-payment enrollment succeeded", {
         productType: payment.productType,
         orderId: payment.orderId,
