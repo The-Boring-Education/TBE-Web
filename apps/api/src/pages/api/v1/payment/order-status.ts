@@ -29,6 +29,19 @@ const mapCashfreeOrderStatus = (
 const syncPaymentStatusIfPending = async (
   payment: PaymentModel,
 ): Promise<PaymentModel> => {
+  // A webhook can commit SUCCESS before enrollment finishes. Reconcile that
+  // state whenever the client polls instead of treating it as terminal.
+  if (payment.status === "SUCCESS") {
+    const enrollmentResult = await processPostPaymentEnrollment(payment);
+    if (!enrollmentResult.success) {
+      logger.error("order-status: post-payment enrollment retry failed", {
+        orderId: payment.orderId,
+        error: enrollmentResult.error,
+      });
+    }
+    return payment;
+  }
+
   if (payment.status !== "PENDING") {
     return payment;
   }
