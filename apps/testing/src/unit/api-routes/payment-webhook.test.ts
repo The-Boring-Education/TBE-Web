@@ -7,6 +7,8 @@ const mockUpdatePaymentStatusToDB = vi.fn();
 const mockProcessPostPaymentEnrollment = vi.fn();
 const mockVerifyWebhookSignature = vi.fn();
 const mockGetRawBody = vi.fn();
+const mockClaimPaymentCouponUsageFromDB = vi.fn();
+const mockMarkPaymentEnrollmentCompletedInDB = vi.fn();
 
 vi.mock("raw-body", () => ({
   default: (...args: any[]) => mockGetRawBody(...args),
@@ -48,6 +50,11 @@ vi.mock("../../../../api/src/lib/database", () => ({
     mockGetPaymentByOrderIdFromDB(...args),
   updatePaymentStatusToDB: (...args: any[]) =>
     mockUpdatePaymentStatusToDB(...args),
+  claimPaymentCouponUsageFromDB: (...args: any[]) =>
+    mockClaimPaymentCouponUsageFromDB(...args),
+  incrementCouponUsageFromDB: vi.fn(),
+  markPaymentEnrollmentCompletedInDB: (...args: any[]) =>
+    mockMarkPaymentEnrollmentCompletedInDB(...args),
 }));
 
 vi.mock("../../../../api/src/lib/services/payment", () => ({
@@ -99,6 +106,8 @@ describe("Payment Webhook API Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockVerifyWebhookSignature.mockReturnValue({ isValid: true });
+    mockClaimPaymentCouponUsageFromDB.mockResolvedValue({ data: null });
+    mockMarkPaymentEnrollmentCompletedInDB.mockResolvedValue({ data: null });
   });
 
   it("should reject non-POST methods", async () => {

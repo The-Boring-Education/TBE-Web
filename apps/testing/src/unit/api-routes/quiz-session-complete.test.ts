@@ -3,10 +3,16 @@ import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockCompleteQuizSessionInDB = vi.fn();
+const mockQuizSessionFindById = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   completeQuizSessionInDB: (...args: unknown[]) =>
     mockCompleteQuizSessionInDB(...args),
+  QuizSession: {
+    findById: (...args: unknown[]) => ({
+      lean: () => mockQuizSessionFindById(...args),
+    }),
+  },
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -26,6 +32,10 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: unknown) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockReturnValue("user-123"),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/quiz/session/[sessionId]/complete";
 
 const baseQuestion = {
@@ -40,6 +50,7 @@ const baseQuestion = {
 describe("Quiz Session Complete API Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockQuizSessionFindById.mockResolvedValue({ userId: "user-123" });
   });
 
   it("rejects non-POST methods", async () => {

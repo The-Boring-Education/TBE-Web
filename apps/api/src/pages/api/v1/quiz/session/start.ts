@@ -24,9 +24,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
-  const authenticatedUserId = getAuthenticatedUserId(req, res);
-  if (!authenticatedUserId) return;
-
   const {
     userId,
     quizId,
@@ -43,6 +40,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       }),
     );
   }
+
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
 
   if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 

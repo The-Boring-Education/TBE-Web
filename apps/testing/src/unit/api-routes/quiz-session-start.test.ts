@@ -35,6 +35,11 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: unknown) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockReturnValue("u1"),
+  verifyOwnership: vi.fn().mockReturnValue(true),
+}));
+
 vi.mock("mongoose", () => ({
   Types: {
     ObjectId: vi.fn((id?: string) => id || "generated-id"),

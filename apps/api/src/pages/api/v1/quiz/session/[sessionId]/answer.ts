@@ -20,9 +20,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       .json(sendAPIResponse({ status: false, message: "Method not allowed" }));
   }
 
-  const authenticatedUserId = getAuthenticatedUserId(req, res);
-  if (!authenticatedUserId) return;
-
   const { sessionId } = req.query;
   const { questionIndex, answer, timeSpent }: SubmitAnswerBody = req.body;
 
@@ -48,6 +45,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+
   if (typeof questionIndex !== "number" || questionIndex < 0) {
     return res
       .status(400)
@@ -69,7 +69,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const sessionOwner = await QuizSession.findById(sessionId).select("userId");
+    const sessionOwner = await QuizSession.findById(sessionId).lean();
     if (!sessionOwner) {
       return res
         .status(404)

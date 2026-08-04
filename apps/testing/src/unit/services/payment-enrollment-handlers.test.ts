@@ -11,6 +11,7 @@ const mockEnrollInACourse = vi.fn();
 const mockGetActiveSubscriptionByUserFromDB = vi.fn();
 const mockCreateSubscriptionInDB = vi.fn();
 const mockUpdateUserSubscriptionStatusInDB = vi.fn();
+const mockExtendSubscriptionInDB = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   getEnrolledSheetFromDB: (...args: unknown[]) =>
@@ -27,6 +28,8 @@ vi.mock("../../../../api/src/lib/database", () => ({
     mockCreateSubscriptionInDB(...args),
   updateUserSubscriptionStatusInDB: (...args: unknown[]) =>
     mockUpdateUserSubscriptionStatusInDB(...args),
+  extendSubscriptionInDB: (...args: unknown[]) =>
+    mockExtendSubscriptionInDB(...args),
 }));
 
 vi.mock("../../../../api/src/lib/constants", () => ({
@@ -77,6 +80,7 @@ const createMockPayment = (
 describe("Payment Enrollment Handlers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockExtendSubscriptionInDB.mockResolvedValue({ data: {} });
   });
 
   describe("enrollInSheet handler", () => {
@@ -244,7 +248,7 @@ describe("Payment Enrollment Handlers", () => {
 
     it("should return alreadyEnrolled when user has active subscription", async () => {
       mockGetActiveSubscriptionByUserFromDB.mockResolvedValue({
-        data: { _id: "existing_sub" },
+        data: { _id: "existing_sub", expiryDate: new Date() },
       });
 
       const payment = createMockPayment({
@@ -256,9 +260,9 @@ describe("Payment Enrollment Handlers", () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toMatchObject({
-        alreadyEnrolled: true,
-        existingSubscription: { _id: "existing_sub" },
+        extended: true,
       });
+      expect(mockExtendSubscriptionInDB).toHaveBeenCalled();
       expect(mockCreateSubscriptionInDB).not.toHaveBeenCalled();
     });
 

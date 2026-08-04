@@ -18,6 +18,17 @@ test.describe("Platform user dashboard gate", () => {
     platformPage: page,
   }) => {
     const token = buildE2EAccessJwt();
+    await page.context().addCookies([
+      {
+        name: TBE_ACCESS_COOKIE,
+        value: token,
+        domain: "localhost",
+        path: "/",
+        sameSite: "Lax",
+        httpOnly: false,
+        secure: false,
+      },
+    ]);
     await page.addInitScript(
       ([key, value]) => {
         document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;

@@ -7,6 +7,29 @@ import { expect, test } from "../fixtures/platform.fixture";
 const TBE_ACCESS_COOKIE = "tbe_access_token";
 const TBE_REFRESH_COOKIE = "tbe_refresh_token";
 
+const setAccessCookie = async (
+  page: import("@playwright/test").Page,
+  token: string,
+) => {
+  await page.context().addCookies([
+    {
+      name: TBE_ACCESS_COOKIE,
+      value: token,
+      domain: "localhost",
+      path: "/",
+      sameSite: "Lax",
+      httpOnly: false,
+      secure: false,
+    },
+  ]);
+  await page.addInitScript(
+    ([key, value]) => {
+      document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
+    },
+    [TBE_ACCESS_COOKIE, token] as [string, string],
+  );
+};
+
 test.describe("Authentication Flow E2E Tests", () => {
   test.describe("Login/Logout Flow", () => {
     test("unauthenticated user sees login options on home page", async ({
@@ -27,12 +50,7 @@ test.describe("Authentication Flow E2E Tests", () => {
     }) => {
       // Set authentication cookie
       const token = buildE2EAccessJwt();
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
+      await setAccessCookie(page, token);
 
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
 
@@ -45,12 +63,7 @@ test.describe("Authentication Flow E2E Tests", () => {
     }) => {
       // First, authenticate
       const token = buildE2EAccessJwt();
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
+      await setAccessCookie(page, token);
 
       // Mock the logout API endpoint
       await page.route("**/api/v1/auth/logout", (route) =>
@@ -161,12 +174,7 @@ test.describe("Authentication Flow E2E Tests", () => {
       ).toString("base64url");
       const expiredToken = `${header}.${payload}.expired`;
 
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, expiredToken] as [string, string],
-      );
+      await setAccessCookie(page, expiredToken);
 
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
 
@@ -198,12 +206,7 @@ test.describe("Authentication Flow E2E Tests", () => {
         },
       ]);
 
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
+      await setAccessCookie(page, token);
 
       // Mock APIs for navigation
       await page.route("**/api/proxy/**", (route) =>
@@ -281,13 +284,18 @@ test.describe("Session Management E2E Tests", () => {
 
     const token = buildE2EAccessJwt();
 
-    // Set auth in first tab
-    await page1.addInitScript(
-      ([key, value]) => {
-        document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
+    // Set auth in the shared browser context before either tab navigates.
+    await context.addCookies([
+      {
+        name: TBE_ACCESS_COOKIE,
+        value: token,
+        domain: "localhost",
+        path: "/",
+        sameSite: "Lax",
+        httpOnly: false,
+        secure: false,
       },
-      [TBE_ACCESS_COOKIE, token] as [string, string],
-    );
+    ]);
 
     // Mock APIs
     for (const page of [page1, page2]) {

@@ -31,6 +31,10 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (handler: unknown) => handler,
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockReturnValue("user-123"),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/quiz/session/[sessionId]/answer";
 
 describe("Quiz Session Answer API Route", () => {
@@ -122,6 +126,7 @@ describe("Quiz Session Answer API Route", () => {
   });
 
   it("returns 400 when submitAnswerInDB returns error", async () => {
+    mockQuizSessionFindById.mockResolvedValue({ userId: "user-123" });
     mockSubmitAnswerInDB.mockResolvedValue({
       data: null,
       error: "Invalid answer index",
@@ -174,6 +179,7 @@ describe("Quiz Session Answer API Route", () => {
       error: null,
     });
     mockQuizSessionFindById.mockResolvedValue({
+      userId: "user-123",
       questionCount: 3,
       questions: [
         {
@@ -221,6 +227,7 @@ describe("Quiz Session Answer API Route", () => {
       error: null,
     });
     mockQuizSessionFindById.mockResolvedValue({
+      userId: "user-123",
       questionCount: 2,
       questions: [
         {
