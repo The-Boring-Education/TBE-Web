@@ -244,7 +244,12 @@ describe("Payment Enrollment Handlers", () => {
 
     it("should return alreadyEnrolled when user has active subscription", async () => {
       mockGetActiveSubscriptionByUserFromDB.mockResolvedValue({
-        data: { _id: "existing_sub" },
+        data: {
+          _id: "existing_sub",
+          expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          duration: 1,
+          save: vi.fn().mockResolvedValue(undefined),
+        },
       });
 
       const payment = createMockPayment({
@@ -256,7 +261,7 @@ describe("Payment Enrollment Handlers", () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toMatchObject({
-        alreadyEnrolled: true,
+        renewed: true,
         existingSubscription: { _id: "existing_sub" },
       });
       expect(mockCreateSubscriptionInDB).not.toHaveBeenCalled();
@@ -299,7 +304,7 @@ describe("Payment Enrollment Handlers", () => {
       expect(result.error).toBe("Update failed");
     });
 
-    it("should use default plan type when productId not in planTypeMap", async () => {
+    it("should reject unknown subscription plans", async () => {
       mockGetActiveSubscriptionByUserFromDB.mockResolvedValue({ data: null });
       mockCreateSubscriptionInDB.mockResolvedValue({
         data: { _id: "sub_default" },
@@ -313,10 +318,8 @@ describe("Payment Enrollment Handlers", () => {
 
       const result = await ENROLLMENT_HANDLERS.createSubscription(payment);
 
-      expect(result.success).toBe(true);
-      expect(result.data).toMatchObject({
-        plan: "3Months", // Default
-      });
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("Unknown subscription plan");
     });
 
     it("should set lifetime expiry date to 2099 for lifetime plans", async () => {
