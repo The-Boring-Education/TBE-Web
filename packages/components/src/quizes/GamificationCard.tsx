@@ -51,7 +51,7 @@ export function GamificationCard({
 
   if (variant === "dashboard") {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-6 max-w-lg border border-gray-100">
+      <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-2xl shadow-lg p-6 max-w-lg border border-gray-100/60 dark:border-zinc-700/60">
         <div className="flex items-center gap-6">
           {/* Left side - Progress Circle */}
           <div className="relative flex-shrink-0">
@@ -65,9 +65,10 @@ export function GamificationCard({
                   cx="50"
                   cy="50"
                   r="40"
-                  stroke="#f3f4f6"
+                  stroke="currentColor"
                   strokeWidth="8"
-                  fill="white"
+                  fill="transparent"
+                  className="text-gray-200 dark:text-zinc-700"
                 />
                 {/* Progress circle */}
                 <circle
@@ -88,7 +89,7 @@ export function GamificationCard({
 
               {/* Points text in center */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-gray-900 dark:text-zinc-100">
                   {loading ? "..." : points}
                 </span>
               </div>
@@ -99,7 +100,7 @@ export function GamificationCard({
           <div className="flex-1 min-w-0">
             <div className="space-y-3">
               {/* "YOU'RE AT" text */}
-              <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">
+              <p className="text-xs uppercase text-gray-500 dark:text-zinc-400 font-semibold tracking-wider">
                 YOU&apos;RE AT
               </p>
 
@@ -137,7 +138,7 @@ export function GamificationCard({
   // Popup version
   return (
     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50 opacity-0 animate-[fadeIn_0.2s_ease-out_forwards]">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-96 relative border border-gray-200">
+      <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-xl shadow-xl p-6 w-96 relative border border-gray-200/60 dark:border-zinc-700/60">
         <div className="flex items-center gap-5">
           {/* Left side - Progress Circle */}
           <div className="relative flex-shrink-0">
@@ -151,9 +152,10 @@ export function GamificationCard({
                   cx="50"
                   cy="50"
                   r="40"
-                  stroke="#f3f4f6"
+                  stroke="currentColor"
                   strokeWidth="8"
-                  fill="white"
+                  fill="transparent"
+                  className="text-gray-200 dark:text-zinc-700"
                 />
                 {/* Progress circle */}
                 <circle
@@ -174,7 +176,7 @@ export function GamificationCard({
 
               {/* Points text in center */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-lg font-bold text-gray-900">
+                <span className="text-lg font-bold text-gray-900 dark:text-zinc-100">
                   {loading ? "..." : points}
                 </span>
               </div>
@@ -185,7 +187,7 @@ export function GamificationCard({
           <div className="flex-1 min-w-0">
             <div className="space-y-2.5">
               {/* "YOU'RE AT" text */}
-              <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">
+              <p className="text-xs uppercase text-gray-500 dark:text-zinc-400 font-semibold tracking-wider">
                 YOU&apos;RE AT
               </p>
 
