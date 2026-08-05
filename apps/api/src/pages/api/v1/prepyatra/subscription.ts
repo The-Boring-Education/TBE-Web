@@ -164,5 +164,5 @@ const handleGetSubscription = async (
   }
 };
 
-// Subscription records are entitlements and may only be created by admins.
+// PrepYatra subscription entitlements are sensitive; this route is restricted to verified admin requests.
 export default withApiHandler(withVerifiedAdminAuth(handler));
