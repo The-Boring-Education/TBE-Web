@@ -600,6 +600,33 @@ const SheetLandingPage = ({
                       </div>
                     ))}
                   </div>
+
+                  {lockedQuestions.length > 6 && (
+                    <p className="text-center text-[11px] text-muted-foreground">
+                      + {lockedQuestions.length - 6} additional questions
+                      included...
+                    </p>
+                  )}
+
+                  {isLocked && !isPurchased && (
+                    <Button
+                      text={`Unlock All ${sheet.questions?.length} Questions · ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
+                      variant="PRIMARY"
+                      onClick={handleShowPayment}
+                      className="w-full py-2.5 text-xs sm:text-sm font-semibold rounded-lg shadow-xs"
+                    />
+                  )}
+                  {isPurchased && (
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 text-center space-y-0.5">
+                      <p className="text-xs font-bold text-emerald-600">
+                        ✓ All Questions Unlocked
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        You have full access to all {sheet.questions?.length}{" "}
+                        questions.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Locked Content Section (Subtle & Compact) */}
