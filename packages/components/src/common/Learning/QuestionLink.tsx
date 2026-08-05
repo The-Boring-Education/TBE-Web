@@ -53,7 +53,7 @@ const QuestionLink = ({
       analyticsId={`learning_question_${questionId}`}
       analyticsLabel={`question:${title}`}
       key={questionId}
-      className={`flex items-center gap-1 w-full p-2 mb-1 rounded border text-left pre-title overflow-hidden ${
+      className={`flex flex-nowrap items-center gap-2 w-full px-3 py-2 mb-1 rounded border text-left pre-title overflow-hidden ${
         isLocked
           ? isDark
             ? "text-gray-500 cursor-not-allowed border-transparent"
@@ -99,12 +99,12 @@ const QuestionLink = ({
         {isLocked ? (
           <FaLock
             className={isDark ? "text-gray-500" : "text-gray-400"}
-            size={20}
+            size={14}
           />
         ) : isCompleted ? (
-          <IoIosCheckmarkCircle className={iconColor} size={24} />
+          <IoIosCheckmarkCircle className={iconColor} size={16} />
         ) : (
-          <FaRegCircle className={iconColor} size={24} />
+          <FaRegCircle className={iconColor} size={14} />
         )}
         {isStarred && (
           <FaStar
@@ -114,7 +114,7 @@ const QuestionLink = ({
           />
         )}
       </div>
-      <span className="truncate min-w-0">{title}</span>
+      <span className="min-w-0 flex-1 break-words leading-snug">{title}</span>
     </LinkText>
   );
 };
