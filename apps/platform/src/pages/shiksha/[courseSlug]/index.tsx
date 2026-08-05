@@ -7,11 +7,9 @@ import {
   ContentFeedbackWidget,
   CourseHeroContainer,
   FeedbackPopup,
-  FlexContainer,
   LinerProgressBar,
   LoadingSpinner,
   MDXRenderer,
-  Section,
   SEO,
   Text,
 } from '@tbe/components';
@@ -28,6 +26,7 @@ import type {
 } from '@tbe/interface';
 import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
 import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
+import { BookOpen } from 'lucide-react';
 import router from 'next/router';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { FaLock, FaTrophy } from 'react-icons/fa';
@@ -371,11 +370,13 @@ const CoursePage = ({
   };
 
   const alertContainer = isSmallScreen && (
-    <Alert
-      className='my-2'
-      message='This Course will require you to write Code. Better open it on Laptop'
-      type='INFO'
-    />
+    <div className='max-w-7xl mx-auto px-4 pt-4'>
+      <Alert
+        className='rounded-xl border border-amber-200 bg-amber-50 text-amber-800'
+        message='This course includes hands-on code examples. We recommend using a laptop or desktop for the best experience.'
+        type='INFO'
+      />
+    </div>
   );
 
   // Show small loader if data is not ready
@@ -384,8 +385,10 @@ const CoursePage = ({
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Section className='md:p-2 p-2'>
+      <div className='bg-background min-h-screen font-body text-foreground'>
         {alertContainer}
+
+        {/* Hero Section */}
         <CourseHeroContainer
           id={course._id ?? ''}
           isEnrolled={course.isEnrolled}
@@ -394,35 +397,39 @@ const CoursePage = ({
           completedChapters={completedChapters}
           totalChapters={totalChapters}
         />
-      </Section>
 
-      {isDataLoading && (
-        <Section className='md:p-2 p-2'>
-          <div className='flex items-center justify-center py-8'>
-            <LoadingSpinner height={8} width={8} />
-            <Text level='p' className='ml-3 text-gray-600'>
-              Loading course content...
-            </Text>
-          </div>
-        </Section>
-      )}
-
-      {!isDataLoading && (
-        <Section id='course-content' className='md:p-2 p-2'>
-          <div ref={contentSectionRef}>
-            <FlexContainer className='w-full gap-4' itemCenter={false}>
-              {/* Left Sidebar (Chapters) */}
-              <FlexContainer
-                className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[80vh] overflow-y-auto bg-white'
-                itemCenter={false}
+        {isDataLoading && (
+          <div className='max-w-7xl mx-auto px-4 py-16 text-center'>
+            <div className='inline-flex items-center justify-center gap-3 bg-card border border-border px-6 py-4 rounded-xl shadow-xs'>
+              <LoadingSpinner height={6} width={6} />
+              <Text
+                level='p'
+                className='text-muted-foreground font-medium text-sm'
               >
-                <div className='w-full sticky top-0 bg-inherit py-2'>
-                  <Text className='heading-5' level='h5'>
-                    Chapters
-                    <Text className='text-xs text-gray-500' level='p'>
+                Loading course content...
+              </Text>
+            </div>
+          </div>
+        )}
+
+        {!isDataLoading && (
+          <div
+            id='course-content'
+            className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10'
+            ref={contentSectionRef}
+          >
+            <div className='flex flex-col lg:flex-row gap-8 items-start'>
+              {/* Left Sidebar (Chapters Navigation) */}
+              <aside className='w-full lg:w-96 xl:w-[420px] shrink-0 self-start sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-2'>
+                <div className='w-full sticky top-0 bg-card z-10 pb-2 border-b border-border/60 space-y-1.5'>
+                  <div className='flex items-center justify-between'>
+                    <h2 className='font-headings font-bold text-lg text-foreground'>
+                      Chapters
+                    </h2>
+                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20'>
                       {chapters.length} chapters
-                    </Text>
-                  </Text>
+                    </span>
+                  </div>
                   {!isLocked && (
                     <LinerProgressBar
                       completedChapters={completedChapters}
@@ -431,185 +438,181 @@ const CoursePage = ({
                   )}
                 </div>
 
-                {/* Sidebar: use button for chapter navigation, not <Link> */}
-                <FlexContainer
-                  className='gap-1 flex-grow'
-                  justifyCenter={false}
-                >
+                {/* Chapter List */}
+                <div className='flex flex-col gap-1 flex-1 overflow-y-auto pt-1'>
                   {chapters?.map(
                     ({ _id, name, content, isCompleted }, index) => {
                       const chapterId = _id?.toString();
 
                       return (
-                        <div
+                        <ChapterLink
                           key={chapterId}
-                          className='flex items-center w-full'
-                        >
-                          <ChapterLink
-                            key={chapterId}
-                            chapterId={chapterId}
-                            content={content}
-                            currentChapterId={currentChapterIdState}
-                            handleChapterClick={handleChapterClick}
-                            href='#'
-                            isCompleted={isCompleted}
-                            name={`${index + 1} - ${name}`}
-                            isLocked={isLocked}
-                          />
-                        </div>
+                          chapterId={chapterId}
+                          content={content}
+                          currentChapterId={currentChapterIdState}
+                          handleChapterClick={handleChapterClick}
+                          href='#'
+                          isCompleted={isCompleted}
+                          name={`${index + 1}. ${name}`}
+                          isLocked={isLocked}
+                        />
                       );
                     },
                   )}
-                </FlexContainer>
+                </div>
 
-                <div className='w-full sticky bottom-0 bg-inherit py-2'>
-                  {!isLocked && (
-                    <div>
-                      <CertificateBanner
-                        backgroundColor={
-                          isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
+                {/* Bottom Banners */}
+                {!isLocked && (
+                  <div className='pt-3 border-t border-border/60 space-y-2'>
+                    <CertificateBanner
+                      backgroundColor={
+                        isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
+                      }
+                      heading={
+                        isGeneratingCertificate
+                          ? 'Generating Certificate...'
+                          : isCourseCompleted
+                            ? 'View Certificate'
+                            : 'Certificate Locked'
+                      }
+                      icon={isCourseCompleted ? FaTrophy : FaLock}
+                      isLocked={!isCourseCompleted || isGeneratingCertificate}
+                      subtext={
+                        isGeneratingCertificate
+                          ? 'Generating your verified certificate...'
+                          : isCourseCompleted
+                            ? 'Download your course certificate'
+                            : 'Complete all chapters to unlock'
+                      }
+                      onClick={() => {
+                        if (
+                          isCourseCompleted &&
+                          certificateId &&
+                          !isGeneratingCertificate
+                        ) {
+                          router.push(`/certificate/${certificateId}`);
                         }
-                        heading={
-                          isGeneratingCertificate
-                            ? 'Generating Certificate...'
-                            : isCourseCompleted
-                              ? 'View Certificate'
-                              : 'Certificate Locked'
-                        }
-                        icon={isCourseCompleted ? FaTrophy : FaLock}
-                        isLocked={!isCourseCompleted || isGeneratingCertificate}
-                        subtext={
-                          isGeneratingCertificate
-                            ? 'Please wait while we generate your certificate.'
-                            : isCourseCompleted
-                              ? 'Click below to download your certificate.'
-                              : 'Complete All to Get Your Certificate.'
-                        }
+                      }}
+                    />
+
+                    {isCourseCompleted && (
+                      <ActionBanner
+                        backgroundColor='bg-blue-400'
+                        heading='Start Interview Prep'
+                        icon={FaTrophy}
+                        isLocked={false}
+                        subtext='Prepare for coding interviews next'
                         onClick={() => {
-                          if (
-                            isCourseCompleted &&
-                            certificateId &&
-                            !isGeneratingCertificate
-                          ) {
-                            router.push(`/certificate/${certificateId}`);
-                          }
+                          router.push(routes.interviewPrep);
                         }}
                       />
+                    )}
+                  </div>
+                )}
+              </aside>
 
-                      {isCourseCompleted && (
-                        <ActionBanner
-                          backgroundColor='bg-blue-400'
-                          heading='Start Interview Prep'
-                          icon={FaTrophy}
-                          isLocked={false}
-                          subtext='Take one more step and start preparing for Coding Interviews'
-                          onClick={() => {
-                            router.push(routes.interviewPrep);
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-              </FlexContainer>
-
-              {/* Main Content */}
-              <FlexContainer
-                className='border md:w-8/12 w-full p-2 rounded'
-                itemCenter={false}
-                justifyCenter={false}
-              >
+              {/* Main Content Viewer */}
+              <main className='flex-1 w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs min-h-[500px]'>
                 {isLocked ? (
-                  <div className='w-full'>
-                    <Text level='h2' className='heading-4 mb-4'>
-                      Course Overview
-                    </Text>
-                    <MDXRenderer mdxSource={course.meta || ''} />
-                    <div className='mt-6 w-full rounded bg-blue-100 p-4 border border-blue-300 shadow-sm'>
-                      <Text level='h4' className='mb-2 flex items-center gap-2'>
-                        📚 Enroll to Access Course
-                      </Text>
-                      <Text level='p' className='mb-4'>
-                        This course is completely free! Simply enroll to access
-                        all chapters and start learning.
-                      </Text>
-                      <Text level='p' className='text-sm text-gray-600'>
-                        Click the "Enroll to Course" button above to get
-                        started.
-                      </Text>
+                  <div className='w-full space-y-6'>
+                    <div>
+                      <h2 className='font-headings font-bold text-2xl text-foreground mb-4'>
+                        Course Overview
+                      </h2>
+                      <div className='prose prose-slate max-w-none'>
+                        <MDXRenderer mdxSource={course.meta || ''} />
+                      </div>
+                    </div>
+
+                    <div className='rounded-xl border border-border bg-card p-4 sm:p-5 shadow-xs flex items-start gap-3'>
+                      <div className='text-primary shrink-0 mt-1'>
+                        <BookOpen className='w-5 h-5 text-primary' />
+                      </div>
+                      <div className='space-y-1 flex-1'>
+                        <h3 className='font-headings font-bold text-base text-foreground'>
+                          Enroll to Access Course
+                        </h3>
+                        <p className='text-xs sm:text-sm text-muted-foreground leading-relaxed'>
+                          This course is 100% free! Simply enroll to access all
+                          chapters, track your learning progress, and claim your
+                          certificate.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <MDXRenderer
-                    mdxSource={courseMeta}
-                    actions={
-                      currentChapterIdState
-                        ? [
-                            <Button
-                              key='complete'
-                              className='w-fit mt-2'
-                              isLoading={isLoading}
-                              disabled={!course.isEnrolled}
-                              text={
-                                isLoading
-                                  ? 'Marking...'
-                                  : !course.isEnrolled
-                                    ? 'Enroll to Mark Complete'
-                                    : isChapterCompleted
-                                      ? 'Completed'
-                                      : 'Mark As Completed'
-                              }
-                              variant={
-                                isChapterCompleted
-                                  ? 'SUCCESS'
-                                  : !course.isEnrolled
-                                    ? 'SECONDARY'
-                                    : isLoading
+                  <div className='w-full space-y-6'>
+                    <MDXRenderer
+                      mdxSource={courseMeta}
+                      actions={
+                        currentChapterIdState
+                          ? [
+                              <Button
+                                key='complete'
+                                className='w-fit mt-4 px-6 py-2.5 rounded-lg font-semibold shadow-xs'
+                                isLoading={isLoading}
+                                disabled={!course.isEnrolled}
+                                text={
+                                  isLoading
+                                    ? 'Marking...'
+                                    : !course.isEnrolled
+                                      ? 'Enroll to Mark Complete'
+                                      : isChapterCompleted
+                                        ? 'Completed'
+                                        : 'Mark As Completed'
+                                }
+                                variant={
+                                  isChapterCompleted
+                                    ? 'SUCCESS'
+                                    : !course.isEnrolled
                                       ? 'SECONDARY'
-                                      : 'PRIMARY'
-                              }
-                              onClick={toggleCompletion}
-                            />,
-                          ]
-                        : []
-                    }
-                  />
+                                      : isLoading
+                                        ? 'SECONDARY'
+                                        : 'PRIMARY'
+                                }
+                                onClick={toggleCompletion}
+                              />,
+                            ]
+                          : []
+                      }
+                    />
+                  </div>
                 )}
-              </FlexContainer>
-            </FlexContainer>
+              </main>
+            </div>
           </div>
-        </Section>
-      )}
+        )}
 
-      {showChapterFeedback && (
-        <FeedbackPopup
-          refId={currentChapterIdState}
-          type='SHIKSHA_CHAPTER'
-          onSubmit={handleFeedbackComplete}
-        />
-      )}
+        {showChapterFeedback && (
+          <FeedbackPopup
+            refId={currentChapterIdState}
+            type='SHIKSHA_CHAPTER'
+            onSubmit={handleFeedbackComplete}
+          />
+        )}
 
-      {showCourseFeedback && (
-        <FeedbackPopup refId={course._id} type='SHIKSHA_COURSE' />
-      )}
+        {showCourseFeedback && (
+          <FeedbackPopup refId={course._id} type='SHIKSHA_COURSE' />
+        )}
 
-      {/* Per-chapter feedback widget (always-on FAB) */}
-      {currentChapterIdState && course.isEnrolled && (
-        <ContentFeedbackWidget
-          contentType='SHIKSHA_CHAPTER'
-          contentId={currentChapterIdState}
-          title='Rate this chapter'
-          meta={{
-            courseId: course._id.toString(),
-            courseName: course.name || course.title || '',
-            chapterId: currentChapterIdState,
-            chapterName:
-              chapters.find((c) => c._id.toString() === currentChapterIdState)
-                ?.title || '',
-          }}
-          theme='light'
-        />
-      )}
+        {/* Per-chapter feedback widget */}
+        {currentChapterIdState && course.isEnrolled && (
+          <ContentFeedbackWidget
+            contentType='SHIKSHA_CHAPTER'
+            contentId={currentChapterIdState}
+            title='Rate this chapter'
+            meta={{
+              courseId: course._id.toString(),
+              courseName: course.name || course.title || '',
+              chapterId: currentChapterIdState,
+              chapterName:
+                chapters.find((c) => c._id.toString() === currentChapterIdState)
+                  ?.title || '',
+            }}
+            theme='light'
+          />
+        )}
+      </div>
     </Fragment>
   );
 };

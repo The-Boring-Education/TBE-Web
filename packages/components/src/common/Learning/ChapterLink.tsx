@@ -1,8 +1,7 @@
 import { ANALYTICS_EVENTS } from "@tbe/constants";
 import type { ChapterLinkProps } from "@tbe/interface";
 import { trackEvent } from "@tbe/utils";
-import { FaLock, FaRegCircle } from "react-icons/fa";
-import { IoIosCheckmarkCircle } from "react-icons/io";
+import { CheckCircle2, Circle, Lock } from "lucide-react";
 
 import LinkText from "../Typography/Link";
 
@@ -16,14 +15,11 @@ const ChapterLink = ({
   handleChapterClick,
   isLocked,
 }: ChapterLinkProps) => {
-  const additionalClasses =
-    currentChapterId === chapterId
-      ? isCompleted
-        ? "text-dark font-semibold bg-green-200"
-        : "text-dark font-semibold bg-gray-200"
-      : "";
+  const isCurrent = currentChapterId === chapterId;
 
-  const iconColor = isCompleted ? "text-green-500" : "text-greyDark";
+  const activeClasses = isCurrent
+    ? "bg-primary/10 text-primary font-semibold border-l-3 border-primary shadow-2xs"
+    : "text-muted-foreground hover:bg-muted hover:text-foreground";
 
   return (
     <LinkText
@@ -31,10 +27,10 @@ const ChapterLink = ({
       analyticsId={`course_chapter_${chapterId}`}
       analyticsLabel={`chapter:${name}`}
       key={chapterId}
-      className={`flex items-center gap-2 w-full px-3 py-2.5 rounded-md text-left pre-title transition-colors duration-150 ${
+      className={`flex items-start gap-2 w-full px-3 py-2 rounded-lg text-left text-xs sm:text-sm transition-all duration-150 ${
         isLocked
-          ? "text-gray-700 cursor-not-allowed"
-          : `hover:bg-gray-200 hover:text-contentLight ${additionalClasses}`
+          ? "text-muted-foreground/60 cursor-not-allowed opacity-75"
+          : activeClasses
       }`}
       href={href}
       onClick={(e) => {
@@ -55,13 +51,19 @@ const ChapterLink = ({
       }}
     >
       {isLocked ? (
-        <FaLock className="text-gray-400" size={20} />
+        <Lock className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
       ) : isCompleted ? (
-        <IoIosCheckmarkCircle className={iconColor} size={24} />
+        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
       ) : (
-        <FaRegCircle className={iconColor} size={24} />
+        <Circle
+          className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${
+            isCurrent ? "text-primary" : "text-muted-foreground/50"
+          }`}
+        />
       )}
-      {name}
+      <span className="leading-snug break-words flex-1 font-medium">
+        {name}
+      </span>
     </LinkText>
   );
 };
