@@ -2,13 +2,11 @@ import {
   Button,
   ContentFeedbackWidget,
   FeedbackPopup,
-  FlexContainer,
   LinerProgressBar,
   LoadingSpinner,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
-  Section,
   SEO,
   SheetHeroContainer,
   Text,
@@ -271,72 +269,72 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <Section className='md:p-2 p-2'>
+      <div className='bg-background min-h-screen font-body text-foreground'>
         <SheetHeroContainer
           id={sheet._id ?? ''}
           isEnrolled={sheet.isEnrolled}
-          name={sheet.name ?? ''}
           isPremium={sheet.isPremium}
-          isPurchased={!!isPurchased} // Ensure boolean
-          backHref={routes.interviewPrep}
+          isPurchased={isPurchased}
+          name={sheet.name ?? ''}
+          redirectTo={`${routes.interviewPrep}/${slug}`}
         />
-      </Section>
 
-      {isDataLoading && (
-        <Section className='md:p-2 p-2'>
-          <div className='flex items-center justify-center py-8'>
-            <LoadingSpinner height={8} width={8} />
-            <Text level='p' className='ml-3 text-gray-600'>
-              Loading interview questions...
-            </Text>
+        {isDataLoading && (
+          <div className='max-w-7xl mx-auto px-4 py-16 text-center'>
+            <div className='inline-flex items-center justify-center gap-3 bg-card border border-border px-6 py-4 rounded-xl shadow-xs'>
+              <LoadingSpinner height={6} width={6} />
+              <Text
+                level='p'
+                className='text-muted-foreground font-medium text-sm'
+              >
+                Loading questions...
+              </Text>
+            </div>
           </div>
-        </Section>
-      )}
+        )}
 
-      {!isDataLoading && (
-        <Section className='md:p-2 p-2'>
-          <FlexContainer className='w-full gap-4' itemCenter={false}>
-            {/* Left Sidebar (Questions) */}
-            <FlexContainer
-              className='border md:w-3/12 w-full px-3 rounded self-baseline max-h-[80vh] overflow-y-auto overflow-x-hidden bg-white flex-col'
-              itemCenter={false}
-              direction='col'
-              wrap={false}
-            >
-              <div className='w-full sticky top-0 z-10 bg-white py-2'>
-                <Text className='heading-5' level='h5'>
-                  Questions
-                </Text>
+        {!isDataLoading && (
+          <div
+            id='sheet-content'
+            className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10'
+          >
+            <div className='flex flex-col lg:flex-row gap-8 items-start'>
+              {/* Left Sidebar (Questions Navigation) */}
+              <aside className='w-full lg:w-96 xl:w-[420px] shrink-0 self-start sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-2'>
+                <div className='w-full sticky top-0 bg-card z-10 pb-2 border-b border-border/60 space-y-1.5'>
+                  <div className='flex items-center justify-between'>
+                    <h2 className='font-headings font-bold text-lg text-foreground'>
+                      Questions
+                    </h2>
+                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20'>
+                      {questions.length} questions
+                    </span>
+                  </div>
+                  {!isLocked && (
+                    <LinerProgressBar
+                      completedChapters={completedQuestions}
+                      totalChapters={totalQuestions}
+                    />
+                  )}
+                </div>
 
-                {/* LinerProgressBar */}
-                {!isLocked && (
-                  <LinerProgressBar
-                    completedChapters={completedQuestions}
-                    totalChapters={totalQuestions}
-                  />
-                )}
-              </div>
+                {/* Sidebar Questions List */}
+                <div className='flex flex-col gap-1 flex-1 overflow-y-auto pt-1'>
+                  {questions?.map(
+                    ({
+                      _id,
+                      title,
+                      question,
+                      answer,
+                      isCompleted,
+                      frequency,
+                      isStarred,
+                    }) => {
+                      const questionId = _id?.toString();
 
-              {/* Sidebar: use button for question navigation, not <Link> */}
-              <div className='flex flex-col gap-px w-full pb-2'>
-                {questions?.map(
-                  ({
-                    _id,
-                    title,
-                    question,
-                    answer,
-                    isCompleted,
-                    frequency,
-                    isStarred,
-                  }) => {
-                    const questionId = _id?.toString();
-
-                    return (
-                      <div
-                        key={questionId}
-                        className='flex items-center w-full'
-                      >
+                      return (
                         <QuestionLink
+                          key={questionId}
                           currentQuestionId={currentQuestionId}
                           frequency={frequency}
                           handleQuestionClick={() =>
@@ -353,115 +351,116 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                           isLocked={isLocked}
                           isStarred={isStarred}
                         />
-                      </div>
-                    );
-                  },
-                )}
-              </div>
-            </FlexContainer>
-
-            {/* Main Content Area */}
-            <FlexContainer
-              className='border md:w-8/12 w-full p-4 sm:p-6 rounded bg-white'
-              itemCenter={false}
-              justifyCenter={false}
-            >
-              {isLocked ? (
-                <div className='w-full'>
-                  <Text level='h2' className='heading-4 mb-4'>
-                    Interview Sheet Overview
-                  </Text>
-                  <InterviewSheetMDXRenderer
-                    mdxSource={sheet.meta || ''}
-                    theme='light'
-                  />
-                  <div className='mt-6 w-full rounded bg-yellow-100 p-4 border border-yellow-300 shadow-sm'>
-                    <Text level='h4' className='mb-2 flex items-center gap-2'>
-                      <FaLock className='text-yellow-600' />
-                      🚀 This is a Premium Interview Sheet
-                    </Text>
-                    <Text level='p' className='mb-4'>
-                      To access all the interview questions and detailed
-                      solutions, please complete the payment. Once payment is
-                      confirmed, all questions will be unlocked instantly.
-                    </Text>
-                    {!showPayment && (
-                      <Button
-                        text='Pay Now to Unlock'
-                        variant='PRIMARY'
-                        className='w-fit'
-                        onClick={handleShowPayment}
-                      />
-                    )}
-                  </div>
-                  {showPayment && (
-                    <div ref={paymentSectionRef}>
-                      <PaymentCard
-                        course={sheet}
-                        onClose={() => setShowPayment(false)}
-                        productType='INTERVIEW_SHEET'
-                      />
-                    </div>
+                      );
+                    },
                   )}
                 </div>
-              ) : (
-                <InterviewQuestionContent
-                  questionTitle={currentQuestion?.title || ''}
-                  question={currentQuestion?.question || ''}
-                  answer={
-                    currentQuestion?.content?.markdownContent ||
-                    currentQuestion?.answer ||
-                    ''
-                  }
-                  frequency={currentQuestion?.frequency}
-                  priority={currentQuestion?.priority}
-                  companyTypes={currentQuestion?.companyTypes}
-                  theme='light'
-                  isStarred={isStarred}
-                  onToggleStar={handleStarToggle}
-                  actions={[
-                    currentQuestionId && (
-                      <Button
-                        key='complete'
-                        className='w-fit mt-2'
-                        isLoading={isLoading}
-                        disabled={!sheet.isEnrolled}
-                        text={
-                          isLoading
-                            ? 'Marking...'
-                            : !sheet.isEnrolled
-                              ? 'Enroll to Mark Complete'
-                              : isQuestionCompleted
-                                ? 'Completed'
-                                : 'Mark As Completed'
-                        }
-                        variant={
-                          isQuestionCompleted
-                            ? 'SUCCESS'
-                            : !sheet.isEnrolled
-                              ? 'SECONDARY'
-                              : isLoading
+              </aside>
+
+              {/* Main Content Viewer */}
+              <main className='flex-1 w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs min-h-[500px]'>
+                {isLocked ? (
+                  <div className='w-full space-y-6'>
+                    <div>
+                      <h2 className='font-headings font-bold text-2xl text-foreground mb-4'>
+                        Interview Sheet Overview
+                      </h2>
+                      <div className='prose prose-slate max-w-none'>
+                        <InterviewSheetMDXRenderer
+                          mdxSource={sheet.meta || ''}
+                          theme='light'
+                        />
+                      </div>
+                    </div>
+
+                    <div className='rounded-xl border border-border bg-card p-5 shadow-xs space-y-3'>
+                      <div className='flex items-center gap-2 text-foreground font-bold text-base font-headings'>
+                        <FaLock className='text-primary' />
+                        <span>🚀 Premium Interview Sheet</span>
+                      </div>
+                      <p className='text-xs sm:text-sm text-muted-foreground leading-relaxed'>
+                        To access all the interview questions and detailed
+                        solutions, unlock this sheet or complete the payment.
+                      </p>
+                      {!showPayment && (
+                        <Button
+                          text='Unlock All Questions'
+                          variant='PRIMARY'
+                          className='w-fit px-6 py-2.5 rounded-lg font-semibold shadow-xs mt-2'
+                          onClick={handleShowPayment}
+                        />
+                      )}
+                    </div>
+
+                    {showPayment && (
+                      <div ref={paymentSectionRef}>
+                        <PaymentCard
+                          course={sheet}
+                          onClose={() => setShowPayment(false)}
+                          productType='INTERVIEW_SHEET'
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <InterviewQuestionContent
+                    questionTitle={currentQuestion?.title || ''}
+                    question={currentQuestion?.question || ''}
+                    answer={
+                      currentQuestion?.content?.markdownContent ||
+                      currentQuestion?.answer ||
+                      ''
+                    }
+                    frequency={currentQuestion?.frequency}
+                    priority={currentQuestion?.priority}
+                    companyTypes={currentQuestion?.companyTypes}
+                    theme='light'
+                    isStarred={isStarred}
+                    onToggleStar={handleStarToggle}
+                    actions={[
+                      currentQuestionId && (
+                        <Button
+                          key='complete'
+                          className='w-fit mt-4 px-6 py-2.5 rounded-lg font-semibold shadow-xs'
+                          isLoading={isLoading}
+                          disabled={!sheet.isEnrolled}
+                          text={
+                            isLoading
+                              ? 'Marking...'
+                              : !sheet.isEnrolled
+                                ? 'Enroll to Mark Complete'
+                                : isQuestionCompleted
+                                  ? 'Completed'
+                                  : 'Mark As Completed'
+                          }
+                          variant={
+                            isQuestionCompleted
+                              ? 'SUCCESS'
+                              : !sheet.isEnrolled
                                 ? 'SECONDARY'
-                                : 'PRIMARY'
-                        }
-                        onClick={toggleCompletion}
-                      />
-                    ),
-                    currentQuestionId && questionResources && (
-                      <ResourceTooltip
-                        key='resources'
-                        resources={questionResources}
-                        theme='light'
-                        className='mt-2'
-                      />
-                    ),
-                  ]}
-                />
-              )}
-            </FlexContainer>
-          </FlexContainer>
-        </Section>
-      )}
+                                : isLoading
+                                  ? 'SECONDARY'
+                                  : 'PRIMARY'
+                          }
+                          onClick={toggleCompletion}
+                        />
+                      ),
+                      currentQuestionId && questionResources && (
+                        <ResourceTooltip
+                          key='resources'
+                          resources={questionResources}
+                          theme='light'
+                          className='mt-4'
+                        />
+                      ),
+                    ]}
+                  />
+                )}
+              </main>
+            </div>
+          </div>
+        )}
+      </div>
 
       {showFeedback && (
         <FeedbackPopup refId={sheet._id} type='INTERVIEW_SHEET' />
@@ -480,16 +479,16 @@ const SheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
           meta={
             currentQuestionId
               ? {
-                  sheetId: sheet._id.toString(),
-                  sheetName: sheet.title || sheet.name || '',
-                  questionId: currentQuestionId,
-                  questionName:
-                    currentQuestion?.title || currentQuestion?.question || '',
-                }
+                sheetId: sheet._id.toString(),
+                sheetName: sheet.name || '',
+                questionId: currentQuestionId,
+                questionName:
+                  currentQuestion?.title || currentQuestion?.question || '',
+              }
               : {
-                  sheetId: sheet._id.toString(),
-                  sheetName: sheet.title || sheet.name || '',
-                }
+                sheetId: sheet._id.toString(),
+                sheetName: sheet.name || '',
+              }
           }
           theme='light'
         />

@@ -2,8 +2,7 @@ import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { useAnalytics } from "@tbe/hooks";
 import type { QuestionLinkProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
-import { FaLock, FaRegCircle, FaStar } from "react-icons/fa";
-import { IoIosCheckmarkCircle } from "react-icons/io";
+import { CheckCircle2, Circle, Lock, Star } from "lucide-react";
 
 import LinkText from "../Typography/Link";
 
@@ -21,31 +20,11 @@ const QuestionLink = ({
   isStarred,
 }: QuestionLinkProps) => {
   const { trackEvent } = useAnalytics();
+  const isCurrent = currentQuestionId === questionId;
 
-  // Theme-based styling
-  const isDark = theme === "dark";
-  const defaultTextColor = isDark ? "text-contentDark" : "";
-  const hoverBgClass = isDark ? "hover:bg-gray-800" : "hover:bg-gray-200";
-  const hoverTextClass = isDark
-    ? "hover:text-contentDark"
-    : "hover:text-contentLight";
-
-  const additionalClasses =
-    currentQuestionId === questionId
-      ? isDark
-        ? "bg-[#111] border-gray-700/60 shadow-[0_0_12px_rgba(0,0,0,0.25)] text-white font-medium"
-        : "bg-gray-100 border-gray-300 shadow-sm text-dark font-medium"
-      : isCompleted
-        ? "border-transparent opacity-80"
-        : "border-transparent";
-
-  const iconColor = isCompleted
-    ? isDark
-      ? "text-green-400"
-      : "text-green-500"
-    : isDark
-      ? "text-gray-400"
-      : "text-greyDark";
+  const activeClasses = isCurrent
+    ? "bg-primary/10 text-primary font-semibold border-l-3 border-primary shadow-2xs"
+    : "text-muted-foreground hover:bg-muted hover:text-foreground";
 
   return (
     <LinkText
@@ -53,13 +32,10 @@ const QuestionLink = ({
       analyticsId={`learning_question_${questionId}`}
       analyticsLabel={`question:${title}`}
       key={questionId}
-      className={`flex flex-nowrap items-center gap-2 w-full px-3 py-2 mb-1 rounded border text-left pre-title overflow-hidden ${
-        isLocked
-          ? isDark
-            ? "text-gray-500 cursor-not-allowed border-transparent"
-            : "text-gray-700 cursor-not-allowed border-transparent"
-          : `${defaultTextColor} ${hoverBgClass} ${hoverTextClass} ${additionalClasses}`
-      }`}
+      className={`flex items-start gap-2 w-full px-3 py-2 rounded-lg text-left text-xs sm:text-sm transition-all duration-150 ${isLocked
+          ? "text-muted-foreground/60 cursor-not-allowed opacity-75"
+          : activeClasses
+        }`}
       href={href}
       onClick={(e) => {
         if (isLocked) {
@@ -67,7 +43,7 @@ const QuestionLink = ({
           return;
         }
 
-        e.preventDefault(); // Prevent full page navigation to support shallow routing
+        e.preventDefault();
 
         trackEvent({
           action: ANALYTICS_EVENTS.QUESTION_START,
@@ -95,26 +71,22 @@ const QuestionLink = ({
         handleQuestionClick(question, questionId);
       }}
     >
-      <div className="flex-shrink-0 flex items-center gap-1">
-        {isLocked ? (
-          <FaLock
-            className={isDark ? "text-gray-500" : "text-gray-400"}
-            size={14}
-          />
-        ) : isCompleted ? (
-          <IoIosCheckmarkCircle className={iconColor} size={16} />
-        ) : (
-          <FaRegCircle className={iconColor} size={14} />
-        )}
-        {isStarred && (
-          <FaStar
-            className="text-yellow-400"
-            style={{ fontSize: "0.9em" }}
-            title="Starred"
-          />
-        )}
-      </div>
-      <span className="min-w-0 flex-1 break-words leading-snug">{title}</span>
+      {isLocked ? (
+        <Lock className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
+      ) : isCompleted ? (
+        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+      ) : (
+        <Circle
+          className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isCurrent ? "text-primary" : "text-muted-foreground/50"
+            }`}
+        />
+      )}
+      {isStarred && (
+        <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0 mt-0.5" />
+      )}
+      <span className="leading-snug break-words flex-1 font-medium">
+        {title}
+      </span>
     </LinkText>
   );
 };

@@ -18,17 +18,19 @@ import {
   getDiscountDisplayInfo,
   getSavingsPercentage,
 } from "@tbe/utils";
-import { Fragment, useMemo, useRef, useState } from "react";
 import {
-  FaCheckCircle,
-  FaClock,
-  FaLock,
-  FaPercentage,
-  FaPlay,
-  FaStar,
-  FaTags,
-  FaUsers,
-} from "react-icons/fa";
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  Lock,
+  Percent,
+  Play,
+  Sparkles,
+  Star,
+  Tag,
+  Users,
+} from "lucide-react";
+import { Fragment, useMemo, useRef, useState } from "react";
 
 interface SheetLandingPageProps {
   sheet: SheetPageProps["sheet"];
@@ -78,7 +80,6 @@ const SheetLandingPage = ({
     if (!sheet?.isPremium || !sheet?.price || !sheet.name) {
       return null;
     }
-    // Cast sheet to InterviewSheetModel for the utility functions
     const sheetModel = sheet as any;
     return calculatePriceBreakdown(sheetModel, appliedCoupon || undefined);
   }, [sheet, appliedCoupon]);
@@ -87,12 +88,10 @@ const SheetLandingPage = ({
     if (!sheet?.isPremium || !sheet.name) {
       return null;
     }
-    // Cast sheet to InterviewSheetModel for the utility functions
     const sheetModel = sheet as any;
     return getDiscountDisplayInfo(sheetModel, appliedCoupon || undefined);
   }, [sheet, appliedCoupon]);
 
-  // User can start if they have access
   const canStartNow = hasAccess;
 
   const enrollSheet = () => {
@@ -194,16 +193,12 @@ const SheetLandingPage = ({
 
   const handleStartNow = () => {
     if (canStartNow) {
-      // Navigate to first question
       window.location.href = `${routes.interviewPrep}/${sheet.slug}`;
     } else if (!isAuth) {
-      // Handle login redirect
       return;
     } else if (!sheet?.isEnrolled && !sheet?.isPremium) {
-      // Auto-enroll for free sheets
       enrollSheet();
     } else {
-      // Show payment for premium sheets
       handleShowPayment();
     }
   };
@@ -214,88 +209,69 @@ const SheetLandingPage = ({
     <Fragment>
       <SEO seoMeta={seoMeta} />
 
-      {/* Hero Section - Full Width */}
-      <Section className="bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/3 translate-y-1/3" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 py-12 lg:py-16 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-center">
+      {/* Hero Section */}
+      <Section className="bg-background border-b border-border/60 text-foreground py-8 sm:py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
             {/* Left: Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Breadcrumb / Navigation */}
-              <div className="flex items-center gap-3 flex-wrap">
+            <div className="lg:col-span-2 space-y-5">
+              {/* Navigation Link */}
+              <div>
                 <LinkButton
                   buttonProps={{
                     variant: "GHOST",
                     text: "← Back to Explore",
                     className:
-                      "bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 text-sm px-4 py-2 rounded-full border border-white/20 transition-all duration-200",
+                      "text-muted-foreground hover:text-foreground font-medium p-0 h-auto bg-transparent hover:bg-transparent shadow-none border-none text-xs",
                   }}
                   href={routes.interviewPrepExplore}
                 />
-                <span className="text-white/40">•</span>
-                <span className="bg-white/10 backdrop-blur-sm text-white/90 text-xs font-medium uppercase tracking-wider px-3 py-1.5 rounded-full border border-white/20">
-                  {sheet.roadmap} Track
-                </span>
               </div>
 
-              {/* Title */}
-              <Text
-                className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight"
-                level="h1"
-              >
-                {sheet.name}
-              </Text>
-
-              {/* Description */}
-              <Text
-                level="p"
-                className="text-lg lg:text-xl text-blue-100 max-w-2xl leading-relaxed"
-              >
-                {sheet.description}
-              </Text>
+              {/* Title & Description */}
+              <div className="space-y-2">
+                <h1 className="font-headings font-bold text-3xl sm:text-4xl lg:text-5xl text-foreground leading-tight">
+                  {sheet.name}
+                </h1>
+                <Text
+                  level="p"
+                  className="text-muted-foreground text-base sm:text-lg max-w-2xl leading-relaxed"
+                >
+                  {sheet.description}
+                </Text>
+              </div>
 
               {/* Stats Pills */}
-              <div className="flex flex-wrap gap-3">
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                  <FaPlay className="text-green-400 text-sm" />
-                  <span className="text-sm font-medium">
-                    {sheet.questions?.length || 0} Questions
-                  </span>
+              <div className="flex flex-wrap gap-2.5 pt-1">
+                <div className="inline-flex items-center gap-2 bg-card border border-border text-foreground text-xs font-medium px-3.5 py-1.5 rounded-lg shadow-2xs">
+                  <Play className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <span>{sheet.questions?.length || 0} Questions</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                  <FaClock className="text-yellow-400 text-sm" />
-                  <span className="text-sm font-medium">
+                <div className="inline-flex items-center gap-2 bg-card border border-border text-foreground text-xs font-medium px-3.5 py-1.5 rounded-lg shadow-2xs">
+                  <Clock className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <span>
                     ~{Math.ceil((sheet.questions?.length || 0) * 2)} min
                   </span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                  <FaUsers className="text-blue-300 text-sm" />
-                  <span className="text-sm font-medium">All Levels</span>
+                <div className="inline-flex items-center gap-2 bg-card border border-border text-foreground text-xs font-medium px-3.5 py-1.5 rounded-lg shadow-2xs">
+                  <Users className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <span>All Experience Levels</span>
                 </div>
                 {isPurchased ? (
-                  <div className="flex items-center gap-2 bg-green-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-green-400/30">
-                    <FaCheckCircle className="text-green-400 text-sm" />
-                    <span className="text-sm font-medium text-green-200">
-                      Full Access
-                    </span>
+                  <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-2xs">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <span>Full Access Granted</span>
                   </div>
                 ) : sheet.isPremium ? (
-                  <div className="flex items-center gap-2 bg-yellow-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-yellow-400/30">
-                    <FaStar className="text-yellow-400 text-sm" />
-                    <span className="text-sm font-medium text-yellow-200">
-                      Premium
-                    </span>
+                  <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-600 text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-2xs">
+                    <Star className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <span>Premium Sheet</span>
                   </div>
                 ) : null}
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 {!isAuth ? (
                   <LoginRedirectButton text="Login to Get Started" />
                 ) : (
@@ -311,26 +287,17 @@ const SheetLandingPage = ({
                               ? "Enroll for Free →"
                               : "Unlock Full Access →"
                     }
-                    variant={isPurchased ? "SUCCESS" : "PRIMARY"}
-                    className={`px-8 py-3.5 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 ${
-                      isPurchased
-                        ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700"
-                        : "bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700"
-                    }`}
+                    variant="PRIMARY"
+                    className="px-6 py-2.5 rounded-lg font-semibold shadow-xs"
                     onClick={handleStartNow}
                     isLoading={loading}
                   />
                 )}
 
                 {sheet?.isPremium && !isPurchased && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                    <FaLock className="text-white/70 text-sm" />
-                    <Text
-                      level="p"
-                      className="text-white/90 text-sm font-medium"
-                    >
-                      ₹{sheet.price} · Lifetime Access
-                    </Text>
+                  <div className="inline-flex items-center gap-2 bg-card border border-border text-muted-foreground text-xs font-medium px-4 py-2 rounded-lg shadow-2xs">
+                    <Lock className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span>₹{sheet.price} · Lifetime Access</span>
                   </div>
                 )}
               </div>
@@ -338,27 +305,23 @@ const SheetLandingPage = ({
 
             {/* Right: Preview Card */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-2xl p-6 text-gray-900 transform hover:scale-[1.02] transition-transform duration-300">
-                <div className="aspect-video bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
-                  <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-rose-600 rounded-full flex items-center justify-center shadow-lg">
-                    <FaPlay className="text-2xl text-white ml-1" />
-                  </div>
+              <div className="bg-card border border-border rounded-2xl shadow-xs p-6 text-foreground space-y-4">
+                <div className="aspect-video bg-muted/30 border border-border/60 rounded-xl flex items-center justify-center relative overflow-hidden">
+                  <Play className="w-8 h-8 text-primary" />
                 </div>
-                <Text level="p" className="font-bold text-lg mb-2">
-                  Preview this sheet
-                </Text>
-                <Text
-                  level="p"
-                  className="text-sm text-gray-600 mb-4 leading-relaxed"
-                >
-                  Get a quick overview of the questions and difficulty levels
-                  before you start
-                </Text>
+                <div className="space-y-1">
+                  <h3 className="font-headings font-bold text-lg text-foreground">
+                    Preview Sheet Questions
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Get a quick overview of question formats and difficulty
+                    levels before diving in.
+                  </p>
+                </div>
                 <Button
                   text="Preview Questions ↓"
-                  variant="SECONDARY"
-                  className="w-full px-4 py-3 text-sm font-semibold bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                  variant="OUTLINE"
+                  className="w-full py-2 rounded-lg text-xs font-medium border-border text-foreground hover:bg-muted shadow-none"
                   onClick={() =>
                     document
                       .getElementById("preview-section")
@@ -371,51 +334,45 @@ const SheetLandingPage = ({
         </div>
       </Section>
 
-      {/* Content Section */}
-      <Section className="py-12 bg-gradient-to-b from-gray-50/50 to-white">
-        <div className="max-w-7xl mx-auto px-4">
+      {/* Main Content Section */}
+      <Section className="py-10 bg-background text-foreground">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
+            {/* Main Content (Left 2 cols) */}
+            <div className="lg:col-span-2 space-y-6">
               {/* About Section */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-lg">📖</span>
-                  </div>
-                  <Text className="text-2xl font-bold text-gray-900" level="h2">
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+                <div className="flex items-center gap-2.5 border-b border-border/60 pb-3.5">
+                  <BookOpen className="w-5 h-5 text-primary shrink-0" />
+                  <h2 className="font-headings font-bold text-xl text-foreground">
                     About This Sheet
-                  </Text>
+                  </h2>
                 </div>
-                <div className="prose max-w-none prose-headings:text-gray-900 prose-p:text-gray-600 prose-strong:text-gray-800">
+                <div className="prose prose-slate max-w-none text-foreground text-sm leading-relaxed">
                   <MDXRenderer mdxSource={sheet.meta || meta || ""} />
                 </div>
               </div>
 
               {/* What You'll Learn */}
               {sheet?.features && sheet.features.length > 0 && (
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100 p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                      <span className="text-white text-lg">🎯</span>
-                    </div>
-                    <Text
-                      className="text-2xl font-bold text-gray-900"
-                      level="h3"
-                    >
+                <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+                  <div className="flex items-center gap-2.5 border-b border-border/60 pb-3.5">
+                    <Sparkles className="w-5 h-5 text-primary shrink-0" />
+                    <h3 className="font-headings font-bold text-xl text-foreground">
                       What You'll Learn
-                    </Text>
+                    </h3>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                     {sheet.features.map((feature, index) => (
                       <div
                         key={index}
-                        className="flex items-start gap-3 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-green-100"
+                        className="flex items-start gap-2.5 bg-muted/30 rounded-lg p-3 border border-border/50 text-xs sm:text-sm"
                       >
-                        <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <FaCheckCircle className="text-green-600 text-xs" />
-                        </div>
-                        <Text level="p" className="text-gray-700 font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <Text
+                          level="p"
+                          className="text-foreground font-medium leading-snug"
+                        >
                           {feature}
                         </Text>
                       </div>
@@ -424,309 +381,194 @@ const SheetLandingPage = ({
                 </div>
               )}
 
-              {/* Preview Questions Section */}
+              {/* Preview Questions Section (Subtle & Compact) */}
               <div
                 id="preview-section"
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6"
+                className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-xs space-y-4"
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                    <FaPlay className="text-white text-sm" />
+                <div className="border-b border-border/60 pb-3 space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <Play className="w-4 h-4 text-primary shrink-0" />
+                    <h3 className="font-headings font-bold text-base sm:text-lg text-foreground">
+                      Preview Questions
+                    </h3>
                   </div>
-                  <Text className="text-2xl font-bold text-gray-900" level="h3">
-                    Preview Questions
-                  </Text>
+                  <p className="text-xs text-muted-foreground">
+                    First {previewQuestions.length} questions included in
+                    preview:
+                  </p>
                 </div>
-                <Text level="p" className="text-gray-600 mb-6 ml-13">
-                  Here are the first {previewQuestions.length} questions to give
-                  you a taste of what's inside:
-                </Text>
 
-                <div className="space-y-4">
+                <div className="space-y-2.5">
                   {previewQuestions.map((q, index) => (
                     <div
                       key={q._id.toString()}
-                      className="group bg-gradient-to-r from-white to-gray-50 border border-gray-200 rounded-xl p-5 hover:shadow-lg hover:border-blue-200 transition-all duration-300"
+                      className="group bg-card border border-border/70 hover:border-primary/30 rounded-lg p-3 sm:p-3.5 transition-all duration-150 space-y-1.5"
                     >
-                      <div className="flex items-start justify-between gap-4 mb-3">
-                        <div className="flex items-start gap-4 min-w-0 flex-1">
-                          <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-blue-200 group-hover:to-indigo-200 transition-colors">
-                            <span className="text-sm font-bold text-blue-600">
-                              {index + 1}
-                            </span>
-                          </div>
-                          <div className="min-w-0 flex-1" title={q.title}>
-                            <Text
-                              level="p"
-                              className="font-semibold text-gray-900 line-clamp-2 text-base group-hover:text-blue-700 transition-colors"
-                            >
-                              {q.title}
-                            </Text>
-                          </div>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <span className="text-xs font-bold text-primary shrink-0">
+                            #{index + 1}
+                          </span>
+                          <h4 className="font-headings font-semibold text-foreground text-xs sm:text-sm truncate group-hover:text-primary transition-colors">
+                            {q.title}
+                          </h4>
                         </div>
-                        {/* Tag Pills */}
-                        <div className="flex flex-wrap gap-2 flex-shrink-0">
-                          <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-red-50 to-rose-50 text-red-700 border border-red-200">
-                            <FaStar className="text-red-500 text-[10px]" />
+                        {q.frequency && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20 shrink-0">
+                            <Star className="w-3 h-3 text-amber-500" />
                             {q.frequency}
                           </span>
-                        </div>
+                        )}
                       </div>
-                      <Text
-                        level="p"
-                        className="text-gray-600 text-sm line-clamp-2 leading-relaxed ml-12"
-                      >
+                      <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
                         {q.question}
-                      </Text>
+                      </p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Locked Content Section */}
+              {/* Locked Content Section (Subtle & Compact) */}
               {lockedQuestions.length > 0 && (
-                <div className="bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 rounded-2xl border border-gray-200 p-6 relative overflow-hidden">
-                  {/* Decorative background pattern */}
-                  <div className="absolute inset-0 opacity-5">
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500 rounded-full translate-x-1/2 -translate-y-1/2" />
-                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500 rounded-full -translate-x-1/2 translate-y-1/2" />
+                <div className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                    <div className="flex items-center gap-2">
+                      {isPurchased ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                      ) : (
+                        <Lock className="w-4 h-4 text-primary shrink-0" />
+                      )}
+                      <h3 className="font-headings font-bold text-base sm:text-lg text-foreground">
+                        {lockedQuestions.length} More Questions
+                      </h3>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {isPurchased ? "All unlocked" : "Locked content"}
+                    </span>
                   </div>
 
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {lockedQuestions.slice(0, 6).map((q, index) => (
                       <div
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        key={q._id.toString()}
+                        className={`flex items-center gap-2 p-2.5 rounded-lg border transition-all text-xs ${
                           isPurchased
-                            ? "bg-gradient-to-br from-green-500 to-emerald-600"
-                            : "bg-gradient-to-br from-gray-400 to-gray-500"
+                            ? "bg-emerald-500/5 border-emerald-500/20 text-foreground"
+                            : "bg-muted/20 border-border/50 text-muted-foreground"
                         }`}
                       >
                         {isPurchased ? (
-                          <FaCheckCircle className="text-white text-lg" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                         ) : (
-                          <FaLock className="text-white text-lg" />
+                          <Lock className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
                         )}
+                        <span className="font-medium truncate flex-1">
+                          {previewQuestions.length + index + 1}. {q.title}
+                        </span>
                       </div>
-                      <div>
-                        <Text
-                          className="text-2xl font-bold text-gray-800"
-                          level="h3"
-                        >
-                          {lockedQuestions.length} More Questions
-                        </Text>
-                        <Text level="p" className="text-gray-500 text-sm">
-                          {isPurchased
-                            ? "All unlocked and ready"
-                            : "Waiting to be discovered"}
-                        </Text>
-                      </div>
-                    </div>
-
-                    <Text
-                      level="p"
-                      className="text-gray-600 mb-6 leading-relaxed"
-                    >
-                      {isPurchased
-                        ? "You have full access to all questions! Continue practicing to master your skills."
-                        : isLocked
-                          ? "Unlock premium access to view all questions with detailed solutions and explanations."
-                          : "More questions are waiting for you after enrollment!"}
-                    </Text>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                      {lockedQuestions.slice(0, 6).map((q, index) => (
-                        <div
-                          key={q._id.toString()}
-                          className={`flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 ${
-                            isPurchased
-                              ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-md"
-                              : "bg-white/60 border-gray-200 backdrop-blur-sm"
-                          }`}
-                        >
-                          <div
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                              isPurchased ? "bg-green-100" : "bg-gray-100"
-                            }`}
-                          >
-                            {isPurchased ? (
-                              <FaCheckCircle className="text-green-600 text-sm" />
-                            ) : (
-                              <FaLock className="text-gray-400 text-xs" />
-                            )}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <Text
-                              level="p"
-                              className={`text-sm font-medium truncate ${
-                                isPurchased ? "text-green-800" : "text-gray-500"
-                              }`}
-                            >
-                              {previewQuestions.length + index + 1}. {q.title}
-                            </Text>
-                          </div>
-                          {/* Tag pill for frequency */}
-                          {isPurchased && (
-                            <span className="flex-shrink-0 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                              {q.frequency}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    {lockedQuestions.length > 6 && (
-                      <Text
-                        level="p"
-                        className="text-center text-gray-500 text-sm mb-6"
-                      >
-                        + {lockedQuestions.length - 6} more questions...
-                      </Text>
-                    )}
-
-                    {isLocked && !isPurchased && (
-                      <Button
-                        text={`Unlock All ${sheet.questions?.length} Questions · ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
-                        variant="PRIMARY"
-                        onClick={handleShowPayment}
-                        className="w-full px-6 py-4 text-base font-bold bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-                      />
-                    )}
-                    {isPurchased && (
-                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-5 text-center">
-                        <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
-                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                            <FaCheckCircle className="text-green-600" />
-                          </div>
-                        </div>
-                        <Text
-                          level="p"
-                          className="text-base font-semibold text-green-800 mb-1"
-                        >
-                          All Questions Unlocked
-                        </Text>
-                        <Text level="p" className="text-sm text-green-600">
-                          You can now access all {sheet.questions?.length}{" "}
-                          questions and start practicing!
-                        </Text>
-                      </div>
-                    )}
+                    ))}
                   </div>
+
+                  {lockedQuestions.length > 6 && (
+                    <p className="text-center text-[11px] text-muted-foreground">
+                      + {lockedQuestions.length - 6} additional questions
+                      included...
+                    </p>
+                  )}
+
+                  {isLocked && !isPurchased && (
+                    <Button
+                      text={`Unlock All ${sheet.questions?.length} Questions · ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
+                      variant="PRIMARY"
+                      onClick={handleShowPayment}
+                      className="w-full py-2.5 text-xs sm:text-sm font-semibold rounded-lg shadow-xs"
+                    />
+                  )}
+                  {isPurchased && (
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 text-center space-y-0.5">
+                      <p className="text-xs font-bold text-emerald-600">
+                        ✓ All Questions Unlocked
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        You have full access to all {sheet.questions?.length}{" "}
+                        questions.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Sidebar */}
+            {/* Sidebar (Right 1 col) */}
             <div className="lg:col-span-1">
               <div className="sticky top-6 space-y-5">
                 {/* Action Card */}
-                <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-6 overflow-hidden relative">
-                  {/* Decorative gradient accent */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-rose-500 to-pink-500" />
-
-                  <div className="text-center space-y-4">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-5">
+                  <div className="text-center space-y-3">
                     {sheet?.isPremium && !isPurchased && (
                       <div className="flex items-center justify-center gap-2 flex-wrap">
-                        <div className="bg-gradient-to-r from-red-500 to-rose-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-sm">
-                          ⭐ Premium Content
-                        </div>
+                        <span className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-xs font-semibold">
+                          ⭐ Premium Sheet
+                        </span>
                         {discountInfo?.showDiscountBadge && (
-                          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
-                            <FaPercentage className="text-xs" />
+                          <span className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                            <Percent className="w-3 h-3" />
                             {discountInfo.discountText}
-                          </div>
+                          </span>
                         )}
                       </div>
                     )}
 
                     <div>
                       {isPurchased ? (
-                        <div className="space-y-3">
-                          <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto">
-                            <FaCheckCircle className="text-3xl text-green-600" />
-                          </div>
-                          <Text
-                            level="p"
-                            className="text-2xl font-bold text-green-600"
-                          >
-                            Purchased
-                          </Text>
-                          <Text level="p" className="text-sm text-gray-600">
-                            Lifetime Access
-                          </Text>
-                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 mt-3">
-                            <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
-                              <FaCheckCircle className="text-sm" />
-                              <Text level="p" className="text-sm font-semibold">
-                                Full Access Granted
-                              </Text>
-                            </div>
-                            <Text level="p" className="text-xs text-green-600">
-                              You can access all {sheet.questions?.length || 0}{" "}
-                              questions and solutions
-                            </Text>
-                          </div>
+                        <div className="space-y-2">
+                          <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+                          <h3 className="font-headings font-bold text-xl text-emerald-600">
+                            Access Purchased
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            Lifetime Access Granted
+                          </p>
                         </div>
                       ) : !sheet?.isPremium ? (
-                        <div className="space-y-2">
-                          <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto">
-                            <FaPlay className="text-2xl text-blue-600" />
-                          </div>
-                          <Text
-                            level="p"
-                            className="text-3xl font-bold text-gray-900"
-                          >
-                            Free
-                          </Text>
-                          <Text level="p" className="text-sm text-gray-500">
+                        <div className="space-y-1">
+                          <h3 className="font-headings font-bold text-3xl text-foreground">
+                            Free Access
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
                             No payment required
-                          </Text>
+                          </p>
                         </div>
                       ) : priceBreakdown ? (
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           {priceBreakdown.savings > 0 && (
-                            <div className="flex items-center justify-center gap-3">
-                              <Text
-                                level="p"
-                                className="text-lg text-gray-400 line-through"
-                              >
+                            <div className="flex items-center justify-center gap-2">
+                              <span className="text-sm text-muted-foreground line-through">
                                 {formatPrice(priceBreakdown.originalPrice)}
-                              </Text>
-                              <div className="bg-gradient-to-r from-red-100 to-rose-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">
+                              </span>
+                              <span className="bg-primary/10 text-primary text-xs font-bold px-2.5 py-0.5 rounded-full border border-primary/20">
                                 {getSavingsPercentage(
                                   priceBreakdown.originalPrice,
                                   priceBreakdown.finalPrice,
                                 )}
                                 % OFF
-                              </div>
+                              </span>
                             </div>
                           )}
-                          <Text
-                            level="p"
-                            className="text-4xl font-bold text-gray-900"
-                          >
+                          <h3 className="font-headings font-bold text-4xl text-foreground">
                             {formatPrice(priceBreakdown.finalPrice)}
-                          </Text>
+                          </h3>
                           {priceBreakdown.savings > 0 && (
-                            <Text
-                              level="p"
-                              className="text-sm text-green-600 font-semibold bg-green-50 px-3 py-1 rounded-full inline-block"
-                            >
-                              🎉 You save {formatPrice(priceBreakdown.savings)}!
-                            </Text>
+                            <p className="text-xs text-emerald-600 font-semibold bg-emerald-500/10 px-3 py-1 rounded-full inline-block border border-emerald-500/20">
+                              🎉 Save {formatPrice(priceBreakdown.savings)}!
+                            </p>
                           )}
                         </div>
                       ) : (
-                        <Text
-                          level="p"
-                          className="text-4xl font-bold text-gray-900"
-                        >
+                        <h3 className="font-headings font-bold text-4xl text-foreground">
                           {formatPrice(sheet.price || 0)}
-                        </Text>
-                      )}
-                      {sheet?.isPremium && !isPurchased && (
-                        <Text level="p" className="text-sm text-gray-500 mt-2">
-                          One-time payment · Lifetime Access
-                        </Text>
+                        </h3>
                       )}
                     </div>
 
@@ -734,15 +576,12 @@ const SheetLandingPage = ({
                     {sheet?.isPremium &&
                       priceBreakdown &&
                       priceBreakdown.savings > 0 && (
-                        <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-4 text-left space-y-2 border border-gray-100">
-                          <Text
-                            level="p"
-                            className="text-sm font-bold text-gray-700 mb-3"
-                          >
+                        <div className="bg-muted/40 rounded-xl p-3.5 text-left space-y-1.5 border border-border/60 text-xs">
+                          <p className="font-bold text-foreground mb-2">
                             💰 Price Breakdown
-                          </Text>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">
+                          </p>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">
                               Original Price
                             </span>
                             <span className="font-medium">
@@ -750,10 +589,9 @@ const SheetLandingPage = ({
                             </span>
                           </div>
                           {priceBreakdown.discountAmount > 0 && (
-                            <div className="flex justify-between text-sm text-green-600">
+                            <div className="flex justify-between text-emerald-600">
                               <span>
-                                Sheet Discount (
-                                {priceBreakdown.discountPercentage}%)
+                                Discount ({priceBreakdown.discountPercentage}%)
                               </span>
                               <span className="font-medium">
                                 -{formatPrice(priceBreakdown.discountAmount)}
@@ -762,44 +600,39 @@ const SheetLandingPage = ({
                           )}
                           {priceBreakdown.couponDiscount > 0 &&
                             appliedCoupon && (
-                              <div className="flex justify-between text-sm text-green-600">
+                              <div className="flex justify-between text-emerald-600">
                                 <span>Coupon ({appliedCoupon.code})</span>
                                 <span className="font-medium">
                                   -{formatPrice(priceBreakdown.couponDiscount)}
                                 </span>
                               </div>
                             )}
-                          <hr className="border-gray-200 my-2" />
-                          <div className="flex justify-between text-sm font-bold">
+                          <hr className="border-border my-1.5" />
+                          <div className="flex justify-between font-bold text-foreground">
                             <span>Final Price</span>
-                            <span className="text-green-600">
+                            <span className="text-primary">
                               {formatPrice(priceBreakdown.finalPrice)}
                             </span>
                           </div>
                         </div>
                       )}
 
-                    {/* Coupon Input - Only show if sheet is premium and not purchased */}
+                    {/* Coupon Input */}
                     {sheet?.isPremium && !appliedCoupon && !isPurchased && (
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 text-center border border-blue-100">
-                        <div className="flex items-center justify-center gap-2 mb-3">
-                          <FaTags className="text-blue-500 text-sm" />
-                          <Text
-                            level="p"
-                            className="text-sm font-bold text-blue-700"
-                          >
-                            Have a coupon?
-                          </Text>
+                      <div className="bg-muted/40 rounded-xl p-3.5 border border-border/60 space-y-2.5 text-left">
+                        <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                          <Tag className="w-3.5 h-3.5 text-primary" />
+                          <span>Have a coupon?</span>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           <input
                             type="text"
-                            placeholder="Enter coupon code"
+                            placeholder="ENTER CODE"
                             value={couponCode}
                             onChange={(e) =>
                               setCouponCode(e.target.value.toUpperCase())
                             }
-                            className="w-full px-4 py-3 border border-blue-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-center font-medium bg-white"
+                            className="w-full px-3 py-2 border border-border rounded-lg text-xs font-semibold bg-background text-foreground text-center focus:outline-none focus:border-primary"
                             onKeyDown={(e) =>
                               e.key === "Enter" && handleApplyCoupon()
                             }
@@ -809,49 +642,36 @@ const SheetLandingPage = ({
                               couponLoading ? "Applying..." : "Apply Coupon"
                             }
                             variant="PRIMARY"
-                            className="w-full px-4 py-3 text-sm font-bold bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl shadow-md"
+                            className="w-full py-2 text-xs font-bold rounded-lg"
                             onClick={handleApplyCoupon}
                             isLoading={couponLoading}
                             disabled={!couponCode.trim()}
                           />
                         </div>
                         {couponError && (
-                          <Text
-                            level="p"
-                            className="text-xs text-red-600 mt-2 text-center font-medium"
-                          >
+                          <p className="text-xs text-destructive font-medium text-center">
                             {couponError}
-                          </Text>
+                          </p>
                         )}
                       </div>
                     )}
 
-                    {/* Applied Coupon Display - Only show if sheet is premium and not purchased */}
+                    {/* Applied Coupon Display */}
                     {sheet?.isPremium && appliedCoupon && !isPurchased && (
-                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 text-left border border-green-200">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                              <FaTags className="text-green-600 text-sm" />
-                            </div>
-                            <div>
-                              <Text
-                                level="p"
-                                className="text-sm font-bold text-green-700"
-                              >
-                                {appliedCoupon.code} Applied ✓
-                              </Text>
-                              <Text
-                                level="p"
-                                className="text-xs text-green-600"
-                              >
-                                {appliedCoupon.description}
-                              </Text>
-                            </div>
+                      <div className="bg-emerald-500/10 rounded-xl p-3.5 border border-emerald-500/20 text-left">
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="space-y-0.5">
+                            <p className="font-bold text-emerald-600 flex items-center gap-1.5">
+                              <Tag className="w-3.5 h-3.5" />{" "}
+                              {appliedCoupon.code} Applied
+                            </p>
+                            <p className="text-muted-foreground text-[11px]">
+                              {appliedCoupon.description}
+                            </p>
                           </div>
                           <button
                             onClick={handleRemoveCoupon}
-                            className="text-xs text-red-500 hover:text-red-700 font-medium underline"
+                            className="text-xs text-destructive hover:underline font-semibold"
                           >
                             Remove
                           </button>
@@ -877,63 +697,54 @@ const SheetLandingPage = ({
                                     ? `Get Access · ${formatPrice(priceBreakdown.finalPrice)}`
                                     : "Get Access"
                         }
-                        variant={isPurchased ? "SUCCESS" : "PRIMARY"}
-                        className={`w-full px-6 py-4 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 ${
-                          isPurchased
-                            ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700"
-                            : "bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700"
-                        }`}
+                        variant="PRIMARY"
+                        className="w-full py-3 text-sm font-bold rounded-xl shadow-xs"
                         onClick={handleStartNow}
                         isLoading={loading}
                       />
                     )}
 
-                    {/* Trust badges */}
-                    <div className="flex items-center justify-center gap-2 flex-wrap text-xs text-gray-500 pt-2">
-                      <span className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-full">
-                        ✓ Instant access
+                    {/* Trust Badges */}
+                    <div className="flex items-center justify-center gap-2 flex-wrap text-[11px] text-muted-foreground pt-1">
+                      <span className="bg-muted px-2.5 py-1 rounded-full border border-border/50">
+                        ✓ Instant Access
                       </span>
-                      <span className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-full">
-                        ✓ Lifetime updates
-                      </span>
-                      <span className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-full">
-                        ✓ Mobile friendly
+                      <span className="bg-muted px-2.5 py-1 rounded-full border border-border/50">
+                        ✓ Lifetime Access
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Quick Info */}
-                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                  <Text level="p" className="font-bold text-gray-900 mb-4">
+                <div className="bg-card border border-border rounded-2xl p-5 shadow-xs space-y-3">
+                  <h4 className="font-headings font-bold text-sm text-foreground">
                     📚 This sheet includes:
-                  </Text>
-                  <div className="space-y-3 text-sm text-gray-600">
-                    <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center">
-                        <FaPlay className="text-red-500 text-xs" />
-                      </div>
-                      <span className="font-medium">
+                  </h4>
+                  <div className="space-y-1.5 text-xs text-muted-foreground pt-1">
+                    <div className="flex items-center gap-2 py-0.5">
+                      <Play className="w-3.5 h-3.5 text-primary shrink-0" />
+                      <span className="font-medium text-foreground">
                         {sheet.questions?.length || 0} Interview Questions
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
-                        <FaCheckCircle className="text-green-500 text-xs" />
-                      </div>
-                      <span className="font-medium">Detailed Solutions</span>
+                    <div className="flex items-center gap-2 py-0.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      <span className="font-medium text-foreground">
+                        Detailed Solutions & Explanations
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center">
-                        <FaClock className="text-yellow-500 text-xs" />
-                      </div>
-                      <span className="font-medium">Progress Tracking</span>
+                    <div className="flex items-center gap-2 py-0.5">
+                      <Clock className="w-3.5 h-3.5 text-primary shrink-0" />
+                      <span className="font-medium text-foreground">
+                        Progress Tracking
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center">
-                        <FaStar className="text-purple-500 text-xs" />
-                      </div>
-                      <span className="font-medium">Bookmark Questions</span>
+                    <div className="flex items-center gap-2 py-0.5">
+                      <Star className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                      <span className="font-medium text-foreground">
+                        Bookmark & Practice Mode
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -950,16 +761,15 @@ const SheetLandingPage = ({
           role="dialog"
           aria-modal="true"
           aria-labelledby="payment-modal-title"
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4"
           onClick={(e) => e.target === e.currentTarget && setShowPayment(false)}
           onKeyDown={(e) => e.key === "Escape" && setShowPayment(false)}
         >
-          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-card border border-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
             <PaymentCard
               course={{
                 ...sheet,
                 price: priceBreakdown?.finalPrice || sheet.price || 0,
-                // Pass additional discount info as custom properties
                 ...(priceBreakdown && {
                   originalPrice: priceBreakdown.originalPrice,
                   discountAmount: priceBreakdown.totalDiscount,
