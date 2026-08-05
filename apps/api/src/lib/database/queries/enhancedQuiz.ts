@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose, { type ClientSession, Schema } from "mongoose";
 
 import type { DatabaseQueryResponseType } from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
@@ -227,75 +227,98 @@ const submitAnswerInDB = async ({
 const completeQuizSessionInDB = async (
   sessionId: string,
 ): Promise<DatabaseQueryResponseType> => {
+  let transaction: ClientSession | undefined;
+
   try {
-    const session = await QuizSession.findById(sessionId);
-    if (!session) {
-      return { error: "Session not found" };
-    }
+    transaction = await mongoose.startSession();
+    const activeTransaction = transaction;
+    let completedSession: QuizSessionModel | null = null;
 
-    // Completion is intentionally idempotent because clients may retry the request.
-    if (session.status === "completed") {
-      return { data: session };
-    }
+    await activeTransaction.withTransaction(async () => {
+      const session =
+        await QuizSession.findById(sessionId).session(activeTransaction);
+      if (!session) {
+        throw new Error("Session not found");
+      }
 
-    const answeredQuestions = session.questions.filter(
-      (q) => q.userAnswer !== undefined,
-    );
-    const correctAnswers = answeredQuestions.filter((q) => q.isCorrect).length;
-    const totalTime = answeredQuestions.reduce(
-      (sum, q) => sum + (q.timeSpent || 0),
-      0,
-    );
-    const score = answeredQuestions.length
-      ? Math.round((correctAnswers / answeredQuestions.length) * 100)
-      : 0;
+      // Keep retries safe while the transaction serializes concurrent completions.
+      if (session.status === "completed") {
+        completedSession = session;
+        return;
+      }
 
-    // Update session
-    session.status = "completed";
-    session.completedAt = new Date();
-    session.totalTime = totalTime;
-    session.score = score;
-    session.percentage = score;
+      const answeredQuestions = session.questions.filter(
+        (q) => q.userAnswer !== undefined,
+      );
+      const correctAnswers = answeredQuestions.filter(
+        (q) => q.isCorrect,
+      ).length;
+      const totalTime = answeredQuestions.reduce(
+        (sum, q) => sum + (q.timeSpent || 0),
+        0,
+      );
+      const score = answeredQuestions.length
+        ? Math.round((correctAnswers / answeredQuestions.length) * 100)
+        : 0;
 
-    await session.save();
+      // Create the dependent records before marking the session completed.
+      const attemptData = {
+        userId: session.userId,
+        quizId: session.quizId,
+        categoryName: session.categoryName,
+        answers: session.questions.map((q, index) => ({
+          questionIndex: index,
+          selectedAnswer: q.userAnswer || -1,
+          isCorrect: q.isCorrect || false,
+          timeSpent: q.timeSpent || 0,
+        })),
+        score,
+        correctAnswers,
+        totalQuestions: answeredQuestions.length,
+        timeTaken: totalTime,
+        pointsEarned: correctAnswers * 10,
+        completedAt: new Date(),
+      };
 
-    // Create traditional quiz attempt for backward compatibility
-    const attemptData = {
-      userId: session.userId,
-      quizId: session.quizId,
-      categoryName: session.categoryName,
-      answers: session.questions.map((q, index) => ({
-        questionIndex: index,
-        selectedAnswer: q.userAnswer || -1,
-        isCorrect: q.isCorrect || false,
-        timeSpent: q.timeSpent || 0,
-      })),
-      score,
-      correctAnswers,
-      totalQuestions: answeredQuestions.length,
-      timeTaken: totalTime,
-      pointsEarned: correctAnswers * 10,
-      completedAt: new Date(),
-    };
+      await QuizAttempt.create([attemptData], { session: activeTransaction });
 
-    await QuizAttempt.create(attemptData);
+      const analyticsResult = await updateUserAnalyticsInDB({
+        userId: session.userId.toString(),
+        categoryName: session.categoryName,
+        score,
+        difficulty: session.difficulty,
+        timeSpent: totalTime,
+        answers: answeredQuestions.map((q) => q.isCorrect ?? false),
+        session: activeTransaction,
+      });
+      if (analyticsResult.error) {
+        throw new Error(analyticsResult.error);
+      }
 
-    // Update user analytics
-    await updateUserAnalyticsInDB({
-      userId: session.userId.toString(),
-      categoryName: session.categoryName,
-      score,
-      difficulty: session.difficulty,
-      timeSpent: totalTime,
-      answers: answeredQuestions.map((q) => q.isCorrect ?? false),
+      session.status = "completed";
+      session.completedAt = new Date();
+      session.totalTime = totalTime;
+      session.score = score;
+      session.percentage = score;
+      await session.save({ session: activeTransaction });
+      completedSession = session;
     });
 
-    return { data: session };
+    return completedSession
+      ? { data: completedSession }
+      : { error: "Failed to complete session" };
   } catch (error) {
     logger.error("Error completing session", {
       error: error instanceof Error ? error.message : String(error),
     });
-    return { error: "Failed to complete session" };
+    return {
+      error:
+        error instanceof Error && error.message === "Session not found"
+          ? "Session not found"
+          : "Failed to complete session",
+    };
+  } finally {
+    await transaction?.endSession();
   }
 };
 
@@ -429,6 +452,7 @@ const updateUserAnalyticsInDB = async ({
   difficulty,
   timeSpent,
   answers = [],
+  session,
 }: {
   userId: string;
   categoryName: string;
@@ -436,12 +460,15 @@ const updateUserAnalyticsInDB = async ({
   difficulty: string;
   timeSpent: number;
   answers?: boolean[];
+  session?: ClientSession;
 }): Promise<DatabaseQueryResponseType> => {
   try {
-    let analytics = await UserQuizAnalytics.findOne({
+    const analyticsQuery = UserQuizAnalytics.findOne({
       userId,
       categoryName,
     });
+    if (session) analyticsQuery.session(session);
+    let analytics = await analyticsQuery;
 
     if (!analytics) {
       analytics = new UserQuizAnalytics({
@@ -502,7 +529,11 @@ const updateUserAnalyticsInDB = async ({
 
     analytics.lastAttemptAt = new Date();
 
-    await analytics.save();
+    if (session) {
+      await analytics.save({ session });
+    } else {
+      await analytics.save();
+    }
     return { data: analytics };
   } catch (error) {
     logger.error("DB: updateUserAnalyticsInDB failed", {
