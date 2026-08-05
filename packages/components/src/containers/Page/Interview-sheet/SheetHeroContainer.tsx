@@ -1,9 +1,8 @@
 import {
   Button,
-  FlexContainer,
   LinkButton,
   LoginRedirectButton,
-  PageHeroMetaContainer,
+  Section,
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
@@ -75,91 +74,71 @@ const SheetHeroContainer = ({
   let headerActionButton;
 
   if (!isAuth) {
-    headerActionButton = (
-      <FlexContainer>
-        <LoginRedirectButton text="Login to Get Started" />
-      </FlexContainer>
-    );
+    headerActionButton = <LoginRedirectButton text="Login to Get Started" />;
   } else if (isAuth && !isEnrolled && !isPremium) {
     headerActionButton = (
-      <FlexContainer>
-        <Button
-          text="Enroll in Sheet"
-          variant="PRIMARY"
-          onClick={enrollSheet}
-        />
-      </FlexContainer>
+      <Button
+        text="Enroll in Sheet"
+        variant="PRIMARY"
+        onClick={enrollSheet}
+        className="px-6 py-2 rounded-lg font-semibold shadow-xs"
+      />
     );
   } else if (isAuth && !isEnrolled && isPremium && isPurchased) {
     headerActionButton = (
-      <FlexContainer>
-        <Button
-          text="Enroll in Sheet"
-          variant="PRIMARY"
-          onClick={enrollSheet}
-        />
-      </FlexContainer>
+      <Button
+        text="Enroll in Sheet"
+        variant="PRIMARY"
+        onClick={enrollSheet}
+        className="px-6 py-2 rounded-lg font-semibold shadow-xs"
+      />
     );
   }
 
   if (loading) {
     headerActionButton = (
-      <Button isLoading text="Enrolling..." variant="PRIMARY" />
+      <Button
+        isLoading
+        text="Enrolling..."
+        variant="PRIMARY"
+        className="px-6 py-2 rounded-lg font-semibold shadow-xs"
+      />
     );
   }
 
-  const isDark = theme === "dark";
-
   return (
-    <FlexContainer>
-      <FlexContainer
-        className={`border md:w-4/5 gap-4 w-full p-2 justify-between rounded ${isDark ? "border-gray-700 bg-[#0A0A0A]" : "border-gray-200 bg-white"}`}
-      >
-        {/* Back Button */}
-        <LinkButton
-          buttonProps={{
-            variant: "GHOST",
-            text: "Back",
-          }}
-          href={backHref ?? routes.interviewPrep}
-          theme={theme}
-        />
+    <Section className="bg-background border-b border-border/60 text-foreground py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <LinkButton
+                buttonProps={{
+                  variant: "GHOST",
+                  text: "← Back to Explore",
+                  className:
+                    "text-muted-foreground hover:text-foreground font-medium p-0 h-auto bg-transparent hover:bg-transparent shadow-none border-none text-xs",
+                }}
+                href={backHref ?? routes.interviewPrepExplore}
+              />
+            </div>
+            <div className="space-y-1">
+              <Text
+                className="text-xs font-semibold text-primary uppercase tracking-wide"
+                level="p"
+              >
+                Practice Track · {name}
+              </Text>
+              <h1 className="font-headings font-bold text-2xl sm:text-3xl text-foreground">
+                Hello {user?.name ?? "Learner"}! 👋
+              </h1>
+            </div>
+          </div>
 
-        {/* Heading and Subheading */}
-        <FlexContainer
-          className="items-start gap-1"
-          direction="col"
-          itemCenter={false}
-        >
-          <Text
-            className={`heading-4 ${isDark ? "text-white" : "text-gray-900"}`}
-            level="h4"
-          >
-            Hello {user?.name ?? "there"}!
-          </Text>
-          <Text
-            className={`paragraph ${isDark ? "text-gray-400" : "text-greyDark"}`}
-            level="p"
-          >
-            Ready to prepare for interviews?
-          </Text>
-        </FlexContainer>
-
-        <FlexContainer
-          className="justify-start items-start gap-3"
-          itemCenter={false}
-          justifyCenter={false}
-        >
-          <PageHeroMetaContainer
-            subtitle="YOU'RE PRACTICING"
-            title={name}
-            theme={theme}
-          />
-        </FlexContainer>
-
-        {headerActionButton}
-      </FlexContainer>
-    </FlexContainer>
+          <div>{headerActionButton}</div>
+        </div>
+      </div>
+    </Section>
   );
 };
 
