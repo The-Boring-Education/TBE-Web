@@ -30,7 +30,7 @@ import {
   Tag,
   Users,
 } from "lucide-react";
-import { Fragment, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 interface SheetLandingPageProps {
   sheet: SheetPageProps["sheet"];
