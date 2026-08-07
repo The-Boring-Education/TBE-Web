@@ -394,6 +394,7 @@ const CoursePage = ({
           isEnrolled={course.isEnrolled}
           isPremium={false}
           name={course.name ?? ''}
+          slug={slug || course.slug || ''}
           completedChapters={completedChapters}
           totalChapters={totalChapters}
         />
