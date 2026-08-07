@@ -408,9 +408,12 @@ export interface LevelInfoProps {
 }
 export interface CourseHeroContainerProps {
   name: string;
+  slug?: string;
   isEnrolled?: boolean;
   id: string;
   isPremium?: boolean;
+  completedChapters?: number;
+  totalChapters?: number;
 }
 
 export interface SheetHeroContainerProps {
