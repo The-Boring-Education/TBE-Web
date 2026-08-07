@@ -258,6 +258,37 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
       .join(", ");
   };
 
+  const getJoinedDate = (): string => {
+    const rawDate =
+      profile?.createdAt ||
+      (profile as any)?.created_at ||
+      (user as any)?.createdAt ||
+      (user as any)?.created_at;
+
+    if (!rawDate) {
+      return new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    const parsed = new Date(rawDate);
+    if (isNaN(parsed.getTime())) {
+      return new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    return parsed.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   const infoRows = [
     {
       icon: <BriefcaseIcon />,
@@ -282,18 +313,16 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
     {
       icon: <CalendarIcon />,
       label: "Joined",
-      value: profile?.createdAt
-        ? new Date(profile.createdAt).toLocaleDateString()
-        : "Unknown",
+      value: getJoinedDate(),
     },
   ];
 
   return (
     <>
-      {/* Avatar + name + action buttons */}
-      <div className="px-6 pt-3 pb-3 flex flex-col items-center gap-2 border-b border-[#e8e8e8]">
+      {/* Avatar + name + social icons + action buttons */}
+      <div className="px-5 pt-4 pb-3 flex flex-col items-center gap-1.5 border-b border-[#e2e8f0]">
         <div
-          className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold overflow-hidden flex-shrink-0"
+          className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-extrabold overflow-hidden flex-shrink-0 shadow-sm ring-2 ring-white"
           style={{ backgroundColor: "#e8372c" }}
         >
           {displayImage ? (
@@ -309,16 +338,10 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
         </div>
 
         <div className="text-center">
-          <div
-            className="font-semibold leading-tight"
-            style={{ fontSize: "14px", color: "#111111" }}
-          >
+          <div className="text-base font-bold leading-snug text-[#0f172a]">
             {displayName}
           </div>
-          <div
-            className="mt-0.5"
-            style={{ fontSize: "11px", color: "#8a8a8a" }}
-          >
+          <div className="text-xs font-medium text-[#64748b]">
             @{displayUsername}
           </div>
         </div>
@@ -327,7 +350,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
         {(profile?.linkedInUrl ||
           profile?.githubUrl ||
           profile?.leetCodeUrl) && (
-          <div className="flex gap-2.5 mt-1 mb-0.5 justify-center">
+          <div className="flex gap-2 justify-center my-0.5">
             {profile.linkedInUrl && (
               <a
                 href={
@@ -337,14 +360,13 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1 rounded hover:bg-slate-100 transition-colors"
-                style={{ color: "#e8372c" }}
+                className="p-1 rounded-md hover:bg-slate-100 transition-colors text-[#e8372c]"
                 title="LinkedIn"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -368,14 +390,13 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1 rounded hover:bg-slate-100 transition-colors"
-                style={{ color: "#e8372c" }}
+                className="p-1 rounded-md hover:bg-slate-100 transition-colors text-[#e8372c]"
                 title="GitHub"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -397,14 +418,13 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1 rounded hover:bg-slate-100 transition-colors"
-                style={{ color: "#e8372c" }}
+                className="p-1 rounded-md hover:bg-slate-100 transition-colors text-[#e8372c]"
                 title="LeetCode"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -422,18 +442,11 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
           </div>
         )}
 
-        <div className="flex gap-2 mt-1 flex-wrap justify-center">
+        <div className="flex gap-2 flex-wrap justify-center mt-0.5">
           {profile?.userName && (
             <button
               onClick={handleShare}
-              className="flex items-center gap-1.5 transition-colors hover:bg-[#f0f0f0]"
-              style={{
-                padding: "4px 10px",
-                borderRadius: "8px",
-                border: "1px solid #e8e8e8",
-                fontSize: "11px",
-                color: "#111111",
-              }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border border-[#cbd5e1] text-[#0f172a] bg-white hover:bg-[#f8fafc] hover:border-[#94a3b8] transition-all shadow-xs cursor-pointer"
             >
               Share Journey
               <CopyIcon />
@@ -442,14 +455,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
           {onEditClick && (
             <button
               onClick={onEditClick}
-              className="flex items-center gap-1.5 transition-colors hover:bg-[#f0f0f0]"
-              style={{
-                padding: "4px 10px",
-                borderRadius: "8px",
-                border: "1px solid #e8e8e8",
-                fontSize: "11px",
-                color: "#111111",
-              }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border border-[#cbd5e1] text-[#0f172a] bg-white hover:bg-[#f8fafc] hover:border-[#94a3b8] transition-all shadow-xs cursor-pointer"
             >
               Edit Details
               <PencilIcon />
@@ -458,48 +464,30 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
         </div>
       </div>
 
-      <div className="px-4 py-2 flex flex-col gap-0.5">
+      <div className="px-5 py-3 flex flex-col gap-1.5">
         {infoRows.map((row) => (
           <div
             key={row.label}
-            className="flex items-start justify-between py-1.5 px-2 rounded-lg"
+            className="flex items-center justify-between py-2 px-2.5 rounded-lg hover:bg-slate-50 transition-colors"
           >
-            <div
-              className="flex items-center gap-2.5 shrink-0 pt-0.5"
-              style={{ color: "#8a8a8a" }}
-            >
-              {row.icon}
-              <span style={{ fontSize: "13px" }}>{row.label}</span>
+            <div className="flex items-center gap-2.5 shrink-0 text-[#475569]">
+              <span className="text-[#64748b]">{row.icon}</span>
+              <span className="text-xs sm:text-sm font-medium text-[#334155]">
+                {row.label}
+              </span>
             </div>
             <div className="flex flex-wrap gap-1 justify-end max-w-[200px]">
               {typeof row.value === "string" && row.value.includes(",") ? (
                 row.value.split(",").map((val) => (
                   <span
                     key={val}
-                    className="rounded-md font-medium text-right"
-                    style={{
-                      fontSize: "11px",
-                      padding: "2px 6px",
-                      backgroundColor: "#f0f0f0",
-                      color: "#111111",
-                      whiteSpace: "nowrap",
-                    }}
+                    className="rounded-md font-semibold text-right text-xs px-2.5 py-0.5 bg-[#f1f5f9] text-[#0f172a] border border-[#e2e8f0] whitespace-nowrap"
                   >
                     {val.trim()}
                   </span>
                 ))
               ) : (
-                <span
-                  className="rounded-md font-medium text-right"
-                  style={{
-                    fontSize: "11px",
-                    padding: "3px 8px",
-                    backgroundColor: "#f0f0f0",
-                    color: "#111111",
-                    whiteSpace: "normal",
-                    wordBreak: "break-word",
-                  }}
-                >
+                <span className="rounded-md font-semibold text-right text-xs px-2.5 py-0.5 bg-[#f1f5f9] text-[#0f172a] border border-[#e2e8f0] whitespace-normal break-words">
                   {row.value}
                 </span>
               )}
