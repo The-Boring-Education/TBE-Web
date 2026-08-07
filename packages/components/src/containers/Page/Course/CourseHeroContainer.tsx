@@ -281,7 +281,7 @@ const CourseHeroContainer = ({
                   <LinkButton
                     buttonProps={{
                       variant: "GHOST",
-                      text: "← Back to Shiksha Courses",
+                      text: "← Back to Courses",
                       className:
                         "text-muted-foreground hover:text-foreground font-medium p-0 h-auto bg-transparent hover:bg-transparent shadow-none border-none text-xs",
                     }}
