@@ -1,11 +1,6 @@
-import {
-  FlexContainer,
-  Image,
-  LinkButton,
-  Section,
-  Text,
-} from "@tbe/components";
+import { SectionHeaderContainer, Text } from "@tbe/components";
 import type { BannerProps } from "@tbe/interface";
+import { ExternalLink } from "lucide-react";
 
 const BannerVariantC = ({
   title,
@@ -14,42 +9,45 @@ const BannerVariantC = ({
   buttonLink,
   imageSrc,
 }: BannerProps) => (
-  <Section className="md:px-8 md:py-8 px-2 py-4">
-    <FlexContainer justifyCenter={false}>
-      <FlexContainer className="w-full gap-4 rounded-2 bg-gradient-to-br from-orange-500 via-pink-500 to-rose-600 md:px-8 md:py-8 px-2 py-4 shadow-xl shadow-orange-500/25 sm:px-8 sm:py-8 lg:px-4 lg:py-4 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-yellow-400/20 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-pink-400/20 rounded-full blur-3xl" />
-        </div>
-
-        <div className="max-w-md relative z-10">
-          <Image alt="banner image" src={imageSrc} />
-        </div>
-        <FlexContainer
-          direction="col"
-          itemCenter
-          className="flex-1 relative z-10"
-        >
-          <Text className="heading-3 text-white mb-2" level="h3" textCenter>
-            {title}
-          </Text>
-          <Text className="paragraph text-white/90 mb-4" level="p" textCenter>
-            {description}
-          </Text>
-          <LinkButton
-            buttonProps={{
-              variant: "OUTLINE",
-              text: buttonText,
-              className:
-                "!bg-white !text-orange-600 hover:!bg-gray-100 !border-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105",
-            }}
-            href={buttonLink}
+  <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16 select-none">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center">
+      {imageSrc ? (
+        <div className="md:col-span-4 flex justify-center">
+          <img
+            alt="Campus Ambassador"
+            src={imageSrc}
+            className="h-28 sm:h-36 w-auto object-contain"
           />
-        </FlexContainer>
-      </FlexContainer>
-    </FlexContainer>
-  </Section>
+        </div>
+      ) : null}
+
+      <div
+        className={`${imageSrc ? "md:col-span-8" : "md:col-span-12"} space-y-3 text-center md:text-left`}
+      >
+        <SectionHeaderContainer
+          heading={title}
+          focusText=""
+          headingLevel={3}
+          textCenter={false}
+        />
+
+        <Text className="paragraph text-grey max-w-2xl" level="p">
+          {description}
+        </Text>
+
+        <div className="pt-2">
+          <a
+            href={buttonLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#FF5757] px-5 py-2.5 text-xs font-bold sm:text-sm text-white transition-colors duration-200 hover:bg-[#e04343]"
+          >
+            {buttonText} <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 );
 
 export default BannerVariantC;

@@ -82,28 +82,19 @@ export const BuildYourStack: React.FC<BuildYourStackProps> = ({
   };
 
   return (
-    <div className="px-4 mt-1.5 pb-2">
+    <div className="px-5 mt-3 pb-4 border-t border-[#e2e8f0] pt-3">
       {/* Section header */}
-      <div className="flex items-center gap-2 mb-2 px-2">
-        <span className="flex items-center" style={{ color: "#8a8a8a" }}>
+      <div className="flex items-center gap-2 mb-3 px-1">
+        <span className="flex items-center text-[#64748b]">
           <LayersIcon />
         </span>
-        <span
-          className="font-semibold"
-          style={{ fontSize: "13px", color: "#111111" }}
-        >
+        <span className="text-xs sm:text-sm font-bold text-[#0f172a]">
           Build Your Stack
         </span>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="ml-auto flex items-center justify-center transition-colors hover:bg-[#e8e8e8]"
-          style={{
-            width: "24px",
-            height: "24px",
-            borderRadius: "8px",
-            backgroundColor: "#f0f0f0",
-            color: "#8a8a8a",
-          }}
+          className="ml-auto flex items-center justify-center w-6 h-6 rounded-lg bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#475569] transition-all cursor-pointer"
+          title="Add skills"
         >
           <PlusIcon />
         </button>
@@ -111,56 +102,34 @@ export const BuildYourStack: React.FC<BuildYourStackProps> = ({
 
       {/* Skills empty state */}
       {userSkills.length === 0 ? (
-        <div
-          className="rounded-lg p-4 flex flex-col items-center gap-2"
-          style={{
-            backgroundColor: "#fff0ef",
-            border: "1px solid #fdecea",
-          }}
-        >
-          <span className="flex items-center" style={{ color: "#e8372c" }}>
+        <div className="rounded-xl p-4 flex flex-col items-center gap-2 bg-[#fff0ef] border border-[#fecdd3]">
+          <span className="flex items-center text-[#e8372c]">
             <AlertTriangleIcon />
           </span>
-          <span
-            className="text-center"
-            style={{ fontSize: "11px", color: "#8a8a8a" }}
-          >
+          <span className="text-xs font-medium text-[#475569] text-center">
             No skills added yet
           </span>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="font-medium hover:underline"
-            style={{ fontSize: "11px", color: "#e8372c" }}
+            className="text-xs font-bold text-[#e8372c] hover:underline cursor-pointer"
           >
             Add your first skill
           </button>
         </div>
       ) : (
         /* Skills populated state */
-        <div className="flex flex-wrap gap-1.5 px-2">
+        <div className="flex flex-wrap gap-2 px-1">
           {userSkills.map((skill) => (
             <span
               key={skill}
-              className="rounded-md"
-              style={{
-                padding: "4px 10px",
-                fontSize: "11px",
-                backgroundColor: "#f0f0f0",
-                color: "#111111",
-              }}
+              className="rounded-lg text-xs font-semibold px-3 py-1 bg-[#f1f5f9] text-[#0f172a] border border-[#cbd5e1] shadow-xs"
             >
               {skill}
             </span>
           ))}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="rounded-md transition-colors hover:bg-[#f0f0f0]"
-            style={{
-              padding: "4px 10px",
-              fontSize: "11px",
-              color: "#8a8a8a",
-              border: "1px dashed #e8e8e8",
-            }}
+            className="rounded-lg text-xs font-semibold px-2.5 py-1 text-[#475569] hover:text-[#0f172a] hover:bg-[#f1f5f9] border border-dashed border-[#cbd5e1] transition-all cursor-pointer"
           >
             + Add
           </button>

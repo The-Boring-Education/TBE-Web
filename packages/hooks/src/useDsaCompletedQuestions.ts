@@ -21,7 +21,7 @@ export interface UseDsaCompletedQuestionsOptions {
 
 interface UseDsaCompletedQuestionsReturn {
   completedIds: (string | number)[];
-  toggleComplete: (questionId: string | number) => void;
+  toggleComplete: (questionId: string | number) => Promise<void>;
   solvedToday: number;
   /** True while loading server progress for an authenticated user */
   isProgressLoading: boolean;
@@ -215,7 +215,7 @@ const useDsaCompletedQuestions = (
   const isProgressLoading = Boolean(userId && remoteQuery.isPending);
 
   const toggleComplete = useCallback(
-    (questionId: string | number) => {
+    async (questionId: string | number): Promise<void> => {
       const qid = String(questionId);
 
       if (userId) {
@@ -247,32 +247,42 @@ const useDsaCompletedQuestions = (
           optimistic,
         );
 
-        void (async () => {
-          try {
-            const res = await sendRequest({
-              method: "PATCH",
-              url: `${routes.api.base}${routes.api.dsaYatraProgress}`,
-              body: {
-                userId,
-                questionId: qid,
-                isCompleted: nextCompleted,
-              },
-            });
-            if (!res?.status) {
-              throw new Error("PATCH failed");
-            }
-            if (res.data) {
-              queryClient.setQueryData(
-                queryKeys.dsa.completedQuestions(userId),
-                res.data as DsaProgressPayload,
-              );
-            }
-          } catch {
-            await queryClient.invalidateQueries({
-              queryKey: queryKeys.dsa.completedQuestions(userId),
-            });
+        try {
+          const res = await sendRequest({
+            method: "PATCH",
+            url: `${routes.api.base}${routes.api.dsaYatraProgress}`,
+            body: {
+              userId,
+              questionId: qid,
+              isCompleted: nextCompleted,
+            },
+          });
+          if (!res?.status) {
+            throw new Error("PATCH failed");
           }
-        })();
+          if (res.data) {
+            queryClient.setQueryData(
+              queryKeys.dsa.completedQuestions(userId),
+              res.data as DsaProgressPayload,
+            );
+          }
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(userId),
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ["gamification"],
+          });
+        } catch {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.dsa.completedQuestions(userId),
+          });
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.points(userId),
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ["gamification"],
+          });
+        }
         return;
       }
 

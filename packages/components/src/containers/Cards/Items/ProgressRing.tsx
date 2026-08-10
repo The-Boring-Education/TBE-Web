@@ -2,7 +2,16 @@ import { Text } from "@tbe/components";
 import type { ProgressRingProps } from "@tbe/interface";
 import React from "react";
 
-const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
+/**
+ * Circular progress ring used as a compact points/level indicator.
+ *
+ * Supports dark and light themes — the track circle colour adapts accordingly.
+ */
+const ProgressRing = ({
+  progress = 0,
+  point,
+  theme = "light",
+}: ProgressRingProps) => {
   const radius = 42;
   const circumference = 2 * Math.PI * radius;
 
@@ -13,6 +22,8 @@ const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
   const strokeDashoffset =
     circumference - (clampedProgress / 100) * circumference;
 
+  const trackColor = theme === "dark" ? "#2A2A2A" : "#E0E0E0";
+
   return (
     <div className="relative w-20 h-20 flex items-center justify-center">
       <svg className="absolute w-full h-full" viewBox="0 0 100 100">
@@ -22,7 +33,7 @@ const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
           cy="50"
           fill="transparent"
           r={radius}
-          stroke="#E0E0E0"
+          stroke={trackColor}
           strokeWidth="8"
         />
         {/* Progress Circle */}
@@ -40,7 +51,12 @@ const ProgressRing = ({ progress = 0, point }: ProgressRingProps) => {
         />
       </svg>
       {/* Display Progress Percentage */}
-      <Text className="p-3 text-base md:text-lg font-bold" level="span">
+      <Text
+        className={`p-3 text-base md:text-lg font-bold ${
+          theme === "dark" ? "text-white" : "text-gray-900"
+        }`}
+        level="span"
+      >
         {point}
       </Text>
     </div>

@@ -45,13 +45,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           );
         }
 
-        const existingUser = userResult.data as { from?: string };
         const updateData: Record<string, unknown> = {
           "techYatra.tyOnboarded": true,
           "techYatra.focus": focus,
         };
 
-        if (from && !existingUser.from) {
+        const existingFrom = (userResult.data as { from?: string }).from;
+        if (from && !existingFrom) {
           updateData.from = from;
         }
 
@@ -87,7 +87,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
       }
     },
-    { ownerRequired: true },
+    { ownerRequired: true, allowUnauthenticated: true },
   )(req, res);
 };
 

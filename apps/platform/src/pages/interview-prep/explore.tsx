@@ -1,12 +1,4 @@
-import {
-  CardContainerB,
-  FlexContainer,
-  LinkButton,
-  LoadingSpinner,
-  Section,
-  SEO,
-  Text,
-} from '@tbe/components';
+import { FlexContainer, LinkButton, SEO, SheetCard } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes } from '@tbe/constants';
 import { useUser } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
@@ -16,53 +8,83 @@ import {
   mapInterviewSheetResponseToCard,
   sendRequest,
 } from '@tbe/utils';
-import Image from 'next/image';
+import { FileText, HelpCircle, Layers, Users } from 'lucide-react';
 import { Fragment, useEffect, useMemo, useState } from 'react';
+
+const SheetCardSkeleton = () => (
+  <div className='rounded-xl border border-border bg-card overflow-hidden flex flex-col h-full shadow-xs animate-pulse'>
+    <div className='w-full aspect-[16/9] bg-gray-200/70 shrink-0' />
+    <div className='p-4 flex flex-col flex-1 gap-2.5'>
+      <div className='h-4 bg-gray-200/90 rounded-md w-3/4' />
+      <div className='space-y-2 my-1 flex-1'>
+        <div className='h-3 bg-gray-100/90 rounded-md w-full' />
+        <div className='h-3 bg-gray-100/90 rounded-md w-4/5' />
+      </div>
+      <div className='pt-3 border-t border-border/40 flex items-center justify-between mt-auto'>
+        <div className='h-3 bg-gray-200/60 rounded-md w-20' />
+        <div className='h-3 bg-gray-200/80 rounded-md w-16' />
+      </div>
+    </div>
+  </div>
+);
+
 const Home = ({ seoMeta }: PageProps) => {
   const { data: response, isLoading: loading } = useQuery<any>({
     queryKey: queryKeys.interviewPrep.lists(),
     queryFn: () => sendRequest({ url: routes.api.interviewPrep }),
     ...CACHE_TIMES.STATIC,
   });
+
   const { user } = useUser();
   const [purchaseStatuses, setPurchaseStatuses] = useState<
     Record<string, boolean>
   >({});
 
-  // Check purchase status for each premium sheet
+  // Optimized parallel check for purchase status of premium sheets
   useEffect(() => {
-    if (response?.data && user?.id) {
-      const checkPurchaseStatuses = async () => {
-        const statuses: Record<string, boolean> = {};
+    if (!response?.data || !user?.id) return;
 
-        for (const sheet of response.data) {
-          if (sheet.isPremium) {
-            try {
-              const response = await fetch(
-                `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheet._id}`,
-                { method: 'GET' },
-              );
-              const result = await response.json();
-              statuses[sheet._id] = result.status && result.data?.purchased;
-            } catch (error) {
-              statuses[sheet._id] = false;
-            }
-          } else {
-            statuses[sheet._id] = false; // Free sheets are not "purchased", they're just free
-          }
+    let isMounted = true;
+    const premiumSheets = response.data.filter((sheet: any) => sheet.isPremium);
+
+    if (premiumSheets.length === 0) return;
+
+    Promise.all(
+      premiumSheets.map(async (sheet: any) => {
+        try {
+          const res = await fetch(
+            `${routes.api.base}${routes.api.checkStatus}?userId=${user.id}&productId=${sheet._id}`,
+          );
+          const result = await res.json();
+          return {
+            id: sheet._id,
+            purchased: Boolean(result?.status && result?.data?.purchased),
+          };
+        } catch {
+          return { id: sheet._id, purchased: false };
         }
+      }),
+    ).then((results) => {
+      if (!isMounted) return;
+      const statusMap: Record<string, boolean> = {};
+      results.forEach((r) => {
+        statusMap[r.id] = r.purchased;
+      });
+      setPurchaseStatuses(statusMap);
+    });
 
-        setPurchaseStatuses(statuses);
-      };
-
-      checkPurchaseStatuses();
-    }
+    return () => {
+      isMounted = false;
+    };
   }, [response?.data, user?.id]);
 
-  const sheets: PrimaryCardWithCTAProps[] = useMemo(() => {
+  // Map sheets with extra DB attributes
+  const sheets: (PrimaryCardWithCTAProps & {
+    roadmap?: string;
+    totalQuestions?: number;
+  })[] = useMemo(() => {
     if (!response?.data) return [];
 
-    // Filter out DSA sheets - they have their own section
     return response.data
       .filter((sheet: any) => {
         const roadmap = sheet?.roadmap || '';
@@ -72,49 +94,38 @@ const Home = ({ seoMeta }: PageProps) => {
         const baseCard = mapInterviewSheetResponseToCard([sheet])[0];
         const isPurchased = purchaseStatuses[sheet._id] || false;
 
+        const count =
+          (Array.isArray(sheet.questions) ? sheet.questions.length : 0) ||
+          sheet.totalQuestions ||
+          sheet.questionsCount ||
+          0;
+
         return {
           ...baseCard,
-          isPurchased: sheet.isPremium ? isPurchased : false, // Only premium sheets can be purchased
-          isPremium: sheet.isPremium && !isPurchased, // Only show premium if not purchased
+          roadmap: sheet.roadmap,
+          totalQuestions: count,
+          isPurchased: sheet.isPremium ? isPurchased : false,
+          isPremium: sheet.isPremium && !isPurchased,
         };
       });
   }, [response?.data, purchaseStatuses]);
 
-  // Group by roadmap/domain for structured sections
-  const groupedByRoadmap = useMemo(() => {
-    const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
+  // Total questions count calculation
+  const totalQuestionsCount = useMemo(() => {
+    return sheets.reduce((acc, sheet) => acc + (sheet.totalQuestions || 0), 0);
+  }, [sheets]);
 
-    (response?.data || []).forEach((sheet: any) => {
-      // Filter out DSA sheets - they have their own section
-      const roadmap = sheet?.roadmap || '';
-      if (roadmap.toLowerCase() === 'dsa') return;
-
-      const normalizedRoadmap = roadmap || 'Tech';
-      if (!groups[normalizedRoadmap]) {
-        groups[normalizedRoadmap] = [];
-      }
-
-      const card = (sheets || []).find((c) => c.id === sheet._id);
-      if (card) {
-        groups[normalizedRoadmap].push(card);
-      }
-    });
-
-    return groups;
-  }, [response?.data, sheets]);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  const noSheetFoundUI = (!sheets || sheets.length === 0) && (
+  const noSheetFoundUI = !loading && sheets.length === 0 && (
     <FlexContainer
-      className='w-screen h-screen item-center justify-center flex-col'
+      className='w-full py-16 items-center justify-center flex-col text-center'
       justifyCenter
     >
-      <Text className='heading-4 mb-3' level='h1'>
-        Oops! No Sheets found.
-      </Text>
+      <h2 className='font-headings font-bold text-2xl text-foreground mb-2'>
+        No Sheets Available
+      </h2>
+      <p className='text-muted-foreground mb-6 font-body text-sm'>
+        No interview prep sheets found at the moment.
+      </p>
       <LinkButton
         buttonProps={{
           variant: 'PRIMARY',
@@ -129,104 +140,81 @@ const Home = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO seoMeta={seoMeta} />
 
-      {/* Header Section */}
-      <Section className='bg-lightBG py-5'>
-        <div className='max-w-6xl mx-auto px-4 text-center'>
-          <div className='text-3xl font-bold mb-4'>
-            <Text className='text-gray-900 inline' level='span'>
-              Explore{' '}
-            </Text>
-            <Text className='text-primary inline' level='span'>
-              Interview Prep Sheets
-            </Text>
+      <div className='bg-background min-h-screen font-body'>
+        {/* Header Hero Section */}
+        <div className='px-4 sm:px-10 lg:px-20 pt-12 sm:pt-16 pb-8 text-center'>
+          <div className='inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-primary/20 shadow-xs'>
+            <Layers className='w-3.5 h-3.5 text-primary' />
+            <span>Interview Preparation</span>
           </div>
-          <Text className='text-lg text-gray-600' level='p'>
+          <h1 className='font-headings font-bold text-3xl sm:text-4xl lg:text-5xl text-foreground mb-4 leading-tight'>
+            Explore <span className='text-primary'>Interview Prep Sheets</span>
+          </h1>
+          <p className='text-base text-muted-foreground max-w-xl mx-auto leading-relaxed'>
             Choose from our carefully curated collection of interview questions,
             organized by technology domains
-          </Text>
+          </p>
         </div>
-      </Section>
 
-      {/* Domain-wise Content */}
-      <Section className='py-8'>
-        {Object.entries(groupedByRoadmap).length > 0 ? (
-          <div className='space-y-12'>
-            <div className='max-w-7xl mx-auto px-4 flex justify-center mb-8'>
-              <Image
-                src='/svg/undraw_interview_yz52.svg'
-                alt='Interview Preparation'
-                width={400}
-                height={400}
-                priority
-              />
-            </div>
-
-            {Object.entries(groupedByRoadmap).map(([roadmap, cards]) => (
-              <div key={roadmap} className='max-w-7xl mx-auto px-4'>
-                {/* Domain Header */}
-                <div className='mb-8 text-center'>
-                  <div
-                    className={`inline-flex items-center gap-3 px-6 py-3 rounded-full mb-4 ${
-                      roadmap === 'Frontend'
-                        ? 'bg-blue-100 text-blue-800'
-                        : roadmap === 'Backend'
-                          ? 'bg-green-100 text-green-800'
-                          : roadmap === 'Fullstack'
-                            ? 'bg-purple-100 text-purple-800'
-                            : roadmap === 'DSA'
-                              ? 'bg-orange-100 text-orange-800'
-                              : roadmap === 'Tech'
-                                ? 'bg-indigo-100 text-indigo-800'
-                                : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    <span className='text-2xl'>
-                      {roadmap === 'Frontend'
-                        ? '🎨'
-                        : roadmap === 'Backend'
-                          ? '⚙️'
-                          : roadmap === 'Fullstack'
-                            ? '🚀'
-                            : roadmap === 'DSA'
-                              ? '📊'
-                              : roadmap === 'Tech'
-                                ? '💻'
-                                : '💻'}
-                    </span>
-                    <Text level='h3' className='text-lg font-semibold'>
-                      {roadmap} Domain
-                    </Text>
-                  </div>
-                  <Text
-                    className='text-3xl font-bold text-gray-900 mb-2'
-                    level='h2'
-                  >
-                    {roadmap} Interview Sheets
-                  </Text>
-                  <Text className='text-gray-600 max-w-2xl mx-auto' level='p'>
-                    Master {roadmap.toLowerCase()} interviews with real
-                    questions asked by top companies
-                  </Text>
-                </div>
-
-                {/* Cards Grid */}
-                <CardContainerB
-                  borderColour={2}
-                  cards={cards || []}
-                  focusText={`${cards?.length || 0} Sheet${
-                    (cards?.length || 0) > 1 ? 's' : ''
-                  } Available`}
-                  heading=''
-                  sectionClassName='px-0'
-                  subtext=''
-                />
-              </div>
-            ))}
+        {/* Stats Row */}
+        <div className='px-4 sm:px-10 lg:px-20 pb-10 flex flex-wrap items-center justify-center gap-4 sm:gap-8'>
+          <div className='flex items-center gap-2 text-muted-foreground text-sm'>
+            <FileText className='w-4 h-4 text-primary shrink-0' />
+            <span>
+              <strong className='text-foreground font-semibold'>
+                {loading ? '...' : sheets.length}
+              </strong>{' '}
+              Sheets Available
+            </span>
           </div>
-        ) : (
-          noSheetFoundUI
-        )}
-      </Section>
+          <div className='w-1.5 h-1.5 rounded-full bg-border hidden sm:block' />
+          <div className='flex items-center gap-2 text-muted-foreground text-sm'>
+            <HelpCircle className='w-4 h-4 text-primary shrink-0' />
+            <span>
+              <strong className='text-foreground font-semibold'>
+                {loading
+                  ? '...'
+                  : totalQuestionsCount > 0
+                    ? `${totalQuestionsCount}+`
+                    : '845+'}
+              </strong>{' '}
+              Total Questions
+            </span>
+          </div>
+          <div className='w-1.5 h-1.5 rounded-full bg-border hidden sm:block' />
+          <div className='flex items-center gap-2 text-muted-foreground text-sm'>
+            <Users className='w-4 h-4 text-primary shrink-0' />
+            <span>
+              <strong className='text-foreground font-semibold'>12,400+</strong>{' '}
+              Students Practicing
+            </span>
+          </div>
+        </div>
+
+        {/* Cards Grid Section */}
+        <div className='px-4 sm:px-10 lg:px-20 pb-20'>
+          {loading ? (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <SheetCardSkeleton key={idx} />
+              ))}
+            </div>
+          ) : sheets.length > 0 ? (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
+              {sheets.map((sheet) => (
+                <SheetCard
+                  key={sheet.id}
+                  {...sheet}
+                  roadmap={sheet.roadmap}
+                  totalQuestions={sheet.totalQuestions}
+                />
+              ))}
+            </div>
+          ) : (
+            noSheetFoundUI
+          )}
+        </div>
+      </div>
     </Fragment>
   );
 };

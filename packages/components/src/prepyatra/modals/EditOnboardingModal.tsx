@@ -14,10 +14,7 @@ const ModalLabel: React.FC<{
   children: React.ReactNode;
   required?: boolean;
 }> = ({ children, required }) => (
-  <label
-    className="block font-medium mb-1.5"
-    style={{ fontSize: "13px", color: "#111111" }}
-  >
+  <label className="block font-semibold mb-1 text-xs text-[#334155]">
     {children} {required && <span className="text-[#e8372c]">*</span>}
   </label>
 );
@@ -29,7 +26,7 @@ const ModalInput = React.forwardRef<
   <input
     ref={ref}
     {...props}
-    className="w-full bg-white border border-[#e8e8e8] px-3.5 py-2 transition-all duration-200 outline-none rounded-md text-[13px] placeholder:text-[#8a8a8a] text-[#111111] focus:border-[#e8372c] focus:ring-1 focus:ring-[#e8372c]/10"
+    className="w-full bg-white border border-[#cbd5e1] px-3 py-1.5 transition-all outline-none rounded-md text-xs text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#e8372c] focus:ring-2 focus:ring-[#e8372c]/15"
   />
 ));
 ModalInput.displayName = "ModalInput";
@@ -39,10 +36,7 @@ const PrimaryButton: React.FC<
 > = ({ children, ...props }) => (
   <button
     {...props}
-    className="px-4 py-2 font-medium text-white transition-colors duration-200 rounded-lg text-[13px]"
-    style={{ backgroundColor: "#e8372c" }}
-    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#d42e23")}
-    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#e8372c")}
+    className="px-4 py-1.5 text-xs font-bold text-white bg-[#e8372c] hover:bg-[#d42e23] rounded-lg transition-all shadow-xs cursor-pointer disabled:opacity-50"
   >
     {children}
   </button>
@@ -53,8 +47,7 @@ const OutlineButton: React.FC<
 > = ({ children, ...props }) => (
   <button
     {...props}
-    className="px-4 py-2 font-medium transition-colors duration-200 border border-[#e8e8e8] hover:bg-[#f0f0f0] rounded-lg text-[13px]"
-    style={{ backgroundColor: "#ffffff", color: "#111111" }}
+    className="px-4 py-1.5 text-xs font-semibold text-[#0f172a] bg-white border border-[#cbd5e1] hover:bg-[#f8fafc] rounded-lg transition-all cursor-pointer"
   >
     {children}
   </button>
@@ -254,18 +247,17 @@ export const EditOnboardingModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white rounded-2xl border border-[#e8e8e8] shadow-xl p-6 sm:max-w-[550px] max-h-[85vh] overflow-y-auto">
-        <DialogHeader className="mb-4">
-          <DialogTitle className="text-[17px] font-semibold text-[#111111]">
+      <DialogContent className="bg-white rounded-xl border border-[#cbd5e1] shadow-2xl p-5 sm:max-w-[480px] max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="mb-2">
+          <DialogTitle className="text-base font-bold text-[#0f172a]">
             Edit Onboarding Details
           </DialogTitle>
-          <p className="mt-1" style={{ fontSize: "13px", color: "#8a8a8a" }}>
-            Modify your targeted goals, experience levels, and company
-            preferences.
+          <p className="mt-0.5 text-xs text-[#64748b]">
+            Update your profile info, target goals, and company focus.
           </p>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <ModalLabel required>Display Name</ModalLabel>
               <ModalInput
@@ -292,7 +284,7 @@ export const EditOnboardingModal = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <ModalLabel>Occupation</ModalLabel>
               <select
@@ -303,7 +295,7 @@ export const EditOnboardingModal = ({
                     occupation: e.target.value,
                   }))
                 }
-                className="w-full bg-white border border-[#e8e8e8] px-3.5 py-2 transition-all duration-200 outline-none rounded-md text-[13px] text-[#111111] focus:border-[#e8372c] focus:ring-1 focus:ring-[#e8372c]/10"
+                className="w-full bg-white border border-[#cbd5e1] px-3 py-1.5 outline-none rounded-md text-xs text-[#0f172a] focus:border-[#e8372c] focus:ring-2 focus:ring-[#e8372c]/15 transition-all"
               >
                 {occupationOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -322,7 +314,7 @@ export const EditOnboardingModal = ({
                     experienceLevel: e.target.value,
                   }))
                 }
-                className="w-full bg-white border border-[#e8e8e8] px-3.5 py-2 transition-all duration-200 outline-none rounded-md text-[13px] text-[#111111] focus:border-[#e8372c] focus:ring-1 focus:ring-[#e8372c]/10"
+                className="w-full bg-white border border-[#cbd5e1] px-3 py-1.5 outline-none rounded-md text-xs text-[#0f172a] focus:border-[#e8372c] focus:ring-2 focus:ring-[#e8372c]/15 transition-all"
               >
                 {experienceOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -340,7 +332,7 @@ export const EditOnboardingModal = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, goal: e.target.value }))
               }
-              className="w-full bg-white border border-[#e8e8e8] px-3.5 py-2 transition-all duration-200 outline-none rounded-md text-[13px] text-[#111111] focus:border-[#e8372c] focus:ring-1 focus:ring-[#e8372c]/10"
+              className="w-full bg-white border border-[#cbd5e1] px-3 py-1.5 outline-none rounded-md text-xs text-[#0f172a] focus:border-[#e8372c] focus:ring-2 focus:ring-[#e8372c]/15 transition-all"
             >
               {goalOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -350,9 +342,9 @@ export const EditOnboardingModal = ({
             </select>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <div>
-              <ModalLabel>LinkedIn URL</ModalLabel>
+              <ModalLabel>LinkedIn</ModalLabel>
               <ModalInput
                 type="text"
                 value={formData.linkedInUrl}
@@ -366,7 +358,7 @@ export const EditOnboardingModal = ({
               />
             </div>
             <div>
-              <ModalLabel>GitHub URL</ModalLabel>
+              <ModalLabel>GitHub</ModalLabel>
               <ModalInput
                 type="text"
                 value={formData.githubUrl}
@@ -380,7 +372,7 @@ export const EditOnboardingModal = ({
               />
             </div>
             <div>
-              <ModalLabel>LeetCode URL</ModalLabel>
+              <ModalLabel>LeetCode</ModalLabel>
               <ModalInput
                 type="text"
                 value={formData.leetCodeUrl}
@@ -397,95 +389,100 @@ export const EditOnboardingModal = ({
 
           <div>
             <ModalLabel>Purpose</ModalLabel>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-              {purposeOptions.map((opt) => (
-                <label
-                  key={opt.value}
-                  className="flex items-center gap-2.5 cursor-pointer p-2.5 rounded-lg border border-[#e8e8e8] hover:bg-slate-50 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.purpose.includes(opt.value)}
-                    onChange={() => {
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {purposeOptions.map((opt) => {
+                const isSelected = formData.purpose.includes(opt.value);
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
                       setFormData((prev) => {
                         const current = prev.purpose;
-                        const updated = current.includes(opt.value)
+                        const updated = isSelected
                           ? current.filter((v) => v !== opt.value)
                           : [...current, opt.value];
                         return { ...prev, purpose: updated };
                       });
                     }}
-                    className="accent-[#e8372c] h-4 w-4"
-                  />
-                  <span style={{ fontSize: "12px", color: "#111111" }}>
+                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer border ${
+                      isSelected
+                        ? "border-[#e8372c] bg-[#fff0ef] text-[#e8372c]"
+                        : "border-[#cbd5e1] bg-[#f8fafc] text-[#475569] hover:bg-[#f1f5f9]"
+                    }`}
+                  >
                     {opt.label}
-                  </span>
-                </label>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <ModalLabel required>Target Companies</ModalLabel>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-              {companyOptions.map((opt) => (
-                <label
-                  key={opt.value}
-                  className="flex items-center gap-2.5 cursor-pointer p-2.5 rounded-lg border border-[#e8e8e8] hover:bg-slate-50 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.targetCompanies.includes(opt.value)}
-                    onChange={() => {
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {companyOptions.map((opt) => {
+                const isSelected = formData.targetCompanies.includes(opt.value);
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
                       setFormData((prev) => {
                         const current = prev.targetCompanies;
-                        const updated = current.includes(opt.value)
+                        const updated = isSelected
                           ? current.filter((v) => v !== opt.value)
                           : [...current, opt.value];
                         return { ...prev, targetCompanies: updated };
                       });
                     }}
-                    className="accent-[#e8372c] h-4 w-4"
-                  />
-                  <span style={{ fontSize: "12px", color: "#111111" }}>
+                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer border ${
+                      isSelected
+                        ? "border-[#e8372c] bg-[#fff0ef] text-[#e8372c]"
+                        : "border-[#cbd5e1] bg-[#f8fafc] text-[#475569] hover:bg-[#f1f5f9]"
+                    }`}
+                  >
                     {opt.label}
-                  </span>
-                </label>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div>
-            <ModalLabel required>Interview Category Focus</ModalLabel>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-              {interviewCategoryOptions.map((opt) => (
-                <label
-                  key={opt.value}
-                  className="flex items-center gap-2.5 cursor-pointer p-2.5 rounded-lg border border-[#e8e8e8] hover:bg-slate-50 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.preferredCategories.includes(opt.value)}
-                    onChange={() => {
+            <ModalLabel required>Interview Focus</ModalLabel>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {interviewCategoryOptions.map((opt) => {
+                const isSelected = formData.preferredCategories.includes(
+                  opt.value,
+                );
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
                       setFormData((prev) => {
                         const current = prev.preferredCategories;
-                        const updated = current.includes(opt.value)
+                        const updated = isSelected
                           ? current.filter((v) => v !== opt.value)
                           : [...current, opt.value];
                         return { ...prev, preferredCategories: updated };
                       });
                     }}
-                    className="accent-[#e8372c] h-4 w-4"
-                  />
-                  <span style={{ fontSize: "12px", color: "#111111" }}>
+                    className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer border ${
+                      isSelected
+                        ? "border-[#e8372c] bg-[#fff0ef] text-[#e8372c]"
+                        : "border-[#cbd5e1] bg-[#f8fafc] text-[#475569] hover:bg-[#f1f5f9]"
+                    }`}
+                  >
                     {opt.label}
-                  </span>
-                </label>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <DialogFooter className="flex gap-2 justify-end pt-4 border-t border-[#e8e8e8]">
+          <DialogFooter className="flex gap-2 justify-end pt-3 border-t border-[#e2e8f0] mt-2">
             <OutlineButton type="button" onClick={onClose}>
               Cancel
             </OutlineButton>

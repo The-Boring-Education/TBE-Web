@@ -91,12 +91,7 @@ export interface LinkButtonProps extends LinkProps {
 }
 
 type ButtonVariant =
-  | "OUTLINE"
-  | "PRIMARY"
-  | "SECONDARY"
-  | "GHOST"
-  | "SUCCESS"
-  | "NEUTRAL";
+  "OUTLINE" | "PRIMARY" | "SECONDARY" | "GHOST" | "SUCCESS" | "NEUTRAL";
 
 export interface ButtonProps extends DelegatedInteractiveAnalyticsProps {
   variant: ButtonVariant;
@@ -337,6 +332,7 @@ export interface LandingPageHeroProps {
   backgroundImageUrl: string;
   heroText: string;
   theme?: "light" | "dark";
+  eyebrow?: string;
 }
 
 interface BaseCardContainerProps {
@@ -412,9 +408,12 @@ export interface LevelInfoProps {
 }
 export interface CourseHeroContainerProps {
   name: string;
+  slug?: string;
   isEnrolled?: boolean;
   id: string;
   isPremium?: boolean;
+  completedChapters?: number;
+  totalChapters?: number;
 }
 
 export interface SheetHeroContainerProps {
@@ -748,6 +747,7 @@ export interface TabProps {
 export interface ProgressRingProps {
   progress: number;
   point: number;
+  theme?: "light" | "dark";
 }
 
 export interface LevelProgressCardProps {
@@ -757,6 +757,7 @@ export interface LevelProgressCardProps {
   nextLevelName?: string;
   pointsLeftToNextLevel: number;
   percentageProgress: number;
+  theme?: "light" | "dark";
 }
 
 export interface LoginRedirectButtonProps {
@@ -1022,6 +1023,7 @@ export interface DsaQuestion {
   notes?: string;
   _priorityScore?: number;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
   /** Whether this question is locked behind a paywall (freemium gating) */
   isLocked?: boolean;
   sections?: {
@@ -1092,6 +1094,8 @@ export interface QuestionRowProps {
   realWorldBadgeLabel?: string;
   /** Indicates a freemium-locked question (paid content) */
   isLocked?: boolean;
+  /** Indicates an interactive visualizer is available for this question */
+  hasVisualizer?: boolean;
   className?: string;
   onClick?: () => void;
   onToggleComplete?: (e: React.MouseEvent) => void;

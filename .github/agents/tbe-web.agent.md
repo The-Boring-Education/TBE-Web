@@ -1,7 +1,21 @@
 ---
 name: "TBE-Web Engineer"
 description: "Use when: building features in TBE-Web monorepo, writing Next.js pages, creating API routes, writing Mongoose models and queries, adding shared components, working with @tbe/* packages, writing tests in apps/testing, fixing bugs, reviewing code, refactoring, debugging, deploying, SEO work, auth flows, payment integration, gamification, or any task inside the TBE-Web Turborepo."
-tools: [execute, read, edit, search, agent, web, todo]
+tools:
+  [
+    vscode,
+    execute,
+    read,
+    agent,
+    GitHub.vscode-pull-request-github,
+    edit,
+    search,
+    web,
+    browser,
+    "com.vercel/vercel-mcp/*",
+    "io.github.vercel/next-devtools-mcp/*",
+    todo,
+  ]
 argument-hint: "Describe the task — e.g. 'add a new course page', 'fix the auth middleware', 'write tests for the quiz API'"
 ---
 

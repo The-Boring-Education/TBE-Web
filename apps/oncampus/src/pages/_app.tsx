@@ -58,7 +58,7 @@ const AppContent = ({
   const pageContent = <Component {...pageProps} />;
 
   return (
-    <GamificationProvider>
+    <GamificationProvider theme="dark">
       {isPricingRoute ? (
         pageContent
       ) : (

@@ -8,6 +8,7 @@ import {
 import { sendAPIResponse } from "@/lib/utils";
 import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
@@ -15,6 +16,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     userId: string;
     playlistId: string;
   };
+
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   switch (method) {
     case "GET":

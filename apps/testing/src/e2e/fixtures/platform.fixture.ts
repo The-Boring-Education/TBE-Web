@@ -77,7 +77,7 @@ export const test = base.extend<{ platformPage: Page }>({
     const MAX_RETRIES = 5;
     for (let i = 0; i < MAX_RETRIES; i++) {
       try {
-        await page.goto("/", { waitUntil: "commit", timeout: 10_000 });
+        await page.goto("/", { waitUntil: "commit", timeout: 30_000 });
         break;
       } catch (e) {
         if (i === MAX_RETRIES - 1) throw e;

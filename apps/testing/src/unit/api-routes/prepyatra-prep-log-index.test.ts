@@ -55,6 +55,35 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => fn,
 }));
 
+vi.mock("../../../../api/src/middleware/api", () => ({
+  adminMiddleware: async (req: NextApiRequest, res: NextApiResponse) => {
+    const adminHeader = req.headers["x-admin-secret"];
+    const expectedSecret = process.env.ADMIN_SECRET;
+    if (!expectedSecret) {
+      res.statusCode = 500;
+      res._getData = () =>
+        JSON.stringify({
+          status: false,
+          message: "Server configuration error",
+        });
+      (res as any).json({
+        status: false,
+        message: "Server configuration error",
+      });
+      return false;
+    }
+    if (!adminHeader || adminHeader !== expectedSecret) {
+      res.statusCode = 401;
+      (res as any).json({
+        status: false,
+        message: "Unauthorized. Admin access required.",
+      });
+      return false;
+    }
+    return true;
+  },
+}));
+
 import handler from "../../../../api/src/pages/api/v1/prepyatra/prep-log/index";
 
 describe("PrepYatra Prep Log API Route", () => {
@@ -264,7 +293,7 @@ describe("PrepYatra Prep Log API Route", () => {
 
     expect(res._getStatusCode()).toBe(401);
     const data = JSON.parse(res._getData());
-    expect(data.message).toBe("Unauthorized");
+    expect(data.message).toBe("Unauthorized. Admin access required.");
   });
 
   it("PATCH - unauthorized (missing admin secret) returns 401", async () => {

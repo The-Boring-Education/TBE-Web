@@ -20,19 +20,20 @@ const Marquee = ({ items, className = "", theme = "dark" }: MarqueeProps) => {
 
   const cardClass =
     theme === "light"
-      ? "border-black/[0.08] bg-black/[0.02] opacity-80 hover:opacity-100"
+      ? "border-slate-200/80 bg-slate-50/90 shadow-sm opacity-95 hover:opacity-100 hover:border-slate-300 hover:shadow-md transition-all"
       : "border-white/10 bg-white/[0.03] opacity-65 hover:opacity-100";
 
   const titleClass =
     theme === "light"
-      ? "text-slate-800 font-semibold"
+      ? "text-slate-900 font-bold text-xs sm:text-sm"
       : "text-white/90 font-semibold";
 
-  const descClass = theme === "light" ? "text-slate-500" : "text-white/55";
+  const descClass =
+    theme === "light" ? "text-slate-600 font-normal" : "text-white/55";
 
   const dividerClass =
     theme === "light"
-      ? "bg-gradient-to-r from-transparent via-primary/25 to-transparent"
+      ? "bg-gradient-to-r from-transparent via-[#FF4D4D]/30 to-transparent"
       : "bg-gradient-to-r from-transparent via-[#ff8b8b]/35 to-transparent";
 
   return (

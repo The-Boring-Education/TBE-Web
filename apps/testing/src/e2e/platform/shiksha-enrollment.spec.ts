@@ -12,8 +12,10 @@ async function goToCourseFromExplore(page: import("@playwright/test").Page) {
   await page.goto("/shiksha/explore");
   const courseLink = page.locator(`a[href="/shiksha/${COURSE_SLUG}"]`).first();
   await expect(courseLink).toBeVisible();
-  await courseLink.click();
-  await page.waitForURL(`**/shiksha/${COURSE_SLUG}**`, { timeout: 60000 });
+  await Promise.all([
+    page.waitForURL(`**/shiksha/${COURSE_SLUG}*`, { timeout: 30000 }),
+    courseLink.click(),
+  ]);
 }
 
 test.describe("Shiksha Enrollment — Flow First", () => {

@@ -29,6 +29,17 @@ vi.mock("../../../../api/src/lib/utils", () => ({
 
 vi.mock("../../../../api/src/middleware/api", () => ({
   connectDB: () => mockConnectDB(),
+  adminMiddleware: vi.fn().mockResolvedValue(true),
+}));
+
+vi.mock("@/middleware/admin", () => ({
+  ensureAdminAccess: vi.fn().mockResolvedValue(true),
+  withVerifiedAdminAuth: (handler: any) => handler,
+}));
+
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  ensureAdminAccess: vi.fn().mockResolvedValue(true),
+  withVerifiedAdminAuth: (handler: any) => handler,
 }));
 
 describe("Quiz API Route", () => {

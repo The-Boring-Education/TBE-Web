@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import type {
   DatabaseQueryResponseType,
   TBEAppType,
@@ -9,11 +11,19 @@ import { logger } from "@/lib/utils/logger";
 
 import { Gamification, UserActivityLog } from "../models";
 
+const getMongoUserId = (userId: string) => {
+  const cleanId = typeof userId === "string" ? userId.trim() : String(userId);
+  if (!mongoose.isValidObjectId(cleanId)) {
+    throw new Error("Invalid userId");
+  }
+  return new mongoose.Types.ObjectId(cleanId);
+};
+
 const addGamificationDocInDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const gamification = new Gamification({ userId });
+    const gamification = new Gamification({ userId: getMongoUserId(userId) });
     await gamification.save();
     const doc = gamification.toObject();
     const { actions: _actions, ...data } = doc;
@@ -31,7 +41,10 @@ const getUserPointsFromDB = async (
   userId: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const gamification = await Gamification.findOne({ userId: { $eq: userId } })
+    const filterId = getMongoUserId(userId);
+    const gamification = await Gamification.findOne({
+      userId: { $eq: filterId },
+    })
       .select("-actions")
       .lean();
 
@@ -63,8 +76,10 @@ const updateUserPointsInDB = async (
       ...(app ? { app } : {}),
     };
 
-    const updatedGamification = await Gamification.findOneAndUpdate(
-      { userId },
+    const filterId = getMongoUserId(userId);
+
+    let updatedGamification = await Gamification.findOneAndUpdate(
+      { userId: { $eq: filterId } },
       {
         $push: { actions: action },
         $inc: { points: pointsEarned },
@@ -73,7 +88,11 @@ const updateUserPointsInDB = async (
     );
 
     if (!updatedGamification) {
-      return { error: "User not found" };
+      updatedGamification = await Gamification.create({
+        userId: filterId,
+        points: pointsEarned,
+        actions: [action],
+      });
     }
 
     // Log activity for streak tracking (intentionally unawaited, best-effort)
@@ -132,9 +151,10 @@ const deductUserPointsFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const pointsToDeduct = calculateUserPointsForAction(actionType);
+    const filterId = getMongoUserId(userId);
 
     const updatedGamification = await Gamification.findOneAndUpdate(
-      { userId },
+      { userId: { $eq: filterId } },
       [
         {
           $set: {

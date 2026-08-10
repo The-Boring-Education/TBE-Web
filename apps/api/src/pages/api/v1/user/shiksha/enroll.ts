@@ -13,6 +13,7 @@ import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { withUserAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
+import { getAuthenticatedUserId, verifyOwnership } from "@/middleware/userAuth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -47,6 +48,9 @@ const handleCourseEnrollment = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
+  const authenticatedUserId = getAuthenticatedUserId(req, res);
+  if (!authenticatedUserId) return;
+
   const { userId, courseId } = (req.body || {}) as CourseEnrollmentRequestProps;
 
   if (!userId || !courseId) {
@@ -58,6 +62,8 @@ const handleCourseEnrollment = async (
       }),
     );
   }
+
+  if (!verifyOwnership(authenticatedUserId, userId, res)) return;
 
   try {
     const { data: alreadyExists, error: fetchEnrolledCourseError } =

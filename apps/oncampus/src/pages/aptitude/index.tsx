@@ -1,6 +1,7 @@
 import {
   AptitudeQuizPanel,
   Button,
+  ContentFeedbackWidget,
   DsaUpsellModal,
   FlexContainer,
   FreemiumLockBanner,
@@ -825,6 +826,19 @@ const AptitudePrepPage = () => {
         title="Unlock OnCampus Aptitude Preparation"
         description="Subscribe to OnCampus to access all quantitative, logical, and verbal reasoning topics, complete study guides, and practice questions."
       />
+
+      {/* Aptitude topic feedback widget */}
+      {isAuth && selectedTopic && (
+        <ContentFeedbackWidget
+          contentType="APTITUDE_TOPIC"
+          contentId={selectedTopic}
+          title="Rate this topic"
+          meta={{
+            topicId: selectedTopic,
+            topicName: selectedTopicLabel || selectedTopic,
+          }}
+        />
+      )}
     </OnCampusLearningLayout>
   );
 };

@@ -9,6 +9,7 @@ import {
   normalizeLatexDelimiters,
   registerMathPlugin,
 } from "../../common/MDXRenderer/mathPlugin";
+import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
 import AptitudeQuestionCard from "./AptitudeQuestionCard";
 
 const md = markdownit({ html: true, breaks: true });
@@ -104,10 +105,12 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
               <div
                 className="text-gray-300 text-[13px] leading-relaxed prose prose-invert max-w-none prose-p:my-2 prose-pre:bg-[#050505] prose-pre:border prose-pre:border-gray-800"
                 dangerouslySetInnerHTML={{
-                  __html: md.render(
-                    normalizeLatexDelimiters(
-                      currentQuestion.answer ||
-                        "No explanation available for this question.",
+                  __html: sanitizeHTML(
+                    md.render(
+                      normalizeLatexDelimiters(
+                        currentQuestion.answer ||
+                          "No explanation available for this question.",
+                      ),
                     ),
                   ),
                 }}

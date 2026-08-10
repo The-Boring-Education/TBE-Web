@@ -15,6 +15,7 @@ import React, {
 import { toast } from "sonner";
 
 import LoadingSpinner from "../../common/LoadingSpinner";
+import ContentFeedbackWidget from "../../containers/Feedback/ContentFeedbackWidget";
 import Footer from "../../layout/Footer";
 import Navbar from "../../layout/Navbar";
 import DashboardTabs from "../dashboard/DashboardTabs";
@@ -260,17 +261,17 @@ export const PrepYatraDashboardPage = () => {
         {/* LEFT SIDEBAR — fixed position with translate for mobile */}
         <aside
           className={`
-            fixed top-0 left-0 z-40 flex flex-col overflow-y-auto
+            fixed top-0 left-0 z-40 flex flex-col overflow-y-auto shadow-lg lg:shadow-none
             transition-transform duration-300 ease-in-out
-            lg:sticky lg:top-[64px] lg:translate-x-0 lg:flex-shrink-0 lg:overflow-y-visible
-            w-[85vw] sm:w-[320px] lg:w-[384px]
+            lg:sticky lg:top-[64px] lg:translate-x-0 lg:flex-shrink-0 lg:overflow-y-auto
+            w-[85vw] sm:w-[320px] lg:w-[340px] xl:w-[360px]
             h-screen lg:h-[calc(100vh-64px)]
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
           `}
           style={{
             paddingTop: isSidebarOpen ? `${NAVBAR_HEIGHT}px` : "0px",
             backgroundColor: "#ffffff",
-            borderRight: "1px solid #e8e8e8",
+            borderRight: "1px solid #e2e8f0",
           }}
         >
           <ProfileSection
@@ -357,6 +358,18 @@ export const PrepYatraDashboardPage = () => {
           onSkillsUpdated={handleSkillsUpdated}
         />
       </Suspense>
+
+      {/* PrepYatra Challenge / Goal feedback widget */}
+      <ContentFeedbackWidget
+        contentType="PREP_CHALLENGE"
+        contentId={user?.id ? `prep-challenge-${user.id}` : "prep-challenge"}
+        title="Rate PrepYatra"
+        meta={{
+          programName: "PrepYatra",
+          goal: (profile as any)?.goal || "",
+        }}
+        theme="light"
+      />
     </div>
   );
 };

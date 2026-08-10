@@ -49,7 +49,7 @@ const GamificationDisplay = ({ userId }: { userId: string }) => {
 
       {open && (
         <div className="absolute z-50 mt-2 left-1/2 -translate-x-1/2">
-          <div className="bg-white rounded-2xl shadow-lg border px-4 py-3 w-[280px]">
+          <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 dark:border-zinc-700/60 px-4 py-3 w-[280px]">
             <div className="flex items-center gap-3">
               {/* Progress Circle */}
               <div className="w-[70px] h-[70px] flex items-center justify-center flex-shrink-0 relative">
@@ -58,9 +58,10 @@ const GamificationDisplay = ({ userId }: { userId: string }) => {
                     cx={35}
                     cy={35}
                     r={30}
-                    stroke="#e5e7eb"
+                    stroke="currentColor"
                     strokeWidth={7}
                     fill="none"
+                    className="text-gray-200 dark:text-zinc-700"
                   />
                   <circle
                     cx={35}
@@ -80,7 +81,7 @@ const GamificationDisplay = ({ userId }: { userId: string }) => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <span className="text-[15px] font-bold text-[#ef4444]">
+                  <span className="text-[15px] font-bold text-gray-900 dark:text-zinc-100">
                     {points}
                   </span>
                 </div>
@@ -88,7 +89,7 @@ const GamificationDisplay = ({ userId }: { userId: string }) => {
 
               {/* Info */}
               <div className="flex flex-col items-start flex-1 min-w-0">
-                <span className="text-sm text-gray-500 font-medium uppercase">
+                <span className="text-sm text-gray-500 dark:text-zinc-400 font-medium uppercase">
                   YOU'RE AT
                 </span>
                 <span className="text-base font-semibold text-primary leading-tight">

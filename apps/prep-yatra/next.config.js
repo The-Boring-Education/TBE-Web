@@ -19,6 +19,10 @@ const nextConfig = {
 
   webpack: (config, { isServer }) => {
     if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        jsdom: false,
+      };
       config.resolve.fallback = {
         ...config.resolve.fallback,
         canvas: false,

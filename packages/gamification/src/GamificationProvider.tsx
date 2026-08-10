@@ -6,6 +6,7 @@ import GamificationToast from "./GamificationToast";
 import type {
   CelebrationData,
   GamificationContextType,
+  ThemeType,
   ToastData,
 } from "./types";
 
@@ -13,6 +14,10 @@ const GamificationContext = createContext<GamificationContextType | null>(null);
 
 interface GamificationProviderProps {
   children: ReactNode;
+  /** Controls the colour scheme of all gamification UI overlays.
+   *  Pass "dark" for apps with a dark background (oncampus, dsayatra).
+   *  Defaults to "light". */
+  theme?: ThemeType;
 }
 
 /**
@@ -20,9 +25,13 @@ interface GamificationProviderProps {
  *
  * Place this near the root of any app that uses gamification.
  * Does NOT own data fetching — that's handled by useGamification via React Query.
+ *
+ * @param theme - "light" (default) or "dark" — controls the visual style of
+ *                all gamification overlays (toast, celebration, points badge).
  */
 export const GamificationProvider = ({
   children,
+  theme = "light",
 }: GamificationProviderProps) => {
   const [celebrationData, setCelebrationData] =
     useState<CelebrationData | null>(null);
@@ -51,7 +60,9 @@ export const GamificationProvider = ({
   };
 
   return (
-    <GamificationContext.Provider value={{ triggerCelebration, showToast }}>
+    <GamificationContext.Provider
+      value={{ triggerCelebration, showToast, theme }}
+    >
       {children}
 
       <CelebrationAnimation
@@ -68,6 +79,7 @@ export const GamificationProvider = ({
         points={toastData?.points}
         level={toastData?.level}
         levelName={toastData?.levelName}
+        theme={theme}
         onClose={handleToastClose}
       />
     </GamificationContext.Provider>
@@ -77,10 +89,11 @@ export const GamificationProvider = ({
 export const useGamificationContext = () => {
   const context = useContext(GamificationContext);
   if (!context) {
-    throw new Error(
-      "useGamificationContext must be used within a <GamificationProvider>. " +
-        "Wrap your app (or the relevant subtree) with <GamificationProvider>.",
-    );
+    return {
+      triggerCelebration: () => {},
+      showToast: () => {},
+      theme: "light" as ThemeType,
+    };
   }
   return context;
 };

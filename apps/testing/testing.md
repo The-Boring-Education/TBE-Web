@@ -955,30 +955,33 @@ apps/testing/src/
 
 ### ✅ Completed Modules
 
-**Components (Common):** 29/55 components tested
+**Components (Common):** 30/55 components tested
 
-- Button, Modal, Card, LoadingSpinner, Accordion, AccordionLinkItem, Alert, Banner (ActionBanner + variants), Carousel (common), CheckboxButton, InputFieldContainer, Pill, RadioButton, RadioInputField, SelectInput, TabComponent, Toast, Link, Text, StarButton, ToggleButton, LinkButton, LogoutButton, FloatingActionButton, LoginRedirectButton, LoginWithGoogleButton, ScrollToTopBottomButton, UserPointButton, BackgroundImage, Image, Logo
+- Button, Modal, Card, LoadingSpinner, Accordion, AccordionLinkItem, Alert, Banner (ActionBanner + variants), Carousel (common), CheckboxButton, InputFieldContainer, Pill, RadioButton, RadioInputField, SelectInput, TabComponent, Toast, Link, Text, StarButton, ToggleButton, LinkButton, LogoutButton, FloatingActionButton, LoginRedirectButton, LoginWithGoogleButton, ScrollToTopBottomButton, UserPointButton, BackgroundImage, Image, Logo, UserAvatar
 
-**Hooks:** 7/30+ hooks tested
+**Hooks:** 45/45 hooks tested (verified directly against `packages/hooks/src`) — full coverage achieved
 
-- useApi, useAPIResponseMapper, useUser, useMobile, useMediaQuery, useScrollDirection, useScrollPosition
+- All previously-tested hooks (useApi, useAPIResponseMapper, useUser, useMobile, useMediaQuery, useScrollDirection, useScrollPosition, useAdmin, useAuthAnalytics, useChallenges, useCopyLink, useDailyPrepEncouragement, useDsaCompletedQuestions, useDsaQuestions, useDsaQuestionsForTopic, useDsaTopics, useDsaTopicSummaries, useGamification, useLeaderboard, useOnboarding, usePatternQuiz, usePaymentAccess, usePaymentStatus, usePrepLogs, usePrepStats, useProductOnboardingGate, usePyGamification, useQuestionStarred, useQuizData) plus the 16 hooks added in this batch: `use-toast`, `useAnalytics`, `useCashfreePayment`, `useCertificate`, `useDsaPrepUrlSync`, `useFeedback`, `useInstallPrompt`, `useNotifications`, `useOptimizedNavigation`, `usePDFFile` (tests `useResumeParser`), `useResumeEvaluation`, `useSkillPlaylist`, `useStudyGuide`, `useTracking`, `useUnskilledGraphData`, `useUsername`.
+- Added a `next/router` alias (`src/test-utils/next-router-mock.ts`) alongside the existing `next/navigation` one, needed to reliably mock Pages Router hooks under the `@tbe/*` deps optimizer.
 
-**Services:** 2/10+ services tested
+**Services:** 13/13 services tested (verified directly against `packages/services/src`) — full coverage achieved
 
-- api.ts (userApi, authApi, analyticsApi, leaderboardApi, gamificationApi), quizApi.ts
+- All previously-tested services (api.ts, base.ts, challenges.ts, prep-logs.ts, quizApi.ts, resumeService.ts, user.ts) plus the 6 added in this batch: `client.ts`, `email.ts`, `prep-stats.ts`, `recruiters.ts`, `templates.ts`, `triggers.ts`.
 
-**Utilities:** 7/15+ utilities tested
+**Utilities:** 23/26 utilities tested (verified directly against `packages/utils/src`)
 
-- functions.ts, api.ts, analytics.ts, challenges.ts, discount.ts, onboarding.ts, quiz.ts
+- All previously-tested utilities plus 9 added in this batch: `auth.ts`, `health.ts`, `initMiddleware.ts`, `mongodb.ts`, `prepLogs.ts`, `sentry.ts`, `sitemap.ts`, `socialMediaTemplates.ts`, `subscriptionPlanCatalog.ts`.
+- Untested (3): `global.ts` (627 lines of `getServerSideProps`-style page-prop builders with heavy DB/SEO dependencies — large, standalone effort, deliberately deferred), `mdx/index.ts`, `socialMedia.ts` (entirely commented-out source, no real exports to test).
 
-**API Routes:** 3/100+ endpoints tested
+**API Routes:** ~54/148 endpoints tested (verified directly against `apps/api/src/pages/api`, correcting a prior stale count)
 
-- /api/health, /api/v1/user, /api/v1/quiz
+- Covered groups include: health, user (+ dashboard/streak/interest/enroll variants), quiz (+ attempt/submit/session flows), admin (admins/coupon/dashboard/me/quiz/subscription-plans), auth (login/logout/refresh/session/token), payment (checkstatus/create-order/quote/webhook), interview-prep (index/upload), prepyatra (challenges/prep-log/subscription/userskills), certificate, gamification, leaderboard, notification, shiksha, coupon, content-export, growth-analytics, aptitude-upload, youfocus-explore.
+- ~90 endpoints remain untested, notably: `auth/[...nextauth]`, `sitemap`, most of `v1/admin/*` (analytics, content, dashboard details, email/send, mentorship/_, prepyatra/_), `v1/devrel/*`, `v1/interview-prep/[sheetId]/*` and aptitude/dsa-sheet/core-subjects sub-routes, `v1/projects/*` (and nested sections/chapters), remaining `v1/prepyatra/*` (onboarding, recruiter, challenges/[id]/*), `v1/quiz/[id]` (single-id GET) and admin quiz-active-sessions/quiz-analytics.
 
 **Total Test Statistics:**
 
-- ✅ **~150 test files** passing (`pnpm test:unit`; 1 skipped)
-- ✅ **~1275 tests** passing (1 skipped)
+- ✅ **~238 test files** passing (`pnpm test:unit`; 1 skipped; 4 pre-existing failing files unrelated to this batch — `src/api/quiz/quiz.test.ts`, `src/unit/api-routes/admin-coupon.test.ts`, `src/unit/api-routes/quiz.test.ts`, `src/unit/database/gamification-queries.test.ts`)
+- ✅ **~1812 tests** passing (1 skipped, 39 pre-existing failing in the 4 files above)
 - Some component suites may log React/jsdom warnings (e.g. Radix prop forwarding); treat noisy output as follow-up, not a reason to skip updating this doc.
 
 **Serial batch — common “Basic UI Elements” (completed):**
@@ -1019,34 +1022,30 @@ apps/testing/src/
 - [x] Banner components (ActionBanner, BannerVariantA/B/C)
 - [x] Carousel (common)
 - [x] Button variants: ScrollToTopBottomButton, UserPointButton (`FloatingActionButton`, `LoginRedirectButton`, `LoginWithGoogleButton` covered)
-- [ ] Image: `ImageLink`, `UserAvatar`; **Complex:** `CelebrationAnimation`, `ComingSoon`, …
+- [x] UserAvatar (already covered — `UserAvatar.test.tsx`)
+- [ ] Image: `ImageLink`; **Complex:** `CelebrationAnimation`, `CertificateBanner`/`CertificateContent`/`CertificateModal`, `ComingSoon`, `GamificationDemo`/`GamificationProvider`, `MDXRenderer`, `NotificationPopover`, `ResourceTooltip`, `QuestionLink`
 
-**Hooks:**
+**Hooks:** ✅ all 45 hooks tested — none pending
 
-- [ ] Authentication: useAuth, useUsername, useAdmin
-- [ ] Payment: useCashfreePayment, usePaymentAccess, usePaymentStatus
-- [ ] Quiz: useQuizData
-- [ ] Learning: usePrepLogs, usePrepStats, useQuestionStarred, useSkillPlaylist, useCertificate, useOnboarding
-- [ ] UI: useToast, useInstallPrompt, useOptimizedNavigation
+**Services:** ✅ all 13 services tested — none pending
 
-**Services:**
+**Utilities:** (3 untested, verified against `packages/utils/src`)
 
-- [ ] challenges.ts, prep-logs.ts, prep-stats.ts, user.ts
-- [ ] recruiters.ts, resumeService.ts, email.ts, templates.ts, triggers.ts
+- `global.ts` (deferred — large `getServerSideProps`-style module with heavy DB/SEO/external-API dependencies, warrants its own focused batch), `mdx/index.ts`, `socialMedia.ts` (dead code — entirely commented out, no exports)
 
-**Utilities:**
+**API Routes:** (~90 untested, verified against `apps/api/src/pages/api`)
 
-- [ ] auth.ts, health.ts, prepLogs.ts, sitemap.ts
-- [ ] socialMedia.ts, mongodb.ts, initMiddleware.ts, mdx/index.ts, global.ts
-
-**API Routes:**
-
-- [ ] Authentication endpoints (/api/auth/[...nextauth])
-- [ ] Quiz endpoints (remaining: [id], [id]/attempt, [id]/submit, sessions, etc.)
-- [ ] Course/Project endpoints
-- [ ] Payment endpoints
-- [ ] Interview prep endpoints
-- [ ] Remaining 90+ endpoints
+- Authentication endpoints (`auth/[...nextauth]`)
+- `sitemap`
+- Remaining `v1/admin/*` (analytics, content, dashboard details, email/send, growth-analytics, mentorship/*, prepyatra/challenges & userlogs, quiz-active-sessions, quiz-analytics)
+- `v1/devrel/*` (applications, apply, dashboard, tasks)
+- `v1/interview-prep/*` sub-routes (aptitude questions/study-guide, core-subjects, dsa-sheet family, sheetId/question family, study-guide/[topicId])
+- `v1/projects/*` and nested sections/chapters
+- Remaining `v1/prepyatra/*` (onboarding, recruiter, challenges/[id]/\*, subscription is covered but userskills variants may need more)
+- `v1/quiz/[id]` single-id GET, plus remaining quiz session edge cases
+- `v1/payment/order-status`
+- `v1/certificate/[certificateId]`
+- `v1/common/mdx`, `v1/feedback`, `v1/notification` variants, `v1/products`, `v1/coupon/[couponId]` family
 
 #### Medium Priority
 
@@ -1060,19 +1059,20 @@ apps/testing/src/
 
 ### 📊 Progress Summary
 
-- **Components:** ~53% complete (29/55 common components with dedicated coverage; see list above)
-- **Hooks:** ~23% complete (7/30+ hooks)
-- **Services:** ~20% complete (2/10+ services)
-- **Utilities:** ~47% complete (7/15+ utilities)
-- **API Routes:** ~3% complete (3/100+ endpoints)
-- **Overall:** ~19% of total testing plan complete (rough estimate; rises as containers/hooks/API expand)
+- **Components:** ~55% complete (30/55 common components with dedicated coverage; see list above)
+- **Hooks:** 100% complete (45/45 hooks)
+- **Services:** 100% complete (13/13 services)
+- **Utilities:** ~88% complete (23/26 utilities; remaining 3 are deferred/dead-code as noted above)
+- **API Routes:** ~36% complete (~54/148 endpoints)
+- **Overall:** hooks/services now fully covered and utilities nearly so (2026-07-30 batch); container/PrepYatra/Quiz/TechYatra/Layout components remain the largest true gap at ~0% dedicated coverage.
 
 ### 🎯 Recommended Next Steps
 
-1. **Next serial common batch:** `ImageLink`, `UserAvatar`, then **Complex** (`CelebrationAnimation`, `ComingSoon`, `ResourceTooltip`, …) — note `CircularProgressBar` / `LinerProgressBar` / `GamificationToast` already have specs under `common/`.
-2. Add tests for more hooks (useAuth, useQuizData, usePrepLogs)
-3. Expand API route coverage (authentication, quiz endpoints)
-4. Add container component tests
+1. **Next serial common batch:** `ImageLink`, then **Complex** (`CelebrationAnimation`, `CertificateBanner`/`CertificateContent`/`CertificateModal`, `ComingSoon`, `GamificationDemo`/`GamificationProvider`, `MDXRenderer`, `NotificationPopover`, `ResourceTooltip`, `QuestionLink`) — note `CircularProgressBar` / `LinerProgressBar` / `GamificationToast` and `UserAvatar` already have specs under `common/`.
+2. ~~Add tests for the 16 remaining hooks~~ ✅ done — all 45 hooks now covered.
+3. ~~Add tests for the 6 remaining services~~ ✅ done — all 13 services now covered. `mdx/index.ts` and the large `global.ts` remain the only untested utilities worth a dedicated follow-up batch (`socialMedia.ts` is dead/commented-out code, not worth testing).
+4. Expand API route coverage — ~90 endpoints remain, concentrated in `v1/admin/*`, `v1/prepyatra/*`, `v1/interview-prep/*`, `v1/projects/*`, `v1/devrel/*`
+5. Add container/PrepYatra/Quiz/TechYatra/Layout component tests — these categories are still at ~0% dedicated coverage and are the largest remaining body of work
 
 ## Next Steps
 

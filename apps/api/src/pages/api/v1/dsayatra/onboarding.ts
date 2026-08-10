@@ -7,7 +7,9 @@ import {
   updateDYUserByIdInDB,
 } from "@/lib/database";
 import type { DSAYatraOnboardingPayload } from "@/lib/interfaces";
+import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 import { normalizeDsaDuration } from "@/lib/validation";
 import { withApiHandler } from "@/middleware/requestLogger";
 
@@ -93,6 +95,27 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (updateResult.error) {
       throw new Error(updateResult.error);
+    }
+
+    if (updateResult.data && !existingUser.dsaYatra?.dyOnboarded) {
+      emailTriggerService
+        .sendExternalEmail({
+          emailType: "ONBOARDING",
+          userData: {
+            email: updateResult.data.email,
+            name: updateResult.data.name,
+            id: updateResult.data._id.toString(),
+          },
+          additionalData: {
+            app: "dsayatra",
+            subject: "DSA Yatra Onboarding Completed! 💻",
+          },
+        })
+        .catch((err) => {
+          logger.error("Failed to send DSA Yatra onboarding email", {
+            error: err,
+          });
+        });
     }
 
     return res.status(apiStatusCodes.OKAY).json(

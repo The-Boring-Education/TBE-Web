@@ -137,9 +137,15 @@ export type ApplicationStatusType =
 
 export type FeedbackType =
   | "GENERAL"
-  | "SHIKSHA_CHAPTER"
-  | "SHIKSHA_COURSE"
+  | "DSA_QUESTION"
   | "INTERVIEW_SHEET"
+  | "SHIKSHA_COURSE"
+  | "SHIKSHA_CHAPTER"
+  | "CORE_SUBJECT"
+  | "APTITUDE_TOPIC"
+  | "RESOURCE_GUIDE"
+  | "QUIZ"
+  | "PREP_CHALLENGE"
   | "CERTIFICATE";
 
 export type { PaymentStatusType, ProductType } from "@/lib/constants/database";

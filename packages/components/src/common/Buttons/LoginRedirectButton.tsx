@@ -10,7 +10,13 @@ const LoginRedirectButton = ({
   text = "Login to Start",
   className = "",
 }: LoginRedirectButtonProps) => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // RouterContext not available in static export / SSR
+  }
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
   const [isClient, setIsClient] = useState(false);
@@ -25,9 +31,9 @@ const LoginRedirectButton = ({
     // Check if we're in prep-yatra app (has /auth route)
     if (
       pathname === "/auth" ||
-      pathname.startsWith("/dashboard") ||
-      pathname.startsWith("/pricing") ||
-      pathname.startsWith("/journey")
+      pathname?.startsWith("/dashboard") ||
+      pathname?.startsWith("/pricing") ||
+      pathname?.startsWith("/journey")
     ) {
       return "/auth";
     }
@@ -47,9 +53,12 @@ const LoginRedirectButton = ({
       }
       const authRoute = getAuthRoute();
       const redirectParam = authRoute === "/auth" ? "callbackUrl" : "redirect";
-      router.push(
-        `${authRoute}?${redirectParam}=${encodeURIComponent(pathname)}`,
-      );
+      const targetUrl = `${authRoute}?${redirectParam}=${encodeURIComponent(pathname || "/")}`;
+      if (router?.push) {
+        router.push(targetUrl);
+      } else if (typeof window !== "undefined") {
+        window.location.href = targetUrl;
+      }
     }
   };
 

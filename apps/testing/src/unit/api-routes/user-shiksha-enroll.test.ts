@@ -64,6 +64,13 @@ vi.mock("../../../../api/src/middleware/admin", () => ({
   isAdminEmail: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("../../../../api/src/middleware/userAuth", () => ({
+  getAuthenticatedUserId: vi.fn().mockImplementation((req) => {
+    return req.query?.userId || req.body?.userId || "user-1";
+  }),
+  verifyOwnership: vi.fn().mockReturnValue(true),
+}));
+
 import handler from "../../../../api/src/pages/api/v1/user/shiksha/enroll";
 
 describe("User Shiksha Enroll API Route", () => {

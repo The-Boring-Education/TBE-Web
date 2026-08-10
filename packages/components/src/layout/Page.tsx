@@ -6,7 +6,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const PageLayout = ({ children }: PageLayoutProps) => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    router = useRouter();
+  } catch {
+    // App Router or RouterContext not mounted
+  }
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -14,7 +20,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   }, []);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !router?.events) return;
 
     const handleRouteChange = () => {
       window.scrollTo(0, 0);
@@ -25,12 +31,12 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [isClient, router.events]);
+  }, [isClient, router?.events]);
 
   if (
-    router.pathname === routes.checkout ||
-    router.pathname === routes.paymentStatus ||
-    router.pathname === routes.login
+    router?.pathname === routes.checkout ||
+    router?.pathname === routes.paymentStatus ||
+    router?.pathname === routes.login
   ) {
     return (
       <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>

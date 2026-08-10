@@ -9,6 +9,13 @@ import userOnboardingHandler from "../../../../api/src/pages/api/v1/user/onboard
 const mockGetDYUserByIdFromDB = vi.fn();
 const mockUpdateDYUserByIdInDB = vi.fn();
 const mockOnboardPrepYatraUserTODB = vi.fn();
+const mockUserFindById = vi.fn();
+
+vi.mock("../../../../api/src/lib/database/models/User", () => ({
+  default: {
+    findById: (...args: unknown[]) => mockUserFindById(...args),
+  },
+}));
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   withApiHandler: (fn: NextApiHandler) => fn,
@@ -133,6 +140,9 @@ describe("POST /api/v1/dsayatra/onboarding (integration)", () => {
   });
 });
 
+/** `/user/onboarding` validates the id as a Mongo ObjectId before touching the DB. */
+const LEGACY_USER_ID = "507f1f77bcf86cd799439011";
+
 describe("PUT /api/v1/user/onboarding legacy Prep Yatra (integration)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -141,7 +151,7 @@ describe("PUT /api/v1/user/onboarding legacy Prep Yatra (integration)", () => {
   it("writes linkedInUrl via onboardPrepYatraUserTODB at the User root", async () => {
     mockOnboardPrepYatraUserTODB.mockResolvedValue({
       data: {
-        _id: "u1",
+        _id: LEGACY_USER_ID,
         linkedInUrl: "https://www.linkedin.com/in/legacy",
         prepYatra: { pyOnboarded: true, workDomain: "TECH" },
       },
@@ -150,7 +160,7 @@ describe("PUT /api/v1/user/onboarding legacy Prep Yatra (integration)", () => {
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
-      query: { userId: "u1" },
+      query: { userId: LEGACY_USER_ID },
       body: {
         workDomain: "TECH",
         linkedInUrl: "https://www.linkedin.com/in/legacy",
@@ -161,10 +171,23 @@ describe("PUT /api/v1/user/onboarding legacy Prep Yatra (integration)", () => {
 
     expect(res._getStatusCode()).toBe(200);
     expect(mockOnboardPrepYatraUserTODB).toHaveBeenCalledWith(
-      "u1",
+      LEGACY_USER_ID,
       "TECH",
       "https://www.linkedin.com/in/legacy",
       undefined,
     );
+  });
+
+  it("rejects a userId that is not a Mongo ObjectId", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "PUT",
+      query: { userId: "u1" },
+      body: { workDomain: "TECH" },
+    });
+
+    await userOnboardingHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(mockOnboardPrepYatraUserTODB).not.toHaveBeenCalled();
   });
 });

@@ -11,6 +11,7 @@ test.describe("Prep Yatra auth and onboarding gate", () => {
   test("unauthenticated user cannot stay on dashboard (sent to login)", async ({
     page,
   }) => {
+    await page.context().clearCookies();
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/login/, { timeout: 20_000 });
   });

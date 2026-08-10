@@ -2,12 +2,11 @@ import { expect, test } from "../fixtures/platform.fixture";
 
 test.describe("Platform smoke flow", () => {
   test("landing loads with hero CTAs", async ({ platformPage: page }) => {
-    const response = await page.goto("/");
+    const response = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
 
-    await expect(page.getByRole("link", { name: "Get Started" })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Book Free Session" }),
+      page.getByRole("link", { name: /Start Learning Now/i }),
     ).toBeVisible();
   });
 

@@ -13,6 +13,7 @@ import {
   parseDsaSheetCreateBody,
   parseDsaSheetGetQuery,
 } from "@/lib/validation";
+import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -35,6 +36,9 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
+  const isAdmin = await adminMiddleware(req, res);
+  if (!isAdmin) return;
+
   const parsed = parseDsaSheetCreateBody(req.body);
   if (!parsed.ok) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(

@@ -11,15 +11,17 @@ const LinerProgressBar = ({
 
   return (
     <div className="w-full">
-      <div className="bg-gray-300 rounded-full h-4 overflow-hidden">
+      <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+        <span>
+          {completedChapters} / {totalChapters} Chapters
+        </span>
+        <span className="font-semibold text-success">{completionPercentage}%</span>
+      </div>
+      <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
         <div
-          className="bg-success h-full rounded-full"
+          className="bg-success h-full rounded-full transition-all duration-500 ease-in-out"
           style={{ width: `${completionPercentage}%` }}
         />
-      </div>
-      <div className="text-sm mt-1">
-        {completedChapters} / {totalChapters} Chapters Completed (
-        {completionPercentage}%)
       </div>
     </div>
   );

@@ -344,6 +344,7 @@ export interface DSAQuestionModel extends Document {
   sections?: DSAQuestionSections;
   order?: number;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -633,6 +634,18 @@ export interface FeedbackModel extends Document {
   updatedAt: Date;
 }
 
+export interface ContentFeedbackModel extends Document {
+  _id: typeof Schema.Types.ObjectId;
+  userId: string;
+  contentType: FeedbackType;
+  contentId: string;
+  rating: number;
+  reviewText: string;
+  meta?: Record<string, unknown>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PrepYatraUserModel extends Document {
   _id: Types.ObjectId;
   userId: string;
@@ -907,6 +920,7 @@ export interface UpdateDSAQuestionRequestPayloadProps {
   sections?: DSAQuestionSections;
   order?: number;
   isRealWorldProblem?: boolean;
+  visualizerId?: string;
 }
 
 export interface AddOnboardingPayloadProps {

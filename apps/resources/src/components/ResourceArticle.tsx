@@ -1,3 +1,7 @@
+"use client";
+
+import { sanitizeHTML } from "@tbe/components";
+
 import type { ResourceMeta } from "@/lib/types";
 
 type Props = {
@@ -10,14 +14,14 @@ type Props = {
   articleClassName?: string;
 };
 
-export function ResourceArticle({
+export const ResourceArticle = ({
   meta,
   pageUrl,
   styleTags,
   bodyHtml,
   includeJsonLd = true,
   articleClassName,
-}: Props) {
+}: Props) => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -33,6 +37,19 @@ export function ResourceArticle({
       name: "The Boring Education",
     },
   };
+  const sanitizedStyleTags = styleTags
+    ? (styleTags.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi) || []).join("\n")
+    : null;
+  const sanitizedBodyHtml = sanitizeHTML(bodyHtml);
+
+  const handleArticleClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement | null;
+    const printBtn = target?.closest(".print-btn, [data-action='print']");
+    if (printBtn) {
+      e.preventDefault();
+      window.print();
+    }
+  };
 
   return (
     <>
@@ -42,18 +59,18 @@ export function ResourceArticle({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <article className={articleClassName}>
+      <article className={articleClassName} onClick={handleArticleClick}>
         {styleTags ? (
           <div
             className="resource-embed-styles"
-            dangerouslySetInnerHTML={{ __html: styleTags }}
+            dangerouslySetInnerHTML={{ __html: sanitizedStyleTags || "" }}
           />
         ) : null}
         <div
           className="resource-embed-body"
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          dangerouslySetInnerHTML={{ __html: sanitizedBodyHtml }}
         />
       </article>
     </>
   );
-}
+};
