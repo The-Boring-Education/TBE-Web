@@ -1,5 +1,7 @@
+import { Button, Card, CardContent } from "@tbe/components/ui";
 import { ANALYTICS_EVENTS } from "@tbe/constants";
 import { trackEvent } from "@tbe/utils";
+import { Copy, RotateCcw, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
