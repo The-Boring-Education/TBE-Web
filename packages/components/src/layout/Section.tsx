@@ -30,7 +30,7 @@ const Section = ({
         initial={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        {children}
+        <div className="max-w-7xl mx-auto w-full">{children}</div>
       </motion.section>
     </Fragment>
   );
