@@ -166,15 +166,15 @@ export function PrepYatraPricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50 text-gray-900">
       <Navbar variant="prepyatra" />
 
       <main className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">
-            Choose Your <span className="text-primary">PrepYatra</span> Plan
+          <h1 className="text-4xl font-extrabold mb-4 text-gray-900 tracking-tight">
+            Choose Your <span className="text-[#e53935]">PrepYatra</span> Plan
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Accelerate your interview preparation with our premium features.
             Start for free and upgrade when you're ready.
           </p>
@@ -184,80 +184,84 @@ export function PrepYatraPricingPage() {
           {plans.map((plan) => (
             <Card
               key={plan.id}
-              className={`relative ${
+              className={`relative bg-white transition-all duration-300 ${
                 plan.popular
-                  ? "border-primary shadow-lg scale-105"
-                  : "border-border"
+                  ? "border-[#ff4d4d] shadow-xl scale-105"
+                  : "border-gray-200 shadow-sm hover:border-[#ff4d4d]/40"
               }`}
             >
               {plan.popular && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
-                  <Star className="w-3 h-3 mr-1" />
+                <Badge className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#fff0f0] border border-[#ff4d4d]/50 text-[#e53935] font-bold px-3 py-1">
+                  <Star className="w-3.5 h-3.5 mr-1 fill-[#e53935]" />
                   Most Popular
                 </Badge>
               )}
 
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-4">
+              <CardHeader className="text-center pt-8">
+                <div className="flex justify-center mb-3">
                   {plan.id === "free" && (
-                    <Zap className="w-8 h-8 text-blue-500" />
+                    <Zap className="w-8 h-8 text-[#e53935]" />
                   )}
                   {plan.id === "pro_monthly" && (
-                    <Star className="w-8 h-8 text-primary" />
+                    <Star className="w-8 h-8 text-[#e53935]" />
                   )}
                   {plan.id === "pro_yearly" && (
-                    <Crown className="w-8 h-8 text-yellow-500" />
+                    <Crown className="w-8 h-8 text-[#e53935]" />
                   )}
                 </div>
 
-                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription className="text-sm">
+                <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
+                <CardDescription className="text-xs text-gray-500 mt-1">
                   {plan.description}
                 </CardDescription>
 
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">₹{plan.price}</span>
-                  <span className="text-muted-foreground">
+                  <span className="text-4xl font-extrabold text-gray-900">₹{plan.price}</span>
+                  <span className="text-xs text-gray-500 ml-1">
                     /{plan.duration}
                   </span>
                   {plan.savings && (
-                    <div className="text-sm text-green-600 font-medium mt-1">
+                    <div className="text-xs text-[#e53935] font-bold mt-1">
                       {plan.savings}
                     </div>
                   )}
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <Button
                   variant={plan.popular ? "PRIMARY" : "SECONDARY"}
-                  className="w-full"
+                  className={`w-full font-bold ${
+                    plan.popular
+                      ? "bg-[#ff4d4d] hover:bg-[#e53935] text-white"
+                      : "bg-white border border-gray-300 text-gray-800 hover:border-[#ff4d4d] hover:text-[#e53935]"
+                  }`}
                   onClick={() => handleSelectPlan(plan.id)}
                   disabled={loading || plan.id === "free"}
                   text={loading ? "Processing..." : plan.buttonText}
                 />
 
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-sm">What's included:</h4>
-                  <ul className="space-y-2 text-sm">
+                  <h4 className="font-semibold text-xs text-gray-900 uppercase tracking-wider">What's included:</h4>
+                  <ul className="space-y-2 text-xs">
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
-                        <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>{feature}</span>
+                        <Check className="w-4 h-4 text-[#e53935] mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 font-medium">{feature}</span>
                       </li>
                     ))}
                   </ul>
 
                   {plan.comingSoon && plan.comingSoon.length > 0 && (
                     <>
-                      <h4 className="font-semibold text-sm text-primary pt-3">
+                      <h4 className="font-semibold text-xs text-[#e53935] pt-3 uppercase tracking-wider">
                         Coming Soon:
                       </h4>
-                      <ul className="space-y-2 text-sm">
+                      <ul className="space-y-2 text-xs">
                         {plan.comingSoon.map((feature, index) => (
                           <li key={index} className="flex items-start">
-                            <Zap className="w-4 h-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                            <span className="text-muted-foreground">
+                            <Zap className="w-4 h-4 text-[#e53935] mr-2 mt-0.5 flex-shrink-0" />
+                            <span className="text-gray-500 font-medium">
                               {feature}
                             </span>
                           </li>
@@ -272,11 +276,11 @@ export function PrepYatraPricingPage() {
         </div>
 
         <div className="text-center mt-16">
-          <p className="text-muted-foreground">
+          <p className="text-xs text-gray-500">
             Have questions?{" "}
             <a
               href="mailto:support@theboringeducation.com"
-              className="text-primary hover:underline"
+              className="text-[#e53935] font-semibold hover:underline"
             >
               Contact our support team
             </a>
@@ -288,3 +292,4 @@ export function PrepYatraPricingPage() {
     </div>
   );
 }
+

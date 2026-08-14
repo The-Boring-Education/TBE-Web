@@ -161,21 +161,21 @@ const PricingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-slate-50 text-gray-900 font-sans">
       {/* Header */}
       <div className="container mx-auto px-4 pt-8 pb-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
             PrepYatra
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="text-[#e53935]">
               {" "}
               Interview Mastery
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
             Complete Interview Preparation Bundle with Personalized Experience
           </p>
-          <div className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold">
+          <div className="inline-block bg-[#fff0f0] border border-[#ff4d4d]/30 text-[#e53935] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">
             🎉 Prep Logs & Recruiter Contact Management - Always FREE!
           </div>
         </div>
@@ -189,13 +189,13 @@ const PricingPage: React.FC = () => {
             {interviewCategories.map((category, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all hover:border-[#ff4d4d]/30"
               >
                 <div className="text-3xl mb-3">{category.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm">
                   {category.title}
                 </h3>
-                <p className="text-gray-600 text-sm">{category.description}</p>
+                <p className="text-gray-500 text-xs">{category.description}</p>
               </div>
             ))}
           </div>
@@ -212,12 +212,12 @@ const PricingPage: React.FC = () => {
                 key={plan.id}
                 className={`bg-white rounded-2xl p-8 border-2 transition-all duration-300 hover:shadow-lg ${
                   plan.popular
-                    ? "border-purple-500 shadow-xl scale-105"
-                    : "border-gray-200 hover:border-purple-300"
+                    ? "border-[#ff4d4d] shadow-xl scale-105"
+                    : "border-gray-200 hover:border-[#ff4d4d]/40"
                 }`}
               >
                 {plan.popular && (
-                  <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold text-center mb-4">
+                  <div className="bg-[#fff0f0] border border-[#ff4d4d]/50 text-[#e53935] px-4 py-1 rounded-full text-xs font-bold text-center mb-4">
                     Most Popular
                   </div>
                 )}
@@ -226,18 +226,18 @@ const PricingPage: React.FC = () => {
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                     {plan.name}
                   </h3>
-                  <div className="text-3xl font-bold text-gray-900 mb-1">
+                  <div className="text-3xl font-extrabold text-gray-900 mb-1">
                     ₹{plan.price}
                   </div>
-                  <div className="text-gray-600 text-sm mb-2">
+                  <div className="text-gray-500 text-xs mb-2">
                     for {plan.duration}
                   </div>
                   {plan.savings && (
-                    <div className="text-green-600 font-semibold text-sm">
+                    <div className="text-[#e53935] font-bold text-xs">
                       {plan.savings}
                     </div>
                   )}
-                  <p className="text-gray-600 text-sm mt-2">
+                  <p className="text-gray-600 text-xs mt-2">
                     {plan.description}
                   </p>
                 </div>
@@ -245,16 +245,16 @@ const PricingPage: React.FC = () => {
                 <div className="space-y-3 mb-8">
                   {plan.features.map((feature, index) => (
                     <div key={index} className="flex items-start space-x-2">
-                      <span className="text-sm">{feature}</span>
+                      <span className="text-xs text-gray-700 font-medium">{feature}</span>
                     </div>
                   ))}
                   {plan.comingSoon &&
                     plan.comingSoon.map((feature, index) => (
                       <div
                         key={index}
-                        className="flex items-start space-x-2 opacity-70"
+                        className="flex items-start space-x-2 opacity-80"
                       >
-                        <span className="text-sm text-orange-600">
+                        <span className="text-xs text-[#e53935] font-medium">
                           {feature}
                         </span>
                       </div>
@@ -263,10 +263,10 @@ const PricingPage: React.FC = () => {
 
                 <button
                   onClick={() => handleSelectPlan(plan.id)}
-                  className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
+                  className={`w-full py-3 px-6 rounded-xl font-bold text-xs transition-all duration-300 cursor-pointer ${
                     plan.popular
-                      ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600"
-                      : "bg-gray-900 text-white hover:bg-gray-800"
+                      ? "bg-[#ff4d4d] hover:bg-[#e53935] text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-800 hover:border-[#ff4d4d] hover:text-[#e53935]"
                   }`}
                 >
                   {plan.buttonText}
@@ -283,37 +283,37 @@ const PricingPage: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🎯</span>
+              <div className="w-14 h-14 bg-[#fff0f0] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl">🎯</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm">
                 Personalized Experience
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-500 text-xs">
                 Questions tailored to your target companies (Startup, MNC,
                 FAANG) and timeline goals.
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📊</span>
+              <div className="w-14 h-14 bg-[#fff0f0] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl">📊</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm">
                 Progress Tracking
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-500 text-xs">
                 Track your preparation progress and get insights on areas to
                 focus on.
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🚀</span>
+              <div className="w-14 h-14 bg-[#fff0f0] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl">🚀</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm">
                 Complete Package
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-500 text-xs">
                 From technical questions to resume building and job application
                 strategies.
               </p>
@@ -322,36 +322,36 @@ const PricingPage: React.FC = () => {
         </div>
 
         {/* FAQ */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">
-            <details className="bg-white rounded-lg p-6 border border-gray-200">
-              <summary className="font-semibold text-gray-900 cursor-pointer">
+            <details className="bg-white rounded-xl p-6 border border-gray-200">
+              <summary className="font-semibold text-gray-900 text-sm cursor-pointer">
                 What's the difference between the plans?
               </summary>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 text-xs mt-2 leading-relaxed">
                 All plans include the same core content. The main differences
                 are the access duration and some exclusive features like
                 extended workshops and priority support for longer plans.
               </p>
             </details>
-            <details className="bg-white rounded-lg p-6 border border-gray-200">
-              <summary className="font-semibold text-gray-900 cursor-pointer">
+            <details className="bg-white rounded-xl p-6 border border-gray-200">
+              <summary className="font-semibold text-gray-900 text-sm cursor-pointer">
                 Can I access TBE webapp interview sheets with this subscription?
               </summary>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 text-xs mt-2 leading-relaxed">
                 Yes! Your PrepYatra subscription gives you seamless access to
                 all interview sheets on the TBE webapp, customized based on your
                 preferences.
               </p>
             </details>
-            <details className="bg-white rounded-lg p-6 border border-gray-200">
-              <summary className="font-semibold text-gray-900 cursor-pointer">
+            <details className="bg-white rounded-xl p-6 border border-gray-200">
+              <summary className="font-semibold text-gray-900 text-sm cursor-pointer">
                 What about the free features?
               </summary>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 text-xs mt-2 leading-relaxed">
                 Prep Logs and Recruiter Contact Management will always remain
                 free. These help you track your preparation and manage your job
                 applications at no cost.
@@ -365,3 +365,4 @@ const PricingPage: React.FC = () => {
 };
 
 export default PricingPage;
+
