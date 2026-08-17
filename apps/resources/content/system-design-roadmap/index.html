@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Design Engineer Roadmap 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            height: 1122px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: hidden;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 12px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 2px 0 18px 20px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── YOUTUBE LINKS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        /* ── TIME BADGE ── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            margin-bottom: 3px;
+        }
+
+        .time-badge span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            display: inline-block;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS TABLE ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── SALARY / STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE — full-width fix for all screen sizes ── */
+        @media (max-width: 860px) {
+            .resource-viewer {
+                padding: 0;
+                gap: 0;
+                background: #0a0a0b;
+            }
+
+            .print-bar {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 0;
+                background: #e8e5df;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 8px;
+            }
+
+            .cover {
+                min-height: unset;
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 18px 18px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 18px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .cover-quote-block {
+                padding: 18px 20px;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .cover-quote-block::before {
+                display: none;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 22px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .cover-footer {
+                padding: 14px 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .inner-page {
+                min-height: unset;
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 18px 12px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+                letter-spacing: 0.04em;
+                max-width: 55%;
+                text-align: right;
+            }
+
+            .page-body {
+                padding: 18px 18px;
+            }
+
+            .page-footer {
+                padding: 12px 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .step-left {
+                width: 36px;
+            }
+
+            .step-dot {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+
+            .step-content {
+                padding: 0 0 16px 12px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: hidden;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                height: 297mm;
+            }
+
+            .inner-page {
+                height: 297mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" onclick="window.print()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">Scale, don't guess</div>
+
+                <h1 class="cover-title">
+                    System Design<br><span>Engineer</span><br>Roadmap
+                </h1>
+
+                <p class="cover-subtitle">
+                    From "what happens when you type a URL" to designing systems that serve a billion requests a
+                    day in 2026. Scalability, databases, caching, distributed systems, and HLD interviews —
+                    everything you need with free YouTube resources for every phase.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Anyone can write code that works for 100 users. The engineer who can design for 100
+                        million — and explain the trade-offs on a whiteboard — is the one who gets promoted, not
+                        just hired."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">6–12</div>
+                        <div class="stat-label">Months to interview-ready</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">10</div>
+                        <div class="stat-label">Phases to master</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">40+</div>
+                        <div class="stat-label">Free YT resources</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">Career ceiling</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for
+                    Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — PHASES 1–3 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">System Design Engineer Roadmap · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Foundation Layer</div>
+                <h2 class="section-title">Start Here — Networking, Client-Server & APIs</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 1 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 1–4</div>
+                            <div class="step-phase">Phase 01 · Networking & Client-Server Basics</div>
+                            <div class="step-heading">What Actually Happens When You Hit Enter</div>
+                            <div class="step-desc">Every system design conversation starts with the request path.
+                                Understand <strong>DNS resolution, TCP/IP, HTTP/HTTPS, TLS handshakes</strong>, and
+                                the client-server model deeply. Learn how <strong>load balancers</strong>,
+                                <strong>reverse proxies</strong>, and <strong>CDNs</strong> sit in that path. Study
+                                the difference between <strong>latency and throughput</strong>, and why every design
+                                decision is really a trade-off between the two. This is the vocabulary every other
+                                phase depends on.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Non-negotiable</span>
+                                <span class="tag">DNS &amp; TCP/IP</span>
+                                <span class="tag">HTTP/HTTPS &amp; TLS</span>
+                                <span class="tag">Load balancers</span>
+                                <span class="tag">Reverse proxies</span>
+                                <span class="tag">CDNs</span>
+                                <span class="tag">Latency vs throughput</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=How%20the%20Internet%20Works%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">How the Internet Works – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=System%20Design%20Networking%20Basics%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">Networking Basics – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Load%20Balancing%20Explained%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Load Balancing Explained – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=CDN%20Explained%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">CDN Explained – Hussein Nasser</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 2 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 3–7</div>
+                            <div class="step-phase">Phase 02 · APIs & Communication Protocols</div>
+                            <div class="step-heading">REST, GraphQL, gRPC & How Services Talk</div>
+                            <div class="step-desc">Every distributed system is a set of services agreeing on how to
+                                talk to each other. Master <strong>REST API design</strong>: resources, status
+                                codes, idempotency, pagination, versioning. Learn <strong>GraphQL</strong> for
+                                flexible client queries and <strong>gRPC</strong> for fast internal
+                                service-to-service calls using Protocol Buffers. Understand
+                                <strong>WebSockets</strong> and <strong>Server-Sent Events</strong> for real-time
+                                communication. Know when to pick sync request/response versus async messaging —
+                                this decision shapes your entire architecture.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Core knowledge</span>
+                                <span class="tag">REST API design</span>
+                                <span class="tag">GraphQL</span>
+                                <span class="tag">gRPC &amp; Protobuf</span>
+                                <span class="tag">WebSockets</span>
+                                <span class="tag">Server-Sent Events</span>
+                                <span class="tag">API versioning</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=REST%20API%20Design%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">REST API Design – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=GraphQL%20vs%20REST%20vs%20gRPC%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">GraphQL vs REST vs gRPC – Hussein Nasser</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=WebSockets%20Explained%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">WebSockets Explained – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=gRPC%20Crash%20Course%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">gRPC Crash Course – TechWorld with Nana</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 3 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 5–10</div>
+                            <div class="step-phase">Phase 03 · Databases — SQL & NoSQL</div>
+                            <div class="step-heading">Databases — Where Every Design Actually Lives or Dies</div>
+                            <div class="step-desc">Most system design interviews hinge on the data model. Master
+                                <strong>relational databases</strong>: normalization, indexing, query
+                                optimization, ACID transactions, joins at scale. Learn <strong>NoSQL</strong>
+                                categories — document stores (MongoDB), key-value (Redis, DynamoDB), wide-column
+                                (Cassandra), and graph (Neo4j) — and when each fits. Understand
+                                <strong>indexing strategies</strong> (B-tree, hash, composite) and how they trade
+                                write speed for read speed. Know the SQL-vs-NoSQL decision cold; interviewers ask
+                                for it constantly.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Daily reference</span>
+                                <span class="tag">SQL &amp; normalization</span>
+                                <span class="tag">Indexing</span>
+                                <span class="tag">ACID transactions</span>
+                                <span class="tag">NoSQL (Mongo, Redis, Cassandra)</span>
+                                <span class="tag">Query optimization</span>
+                                <span class="tag">Schema design</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=SQL%20vs%20NoSQL%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">SQL vs NoSQL – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Database%20Indexing%20Explained%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">Database Indexing Explained – Hussein Nasser</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=ACID%20Transactions%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">ACID Transactions – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=NoSQL%20Databases%20Explained%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">NoSQL Databases Explained – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:16px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🧠</div>
+                        <div class="tip-text"><strong>Draw before you code.</strong> System design isn't about
+                            memorizing architectures — it's about reasoning through trade-offs on a whiteboard. For
+                            every concept you learn, sketch a boxes-and-arrows diagram from scratch and explain it
+                            out loud, as if to an interviewer. That habit matters more than any single tool.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — PHASES 4–5 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">System Design Engineer Roadmap · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Core Design Skills</div>
+                <h2 class="section-title">Scalability, Caching & Database Scaling</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 4 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 8–16</div>
+                            <div class="step-phase">Phase 04 · Scalability Fundamentals</div>
+                            <div class="step-heading">Scaling — From One Server to a Million Users</div>
+                            <div class="step-desc">Scalability is the heart of system design. Master
+                                <strong>vertical vs horizontal scaling</strong> and why horizontal wins at scale.
+                                Learn <strong>load balancing algorithms</strong> (round robin, least connections,
+                                consistent hashing) and how to keep services <strong>stateless</strong> so any
+                                instance can serve any request. Study <strong>rate limiting</strong> (token
+                                bucket, sliding window) to protect systems from overload. Understand
+                                <strong>horizontal partitioning</strong> as the pattern behind almost every
+                                large-scale design you'll be asked to whiteboard.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Industry standard</span>
+                                <span class="tag">Horizontal scaling</span>
+                                <span class="tag">Load balancing algorithms</span>
+                                <span class="tag">Consistent hashing</span>
+                                <span class="tag">Stateless services</span>
+                                <span class="tag">Rate limiting</span>
+                                <span class="tag">Auto-scaling</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Scalability%20Basics%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">Scalability Basics – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Consistent%20Hashing%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Consistent Hashing – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Rate%20Limiting%20Algorithms%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Rate Limiting Algorithms – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=System%20Design%20Scalability%20%E2%80%93%20Tech%20Dummies%20Narendra%20L"
+                                    target="_blank">System Design Scalability – Tech Dummies</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 5 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 12–20</div>
+                            <div class="step-phase">Phase 05 · Caching & Database Scaling</div>
+                            <div class="step-heading">Caching, Replication & Sharding — The Performance Toolkit</div>
+                            <div class="step-desc">Caching is the fastest way to make a slow system feel instant.
+                                Master <strong>Redis and Memcached</strong> for in-memory caching, cache
+                                invalidation strategies (write-through, write-behind, cache-aside), and CDN edge
+                                caching. On the database side, learn <strong>replication</strong> (leader-follower,
+                                multi-leader) for read scaling and <strong>sharding/partitioning</strong>
+                                (range-based, hash-based, geo-based) for write scaling. Understand
+                                <strong>read replicas</strong> and <strong>connection pooling</strong> as the
+                                first tools you reach for before rearchitecting anything.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Core design tool</span>
+                                <span class="tag">Redis / Memcached</span>
+                                <span class="tag">Cache invalidation</span>
+                                <span class="tag">CDN caching</span>
+                                <span class="tag">Database replication</span>
+                                <span class="tag">Sharding &amp; partitioning</span>
+                                <span class="tag">Connection pooling</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Caching%20Strategies%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Caching Strategies – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Redis%20Crash%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Redis Crash Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Database%20Sharding%20Explained%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">Database Sharding Explained – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Database%20Replication%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">Database Replication – Hussein Nasser</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">⚡</div>
+                    <div class="tip-text"><strong>Cache first, shard later.</strong> Most systems never need
+                        sharding — a well-placed cache and a couple of read replicas solve 90% of scaling problems
+                        far more cheaply. Sharding adds real operational complexity (rebalancing, cross-shard
+                        queries). Reach for it only when write throughput, not read throughput, is the actual
+                        bottleneck.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">System Design Specialization Tracks — Pick Your Path</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Track</th>
+                                <th>Focus Area</th>
+                                <th>Key Concepts</th>
+                                <th>Companies Hiring</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Backend / HLD Engineer</td>
+                                <td>Service architecture, APIs, database design</td>
+                                <td>Microservices, REST/gRPC, sharding</td>
+                                <td>Product companies, fintech</td>
+                            </tr>
+                            <tr>
+                                <td>Distributed Systems</td>
+                                <td>Consensus, replication, fault tolerance</td>
+                                <td>Raft/Paxos, CAP theorem, quorum</td>
+                                <td>Infra teams, cloud providers</td>
+                            </tr>
+                            <tr>
+                                <td>Data-Intensive Systems</td>
+                                <td>Streaming, batch pipelines, analytics at scale</td>
+                                <td>Kafka, Spark, Flink</td>
+                                <td>Data platforms, ad-tech</td>
+                            </tr>
+                            <tr>
+                                <td>Site Reliability (SRE)</td>
+                                <td>Observability, SLOs, incident response</td>
+                                <td>Prometheus, Grafana, chaos testing</td>
+                                <td>Google, Uber, fintech</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — PHASES 6–7 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">System Design Engineer Roadmap · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Distributed Systems Core</div>
+                <h2 class="section-title">Messaging, Microservices & Consistency</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 6 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 16–26</div>
+                            <div class="step-phase">Phase 06 · Messaging & Async Systems</div>
+                            <div class="step-heading">Queues, Pub/Sub & Event-Driven Architecture</div>
+                            <div class="step-desc">Not everything needs an immediate response. Master
+                                <strong>message queues</strong> (RabbitMQ, SQS) for decoupling producers from
+                                consumers and <strong>pub/sub systems</strong> (Kafka, Google Pub/Sub) for
+                                fan-out at scale. Understand <strong>event-driven architecture</strong>, event
+                                sourcing, and the <strong>outbox pattern</strong> for reliable messaging alongside
+                                database writes. Learn delivery guarantees — at-most-once, at-least-once,
+                                exactly-once — and why "exactly-once" is mostly a marketing term. Async messaging
+                                is what lets systems absorb traffic spikes gracefully.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Most in-demand 2026</span>
+                                <span class="tag">Kafka</span>
+                                <span class="tag">RabbitMQ / SQS</span>
+                                <span class="tag">Pub/Sub patterns</span>
+                                <span class="tag">Event sourcing</span>
+                                <span class="tag">Outbox pattern</span>
+                                <span class="tag">Delivery guarantees</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Kafka%20Explained%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Kafka Explained – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Message%20Queues%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">Message Queues – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Event%20Driven%20Architecture%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">Event-Driven Architecture – Hussein Nasser</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Apache%20Kafka%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">Apache Kafka Full Course – freeCodeCamp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 7 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Weeks 20–30</div>
+                            <div class="step-phase">Phase 07 · Microservices & Distributed Consistency</div>
+                            <div class="step-heading">Microservices, CAP Theorem & Consensus</div>
+                            <div class="step-desc">Splitting a monolith into services introduces distributed
+                                systems problems you didn't have before. Learn
+                                <strong>microservices patterns</strong>: API gateways, service discovery, circuit
+                                breakers, and the saga pattern for distributed transactions. Master the
+                                <strong>CAP theorem</strong> and what it actually forces you to trade off. Study
+                                <strong>consensus algorithms</strong> (Raft, Paxos) and how they underpin
+                                leader election in distributed databases. Understand
+                                <strong>eventual vs strong consistency</strong> — and how to explain, precisely,
+                                which one a given feature needs.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Production-grade</span>
+                                <span class="tag">Microservices patterns</span>
+                                <span class="tag">API Gateway</span>
+                                <span class="tag">Circuit breakers</span>
+                                <span class="tag">CAP theorem</span>
+                                <span class="tag">Raft / Paxos</span>
+                                <span class="tag">Saga pattern</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=CAP%20Theorem%20Explained%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">CAP Theorem Explained – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Microservices%20Patterns%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Microservices Patterns – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Raft%20Consensus%20Algorithm%20Explained"
+                                    target="_blank">Raft Consensus Algorithm Explained</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Saga%20Pattern%20Microservices%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">Saga Pattern – Hussein Nasser</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧩</div>
+                    <div class="tip-text"><strong>Don't reach for microservices by default.</strong> A well-built
+                        monolith with clean module boundaries scales further than most teams think, and it avoids
+                        distributed-transaction pain entirely. Split into services when a team or a workload
+                        genuinely needs independent scaling or deployment — not because it looks more
+                        "senior."</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Consistency Model Comparison</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Guarantee</th>
+                                <th>Trade-off</th>
+                                <th>When to Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Strong Consistency</td>
+                                <td>Every read sees the latest write</td>
+                                <td>Higher latency, lower availability</td>
+                                <td>Payments, inventory, banking</td>
+                            </tr>
+                            <tr>
+                                <td>Eventual Consistency</td>
+                                <td>Reads converge to latest write over time</td>
+                                <td>Stale reads possible</td>
+                                <td>Social feeds, view counts, likes</td>
+                            </tr>
+                            <tr>
+                                <td>Causal Consistency</td>
+                                <td>Related operations are seen in order</td>
+                                <td>More complex to implement</td>
+                                <td>Comment threads, chat apps</td>
+                            </tr>
+                            <tr>
+                                <td>Read-Your-Writes</td>
+                                <td>A user always sees their own updates</td>
+                                <td>Needs session affinity or routing</td>
+                                <td>Profile edits, settings pages</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — PHASES 8–9 ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">System Design Engineer Roadmap · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Reliability & Applied Design</div>
+                <h2 class="section-title">Fault Tolerance, Observability & Case Studies</h2>
+
+                <div class="roadmap">
+
+                    <!-- PHASE 8 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 6–9</div>
+                            <div class="step-phase">Phase 08 · Reliability & Fault Tolerance</div>
+                            <div class="step-heading">Designing for Failure — Because Everything Fails Eventually</div>
+                            <div class="step-desc">At scale, hardware fails, networks partition, and services crash
+                                — design for it, don't hope around it. Learn <strong>redundancy and failover</strong>
+                                (active-active, active-passive), <strong>circuit breakers and retries with
+                                    backoff</strong>, and <strong>graceful degradation</strong>. Master
+                                <strong>observability</strong>: metrics with Prometheus, structured logging, and
+                                distributed tracing with OpenTelemetry to debug a request across a dozen services.
+                                Study <strong>SLOs, SLAs, and error budgets</strong> — the language reliability
+                                gets measured in.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">SRE essential</span>
+                                <span class="tag">Redundancy &amp; failover</span>
+                                <span class="tag">Circuit breakers</span>
+                                <span class="tag">Retries &amp; backoff</span>
+                                <span class="tag">Prometheus &amp; Grafana</span>
+                                <span class="tag">Distributed tracing</span>
+                                <span class="tag">SLOs / error budgets</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Fault%20Tolerance%20System%20Design%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Fault Tolerance – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Circuit%20Breaker%20Pattern%20%E2%80%93%20Hussein%20Nasser"
+                                    target="_blank">Circuit Breaker Pattern – Hussein Nasser</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Prometheus%20%26%20Grafana%20%E2%80%93%20TechWorld%20with%20Nana"
+                                    target="_blank">Prometheus & Grafana – TechWorld with Nana</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=SRE%20Fundamentals%20%E2%80%93%20Google%20SRE%20Book%20Walkthrough"
+                                    target="_blank">SRE Fundamentals – Google SRE Book Walkthrough</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 9 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 7–11</div>
+                            <div class="step-phase">Phase 09 · Applied Case Studies</div>
+                            <div class="step-heading">Design Real Systems — Not Just Theory</div>
+                            <div class="step-desc">Theory only sticks once you've applied it end to end. Practice
+                                designing well-known systems from scratch: a <strong>URL shortener</strong>, a
+                                <strong>rate limiter</strong>, a <strong>chat application</strong> (WhatsApp-style),
+                                a <strong>news feed</strong> (Twitter/Instagram-style), a <strong>ride-sharing
+                                    dispatch system</strong> (Uber-style), and a <strong>video streaming
+                                    platform</strong> (YouTube/Netflix-style). For each, work through requirements,
+                                capacity estimation, high-level design, deep dives, and bottlenecks — the exact
+                                structure interviewers expect.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">High-yield practice</span>
+                                <span class="tag">URL shortener</span>
+                                <span class="tag">Rate limiter</span>
+                                <span class="tag">Chat system design</span>
+                                <span class="tag">News feed design</span>
+                                <span class="tag">Ride-sharing design</span>
+                                <span class="tag">Video streaming design</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Design%20a%20URL%20Shortener%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">Design a URL Shortener – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Design%20WhatsApp%20System%20Design%20%E2%80%93%20ByteByteGo"
+                                    target="_blank">Design WhatsApp – ByteByteGo</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Design%20Twitter%20System%20Design%20%E2%80%93%20Exponent"
+                                    target="_blank">Design Twitter – Exponent</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Design%20Uber%20System%20Design%20%E2%80%93%20System%20Design%20Interview"
+                                    target="_blank">Design Uber – System Design Interview</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Essential System Design Patterns</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚦 API Gateway</div>
+                        <div class="resource-card-desc">A single entry point that handles routing, auth, rate
+                            limiting, and request aggregation across microservices. Keeps client-facing concerns
+                            out of individual services and gives you one place to enforce policy.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=API%20Gateway%20Pattern%20%E2%80%93%20ByteByteGo" target="_blank">API
+                                Gateway Pattern – ByteByteGo</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🗳️ Leader Election</div>
+                        <div class="resource-card-desc">Distributed nodes agree on a single coordinator using
+                            algorithms like Raft or ZooKeeper's ZAB, so the system keeps functioning correctly
+                            even when the current leader fails and a new one must be chosen.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Leader%20Election%20Distributed%20Systems%20%E2%80%93%20Gaurav%20Sen" target="_blank">Leader
+                                Election – Gaurav Sen</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🌸 Bloom Filters</div>
+                        <div class="resource-card-desc">A space-efficient probabilistic structure that answers
+                            "definitely not present, or maybe present" in constant time — used to avoid expensive
+                            cache misses and duplicate-check lookups at massive scale.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=Bloom%20Filters%20Explained%20%E2%80%93%20ByteByteGo" target="_blank">Bloom
+                                Filters Explained – ByteByteGo</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📐 CQRS &amp; Event Sourcing</div>
+                        <div class="resource-card-desc">Separate the write model from the read model so each can
+                            be optimized independently, and store state as a sequence of events rather than a
+                            single mutable row. Powerful for audit trails and complex domains, overkill for simple
+                            CRUD.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/results?search_query=CQRS%20and%20Event%20Sourcing%20%E2%80%93%20ByteByteGo"
+                                target="_blank">CQRS & Event Sourcing – ByteByteGo</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — PHASE 10 + SKILL MAP ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">System Design Engineer Roadmap · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Endgame</div>
+                <h2 class="section-title">Mock Interviews, Estimation & Getting Hired</h2>
+
+                <div class="roadmap">
+                    <!-- PHASE 10 -->
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="time-badge"><span></span> Month 8–12 (Interview Prep)</div>
+                            <div class="step-phase">Phase 10 · Interview Ready</div>
+                            <div class="step-heading">Capacity Estimation + Mock Interviews + HLD/LLD Practice</div>
+                            <div class="step-desc">System design interviews test four things:
+                                <strong>requirement clarification</strong> (functional vs non-functional,
+                                asking the right questions first), <strong>capacity estimation</strong>
+                                (back-of-envelope math for storage, bandwidth, and QPS), <strong>high-level
+                                    design</strong> (the boxes-and-arrows architecture), and
+                                <strong>deep dives</strong> (defending one component under interviewer pressure).
+                                Practice <strong>low-level design (LLD)</strong> too — class diagrams and design
+                                patterns for a single service. Do at least 15 timed mock interviews before
+                                real ones. Document 3–5 designs on GitHub with diagrams and trade-off write-ups.
+                            </div>
+                            <div class="step-tags">
+                                <span class="tag red">Job-ready</span>
+                                <span class="tag">Capacity estimation</span>
+                                <span class="tag">HLD practice</span>
+                                <span class="tag">LLD &amp; design patterns</span>
+                                <span class="tag">Mock interviews</span>
+                                <span class="tag">Trade-off articulation</span>
+                                <span class="tag">GitHub portfolio</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=System%20Design%20Interview%20Full%20Course%20%E2%80%93%20freeCodeCamp"
+                                    target="_blank">System Design Interview Full Course – freeCodeCamp</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Capacity%20Estimation%20System%20Design%20%E2%80%93%20Gaurav%20Sen"
+                                    target="_blank">Capacity Estimation – Gaurav Sen</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Low%20Level%20Design%20Interview%20%E2%80%93%20Concept%20%26%20Coding"
+                                    target="_blank">Low Level Design Interview – Concept & Coding</a>
+                                <a class="yt-link" href="https://www.youtube.com/results?search_query=Mock%20System%20Design%20Interview%20%E2%80%93%20Exponent"
+                                    target="_blank">Mock System Design Interview – Exponent</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Skill Map</div>
+                <div
+                    style="font-size:16px; font-weight:800; color:var(--dark); margin-bottom:12px; letter-spacing:-0.01em;">
+                    What to Learn & When — Full Timeline</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Month 1–3</div>
+                        <div class="skill-item">Networking &amp; HTTP/TCP</div>
+                        <div class="skill-item">REST / GraphQL / gRPC</div>
+                        <div class="skill-item">SQL fundamentals &amp; indexing</div>
+                        <div class="skill-item">NoSQL basics (Mongo, Redis)</div>
+                        <div class="skill-item">Load balancers &amp; CDNs</div>
+                        <div class="skill-item">ACID transactions</div>
+                        <div class="skill-item">Basic capacity math</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Month 4–8</div>
+                        <div class="skill-item">Horizontal scaling patterns</div>
+                        <div class="skill-item">Caching strategies</div>
+                        <div class="skill-item">Replication &amp; sharding</div>
+                        <div class="skill-item">Message queues &amp; Kafka</div>
+                        <div class="skill-item">CAP theorem &amp; consistency</div>
+                        <div class="skill-item">Microservices patterns</div>
+                        <div class="skill-item">Consensus (Raft/Paxos)</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Month 9–12</div>
+                        <div class="skill-item">Fault tolerance &amp; failover</div>
+                        <div class="skill-item">Observability &amp; SLOs</div>
+                        <div class="skill-item">Case study designs (10+)</div>
+                        <div class="skill-item">Low-level design patterns</div>
+                        <div class="skill-item">Capacity estimation drills</div>
+                        <div class="skill-item">Mock interviews (15+)</div>
+                        <div class="skill-item">Portfolio &amp; write-ups</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Daily Routine</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">The Boring
+                    System Design Routine That Works</div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Pick one concept and draw its architecture from memory, no
+                        notes
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> 1 hour hands-on: sketch a full HLD for one real-world system
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Read one real engineering blog post (Uber Eng, Netflix Tech
+                        Blog, Meta Eng)
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Explain one trade-off out loud as if defending it to an
+                        interviewer
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Share one design or diagram you built on LinkedIn or Twitter
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 07</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — RESOURCES + CTA ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">System Design Engineer Roadmap · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free YouTube Channels for System Design</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Gaurav Sen</div>
+                        <div class="resource-card-desc">The channel most engineers cite as where system design
+                            actually clicked for them. Clear, first-principles breakdowns of scalability,
+                            sharding, consensus, and classic HLD interview questions. Start here if you're new
+                            to the subject.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@gkcs" target="_blank">@gkcs</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 ByteByteGo</div>
+                        <div class="resource-card-desc">Alex Xu's channel — the visual companion to the "System
+                            Design Interview" book series. Beautifully animated explanations of caching, CDNs,
+                            consistent hashing, and real production architectures at scale.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@ByteByteGo"
+                                target="_blank">@ByteByteGo</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Hussein Nasser</div>
+                        <div class="resource-card-desc">Deep, practical dives into databases, networking
+                            internals, and backend engineering trade-offs. Goes further into "why" than most
+                            channels — great once you've got the basics down and want real depth.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@hnasr" target="_blank">@hnasr</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Tech Dummies Narendra L</div>
+                        <div class="resource-card-desc">Detailed, whiteboard-style walkthroughs of classic
+                            system design interview problems — chat systems, ride-sharing, feed ranking — built
+                            from requirements to deep dives, the way an actual interview unfolds.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@TechDummiesNarendraL"
+                                target="_blank">@TechDummiesNarendraL</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 freeCodeCamp</div>
+                        <div class="resource-card-desc">Full-length free courses covering system design
+                            fundamentals, databases, Kafka, and distributed systems end to end. Comprehensive and
+                            completely free, ideal for structured study over a weekend.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@freecodecamp"
+                                target="_blank">@freecodecamp</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Exponent</div>
+                        <div class="resource-card-desc">Real mock system design interviews with ex-FAANG
+                            interviewers, plus breakdowns of what strong versus weak answers actually sound like.
+                            The closest free thing to sitting in on a real interview.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@tryexponent"
+                                target="_blank">@tryexponent</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">YouFocus — Distraction-free YT</span>
+                    <span class="tag">Interview Prep — Question banks</span>
+                    <span class="tag">Community — Peer learning</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Your System Design Journey Starts Now 🚀</div>
+                    <div class="cta-sub">Every large-scale system you use today started as a whiteboard sketch by
+                        an engineer who once stared at a blank page too.<br>Consistency over 12 months beats raw
+                        talent every single time. Start today.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→
+                        theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                            alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                            alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"
+                            alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">07 / 07</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
