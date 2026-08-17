@@ -1,0 +1,18 @@
+{
+  "title": "System Design Engineer Roadmap 2026",
+  "description": "From 'what happens when you type a URL' to designing systems that serve a billion requests a day. Scalability, databases, caching, distributed systems, HLD, and LLD — with free resources for every phase.",
+  "keywords": [
+    "system design",
+    "hld",
+    "lld",
+    "distributed systems",
+    "scalability",
+    "architecture",
+    "databases",
+    "caching",
+    "microservices",
+    "load balancing"
+  ],
+  "tags": ["roadmap", "systemdesign"],
+  "ogImage": "https://theboringeducation.com/images/system-design-roadmap-og.png"
+}
