@@ -15,10 +15,7 @@
       "python",
       "generative ai"
     ],
-    "tags": [
-      "roadmap",
-      "agenticai"
-    ]
+    "tags": ["roadmap", "agenticai"]
   },
   {
     "slug": "aiml-engineer-roadmap",
@@ -33,10 +30,7 @@
       "data science",
       "models"
     ],
-    "tags": [
-      "roadmap",
-      "aiml"
-    ]
+    "tags": ["roadmap", "aiml"]
   },
   {
     "slug": "backend-engineer-roadmap",
@@ -51,10 +45,7 @@
       "sql",
       "apis"
     ],
-    "tags": [
-      "roadmap",
-      "backend"
-    ]
+    "tags": ["roadmap", "backend"]
   },
   {
     "slug": "blockchain-engineer-roadmap",
@@ -70,10 +61,7 @@
       "dapps",
       "smart contracts"
     ],
-    "tags": [
-      "roadmap",
-      "blockchain"
-    ]
+    "tags": ["roadmap", "blockchain"]
   },
   {
     "slug": "cloud-engineer-roadmap",
@@ -91,10 +79,7 @@
       "ci cd",
       "networking"
     ],
-    "tags": [
-      "roadmap",
-      "cloud"
-    ]
+    "tags": ["roadmap", "cloud"]
   },
   {
     "slug": "cold-email-guide",
@@ -122,10 +107,7 @@
       "linux",
       "cloud security"
     ],
-    "tags": [
-      "roadmap",
-      "cybersecurity"
-    ]
+    "tags": ["roadmap", "cybersecurity"]
   },
   {
     "slug": "devops-engineer-roadmap",
@@ -140,10 +122,7 @@
       "linux",
       "automation"
     ],
-    "tags": [
-      "roadmap",
-      "devops"
-    ]
+    "tags": ["roadmap", "devops"]
   },
   {
     "slug": "dsa-escape-plan-2026",
@@ -158,11 +137,7 @@
       "problem solving",
       "roadmap"
     ],
-    "tags": [
-      "dsa",
-      "roadmap",
-      "interview-prep"
-    ]
+    "tags": ["dsa", "roadmap", "interview-prep"]
   },
   {
     "slug": "freelance-developer-guide",
@@ -180,10 +155,7 @@
       "software developer",
       "tech freelancing"
     ],
-    "tags": [
-      "guide",
-      "freelancing"
-    ]
+    "tags": ["guide", "freelancing"]
   },
   {
     "slug": "frontend-engineer-roadmap",
@@ -199,10 +171,7 @@
       "css",
       "web development"
     ],
-    "tags": [
-      "roadmap",
-      "frontend"
-    ]
+    "tags": ["roadmap", "frontend"]
   },
   {
     "slug": "genai-engineer-roadmap",
@@ -217,10 +186,7 @@
       "langchain",
       "vector database"
     ],
-    "tags": [
-      "roadmap",
-      "genai"
-    ]
+    "tags": ["roadmap", "genai"]
   },
   {
     "slug": "git-github-contributor-playbook",
@@ -238,11 +204,7 @@
       "version control",
       "contributor playbook"
     ],
-    "tags": [
-      "git",
-      "github",
-      "open-source"
-    ]
+    "tags": ["git", "github", "open-source"]
   },
   {
     "slug": "hr-interview-questions",
@@ -259,11 +221,7 @@
       "mock interview",
       "hiring manager questions"
     ],
-    "tags": [
-      "interview",
-      "career",
-      "behavioral"
-    ]
+    "tags": ["interview", "career", "behavioral"]
   },
   {
     "slug": "javascript-interview-questions",
@@ -279,11 +237,7 @@
       "dom",
       "interview prep"
     ],
-    "tags": [
-      "javascript",
-      "interview",
-      "frontend"
-    ]
+    "tags": ["javascript", "interview", "frontend"]
   },
   {
     "slug": "mobile-app-developer-roadmap",
@@ -301,10 +255,7 @@
       "firebase",
       "cross platform apps"
     ],
-    "tags": [
-      "roadmap",
-      "mobiledevelopment"
-    ]
+    "tags": ["roadmap", "mobiledevelopment"]
   },
   {
     "slug": "nodejs-express-interview-questions",
@@ -317,11 +268,7 @@
       "javascript",
       "interview questions"
     ],
-    "tags": [
-      "nodejs",
-      "express",
-      "interview"
-    ]
+    "tags": ["nodejs", "express", "interview"]
   },
   {
     "slug": "placement-preparation-roadmap",
@@ -345,17 +292,25 @@
     "slug": "react-interview-questions",
     "title": "40 React Interview Questions",
     "description": "A curated set of 40 essential React interview questions covering fundamentals, hooks, lifecycle, state management, and performance optimization.",
+    "keywords": ["react", "javascript", "frontend", "hooks", "web development"],
+    "tags": ["react", "interview", "frontend"]
+  },
+  {
+    "slug": "system-design-roadmap",
+    "title": "System Design Engineer Roadmap 2026",
+    "description": "From 'what happens when you type a URL' to designing systems that serve a billion requests a day. Scalability, databases, caching, distributed systems, HLD, and LLD — with free resources for every phase.",
     "keywords": [
-      "react",
-      "javascript",
-      "frontend",
-      "hooks",
-      "web development"
+      "system design",
+      "hld",
+      "lld",
+      "distributed systems",
+      "scalability",
+      "architecture",
+      "databases",
+      "caching",
+      "microservices",
+      "load balancing"
     ],
-    "tags": [
-      "react",
-      "interview",
-      "frontend"
-    ]
+    "tags": ["roadmap", "systemdesign"]
   }
 ]
