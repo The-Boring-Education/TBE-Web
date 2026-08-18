@@ -17,7 +17,10 @@ const protectedAPIRoutes = [
   },
 ];
 
-const protectedUIRoutes = [{ path: /^\/shiksha\/(?:\/|$)/ }];
+const protectedUIRoutes = [
+  { path: /^\/shiksha\/(?:\/|$)/ },
+  { path: /^\/learn(?:\/|$)/ },
+];
 
 // CORS headers removed - using proxy pattern for API calls
 
@@ -134,6 +137,7 @@ const middleware = async (req: NextRequest) => {
 export const config = {
   matcher: [
     '/register',
+    '/learn',
     '/shiksha/:courseSlug*',
     '/api/v1/course/:courseId*',
     '/api/v1/shiksha/:path*',

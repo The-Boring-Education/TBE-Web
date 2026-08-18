@@ -94,6 +94,14 @@ export interface UserModel {
     ryOnboarded?: boolean;
     experienceBand?: string;
   };
+  personalization?: {
+    isCompleted?: boolean;
+    interests?: string[];
+    experienceLevel?: string;
+    weeklyCommitment?: string;
+    skipped?: boolean;
+    updatedAt?: Date;
+  };
 }
 
 export interface WebinarEnrolledUsersProps {

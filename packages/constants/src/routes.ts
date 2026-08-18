@@ -4,6 +4,7 @@ const routes = {
   home: "/",
   login: "/login",
   onboarding: "/onboarding",
+  learn: "/learn",
   // Topmate Sessions
   topmateSessions: "/topmate-sessions",
   // Shiksha
@@ -226,6 +227,7 @@ const routes = {
     unskilledEvaluationHealth: "/api/v1/evaluate/health",
     markSheetQuestionAsStarred: "/user/interview-prep/starred",
     leaderboard: "/leaderboard",
+    personalization: "/user/personalization",
   },
 };
 
