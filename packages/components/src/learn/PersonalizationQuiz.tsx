@@ -173,31 +173,31 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
   }
 
   return (
-    <div className="w-full text-[#10162F] py-4 px-4 sm:px-8 lg:px-12 flex flex-col relative font-sans">
+    <div className="w-full text-[#10162F] py-2 sm:py-4 px-3 sm:px-8 lg:px-12 flex flex-col relative font-sans">
       {/* Main Container */}
-      <div className="w-full max-w-5xl mx-auto flex-1 flex flex-col my-4">
+      <div className="w-full max-w-5xl mx-auto flex-1 flex flex-col my-2 sm:my-4">
         {/* Title Header */}
-        <div className="text-center mb-6 sm:mb-8 space-y-1.5">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#10162F] tracking-tight">
+        <div className="text-center mb-5 sm:mb-8 space-y-1 sm:space-y-1.5">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#10162F] tracking-tight">
             Find what's right for you
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 font-medium">
+          <p className="text-xs sm:text-sm md:text-base text-slate-600 font-medium max-w-lg mx-auto">
             Answer 3 quick questions to get recommendations that match your
             interests.
           </p>
         </div>
 
         {/* 3-Column Question Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Vertical Stepper */}
-          <div className="md:col-span-1 flex md:flex-col items-center md:items-start justify-center gap-4 py-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-8 items-start">
+          {/* Stepper */}
+          <div className="md:col-span-1 flex md:flex-col items-center justify-center md:justify-start gap-3 sm:gap-4 py-1 sm:py-2">
             {[1, 2, 3].map((num) => {
               const isCompleted = step > num;
               const isActive = step === num;
               return (
                 <div
                   key={num}
-                  className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+                  className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
                     isCompleted
                       ? "bg-[#10162F] text-white shadow-xs"
                       : isActive
@@ -205,21 +205,25 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         : "border border-slate-300 text-slate-400 bg-transparent font-medium"
                   }`}
                 >
-                  {isCompleted ? <FiCheck className="w-4 h-4" /> : num}
+                  {isCompleted ? (
+                    <FiCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  ) : (
+                    num
+                  )}
                 </div>
               );
             })}
           </div>
 
           {/* Center Column: Questions & Options */}
-          <div className="md:col-span-7 space-y-5">
+          <div className="md:col-span-7 space-y-4 sm:space-y-5">
             {step === 1 && (
-              <div className="space-y-4">
-                <h2 className="text-lg sm:text-xl font-bold text-[#10162F]">
+              <div className="space-y-3 sm:space-y-4">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F]">
                   What do you want to learn about?
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                   {STEP_1_TOPICS.map((topic) => {
                     const isSelected = selectedInterests.includes(topic.id);
                     return (
@@ -227,10 +231,10 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         key={topic.id}
                         type="button"
                         onClick={() => handleSelectInterest(topic.id)}
-                        className={`px-4 py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xs shadow-xs ${
+                        className={`px-3.5 sm:px-4 py-3 sm:py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xl shadow-xs cursor-pointer ${
                           isSelected
                             ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
-                            : "bg-white border-slate-300 hover:border-slate-800 text-slate-800"
+                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
                         }`}
                       >
                         {topic.label}
@@ -242,12 +246,12 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
             )}
 
             {step === 2 && (
-              <div className="space-y-4">
-                <h2 className="text-lg sm:text-xl font-bold text-[#10162F]">
+              <div className="space-y-3 sm:space-y-4">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F]">
                   What do you want to achieve?
                 </h2>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2.5 sm:gap-3">
                   {STEP_2_GOALS.map((goal) => {
                     const isSelected = selectedGoals.includes(goal.id);
                     return (
@@ -255,10 +259,10 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         key={goal.id}
                         type="button"
                         onClick={() => handleSelectGoal(goal.id)}
-                        className={`w-full px-5 py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xs shadow-xs ${
+                        className={`w-full px-4 sm:px-5 py-3 sm:py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xl shadow-xs cursor-pointer ${
                           isSelected
                             ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
-                            : "bg-white border-slate-300 hover:border-slate-800 text-slate-800"
+                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
                         }`}
                       >
                         {goal.label}
@@ -270,12 +274,12 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
             )}
 
             {step === 3 && (
-              <div className="space-y-4">
-                <h2 className="text-lg sm:text-xl font-bold text-[#10162F]">
+              <div className="space-y-3 sm:space-y-4">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F]">
                   How much coding experience do you have?
                 </h2>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2.5 sm:gap-3">
                   {STEP_3_EXPERIENCE.map((exp) => {
                     const isSelected = experienceLevel === exp.id;
                     return (
@@ -283,16 +287,16 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         key={exp.id}
                         type="button"
                         onClick={() => handleSelectExperience(exp.id)}
-                        className={`w-full p-4 border text-left transition-all rounded-xs shadow-xs ${
+                        className={`w-full p-3.5 sm:p-4 border text-left transition-all rounded-xl shadow-xs cursor-pointer ${
                           isSelected
                             ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
-                            : "bg-white border-slate-300 hover:border-slate-800 text-slate-800"
+                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
                         }`}
                       >
-                        <h3 className="font-bold text-sm sm:text-base text-[#10162F]">
+                        <h3 className="font-bold text-xs sm:text-sm md:text-base text-[#10162F]">
                           {exp.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                        <p className="text-[11px] sm:text-xs text-slate-600 mt-1">
                           {exp.desc}
                         </p>
                       </button>
@@ -304,11 +308,11 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
 
             {/* Bottom Back Button */}
             {step > 1 && (
-              <div className="pt-4 flex items-center justify-start">
+              <div className="pt-2 sm:pt-4 flex items-center justify-start">
                 <button
                   type="button"
                   onClick={() => setStep((step - 1) as 1 | 2)}
-                  className="text-xs sm:text-sm font-bold text-indigo-700 hover:underline"
+                  className="text-xs sm:text-sm font-bold text-indigo-700 hover:underline cursor-pointer"
                 >
                   ← Back
                 </button>
@@ -317,13 +321,13 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
           </div>
 
           {/* Right Column: Illustration & Note */}
-          <div className="md:col-span-4 flex flex-col items-center justify-center text-center p-4">
+          <div className="md:col-span-4 flex flex-col items-center justify-center text-center p-2 sm:p-4">
             {step === 1 && (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <img
                   src="/images/note.png"
                   alt="Learn topics"
-                  className="max-h-56 sm:max-h-64 object-contain mx-auto"
+                  className="max-h-40 sm:max-h-56 md:max-h-64 object-contain mx-auto"
                 />
                 <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xs mx-auto">
                   We have hundreds of courses that cover just about everything.
@@ -332,11 +336,11 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
             )}
 
             {step === 2 && (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <img
                   src="/images/target.png"
                   alt="Set goals"
-                  className="max-h-56 sm:max-h-64 object-contain mx-auto"
+                  className="max-h-40 sm:max-h-56 md:max-h-64 object-contain mx-auto"
                 />
                 <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xs mx-auto">
                   People who set a goal are 40% more likely to achieve it.
@@ -345,11 +349,11 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
             )}
 
             {step === 3 && (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <img
                   src="/images/laptop.png"
                   alt="Coding experience"
-                  className="max-h-56 sm:max-h-64 object-contain mx-auto"
+                  className="max-h-40 sm:max-h-56 md:max-h-64 object-contain mx-auto"
                 />
                 <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xs mx-auto">
                   Our hands-on learning environment is designed for all levels.

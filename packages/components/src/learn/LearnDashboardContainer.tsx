@@ -1,17 +1,26 @@
 import { routes } from "@tbe/constants";
+import { sendRequest } from "@tbe/utils";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
   FiArrowRight,
   FiArrowUpRight,
+  FiBarChart2,
   FiBookOpen,
+  FiCheckCircle,
+  FiChevronsLeft,
+  FiChevronsRight,
+  FiCode,
+  FiCompass,
   FiExternalLink,
+  FiFileText,
   FiGrid,
+  FiHelpCircle,
   FiLayers,
   FiPlayCircle,
+  FiSearch,
+  FiSettings,
   FiTarget,
-  FiUser,
-  FiUsers,
 } from "react-icons/fi";
 
 import type { PersonalizationQuizData } from "./PersonalizationQuiz";
@@ -109,43 +118,558 @@ const TBE_ECOSYSTEM_APPS = [
   },
 ];
 
-const RECOMMENDED_COURSES = [
+export interface RecommendedItem {
+  id: string;
+  type: "sheet" | "core-subject" | "resource" | "course";
+  title: string;
+  desc: string;
+  slug?: string;
+  url: string;
+  isExternal?: boolean;
+  category: string;
+  categoryStyle?: string;
+  logoKey?: string;
+  iconType?: "code" | "book" | "layer" | "file";
+}
+
+const SHIKSHA_COURSES = [
   {
-    id: "fullstack",
-    badge: "SKILL PATH",
-    badgeBg: "bg-[#E0F2FE] text-[#0369A1]",
-    title: "Full Stack Web Development",
-    desc: "Master frontend, backend and databases by building real world projects.",
-    coursesInfo: "6 Courses  |  Beginner Friendly",
-    timeInfo: "25 hrs",
+    id: "course-logic",
+    type: "course" as const,
+    title: "Logic Building for Everyone",
+    desc: "Build programming logic from scratch — no prior experience needed. Perfect for absolute beginners.",
+    slug: "logic-building-for-everyone",
+    url: "/shiksha/logic-building-for-everyone",
+    category: "SHIKSHA COURSE",
+    categoryStyle: "bg-[#FF3B30] text-white",
+    logoKey: "logic",
   },
   {
-    id: "blockly",
-    badge: "IN PROGRESS",
-    badgeBg: "bg-[#FFCC00] text-slate-900 font-extrabold",
-    title: "Learn to Code with Blockly",
-    desc: "Want to learn how to get started with programming in an interactive way? Try our drag and drop code lessons!",
-    progress: 11,
-    coursesInfo: "4 Courses  |  Beginner Friendly",
-    timeInfo: "10 hrs",
+    id: "course-js",
+    type: "course" as const,
+    title: "Basics of Programming with JS",
+    desc: "Learn JavaScript fundamentals: variables, loops, functions, DOM manipulation and mini-projects.",
+    slug: "basics-of-programming-with-js",
+    url: "/shiksha/basics-of-programming-with-js",
+    category: "SHIKSHA COURSE",
+    categoryStyle: "bg-[#FF3B30] text-white",
+    logoKey: "javascript",
   },
   {
-    id: "datascience",
-    badge: "DATA SCIENCE",
-    badgeBg: "bg-[#E0F2FE] text-[#0369A1]",
-    title: "Data Science Fundamentals",
-    desc: "Learn statistics, Python, data analysis and visualization from scratch.",
-    coursesInfo: "5 Courses  |  Beginner Friendly",
-    timeInfo: "18 hrs",
+    id: "course-frontend",
+    type: "course" as const,
+    title: "Zero to One Frontend Development",
+    desc: "Master HTML, CSS, JavaScript, React and build production-ready frontend projects end to end.",
+    slug: "zero-to-one-frontend-development",
+    url: "/shiksha/zero-to-one-frontend-development",
+    category: "SHIKSHA COURSE",
+    categoryStyle: "bg-[#FF3B30] text-white",
+    logoKey: "react",
   },
   {
-    id: "dsa",
-    badge: "DSA",
-    badgeBg: "bg-[#E0F2FE] text-[#0369A1]",
-    title: "DSA Roadmap",
-    desc: "Crack coding interviews with our structured DSA roadmap and practice sheets.",
-    coursesInfo: "5 Courses  |  Beginner Friendly",
-    timeInfo: "38 hrs",
+    id: "course-backend",
+    type: "course" as const,
+    title: "Zero to One Backend Development",
+    desc: "Learn Node.js, Express, MongoDB, REST APIs, authentication and deploy full-stack applications.",
+    slug: "zero-to-one-backend-development",
+    url: "/shiksha/zero-to-one-backend-development",
+    category: "SHIKSHA COURSE",
+    categoryStyle: "bg-[#FF3B30] text-white",
+    logoKey: "nodejs",
+  },
+];
+
+const RECOMMENDED_DISCOVERY_ITEMS: RecommendedItem[] = [
+  // Alternated: Sheet → Core → Resource → Course (no two same types side by side)
+
+  // 1
+  {
+    id: "java-sheet",
+    type: "sheet",
+    title: "Java Interview Questions",
+    desc: "Top core Java, OOPs, Collections, Multi-threading & JVM interview questions.",
+    slug: "java-interview-questions",
+    url: "/interview-prep/java-interview-questions",
+    category: "INTERVIEW SHEET",
+    logoKey: "java",
+  },
+  // 2 — Course
+  ...SHIKSHA_COURSES.slice(0, 1),
+  // 3
+  {
+    id: "os-core",
+    type: "core-subject",
+    title: "Operating Systems Vault",
+    desc: "Process synchronization, deadlocks, memory management, paging & CPU scheduling.",
+    url: "https://oncampus.theboringeducation.com/coresubjects/operating-systems",
+    isExternal: true,
+    category: "CORE CS",
+    categoryStyle: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  // 3
+  {
+    id: "res-agentic-ai",
+    type: "resource",
+    title: "Agentic AI Engineer Roadmap 2026",
+    desc: "LLMs, AI agents, RAG systems, workflows, tool calling, memory & multi-agent architectures.",
+    url: "https://resources.theboringeducation.com/resources/agentic-ai-engineer-roadmap",
+    isExternal: true,
+    category: "AI ROADMAP",
+    categoryStyle: "bg-purple-50 text-purple-700 border-purple-200",
+    iconType: "code",
+  },
+  // 4
+  {
+    id: "javascript-sheet",
+    type: "sheet",
+    title: "JavaScript Interview Questions",
+    desc: "Closures, Event Loop, Promises, Prototypes, async/await and ES6+ fundamentals.",
+    slug: "javascript-interview-questions",
+    url: "/interview-prep/javascript-interview-questions",
+    category: "INTERVIEW SHEET",
+    logoKey: "javascript",
+  },
+  // 5
+  {
+    id: "dbms-core",
+    type: "core-subject",
+    title: "DBMS & SQL Architecture",
+    desc: "ACID properties, indexing, B-Trees, normalization, transactions & query optimization.",
+    url: "https://oncampus.theboringeducation.com/coresubjects/dbms",
+    isExternal: true,
+    category: "CORE CS",
+    categoryStyle: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  // 6
+  {
+    id: "res-placement",
+    type: "resource",
+    title: "Placement Preparation Roadmap 2026",
+    desc: "Phase-by-phase plan covering DSA, projects, core CS subjects, resume & interview rounds.",
+    url: "https://resources.theboringeducation.com/resources/placement-preparation-roadmap",
+    isExternal: true,
+    category: "CAREER ROADMAP",
+    categoryStyle: "bg-rose-50 text-rose-700 border-rose-200",
+    iconType: "book",
+  },
+  // 7
+  {
+    id: "react-sheet",
+    type: "sheet",
+    title: "React.js Interview Questions",
+    desc: "Hooks, Virtual DOM, state management, reconciliation & Next.js SSR concepts.",
+    slug: "react-interview-questions",
+    url: "/interview-prep/react-interview-questions",
+    category: "FRONTEND SHEET",
+    logoKey: "react",
+  },
+  // 8 — Course
+  ...SHIKSHA_COURSES.slice(1, 2),
+  // 9
+  {
+    id: "cn-core",
+    type: "core-subject",
+    title: "Computer Networks & Protocols",
+    desc: "OSI Model, TCP/IP handshake, HTTP/HTTPS, DNS resolution, sockets & subnetting.",
+    url: "https://oncampus.theboringeducation.com/coresubjects/computer-networks",
+    isExternal: true,
+    category: "CORE CS",
+    categoryStyle: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  // 9
+  {
+    id: "res-dsa-escape",
+    type: "resource",
+    title: "DSA Escape Plan 2026",
+    desc: "Structured 90-day plan, daily problem-solving strategy & pattern recognition techniques.",
+    url: "https://resources.theboringeducation.com/resources/dsa-escape-plan-2026",
+    isExternal: true,
+    category: "DSA GUIDE",
+    categoryStyle: "bg-amber-50 text-amber-800 border-amber-200",
+    iconType: "code",
+  },
+  // 10
+  {
+    id: "node-sheet",
+    type: "sheet",
+    title: "Node.js Interview Questions",
+    desc: "Event loop, libuv, streams, Express middleware, authentication & microservices.",
+    slug: "node-js-express-interview-questions",
+    url: "/interview-prep/node-js-express-interview-questions",
+    category: "BACKEND SHEET",
+    logoKey: "nodejs",
+  },
+  // 11 — Course
+  ...SHIKSHA_COURSES.slice(2, 3),
+  // 12
+  {
+    id: "oops-core",
+    type: "core-subject",
+    title: "OOPs & Design Patterns",
+    desc: "Encapsulation, Polymorphism, SOLID principles, Factory, Singleton & Observer.",
+    url: "https://oncampus.theboringeducation.com/coresubjects/oops",
+    isExternal: true,
+    category: "CORE CS",
+    categoryStyle: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  // 12
+  {
+    id: "res-backend",
+    type: "resource",
+    title: "Backend Engineer Roadmap 2026",
+    desc: "Languages, databases, APIs, system design, authentication and DevOps automation.",
+    url: "https://resources.theboringeducation.com/resources/backend-engineer-roadmap",
+    isExternal: true,
+    category: "BACKEND ROADMAP",
+    categoryStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    iconType: "code",
+  },
+  // 13
+  {
+    id: "db-sheet",
+    type: "sheet",
+    title: "Database Interview Questions",
+    desc: "Relational vs NoSQL, joins, indexes, normalization, schema design & query tuning.",
+    slug: "database-interview-questions",
+    url: "/interview-prep/database-interview-questions",
+    category: "DATABASE SHEET",
+    logoKey: "postgresql",
+  },
+  // 14 — Course
+  ...SHIKSHA_COURSES.slice(3, 4),
+  // 15
+  {
+    id: "res-frontend",
+    type: "resource",
+    title: "Frontend Developer Roadmap 2026",
+    desc: "HTML, CSS, JavaScript, React, Next.js, responsive layouts & modern CSS frameworks.",
+    url: "https://resources.theboringeducation.com/resources/frontend-engineer-roadmap",
+    isExternal: true,
+    category: "FRONTEND ROADMAP",
+    categoryStyle: "bg-cyan-50 text-cyan-800 border-cyan-200",
+    iconType: "code",
+  },
+  // 15
+  {
+    id: "python-sheet",
+    type: "sheet",
+    title: "Python Interview Questions",
+    desc: "Memory management, decorators, generators, GIL, data structures & OOP in Python.",
+    slug: "python-interview-questions",
+    url: "/interview-prep/python-interview-questions",
+    category: "INTERVIEW SHEET",
+    logoKey: "python",
+  },
+  // 16
+  {
+    id: "res-aiml",
+    type: "resource",
+    title: "AI/ML Engineer Roadmap 2026",
+    desc: "Mathematics, machine learning algorithms, deep learning, model deployment & applications.",
+    url: "https://resources.theboringeducation.com/resources/aiml-engineer-roadmap",
+    isExternal: true,
+    category: "AI/ML ROADMAP",
+    categoryStyle: "bg-purple-50 text-purple-700 border-purple-200",
+    iconType: "code",
+  },
+  // 17
+  {
+    id: "res-genai",
+    type: "resource",
+    title: "Generative AI Engineer Roadmap 2026",
+    desc: "Prompt engineering, fine-tuning, vector databases, and building real-world GenAI apps.",
+    url: "https://resources.theboringeducation.com/resources/genai-engineer-roadmap",
+    isExternal: true,
+    category: "GENAI ROADMAP",
+    categoryStyle: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    iconType: "code",
+  },
+  // 18
+  {
+    id: "res-devops",
+    type: "resource",
+    title: "DevOps Engineer Roadmap 2026",
+    desc: "Linux, CI/CD, cloud platforms, Docker, Kubernetes, infrastructure as code & monitoring.",
+    url: "https://resources.theboringeducation.com/resources/devops-engineer-roadmap",
+    isExternal: true,
+    category: "DEVOPS ROADMAP",
+    categoryStyle: "bg-orange-50 text-orange-700 border-orange-200",
+    iconType: "code",
+  },
+  // 19
+  {
+    id: "res-cloud",
+    type: "resource",
+    title: "Cloud Engineer Roadmap 2026",
+    desc: "Cloud computing fundamentals, AWS, Azure, Google Cloud, networking & security.",
+    url: "https://resources.theboringeducation.com/resources/cloud-engineer-roadmap",
+    isExternal: true,
+    category: "CLOUD ROADMAP",
+    categoryStyle: "bg-blue-50 text-blue-700 border-blue-200",
+    iconType: "layer",
+  },
+  // 20
+  {
+    id: "res-git",
+    type: "resource",
+    title: "Git & GitHub Contributor's Playbook",
+    desc: "Every essential Git command explained and practical guide to getting open source PRs merged.",
+    url: "https://resources.theboringeducation.com/resources/git-github-contributor-playbook",
+    isExternal: true,
+    category: "GIT PLAYBOOK",
+    categoryStyle: "bg-slate-100 text-slate-800 border-slate-200",
+    iconType: "code",
+  },
+  // 21
+  {
+    id: "res-cold-email",
+    type: "resource",
+    title: "Cold Mail Masterclass 2026",
+    desc: "Subject lines, body formulas, and follow-up tricks that hiring managers actually respond to.",
+    url: "https://resources.theboringeducation.com/resources/cold-email-guide",
+    isExternal: true,
+    category: "JOB GUIDE",
+    categoryStyle: "bg-teal-50 text-teal-800 border-teal-200",
+    iconType: "file",
+  },
+  // 22
+  {
+    id: "res-freelance",
+    type: "resource",
+    title: "Freelance Developer Guide 2026",
+    desc: "Client acquisition, personal branding, portfolio building, pricing, contracts & scaling.",
+    url: "https://resources.theboringeducation.com/resources/freelance-developer-guide",
+    isExternal: true,
+    category: "FREELANCE GUIDE",
+    categoryStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    iconType: "book",
+  },
+  // 23
+  {
+    id: "res-cybersecurity",
+    type: "resource",
+    title: "Cyber Security Engineer Roadmap 2026",
+    desc: "Networking, Linux, ethical hacking, security tools, cloud security & incident response.",
+    url: "https://resources.theboringeducation.com/resources/cyber-security-engineer-roadmap",
+    isExternal: true,
+    category: "SECURITY ROADMAP",
+    categoryStyle: "bg-red-50 text-red-700 border-red-200",
+    iconType: "file",
+  },
+  // 24
+  {
+    id: "res-mobile",
+    type: "resource",
+    title: "Mobile App Developer Roadmap 2026",
+    desc: "Android, iOS, Flutter, React Native, architecture, APIs, and performance optimization.",
+    url: "https://resources.theboringeducation.com/resources/mobile-app-developer-roadmap",
+    isExternal: true,
+    category: "MOBILE ROADMAP",
+    categoryStyle: "bg-violet-50 text-violet-700 border-violet-200",
+    iconType: "code",
+  },
+  // 25
+  {
+    id: "res-blockchain",
+    type: "resource",
+    title: "Blockchain Engineer Roadmap 2026",
+    desc: "Web3, Ethereum, Smart Contracts, Solidity, DeFi protocols and DApps development.",
+    url: "https://resources.theboringeducation.com/resources/blockchain-engineer-roadmap",
+    isExternal: true,
+    category: "WEB3 ROADMAP",
+    categoryStyle: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    iconType: "code",
+  },
+  // 26
+  {
+    id: "res-hr",
+    type: "resource",
+    title: "30 HR Interview Questions Answered",
+    desc: "Exact questions HR and hiring managers ask in real interviews and answer frameworks.",
+    url: "https://resources.theboringeducation.com/resources/hr-interview-questions",
+    isExternal: true,
+    category: "HR INTERVIEW",
+    categoryStyle: "bg-amber-50 text-amber-800 border-amber-200",
+    iconType: "file",
+  },
+];
+
+const LANGUAGE_LOGOS: Record<string, string> = {
+  logic:
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23FF3B30' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'><path d='M20 25 H80 M35 25 L65 50 L35 75 M20 75 H80'/></svg>",
+  javascript:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg",
+  typescript:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg",
+  python:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg",
+  java: "https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg",
+  react:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg",
+  nodejs:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg",
+  node: "https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg",
+  cplusplus:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg",
+  cpp: "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg",
+  c: "https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg",
+  go: "https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg",
+  golang:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg",
+  postgresql:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg",
+  postgres:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg",
+  sql: "https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg",
+  dbms: "https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg",
+  db: "https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg",
+  database:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg",
+  mongodb:
+    "https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg",
+  dsa: "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg",
+  html: "https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg",
+  css: "https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg",
+};
+
+const getSheetLogo = (sheet: any) => {
+  const title = (sheet?.title || sheet?.name || "").toLowerCase();
+  const slug = (sheet?.slug || "").toLowerCase();
+
+  const orderedKeys = [
+    "javascript",
+    "typescript",
+    "postgresql",
+    "postgres",
+    "nodejs",
+    "cplusplus",
+    "mongodb",
+    "database",
+    "golang",
+    "python",
+    "react",
+    "dbms",
+    "html",
+    "java",
+    "node",
+    "sql",
+    "cpp",
+    "dsa",
+    "css",
+    "db",
+    "go",
+    "c",
+  ];
+
+  for (const key of orderedKeys) {
+    if (slug.includes(key) || title.includes(key)) {
+      return LANGUAGE_LOGOS[key];
+    }
+  }
+
+  return sheet?.thumbnail || sheet?.image || null;
+};
+
+const CARD_THEMES = [
+  {
+    name: "blue",
+    badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
+    hoverBorder: "hover:border-blue-300",
+    accentText: "group-hover:text-blue-600",
+    linkColor: "text-blue-600",
+    btnStyle: "text-blue-700 hover:bg-blue-50",
+    progressBar: "bg-blue-600",
+    logoBg: "bg-blue-50/60 text-blue-600 border-blue-100",
+  },
+  {
+    name: "emerald",
+    badgeBg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    hoverBorder: "hover:border-emerald-300",
+    accentText: "group-hover:text-emerald-600",
+    linkColor: "text-emerald-600",
+    btnStyle: "text-emerald-700 hover:bg-emerald-50",
+    progressBar: "bg-emerald-600",
+    logoBg: "bg-emerald-50/60 text-emerald-600 border-emerald-100",
+  },
+  {
+    name: "purple",
+    badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
+    hoverBorder: "hover:border-purple-300",
+    accentText: "group-hover:text-purple-600",
+    linkColor: "text-purple-600",
+    btnStyle: "text-purple-700 hover:bg-purple-50",
+    progressBar: "bg-purple-600",
+    logoBg: "bg-purple-50/60 text-purple-600 border-purple-100",
+  },
+  {
+    name: "amber",
+    badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
+    hoverBorder: "hover:border-amber-300",
+    accentText: "group-hover:text-amber-600",
+    linkColor: "text-amber-700",
+    btnStyle: "text-amber-800 hover:bg-amber-50",
+    progressBar: "bg-amber-500",
+    logoBg: "bg-amber-50/60 text-amber-700 border-amber-100",
+  },
+  {
+    name: "rose",
+    badgeBg: "bg-rose-50 text-rose-700 border-rose-200",
+    hoverBorder: "hover:border-rose-300",
+    accentText: "group-hover:text-rose-600",
+    linkColor: "text-rose-600",
+    btnStyle: "text-rose-700 hover:bg-rose-50",
+    progressBar: "bg-rose-500",
+    logoBg: "bg-rose-50/60 text-rose-600 border-rose-100",
+  },
+  {
+    name: "indigo",
+    badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    hoverBorder: "hover:border-indigo-300",
+    accentText: "group-hover:text-indigo-600",
+    linkColor: "text-indigo-600",
+    btnStyle: "text-indigo-700 hover:bg-indigo-50",
+    progressBar: "bg-indigo-600",
+    logoBg: "bg-indigo-50/60 text-indigo-600 border-indigo-100",
+  },
+  {
+    name: "cyan",
+    badgeBg: "bg-cyan-50 text-cyan-800 border-cyan-200",
+    hoverBorder: "hover:border-cyan-300",
+    accentText: "group-hover:text-cyan-700",
+    linkColor: "text-cyan-700",
+    btnStyle: "text-cyan-800 hover:bg-cyan-50",
+    progressBar: "bg-cyan-600",
+    logoBg: "bg-cyan-50/60 text-cyan-700 border-cyan-100",
+  },
+  {
+    name: "orange",
+    badgeBg: "bg-orange-50 text-orange-700 border-orange-200",
+    hoverBorder: "hover:border-orange-300",
+    accentText: "group-hover:text-orange-600",
+    linkColor: "text-orange-600",
+    btnStyle: "text-orange-700 hover:bg-orange-50",
+    progressBar: "bg-orange-500",
+    logoBg: "bg-orange-50/60 text-orange-600 border-orange-100",
+  },
+  {
+    name: "teal",
+    badgeBg: "bg-teal-50 text-teal-800 border-teal-200",
+    hoverBorder: "hover:border-teal-300",
+    accentText: "group-hover:text-teal-700",
+    linkColor: "text-teal-700",
+    btnStyle: "text-teal-800 hover:bg-teal-50",
+    progressBar: "bg-teal-600",
+    logoBg: "bg-teal-50/60 text-teal-700 border-teal-100",
+  },
+  {
+    name: "violet",
+    badgeBg: "bg-violet-50 text-violet-700 border-violet-200",
+    hoverBorder: "hover:border-violet-300",
+    accentText: "group-hover:text-violet-600",
+    linkColor: "text-violet-600",
+    btnStyle: "text-violet-700 hover:bg-violet-50",
+    progressBar: "bg-violet-600",
+    logoBg: "bg-violet-50/60 text-violet-600 border-violet-100",
   },
 ];
 
@@ -153,20 +677,77 @@ export const LearnDashboardContainer: React.FC<
   LearnDashboardContainerProps
 > = ({ user, initialPersonalization }) => {
   const [activeTab, setActiveTab] = useState<
-    "dashboard" | "ecosystem" | "mylearning"
+    "dashboard" | "explore" | "ecosystem" | "mylearning"
   >("dashboard");
+  const [exploreCategory, setExploreCategory] = useState<
+    "all" | "courses" | "sheets" | "core" | "resources"
+  >("all");
+  const [exploreSearchQuery, setExploreSearchQuery] = useState<string>("");
   const [personalization, setPersonalization] = useState<any>(
     initialPersonalization || null,
   );
   const [showQuiz, setShowQuiz] = useState<boolean>(false);
   const [isSavingQuiz, setIsSavingQuiz] = useState<boolean>(false);
   const [isCookingQuiz, setIsCookingQuiz] = useState<boolean>(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [enrolledSheets, setEnrolledSheets] = useState<any[]>([]);
+  const [loadingLearning, setLoadingLearning] = useState<boolean>(false);
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
+  const activeSheetsWithProgress = enrolledSheets.filter(
+    (sheet) =>
+      (sheet.progress?.completed ?? 0) > 0 ||
+      (sheet.progress?.percentage ?? 0) > 0,
+  );
 
   useEffect(() => {
-    if (user?.id) {
+    const userId = user?.id || user?._id;
+    if (userId) {
       fetchPersonalization();
+      fetchMyLearningData();
     }
-  }, [user?.id]);
+  }, [user?.id, user?._id]);
+
+  const fetchMyLearningData = async () => {
+    const userId = user?.id || user?._id;
+    if (!userId) return;
+
+    setLoadingLearning(true);
+    try {
+      const [coursesRes, sheetsRes] = await Promise.all([
+        sendRequest({
+          method: "GET",
+          url: `${routes.api.myCourses}?userId=${userId}`,
+        }),
+        sendRequest({
+          method: "GET",
+          url: `${routes.api.mySheets}?userId=${userId}`,
+        }),
+      ]);
+
+      if (coursesRes && coursesRes.data) {
+        setEnrolledCourses(
+          Array.isArray(coursesRes.data) ? coursesRes.data : [],
+        );
+      }
+
+      if (sheetsRes && sheetsRes.data) {
+        setEnrolledSheets(Array.isArray(sheetsRes.data) ? sheetsRes.data : []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch my learning data", err);
+    } finally {
+      setLoadingLearning(false);
+    }
+  };
 
   const fetchPersonalization = () => {
     if (typeof window !== "undefined") {
@@ -226,749 +807,1439 @@ export const LearnDashboardContainer: React.FC<
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative">
+    <div className="w-full min-h-screen bg-[#F8FAFC] flex relative font-sans">
       <div
-        className={
-          !showQuiz || isCookingQuiz || isSavingQuiz ? "block" : "hidden"
-        }
+        className={`w-full flex ${
+          !showQuiz || isCookingQuiz || isSavingQuiz ? "flex" : "hidden"
+        }`}
       >
-        {/* Main 2-Column Layout with Vertical Sidebar */}
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
-          {/* Left Column: Transparent Navigation Sidebar */}
-          <aside className="w-full lg:w-56 flex-shrink-0 lg:sticky lg:top-20">
-            <nav className="bg-transparent space-y-1.5 p-0">
-              {/* Dashboard */}
+        {/* Left Column: Fixed Navigation Sidebar */}
+        <aside
+          className={`${
+            isSidebarCollapsed
+              ? "w-[56px] sm:w-[64px] px-1 sm:px-1.5"
+              : "w-[220px] sm:w-[240px] px-2 sm:px-2.5"
+          } border-r border-[#E8ECF2] bg-white min-h-screen sticky top-0 flex flex-col justify-between py-3 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 overflow-hidden`}
+        >
+          <div className="space-y-2">
+            {/* Top Collapse Toggle Button */}
+            <div
+              className={`flex items-center ${
+                isSidebarCollapsed ? "justify-center" : "justify-end"
+              } pb-0.5`}
+            >
               <button
-                onClick={() => setActiveTab("dashboard")}
-                className={`w-full flex items-center justify-between px-4 py-3 text-xs sm:text-sm transition-all rounded-none ${
-                  activeTab === "dashboard"
-                    ? "border-l-4 border-[#FF3B30] bg-red-50/70 text-[#FF3B30] font-extrabold shadow-2xs"
-                    : "text-slate-700 hover:bg-slate-100/70 font-semibold"
-                }`}
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+                title={
+                  isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+                }
               >
-                <div className="flex items-center gap-3">
-                  <FiGrid
-                    className={`w-4.5 h-4.5 ${activeTab === "dashboard" ? "text-[#FF3B30]" : "text-slate-600"}`}
-                  />
-                  <span>Dashboard</span>
-                </div>
+                {isSidebarCollapsed ? (
+                  <FiChevronsRight className="w-3 h-3" />
+                ) : (
+                  <FiChevronsLeft className="w-3 h-3" />
+                )}
               </button>
+            </div>
 
-              {/* Ecosystem */}
-              <button
-                onClick={() => setActiveTab("ecosystem")}
-                className={`w-full flex items-center justify-between px-4 py-3 text-xs sm:text-sm transition-all rounded-none ${
-                  activeTab === "ecosystem"
-                    ? "border-l-4 border-[#FF3B30] bg-red-50/70 text-[#FF3B30] font-extrabold shadow-2xs"
-                    : "text-slate-700 hover:bg-slate-100/70 font-semibold"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <FiLayers
-                    className={`w-4.5 h-4.5 ${activeTab === "ecosystem" ? "text-[#FF3B30]" : "text-slate-600"}`}
-                  />
-                  <span>Ecosystem</span>
+            <nav className="space-y-1.5">
+              {/* Dashboard Tab */}
+              <div>
+                <button
+                  onClick={() => setActiveTab("dashboard")}
+                  title={isSidebarCollapsed ? "Dashboard" : undefined}
+                  className={`w-full relative flex items-center ${
+                    isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2.5"
+                  } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    activeTab === "dashboard"
+                      ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                  }`}
+                >
+                  {activeTab === "dashboard" && (
+                    <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-[#FF4D4D] rounded-r-full" />
+                  )}
+                  <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                    <FiGrid
+                      className={`w-[17px] h-[17px] ${
+                        activeTab === "dashboard"
+                          ? "text-[#FF4D4D]"
+                          : "text-slate-500"
+                      }`}
+                    />
+                  </div>
+                  <span
+                    className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                      isSidebarCollapsed ? "hidden" : "block"
+                    }`}
+                  >
+                    Dashboard
+                  </span>
+                  {!isSidebarCollapsed && activeTab === "dashboard" && (
+                    <svg
+                      className="w-3.5 h-3.5 text-[#FF4D4D] shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+
+              {/* LEARNING Section */}
+              <div className="space-y-0.5">
+                <div
+                  className={`px-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                    isSidebarCollapsed
+                      ? "opacity-0 h-0 my-0"
+                      : "opacity-100 py-0.5"
+                  }`}
+                >
+                  Learning
                 </div>
-              </button>
-
-              {/* My Learning */}
-              <button
-                onClick={() => setActiveTab("mylearning")}
-                className={`w-full flex items-center justify-between px-4 py-3 text-xs sm:text-sm transition-all rounded-none ${
-                  activeTab === "mylearning"
-                    ? "border-l-4 border-[#FF3B30] bg-red-50/70 text-[#FF3B30] font-extrabold shadow-2xs"
-                    : "text-slate-700 hover:bg-slate-100/70 font-semibold"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <FiBookOpen
-                    className={`w-4.5 h-4.5 ${activeTab === "mylearning" ? "text-[#FF3B30]" : "text-slate-600"}`}
-                  />
-                  <span>My learning</span>
-                </div>
-              </button>
-
-              {/* Interview Prep */}
-              <a
-                href={routes.interviewPrep}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs sm:text-sm text-slate-700 hover:bg-slate-100/70 font-semibold transition-all group"
-              >
-                <div className="flex items-center gap-3">
-                  <FiTarget className="w-4.5 h-4.5 text-slate-600 group-hover:text-[#FF3B30] transition-colors" />
-                  <span>Interview Prep</span>
-                </div>
-              </a>
-
-              {/* Shiksha */}
-              <a
-                href={routes.shiksha}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs sm:text-sm text-slate-700 hover:bg-slate-100/70 font-semibold transition-all group"
-              >
-                <div className="flex items-center gap-3">
-                  <FiPlayCircle className="w-4.5 h-4.5 text-slate-600 group-hover:text-[#FF3B30] transition-colors" />
-                  <span>Shiksha</span>
-                </div>
-              </a>
-            </nav>
-          </aside>
-
-          {/* Right Column: Main Content Area */}
-          <main className="flex-1 min-w-0 space-y-6">
-            {activeTab === "ecosystem" ? (
-              /* Ecosystem Tab */
-              <div className="space-y-4">
-                <section className="space-y-3">
-                  <h2 className="text-sm font-bold text-slate-900">
-                    Quick access to TBE Ecosystem
-                  </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {TBE_ECOSYSTEM_APPS.map((app, i) => (
-                      <a
-                        key={app.name}
-                        href={app.url}
-                        target={app.isExternal ? "_blank" : undefined}
-                        rel={app.isExternal ? "noopener noreferrer" : undefined}
-                        className={`group bg-white hover:bg-slate-50/80 border border-slate-200/80 hover:border-[#FF3B30]/50 transition-all hover:shadow-md rounded-2xl p-4 flex min-w-0 overflow-hidden ${i % 2 === 0 ? "flex-col" : "flex-col-reverse"}`}
+                <div className="space-y-0.5">
+                  <button
+                    onClick={() => setActiveTab("mylearning")}
+                    title={isSidebarCollapsed ? "My Learning" : undefined}
+                    className={`w-full relative flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
+                      activeTab === "mylearning"
+                        ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                    }`}
+                  >
+                    {activeTab === "mylearning" && (
+                      <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-[#FF4D4D] rounded-r-full" />
+                    )}
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiBookOpen
+                        className={`w-[17px] h-[17px] ${
+                          activeTab === "mylearning"
+                            ? "text-[#FF4D4D]"
+                            : "text-slate-500"
+                        }`}
+                      />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      My Learning
+                    </span>
+                    {!isSidebarCollapsed && activeTab === "mylearning" && (
+                      <svg
+                        className="w-3.5 h-3.5 text-[#FF4D4D] shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
                       >
-                        {/* Image */}
-                        <div className="w-full h-36 sm:h-44 flex items-center justify-center py-3">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("explore")}
+                    title={isSidebarCollapsed ? "Catalog" : undefined}
+                    className={`w-full relative flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
+                      activeTab === "explore"
+                        ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                    }`}
+                  >
+                    {activeTab === "explore" && (
+                      <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-[#FF4D4D] rounded-r-full" />
+                    )}
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiCompass
+                        className={`w-[17px] h-[17px] ${
+                          activeTab === "explore"
+                            ? "text-[#FF4D4D]"
+                            : "text-slate-500"
+                        }`}
+                      />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      Catalog
+                    </span>
+                    {!isSidebarCollapsed && activeTab === "explore" && (
+                      <svg
+                        className="w-3.5 h-3.5 text-[#FF4D4D] shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    )}
+                  </button>
+
+                  <a
+                    href={routes.shiksha}
+                    title={isSidebarCollapsed ? "Shiksha" : undefined}
+                    className={`w-full flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiPlayCircle className="w-[17px] h-[17px] text-slate-500" />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      Shiksha
+                    </span>
+                  </a>
+
+                  <button
+                    onClick={() => setActiveTab("ecosystem")}
+                    title={isSidebarCollapsed ? "Ecosystem" : undefined}
+                    className={`w-full relative flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
+                      activeTab === "ecosystem"
+                        ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                    }`}
+                  >
+                    {activeTab === "ecosystem" && (
+                      <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-[#FF4D4D] rounded-r-full" />
+                    )}
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiLayers
+                        className={`w-[17px] h-[17px] ${
+                          activeTab === "ecosystem"
+                            ? "text-[#FF4D4D]"
+                            : "text-slate-500"
+                        }`}
+                      />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      Ecosystem
+                    </span>
+                    {!isSidebarCollapsed && activeTab === "ecosystem" && (
+                      <svg
+                        className="w-3.5 h-3.5 text-[#FF4D4D] shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Separator */}
+              <div className="border-b border-[#E8ECF2] my-1" />
+
+              {/* PRACTICE Section */}
+              <div className="space-y-0.5">
+                <div
+                  className={`px-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                    isSidebarCollapsed
+                      ? "opacity-0 h-0 my-0"
+                      : "opacity-100 py-0.5"
+                  }`}
+                >
+                  Practice
+                </div>
+                <div className="space-y-0.5">
+                  <a
+                    href="https://dsayatra.theboringeducation.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={isSidebarCollapsed ? "DSA Practice" : undefined}
+                    className={`w-full flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiCode className="w-[17px] h-[17px] text-slate-500" />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      DSA Practice
+                    </span>
+                  </a>
+
+                  <a
+                    href={routes.interviewPrep}
+                    title={isSidebarCollapsed ? "Interview Prep" : undefined}
+                    className={`w-full flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiTarget className="w-[17px] h-[17px] text-slate-500" />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      Interview Prep
+                    </span>
+                  </a>
+
+                  <a
+                    href="https://oncampus.theboringeducation.com/aptitude"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={isSidebarCollapsed ? "Aptitude Practice" : undefined}
+                    className={`w-full flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiBarChart2 className="w-[17px] h-[17px] text-slate-500" />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      Aptitude Practice
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Separator */}
+              <div className="border-b border-[#E8ECF2] my-1" />
+
+              {/* COMMUNITY Section */}
+              <div className="space-y-0.5">
+                <div
+                  className={`px-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                    isSidebarCollapsed
+                      ? "opacity-0 h-0 my-0"
+                      : "opacity-100 py-0.5"
+                  }`}
+                >
+                  Community
+                </div>
+                <div className="space-y-0.5">
+                  <a
+                    href="https://resources.theboringeducation.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={isSidebarCollapsed ? "Resources" : undefined}
+                    className={`w-full flex items-center ${
+                      isSidebarCollapsed
+                        ? "justify-center px-0"
+                        : "px-2 gap-2.5"
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <FiFileText className="w-[17px] h-[17px] text-slate-500" />
+                    </div>
+                    <span
+                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                        isSidebarCollapsed ? "hidden" : "block"
+                      }`}
+                    >
+                      Resources
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </nav>
+          </div>
+
+          {/* Bottom Anchored Settings Area */}
+          <div className="pt-2 border-t border-[#E8ECF2] mt-auto">
+            <Link
+              href="/user/profile"
+              title="Settings"
+              className={`w-full bg-slate-50/70 hover:bg-slate-100 text-slate-600 hover:text-slate-900 rounded-lg ${
+                isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2.5"
+              } py-1.5 text-[13px] font-normal flex items-center border border-[#E8ECF2] transition-colors cursor-pointer overflow-hidden`}
+            >
+              <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                <FiSettings className="w-[17px] h-[17px] text-slate-500" />
+              </div>
+              <span
+                className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
+                  isSidebarCollapsed ? "hidden" : "block"
+                }`}
+              >
+                Settings
+              </span>
+              {!isSidebarCollapsed && (
+                <svg
+                  className="w-3.5 h-3.5 text-slate-400 shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              )}
+            </Link>
+          </div>
+        </aside>
+
+        {/* Right Column: Main Content Area */}
+        <main className="flex-1 min-w-0 p-3 sm:p-5 md:p-6 lg:p-8 space-y-5 sm:space-y-7 overflow-y-auto overflow-x-hidden">
+          {activeTab === "ecosystem" ? (
+            /* Ecosystem Tab */
+            <div className="space-y-4">
+              <section className="space-y-3">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                  Quick access to TBE Ecosystem
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {TBE_ECOSYSTEM_APPS.map((app, i) => (
+                    <a
+                      key={app.name}
+                      href={app.url}
+                      target={app.isExternal ? "_blank" : undefined}
+                      rel={app.isExternal ? "noopener noreferrer" : undefined}
+                      className={`group bg-white hover:bg-slate-50/80 border border-slate-200/80 hover:border-[#FF3B30]/50 transition-all hover:shadow-md rounded-2xl p-3.5 sm:p-4 flex min-w-0 overflow-hidden ${i % 2 === 0 ? "flex-col" : "flex-col-reverse"}`}
+                    >
+                      {/* Image */}
+                      <div className="w-full h-32 sm:h-40 flex items-center justify-center py-2 sm:py-3">
+                        <img
+                          src={app.image}
+                          alt={app.name}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = app.fallback;
+                          }}
+                          className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+
+                      {/* Text */}
+                      <div
+                        className={
+                          i % 2 === 0
+                            ? "mt-auto pt-2.5 border-t border-slate-100"
+                            : "mb-auto pb-2.5 border-b border-slate-100"
+                        }
+                      >
+                        <div className="flex items-center justify-between gap-1">
+                          <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#FF3B30] transition-colors leading-tight">
+                            {app.name}
+                          </h3>
+                          <FiArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF3B30] shrink-0" />
+                        </div>
+                        <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                          {app.desc}
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            </div>
+          ) : activeTab === "dashboard" ? (
+            /* Dashboard Tab */
+            <div className="space-y-5 sm:space-y-6">
+              {/* Greeting Header */}
+              <div className="space-y-0.5">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-extrabold text-[#10162F] tracking-tight">
+                  {getGreeting()}, {user?.name?.split(" ")[0] || "Nitin"} 👋
+                </h1>
+                <p className="text-xs text-slate-500 font-semibold">
+                  Keep learning, keep growing!
+                </p>
+              </div>
+
+              {/* Recommended for you */}
+              <section className="space-y-2.5 sm:space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                      Recommended for you
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab("explore")}
+                    className="text-xs font-bold text-[#FF3B30] hover:underline flex items-center gap-1 shrink-0 cursor-pointer self-start sm:self-auto"
+                  >
+                    Explore all courses &amp; sheets{" "}
+                    <FiArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="relative group overflow-x-clip">
+                  <div
+                    id="recommended-scroll-container"
+                    className="flex items-stretch gap-3 sm:gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400"
+                  >
+                    {/* Bulb Card */}
+                    <div className="w-52 sm:w-60 md:w-64 shrink-0 bg-white border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between text-center shadow-xs hover:border-slate-300 transition-all snap-start">
+                      <div>
+                        <div className="w-full flex items-center justify-center py-1 mb-2">
                           <img
-                            src={app.image}
-                            alt={app.name}
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = app.fallback;
-                            }}
-                            className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                            src="/images/bulb.png"
+                            alt="Explore courses & sheets"
+                            className="h-20 sm:h-24 md:h-28 object-contain mx-auto"
                           />
                         </div>
-
-                        {/* Text */}
-                        <div
-                          className={
-                            i % 2 === 0
-                              ? "mt-auto pt-2.5 border-t border-slate-100"
-                              : "mb-auto pb-2.5 border-b border-slate-100"
-                          }
-                        >
-                          <div className="flex items-center justify-between gap-1">
-                            <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#FF3B30] transition-colors leading-tight">
-                              {app.name}
-                            </h3>
-                            <FiArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF3B30] shrink-0" />
-                          </div>
-                          <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
-                            {app.desc}
-                          </p>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                </section>
-              </div>
-            ) : activeTab === "dashboard" ? (
-              /* Dashboard Tab */
-              <div className="space-y-6">
-                {/* Continue Learning */}
-                <section className="space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-bold text-slate-900">
-                      Continue learning
-                    </h2>
-                    <Link
-                      href={routes.shiksha}
-                      className="text-[11px] font-bold text-[#FF3B30] hover:underline flex items-center gap-1"
-                    >
-                      View all courses <FiArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-                    <div className="lg:col-span-2 bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xs relative">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-red-50 text-[#FF3B30] border border-red-100 flex items-center justify-center font-black text-xl shadow-xs shrink-0">
-                          {"</>"}
-                        </div>
-                        <div className="space-y-1.5 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2.5 py-0.5 bg-red-50 text-[#FF3B30] border border-red-100 rounded-full text-[11px] font-bold">
-                              33% complete
-                            </span>
-                            <span className="text-xs text-slate-400 font-semibold">
-                              • Logic Building
-                            </span>
-                          </div>
-                          <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
-                            Learn to Code with Blockly
-                          </h3>
-                          <p className="text-xs text-slate-600 font-medium">
-                            Module 1: Introduction to Learn to Code with Blockly
-                          </p>
-                          <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden mt-2">
-                            <div className="bg-[#FF3B30] h-1.5 rounded-full w-1/3" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-                        <div className="text-xs text-slate-500 font-medium hidden sm:block">
-                          Next up:{" "}
-                          <span className="font-bold text-slate-800">
-                            Variables &amp; Logic Blocks
-                          </span>
-                        </div>
-                        <Link
-                          href={routes.allCourses.logicBuildingForEveryone}
-                          className="w-full sm:w-auto px-5 py-2.5 bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-xs transition-all shrink-0"
-                        >
-                          Resume Learning{" "}
-                          <FiArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
-                    </div>
-
-                    <div className="bg-white border border-slate-200/80 rounded-xl p-4 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-xs font-bold text-slate-900 mb-1">
-                          Let&apos;s keep the momentum!
+                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                          Explore courses & sheets
                         </h3>
-                        <p className="text-[11px] text-slate-500 leading-tight">
-                          Build a learning rhythm that fits your schedule.
+                        <p className="text-[11px] text-slate-500 mt-1.5 leading-snug">
+                          Browse all interview sheets, core CS subjects & free
+                          roadmaps.
                         </p>
                       </div>
-                      <div className="mt-4 flex items-center gap-2">
-                        <button className="flex-1 py-1.5 bg-[#FF3B30] text-white font-bold text-[11px] rounded-lg">
-                          Make a plan
-                        </button>
-                        <button className="px-3 py-1.5 bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg">
-                          Dismiss
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Your Progress */}
-                <section className="space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-bold text-slate-900">
-                      Your progress
-                    </h2>
-                    <button className="text-xs font-bold text-[#FF3B30] hover:underline flex items-center gap-1">
-                      View achievements <FiArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-                    <div className="lg:col-span-2 bg-white border border-slate-200/80 rounded-xl p-4 sm:p-5 flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                            Subjects &amp; Languages
-                          </h3>
-                          <button className="text-xs font-bold text-[#FF3B30] hover:underline">
-                            Edit
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-5 gap-2 text-center py-2">
-                          {[
-                            { name: "Web Dev", percent: 12 },
-                            { name: "DSA", percent: 8 },
-                            { name: "Python", percent: 0 },
-                            { name: "AI/ML", percent: 0 },
-                            { name: "DBMS", percent: 0 },
-                          ].map((item) => (
-                            <div
-                              key={item.name}
-                              className="flex flex-col items-center"
-                            >
-                              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-3 border-slate-100 border-t-[#FF3B30] flex items-center justify-center font-bold text-xs text-slate-900 mb-1.5">
-                                {item.percent}%
-                              </div>
-                              <span className="text-[11px] font-semibold text-slate-700">
-                                {item.name}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="mt-4 pt-3 border-t border-slate-100 text-center">
-                        <p className="text-xs font-bold text-slate-800 flex items-center justify-center gap-1">
-                          ☀️ Take action to stay motivated
-                        </p>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
-                          Move forward in your learning and watch your skills
-                          grow.
-                        </p>
-                        <Link
-                          href={routes.shiksha}
-                          className="inline-flex items-center gap-1 text-xs font-bold text-[#FF3B30] mt-1.5 hover:underline"
-                        >
-                          Continue learning <FiArrowRight className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 flex flex-col justify-between">
-                      <div className="bg-white border border-slate-200/80 rounded-xl p-4 flex items-center justify-between">
-                        <div className="space-y-1">
-                          <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                            No weekly target set yet
-                          </h4>
-                          <p className="text-[11px] text-slate-500">
-                            Set a weekly study target to stay consistent.
-                          </p>
-                          <button className="mt-2 px-3.5 py-1.5 bg-[#FF3B30] text-white text-xs font-bold rounded-lg shadow-xs">
-                            Set target
-                          </button>
-                        </div>
-                        <div className="w-14 h-14 rounded-full bg-red-50 text-[#FF3B30] flex items-center justify-center shrink-0">
-                          <svg
-                            className="w-8 h-8 text-[#FF3B30]"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle cx="12" cy="12" r="9" />
-                            <circle cx="12" cy="12" r="5" />
-                            <circle cx="12" cy="12" r="1" />
-                            <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="bg-white border border-slate-200/80 rounded-xl p-4 flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                              Your goal
-                            </h4>
-                            <button className="text-xs font-bold text-[#FF3B30] hover:underline">
-                              Edit
-                            </button>
-                          </div>
-                          <p className="text-xs font-bold text-slate-800 mt-2">
-                            Grow in my existing role
-                          </p>
-                        </div>
-                        <div className="w-12 h-12 flex items-center justify-center shrink-0 text-slate-400">
-                          <svg
-                            className="w-10 h-10"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M4 20l8-14 8 14H4z" />
-                            <path
-                              d="M12 6v6"
-                              stroke="#FF3B30"
-                              strokeWidth="2"
-                            />
-                            <path
-                              d="M12 6l3 2-3 2"
-                              fill="#FF3B30"
-                              stroke="#FF3B30"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Enrolled Courses & Interview Sheets */}
-                <section className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-sm sm:text-base font-bold text-slate-900">
-                        Enrolled Courses &amp; Interview Sheets
-                      </h2>
-                      <span className="px-2 py-0.5 bg-red-50 text-[#FF3B30] border border-red-100 rounded-full text-[10px] font-extrabold">
-                        3 Active
-                      </span>
-                    </div>
-                    <a
-                      href={routes.interviewPrep}
-                      className="text-xs font-bold text-[#FF3B30] hover:underline flex items-center gap-1 shrink-0"
-                    >
-                      View all sheets <FiArrowRight className="w-3 h-3" />
-                    </a>
-                  </div>
-
-                  <div className="flex items-stretch gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
-                    {/* Card 1 */}
-                    <div className="w-72 sm:w-80 shrink-0 bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between snap-start">
-                      <div className="space-y-2.5">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100 shrink-0">
-                            INTERVIEW SHEET
-                          </span>
-                          <span className="text-xs font-extrabold text-[#FF3B30] shrink-0">
-                            45% Solved
-                          </span>
-                        </div>
-                        <div>
-                          <h3 className="text-base font-extrabold text-slate-900 leading-snug">
-                            DSA 450 Interview Questions Sheet
-                          </h3>
-                          <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                            Must-do Data Structures &amp; Algorithms coding
-                            interview questions for top tech companies.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="space-y-3 pt-3 border-t border-slate-100">
-                        <div className="space-y-1.5">
-                          <div className="w-full bg-slate-100 rounded-full h-2">
-                            <div className="bg-[#FF3B30] h-2 rounded-full w-[45%]" />
-                          </div>
-                          <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold pt-0.5">
-                            <span>202 / 450 Problems Solved</span>
-                            <span>🔥 15 Day Streak</span>
-                          </div>
-                        </div>
-                        <div className="pt-1 flex items-center justify-between gap-3">
-                          <span className="text-xs text-slate-500 font-medium">
-                            Topic: Arrays &amp; Trees
-                          </span>
-                          <a
-                            href={routes.interviewPrep}
-                            className="px-4 py-2 bg-[#FF3B30] hover:bg-[#EE3126] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0"
-                          >
-                            Resume Sheet{" "}
-                            <FiArrowRight className="w-3.5 h-3.5" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 2 */}
-                    <div className="w-72 sm:w-80 shrink-0 bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between snap-start">
-                      <div className="space-y-2.5">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 shrink-0">
-                            SYSTEM DESIGN SHEET
-                          </span>
-                          <span className="text-xs font-extrabold text-[#FF3B30] shrink-0">
-                            20% Solved
-                          </span>
-                        </div>
-                        <div>
-                          <h3 className="text-base font-extrabold text-slate-900 leading-snug">
-                            System Design &amp; Architecture Sheet
-                          </h3>
-                          <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                            High Level &amp; Low Level Design interview
-                            architecture guide with interactive diagrams.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="space-y-3 pt-3 border-t border-slate-100">
-                        <div className="space-y-1.5">
-                          <div className="w-full bg-slate-100 rounded-full h-2">
-                            <div className="bg-[#FF3B30] h-2 rounded-full w-[20%]" />
-                          </div>
-                          <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold pt-0.5">
-                            <span>8 / 40 Architecture Topics</span>
-                            <span>HLD &amp; LLD</span>
-                          </div>
-                        </div>
-                        <div className="pt-1 flex items-center justify-between gap-3">
-                          <span className="text-xs text-slate-500 font-medium">
-                            Topic: Microservices
-                          </span>
-                          <a
-                            href={routes.interviewPrep}
-                            className="px-4 py-2 bg-[#FF3B30] hover:bg-[#EE3126] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0"
-                          >
-                            Resume Sheet{" "}
-                            <FiArrowRight className="w-3.5 h-3.5" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 3 */}
-                    <div className="w-72 sm:w-80 shrink-0 bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between snap-start">
-                      <div className="space-y-2.5">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
-                            COURSE IN PROGRESS
-                          </span>
-                          <span className="text-xs font-extrabold text-[#FF3B30] shrink-0">
-                            33% Completed
-                          </span>
-                        </div>
-                        <div>
-                          <h3 className="text-base font-extrabold text-slate-900 leading-snug">
-                            Learn to Code with Blockly
-                          </h3>
-                          <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                            Interactive drag-and-drop programming fundamentals
-                            and logic building.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="space-y-3 pt-3 border-t border-slate-100">
-                        <div className="space-y-1.5">
-                          <div className="w-full bg-slate-100 rounded-full h-2">
-                            <div className="bg-[#FF3B30] h-2 rounded-full w-[33%]" />
-                          </div>
-                          <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold pt-0.5">
-                            <span>Module 1 of 4</span>
-                            <span>Beginner Friendly</span>
-                          </div>
-                        </div>
-                        <div className="pt-1 flex items-center justify-between gap-3">
-                          <span className="text-xs text-slate-500 font-medium">
-                            Topic: Logic Building
-                          </span>
-                          <a
-                            href={routes.shiksha}
-                            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0"
-                          >
-                            Resume Course{" "}
-                            <FiArrowRight className="w-3.5 h-3.5" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Recommended for you */}
-                <section className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-sm sm:text-base font-bold text-slate-900">
-                        Recommended for you
-                      </h2>
                       <button
-                        onClick={handleOpenQuiz}
-                        className="text-xs font-bold text-[#FF3B30] hover:underline"
+                        onClick={() => setActiveTab("explore")}
+                        className="mt-3 w-full py-2 bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        Edit interests
+                        Explore Catalog <FiArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
-                    <div className="text-[11px] text-slate-500 space-x-1.5 hidden sm:block">
-                      <span className="font-bold">Popular topics:</span>
-                      <span className="text-[#FF3B30] hover:underline cursor-pointer">
-                        Python
-                      </span>
-                      <span>|</span>
-                      <span className="text-[#FF3B30] hover:underline cursor-pointer">
-                        JavaScript
-                      </span>
-                      <span>|</span>
-                      <span className="text-[#FF3B30] hover:underline cursor-pointer">
-                        HTML &amp; CSS
-                      </span>
-                      <span>|</span>
-                      <span className="text-[#FF3B30] hover:underline cursor-pointer">
-                        DSA
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className="relative group overflow-x-clip">
-                    <div
-                      id="recommended-scroll-container"
-                      className="flex items-stretch gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400"
-                    >
-                      {/* Quiz Card */}
-                      <div className="w-56 sm:w-64 shrink-0 bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col justify-between text-center shadow-xs hover:border-slate-300 transition-all snap-start">
-                        <div>
-                          <div className="w-full flex items-center justify-center py-1 mb-2">
-                            <img
-                              src="/images/bulb.png"
-                              alt="Not sure where to start"
-                              className="h-24 sm:h-28 object-contain mx-auto"
-                            />
-                          </div>
-                          <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
-                            Not sure where to start?
-                          </h3>
-                          <p className="text-[11px] text-slate-500 mt-1.5 leading-snug">
-                            Answer 3 quick questions and get recommendations.
-                          </p>
-                        </div>
-                        <button
-                          onClick={handleOpenQuiz}
-                          className="mt-3 w-full py-2 bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-xs rounded-xl shadow-xs transition-all"
-                        >
-                          Take the quiz
-                        </button>
-                      </div>
+                    {/* Mixed Recommendation Cards */}
+                    {RECOMMENDED_DISCOVERY_ITEMS.map((item) => {
+                      const enrolledMatch = item.slug
+                        ? item.type === "course"
+                          ? enrolledCourses.find(
+                              (c) =>
+                                c.slug === item.slug ||
+                                c.title?.toLowerCase() ===
+                                  item.title.toLowerCase(),
+                            )
+                          : enrolledSheets.find(
+                              (s) =>
+                                s.slug === item.slug ||
+                                s.title?.toLowerCase() ===
+                                  item.title.toLowerCase(),
+                            )
+                        : null;
 
-                      {/* Course Cards */}
-                      {RECOMMENDED_COURSES.map((course) => (
+                      const isInProgress =
+                        enrolledMatch &&
+                        ((enrolledMatch.progress?.completed ?? 0) > 0 ||
+                          (enrolledMatch.progress?.percentage ?? 0) > 0);
+
+                      const progressPercentage =
+                        enrolledMatch?.progress?.percentage ?? 0;
+
+                      let badgeText = item.category;
+                      let badgeStyle =
+                        item.categoryStyle || "bg-[#E0F2FE] text-[#0369A1]";
+
+                      if (
+                        (item.type === "sheet" || item.type === "course") &&
+                        isInProgress
+                      ) {
+                        badgeText = "IN PROGRESS";
+                        badgeStyle = "bg-[#FF3B30] text-white font-extrabold";
+                      }
+
+                      const linkHref =
+                        item.type === "sheet" && enrolledMatch?.slug
+                          ? `/interview-prep/${enrolledMatch.slug}`
+                          : item.url;
+
+                      return (
                         <div
-                          key={course.id}
-                          className="w-56 sm:w-64 shrink-0 bg-white border border-slate-200/80 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:border-slate-300 transition-all snap-start"
+                          key={item.id}
+                          className="w-52 sm:w-60 md:w-64 shrink-0 bg-white border border-slate-200/80 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:border-slate-300 transition-all snap-start group"
                         >
                           <div>
                             <div
-                              className={`px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${course.badgeBg}`}
+                              className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
                             >
-                              {course.badge}
+                              {badgeText}
                             </div>
-                            <div className="p-3.5 space-y-2">
-                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
-                                {course.title}
+                            <div className="p-3 sm:p-3.5 space-y-1.5 sm:space-y-2">
+                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug group-hover:text-[#FF3B30] transition-colors">
+                                {item.title}
                               </h3>
                               <p className="text-[11px] text-slate-600 leading-snug line-clamp-3">
-                                {course.desc}
+                                {item.desc}
                               </p>
-                              {course.progress !== undefined && (
+                              {isInProgress && (
                                 <div className="pt-1.5 space-y-1">
                                   <div className="w-full bg-slate-100 rounded-full h-1.5">
                                     <div
                                       className="bg-[#FF3B30] h-1.5 rounded-full"
-                                      style={{ width: `${course.progress}%` }}
+                                      style={{
+                                        width: `${progressPercentage}%`,
+                                      }}
                                     />
                                   </div>
-                                  <div className="text-right text-[10px] font-bold text-slate-500">
-                                    {course.progress}% Completed
+                                  <div className="text-right text-[10px] font-bold text-slate-700">
+                                    {progressPercentage}% Completed
                                   </div>
                                 </div>
                               )}
                             </div>
                           </div>
-                          <div className="px-3.5 py-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-medium text-slate-400">
-                            <span>{course.coursesInfo}</span>
-                            <span>{course.timeInfo}</span>
+                          <div className="px-3 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-medium text-slate-400">
+                            <span>
+                              {item.type === "core-subject"
+                                ? "OnCampus"
+                                : item.type === "resource"
+                                  ? "Resources"
+                                  : item.type === "course"
+                                    ? "Shiksha"
+                                    : "Interview Prep"}
+                            </span>
+                            {item.isExternal ? (
+                              <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-bold text-[#FF3B30] group-hover:underline flex items-center gap-0.5"
+                              >
+                                Explore <FiArrowRight className="w-3 h-3" />
+                              </a>
+                            ) : (
+                              <Link
+                                href={linkHref}
+                                className="font-bold text-[#FF3B30] group-hover:underline flex items-center gap-0.5"
+                              >
+                                {isInProgress ? "Resume" : "Explore"}{" "}
+                                <FiArrowRight className="w-3 h-3" />
+                              </Link>
+                            )}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-
-                {/* More features to explore */}
-                <section className="space-y-2.5">
-                  <h2 className="text-sm font-bold text-slate-900">
-                    More features to explore
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-red-50 text-[#FF3B30] flex items-center justify-center shrink-0">
-                          <FiUser className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-slate-900">
-                            Interview Simulator
-                          </h4>
-                          <p className="text-[10px] text-slate-500">
-                            Practice interviewing with AI feedback.
-                          </p>
-                        </div>
-                      </div>
-                      <FiArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    </div>
-                    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                          <FiBookOpen className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-slate-900">
-                            Job-readiness checker
-                          </h4>
-                          <p className="text-[10px] text-slate-500">
-                            Analyze job postings &amp; skill gaps.
-                          </p>
-                        </div>
-                      </div>
-                      <FiArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    </div>
-                    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                          <FiUsers className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-slate-900">
-                            Clubs
-                          </h4>
-                          <p className="text-[10px] text-slate-500">
-                            Connect with peers &amp; join events.
-                          </p>
-                        </div>
-                      </div>
-                      <FiExternalLink className="w-3.5 h-3.5 text-slate-400" />
-                    </div>
-                  </div>
-                </section>
-              </div>
-            ) : (
-              /* My Learning Tab */
-              <div className="space-y-4">
-                <h2 className="text-sm font-bold text-slate-900">
-                  My Active Learning
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="bg-white border border-slate-200/80 rounded-xl p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
-                        IN PROGRESS
-                      </span>
-                      <span className="text-xs font-bold text-[#FF3B30]">
-                        33% Completed
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-900">
-                        Learn to Code with Blockly
-                      </h3>
-                      <p className="text-[11px] text-slate-500">
-                        Module 1: Introduction to Learn to Code with Blockly
-                      </p>
-                    </div>
-                    <div className="w-full bg-slate-100 rounded-full h-1.5">
-                      <div className="bg-[#FF3B30] h-1.5 rounded-full w-1/3" />
-                    </div>
-                    <div className="pt-1 flex items-center justify-between">
-                      <span className="text-[10px] text-slate-400">
-                        4 Modules
-                      </span>
-                      <Link
-                        href={routes.allCourses.logicBuildingForEveryone}
-                        className="px-3 py-1.5 bg-[#FF3B30] text-white text-xs font-bold rounded-lg"
-                      >
-                        Resume Course
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="bg-white border border-slate-200/80 rounded-xl p-4 space-y-3 flex flex-col justify-between">
-                    <div>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800">
-                        SAVED PATH
-                      </span>
-                      <h3 className="text-xs font-bold text-slate-900 mt-2">
-                        Full Stack Web Development
-                      </h3>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        HTML, CSS, JS, React.js, Express &amp; Node.js
-                      </p>
-                    </div>
-                    <div className="pt-1 flex items-center justify-between">
-                      <span className="text-[10px] text-slate-400">
-                        6 Courses
-                      </span>
-                      <Link
-                        href={routes.shiksha}
-                        className="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg"
-                      >
-                        Start Path
-                      </Link>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
+              </section>
+
+              {/* My learning section */}
+              <section className="space-y-2.5 sm:space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 border-b border-slate-100 pb-2">
+                  <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                    My learning
+                  </h2>
+                  <Link
+                    href={routes.interviewPrep}
+                    className="text-xs font-bold text-[#FF3B30] hover:underline flex items-center gap-1 shrink-0 self-start sm:self-auto"
+                  >
+                    View all sheets <FiArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+
+                <div className="flex items-stretch gap-3 sm:gap-4 overflow-x-auto snap-x pb-3 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+                  {loadingLearning ? (
+                    <div className="w-full py-8 flex items-center justify-center text-xs font-bold text-slate-400">
+                      Loading your learning sheets...
+                    </div>
+                  ) : activeSheetsWithProgress &&
+                    activeSheetsWithProgress.length > 0 ? (
+                    activeSheetsWithProgress.map((sheet, index) => {
+                      const isDsa =
+                        sheet.title?.toLowerCase().includes("dsa") ||
+                        sheet.title?.toLowerCase().includes("data structures");
+                      const isSystemDesign =
+                        sheet.title?.toLowerCase().includes("system design") ||
+                        sheet.title?.toLowerCase().includes("architecture");
+
+                      let badgeLabel = "INTERVIEW SHEET";
+                      let badgeStyle =
+                        "bg-purple-50 text-purple-700 border-purple-100";
+                      let btnStyle =
+                        "bg-purple-50/50 hover:bg-purple-50 text-purple-700 border-purple-100";
+                      let progressColor = "bg-purple-600";
+
+                      if (sheet.isCourse) {
+                        badgeLabel = "SHIKSHA COURSE";
+                        badgeStyle = "bg-rose-50 text-rose-700 border-rose-100";
+                        btnStyle =
+                          "bg-rose-50/50 hover:bg-rose-50 text-rose-700 border-rose-100";
+                        progressColor = "bg-[#FF3B30]";
+                      } else if (isSystemDesign) {
+                        badgeLabel = "SYSTEM DESIGN";
+                        badgeStyle =
+                          "bg-indigo-50 text-indigo-700 border-indigo-100";
+                        btnStyle =
+                          "bg-indigo-50/50 hover:bg-indigo-50 text-indigo-700 border-indigo-100";
+                        progressColor = "bg-indigo-600";
+                      } else if (!isDsa) {
+                        const themeIndex = index % 2;
+                        if (themeIndex === 0) {
+                          badgeStyle =
+                            "bg-blue-50 text-blue-700 border-blue-100";
+                          btnStyle =
+                            "bg-blue-50/50 hover:bg-blue-50 text-blue-700 border-blue-100";
+                          progressColor = "bg-blue-600";
+                        } else {
+                          badgeStyle =
+                            "bg-amber-50 text-amber-800 border-amber-200";
+                          btnStyle =
+                            "bg-amber-50/50 hover:bg-amber-50 text-amber-800 border-amber-200";
+                          progressColor = "bg-amber-500";
+                        }
+                      }
+
+                      const progressPercentage =
+                        sheet.progress?.percentage ?? 0;
+                      const completedCount = sheet.progress?.completed ?? 0;
+                      const totalCount = sheet.progress?.total ?? 0;
+
+                      const sheetLogo = getSheetLogo(sheet);
+
+                      return (
+                        <div
+                          key={sheet.slug || sheet._id || index}
+                          className="w-[260px] sm:w-[290px] md:w-[320px] shrink-0 bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group snap-start"
+                        >
+                          {/* Top border badge strip */}
+                          <div
+                            className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                          >
+                            {badgeLabel}
+                          </div>
+
+                          <div className="p-3.5 sm:p-4 md:p-5 flex flex-col justify-between flex-1">
+                            <div>
+                              <div className="flex items-center justify-between gap-2.5 sm:gap-3">
+                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                  {sheetLogo ? (
+                                    <img
+                                      src={sheetLogo}
+                                      alt={sheet.title}
+                                      className="w-7 h-7 sm:w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
+                                    />
+                                  ) : (
+                                    <FiFileText className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
+                                  )}
+                                  <div className="min-w-0">
+                                    <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                      {sheet.title}
+                                    </h3>
+                                  </div>
+                                </div>
+                                <div className="shrink-0 text-right">
+                                  <span className="text-xs font-black text-slate-900">
+                                    {progressPercentage}%
+                                  </span>
+                                  <div className="text-[9px] font-bold text-slate-400">
+                                    Solved
+                                  </div>
+                                </div>
+                              </div>
+
+                              <p className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                                {sheet.description ||
+                                  "Curated list of topic-wise interview preparation problems."}
+                              </p>
+                            </div>
+
+                            <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-slate-100 space-y-2.5 sm:space-y-3">
+                              <div className="space-y-1.5">
+                                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                  <div
+                                    className={`${progressColor} h-1.5 rounded-full`}
+                                    style={{ width: `${progressPercentage}%` }}
+                                  />
+                                </div>
+                                <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                                  <span>
+                                    {completedCount} / {totalCount} Problems
+                                    Solved
+                                  </span>
+                                  {progressPercentage > 0 && (
+                                    <span className="text-[#FF3B30] font-bold">
+                                      In Progress
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <Link
+                                href={
+                                  sheet.isCourse
+                                    ? `/shiksha/${sheet.slug}`
+                                    : `/interview-prep/${sheet.slug}`
+                                }
+                                className={`w-full py-2 sm:py-2.5 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all ${btnStyle}`}
+                              >
+                                {sheet.isCourse
+                                  ? "Continue Course"
+                                  : "Resume Sheet"}{" "}
+                                <FiArrowRight className="w-3.5 h-3.5" />
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="w-full py-8 bg-white border border-slate-200/80 rounded-2xl flex flex-col items-center justify-center text-center space-y-2 p-4 sm:p-6">
+                      <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
+                        <FiBookOpen className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-700">
+                        No active sheets in progress yet
+                      </span>
+                      <p className="text-[11px] text-slate-400 max-w-sm">
+                        Start solving questions in any interview sheet to see
+                        your progress here.
+                      </p>
+                      <Link
+                        href={routes.interviewPrep}
+                        className="px-3.5 py-1.5 bg-[#FF3B30] text-white text-xs font-bold rounded-xl shadow-xs hover:bg-[#EE3126] transition-all"
+                      >
+                        Explore Interview Sheets
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* More features to explore */}
+              <section className="space-y-2.5">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                  More features to explore
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+                  <a
+                    href="https://quiz.theboringeducation.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <div className="w-7 h-7 sm:w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <FiHelpCircle className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#FF3B30] transition-colors truncate">
+                          Tech Quizzes
+                        </h4>
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
+                          Topic-wise quizzes &amp; skill assessments.
+                        </p>
+                      </div>
+                    </div>
+                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2" />
+                  </a>
+
+                  <a
+                    href="https://oncampus.theboringeducation.com/aptitude"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <div className="w-7 h-7 sm:w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <FiBarChart2 className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#FF3B30] transition-colors truncate">
+                          Aptitude Practice
+                        </h4>
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
+                          Company mock tests &amp; placement questions.
+                        </p>
+                      </div>
+                    </div>
+                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2" />
+                  </a>
+
+                  <a
+                    href="https://oncampus.theboringeducation.com/coresubjects"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group sm:col-span-2 lg:col-span-1"
+                  >
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <div className="w-7 h-7 sm:w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <FiBookOpen className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#FF3B30] transition-colors truncate">
+                          Core Subjects
+                        </h4>
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
+                          Master OS, DBMS, CN &amp; OOPs for interviews.
+                        </p>
+                      </div>
+                    </div>
+                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2" />
+                  </a>
+                </div>
+              </section>
+            </div>
+          ) : activeTab === "explore" ? (
+            /* Explore Catalog Tab */
+            <div className="space-y-5 sm:space-y-6">
+              {/* Header */}
+              <div className="space-y-0.5 sm:space-y-1">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
+                  Explore Courses, Sheets &amp; Resources
+                </h1>
+                <p className="text-xs text-slate-500 font-normal">
+                  Master interview questions, college core subjects &amp; full
+                  stack engineering.
+                </p>
               </div>
-            )}
-          </main>
-        </div>
+
+              {/* Filters & Search Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 bg-white p-2.5 sm:p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+                {/* Category Pills */}
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none flex-nowrap">
+                  {[
+                    { id: "all", label: "All Catalog" },
+                    { id: "courses", label: "Shiksha Courses" },
+                    { id: "sheets", label: "Interview Sheets" },
+                    { id: "core", label: "Core CS Subjects" },
+                    { id: "resources", label: "Free Resources" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setExploreCategory(tab.id as any)}
+                      className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                        exploreCategory === tab.id
+                          ? "bg-[#FF3B30] text-white shadow-xs"
+                          : "bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Search Input */}
+                <div className="relative w-full sm:w-56 md:w-64 shrink-0">
+                  <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search topics, languages..."
+                    value={exploreSearchQuery}
+                    onChange={(e) => setExploreSearchQuery(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#FF3B30] transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Cards Grid with Fixed Uniform Shape */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                {RECOMMENDED_DISCOVERY_ITEMS.filter((item) => {
+                  if (exploreCategory === "courses" && item.type !== "course")
+                    return false;
+                  if (exploreCategory === "sheets" && item.type !== "sheet")
+                    return false;
+                  if (
+                    exploreCategory === "core" &&
+                    item.type !== "core-subject"
+                  )
+                    return false;
+                  if (
+                    exploreCategory === "resources" &&
+                    item.type !== "resource"
+                  )
+                    return false;
+
+                  if (exploreSearchQuery.trim()) {
+                    const q = exploreSearchQuery.toLowerCase();
+                    const matchTitle = item.title.toLowerCase().includes(q);
+                    const matchDesc = item.desc.toLowerCase().includes(q);
+                    const matchCat = item.category.toLowerCase().includes(q);
+                    return matchTitle || matchDesc || matchCat;
+                  }
+                  return true;
+                }).map((item, index) => {
+                  const theme = CARD_THEMES[index % CARD_THEMES.length]!;
+                  const logoUrl = item.logoKey
+                    ? LANGUAGE_LOGOS[item.logoKey]
+                    : null;
+
+                  const enrolledMatch = item.slug
+                    ? item.type === "course"
+                      ? enrolledCourses.find(
+                          (c) =>
+                            c.slug === item.slug ||
+                            c.title?.toLowerCase() === item.title.toLowerCase(),
+                        )
+                      : enrolledSheets.find(
+                          (s) =>
+                            s.slug === item.slug ||
+                            s.title?.toLowerCase() === item.title.toLowerCase(),
+                        )
+                    : null;
+
+                  const isInProgress =
+                    enrolledMatch &&
+                    ((enrolledMatch.progress?.completed ?? 0) > 0 ||
+                      (enrolledMatch.progress?.percentage ?? 0) > 0);
+
+                  const progressPercentage =
+                    enrolledMatch?.progress?.percentage ?? 0;
+                  const completedCount =
+                    enrolledMatch?.progress?.completed ?? 0;
+                  const totalCount = enrolledMatch?.progress?.total ?? 0;
+
+                  let badgeText = item.category;
+                  let badgeStyle = theme.badgeBg;
+
+                  if (
+                    (item.type === "sheet" || item.type === "course") &&
+                    isInProgress
+                  ) {
+                    badgeText = "IN PROGRESS";
+                    badgeStyle = "bg-[#FF3B30] text-white font-extrabold";
+                  }
+
+                  const linkHref =
+                    item.type === "sheet" && enrolledMatch?.slug
+                      ? `/interview-prep/${enrolledMatch.slug}`
+                      : item.url;
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`bg-white border rounded-2xl flex flex-col shadow-xs hover:shadow-md transition-all group overflow-hidden ${
+                        isInProgress
+                          ? "border-slate-200"
+                          : "border-slate-200/80 hover:border-slate-300"
+                      }`}
+                    >
+                      {/* Full-width top badge strip */}
+                      <div
+                        className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                      >
+                        {badgeText}
+                      </div>
+
+                      {/* Language logo — interview sheets & shiksha courses */}
+                      {(item.type === "sheet" || item.type === "course") &&
+                        logoUrl && (
+                          <div className="px-3.5 sm:px-5 pt-3 sm:pt-4 flex justify-end">
+                            <img
+                              src={logoUrl}
+                              alt={item.title}
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+                            />
+                          </div>
+                        )}
+
+                      {/* Title + Description */}
+                      <div className="px-3.5 sm:px-5 pt-2 pb-3.5 sm:pb-4 flex-1 flex flex-col gap-1.5 sm:gap-2">
+                        <h3
+                          className="text-sm sm:text-[15px] font-bold text-slate-900 leading-snug"
+                          title={item.title}
+                        >
+                          {item.title}
+                        </h3>
+                        <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                          {item.desc}
+                        </p>
+
+                        {/* Progress / Status */}
+                        <div className="mt-2.5 sm:mt-3">
+                          {isInProgress ? (
+                            <div className="space-y-1.5">
+                              {/* Thin colored bar */}
+                              <div className="w-full bg-slate-100 rounded-full h-1 overflow-hidden">
+                                <div
+                                  className="h-1 rounded-full bg-[#FF3B30]"
+                                  style={{ width: `${progressPercentage}%` }}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500">
+                                <span className="font-bold text-slate-700">
+                                  {progressPercentage}% Solved
+                                </span>
+                                <span>
+                                  {completedCount} / {totalCount || 450}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Gray pill */
+                            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[10px] sm:text-[11px] font-semibold text-slate-500">
+                              <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                              {item.type === "core-subject"
+                                ? "Core CS Subject"
+                                : item.type === "resource"
+                                  ? "Developer Guide • 100% Free"
+                                  : item.type === "course"
+                                    ? "Shiksha Course • 100% Free"
+                                    : "Comprehensive Practice Sheet"}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                        <span className="flex items-center gap-1.5 text-slate-400 font-medium">
+                          {item.type === "course" ? (
+                            <FiPlayCircle className="w-3.5 h-3.5" />
+                          ) : (
+                            <FiFileText className="w-3.5 h-3.5" />
+                          )}
+                          {item.type === "core-subject"
+                            ? "OnCampus Vault"
+                            : item.type === "resource"
+                              ? "Resource App"
+                              : item.type === "course"
+                                ? "Shiksha Course"
+                                : "Interview Sheet"}
+                        </span>
+                        {item.isExternal ? (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`font-bold text-xs flex items-center gap-1 ${theme.linkColor} hover:underline shrink-0`}
+                          >
+                            Explore <FiArrowRight className="w-3.5 h-3.5" />
+                          </a>
+                        ) : (
+                          <Link
+                            href={linkHref}
+                            className={`font-bold text-xs flex items-center gap-1 shrink-0 hover:underline ${
+                              isInProgress ? "text-[#FF3B30]" : theme.linkColor
+                            }`}
+                          >
+                            {isInProgress ? "Resume" : "Explore"}{" "}
+                            <FiArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* My Learning Tab */
+            <div className="space-y-4 sm:space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 border-b border-slate-100 pb-2.5">
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                  My Active Learning
+                </h2>
+                <Link
+                  href={routes.interviewPrep}
+                  className="text-xs font-bold text-[#FF3B30] hover:underline flex items-center gap-1 self-start sm:self-auto"
+                >
+                  Explore all sheets <FiArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                {loadingLearning ? (
+                  <div className="col-span-full py-12 flex items-center justify-center text-xs font-bold text-slate-400">
+                    Loading your enrolled sheets...
+                  </div>
+                ) : activeSheetsWithProgress &&
+                  activeSheetsWithProgress.length > 0 ? (
+                  activeSheetsWithProgress.map((sheet, index) => {
+                    const isDsa =
+                      sheet.title?.toLowerCase().includes("dsa") ||
+                      sheet.title?.toLowerCase().includes("data structures");
+                    const isSystemDesign =
+                      sheet.title?.toLowerCase().includes("system design") ||
+                      sheet.title?.toLowerCase().includes("architecture");
+
+                    let badgeLabel = "INTERVIEW SHEET";
+                    let badgeStyle =
+                      "bg-purple-50 text-purple-700 border-purple-100";
+                    let btnStyle =
+                      "bg-purple-50/50 hover:bg-purple-50 text-purple-700 border-purple-100";
+                    let progressColor = "bg-purple-600";
+
+                    if (sheet.isCourse) {
+                      badgeLabel = "SHIKSHA COURSE";
+                      badgeStyle = "bg-rose-50 text-rose-700 border-rose-100";
+                      btnStyle =
+                        "bg-rose-50/50 hover:bg-rose-50 text-rose-700 border-rose-100";
+                      progressColor = "bg-[#FF3B30]";
+                    } else if (isSystemDesign) {
+                      badgeLabel = "SYSTEM DESIGN";
+                      badgeStyle =
+                        "bg-indigo-50 text-indigo-700 border-indigo-100";
+                      btnStyle =
+                        "bg-indigo-50/50 hover:bg-indigo-50 text-indigo-700 border-indigo-100";
+                      progressColor = "bg-indigo-600";
+                    } else if (!isDsa) {
+                      const themeIndex = index % 2;
+                      if (themeIndex === 0) {
+                        badgeStyle = "bg-blue-50 text-blue-700 border-blue-100";
+                        btnStyle =
+                          "bg-blue-50/50 hover:bg-blue-50 text-blue-700 border-blue-100";
+                        progressColor = "bg-blue-600";
+                      } else {
+                        badgeStyle =
+                          "bg-amber-50 text-amber-800 border-amber-200";
+                        btnStyle =
+                          "bg-amber-50/50 hover:bg-amber-50 text-amber-800 border-amber-200";
+                        progressColor = "bg-amber-500";
+                      }
+                    }
+
+                    const progressPercentage = sheet.progress?.percentage ?? 0;
+                    const completedCount = sheet.progress?.completed ?? 0;
+                    const totalCount = sheet.progress?.total ?? 0;
+
+                    const sheetLogo = getSheetLogo(sheet);
+
+                    return (
+                      <div
+                        key={sheet.slug || sheet._id || index}
+                        className="bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
+                      >
+                        {/* Top border badge strip */}
+                        <div
+                          className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                        >
+                          {badgeLabel}
+                        </div>
+
+                        <div className="p-3.5 sm:p-4 md:p-5 flex flex-col justify-between flex-1">
+                          <div>
+                            <div className="flex items-center justify-between gap-2.5 sm:gap-3">
+                              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                {sheetLogo ? (
+                                  <img
+                                    src={sheetLogo}
+                                    alt={sheet.title}
+                                    className="w-7 h-7 sm:w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
+                                  />
+                                ) : (
+                                  <FiFileText className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
+                                )}
+                                <div className="min-w-0">
+                                  <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                    {sheet.title}
+                                  </h3>
+                                </div>
+                              </div>
+                              <div className="shrink-0 text-right">
+                                <span className="text-xs font-black text-slate-900">
+                                  {progressPercentage}%
+                                </span>
+                                <div className="text-[9px] font-bold text-slate-400">
+                                  Solved
+                                </div>
+                              </div>
+                            </div>
+
+                            <p className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                              {sheet.description ||
+                                "Curated list of topic-wise interview preparation problems."}
+                            </p>
+                          </div>
+
+                          <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-slate-100 space-y-2.5 sm:space-y-3">
+                            <div className="space-y-1.5">
+                              <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                <div
+                                  className={`${progressColor} h-1.5 rounded-full`}
+                                  style={{ width: `${progressPercentage}%` }}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                                <span>
+                                  {completedCount} / {totalCount} Problems
+                                  Solved
+                                </span>
+                                {progressPercentage > 0 && (
+                                  <span className="text-[#FF3B30] font-bold">
+                                    In Progress
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <Link
+                              href={
+                                sheet.isCourse
+                                  ? `/shiksha/${sheet.slug}`
+                                  : `/interview-prep/${sheet.slug}`
+                              }
+                              className={`w-full py-2 sm:py-2.5 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all ${btnStyle}`}
+                            >
+                              {sheet.isCourse
+                                ? "Continue Course"
+                                : "Resume Sheet"}{" "}
+                              <FiArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : null}
+
+                {/* Enrolled Shiksha Courses */}
+                {enrolledCourses &&
+                  enrolledCourses.length > 0 &&
+                  enrolledCourses.map((course: any, index: number) => {
+                    const courseDef = SHIKSHA_COURSES.find(
+                      (c) =>
+                        c.slug === course.slug ||
+                        c.title?.toLowerCase() === course.title?.toLowerCase(),
+                    );
+                    const logoUrl = courseDef?.logoKey
+                      ? LANGUAGE_LOGOS[courseDef.logoKey]
+                      : null;
+                    const progressPct = course.progress?.percentage ?? 0;
+                    const completedChapters = course.progress?.completed ?? 0;
+                    const totalChapters = course.progress?.total ?? 0;
+                    return (
+                      <div
+                        key={course.slug || course._id || index}
+                        className="bg-white border border-slate-200/80 hover:border-[#FF3B30]/30 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
+                      >
+                        <div className="px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase bg-[#FF3B30] text-white">
+                          SHIKSHA COURSE
+                        </div>
+                        <div className="p-3.5 sm:p-4 md:p-5 flex flex-col justify-between flex-1">
+                          <div>
+                            <div className="flex items-center justify-between gap-2.5 sm:gap-3">
+                              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                {logoUrl ? (
+                                  <img
+                                    src={logoUrl}
+                                    alt={course.title}
+                                    className="w-7 h-7 sm:w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
+                                  />
+                                ) : (
+                                  <FiPlayCircle className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
+                                )}
+                                <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                  {course.title}
+                                </h3>
+                              </div>
+                              <div className="shrink-0 text-right">
+                                <span className="text-xs font-black text-slate-900">
+                                  {progressPct}%
+                                </span>
+                                <div className="text-[9px] font-bold text-slate-400">
+                                  Done
+                                </div>
+                              </div>
+                            </div>
+                            <p className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                              {course.description ||
+                                courseDef?.desc ||
+                                "Full-stack course on Shiksha."}
+                            </p>
+                          </div>
+                          <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-slate-100 space-y-2.5 sm:space-y-3">
+                            <div className="space-y-1.5">
+                              <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                <div
+                                  className="bg-[#FF3B30] h-1.5 rounded-full"
+                                  style={{ width: `${progressPct}%` }}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                                <span>
+                                  {completedChapters} / {totalChapters} Chapters
+                                  Done
+                                </span>
+                                {progressPct > 0 && (
+                                  <span className="text-[#FF3B30] font-bold">
+                                    In Progress
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <Link
+                              href={courseDef?.url || `/shiksha/${course.slug}`}
+                              className="w-full py-2 sm:py-2.5 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all bg-red-50/50 hover:bg-red-50 text-[#FF3B30] border border-red-100"
+                            >
+                              Continue Course{" "}
+                              <FiArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                {!loadingLearning &&
+                  (!activeSheetsWithProgress ||
+                    activeSheetsWithProgress.length === 0) &&
+                  (!enrolledCourses || enrolledCourses.length === 0) && (
+                    <div className="col-span-full py-8 bg-white border border-slate-200/80 rounded-2xl flex flex-col items-center justify-center text-center space-y-2 p-4 sm:p-6">
+                      <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
+                        <FiBookOpen className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-700">
+                        No active learning in progress yet
+                      </span>
+                      <p className="text-[11px] text-slate-400 max-w-sm">
+                        Start solving questions in any interview sheet or course
+                        to track your progress here.
+                      </p>
+                      <Link
+                        href={routes.interviewPrep}
+                        className="px-3.5 py-1.5 bg-[#FF3B30] text-white text-xs font-bold rounded-xl shadow-xs hover:bg-[#EE3126] transition-all"
+                      >
+                        Explore Interview Sheets
+                      </Link>
+                    </div>
+                  )}
+              </div>
+            </div>
+          )}
+        </main>
       </div>
 
       {showQuiz && (
