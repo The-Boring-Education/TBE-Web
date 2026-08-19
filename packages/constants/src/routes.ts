@@ -227,7 +227,6 @@ const routes = {
     unskilledEvaluationHealth: "/api/v1/evaluate/health",
     markSheetQuestionAsStarred: "/user/interview-prep/starred",
     leaderboard: "/leaderboard",
-    personalization: "/user/personalization",
   },
 };
 

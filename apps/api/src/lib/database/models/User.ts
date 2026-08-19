@@ -143,33 +143,6 @@ const DSAYatraSchema = new Schema({
   },
 });
 
-const PersonalizationSchema = new Schema({
-  isCompleted: {
-    type: Boolean,
-    default: false,
-  },
-  interests: {
-    type: [String],
-    default: [],
-  },
-  experienceLevel: {
-    type: String,
-    default: "",
-  },
-  weeklyCommitment: {
-    type: String,
-    default: "",
-  },
-  skipped: {
-    type: Boolean,
-    default: false,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
 const UserSchema: Schema<UserModel> = new Schema(
   {
     name: {
@@ -243,7 +216,6 @@ const UserSchema: Schema<UserModel> = new Schema(
     oncampus: OncampusSchema,
     techYatra: TechYatraSchema,
     resumeYatra: ResumeYatraSchema,
-    personalization: PersonalizationSchema,
   },
   { timestamps: true },
 );

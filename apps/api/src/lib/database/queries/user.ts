@@ -209,64 +209,6 @@ const getUserDataByUserNameFromDB = async (
   }
 };
 
-const updateUserPersonalizationInDB = async (
-  userId: string,
-  personalizationData: {
-    interests?: string[];
-    experienceLevel?: string;
-    weeklyCommitment?: string;
-    skipped?: boolean;
-    isCompleted?: boolean;
-  },
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const isCompleted =
-      personalizationData.isCompleted ??
-      (personalizationData.skipped ||
-        Boolean(
-          personalizationData.interests &&
-          personalizationData.interests.length > 0 &&
-          personalizationData.experienceLevel &&
-          personalizationData.weeklyCommitment,
-        ));
-
-    const update: Record<string, unknown> = {
-      "personalization.isCompleted": isCompleted,
-      "personalization.updatedAt": new Date(),
-    };
-
-    if (personalizationData.interests !== undefined) {
-      update["personalization.interests"] = personalizationData.interests;
-    }
-    if (personalizationData.experienceLevel !== undefined) {
-      update["personalization.experienceLevel"] =
-        personalizationData.experienceLevel;
-    }
-    if (personalizationData.weeklyCommitment !== undefined) {
-      update["personalization.weeklyCommitment"] =
-        personalizationData.weeklyCommitment;
-    }
-    if (personalizationData.skipped !== undefined) {
-      update["personalization.skipped"] = personalizationData.skipped;
-    }
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { $set: update },
-      { new: true },
-    );
-
-    if (!user) return { error: "User does not exist" };
-    return { data: user };
-  } catch (error) {
-    logger.error("DB: updateUserPersonalizationInDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to update user personalization", details: error };
-  }
-};
-
 export {
   createUserInDB,
   getUserByEmailFromDB,
@@ -275,6 +217,5 @@ export {
   getUserDataByUserNameFromDB,
   onboardPrepYatraUserTODB,
   onboardUserToDB,
-  updateUserPersonalizationInDB,
   updateUserSkillsInDB,
 };

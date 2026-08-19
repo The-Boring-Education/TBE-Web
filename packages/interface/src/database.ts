@@ -63,14 +63,6 @@ export interface UserModel {
       totalLogs?: number;
     };
   };
-  personalization?: {
-    isCompleted?: boolean;
-    interests?: string[];
-    experienceLevel?: string;
-    weeklyCommitment?: string;
-    skipped?: boolean;
-    updatedAt?: Date;
-  };
 }
 
 export interface ProjectChapter {

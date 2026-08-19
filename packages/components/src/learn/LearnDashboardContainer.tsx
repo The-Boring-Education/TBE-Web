@@ -163,53 +163,52 @@ export const LearnDashboardContainer: React.FC<
   const [isCookingQuiz, setIsCookingQuiz] = useState<boolean>(false);
 
   useEffect(() => {
-    if (user?.id && !initialPersonalization) {
+    if (user?.id) {
       fetchPersonalization();
     }
   }, [user?.id]);
 
-  const fetchPersonalization = async () => {
-    try {
-      const res = await fetch(
-        `${routes.api.personalization}?userId=${user.id}`,
-      );
-      if (res.ok) {
-        const json = await res.json();
-        if (json.status && json.data) {
-          setPersonalization(json.data);
+  const fetchPersonalization = () => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(`tbe_personalization_${user.id}`);
+        if (stored) {
+          setPersonalization(JSON.parse(stored));
+        } else if (initialPersonalization) {
+          setPersonalization(initialPersonalization);
         }
+      } catch (err) {
+        console.error("Failed to read personalization from localStorage", err);
       }
-    } catch (err) {
-      console.error("Failed to fetch personalization", err);
     }
   };
 
   const handleQuizSubmit = async (data: PersonalizationQuizData) => {
     setIsSavingQuiz(true);
     try {
-      const res = await fetch(routes.api.personalization, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.id,
-          interests: data.interests,
-          experienceLevel: data.experienceLevel,
-          weeklyCommitment: data.weeklyCommitment,
-          skipped: data.skipped,
-          isCompleted: true,
-        }),
-      });
+      // Simulate network save delay so the loader overlay is shown beautifully
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      if (res.ok) {
-        const json = await res.json();
-        if (json.status && json.data) {
-          setPersonalization(json.data?.personalization || json.data);
-        }
+      const personalizationData = {
+        isCompleted: true,
+        interests: data.interests,
+        experienceLevel: data.experienceLevel,
+        weeklyCommitment: data.weeklyCommitment || "regular",
+        skipped: data.skipped,
+        updatedAt: new Date().toISOString(),
+      };
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          `tbe_personalization_${user.id}`,
+          JSON.stringify(personalizationData),
+        );
       }
+      setPersonalization(personalizationData);
       setShowQuiz(false);
       setIsCookingQuiz(false);
     } catch (err) {
-      console.error("Error saving personalization quiz", err);
+      console.error("Error saving personalization quiz locally", err);
       setShowQuiz(false);
       setIsCookingQuiz(false);
     } finally {
