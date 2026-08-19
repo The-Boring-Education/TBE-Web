@@ -4,6 +4,7 @@ const routes = {
   home: "/",
   login: "/login",
   onboarding: "/onboarding",
+  learn: "/learn",
   // Topmate Sessions
   topmateSessions: "/topmate-sessions",
   // Shiksha

@@ -11,6 +11,12 @@ export { default as AdminLayout } from "./admin/AdminLayout";
 export { default as AdminStats } from "./admin/AdminStats";
 export { default as AdminTable } from "./admin/AdminTable";
 
+// Learn Page Components
+export type { LearnDashboardContainerProps } from "./learn/LearnDashboardContainer";
+export { LearnDashboardContainer } from "./learn/LearnDashboardContainer";
+export type { PersonalizationQuizData } from "./learn/PersonalizationQuiz";
+export { PersonalizationQuiz } from "./learn/PersonalizationQuiz";
+
 // Common Components
 export { default as Accordion } from "./common/Accordion";
 export { default as AccordionLinkItem } from "./common/Accordion/AccordionLinkItem";
