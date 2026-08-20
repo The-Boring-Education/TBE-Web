@@ -56,10 +56,179 @@ const RowItem = ({
   </div>
 );
 
+const DSA_TOPICS = [
+  "Arrays & Hashing",
+  "Two Pointers",
+  "Sliding Window",
+  "Binary Search",
+] as const;
+
+type DsaTopic = (typeof DSA_TOPICS)[number];
+
+type DsaProblem = {
+  name: string;
+  diff: "Easy" | "Medium" | "Hard";
+  status: "Completed" | "In Progress" | "Locked";
+  icon: React.ElementType;
+  color: string;
+};
+
+const DSA_PROBLEMS_BY_TOPIC: Record<DsaTopic, DsaProblem[]> = {
+  "Arrays & Hashing": [
+    {
+      name: "Two Sum Pattern",
+      diff: "Easy",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Contains Duplicate",
+      diff: "Easy",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Valid Anagram",
+      diff: "Easy",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Group Anagrams",
+      diff: "Medium",
+      status: "In Progress",
+      icon: Clock,
+      color: "text-zinc-400",
+    },
+    {
+      name: "Top K Frequent",
+      diff: "Medium",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+  ],
+  "Two Pointers": [
+    {
+      name: "Valid Palindrome",
+      diff: "Easy",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Container With Most Water",
+      diff: "Medium",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "3Sum",
+      diff: "Medium",
+      status: "In Progress",
+      icon: Clock,
+      color: "text-zinc-400",
+    },
+    {
+      name: "Remove Duplicates from Sorted Array",
+      diff: "Easy",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+    {
+      name: "Trapping Rain Water",
+      diff: "Hard",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+  ],
+  "Sliding Window": [
+    {
+      name: "Best Time to Buy and Sell Stock",
+      diff: "Easy",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Longest Substring Without Repeating",
+      diff: "Medium",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Permutation in String",
+      diff: "Medium",
+      status: "In Progress",
+      icon: Clock,
+      color: "text-zinc-400",
+    },
+    {
+      name: "Minimum Window Substring",
+      diff: "Hard",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+    {
+      name: "Max Consecutive Ones III",
+      diff: "Medium",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+  ],
+  "Binary Search": [
+    {
+      name: "Binary Search",
+      diff: "Easy",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Search a 2D Matrix",
+      diff: "Medium",
+      status: "Completed",
+      icon: CheckCircle2,
+      color: "text-[#FF5757]",
+    },
+    {
+      name: "Koko Eating Bananas",
+      diff: "Medium",
+      status: "In Progress",
+      icon: Clock,
+      color: "text-zinc-400",
+    },
+    {
+      name: "Find Minimum in Rotated Sorted Array",
+      diff: "Medium",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+    {
+      name: "Median of Two Sorted Arrays",
+      diff: "Hard",
+      status: "Locked",
+      icon: Lock,
+      color: "text-zinc-300",
+    },
+  ],
+};
+
 export function AppShowcaseSections({
   theme = "light",
 }: AppShowcaseSectionsProps) {
-  const [dsaActiveTopic, setDsaActiveTopic] = useState("Arrays & Hashing");
+  const [dsaActiveTopic, setDsaActiveTopic] =
+    useState<DsaTopic>("Arrays & Hashing");
 
   return (
     <div
@@ -416,12 +585,7 @@ export function AppShowcaseSections({
 
               {/* Topic tabs — wrap on mobile, no scroll */}
               <div className="flex flex-wrap gap-1.5 pb-1 mb-2.5">
-                {[
-                  "Arrays & Hashing",
-                  "Two Pointers",
-                  "Sliding Window",
-                  "Binary Search",
-                ].map((topic) => (
+                {DSA_TOPICS.map((topic) => (
                   <button
                     key={topic}
                     onClick={() => setDsaActiveTopic(topic)}
@@ -438,43 +602,7 @@ export function AppShowcaseSections({
 
               {/* Problem list */}
               <div className="space-y-1.5">
-                {[
-                  {
-                    name: "Two Sum Pattern",
-                    diff: "Easy",
-                    status: "Completed",
-                    icon: CheckCircle2,
-                    color: "text-[#FF5757]",
-                  },
-                  {
-                    name: "Contains Duplicate",
-                    diff: "Easy",
-                    status: "Completed",
-                    icon: CheckCircle2,
-                    color: "text-[#FF5757]",
-                  },
-                  {
-                    name: "Valid Anagram",
-                    diff: "Easy",
-                    status: "Completed",
-                    icon: CheckCircle2,
-                    color: "text-[#FF5757]",
-                  },
-                  {
-                    name: "Group Anagrams",
-                    diff: "Medium",
-                    status: "In Progress",
-                    icon: Clock,
-                    color: "text-zinc-400",
-                  },
-                  {
-                    name: "Top K Frequent",
-                    diff: "Medium",
-                    status: "Locked",
-                    icon: Lock,
-                    color: "text-zinc-300",
-                  },
-                ].map((prob) => (
+                {DSA_PROBLEMS_BY_TOPIC[dsaActiveTopic].map((prob) => (
                   <RowItem key={prob.name}>
                     <div className="flex items-center gap-2 min-w-0">
                       <prob.icon
