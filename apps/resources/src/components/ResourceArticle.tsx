@@ -1,3 +1,5 @@
+"use client";
+
 import type { ResourceMeta } from "@/lib/types";
 
 type Props = {
@@ -34,6 +36,15 @@ export function ResourceArticle({
     },
   };
 
+  const handleArticleClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement | null;
+    const printBtn = target?.closest(".print-btn, [data-action='print']");
+    if (printBtn) {
+      e.preventDefault();
+      window.print();
+    }
+  };
+
   return (
     <>
       {includeJsonLd ? (
@@ -42,7 +53,7 @@ export function ResourceArticle({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <article className={articleClassName}>
+      <article className={articleClassName} onClick={handleArticleClick}>
         {styleTags ? (
           <div
             className="resource-embed-styles"
