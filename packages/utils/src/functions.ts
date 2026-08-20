@@ -559,11 +559,11 @@ const calculateProgressPercentage = (
 };
 
 const getRedirectUrl = (url?: string) => {
-  const redirectTo =
-    new URL(url || window.location.href).searchParams.get("redirectTo") ||
-    routes.user.dashboard;
+  const redirect =
+    new URL(url || window.location.href).searchParams.get("redirect") ||
+    routes.learn;
 
-  return redirectTo;
+  return redirect;
 };
 
 const normalizeAPIPayload = (

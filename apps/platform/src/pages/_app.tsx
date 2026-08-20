@@ -46,8 +46,69 @@ const AppContent = ({
     if (!isClient || loading || !isAuth || isSyncingSession) return;
 
     const ensureOnboardingAndSession = async () => {
-      // If session says not onboarded, verify with API once to avoid stale session loop
-      if (!isOnboarded && router.pathname !== routes.onboarding) {
+      // If user is on the onboarding page
+      if (router.pathname === routes.onboarding) {
+        if (isOnboarded) {
+          const redirectTo = getRedirectUrl();
+          router.push(redirectTo);
+          return;
+        }
+
+        // If local session says not onboarded, verify with DB to prevent staying stuck on onboarding
+        if (user?.id) {
+          try {
+            const accessToken = getAccessToken();
+            const authHeaders: Record<string, string> = accessToken
+              ? { Authorization: ['Bearer', accessToken].join(' ') }
+              : {};
+
+            let dbIsOnboarded = false;
+            try {
+              const apiUrl = envConfig.API_URL || '/api/proxy';
+              const resp = await fetch(`${apiUrl}/user?userId=${user.id}`, {
+                headers: authHeaders,
+              });
+              if (resp.ok) {
+                const json = await resp.json();
+                dbIsOnboarded = json?.data?.isOnboarded === true;
+              }
+            } catch {
+              // fallback to same-origin proxy
+              try {
+                const resp = await fetch(`/api/proxy/user?userId=${user.id}`, {
+                  headers: authHeaders,
+                });
+                if (resp.ok) {
+                  const json = await resp.json();
+                  dbIsOnboarded = json?.data?.isOnboarded === true;
+                }
+              } catch {
+                // ignore
+              }
+            }
+
+            if (dbIsOnboarded) {
+              setIsSyncingSession(true);
+              try {
+                if (typeof updateSession === 'function') {
+                  await updateSession();
+                }
+              } finally {
+                setIsSyncingSession(false);
+              }
+              const redirectTo = getRedirectUrl();
+              router.push(redirectTo);
+              return;
+            }
+          } catch {
+            // ignore
+          }
+        }
+        return;
+      }
+
+      // If user is not on the onboarding page and session says not onboarded
+      if (!isOnboarded) {
         try {
           if (user?.id) {
             // The `/user?userId=...` endpoint is protected by
@@ -59,18 +120,36 @@ const AppContent = ({
             // bounced right back to Step 1 (0%) instead of landing on the
             // intended page.
             const accessToken = getAccessToken();
-            // NOTE: intentional array-join instead of a `******
-            // template literal — some tooling redacts the literal pattern
-            // and corrupts the source.
+            // NOTE: intentional array-join instead of a template literal
             const authHeaders: Record<string, string> = accessToken
               ? { Authorization: ['Bearer', accessToken].join(' ') }
               : {};
-            const resp = await fetch(
-              `${envConfig.API_URL}/user?userId=${user.id}`,
-              { headers: authHeaders },
-            );
-            const json = await resp.json();
-            const dbIsOnboarded = json?.data?.isOnboarded === true;
+
+            let dbIsOnboarded = false;
+            try {
+              const apiUrl = envConfig.API_URL || '/api/proxy';
+              const resp = await fetch(`${apiUrl}/user?userId=${user.id}`, {
+                headers: authHeaders,
+              });
+              if (resp.ok) {
+                const json = await resp.json();
+                dbIsOnboarded = json?.data?.isOnboarded === true;
+              }
+            } catch {
+              // fallback to same-origin proxy
+              try {
+                const resp = await fetch(`/api/proxy/user?userId=${user.id}`, {
+                  headers: authHeaders,
+                });
+                if (resp.ok) {
+                  const json = await resp.json();
+                  dbIsOnboarded = json?.data?.isOnboarded === true;
+                }
+              } catch {
+                // ignore
+              }
+            }
+
             if (dbIsOnboarded) {
               // Refresh session so callbacks pull latest isOnboarded
               setIsSyncingSession(true);
@@ -94,11 +173,19 @@ const AppContent = ({
         // Redirect to external onboarding app (only if URL configured)
         const onboardingBaseUrl = envConfig.ONBOARDING_URL;
         if (onboardingBaseUrl) {
+          const redirectTarget =
+            router.pathname === routes.onboarding ||
+            router.pathname === routes.login ||
+            router.pathname === routes.home
+              ? `${window.location.origin}${routes.learn}`
+              : window.location.href;
+
           const params = new URLSearchParams({
             userId: user?.id || '',
             email: user?.email || '',
+            productId: 'platform',
             from: 'webapp',
-            redirect: window.location.href,
+            redirect: redirectTarget,
           });
           if (user && (user as any).token) {
             params.append('token', (user as any).token);
@@ -116,12 +203,6 @@ const AppContent = ({
           window.location.href = `${onboardingBaseUrl}/?${params.toString()}`;
           return;
         }
-      }
-
-      // Redirect to dashboard if onboarded and authenticated
-      if (isOnboarded && router.pathname === routes.onboarding) {
-        const redirectTo = getRedirectUrl();
-        router.push(redirectTo);
       }
     };
 
@@ -148,6 +229,7 @@ const AppContent = ({
     </TBEQueryProvider>
   );
 };
+
 const TheBoringEducation = ({ Component, pageProps }: AppProps) => {
   return (
     <Fragment>
