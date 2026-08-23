@@ -41,6 +41,15 @@ const Onboarding: React.FC = () => {
     apiBaseUrl,
   });
 
+  React.useEffect(() => {
+    if (
+      user?.isOnboarded &&
+      (productId === "webapp" || productId === "platform")
+    ) {
+      window.location.href = redirect;
+    }
+  }, [user?.isOnboarded, productId, redirect]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-green-50">
