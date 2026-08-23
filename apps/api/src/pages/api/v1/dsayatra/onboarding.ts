@@ -83,6 +83,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
         githubUrl,
         leetCodeUrl,
       }),
+      isOnboarded: true,
       "dsaYatra.dyOnboarded": true,
       "dsaYatra.timeline": normalizedTimeline,
       "dsaYatra.target": target,

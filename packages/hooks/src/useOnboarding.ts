@@ -141,13 +141,18 @@ export default function useOnboarding({
           }
         } catch {}
 
+        // Ensure the personalization animation plays smoothly for at least 3 seconds
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
         if (redirect) {
           window.location.href = redirect;
         }
       } else {
+        setSubmitting(false);
         throw new Error(response.error || "Submission failed");
       }
     } catch (err: any) {
+      setSubmitting(false);
       const errorMessage = err.message || "Submission failed";
       setError(errorMessage);
 
@@ -157,8 +162,6 @@ export default function useOnboarding({
           label: `${productId}_${errorMessage}`,
         });
       } catch {}
-    } finally {
-      setSubmitting(false);
     }
   };
 

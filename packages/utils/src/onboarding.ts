@@ -72,3 +72,115 @@ export async function getOnboardingUser(
     return null;
   }
 }
+
+/**
+ * Checks if a user has completed global unified onboarding across the TBE ecosystem.
+ * When a user completes the unified onboarding flow, `isOnboarded: true` is set on the user record,
+ * allowing seamless access across all ecosystem products without repeating onboarding.
+ */
+export function isUserGloballyOnboarded(userData: unknown): boolean {
+  if (!userData || typeof userData !== "object") return false;
+  const user = userData as Record<string, any>;
+
+  // Check top-level isOnboarded flag
+  return user.isOnboarded === true;
+}
+
+/**
+ * Derives initial learning personalization data from existing cross-app user profile data
+ * (e.g. if user onboarded on DSAYatra, PrepYatra, TechYatra, OnCampus).
+ */
+export function deriveInitialPersonalization(userData: unknown): {
+  isCompleted: boolean;
+  interests: string[];
+  goals: string[];
+  experienceLevel: string;
+  weeklyCommitment: string;
+  source: string;
+} {
+  if (!userData || typeof userData !== "object") {
+    return {
+      isCompleted: true,
+      interests: ["web_dev"],
+      goals: ["switch_careers"],
+      experienceLevel: "beginner",
+      weeklyCommitment: "regular",
+      source: "default",
+    };
+  }
+
+  const user = userData as Record<string, any>;
+  const interests: string[] = [];
+  let experienceLevel = "beginner";
+  const goals: string[] = ["switch_careers"];
+
+  // Check DSAYatra details
+  if (user.dsaYatra) {
+    if (
+      user.dsaYatra.targetTopics &&
+      Array.isArray(user.dsaYatra.targetTopics)
+    ) {
+      interests.push("computer_science");
+      interests.push("web_dev");
+    }
+    if (user.dsaYatra.experienceLevel) {
+      const exp = String(user.dsaYatra.experienceLevel).toLowerCase();
+      if (exp.includes("senior") || exp.includes("5+")) {
+        experienceLevel = "advanced";
+      } else if (
+        exp.includes("mid") ||
+        exp.includes("junior") ||
+        exp.includes("1-3") ||
+        exp.includes("3-5")
+      ) {
+        experienceLevel = "intermediate";
+      } else {
+        experienceLevel = "beginner";
+      }
+    }
+  }
+
+  // Check PrepYatra details
+  if (user.prepYatra) {
+    if (user.prepYatra.preferredCategories) {
+      interests.push("computer_science");
+    }
+    if (user.prepYatra.experienceLevel) {
+      const exp = String(user.prepYatra.experienceLevel).toLowerCase();
+      if (exp.includes("senior")) experienceLevel = "advanced";
+      else if (exp.includes("mid") || exp.includes("junior")) {
+        experienceLevel = "intermediate";
+      }
+    }
+  }
+
+  // Check TechYatra details
+  if (user.techYatra?.focus) {
+    if (user.techYatra.focus === "roadmaps") interests.push("web_dev");
+    else if (user.techYatra.focus === "projects") interests.push("web_dev");
+    else if (user.techYatra.focus === "interviews") {
+      interests.push("computer_science");
+    }
+  }
+
+  // Check Oncampus details
+  if (user.oncampus) {
+    interests.push("computer_science");
+  }
+
+  // Fallback interest if none found
+  if (interests.length === 0) {
+    interests.push("web_dev");
+  }
+
+  const uniqueInterests = Array.from(new Set(interests));
+
+  return {
+    isCompleted: true,
+    interests: uniqueInterests,
+    goals,
+    experienceLevel,
+    weeklyCommitment: "regular",
+    source: "cross_app_onboarding",
+  };
+}

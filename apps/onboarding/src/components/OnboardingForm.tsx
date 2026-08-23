@@ -34,7 +34,6 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
   user,
   onUsernameAvailabilityChange,
 }) => {
-  const [fieldFocus, setFieldFocus] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(true);
   const [usernameChecking, setUsernameChecking] = useState(false);
 
@@ -57,7 +56,7 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
         );
         setUsernameAvailable(available);
         setUsernameChecking(false);
-      }, 1200);
+      }, 800);
       return () => clearTimeout(timeout);
     } else {
       setUsernameChecking(false);
@@ -112,178 +111,43 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
 
   const renderField = (field: OnboardingFieldConfig) => {
     const val = form[field.name] || (field.type === "multiselect" ? [] : "");
-    const fieldClasses = `w-full border rounded-lg px-4 py-2.5 focus:outline-none transition-all duration-300 focus:ring-2 focus:ring-red-300/20 text-base ${
-      fieldFocus
-        ? "border-red-400 shadow bg-white/80"
-        : "border-gray-200 bg-white/60 hover:bg-white/80"
-    }`;
 
     switch (field.type) {
       case "text":
       case "email":
       case "url":
-        return (
-          <div className="relative">
-            <input
-              type={field.type}
-              name={field.name}
-              value={val as string}
-              onChange={handleChange}
-              onFocus={() => setFieldFocus(true)}
-              onBlur={() => setFieldFocus(false)}
-              placeholder={field.placeholder}
-              className={fieldClasses}
-              autoComplete="off"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-              <div className="w-2 h-2 bg-red-500 rounded-full opacity-60" />
-            </div>
-          </div>
-        );
-
-      case "select":
-        return (
-          <div className="flex flex-wrap gap-3 justify-center">
-            {(field.options as FieldOption[] | undefined)?.map((opt) => {
-              const v = optionValue(opt);
-              const isSelected = val === v;
-              return (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() =>
-                    setForm((prev: Record<string, unknown>) => ({
-                      ...prev,
-                      [field.name]: v,
-                    }))
-                  }
-                  className={`px-4 py-1.5 rounded-md font-medium transition-all duration-300 border text-sm shadow focus:outline-none focus:ring-1 focus:ring-red-300/30 ${
-                    isSelected
-                      ? "bg-red-400 text-white border-red-400 hover:bg-red-500 hover:border-red-500"
-                      : "bg-white text-red-400 border-red-400 hover:bg-red-50 hover:border-red-500"
-                  }`}
-                  style={{ minWidth: "80px" }}
-                >
-                  {optionLabel(opt)}
-                </button>
-              );
-            })}
-          </div>
-        );
-
-      case "multiselect":
-        return (
-          <div className="flex flex-wrap gap-3 justify-center">
-            {(field.options as FieldOption[] | undefined)?.map((opt) => {
-              const v = optionValue(opt);
-              const isSelected = (val as string[]).includes(v);
-              return (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() => handleButtonClick(field.name, v)}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-all duration-300 border text-sm shadow focus:outline-none focus:ring-1 focus:ring-red-300/30 ${
-                    isSelected
-                      ? "bg-red-400 text-white border-red-400 hover:bg-red-500 hover:border-red-500"
-                      : "bg-white text-red-400 border-red-400 hover:bg-red-50 hover:border-red-500"
-                  }`}
-                  style={{ minWidth: "80px" }}
-                >
-                  <div className="flex items-center space-x-2">
-                    {isSelected && (
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    )}
-                    <span>{optionLabel(opt)}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        );
-
       case "tel":
         return (
-          <div className="relative">
-            <input
-              type="tel"
-              name={field.name}
-              value={val as string}
-              onChange={handleChange}
-              onFocus={() => setFieldFocus(true)}
-              onBlur={() => setFieldFocus(false)}
-              placeholder={field.placeholder}
-              className={fieldClasses}
-              autoComplete="off"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-              <svg
-                className="w-5 h-5 text-red-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-              </svg>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="space-y-5">
-      <div className="text-center mb-6">
-        {/* If only one field, show label/placeholder as before. If multiple, show a group label. */}
-        {currentFields.length === 1 ? (
-          <>
-            <h2 className="text-xl font-semibold text-gray-800 mb-1">
-              {currentFields[0].label}
-              {currentFields[0].required && (
-                <span className="text-red-400 ml-1">*</span>
+          <div className="space-y-2" key={field.name}>
+            <label className="block text-xs sm:text-sm font-bold text-[#10162F]">
+              {field.label}{" "}
+              {field.required ? (
+                <span className="text-[#FF4D4D]">*</span>
+              ) : (
+                <span className="text-slate-400 text-xs font-normal">
+                  (optional)
+                </span>
               )}
-            </h2>
-            {currentFields[0].placeholder && (
-              <p className="text-gray-500 text-base">
-                {currentFields[0].placeholder}
-              </p>
-            )}
-          </>
-        ) : (
-          <>
-            <h2 className="text-xl font-semibold text-gray-800 mb-1">
-              Social Profiles (optional)
-            </h2>
-            <p className="text-gray-500 text-base">
-              You can provide any or all of your social profiles below.
-            </p>
-          </>
-        )}
-      </div>
+            </label>
+            <div className="relative">
+              <input
+                type={field.type}
+                name={field.name}
+                value={val as string}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                className="w-full px-4 py-3 sm:py-3.5 bg-white border border-slate-200 hover:border-slate-800 focus:border-[#10162F] focus:ring-1 focus:ring-[#10162F] focus:outline-none rounded-xl text-xs sm:text-sm font-medium transition-all shadow-xs text-[#10162F] placeholder:text-slate-400"
+                autoComplete="off"
+              />
+            </div>
 
-      {/* Render all fields for this step */}
-      {currentFields.map((field) => (
-        <div key={field.name}>
-          {renderField(field)}
-          {/* Username availability logic, if needed */}
-          {field.checkAvailability && Boolean(form[field.name]) && (
-            <>
-              {usernameChecking && (
-                <div className="mt-2 p-2 bg-blue-50 border border-blue-100 rounded-lg text-blue-600 text-sm font-normal">
-                  <div className="flex items-center space-x-2">
+            {/* Live Username Availability Feedback */}
+            {field.checkAvailability && Boolean(form[field.name]) && (
+              <div className="pt-1">
+                {usernameChecking && (
+                  <div className="flex items-center gap-1.5 text-xs text-blue-600 font-medium">
                     <svg
-                      className="animate-spin w-4 h-4"
+                      className="animate-spin w-3.5 h-3.5"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -293,15 +157,13 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span>Checking username availability...</span>
+                    <span>Checking availability...</span>
                   </div>
-                </div>
-              )}
-              {!usernameChecking && !usernameAvailable && (
-                <div className="mt-2 p-2 bg-red-50 border border-red-100 rounded-lg text-red-500 text-sm font-normal">
-                  <div className="flex items-center space-x-2">
+                )}
+                {!usernameChecking && !usernameAvailable && (
+                  <div className="flex items-center gap-1.5 text-xs text-[#FF4D4D] font-semibold">
                     <svg
-                      className="w-4 h-4"
+                      className="w-3.5 h-3.5"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -311,15 +173,13 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span>Username not available</span>
+                    <span>Username is already taken</span>
                   </div>
-                </div>
-              )}
-              {!usernameChecking && usernameAvailable && (
-                <div className="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-green-600 text-sm font-normal">
-                  <div className="flex items-center space-x-2">
+                )}
+                {!usernameChecking && usernameAvailable && (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-semibold">
                     <svg
-                      className="w-4 h-4"
+                      className="w-3.5 h-3.5"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -331,12 +191,127 @@ const OnboardingForm: React.FC<OnboardingFormProps> = ({
                     </svg>
                     <span>Username is available!</span>
                   </div>
-                </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+
+      case "select":
+        return (
+          <div className="space-y-3" key={field.name}>
+            <h2 className="text-base sm:text-lg font-bold text-[#10162F]">
+              {field.label}{" "}
+              {field.required ? (
+                <span className="text-[#FF4D4D]">*</span>
+              ) : (
+                <span className="text-slate-400 text-xs font-normal">
+                  (optional)
+                </span>
               )}
-            </>
-          )}
-        </div>
-      ))}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+              {(field.options as FieldOption[] | undefined)?.map((opt) => {
+                const v = optionValue(opt);
+                const isSelected = val === v;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() =>
+                      setForm((prev: Record<string, unknown>) => ({
+                        ...prev,
+                        [field.name]: v,
+                      }))
+                    }
+                    className={`px-3.5 sm:px-4 py-3 sm:py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xl shadow-xs cursor-pointer flex items-center justify-between gap-2 ${
+                      isSelected
+                        ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
+                        : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
+                    }`}
+                  >
+                    <span>{optionLabel(opt)}</span>
+                    {isSelected && (
+                      <svg
+                        className="w-4 h-4 text-[#FF4D4D] shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      case "multiselect":
+        return (
+          <div className="space-y-3" key={field.name}>
+            <h2 className="text-base sm:text-lg font-bold text-[#10162F]">
+              {field.label}{" "}
+              {field.required ? (
+                <span className="text-[#FF4D4D]">*</span>
+              ) : (
+                <span className="text-slate-400 text-xs font-normal">
+                  (optional)
+                </span>
+              )}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+              {(field.options as FieldOption[] | undefined)?.map((opt) => {
+                const v = optionValue(opt);
+                const isSelected = (val as string[]).includes(v);
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => handleButtonClick(field.name, v)}
+                    className={`px-3.5 sm:px-4 py-3 sm:py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xl shadow-xs cursor-pointer flex items-center justify-between gap-2 ${
+                      isSelected
+                        ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
+                        : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
+                    }`}
+                  >
+                    <span>{optionLabel(opt)}</span>
+                    {isSelected && (
+                      <svg
+                        className="w-4 h-4 text-[#FF4D4D] shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="space-y-5">
+      {currentFields.map((field) => renderField(field))}
     </div>
   );
 };

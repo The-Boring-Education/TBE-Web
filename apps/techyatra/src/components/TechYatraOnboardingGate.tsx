@@ -1,6 +1,6 @@
 "use client";
 
-import { LoadingSpinner } from "@tbe/components";
+import { PersonalizationLoader } from "@tbe/components";
 import { useProductOnboardingGate } from "@tbe/hooks";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
@@ -13,7 +13,7 @@ export function TechYatraOnboardingGate() {
     return `${window.location.origin}/`;
   }, []);
 
-  const { isChecking } = useProductOnboardingGate({
+  const { isChecking, isActivating } = useProductOnboardingGate({
     pathname,
     publicRoutes: ["/", "/auth/callback"],
     productId: "tech-yatra",
@@ -24,11 +24,13 @@ export function TechYatraOnboardingGate() {
         ?.tyOnboarded === true,
   });
 
-  if (isChecking) {
+  if (isActivating) {
     return (
-      <div className="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <PersonalizationLoader
+        title="Setting up your Tech Yatra roadmaps..."
+        subtitle="Personalizing full-stack & systems learning paths"
+        fullScreen
+      />
     );
   }
 
