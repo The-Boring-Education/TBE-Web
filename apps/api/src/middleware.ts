@@ -13,14 +13,14 @@ const SECURITY_HEADERS = {
 
 const ALLOWED_METHODS = "GET, POST, PUT, DELETE, PATCH, OPTIONS";
 const ALLOWED_HEADERS =
-  "Content-Type, Authorization, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control, x-admin-secret";
+  "Content-Type, Authorization, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version, cache, Cache-Control, x-admin-secret, x-agents-env";
 
 /**
  * Checks if the origin is allowed based on known TBE domain patterns.
  * Allows:
  * - localhost / 127.0.0.1 (development)
  * - *.theboringeducation.com (production domains)
- * - *-tbe.vercel.app (Vercel preview deployments)
+ * - TBE Vercel preview deployments (tbe-*...-tbe.vercel.app)
  */
 function resolveOrigin(request: NextRequest): string | undefined {
   const origin = request.headers.get("origin");
@@ -42,8 +42,10 @@ function resolveOrigin(request: NextRequest): string | undefined {
       return origin;
     }
 
-    // Allow Vercel preview deployments (*-tbe.vercel.app)
-    if (hostname.endsWith("-tbe.vercel.app")) {
+    // Allow TBE Vercel preview deployments only. Requiring both the `tbe-` prefix
+    // and the `-tbe.vercel.app` team-slug suffix scopes this to the TBE namespace
+    // instead of any attacker-created `evil-tbe.vercel.app` project.
+    if (hostname.startsWith("tbe-") && hostname.endsWith("-tbe.vercel.app")) {
       return origin;
     }
 

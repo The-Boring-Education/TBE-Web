@@ -111,15 +111,8 @@ export const useUpdateQuiz = () => {
   });
 };
 
-import axios from "axios";
-
-import {
-  getAgentsApiBaseForEnv,
-  getStoredAgentsEnv,
-} from "@/hooks/useEnvironment";
-
-// Get Agents API base URL based on current AGENTS environment
-const getAgentsApiBase = () => getAgentsApiBaseForEnv();
+import { getStoredAgentsEnv } from "@/hooks/useEnvironment";
+import { agentsClient } from "@/lib/agentsClient";
 
 export type GenerateQuizPayload = {
   topic: string;
@@ -130,37 +123,27 @@ export type GenerateQuizPayload = {
 };
 
 export async function generateQuiz(payload: GenerateQuizPayload) {
-  const agentsBase = getAgentsApiBase();
   const env = getStoredAgentsEnv();
 
-  const res = await axios.post(
-    `${agentsBase}/quiz/generate`,
-    {
-      ...payload,
-      environment: env, // Pass environment info to Agents
-    },
-    {
-      headers: { "Content-Type": "application/json" },
-    },
-  );
+  const res = await agentsClient.post("/quiz/generate", {
+    ...payload,
+    environment: env, // Pass environment info to Agents
+  });
   return res.data;
 }
 
 export async function validateQuiz(quiz: any) {
-  const agentsBase = getAgentsApiBase();
-  const res = await axios.post(
-    `${agentsBase}/quiz/validate`,
+  const res = await agentsClient.post<{ ok: boolean; message: string }>(
+    "/quiz/validate",
     { quiz },
-    { headers: { "Content-Type": "application/json" } },
   );
-  return res.data as { ok: boolean; message: string };
+  return res.data;
 }
 
 // Removed upload via Agents; uploads now go directly to Platform API using axios instance
 
 export async function getQuizTopics(): Promise<string[]> {
-  const agentsBase = getAgentsApiBase();
-  const res = await axios.get(`${agentsBase}/quiz/topics`);
+  const res = await agentsClient.get<{ topics?: string[] }>("/quiz/topics");
   return (res.data?.topics || []) as string[];
 }
 
@@ -169,8 +152,11 @@ export async function pingAgents(): Promise<{
   service: string;
   version?: string;
 }> {
-  const agentsBase = getAgentsApiBase();
-  const res = await axios.get(`${agentsBase}/ping`);
+  const res = await agentsClient.get<{
+    ok: boolean;
+    service: string;
+    version?: string;
+  }>("/ping");
   return res.data;
 }
 
@@ -184,23 +170,22 @@ export type PendingQuiz = {
 };
 
 export async function listPendingQuizzes(): Promise<PendingQuiz[]> {
-  const agentsBase = getAgentsApiBase();
-  const res = await axios.get(`${agentsBase}/quiz/pending`);
+  const res = await agentsClient.get<{ pending?: PendingQuiz[] }>(
+    "/quiz/pending",
+  );
   return (res.data?.pending || []) as PendingQuiz[];
 }
 
 export async function deletePendingQuiz(filename: string): Promise<boolean> {
-  const agentsBase = getAgentsApiBase();
-  const res = await axios.delete(
-    `${agentsBase}/quiz/pending/${encodeURIComponent(filename)}`,
+  const res = await agentsClient.delete<{ ok?: boolean }>(
+    `/quiz/pending/${encodeURIComponent(filename)}`,
   );
   return !!res.data?.ok;
 }
 
 export async function getPendingQuizContent(filename: string): Promise<any> {
-  const agentsBase = getAgentsApiBase();
-  const res = await axios.get(
-    `${agentsBase}/quiz/pending/${encodeURIComponent(filename)}/content`,
+  const res = await agentsClient.get(
+    `/quiz/pending/${encodeURIComponent(filename)}/content`,
   );
   return res.data;
 }

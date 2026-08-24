@@ -7,6 +7,7 @@ import {
   upsertAptitudeStudyGuideToDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { verifyAdminSecret } from "@/middleware/adminSecret";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -73,12 +74,7 @@ const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
 // POST /api/v1/interview-prep/aptitude/study-guide
 // Protected by x-admin-secret header
 const handleUpload = async (req: NextApiRequest, res: NextApiResponse) => {
-  const adminSecret = req.headers["x-admin-secret"];
-  if (adminSecret !== process.env.ADMIN_SECRET) {
-    return res
-      .status(apiStatusCodes.UNAUTHORIZED)
-      .json(sendAPIResponse({ status: false, message: "Unauthorized" }));
-  }
+  if (!verifyAdminSecret(req, res)) return;
 
   const { topic, content } = req.body as { topic: string; content: string };
 

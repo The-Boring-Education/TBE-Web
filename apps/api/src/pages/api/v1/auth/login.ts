@@ -10,7 +10,11 @@ const isAllowedRedirect = (url: string): boolean => {
     const { hostname } = new URL(url);
     if (hostname === "localhost" || hostname === "127.0.0.1") return true;
     if (hostname.endsWith(".theboringeducation.com")) return true;
-    if (hostname.endsWith("-tbe.vercel.app")) return true;
+    // TBE Vercel previews only: require both the `tbe-` prefix and the `-tbe`
+    // team-slug suffix so an attacker-created `evil-tbe.vercel.app` can't be used
+    // as an OAuth redirect target.
+    if (hostname.startsWith("tbe-") && hostname.endsWith("-tbe.vercel.app"))
+      return true;
 
     const allowed = (process.env.ALLOWED_AUTH_ORIGINS || "")
       .split(",")

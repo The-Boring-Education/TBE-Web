@@ -18,7 +18,10 @@
     "migrate": "tsx scripts/migrate-content.ts",
     "seed:subscription-plans": "tsx scripts/seed-subscription-plans.ts",
     "seed:subscription-plans:dev": "tsx scripts/seed-subscription-plans.ts --env development",
-    "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env production --yes"
+    "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env production --yes",
+    "admin:add": "tsx scripts/manage-admin.ts add",
+    "admin:list": "tsx scripts/manage-admin.ts list",
+    "admin:deactivate": "tsx scripts/manage-admin.ts deactivate"
   },
   "dependencies": {
     "@google-analytics/data": "^5.1.0",

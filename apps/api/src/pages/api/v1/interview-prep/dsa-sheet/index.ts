@@ -13,6 +13,7 @@ import {
   parseDsaSheetCreateBody,
   parseDsaSheetGetQuery,
 } from "@/lib/validation";
+import { matchesAdminSecret } from "@/middleware/adminSecret";
 import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
@@ -108,11 +109,7 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Admin dashboard (tbe-admin) lists the full DSA sheet via platform API with
   // x-admin-secret — bypass freemium caps so answers and pagination match DB.
-  const adminHeader = req.headers["x-admin-secret"];
-  const isAdminListRequest =
-    typeof adminHeader === "string" &&
-    Boolean(process.env.ADMIN_SECRET) &&
-    adminHeader === process.env.ADMIN_SECRET;
+  const isAdminListRequest = matchesAdminSecret(req);
 
   // Check subscription status for freemium gating.
   // Pass productType so the Subscription short-circuit in

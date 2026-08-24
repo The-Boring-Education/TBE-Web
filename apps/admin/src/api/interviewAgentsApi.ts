@@ -1,14 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "sonner";
 
+import { agentsClient } from "@/lib/agentsClient";
 import api from "@/lib/axios";
-
-const AGENTS_API_BASE_RAW = (import.meta as any).env?.VITE_AGENTS_API_BASE;
-const AGENTS_API_BASE =
-  (AGENTS_API_BASE_RAW && AGENTS_API_BASE_RAW.trim().length > 0
-    ? AGENTS_API_BASE_RAW.trim()
-    : undefined) || "http://localhost:8000/api/v1";
 
 // Types
 export interface InterviewGenerationSession {
@@ -54,19 +48,13 @@ export async function createInterviewSheetFromMDX(payload: {
   technology?: string;
   save?: boolean;
 }) {
-  const res = await axios.post(
-    `${AGENTS_API_BASE}/interview/create-sheet`,
-    payload,
-    {
-      headers: { "Content-Type": "application/json" },
-    },
-  );
-  return res.data as {
+  const res = await agentsClient.post<{
     ok: boolean;
     message: string;
     output_file?: string;
     sheet?: any;
-  };
+  }>(`/interview/create-sheet`, payload);
+  return res.data;
 }
 
 // Helper function to validate session data
@@ -123,11 +111,10 @@ export const enhancedInterviewApi = {
   startBulkGeneration: async (
     payload: BulkGenerationRequest,
   ): Promise<{ sessionIds: string[]; message: string }> => {
-    const response = await axios.post(
-      `${AGENTS_API_BASE}/interview/bulk-generate`,
-      payload,
-      { headers: { "Content-Type": "application/json" } },
-    );
+    const response = await agentsClient.post<{
+      sessionIds: string[];
+      message: string;
+    }>(`/interview/bulk-generate`, payload);
     return response.data;
   },
 
@@ -141,11 +128,10 @@ export const enhancedInterviewApi = {
     difficulty: "Easy" | "Medium" | "Hard" | "Mixed";
     generateAnswers: boolean;
   }): Promise<{ sessionId: string; message: string }> => {
-    const response = await axios.post(
-      `${AGENTS_API_BASE}/interview/generate-topic`,
-      payload,
-      { headers: { "Content-Type": "application/json" } },
-    );
+    const response = await agentsClient.post<{
+      sessionId: string;
+      message: string;
+    }>(`/interview/generate-topic`, payload);
     return response.data;
   },
 
@@ -153,16 +139,16 @@ export const enhancedInterviewApi = {
   getSessionProgress: async (
     sessionId: string,
   ): Promise<InterviewGenerationSession> => {
-    const response = await axios.get(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/progress`,
+    const response = await agentsClient.get<InterviewGenerationSession>(
+      `/interview/session/${sessionId}/progress`,
     );
     return response.data;
   },
   // Get single session details
   getSession: async (sessionId: string): Promise<any> => {
     try {
-      const response = await axios.get(
-        `${AGENTS_API_BASE}/interview/session/${sessionId}/output`,
+      const response = await agentsClient.get<any>(
+        `/interview/session/${sessionId}/output`,
       );
 
       // Handle wrapped response structure
@@ -183,16 +169,17 @@ export const enhancedInterviewApi = {
     status?: string,
   ): Promise<InterviewGenerationSession[]> => {
     const params = status ? { status } : {};
-    const response = await axios.get(`${AGENTS_API_BASE}/interview/sessions`, {
-      params,
-    });
+    const response = await agentsClient.get<InterviewGenerationSession[]>(
+      `/interview/sessions`,
+      { params },
+    );
     return response.data;
   },
 
   // Cancel a session
   cancelSession: async (sessionId: string): Promise<{ message: string }> => {
-    const response = await axios.post(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/cancel`,
+    const response = await agentsClient.post<{ message: string }>(
+      `/interview/session/${sessionId}/cancel`,
     );
     return response.data;
   },
@@ -201,9 +188,10 @@ export const enhancedInterviewApi = {
   retrySession: async (
     sessionId: string,
   ): Promise<{ sessionId: string; message: string }> => {
-    const response = await axios.post(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/retry`,
-    );
+    const response = await agentsClient.post<{
+      sessionId: string;
+      message: string;
+    }>(`/interview/session/${sessionId}/retry`);
     return response.data;
   },
 
@@ -224,8 +212,8 @@ export const enhancedInterviewApi = {
 
   // Delete a session
   deleteSession: async (sessionId: string): Promise<{ message: string }> => {
-    const response = await axios.delete(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}`,
+    const response = await agentsClient.delete<{ message: string }>(
+      `/interview/session/${sessionId}`,
     );
     return response.data;
   },
@@ -241,9 +229,16 @@ export const enhancedInterviewApi = {
       roadmaps: string[];
     }>
   > => {
-    const response = await axios.get(
-      `${AGENTS_API_BASE}/interview/topic-templates`,
-    );
+    const response = await agentsClient.get<
+      Array<{
+        name: string;
+        description: string;
+        agentTypes: string[];
+        suggestedQuestionCount: number;
+        difficulty: string;
+        roadmaps: string[];
+      }>
+    >(`/interview/topic-templates`);
     return response.data;
   },
 
@@ -256,9 +251,14 @@ export const enhancedInterviewApi = {
       technologies: string[];
     }>
   > => {
-    const response = await axios.get(
-      `${AGENTS_API_BASE}/interview/roadmap-suggestions`,
-    );
+    const response = await agentsClient.get<
+      Array<{
+        name: string;
+        description: string;
+        topics: string[];
+        technologies: string[];
+      }>
+    >(`/interview/roadmap-suggestions`);
     return response.data;
   },
 
@@ -267,8 +267,8 @@ export const enhancedInterviewApi = {
     sessionId: string,
     sheetData: any,
   ): Promise<{ message: string }> => {
-    const response = await axios.put(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/sheet`,
+    const response = await agentsClient.put<{ message: string }>(
+      `/interview/session/${sessionId}/sheet`,
       { sheetData },
     );
     return response.data;
