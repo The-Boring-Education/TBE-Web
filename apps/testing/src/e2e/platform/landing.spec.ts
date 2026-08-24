@@ -34,6 +34,20 @@ test.describe("Platform Landing Page", () => {
     expect(await productCTAs.count()).toBeGreaterThan(0);
   });
 
+  test("updates DSA questions when changing pattern tabs", async ({
+    platformPage: page,
+  }) => {
+    await page.goto("/");
+
+    const dsaShowcase = page.locator("#showcase-dsayatra");
+    await expect(dsaShowcase.getByText("Two Sum Pattern")).toBeVisible();
+
+    await dsaShowcase.getByRole("button", { name: "Two Pointers" }).click();
+
+    await expect(dsaShowcase.getByText("Valid Palindrome")).toBeVisible();
+    expect(await dsaShowcase.getByText("Two Sum Pattern").count()).toBe(0);
+  });
+
   test("renders community and testimonial sections", async ({
     platformPage: page,
   }) => {
