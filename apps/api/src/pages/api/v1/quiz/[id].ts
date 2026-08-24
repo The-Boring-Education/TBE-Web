@@ -7,6 +7,7 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
+import { ensureAdminAccess } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -23,10 +24,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       case "GET":
         return handleGetQuiz(id, req, res);
 
-      case "PUT":
+      case "PUT": {
+        const isAdmin = await ensureAdminAccess(req, res);
+        if (!isAdmin) return;
         return handleUpdateQuiz(id, req, res);
-      case "POST":
+      }
+      case "POST": {
+        const isAdmin = await ensureAdminAccess(req, res);
+        if (!isAdmin) return;
         return handleAppendQuestions(id, req, res);
+      }
 
       default:
         return res
@@ -52,12 +59,9 @@ async function handleGetQuiz(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { includeInactive, shuffle, admin } = req.query;
+  const { includeInactive, shuffle } = req.query;
   const includeInactiveQuizzes =
     typeof includeInactive === "string" ? includeInactive === "true" : false;
-
-  const adminParam = Array.isArray(admin) ? admin[0] : admin;
-  const isAdminFull = adminParam === "true";
 
   // Check if shuffling should be disabled
   const shouldShuffle = shuffle !== "false" && shuffle !== "0"; // Default to true for backward compatibility
@@ -68,32 +72,6 @@ async function handleGetQuiz(
     return res
       .status(404)
       .json(sendAPIResponse({ status: false, message: error || "Not found" }));
-  }
-
-  // Full document for admin / modify flows (all questions, includes difficulty)
-  if (isAdminFull) {
-    const allQuestions = data.questions || [];
-    const adminQuestions = allQuestions.map((question: any) => ({
-      question: question.question,
-      options: question.options,
-      correctAnswer: question.correctAnswer,
-      explanation: question.explanation,
-      detailedExplanation: question.detailedExplanation,
-      difficulty: question.difficulty,
-    }));
-
-    const adminData = {
-      _id: data._id,
-      categoryName: data.categoryName,
-      categoryDescription: data.categoryDescription,
-      categoryIcon: data.categoryIcon,
-      isActive: data.isActive,
-      questions: adminQuestions,
-    };
-
-    return res
-      .status(200)
-      .json(sendAPIResponse({ status: true, data: adminData }));
   }
 
   // Get all questions

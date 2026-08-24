@@ -49,4 +49,21 @@ describe("Admin Cache Service", () => {
     invalidateAdminCache();
     expect(isAdminEmailCached("admin@example.com")).toBe(false);
   });
+
+  it("resolves a script-created admin after cache invalidation", async () => {
+    // Simulate the initial (empty) admin set.
+    mockGetActiveAdminEmailsFromDB.mockResolvedValueOnce({ data: [] });
+    await expect(isAdminEmail("new-admin@example.com")).resolves.toBe(false);
+
+    // The admin:add script writes directly to the adminusers collection.
+    // After invalidation, the next lookup reloads from the DB and the new
+    // admin resolves as authorized.
+    mockGetActiveAdminEmailsFromDB.mockResolvedValueOnce({
+      data: ["new-admin@example.com"],
+    });
+    invalidateAdminCache();
+
+    await expect(isAdminEmail("new-admin@example.com")).resolves.toBe(true);
+    expect(isAdminEmailCached("new-admin@example.com")).toBe(true);
+  });
 });

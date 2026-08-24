@@ -1,14 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import axios from "axios";
 import { toast } from "sonner";
 
+import { agentsClient } from "@/lib/agentsClient";
 import api from "@/lib/axios";
 import { logApiError, logApiSuccess } from "@/lib/logInterceptor";
-
-const AGENTS_API_BASE =
-  (import.meta as any).env?.VITE_AGENTS_API_BASE ||
-  "http://localhost:8000/api/v1";
 
 // Types
 export interface IResource {
@@ -154,8 +150,8 @@ export const interviewSheetModifyApi = {
 
   // Get complete sheet with all questions from session
   getSheet: async (sessionId: string): Promise<ISheet> => {
-    const response = await axios.get(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/output`,
+    const response = await agentsClient.get<any>(
+      `/interview/session/${sessionId}/output`,
     );
 
     // Handle both response structures
@@ -197,10 +193,12 @@ export const interviewSheetModifyApi = {
     skip = 0,
     limit = 100,
   ): Promise<{ questions: IQuestion[]; total: number }> => {
-    const response = await axios.get(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/questions`,
-      { params: { skip, limit } },
-    );
+    const response = await agentsClient.get<{
+      questions: IQuestion[];
+      total: number;
+    }>(`/interview/session/${sessionId}/questions`, {
+      params: { skip, limit },
+    });
     return response.data;
   },
 
@@ -209,8 +207,8 @@ export const interviewSheetModifyApi = {
     sessionId: string,
     questionId: string,
   ): Promise<IQuestion> => {
-    const response = await axios.get(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/questions/${questionId}`,
+    const response = await agentsClient.get<IQuestion>(
+      `/interview/session/${sessionId}/questions/${questionId}`,
     );
     return response.data;
   },
@@ -221,10 +219,9 @@ export const interviewSheetModifyApi = {
     questionId: string,
     updates: Partial<IQuestion>,
   ) => {
-    const response = await axios.put(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/questions/${questionId}`,
+    const response = await agentsClient.put(
+      `/interview/session/${sessionId}/questions/${questionId}`,
       updates,
-      { headers: { "Content-Type": "application/json" } },
     );
     return response.data;
   },
@@ -234,9 +231,10 @@ export const interviewSheetModifyApi = {
     sessionId: string,
     questionId: string,
   ): Promise<{ message: string; remaining_questions: number }> => {
-    const response = await axios.delete(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/questions/${questionId}`,
-    );
+    const response = await agentsClient.delete<{
+      message: string;
+      remaining_questions: number;
+    }>(`/interview/session/${sessionId}/questions/${questionId}`);
     return response.data;
   },
 
@@ -245,18 +243,17 @@ export const interviewSheetModifyApi = {
     sessionId: string,
     question: Omit<IQuestion, "id" | "created_at" | "updated_at">,
   ): Promise<{ question: IQuestion; total_questions: number }> => {
-    const response = await axios.post(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/questions`,
-      question,
-      { headers: { "Content-Type": "application/json" } },
-    );
+    const response = await agentsClient.post<{
+      question: IQuestion;
+      total_questions: number;
+    }>(`/interview/session/${sessionId}/questions`, question);
     return response.data;
   },
 
   // Save sheet to local JSON file
   saveSheetLocally: async (sessionId: string): Promise<ISheet> => {
-    const response = await api.post(
-      `${AGENTS_API_BASE}/interview/session/${sessionId}/output`,
+    const response = await agentsClient.post<ISheet>(
+      `/interview/session/${sessionId}/output`,
     );
     return response.data;
   },

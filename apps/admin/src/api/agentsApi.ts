@@ -1,8 +1,4 @@
-import axios from "axios";
-
-import { getAgentsApiBaseForEnv } from "@/hooks/useEnvironment";
-
-const getBase = () => getAgentsApiBaseForEnv();
+import { agentsClient } from "@/lib/agentsClient";
 
 export type QuizSessionInfo = {
   session_id: string;
@@ -19,7 +15,11 @@ export async function listQuizSessions(): Promise<{
   sessions: QuizSessionInfo[];
   count: number;
 }> {
-  const res = await axios.get(`${getBase()}/quiz/sessions`);
+  const res = await agentsClient.get<{
+    status: string;
+    sessions: QuizSessionInfo[];
+    count: number;
+  }>("/quiz/sessions");
   return res.data;
 }
 
@@ -39,14 +39,18 @@ export type QuizSessionProgress = {
 export async function getQuizSessionProgress(
   sessionId: string,
 ): Promise<QuizSessionProgress> {
-  const res = await axios.get(`${getBase()}/quiz/progress/${sessionId}`);
+  const res = await agentsClient.get<QuizSessionProgress>(
+    `/quiz/progress/${sessionId}`,
+  );
   return res.data;
 }
 
 export async function getQuizSessionLogs(
   sessionId: string,
 ): Promise<{ session_id: string; logs: any[] }> {
-  const res = await axios.get(`${getBase()}/quiz/logs/${sessionId}`);
+  const res = await agentsClient.get<{ session_id: string; logs: any[] }>(
+    `/quiz/logs/${sessionId}`,
+  );
   return res.data;
 }
 
@@ -55,7 +59,11 @@ export async function pingAgents(): Promise<{
   service: string;
   version?: string;
 }> {
-  const res = await axios.get(`${getBase()}/ping`);
+  const res = await agentsClient.get<{
+    ok: boolean;
+    service: string;
+    version?: string;
+  }>("/ping");
   return res.data;
 }
 
@@ -67,14 +75,17 @@ export type ActiveSessionsResponse = {
 };
 
 export async function listActiveSessions(): Promise<ActiveSessionsResponse> {
-  const res = await axios.get(`${getBase()}/sessions/active`);
+  const res =
+    await agentsClient.get<ActiveSessionsResponse>("/sessions/active");
   return res.data;
 }
 
 export async function getSessionDetail(
   sessionId: string,
 ): Promise<{ ok: boolean; data: any }> {
-  const res = await axios.get(`${getBase()}/sessions/detail/${sessionId}`);
+  const res = await agentsClient.get<{ ok: boolean; data: any }>(
+    `/sessions/detail/${sessionId}`,
+  );
   return res.data;
 }
 
@@ -82,29 +93,37 @@ export async function getSessionLogs(
   sessionId: string,
   limit: number = 200,
 ): Promise<{ ok: boolean; session_id: string; logs: any[] }> {
-  const res = await axios.get(`${getBase()}/sessions/logs/${sessionId}`, {
-    params: { limit },
-  });
+  const res = await agentsClient.get<{
+    ok: boolean;
+    session_id: string;
+    logs: any[];
+  }>(`/sessions/logs/${sessionId}`, { params: { limit } });
   return res.data;
 }
 
 export async function resumeSession(
   sessionId: string,
 ): Promise<{ ok: boolean; result?: any }> {
-  const res = await axios.post(`${getBase()}/sessions/resume/${sessionId}`);
+  const res = await agentsClient.post<{ ok: boolean; result?: any }>(
+    `/sessions/resume/${sessionId}`,
+  );
   return res.data;
 }
 
 export async function deleteSessionLogs(
   sessionId: string,
 ): Promise<{ ok: boolean; message: string }> {
-  const res = await axios.delete(`${getBase()}/sessions/logs/${sessionId}`);
+  const res = await agentsClient.delete<{ ok: boolean; message: string }>(
+    `/sessions/logs/${sessionId}`,
+  );
   return res.data;
 }
 
 export async function deleteSession(
   sessionId: string,
 ): Promise<{ ok: boolean; removed: any }> {
-  const res = await axios.delete(`${getBase()}/sessions/${sessionId}`);
+  const res = await agentsClient.delete<{ ok: boolean; removed: any }>(
+    `/sessions/${sessionId}`,
+  );
   return res.data;
 }

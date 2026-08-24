@@ -22,8 +22,12 @@ function isAllowedOrigin(origin: string): boolean {
       return true;
     }
 
-    // Allow Vercel preview deployments (*-tbe.vercel.app)
-    if (hostname.endsWith("-tbe.vercel.app")) {
+    // Allow TBE Vercel preview deployments only. These follow the team's
+    // `tbe-<project>-...-tbe.vercel.app` naming (the trailing `-tbe` is the team
+    // slug). Requiring BOTH the `tbe-` prefix and the `-tbe.vercel.app` suffix
+    // scopes this to the TBE namespace, instead of the previous suffix-only match
+    // that also allowed any attacker-created `evil-tbe.vercel.app` project.
+    if (hostname.startsWith("tbe-") && hostname.endsWith("-tbe.vercel.app")) {
       return true;
     }
 
@@ -59,6 +63,7 @@ export const cors = initMiddleware(
 
       // Custom headers
       "x-admin-secret",
+      "x-agents-env",
       "cache",
 
       // Browser security headers (Client Hints)

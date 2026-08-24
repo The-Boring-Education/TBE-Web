@@ -17,11 +17,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
-// Constants for Agents API updates
-const AGENTS_API_BASE =
-  (import.meta as any).env?.VITE_AGENTS_API_BASE ||
-  "http://localhost:8000/api/v1";
-
 interface InterviewSheetReviewerProps {
   id: string | null;
   type: "session" | "sheet" | null;
