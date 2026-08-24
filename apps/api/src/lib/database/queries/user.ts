@@ -108,7 +108,10 @@ const onboardUserToDB = async (
       isOnboarded: true,
     };
 
-    const existingUser = await User.findById(userId);
+    const existingUserDoc = await User.findById(userId);
+    const existingUser = existingUserDoc?.toObject
+      ? existingUserDoc.toObject()
+      : existingUserDoc;
     const origin = (from || extraData?.from || existingUser?.from || "")
       .toLowerCase()
       .replace(/[-_]/g, "");
@@ -160,9 +163,7 @@ const onboardUserToDB = async (
           "JavaScript",
         targetTopics:
           extraData.targetTopics || existingUser?.dsaYatra?.targetTopics || [],
-        ...(existingUser?.dsaYatra?.toObject
-          ? existingUser.dsaYatra.toObject()
-          : existingUser?.dsaYatra || {}),
+        ...(existingUser?.dsaYatra || {}),
         ...(extraData.dsaYatra || {}),
         dyOnboarded: isDsa,
       };
@@ -190,9 +191,7 @@ const onboardUserToDB = async (
             [],
           ...(extraData.prepYatra?.preferences || {}),
         },
-        ...(existingUser?.prepYatra?.toObject
-          ? existingUser.prepYatra.toObject()
-          : existingUser?.prepYatra || {}),
+        ...(existingUser?.prepYatra || {}),
         ...(extraData.prepYatra || {}),
         pyOnboarded: isPrep,
       };
@@ -210,9 +209,7 @@ const onboardUserToDB = async (
           existingUser?.oncampus?.experienceLevel ||
           "Fresher (0-1 yr)",
         offCampus: true,
-        ...(existingUser?.oncampus?.toObject
-          ? existingUser.oncampus.toObject()
-          : existingUser?.oncampus || {}),
+        ...(existingUser?.oncampus || {}),
         ...(extraData.oncampus || {}),
         onboardingCompleted: isOncampus,
       };
@@ -220,9 +217,7 @@ const onboardUserToDB = async (
       // Populate Tech Yatra subdoc
       updateData.techYatra = {
         focus: extraData.focus || existingUser?.techYatra?.focus || "roadmaps",
-        ...(existingUser?.techYatra?.toObject
-          ? existingUser.techYatra.toObject()
-          : existingUser?.techYatra || {}),
+        ...(existingUser?.techYatra || {}),
         ...(extraData.techYatra || {}),
         tyOnboarded: isTech,
       };
@@ -233,9 +228,7 @@ const onboardUserToDB = async (
           extraData.experienceLevel ||
           existingUser?.resumeYatra?.experienceBand ||
           "student",
-        ...(existingUser?.resumeYatra?.toObject
-          ? existingUser.resumeYatra.toObject()
-          : existingUser?.resumeYatra || {}),
+        ...(existingUser?.resumeYatra || {}),
         ...(extraData.resumeYatra || {}),
         ryOnboarded: isResume,
       };
