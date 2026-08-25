@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking Roadmap 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP / STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 10px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1px 0 14px 18px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .step-desc strong {
+            color: var(--dark);
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── LINK CHIPS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        .yt-link.plain::before {
+            content: '✔';
+            font-size: 8px;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS ROW ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .resource-viewer {
+                padding: 0;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .print-bar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px 16px;
+                margin-bottom: 0;
+                background: #1a1a1a;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+                margin: 0;
+            }
+
+            .page + .page {
+                margin-top: 4px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 16px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 16px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .cover-quote-block {
+                padding: 20px 18px;
+                max-width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+            }
+
+            .page-body {
+                padding: 16px 16px;
+                overflow: visible;
+            }
+
+            .page-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 14px;
+            }
+
+            .step-content {
+                padding: 1px 0 12px 10px;
+            }
+
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .tip-block {
+                padding: 10px 12px;
+            }
+
+            .tip-text {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                min-height: 297mm;
+            }
+
+            .inner-page {
+                min-height: 297mm;
+            }
+
+            .step,
+            .resource-card,
+            .tip-block,
+            .cta-block,
+            .social-card,
+            .stack-table tr,
+            .check-item,
+            .cover-quote-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" data-action="print">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">Break in, then lock it down</div>
+
+                <h1 class="cover-title">
+                    The Ethical<br>Hacking<span> Roadmap</span><br>2026
+                </h1>
+
+                <p class="cover-subtitle">
+                    A structured, phase-by-phase path from networking fundamentals to penetration testing and bug bounty — the exact skill order security teams and CTF players actually build in, not a random list of tools.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "You can't defend what you don't understand how to attack. Ethical hacking isn't about memorizing tool commands — it's about understanding systems well enough to know exactly where they'll break."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">30</div>
+                        <div class="stat-label">Roadmap milestones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Learning phases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">12+</div>
+                        <div class="stat-label">Months, realistic pace</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-label">Legal, lab-based practice</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — FOUNDATIONS (1–5) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 01 · Foundations</div>
+                <h2 class="section-title">Everything Downstream Depends on These Basics</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 1 · Non-negotiable base layer</div>
+                            <div class="step-heading">Networking Fundamentals</div>
+                            <div class="step-desc">Almost every attack and every defense sits on top of networking concepts. Get comfortable with the <strong>OSI and TCP/IP models</strong>, IP addressing and subnetting, DNS, DHCP, routing, and how HTTP/HTTPS actually move data. Without this, tool output from scanners and proxies is just noise you can't interpret.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start here</span>
+                                <span class="tag">4–6 weeks</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">OSI + TCP/IP models cold</a>
+                                <a class="yt-link plain">Subnetting until it's automatic</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 2 · Your daily driver</div>
+                            <div class="step-heading">Linux & the Command Line</div>
+                            <div class="step-desc">Nearly every security tool ships Linux-first. Get fluent with the filesystem, permissions, process management, package managers, and shell scripting in Bash. Install a distro like <strong>Kali Linux</strong> or <strong>Parrot OS</strong> and live in the terminal — GUI-only comfort will slow you down at every later stage.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Daily practice</span>
+                                <span class="tag">Kali / Parrot OS</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Filesystem, permissions, processes</a>
+                                <a class="yt-link plain">Basic Bash scripting</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 3 · Read code before you break it</div>
+                            <div class="step-heading">Programming & Scripting Basics</div>
+                            <div class="step-desc">You don't need to be a software engineer, but you do need to <strong>read and write</strong> code. Start with Python for automation and scripting, and pick up enough Bash for one-liners. Understanding how code actually executes is what separates running a tool from understanding what it's doing.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Python first</span>
+                                <span class="tag">Bash one-liners</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Python fundamentals + scripting</a>
+                                <a class="yt-link plain">Automate a repetitive task end to end</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 4 · Know your own house</div>
+                            <div class="step-heading">Windows & Active Directory Basics</div>
+                            <div class="step-desc">Most corporate environments run on Windows and Active Directory, so most real-world engagements target it. Learn user/group management, Group Policy, NTFS permissions, and how domain authentication generally works — this context makes later AD attack paths make sense instead of feeling like magic.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Corporate context</span>
+                                <span class="tag">AD fundamentals</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Users, groups, Group Policy</a>
+                                <a class="yt-link plain">How domain auth generally works</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 5 · The rules of the game</div>
+                            <div class="step-heading">Legal & Ethical Boundaries</div>
+                            <div class="step-desc">Before touching any offensive tool, understand what makes testing <strong>legal</strong>: written authorization, defined scope, and rules of engagement. Learn the basics of laws relevant to your country (e.g. computer misuse legislation) and what a scope document and a get-out-of-jail letter actually look like. Skipping this step isn't a shortcut — it's a career-ending mistake.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Read this twice</span>
+                                <span class="tag">Authorization = everything</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Never test without written authorization</a>
+                                <a class="yt-link plain">Know your local computer-misuse law</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-text"><strong>Don't skip to "hacking" before this phase is solid.</strong> Nearly every struggling learner in this field jumped straight to running tools without understanding what's happening underneath. Spend real time here — the rest of the roadmap moves much faster once networking, Linux, and scripting are second nature.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — SECURITY CONCEPTS & LAB SETUP (6–10) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 02 · Core Security Concepts & Your Lab</div>
+                <h2 class="section-title">Build the Sandbox Before You Build the Skillset</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 6 · The mental model</div>
+                            <div class="step-heading">Core InfoSec Principles (CIA Triad)</div>
+                            <div class="step-desc">Every security decision maps back to <strong>Confidentiality, Integrity, and Availability</strong>. Learn how vulnerabilities, threats, and risk relate to each other, and get familiar with common frameworks like MITRE ATT&CK for describing attacker behavior in a structured way. This vocabulary is what lets you communicate findings clearly later.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Vocabulary matters</span>
+                                <span class="tag">MITRE ATT&CK intro</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">CIA triad, risk vs. vulnerability</a>
+                                <a class="yt-link plain">Skim the MITRE ATT&CK matrix</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 7 · Your practice ground</div>
+                            <div class="step-heading">Build a Home Lab</div>
+                            <div class="step-desc">Set up a virtualized lab using <strong>VirtualBox or VMware</strong> with a Kali Linux attacker box and deliberately vulnerable target VMs. This gives you a safe, fully legal environment to practice everything that follows — never run offensive tools against systems you don't own or lack written permission to test.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Legal practice only</span>
+                                <span class="tag">VirtualBox / VMware</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Kali attacker VM + isolated network</a>
+                                <a class="yt-link plain">Snapshot before every test</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 8 · Structured, legal targets</div>
+                            <div class="step-heading">Practice on Purpose-Built Vulnerable Machines</div>
+                            <div class="step-desc">Platforms like <strong>TryHackMe, HackTheBox, and VulnHub</strong> host machines specifically designed to be tested legally. Start with beginner-friendly rooms and paths that teach one concept at a time, and resist jumping to advanced boxes before the fundamentals from Phase 01 feel automatic.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Purpose-built targets</span>
+                                <span class="tag">Start on beginner paths</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">TryHackMe beginner path</a>
+                                <a class="yt-link plain">HackTheBox starting point machines</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 9 · Learn the standard process</div>
+                            <div class="step-heading">The Penetration Testing Methodology</div>
+                            <div class="step-desc">Real engagements follow a repeatable structure, generally: <strong>reconnaissance → scanning → enumeration → exploitation → post-exploitation → reporting</strong>. Learn this flow before diving into individual tools — it gives every tool you learn later a clear place in the process instead of feeling random.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Process over tools</span>
+                                <span class="tag">Recon to reporting</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Memorize the 6-phase flow</a>
+                                <a class="yt-link plain">Reporting is part of the process</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 10 · Track what you learn</div>
+                            <div class="step-heading">Start a Notes & Documentation System</div>
+                            <div class="step-desc">Use a tool like <strong>Obsidian, Notion, or CherryTree</strong> to log every machine, concept, and command you learn from day one. This habit compounds — your notes become both a personal reference and, later, the foundation of the writeups and reports that certifications and jobs actually require.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start day one</span>
+                                <span class="tag">Compounds over time</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">One note per box or concept</a>
+                                <a class="yt-link plain">Tag by technique for later search</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧪</div>
+                    <div class="tip-text"><strong>Everything past this point should be practiced only in your lab or on platforms built for it.</strong> Testing systems you don't own or lack explicit written permission for is illegal in most jurisdictions, regardless of intent. Every skill in this roadmap is meant to be learned and demonstrated on authorized targets — labs, CTFs, and paid bug bounty programs with defined scope.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Recommended Learning Platforms — Where to Practice</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Best For</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TryHackMe</td>
+                                <td>Guided beginner paths, concept-by-concept rooms</td>
+                                <td>Free tier + paid subscription</td>
+                            </tr>
+                            <tr>
+                                <td>HackTheBox</td>
+                                <td>Realistic machines, CTF-style challenges</td>
+                                <td>Free tier + paid subscription</td>
+                            </tr>
+                            <tr>
+                                <td>PortSwigger Web Academy</td>
+                                <td>Deep, structured web application security labs</td>
+                                <td>Completely free</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — RECON & SCANNING (11–15) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 03 · Reconnaissance & Scanning</div>
+                <h2 class="section-title">Understanding a Target Before Touching It</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 11 · The information-gathering phase</div>
+                            <div class="step-heading">Passive & Active Reconnaissance</div>
+                            <div class="step-desc">Learn the difference between <strong>passive recon</strong> (gathering public info without touching the target — WHOIS, DNS records, job postings, LinkedIn) and <strong>active recon</strong> (direct interaction like ping sweeps and port scans). Most real engagements start entirely passive to avoid tipping off defenders early.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Passive vs. active</span>
+                                <span class="tag">OSINT basics</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">WHOIS, DNS, and public records</a>
+                                <a class="yt-link plain">Know when recon becomes active</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">12</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 12 · The workhorse tool</div>
+                            <div class="step-heading">Network Scanning with Nmap</div>
+                            <div class="step-desc"><strong>Nmap</strong> is the industry-standard tool for discovering live hosts, open ports, and running services. Learn scan types (TCP connect, SYN, UDP), timing options, and service/version detection. Understanding what each scan actually does on the wire matters more than memorizing flags.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Industry standard</span>
+                                <span class="tag">Understand, don't memorize</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">TCP connect vs. SYN scans</a>
+                                <a class="yt-link plain">Service and version detection</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">13</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 13 · Turning ports into targets</div>
+                            <div class="step-heading">Service Enumeration</div>
+                            <div class="step-desc">Once you know what ports are open, dig into what's actually running: web servers, SMB shares, FTP, SSH banners, and database services. Learn tools like <strong>enum4linux, smbclient, and gobuster/ffuf</strong> for content discovery. This step turns a scan result into an actual attack surface map.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Attack surface mapping</span>
+                                <span class="tag">enum4linux, gobuster</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">SMB and FTP enumeration</a>
+                                <a class="yt-link plain">Directory/content discovery</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">14</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 14 · Match the version to the flaw</div>
+                            <div class="step-heading">Vulnerability Scanning & Research</div>
+                            <div class="step-desc">Learn to use automated scanners like <strong>Nessus, OpenVAS, or Nikto</strong> to surface known vulnerabilities, then cross-reference findings against sources like the <strong>NVD (National Vulnerability Database)</strong> and Exploit-DB. Automated scanners are a starting point, not a final answer — always verify findings manually before trusting them.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Verify, don't trust blindly</span>
+                                <span class="tag">NVD, Exploit-DB</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Run and interpret a Nessus/OpenVAS scan</a>
+                                <a class="yt-link plain">Cross-check against NVD</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">15</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 15 · Write it down as you go</div>
+                            <div class="step-heading">Building a Recon Report</div>
+                            <div class="step-desc">Practice turning raw scan output into a clean, structured recon summary: open ports, running services and versions, and a prioritized list of what looks worth investigating further. This habit — documenting as you go rather than after — is exactly what real client-facing pentest reports require.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Document as you go</span>
+                                <span class="tag">Mirrors real reports</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Structured recon summary format</a>
+                                <a class="yt-link plain">Prioritize findings, don't just list them</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🔍</div>
+                    <div class="tip-text"><strong>Recon quality determines exploitation quality.</strong> Beginners rush past this phase to get to "the fun part" — but the strongest testers spend proportionally more time here than anywhere else. A missed service or an unchecked subdomain is the difference between finding the real vulnerability and missing it entirely.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — WEB APP SECURITY (16–20) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 04 · Web Application Security</div>
+                <h2 class="section-title">Where the Highest Volume of Real-World Bugs Lives</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">16</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 16 · The map of the field</div>
+                            <div class="step-heading">Learn the OWASP Top 10</div>
+                            <div class="step-desc">The <strong>OWASP Top 10</strong> is the standard reference for the most common and impactful web application vulnerabilities — injection flaws, broken authentication, broken access control, security misconfiguration, and more. Study each category's root cause, not just its name, before touching a single tool.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Standard reference</span>
+                                <span class="tag">Root cause, not just names</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">All 10 categories, root causes</a>
+                                <a class="yt-link plain">Read the official OWASP docs</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">17</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 17 · Learn to see requests, not pages</div>
+                            <div class="step-heading">Master a Web Proxy (Burp Suite)</div>
+                            <div class="step-desc"><strong>Burp Suite</strong> is the standard tool for intercepting, inspecting, and modifying web traffic between browser and server. Learn the Proxy, Repeater, and Intruder tabs deeply — most web testing work happens inside this single tool, and fluency here is a genuine career differentiator.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Industry standard tool</span>
+                                <span class="tag">Proxy, Repeater, Intruder</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Intercept and modify a live request</a>
+                                <a class="yt-link plain">Automate testing with Intruder</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">18</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 18 · Injection-class vulnerabilities</div>
+                            <div class="step-heading">SQL Injection & Command Injection</div>
+                            <div class="step-desc">Understand why injection flaws happen — unsanitized input reaching a query or shell — and practice identifying and demonstrating them on <strong>legal lab environments like PortSwigger's Web Academy or DVWA</strong>. Learn both manual testing and how tools like <strong>sqlmap</strong> automate the process, so you understand what's happening underneath the automation.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Lab environments only</span>
+                                <span class="tag">Manual first, tools second</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">PortSwigger SQLi labs, manual first</a>
+                                <a class="yt-link plain">Understand sqlmap before automating</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">19</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 19 · Client-side impact</div>
+                            <div class="step-heading">Cross-Site Scripting (XSS) & CSRF</div>
+                            <div class="step-desc">Learn the difference between <strong>reflected, stored, and DOM-based XSS</strong>, and how Cross-Site Request Forgery abuses a user's authenticated session. Practice identifying and demonstrating impact safely in lab environments, and study the defenses (CSP, output encoding, CSRF tokens) alongside the attacks — understanding the fix is half the skill.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Learn defenses too</span>
+                                <span class="tag">Reflected / stored / DOM</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">All three XSS types, hands-on</a>
+                                <a class="yt-link plain">CSP and CSRF tokens as defenses</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">20</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 20 · The full picture</div>
+                            <div class="step-heading">Authentication, Session & Access Control Flaws</div>
+                            <div class="step-desc">Study weak password policies, broken session management, IDOR (Insecure Direct Object Reference), and privilege escalation within web apps. These logic-level flaws are consistently among the highest-paying and most commonly found issues in real bug bounty programs, precisely because they can't be caught by automated scanners alone.</div>
+                            <div class="step-tags">
+                                <span class="tag red">High bounty value</span>
+                                <span class="tag">Scanners miss these</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">IDOR hunting methodology</a>
+                                <a class="yt-link plain">Privilege escalation within an app</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Free Practice Labs for This Phase</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧪 PortSwigger Web Security Academy</div>
+                        <div class="resource-card-desc">Completely free, extremely deep labs covering every OWASP Top 10 category with guided walkthroughs and standalone challenge labs.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧪 DVWA (Damn Vulnerable Web App)</div>
+                        <div class="resource-card-desc">A deliberately insecure PHP/MySQL app you run locally, with adjustable difficulty levels for each vulnerability class.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧪 OWASP Juice Shop</div>
+                        <div class="resource-card-desc">A modern, intentionally vulnerable JavaScript web app with a built-in scoreboard covering realistic, current-day web flaws.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧪 bWAPP</div>
+                        <div class="resource-card-desc">Over 100 individual vulnerability categories in one deliberately buggy app — good for breadth once fundamentals are solid.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — SYSTEMS, NETWORK & ADVANCED (21–25) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 05 · Systems, Network & Advanced Topics</div>
+                <h2 class="section-title">Beyond the Browser — Infrastructure-Level Testing</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">21</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 21 · Beyond the browser</div>
+                            <div class="step-heading">Network & Host Exploitation Basics</div>
+                            <div class="step-desc">Learn how outdated services, weak configurations, and known CVEs on hosts get exploited using frameworks like <strong>Metasploit</strong>, always inside your lab or authorized scope. Focus on understanding the exploit's mechanism, not just firing a module — that understanding is what lets you explain impact to a client afterward.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Lab / authorized scope only</span>
+                                <span class="tag">Metasploit fundamentals</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Understand the exploit, not just run it</a>
+                                <a class="yt-link plain">Metasploit modules and payloads</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">22</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 22 · The step most tutorials skip</div>
+                            <div class="step-heading">Privilege Escalation (Linux & Windows)</div>
+                            <div class="step-desc">Getting initial access is rarely the finish line — real engagements need <strong>privilege escalation</strong> to demonstrate actual business impact. Practice enumeration scripts (LinPEAS, WinPEAS), misconfigured permissions, and kernel/service exploits on lab machines, always documenting the exact path from low-privilege to admin/root.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Where real skill shows</span>
+                                <span class="tag">LinPEAS / WinPEAS</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Enumeration scripts on lab boxes</a>
+                                <a class="yt-link plain">Document the full escalation path</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">23</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 23 · Understand attacker persistence</div>
+                            <div class="step-heading">Post-Exploitation Concepts</div>
+                            <div class="step-desc">Study — at a conceptual level, inside your lab — how attackers maintain access, move laterally, and gather credentials after an initial compromise. Understanding these patterns is what makes you effective at both offense (demonstrating real risk) and defense (recognizing these exact patterns in security logs).</div>
+                            <div class="step-tags">
+                                <span class="tag red">Conceptual + lab only</span>
+                                <span class="tag">Offense informs defense</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Lateral movement concepts</a>
+                                <a class="yt-link plain">How defenders detect these patterns</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">24</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 24 · The human layer</div>
+                            <div class="step-heading">Social Engineering Awareness</div>
+                            <div class="step-desc">Learn how phishing, pretexting, and other social engineering tactics work well enough to design <strong>authorized awareness campaigns and simulated phishing tests</strong> — always with explicit organizational sign-off. This is one of the most legally sensitive areas of the field; scope and consent matter even more here than in technical testing.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Extra legal sensitivity</span>
+                                <span class="tag">Sign-off required always</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">How phishing campaigns are structured</a>
+                                <a class="yt-link plain">Consent and sign-off requirements</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">25</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 25 · Pick a specialization</div>
+                            <div class="step-heading">Explore a Specialty Track</div>
+                            <div class="step-desc">Once fundamentals are solid, pick a direction to go deeper: <strong>cloud security (AWS/Azure misconfigurations), mobile app security (Android/iOS), wireless security, or malware analysis/reverse engineering</strong> studied defensively in a controlled lab. Specializing after a strong generalist base is far more effective than specializing too early.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Specialize after fundamentals</span>
+                                <span class="tag">Cloud, mobile, wireless, RE</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pick one track, go deep for 2–3 months</a>
+                                <a class="yt-link plain">Don't specialize before fundamentals</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Common Mistakes at This Stage</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Testing without written scope</div>
+                        <div class="resource-card-desc">Running any tool covered in this phase against a system you don't own and don't have explicit written authorization for is illegal — no exceptions for good intentions.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Tool-collecting instead of understanding</div>
+                        <div class="resource-card-desc">Running Metasploit modules without understanding the underlying vulnerability produces reports you can't defend in front of a client or interviewer.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Skipping documentation mid-engagement</div>
+                        <div class="resource-card-desc">Trying to reconstruct a testing path from memory afterward is how findings get lost. Screenshot and log as you go, every time.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Specializing before the fundamentals stick</div>
+                        <div class="resource-card-desc">Jumping into cloud or mobile security without solid networking and web basics leaves gaps that resurface at the worst moments — like a live interview.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — CERTS, PORTFOLIO & CAREER (26–30) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 06 · Certifications, Proof of Skill & Career</div>
+                <h2 class="section-title">Turning Skill Into a Verifiable Credential</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">26</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 26 · The entry-level credential</div>
+                            <div class="step-heading">CompTIA Security+ or eJPT</div>
+                            <div class="step-desc">A solid first certification to prove foundational knowledge to recruiters and HR filters that screen resumes before a human sees them. <strong>Security+</strong> is broad and vendor-neutral; <strong>eJPT</strong> (eLearnSecurity Junior Penetration Tester) is more hands-on and practical for those aiming specifically at pentesting roles.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Passes resume filters</span>
+                                <span class="tag">Security+ / eJPT</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Security+ for broad HR recognition</a>
+                                <a class="yt-link plain">eJPT for hands-on proof</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">27</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 27 · The industry gold standard</div>
+                            <div class="step-heading">OSCP (Offensive Security Certified Professional)</div>
+                            <div class="step-desc">Widely considered the most respected hands-on penetration testing certification in the industry — a 24-hour practical exam where you actually compromise machines rather than answer multiple choice. Demanding, but the single credential that opens the most pentesting job doors. Plan for several months of dedicated lab practice beforehand.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Most respected credential</span>
+                                <span class="tag">Fully practical exam</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">PWK course + labs before attempting</a>
+                                <a class="yt-link plain">Practice full-length boxes under time</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">28</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 28 · Show, don't just tell</div>
+                            <div class="step-heading">Build a Public Portfolio</div>
+                            <div class="step-desc">Write up your HackTheBox/TryHackMe machine walkthroughs, CTF solutions, and lab projects on a personal blog or GitHub. A portfolio of clear, well-documented writeups demonstrates real methodology and communication skill — exactly what certifications alone can't prove to a hiring manager.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Proves methodology</span>
+                                <span class="tag">Blog + GitHub</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Write up every solved machine</a>
+                                <a class="yt-link plain">Clear structure beats clever prose</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">29</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 29 · Real-world, paid practice</div>
+                            <div class="step-heading">Start Bug Bounty Hunting</div>
+                            <div class="step-desc">Platforms like <strong>HackerOne and Bugcrowd</strong> connect researchers with companies that have explicitly authorized testing within a defined scope. This is legal by design — every program specifies exactly what's in and out of scope. Start with programs that have generous scope and active triage teams while you're still building speed.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Legal by design</span>
+                                <span class="tag">HackerOne / Bugcrowd</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Read the scope document fully, every time</a>
+                                <a class="yt-link plain">Start on generous, active programs</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">30</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 30 · Where the roadmap leads</div>
+                            <div class="step-heading">Choose Your Career Path</div>
+                            <div class="step-desc">From here, common directions include <strong>Penetration Tester, Security Analyst/SOC Analyst, Red Teamer, Application Security Engineer, or independent Bug Bounty Hunter</strong>. Each rewards a slightly different emphasis from this roadmap — SOC and defensive roles lean more on Phase 06 monitoring/detection knowledge, offensive roles lean more on Phases 04–05.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Multiple valid paths</span>
+                                <span class="tag">Offense vs. defense</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pentester vs. SOC Analyst vs. Red Team</a>
+                                <a class="yt-link plain">AppSec and bug bounty as alt paths</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Certification Path — Choose Based on Your Goal</div>
+                <div style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:10px; letter-spacing:-0.01em;">
+                    Beginner → Intermediate → Advanced</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Entry-Level</div>
+                        <div class="skill-item">CompTIA Security+</div>
+                        <div class="skill-item">eJPT</div>
+                        <div class="skill-item">CompTIA PenTest+</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Intermediate</div>
+                        <div class="skill-item">OSCP</div>
+                        <div class="skill-item">CEH (Practical)</div>
+                        <div class="skill-item">GPEN (SANS/GIAC)</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Advanced / Specialized</div>
+                        <div class="skill-item">OSWE — web application focus</div>
+                        <div class="skill-item">OSEP — advanced evasion</div>
+                        <div class="skill-item">OSCE3 — expert-level bundle</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Weekly Practice Rhythm</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">Once Past the Foundations Phase
+                </div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Solve 2–3 machines a week on TryHackMe or HackTheBox, in your current focus area
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Write one clear walkthrough per solved machine for your portfolio
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Read one recent CVE writeup or disclosed bug bounty report weekly
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Revisit your notes system and tag new techniques as you learn them
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Join one CTF (individual or team) per month to test under time pressure
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Ethical Hacking Roadmap · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free Channels & Platforms for Ethical Hacking</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 NetworkChuck</div>
+                        <div class="resource-card-desc">Engaging, beginner-friendly walkthroughs covering networking, Linux, and cybersecurity fundamentals — a great on-ramp into the field.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@NetworkChuck" target="_blank">@NetworkChuck</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 John Hammond</div>
+                        <div class="resource-card-desc">CTF walkthroughs, malware analysis breakdowns, and practical security tutorials with clear, methodical explanations.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@_JohnHammond" target="_blank">@_JohnHammond</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 IppSec</div>
+                        <div class="resource-card-desc">Deeply detailed HackTheBox machine walkthroughs — widely considered essential viewing for anyone working toward OSCP.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@ippsec" target="_blank">@ippsec</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 The Cyber Mentor</div>
+                        <div class="resource-card-desc">Practical pentesting courses and tutorials from a working penetration tester, covering web, network, and career guidance.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@TCMSecurityAcademy" target="_blank">@TCMSecurityAcademy</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 LiveOverflow</div>
+                        <div class="resource-card-desc">Deep technical breakdowns of binary exploitation, web security, and CTF challenges for viewers ready to go beneath the surface.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@LiveOverflow" target="_blank">@LiveOverflow</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 STÖK</div>
+                        <div class="resource-card-desc">Bug bounty mindset, hunter interviews, and practical hacking methodology from an established bug bounty community figure.</div>
+                        <div class="yt-links">
+                            <a class="yt-link" href="https://www.youtube.com/@STOKfredrik" target="_blank">@STOKfredrik</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">Community — Peer study groups</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Practice Legally, Document Everything 🔐</div>
+                    <div class="cta-sub">Every skill in this roadmap belongs in a lab, a CTF, or an authorized scope — never on a system you don't have written permission to test. Consistency beats intensity: a little every day compounds into real capability.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
