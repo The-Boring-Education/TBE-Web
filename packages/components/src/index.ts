@@ -327,6 +327,7 @@ export type { PageHeaderProps } from "./layout/PageHeader";
 export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
+export * from "./profile";
 export * from "./techyatra";
 export * from "./ui";
 export * from "./visualizers";

@@ -217,6 +217,8 @@ const Navbar = ({
                 <UserAvatar
                   dashboardRoute={finalDashboardRoute}
                   profileRoute={profileRoute}
+                  theme={theme}
+                  variant={variant}
                 />
               )}
               <button
@@ -245,6 +247,8 @@ const Navbar = ({
                 <UserAvatar
                   dashboardRoute={finalDashboardRoute}
                   profileRoute={profileRoute}
+                  theme={theme}
+                  variant={variant}
                 />
               )}
             </div>
@@ -258,6 +262,8 @@ const Navbar = ({
                 <UserAvatar
                   dashboardRoute={finalDashboardRoute}
                   profileRoute={profileRoute}
+                  theme={theme}
+                  variant={variant}
                 />
               )}
               <button
@@ -337,6 +343,8 @@ const Navbar = ({
                   <UserAvatar
                     dashboardRoute={finalDashboardRoute}
                     profileRoute={profileRoute}
+                    theme={theme}
+                    variant={variant}
                   />
                 )}
               </div>

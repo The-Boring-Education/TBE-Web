@@ -959,11 +959,16 @@ export interface PrepLog {
 export interface UserProfile {
   name: string;
   userName: string;
+  email?: string;
   createdAt: string;
   linkedInUrl?: string;
   image?: string;
   githubUrl?: string;
   leetCodeUrl?: string;
+  codeforcesUrl?: string;
+  location?: string;
+  headline?: string;
+  aboutMe?: string;
   userSkills?: string[];
   userSkillsLastUpdated?: string;
   occupation?: string;
@@ -971,7 +976,7 @@ export interface UserProfile {
   contactNo?: string;
   portfolioUrl?: string;
   purpose?: string[];
-  prepYatra: {
+  prepYatra?: {
     goal?: string;
     experienceLevel?: string;
     workDomain?: string;
@@ -988,12 +993,22 @@ export interface UserProfile {
     experienceLevel?: string;
     preferredLanguage?: string;
     companies?: string[];
+    targetTopics?: string[];
+    dyOnboarded?: boolean;
   };
   oncampus?: {
     onboardingCompleted?: boolean;
     experienceLevel?: string;
     duration?: string;
     offCampus?: boolean;
+  };
+  resumeYatra?: {
+    ryOnboarded?: boolean;
+    experienceBand?: string;
+  };
+  techYatra?: {
+    tyOnboarded?: boolean;
+    focus?: string;
   };
 }
 
