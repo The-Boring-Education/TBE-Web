@@ -4,7 +4,7 @@ import OnboardingLayout from "@tbe/onboarding/components/OnboardingLayout";
 import type { OnboardingProductConfig } from "@tbe/types";
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockConfig: OnboardingProductConfig = {
   id: "dsayatra",
@@ -58,77 +58,68 @@ describe("OnboardingLayout", () => {
 
   it("renders fallback title when config is null", () => {
     render(<OnboardingLayout {...defaultProps} config={null} />);
-    expect(screen.getByText("Welcome Onboard!")).toBeInTheDocument();
+    expect(screen.getByText("Find what's right for you")).toBeInTheDocument();
   });
 
   // ------------------------------------------------------------------ //
-  // Progress bar
+  // Step indicator
   // ------------------------------------------------------------------ //
   it("shows 'Step 1 of 3' when step=1", () => {
     render(<OnboardingLayout {...defaultProps} step={1} totalSteps={3} />);
-    expect(screen.getByText("Step 1 of 3")).toBeInTheDocument();
+    expect(screen.getByText(/Step 1 of 3/)).toBeInTheDocument();
   });
 
   it("shows 'Step 2 of 3' when step=2", () => {
     render(<OnboardingLayout {...defaultProps} step={2} totalSteps={3} />);
-    expect(screen.getByText("Step 2 of 3")).toBeInTheDocument();
+    expect(screen.getByText(/Step 2 of 3/)).toBeInTheDocument();
   });
 
-  it("renders progress bar with correct percentage for step 1 of 3", () => {
-    const { container } = render(
-      <OnboardingLayout {...defaultProps} step={1} totalSteps={3} />,
-    );
-    // Progress bar is 0% at step 1 (no steps completed yet)
-    const bar = container.querySelector('[style*="width"]');
-    expect(bar).not.toBeNull();
+  it("renders stepper indicators for all steps", () => {
+    render(<OnboardingLayout {...defaultProps} step={1} totalSteps={3} />);
+    expect(screen.getByText("1")).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.getByText("3")).toBeInTheDocument();
   });
 
   // ------------------------------------------------------------------ //
   // Navigation buttons
   // ------------------------------------------------------------------ //
-  it("shows 'Back' and 'Next' buttons when step < totalSteps", () => {
+  it("shows 'Continue' button when step < totalSteps", () => {
     render(<OnboardingLayout {...defaultProps} step={1} totalSteps={3} />);
-    expect(screen.getByText("Back")).toBeInTheDocument();
-    expect(screen.getByText("Next")).toBeInTheDocument();
+    expect(screen.getByText("Continue")).toBeInTheDocument();
   });
 
-  it("shows 'Finish' button on the last step", () => {
+  it("shows 'Finish Setup' button on the last step", () => {
     render(<OnboardingLayout {...defaultProps} step={3} totalSteps={3} />);
-    expect(screen.getByText("Finish")).toBeInTheDocument();
-    expect(screen.queryByText("Next")).not.toBeInTheDocument();
+    expect(screen.getByText("Finish Setup")).toBeInTheDocument();
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
   });
 
-  it("Back button is disabled on step 1", () => {
+  it("does not show Back button on step 1", () => {
     render(<OnboardingLayout {...defaultProps} step={1} onBack={vi.fn()} />);
-    const backBtn = screen
-      .getByText("Back")
-      .closest("button") as HTMLButtonElement;
-    expect(backBtn).toBeDisabled();
+    expect(screen.queryByText("← Back")).not.toBeInTheDocument();
   });
 
-  it("Back button is enabled when step > 1", () => {
+  it("shows Back button when step > 1", () => {
     render(<OnboardingLayout {...defaultProps} step={2} onBack={vi.fn()} />);
-    const backBtn = screen
-      .getByText("Back")
-      .closest("button") as HTMLButtonElement;
-    expect(backBtn).not.toBeDisabled();
+    expect(screen.getByText("← Back")).toBeInTheDocument();
   });
 
   it("calls onBack when Back button is clicked", () => {
     const onBack = vi.fn();
     render(<OnboardingLayout {...defaultProps} step={2} onBack={onBack} />);
-    fireEvent.click(screen.getByText("Back"));
+    fireEvent.click(screen.getByText("← Back"));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onNext when Next button is clicked", () => {
+  it("calls onNext when submit button is clicked on non-last step", () => {
     const onNext = vi.fn();
     render(<OnboardingLayout {...defaultProps} step={1} onNext={onNext} />);
-    fireEvent.click(screen.getByText("Next"));
+    fireEvent.click(screen.getByText("Continue"));
     expect(onNext).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onFinish when Finish button is clicked", () => {
+  it("calls onFinish when submit button is clicked on last step", () => {
     const onFinish = vi.fn();
     render(
       <OnboardingLayout
@@ -138,7 +129,7 @@ describe("OnboardingLayout", () => {
         onFinish={onFinish}
       />,
     );
-    fireEvent.click(screen.getByText("Finish"));
+    fireEvent.click(screen.getByText("Finish Setup"));
     expect(onFinish).toHaveBeenCalledTimes(1);
   });
 
@@ -149,7 +140,9 @@ describe("OnboardingLayout", () => {
     const { getByText } = render(
       <OnboardingLayout {...defaultProps} step={1} isFieldValid={false} />,
     );
-    const nextBtn = getByText("Next").closest("button") as HTMLButtonElement;
+    const nextBtn = getByText("Continue").closest(
+      "button",
+    ) as HTMLButtonElement;
     expect(nextBtn).toBeDisabled();
   });
 
@@ -157,7 +150,9 @@ describe("OnboardingLayout", () => {
     const { getByText } = render(
       <OnboardingLayout {...defaultProps} step={1} isFieldValid />,
     );
-    const nextBtn = getByText("Next").closest("button") as HTMLButtonElement;
+    const nextBtn = getByText("Continue").closest(
+      "button",
+    ) as HTMLButtonElement;
     expect(nextBtn).not.toBeDisabled();
   });
 
@@ -165,18 +160,10 @@ describe("OnboardingLayout", () => {
     const { getByText } = render(
       <OnboardingLayout {...defaultProps} step={1} submitting />,
     );
-    const nextBtn = getByText("Next").closest("button") as HTMLButtonElement;
+    const nextBtn = getByText("Continue").closest(
+      "button",
+    ) as HTMLButtonElement;
     expect(nextBtn).toBeDisabled();
-  });
-
-  // ------------------------------------------------------------------ //
-  // Submitting state
-  // ------------------------------------------------------------------ //
-  it("shows 'Submitting...' text on Finish button while submitting", () => {
-    render(
-      <OnboardingLayout {...defaultProps} step={3} totalSteps={3} submitting />,
-    );
-    expect(screen.getByText("Submitting...")).toBeInTheDocument();
   });
 
   // ------------------------------------------------------------------ //
@@ -187,7 +174,7 @@ describe("OnboardingLayout", () => {
       <OnboardingLayout {...defaultProps} error="" />,
     );
     expect(
-      container.querySelector('[class*="bg-pink-50"]'),
+      container.querySelector('[class*="bg-red-50"]'),
     ).not.toBeInTheDocument();
   });
 
@@ -211,7 +198,7 @@ describe("OnboardingLayout", () => {
     const { container } = render(<OnboardingLayout {...defaultProps} />);
     const img = container.querySelector("img");
     expect(img).toBeInTheDocument();
-    expect(img?.alt).toBe("Boring Education Logo");
+    expect(img?.alt).toBe("The Boring Education Logo");
   });
 
   // ------------------------------------------------------------------ //
@@ -222,7 +209,6 @@ describe("OnboardingLayout", () => {
     const { container } = render(
       <OnboardingLayout {...defaultProps} step={1} onNext={onNext} />,
     );
-    // Find the form element
     const form = container.querySelector("form");
     fireEvent.submit(form!);
     expect(onNext).toHaveBeenCalledTimes(1);

@@ -1,4 +1,4 @@
-import type { BaseUser, OnboardingProductConfig } from '@tbe/types';
+import type { BaseUser, OnboardingFieldConfig, OnboardingProductConfig } from '@tbe/types';
 
 // Helper to create field configurations
 const createField = (
@@ -14,7 +14,7 @@ const createField = (
     validation?: any;
     prefill?: any;
   }
-) => ({
+): OnboardingFieldConfig => ({
   name,
   label,
   type,
@@ -27,67 +27,244 @@ const createField = (
   prefill: options?.prefill,
 });
 
+/**
+ * Unified 4-Step Onboarding Fields
+ * Consolidates all questions asked across the TBE ecosystem into 4 cohesive, structured steps.
+ */
+export const UNIFIED_ONBOARDING_FIELDS: OnboardingFieldConfig[] = [
+  // Step 1: Identity & Current Role
+  createField('name', 'Full Name', 'text', 1, {
+    placeholder: 'Enter your full name (e.g. Alex Kumar)',
+    prefill: {
+      fromUser: (user: BaseUser) => user.name || '',
+    },
+  }),
+  createField('userName', 'Choose your username', 'text', 1, {
+    placeholder: 'Enter unique username (e.g. alpha_dev)',
+    checkAvailability: true,
+    prefill: {
+      fromUser: (user: BaseUser) => user.userName || '',
+    },
+  }),
+  createField('contactNo', 'Mobile / WhatsApp Number', 'tel', 1, {
+    placeholder: 'Enter your 10-digit mobile number',
+    prefill: {
+      fromUser: (user: BaseUser) => user.contactNo || '',
+    },
+  }),
+  createField('occupation', 'What is your current occupation / role?', 'select', 1, {
+    placeholder: 'Select your current status',
+    options: [
+      { value: 'TECH_STUDENT', label: '🎓 Tech Student / College' },
+      { value: 'WORKING_PROFESSIONAL', label: '💼 Working Professional' },
+      { value: 'CAREER_SWITCHER', label: '🚀 Self-Taught / Career Switcher' },
+      { value: 'OTHER', label: '⚡ Other / Enthusiast' },
+    ],
+    prefill: {
+      fromUser: (user: BaseUser) => user.occupation || '',
+    },
+  }),
+
+  // Step 2: Learning Focus & Primary Goals
+  createField('purpose', 'What topics do you want to master?', 'multiselect', 2, {
+    placeholder: 'Select learning topics',
+    options: [
+      { value: 'web_dev', label: '🌐 Web Development (Full-Stack)' },
+      { value: 'dsa', label: '🧩 Data Structures & Algorithms' },
+      { value: 'ai_ml', label: '🤖 AI & Machine Learning' },
+      { value: 'core_cs', label: '🏛️ System Design & Core CS' },
+      { value: 'mobile_dev', label: '📱 Mobile App Development' },
+      { value: 'devops', label: '☁️ Cloud & DevOps' },
+    ],
+    prefill: {
+      fromUser: (user: BaseUser) => user.purpose || [],
+    },
+  }),
+  createField('goal', 'What is your primary career goal?', 'select', 2, {
+    placeholder: 'Select your main objective',
+    options: [
+      { value: 'crack_placements', label: '🎯 Crack Tech Placements & Job Search' },
+      { value: 'build_projects', label: '🛠️ Build Production-Ready Projects' },
+      { value: 'job_skill', label: '📈 Upskill & Level Up for Current Job' },
+      { value: 'fun_school', label: '📚 Learn for Fun / College Exams' },
+    ],
+  }),
+
+  // Step 3: Experience Level, Timeline & Language
+  createField('experienceLevel', 'How much coding experience do you have?', 'select', 3, {
+    placeholder: 'Select your experience level',
+    options: [
+      { value: 'beginner', label: '🌱 Beginner (0–1 yr) — Learning basics' },
+      { value: 'intermediate', label: '⚡ Intermediate (1–3 yrs) — Building projects' },
+      { value: 'advanced', label: '🚀 Advanced (3+ yrs) — Production experience' },
+    ],
+    prefill: {
+      fromUser: (user: BaseUser) =>
+        user.dsaYatra?.experienceLevel || user.prepYatra?.experienceLevel || '',
+    },
+  }),
+  createField('timeline', 'Target Preparation Timeline', 'select', 3, {
+    placeholder: 'Select your timeline',
+    options: [
+      { value: '3_months', label: '⏱️ 1–3 Months (Fast-Track Sprint)' },
+      { value: '6_months', label: '📅 4–6 Months (Structured Roadmap)' },
+      { value: '1_year', label: '🗓️ 6–12 Months (Long-Term Mastery)' },
+    ],
+    prefill: {
+      fromUser: (user: BaseUser) => user.dsaYatra?.timeline || '',
+    },
+  }),
+  createField('preferredLanguage', 'Preferred Programming Language', 'select', 3, {
+    placeholder: 'Select your language',
+    options: [
+      { value: 'C++', label: 'C++' },
+      { value: 'Java', label: 'Java' },
+      { value: 'Python', label: 'Python' },
+      { value: 'JavaScript', label: 'JavaScript / TypeScript' },
+    ],
+    prefill: {
+      fromUser: (user: BaseUser) => user.dsaYatra?.preferredLanguage || '',
+    },
+  }),
+
+  // Step 4: Target Companies & Social Profiles (Optional)
+  createField('targetCompanies', 'Target Company Types', 'multiselect', 4, {
+    required: false,
+    placeholder: 'Select target companies',
+    options: [
+      { value: 'startup', label: '🦄 High-Growth Startups' },
+      { value: 'faang', label: '🏢 Product Companies / FAANG' },
+      { value: 'mnc', label: '🌐 Top Tech MNCs & Enterprise' },
+      { value: 'oncampus', label: '🎓 On-Campus College Placements' },
+    ],
+  }),
+  createField('linkedInUrl', 'LinkedIn URL', 'url', 4, {
+    required: false,
+    placeholder: 'https://linkedin.com/in/yourprofile',
+    prefill: {
+      fromUser: (user: BaseUser) => user.linkedInUrl || '',
+    },
+  }),
+  createField('githubUrl', 'GitHub URL', 'url', 4, {
+    required: false,
+    placeholder: 'https://github.com/yourusername',
+    prefill: {
+      fromUser: (user: BaseUser) => user.githubUrl || '',
+    },
+  }),
+  createField('leetCodeUrl', 'LeetCode URL', 'url', 4, {
+    required: false,
+    placeholder: 'https://leetcode.com/yourusername',
+    prefill: {
+      fromUser: (user: BaseUser) => user.leetCodeUrl || '',
+    },
+  }),
+];
+
+/**
+ * Unified transformer that prepares all user fields for backend storage.
+ */
+export const unifiedTransformPayload = (form: any, userId: string, from?: string) => {
+  const origin = (from || '').toLowerCase().replace(/[-_]/g, '');
+
+  const isPrep = origin === 'prepyatra';
+  const isDsa = origin === 'dsayatra';
+  const isOncampus = origin === 'oncampus';
+  const isTech = origin === 'techyatra';
+  const isResume = origin === 'resumeyatra';
+
+  return {
+    userId,
+    name: form.name,
+    userName: form.userName,
+    occupation: form.occupation || 'TECH_STUDENT',
+    purpose: Array.isArray(form.purpose) ? form.purpose : [form.purpose].filter(Boolean),
+    contactNo: form.contactNo || '+91',
+    goal: form.goal || 'crack_placements',
+    experienceLevel: form.experienceLevel || 'beginner',
+    timeline: form.timeline || '6_months',
+    preferredLanguage: form.preferredLanguage || 'JavaScript',
+    targetCompanies: Array.isArray(form.targetCompanies) ? form.targetCompanies : [],
+    linkedInUrl: form.linkedInUrl || '',
+    githubUrl: form.githubUrl || '',
+    leetCodeUrl: form.leetCodeUrl || '',
+    isOnboarded: true,
+    ...(from ? { from } : {}),
+
+    // Prep Yatra placement & interview prep details
+    prepYatra: {
+      pyOnboarded: Boolean(form.prepYatra?.pyOnboarded ?? isPrep),
+      goal: form.goal || 'crack_placements',
+      experienceLevel: form.experienceLevel || 'fresher',
+      targetCompanies: Array.isArray(form.targetCompanies) ? form.targetCompanies : [],
+      preferences: {
+        interviewCategories: Array.isArray(form.preferredCategories)
+          ? form.preferredCategories
+          : [],
+        focusAreas: Array.isArray(form.purpose) ? form.purpose : [form.purpose].filter(Boolean),
+      },
+    },
+
+    // DSA Yatra algorithm preparation details
+    dsaYatra: {
+      dyOnboarded: Boolean(form.dsaYatra?.dyOnboarded ?? isDsa),
+      experienceLevel:
+        form.experienceLevel === 'advanced'
+          ? 'Experienced (3+ yrs)'
+          : form.experienceLevel === 'intermediate'
+            ? 'Intermediate (1-3 yrs)'
+            : 'Fresher (0-1 yr)',
+      timeline:
+        form.timeline === '1_year' ? '1Year' : form.timeline === '3_months' ? '3Months' : '6Months',
+      target: form.targetCompanies?.includes('faang')
+        ? 'Product-based'
+        : form.targetCompanies?.includes('startup')
+          ? 'Startups'
+          : 'Product-based',
+      preferredLanguage: form.preferredLanguage || 'JavaScript',
+      targetTopics: Array.isArray(form.purpose) ? form.purpose : [form.purpose].filter(Boolean),
+    },
+
+    // OnCampus placement details
+    oncampus: {
+      onboardingCompleted: Boolean(form.oncampus?.onboardingCompleted ?? isOncampus),
+      duration:
+        form.timeline === '1_year' ? '1Year' : form.timeline === '3_months' ? '3Months' : '6Months',
+      experienceLevel: form.experienceLevel || 'Fresher (0-1 yr)',
+      offCampus: !form.targetCompanies?.includes('oncampus'),
+    },
+
+    // Tech Yatra roadmap focus details
+    techYatra: {
+      tyOnboarded: Boolean(form.techYatra?.tyOnboarded ?? isTech),
+      focus: form.purpose?.[0] || 'roadmaps',
+    },
+
+    // Resume Yatra ATS builder details
+    resumeYatra: {
+      ryOnboarded: Boolean(form.resumeYatra?.ryOnboarded ?? isResume),
+      experienceBand: form.experienceLevel || 'student',
+    },
+  };
+};
+
 // TBE Platform Onboarding Configurations
 export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
   platform: {
     id: 'platform',
     name: 'TBE Platform',
-    description: 'Main TBE platform onboarding',
-    fields: [
-      createField('userName', 'Username', 'text', 1, {
-        placeholder: 'Enter your username',
-        checkAvailability: true,
-        prefill: {
-          fromUser: (user: BaseUser) => user.userName || '',
-        },
-      }),
-      createField('occupation', 'Occupation', 'select', 2, {
-        placeholder: 'Select your occupation',
-        options: [
-          { value: 'TECH_STUDENT', label: 'Tech Student' },
-          { value: 'WORKING_PROFESSIONAL', label: 'Working Professional' },
-          { value: 'ENTREPRENEUR', label: 'Entrepreneur' },
-          { value: 'OTHER', label: 'Other' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.occupation || '',
-        },
-      }),
-      createField('purpose', 'Purpose', 'multiselect', 3, {
-        placeholder: 'Select your purpose(s)',
-        options: [
-          { value: 'BUILDING_PROJECTS', label: 'Building Projects' },
-          { value: 'LEARNING', label: 'Learning' },
-          { value: 'NETWORKING', label: 'Networking' },
-          { value: 'JOB_SEARCH', label: 'Job Search' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.purpose || [],
-        },
-      }),
-      createField('contactNo', 'Contact Number', 'tel', 4, {
-        placeholder: '+91 9876543210',
-        prefill: {
-          fromUser: (user: BaseUser) => user.contactNo || '',
-        },
-      }),
-    ],
+    description: 'Main TBE platform unified onboarding',
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
       endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
-      transformPayload: (form: any, _userId: string, from?: string) => ({
-        userName: form.userName,
-        occupation: form.occupation,
-        purpose: form.purpose,
-        contactNo: form.contactNo,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: unifiedTransformPayload,
     },
     ui: {
       variant: 'platform',
       branding: {
         title: 'Welcome to The Boring Education!',
-        subtitle: "Let's start your tech journey.",
+        subtitle: "Let's personalize your learning & career journey in 4 quick steps.",
       },
     },
   },
@@ -96,117 +273,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'prep-yatra',
     name: 'Prep Yatra',
     description: 'Career navigation platform onboarding',
-    fields: [
-      createField('name', 'Full Name', 'text', 1, {
-        placeholder: 'Enter your full name',
-        prefill: {
-          fromUser: (user: BaseUser) => user.name || '',
-        },
-      }),
-      createField('username', 'Username', 'text', 2, {
-        placeholder: 'Choose a username',
-        checkAvailability: true,
-        prefill: {
-          fromUser: (user: BaseUser) => user.userName || '',
-        },
-      }),
-      createField('occupation', 'Occupation', 'select', 3, {
-        placeholder: 'Select your occupation',
-        options: [
-          { value: 'TECH_STUDENT', label: 'Tech Student' },
-          { value: 'NON_TECH_STUDENT', label: 'Non-Tech Student' },
-          { value: 'WORKING_PROFESSIONAL', label: 'Working Professional' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.occupation || '',
-        },
-      }),
-      createField('purpose', 'Purpose', 'multiselect', 4, {
-        placeholder: 'Select your purpose(s)',
-        options: [
-          { value: 'LEARNING_TECH', label: 'Learning Tech' },
-          { value: 'BUILDING_PROJECTS', label: 'Building Projects' },
-          { value: 'INTERVIEW_PREP', label: 'Interview Prep' },
-          { value: 'JOB_SEARCH', label: 'Job Search' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.purpose || [],
-        },
-      }),
-      createField('goal', 'Career Goal Timeline', 'select', 5, {
-        placeholder: 'Select your goal timeline',
-        options: [
-          { value: '3_months', label: '3 Months' },
-          { value: '6_months', label: '6 Months' },
-          { value: '1_year', label: '1 Year' },
-        ],
-      }),
-      createField('targetCompanies', 'Target Company Types', 'multiselect', 6, {
-        placeholder: 'Select target company types',
-        options: [
-          { value: 'startup', label: 'Startup' },
-          { value: 'mnc', label: 'MNC' },
-          { value: 'faang', label: 'FAANG' },
-          { value: 'midsize', label: 'Mid-Size' },
-        ],
-      }),
-      createField('preferredCategories', 'Interview Categories', 'multiselect', 7, {
-        placeholder: 'Select preferred interview categories',
-        options: [
-          { value: 'mnc', label: 'MNC Interviews' },
-          { value: 'mern', label: 'MERN Stack' },
-          { value: 'placement', label: 'College Placement' },
-          { value: 'dsa', label: 'Data Structures & Algorithms' },
-          { value: 'system_design', label: 'System Design' },
-          { value: 'general', label: 'General Tech' },
-        ],
-      }),
-      createField('experienceLevel', 'Experience Level', 'select', 8, {
-        placeholder: 'Select your experience level',
-        options: [
-          { value: 'fresher', label: 'Fresher (0-1 yr)' },
-          { value: 'junior', label: 'Junior (1-3 yr)' },
-          { value: 'mid', label: 'Mid (3-5 yr)' },
-          { value: 'senior', label: 'Senior (5+ yrs)' },
-        ],
-      }),
-      createField('linkedInUrl', 'LinkedIn URL', 'url', 9, {
-        required: false,
-        placeholder: 'Paste your LinkedIn profile URL',
-      }),
-      createField('githubUrl', 'GitHub URL', 'url', 9, {
-        required: false,
-        placeholder: 'Paste your GitHub profile URL',
-      }),
-      createField('leetCodeUrl', 'LeetCode URL', 'url', 9, {
-        required: false,
-        placeholder: 'Paste your LeetCode profile URL',
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: () => `/prepyatra/onboarding`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        name: form.name,
-        username: form.username,
-        goal: form.goal,
-        targetCompanies: form.targetCompanies,
-        preferredCategories: form.preferredCategories,
-        experienceLevel: form.experienceLevel,
-        ...(form.occupation ? { occupation: form.occupation } : {}),
-        ...(form.purpose ? { purpose: form.purpose } : {}),
-        ...(form.linkedInUrl ? { linkedInUrl: form.linkedInUrl } : {}),
-        ...(form.githubUrl ? { githubUrl: form.githubUrl } : {}),
-        ...(form.leetCodeUrl ? { leetCodeUrl: form.leetCodeUrl } : {}),
-        ...(from ? { from } : {}),
+        ...unifiedTransformPayload(form, userId, from || 'prepyatra'),
       }),
     },
     ui: {
       variant: 'prep-yatra',
       branding: {
         title: 'Welcome to Prep Yatra!',
-        subtitle: 'Navigate your career journey',
+        subtitle: 'Navigate your tech interview prep & placement roadmap.',
       },
     },
   },
@@ -215,50 +294,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'quizes',
     name: 'Quiz Platform',
     description: 'Quiz platform onboarding',
-    fields: [
-      createField('username', 'Username', 'text', 1, {
-        placeholder: 'Choose a username',
-        checkAvailability: true,
-        prefill: {
-          fromUser: (user: BaseUser) => user.userName || '',
-        },
-      }),
-      createField('interests', 'Learning Interests', 'multiselect', 2, {
-        placeholder: 'Select your interests',
-        options: [
-          { value: 'web_dev', label: 'Web Development' },
-          { value: 'mobile_dev', label: 'Mobile Development' },
-          { value: 'data_science', label: 'Data Science' },
-          { value: 'ai_ml', label: 'AI/Machine Learning' },
-          { value: 'devops', label: 'DevOps' },
-          { value: 'cybersecurity', label: 'Cybersecurity' },
-        ],
-      }),
-      createField('skillLevel', 'Current Skill Level', 'select', 3, {
-        placeholder: 'Select your skill level',
-        options: [
-          { value: 'beginner', label: 'Beginner' },
-          { value: 'intermediate', label: 'Intermediate' },
-          { value: 'advanced', label: 'Advanced' },
-        ],
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: (userId: string) => `/quiz/onboarding?userId=${userId}`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        username: form.username,
-        interests: form.interests,
-        skillLevel: form.skillLevel,
-        ...(from ? { from } : {}),
+        ...unifiedTransformPayload(form, userId, from || 'quiz'),
       }),
     },
     ui: {
       variant: 'quizes',
       branding: {
         title: 'Welcome to TBE Quizes!',
-        subtitle: 'Test and improve your skills',
+        subtitle: 'Test and improve your coding skills with daily challenges.',
       },
     },
   },
@@ -266,66 +314,18 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
   onboarding: {
     id: 'onboarding',
     name: 'General Onboarding',
-    description: 'General TBE onboarding flow',
-    fields: [
-      createField('name', 'Full Name', 'text', 1, {
-        placeholder: 'Enter your full name',
-        prefill: {
-          fromUser: (user: BaseUser) => user.name || '',
-        },
-      }),
-      createField('email', 'Email Address', 'email', 1, {
-        placeholder: 'Enter your email',
-        prefill: {
-          fromUser: (user: BaseUser) => user.email || '',
-        },
-      }),
-      createField('username', 'Username', 'text', 2, {
-        placeholder: 'Choose a unique username',
-        checkAvailability: true,
-      }),
-      createField('interests', 'Learning Interests', 'select', 2, {
-        placeholder: 'What interests you most?',
-        options: [
-          { value: 'web-dev', label: 'Web Development' },
-          { value: 'data-science', label: 'Data Science' },
-          { value: 'mobile-dev', label: 'Mobile Development' },
-          { value: 'devops', label: 'DevOps' },
-          { value: 'ai-ml', label: 'AI/Machine Learning' },
-        ],
-      }),
-      createField('experience', 'Experience Level', 'select', 3, {
-        placeholder: 'Select your experience level',
-        options: [
-          { value: 'beginner', label: 'Beginner (0-1 years)' },
-          { value: 'intermediate', label: 'Intermediate (1-3 years)' },
-          { value: 'advanced', label: 'Advanced (3+ years)' },
-        ],
-      }),
-      createField('goals', 'Learning Goals', 'textarea', 3, {
-        placeholder: 'What do you want to achieve?',
-        required: false,
-      }),
-    ],
+    description: 'General TBE unified onboarding flow',
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: () => `/onboarding/complete`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
-      transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        name: form.name,
-        email: form.email,
-        username: form.username,
-        interests: form.interests,
-        experience: form.experience,
-        goals: form.goals,
-        ...(from ? { from } : {}),
-      }),
+      transformPayload: unifiedTransformPayload,
     },
     ui: {
       variant: 'onboarding',
       branding: {
         title: 'Welcome to TBE!',
-        subtitle: "Let's set up your learning profile",
+        subtitle: "Let's set up your personalized learning & career roadmap.",
       },
     },
   },
@@ -334,133 +334,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'dsayatra',
     name: 'DSA Yatra',
     description: 'DSA preparation platform onboarding',
-    fields: [
-      createField('name', 'Full Name', 'text', 1, {
-        placeholder: 'Enter your full name',
-        prefill: {
-          fromUser: (user: BaseUser) => user.name || '',
-        },
-      }),
-      createField('username', 'Username', 'text', 2, {
-        placeholder: 'Choose a username',
-        checkAvailability: true,
-        prefill: {
-          fromUser: (user: BaseUser) => user.userName || '',
-        },
-      }),
-      createField('preferredLanguage', 'Preferred Language', 'select', 3, {
-        placeholder: 'Select your preferred language',
-        options: [
-          { value: 'C++', label: 'C++' },
-          { value: 'Java', label: 'Java' },
-          { value: 'Python', label: 'Python' },
-          { value: 'JavaScript', label: 'JavaScript' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.dsaYatra?.preferredLanguage || '',
-        },
-      }),
-      createField('timeline', 'Choose your timeline', 'select', 4, {
-        placeholder: 'Select your timeline',
-        options: [
-          { value: '2-3 months', label: '2-3 months' },
-          { value: '4-6 months', label: '4-6 months' },
-          { value: '8-12 months', label: '8-12 months' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.dsaYatra?.timeline || '',
-        },
-      }),
-      createField('experienceLevel', 'Experience Level', 'select', 5, {
-        placeholder: 'Select your experience level',
-        options: [
-          { value: 'Fresher (0-1 yr)', label: 'Fresher (0-1 yr)' },
-          { value: 'Junior (1-3 yr)', label: 'Junior (1-3 yr)' },
-          { value: 'Mid (3-5 yr)', label: 'Mid (3-5 yr)' },
-          { value: 'Senior (5+ yrs)', label: 'Senior (5+ yrs)' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.dsaYatra?.experienceLevel || '',
-        },
-      }),
-      createField('target', 'Choose your target', 'select', 6, {
-        placeholder: 'Select target',
-        options: [
-          { value: 'Product-based', label: 'Product-based' },
-          { value: 'Startups', label: 'Startups' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.dsaYatra?.target || '',
-        },
-      }),
-      createField('targetTopics', 'Target DSA Topics', 'multiselect', 7, {
-        placeholder: 'Select topics you want to focus on',
-        options: [
-          { value: 'ARRAY', label: 'Array' },
-          { value: 'HASHMAP', label: 'Hashmap' },
-          { value: 'TWO_POINTERS', label: 'Two pointers' },
-          { value: 'SLIDING_WINDOW', label: 'Sliding window' },
-          { value: 'BINARY_SEARCH', label: 'Binary search' },
-          { value: 'LINKED_LIST', label: 'Linked list' },
-          { value: 'STACK', label: 'Stack' },
-          { value: 'QUEUE', label: 'Queue' },
-          { value: 'TREE', label: 'Tree' },
-          { value: 'GRAPH', label: 'Graph' },
-          { value: 'DYNAMIC_PROGRAMMING', label: 'Dynamic programming' },
-          { value: 'GREEDY', label: 'Greedy' },
-          { value: 'STRING', label: 'String' },
-          { value: 'MATH', label: 'Math' },
-          { value: 'BIT_MANIPULATION', label: 'Bit manipulation' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.dsaYatra?.targetTopics || [],
-        },
-      }),
-      createField('linkedInUrl', 'LinkedIn URL', 'url', 8, {
-        required: false,
-        placeholder: 'Paste your LinkedIn profile URL',
-        prefill: {
-          fromUser: (user: BaseUser) => user.linkedInUrl || '',
-        },
-      }),
-      createField('githubUrl', 'GitHub URL', 'url', 8, {
-        required: false,
-        placeholder: 'Paste your GitHub profile URL',
-        prefill: {
-          fromUser: (user: BaseUser) => user.githubUrl || '',
-        },
-      }),
-      createField('leetCodeUrl', 'LeetCode URL', 'url', 8, {
-        required: false,
-        placeholder: 'Paste your LeetCode profile URL',
-        prefill: {
-          fromUser: (user: BaseUser) => user.leetCodeUrl || '',
-        },
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: () => `/dsayatra/onboarding`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        name: form.name,
-        username: form.username,
-        preferredLanguage: form.preferredLanguage,
-        timeline: form.timeline,
-        experienceLevel: form.experienceLevel,
-        target: form.target,
-        targetTopics: form.targetTopics,
-        ...(form.linkedInUrl ? { linkedInUrl: form.linkedInUrl } : {}),
-        ...(form.githubUrl ? { githubUrl: form.githubUrl } : {}),
-        ...(form.leetCodeUrl ? { leetCodeUrl: form.leetCodeUrl } : {}),
-        ...(from ? { from } : {}),
+        ...unifiedTransformPayload(form, userId, from || 'dsayatra'),
       }),
     },
     ui: {
       variant: 'prep-yatra',
       branding: {
         title: 'Welcome to DSA Yatra!',
-        subtitle: 'Master Data Structures and Algorithms',
+        subtitle: 'Master Data Structures and Algorithms with curated patterns.',
       },
     },
   },
@@ -469,37 +355,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'oncampus',
     name: 'OnCampus',
     description: 'Campus placement preparation onboarding',
-    fields: [
-      createField('duration', 'When will your On Campus Placements will start?', 'select', 1, {
-        options: [
-          { value: '1 Month', label: '1 Month' },
-          { value: '3 Months', label: '3 Months' },
-          { value: '6 Months', label: '6 Months' },
-          { value: '1 Year', label: '1 Year' },
-        ],
-      }),
-      createField('offCampus', 'Are you also going to apply Off Campus Jobs?', 'select', 2, {
-        options: [
-          { value: 'Yes', label: 'Yes' },
-          { value: 'No', label: 'No' },
-        ],
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: () => `/user/oncampus/onboarding`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        duration: String(form.duration || '').replace(/\s+/g, ''),
-        offCampus: form.offCampus === 'Yes',
-        ...(from ? { from } : {}),
+        ...unifiedTransformPayload(form, userId, from || 'oncampus'),
       }),
     },
     ui: {
       variant: 'platform',
       branding: {
         title: 'Welcome to OnCampus!',
-        subtitle: "Let's personalize your campus placement prep",
+        subtitle: "Let's personalize your campus placement prep & mock assessments.",
       },
     },
   },
@@ -508,33 +376,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'tech-yatra',
     name: 'Tech Yatra',
     description: 'Tech learning roadmap onboarding',
-    fields: [
-      createField('focus', 'What do you want to focus on first?', 'select', 1, {
-        placeholder: 'Select one',
-        options: [
-          { value: 'roadmaps', label: 'Learning roadmaps' },
-          { value: 'projects', label: 'Hands-on projects' },
-          { value: 'interviews', label: 'Interview prep' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.techYatra?.focus || '',
-        },
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: () => `/techyatra/onboarding`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        focus: form.focus,
-        ...(from ? { from } : {}),
+        ...unifiedTransformPayload(form, userId, from || 'techyatra'),
       }),
     },
     ui: {
       variant: 'platform',
       branding: {
         title: 'Welcome to Tech Yatra!',
-        subtitle: 'Your personalized tech learning path',
+        subtitle: 'Your personalized engineering roadmaps from scratch to production.',
       },
     },
   },
@@ -543,34 +397,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'resume-yatra',
     name: 'Resume Yatra',
     description: 'Resume builder onboarding',
-    fields: [
-      createField('experienceBand', 'How much experience do you have?', 'select', 1, {
-        placeholder: 'Select one',
-        options: [
-          { value: 'student', label: 'Student / fresher' },
-          { value: 'early', label: '1–3 years' },
-          { value: 'mid', label: '3–7 years' },
-          { value: 'senior', label: '7+ years' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.resumeYatra?.experienceBand || '',
-        },
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
-      endpoint: () => `/resumeyatra/onboarding`,
+      endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
       transformPayload: (form: any, userId: string, from?: string) => ({
-        userId,
-        experienceBand: form.experienceBand,
-        ...(from ? { from } : {}),
+        ...unifiedTransformPayload(form, userId, from || 'resumeyatra'),
       }),
     },
     ui: {
       variant: 'platform',
       branding: {
         title: 'Welcome to Resume Yatra!',
-        subtitle: 'Build a resume that gets interviews',
+        subtitle: 'Build ATS-optimized tech resumes that get you interviews.',
       },
     },
   },
@@ -580,61 +419,19 @@ export const ONBOARDING_CONFIGS: Record<string, OnboardingProductConfig> = {
     id: 'quizapp',
     name: 'Quiz App',
     description: 'Quiz App onboarding',
-    fields: [
-      createField('userName', 'Username', 'text', 1, {
-        placeholder: 'Enter your username',
-        checkAvailability: true,
-        prefill: {
-          fromUser: (user: BaseUser) => user.userName || '',
-        },
-      }),
-      createField('occupation', 'Occupation', 'select', 2, {
-        placeholder: 'Select your occupation',
-        options: [
-          { value: 'TECH_STUDENT', label: 'Tech Student' },
-          { value: 'WORKING_PROFESSIONAL', label: 'Working Professional' },
-          { value: 'ENTREPRENEUR', label: 'Entrepreneur' },
-          { value: 'OTHER', label: 'Other' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.occupation || '',
-        },
-      }),
-      createField('purpose', 'Purpose', 'multiselect', 3, {
-        placeholder: 'Select your purpose(s)',
-        options: [
-          { value: 'BUILDING_PROJECTS', label: 'Building Projects' },
-          { value: 'LEARNING', label: 'Learning' },
-          { value: 'NETWORKING', label: 'Networking' },
-          { value: 'JOB_SEARCH', label: 'Job Search' },
-        ],
-        prefill: {
-          fromUser: (user: BaseUser) => user.purpose || [],
-        },
-      }),
-      createField('contactNo', 'Contact Number', 'tel', 4, {
-        placeholder: '+91 9876543210',
-        prefill: {
-          fromUser: (user: BaseUser) => user.contactNo || '',
-        },
-      }),
-    ],
+    fields: UNIFIED_ONBOARDING_FIELDS,
     api: {
       endpoint: (userId: string) => `/user/onboarding?userId=${userId}`,
       method: 'POST',
-      transformPayload: (form: any, _userId: string, from?: string) => ({
-        userName: form.userName,
-        occupation: form.occupation,
-        purpose: form.purpose,
-        contactNo: form.contactNo,
-        ...(from ? { from } : {}),
+      transformPayload: (form: any, userId: string, from?: string) => ({
+        ...unifiedTransformPayload(form, userId, from || 'quiz'),
       }),
     },
     ui: {
       variant: 'platform',
       branding: {
         title: 'Welcome to The Boring Quiz!',
-        subtitle: "Let's start your tech journey.",
+        subtitle: "Let's personalize your daily quizzes & assessments.",
       },
     },
   },
@@ -652,7 +449,7 @@ export const resolveOnboardingProductId = (productId: string): string =>
 // Helper functions
 export const getOnboardingConfig = (productId: string): OnboardingProductConfig | null => {
   const resolved = resolveOnboardingProductId(productId);
-  return ONBOARDING_CONFIGS[resolved] || null;
+  return ONBOARDING_CONFIGS[resolved] ?? ONBOARDING_CONFIGS.platform ?? null;
 };
 
 export const getAvailableOnboardingProducts = (): string[] => {

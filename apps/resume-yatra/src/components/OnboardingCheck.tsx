@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "@tbe/components";
+import { PersonalizationLoader } from "@tbe/components";
 import { useProductOnboardingGate } from "@tbe/hooks";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -11,7 +11,7 @@ export const OnboardingCheck = () => {
     return `${window.location.origin}/builder/`;
   }, []);
 
-  const { isChecking } = useProductOnboardingGate({
+  const { isChecking, isActivating } = useProductOnboardingGate({
     pathname: router.pathname,
     publicRoutes: ["/", "/login", "/auth"],
     productId: "resume-yatra",
@@ -22,11 +22,13 @@ export const OnboardingCheck = () => {
         ?.ryOnboarded === true,
   });
 
-  if (isChecking) {
+  if (isActivating) {
     return (
-      <div className="fixed inset-0 bg-background z-[9999] flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <PersonalizationLoader
+        title="Preparing Resume Yatra..."
+        subtitle="Setting up ATS resume builder and templates"
+        fullScreen
+      />
     );
   }
 

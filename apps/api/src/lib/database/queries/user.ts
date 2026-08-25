@@ -97,6 +97,7 @@ const onboardUserToDB = async (
   purpose: PlatformUsageType[],
   contactNo: string,
   from?: string,
+  extraData?: Record<string, any>,
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const updateData: any = {
@@ -107,12 +108,135 @@ const onboardUserToDB = async (
       isOnboarded: true,
     };
 
+    const existingUserDoc = await User.findById(userId);
+    const existingUser = existingUserDoc?.toObject
+      ? existingUserDoc.toObject()
+      : existingUserDoc;
+    const origin = (from || extraData?.from || existingUser?.from || "")
+      .toLowerCase()
+      .replace(/[-_]/g, "");
+
+    const isPrep =
+      extraData?.prepYatra?.pyOnboarded === true ||
+      existingUser?.prepYatra?.pyOnboarded === true ||
+      origin === "prepyatra";
+
+    const isDsa =
+      extraData?.dsaYatra?.dyOnboarded === true ||
+      existingUser?.dsaYatra?.dyOnboarded === true ||
+      origin === "dsayatra";
+
+    const isOncampus =
+      extraData?.oncampus?.onboardingCompleted === true ||
+      existingUser?.oncampus?.onboardingCompleted === true ||
+      origin === "oncampus";
+
+    const isTech =
+      extraData?.techYatra?.tyOnboarded === true ||
+      existingUser?.techYatra?.tyOnboarded === true ||
+      origin === "techyatra";
+
+    const isResume =
+      extraData?.resumeYatra?.ryOnboarded === true ||
+      existingUser?.resumeYatra?.ryOnboarded === true ||
+      origin === "resumeyatra";
+
+    if (extraData) {
+      if (extraData.name) updateData.name = extraData.name;
+      if (extraData.linkedInUrl) updateData.linkedInUrl = extraData.linkedInUrl;
+      if (extraData.githubUrl) updateData.githubUrl = extraData.githubUrl;
+      if (extraData.leetCodeUrl) updateData.leetCodeUrl = extraData.leetCodeUrl;
+
+      // Populate DSA Yatra subdoc
+      updateData.dsaYatra = {
+        experienceLevel:
+          extraData.experienceLevel ||
+          existingUser?.dsaYatra?.experienceLevel ||
+          "Fresher (0-1 yr)",
+        timeline:
+          extraData.timeline || existingUser?.dsaYatra?.timeline || "6Months",
+        target:
+          extraData.target || existingUser?.dsaYatra?.target || "Product-based",
+        preferredLanguage:
+          extraData.preferredLanguage ||
+          existingUser?.dsaYatra?.preferredLanguage ||
+          "JavaScript",
+        targetTopics:
+          extraData.targetTopics || existingUser?.dsaYatra?.targetTopics || [],
+        ...(existingUser?.dsaYatra || {}),
+        ...(extraData.dsaYatra || {}),
+        dyOnboarded: isDsa,
+      };
+
+      // Populate Prep Yatra subdoc
+      updateData.prepYatra = {
+        goal:
+          extraData.goal || existingUser?.prepYatra?.goal || "crack_placements",
+        experienceLevel:
+          extraData.experienceLevel ||
+          existingUser?.prepYatra?.experienceLevel ||
+          "fresher",
+        targetCompanies:
+          extraData.targetCompanies ||
+          existingUser?.prepYatra?.targetCompanies ||
+          [],
+        preferences: {
+          interviewCategories:
+            extraData.preferredCategories ||
+            existingUser?.prepYatra?.preferences?.interviewCategories ||
+            [],
+          focusAreas:
+            extraData.purpose ||
+            existingUser?.prepYatra?.preferences?.focusAreas ||
+            [],
+          ...(extraData.prepYatra?.preferences || {}),
+        },
+        ...(existingUser?.prepYatra || {}),
+        ...(extraData.prepYatra || {}),
+        pyOnboarded: isPrep,
+      };
+
+      // Populate OnCampus subdoc
+      updateData.oncampus = {
+        duration:
+          extraData.timeline === "1_year"
+            ? "1Year"
+            : extraData.timeline === "3_months"
+              ? "3Months"
+              : "6Months",
+        experienceLevel:
+          extraData.experienceLevel ||
+          existingUser?.oncampus?.experienceLevel ||
+          "Fresher (0-1 yr)",
+        offCampus: true,
+        ...(existingUser?.oncampus || {}),
+        ...(extraData.oncampus || {}),
+        onboardingCompleted: isOncampus,
+      };
+
+      // Populate Tech Yatra subdoc
+      updateData.techYatra = {
+        focus: extraData.focus || existingUser?.techYatra?.focus || "roadmaps",
+        ...(existingUser?.techYatra || {}),
+        ...(extraData.techYatra || {}),
+        tyOnboarded: isTech,
+      };
+
+      // Populate Resume Yatra subdoc
+      updateData.resumeYatra = {
+        experienceBand:
+          extraData.experienceLevel ||
+          existingUser?.resumeYatra?.experienceBand ||
+          "student",
+        ...(existingUser?.resumeYatra || {}),
+        ...(extraData.resumeYatra || {}),
+        ryOnboarded: isResume,
+      };
+    }
+
     // Only add 'from' if it doesn't already exist
-    if (from) {
-      const existingUser = await User.findById(userId);
-      if (!existingUser?.from) {
-        updateData.from = from;
-      }
+    if (from && !existingUser?.from) {
+      updateData.from = from;
     }
 
     const user = await User.findByIdAndUpdate(userId, updateData, {
@@ -140,6 +264,7 @@ const onboardPrepYatraUserTODB = async (
   try {
     const updateData: Record<string, unknown> = {
       ...buildUserSocialProfileUpdate({ linkedInUrl }),
+      isOnboarded: true,
       prepYatra: {
         workDomain,
         pyOnboarded: true,

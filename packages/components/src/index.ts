@@ -14,6 +14,8 @@ export { default as AdminTable } from "./admin/AdminTable";
 // Learn Page Components
 export type { LearnDashboardContainerProps } from "./learn/LearnDashboardContainer";
 export { LearnDashboardContainer } from "./learn/LearnDashboardContainer";
+export type { PersonalizationLoaderProps } from "./learn/PersonalizationLoader";
+export { PersonalizationLoader } from "./learn/PersonalizationLoader";
 export type { PersonalizationQuizData } from "./learn/PersonalizationQuiz";
 export { PersonalizationQuiz } from "./learn/PersonalizationQuiz";
 

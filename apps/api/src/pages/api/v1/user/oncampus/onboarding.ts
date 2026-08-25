@@ -65,6 +65,7 @@ const handleOnboarding = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const updatePayload: Record<string, unknown> = {
+      isOnboarded: true,
       "oncampus.onboardingCompleted": true,
       "oncampus.duration": normalizedDuration,
       "oncampus.offCampus": offCampus === true || offCampus === "true",

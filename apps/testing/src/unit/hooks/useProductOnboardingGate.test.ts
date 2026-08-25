@@ -3,9 +3,13 @@ import { waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockSendRequest = vi.fn();
-vi.mock("@tbe/utils", () => ({
-  sendRequest: (...a: unknown[]) => mockSendRequest(...a),
-}));
+vi.mock("@tbe/utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@tbe/utils")>();
+  return {
+    ...actual,
+    sendRequest: (...a: unknown[]) => mockSendRequest(...a),
+  };
+});
 
 vi.mock("@tbe/auth", () => ({
   useAuth: vi.fn(),
@@ -159,5 +163,35 @@ describe("useProductOnboardingGate", () => {
     await waitFor(() => {
       expect(result.current.isChecking).toBe(false);
     });
+  });
+
+  it("auto-activates product for globally onboarded user without redirecting", async () => {
+    mockSendRequest.mockImplementation(
+      async ({ method }: { method?: string }) => {
+        if (method === "POST") {
+          return {
+            success: true,
+            data: { isOnboarded: true, onboarded: true },
+          };
+        }
+        return { data: { isOnboarded: true, onboarded: false } };
+      },
+    );
+
+    const { result } = renderHookWithQuery(() =>
+      useProductOnboardingGate({
+        ...opts(),
+      }),
+    );
+
+    await waitFor(() => {
+      expect(mockSendRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: "POST",
+        }),
+      );
+    });
+
+    expect(window.location.href).toBe("");
   });
 });

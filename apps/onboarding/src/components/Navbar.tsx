@@ -1,12 +1,14 @@
 import React from "react";
 
-import logo from "../assets/logo.svg";
-
 const Navbar: React.FC = () => {
   return (
     <nav className="w-full mt-6 bg-white flex justify-center items-center h-14 px-4">
       <div className="flex items-center">
-        <img src={logo} alt="Boring Education Logo" className="h-14 w-14" />
+        <img
+          src="https://ik.imagekit.io/tbe/webapp/logo.svg"
+          alt="The Boring Education Logo"
+          className="h-10 w-auto object-contain"
+        />
       </div>
     </nav>
   );

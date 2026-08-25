@@ -3,7 +3,10 @@ import "@/styles/globals.css";
 
 import { AuthProvider } from "@tbe/auth";
 import { useAuth } from "@tbe/auth";
-import { LoadingSpinner, PrepYatraGamificationProvider } from "@tbe/components";
+import {
+  PersonalizationLoader,
+  PrepYatraGamificationProvider,
+} from "@tbe/components";
 import { Toaster as Sonner } from "@tbe/components";
 import { Toaster } from "@tbe/components";
 import { TooltipProvider } from "@tbe/components";
@@ -61,7 +64,7 @@ const AppContent = ({
     return `${window.location.origin}/dashboard`;
   }, []);
 
-  const { isChecking } = useProductOnboardingGate({
+  const { isChecking, isActivating } = useProductOnboardingGate({
     pathname: router.pathname,
     publicRoutes: ["/login", "/", "/auth"],
     productId: "prepyatra",
@@ -80,12 +83,14 @@ const AppContent = ({
     isProtectedPage &&
     isAuthenticated &&
     !isLoading &&
-    isChecking
+    isActivating
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <PersonalizationLoader
+        title="Setting up your Prep Yatra dashboard..."
+        subtitle="Preparing tailored interview prep & daily streak tracker"
+        fullScreen
+      />
     );
   }
 

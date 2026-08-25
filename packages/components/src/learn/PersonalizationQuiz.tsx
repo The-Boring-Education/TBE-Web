@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 
+import { PersonalizationLoader } from "./PersonalizationLoader";
+
 export interface PersonalizationQuizData {
   interests: string[];
   goals?: string[];
@@ -123,52 +125,11 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
 
   if (isCooking || isSaving) {
     return (
-      <div className="fixed top-0 left-0 right-0 bottom-0 z-40 bg-white/20 backdrop-blur-[6px] flex flex-col items-center justify-center p-4 text-slate-800 text-center font-sans select-none">
-        <style>{`
-          @keyframes tiltSequence {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(-18deg); }
-            50% { transform: rotate(18deg); }
-            75% { transform: rotate(-8deg); }
-            100% { transform: rotate(0deg); }
-          }
-          .animate-tilt-1 { animation: tiltSequence 4s ease-in-out infinite; }
-          .animate-tilt-2 { animation: tiltSequence 4s ease-in-out 0.6s infinite; }
-          .animate-tilt-3 { animation: tiltSequence 4s ease-in-out 1.2s infinite; }
-        `}</style>
-
-        {/* Small Micro Tech Logos */}
-        <div className="flex items-center justify-center gap-3 mb-2.5">
-          <div className="w-6 h-6 sm:w-7 sm:h-7 animate-tilt-1 flex items-center justify-center">
-            <img
-              src="/images/html.png"
-              alt="HTML5"
-              className="w-full h-full object-contain"
-            />
-          </div>
-
-          <div className="w-6 h-6 sm:w-7 sm:h-7 animate-tilt-2 flex items-center justify-center">
-            <img
-              src="/images/css.png"
-              alt="CSS3"
-              className="w-full h-full object-contain"
-            />
-          </div>
-
-          <div className="w-6 h-6 sm:w-7 sm:h-7 animate-tilt-3 flex items-center justify-center">
-            <img
-              src="/images/js.png"
-              alt="JavaScript"
-              className="w-full h-full object-contain"
-            />
-          </div>
-        </div>
-
-        {/* Minimal Subtle Text */}
-        <h2 className="text-xs sm:text-sm font-semibold text-slate-700 tracking-tight">
-          Crafting your learning dashboard...
-        </h2>
-      </div>
+      <PersonalizationLoader
+        title="Crafting your learning dashboard..."
+        subtitle="Analyzing your responses and preparing customized course recommendations"
+        fullScreen
+      />
     );
   }
 
