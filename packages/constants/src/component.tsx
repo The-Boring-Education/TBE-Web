@@ -94,7 +94,20 @@ const getNavbarVariantConfig = (
 ): Record<string, NavbarVariantConfig> => ({
   default: {
     branding: <Logo />,
-    dashboardRoute: "/user/dashboard",
+    dashboardRoute: "/learn",
+    borderClass: "border",
+    requiresAuth: true,
+    navigation: {
+      issues: true,
+      cohorts: true,
+      learn: true,
+      tools: true,
+      links: true,
+    },
+  },
+  platform: {
+    branding: <Logo />,
+    dashboardRoute: "/learn",
     borderClass: "border",
     requiresAuth: true,
     navigation: {
@@ -107,7 +120,7 @@ const getNavbarVariantConfig = (
   },
   transparent: {
     branding: <Logo />,
-    dashboardRoute: "/user/dashboard",
+    dashboardRoute: "/learn",
     borderClass: "border",
     requiresAuth: true,
     navigation: {
