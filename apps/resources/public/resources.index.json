@@ -165,6 +165,24 @@
     ]
   },
   {
+    "slug": "ethical-hacking-roadmap",
+    "title": "Ethical Hacking Roadmap 2026",
+    "description": "A structured, phase-by-phase path from networking fundamentals to penetration testing and bug bounty — the exact skill order security teams and CTF players actually build in, not a random list of tools.",
+    "keywords": [
+      "ethical hacking",
+      "cyber security",
+      "penetration testing",
+      "bug bounty",
+      "kali linux",
+      "network security",
+      "infosec",
+      "ctf",
+      "web application security",
+      "roadmap"
+    ],
+    "tags": ["roadmap", "ethicalhacking"]
+  },
+  {
     "slug": "freelance-developer-guide",
     "title": "Freelance Developer Guide 2026",
     "description": "A complete step-by-step guide to becoming a successful Freelance Developer, covering client acquisition, personal branding, portfolio building, pricing, contracts, remote work, communication, scaling income, and building a long-term freelance career.",
@@ -357,6 +375,24 @@
       "interview",
       "frontend"
     ]
+  },
+  {
+    "slug": "referral-strategy-guide",
+    "title": "Referral Strategy Guide 2026",
+    "description": "A referral gets your resume in front of a human instead of an ATS filter. This guide covers exactly who to ask, how to ask without feeling awkward, what to send, and how to follow up — so referrals stop being luck and start being a repeatable system.",
+    "keywords": [
+      "referral",
+      "job referral",
+      "referral strategy",
+      "job search",
+      "networking",
+      "linkedin outreach",
+      "cold outreach",
+      "interview prep",
+      "career advice",
+      "resume referral"
+    ],
+    "tags": ["guide", "career", "networking"]
   },
   {
     "slug": "system-design-roadmap",

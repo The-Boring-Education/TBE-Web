@@ -1,0 +1,18 @@
+{
+  "title": "Ethical Hacking Roadmap 2026",
+  "description": "A structured, phase-by-phase path from networking fundamentals to penetration testing and bug bounty — the exact skill order security teams and CTF players actually build in, not a random list of tools.",
+  "keywords": [
+    "ethical hacking",
+    "cyber security",
+    "penetration testing",
+    "bug bounty",
+    "kali linux",
+    "network security",
+    "infosec",
+    "ctf",
+    "web application security",
+    "roadmap"
+  ],
+  "tags": ["roadmap", "ethicalhacking"],
+  "ogImage": "https://theboringeducation.com/images/ethical-hacking-roadmap-og.png"
+}
