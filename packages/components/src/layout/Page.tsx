@@ -33,11 +33,16 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     };
   }, [isClient, router?.events]);
 
-  if (
+  const isExcludedRoute =
     router?.pathname === routes.checkout ||
     router?.pathname === routes.paymentStatus ||
-    router?.pathname === routes.login
-  ) {
+    router?.pathname === routes.login ||
+    router?.pathname === "/profile" ||
+    router?.pathname === "/user/profile" ||
+    Boolean(router?.pathname?.endsWith("/profile")) ||
+    Boolean(router?.pathname?.includes("/profile"));
+
+  if (isExcludedRoute) {
     return (
       <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>
     );

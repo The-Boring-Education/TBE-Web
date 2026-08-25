@@ -8,7 +8,7 @@ const ProfilePage = ({ seoMeta }: PageProps) => {
     <UnifiedProfilePage
       seoMeta={seoMeta}
       navbarVariant='platform'
-      profileRoute='/user/profile'
+      profileRoute='/profile'
     />
   );
 };

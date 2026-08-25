@@ -24,10 +24,10 @@ export const PersonalizationLoader: React.FC<PersonalizationLoaderProps> = ({
 
   const containerClasses = fullScreen
     ? `fixed inset-0 z-50 ${
-        isDark ? "bg-[#0B0F19]/90 text-white" : "bg-white/30 text-slate-800"
-      } backdrop-blur-[10px] flex flex-col items-center justify-center p-4 text-center font-sans select-none ${className}`
+        isDark ? "bg-black text-white" : "bg-white text-slate-800"
+      } flex flex-col items-center justify-center p-4 text-center font-sans select-none ${className}`
     : `w-full py-12 flex flex-col items-center justify-center p-4 ${
-        isDark ? "text-white" : "text-slate-800"
+        isDark ? "bg-black text-white" : "text-slate-800"
       } text-center font-sans select-none ${className}`;
 
   return (

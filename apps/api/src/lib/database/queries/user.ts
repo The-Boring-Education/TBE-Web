@@ -143,9 +143,24 @@ const onboardUserToDB = async (
 
     if (extraData) {
       if (extraData.name) updateData.name = extraData.name;
-      if (extraData.linkedInUrl) updateData.linkedInUrl = extraData.linkedInUrl;
-      if (extraData.githubUrl) updateData.githubUrl = extraData.githubUrl;
-      if (extraData.leetCodeUrl) updateData.leetCodeUrl = extraData.leetCodeUrl;
+      if (extraData.linkedInUrl !== undefined)
+        updateData.linkedInUrl = extraData.linkedInUrl;
+      if (extraData.githubUrl !== undefined)
+        updateData.githubUrl = extraData.githubUrl;
+      if (extraData.leetCodeUrl !== undefined)
+        updateData.leetCodeUrl = extraData.leetCodeUrl;
+      if (extraData.codeforcesUrl !== undefined)
+        updateData.codeforcesUrl = extraData.codeforcesUrl;
+      if (extraData.location !== undefined)
+        updateData.location = extraData.location;
+      if (extraData.headline !== undefined)
+        updateData.headline = extraData.headline;
+      if (extraData.aboutMe !== undefined)
+        updateData.aboutMe = extraData.aboutMe;
+      if (Array.isArray(extraData.userSkills)) {
+        updateData.userSkills = extraData.userSkills;
+        updateData.userSkillsLastUpdated = new Date();
+      }
 
       // Populate DSA Yatra subdoc
       updateData.dsaYatra = {
