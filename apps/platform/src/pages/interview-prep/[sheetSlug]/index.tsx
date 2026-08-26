@@ -26,6 +26,7 @@ import {
 import type { SheetPageProps } from '@tbe/interface';
 import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
 import { getSheetPageProps, sendRequest } from '@tbe/utils';
+import { List, X } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
@@ -44,6 +45,7 @@ const SheetPage = ({
   const [isEnrolled, setIsEnrolled] = useState(
     initialSheet?.isEnrolled || false,
   );
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [sheetMeta, setSheetMeta] = useState<string>(meta || '');
   const [questions, setQuestions] = useState(initialSheet?.questions || []);
   const firstQuestionId = questions?.[0]?._id?.toString() || '';
@@ -365,11 +367,104 @@ const SheetPage = ({
         {!isDataLoading && (
           <div
             id='sheet-content'
-            className='w-full max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-6 sm:py-8 font-primary'
+            className='w-full max-w-[1536px] mx-auto px-3.5 sm:px-6 lg:px-8 xl:px-12 py-3 sm:py-6 font-primary'
           >
-            <div className='flex flex-col lg:flex-row gap-6 lg:gap-8 items-start'>
-              {/* Left Sidebar (Questions Navigation) */}
-              <aside className='w-full lg:w-[320px] xl:w-[360px] shrink-0 self-start sticky top-6 max-h-[calc(100vh-3rem)] bg-card border border-border/70 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-3 overflow-hidden'>
+            {/* Mobile Floating Questions Toggle Button (Left Side) */}
+            {!isMobileSidebarOpen && (
+              <button
+                onClick={() => setIsMobileSidebarOpen(true)}
+                aria-label='View Questions'
+                className='fixed left-0 top-1/2 -translate-y-1/2 z-30 lg:hidden bg-primary text-white font-medium py-2 pl-2 pr-2.5 rounded-r-full shadow-lg flex items-center gap-1.5 text-xs hover:bg-primary/90 active:scale-95 transition-all cursor-pointer'
+              >
+                <List className='w-3.5 h-3.5 text-white' />
+                <span className='text-[11px] font-semibold tracking-wide'>
+                  Questions ({questions.length})
+                </span>
+              </button>
+            )}
+
+            {/* Mobile Drawer Backdrop */}
+            {isMobileSidebarOpen && (
+              <div
+                className='fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-xs transition-opacity duration-200'
+                onClick={() => setIsMobileSidebarOpen(false)}
+              />
+            )}
+
+            {/* Mobile Drawer Panel (Solid White Background) */}
+            <div
+              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${
+                isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+              }`}
+            >
+              <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
+                <div className='flex items-center gap-2'>
+                  <h2 className='font-semibold text-base text-gray-900'>
+                    Questions
+                  </h2>
+                  <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-50 text-primary border border-red-200/60'>
+                    {questions.length} questions
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsMobileSidebarOpen(false)}
+                  className='p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer'
+                >
+                  <X className='w-5 h-5' />
+                </button>
+              </div>
+
+              {!isLocked && (
+                <div className='pb-2 bg-white'>
+                  <LinerProgressBar
+                    completedChapters={completedQuestions}
+                    totalChapters={totalQuestions}
+                  />
+                </div>
+              )}
+
+              <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-white'>
+                {questions?.map(
+                  ({
+                    _id,
+                    title,
+                    question,
+                    answer,
+                    isCompleted,
+                    frequency,
+                    isStarred,
+                  }) => {
+                    const questionId = _id?.toString();
+
+                    return (
+                      <QuestionLink
+                        key={questionId}
+                        currentQuestionId={currentQuestionId}
+                        frequency={frequency}
+                        handleQuestionClick={() => {
+                          handleQuestionClick(
+                            `${question}\n\n${answer}`,
+                            questionId,
+                          );
+                          setIsMobileSidebarOpen(false);
+                        }}
+                        href={router.asPath.split('?')[0]}
+                        isCompleted={isCompleted}
+                        question={`${question}\n\n${answer}`}
+                        questionId={questionId}
+                        title={title}
+                        isLocked={isLocked}
+                        isStarred={isStarred}
+                      />
+                    );
+                  },
+                )}
+              </div>
+            </div>
+
+            <div className='flex flex-col lg:flex-row gap-4 lg:gap-6 items-start'>
+              {/* Desktop Left Sidebar (Questions Navigation) */}
+              <aside className='hidden lg:flex w-full lg:w-[320px] xl:w-[360px] shrink-0 self-start sticky top-6 max-h-[calc(100vh-3rem)] bg-card border border-border/70 rounded-2xl p-4 sm:p-5 shadow-xs flex-col gap-3 overflow-hidden'>
                 <div className='w-full sticky top-0 bg-card z-10 pb-3 border-b border-border/60 space-y-2'>
                   <div className='flex items-center justify-between'>
                     <h2 className='font-semibold text-base sm:text-lg text-foreground'>
@@ -427,7 +522,7 @@ const SheetPage = ({
               </aside>
 
               {/* Main Content Viewer */}
-              <main className='flex-1 w-full bg-card border border-border/70 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xs min-h-[500px]'>
+              <main className='flex-1 w-full bg-transparent lg:bg-card border-none lg:border lg:border-border/70 rounded-none lg:rounded-2xl p-0 sm:p-4 lg:p-10 shadow-none lg:shadow-xs min-h-[500px]'>
                 {isLocked ? (
                   <div className='w-full space-y-6'>
                     <div>

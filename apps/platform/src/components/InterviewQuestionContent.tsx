@@ -65,14 +65,14 @@ const InterviewQuestionContent = ({
 
       {/* Metadata Row: Priority, Frequency, Company Types */}
       <div
-        className={`flex items-center gap-3 text-xs pb-5 border-b mb-6 flex-wrap ${
+        className={`flex items-center gap-3 text-xs pb-3.5 border-b mb-4 flex-wrap ${
           isDark
             ? 'text-gray-400 border-gray-800'
             : 'text-muted-foreground border-border/80'
         }`}
       >
         {priority && (
-          <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-1 rounded-md'>
+          <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-0.5 rounded-md'>
             {priority} Priority
           </span>
         )}
@@ -106,9 +106,9 @@ const InterviewQuestionContent = ({
       </div>
 
       {/* Structured Content matching core interview layout */}
-      <div className='space-y-6 w-full'>
+      <div className='space-y-4 w-full'>
         {question && (
-          <div className='space-y-3'>
+          <div className='space-y-1.5'>
             <h2 className='text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5'>
               <span className='font-bold'>—</span>
               <span>PROBLEM STATEMENT</span>
@@ -120,7 +120,7 @@ const InterviewQuestionContent = ({
         )}
 
         {answer && (
-          <div className='space-y-4'>
+          <div className='space-y-2'>
             <div className={proseClass}>
               <InterviewSheetMDXRenderer mdxSource={answer} theme={theme} />
             </div>
@@ -129,7 +129,7 @@ const InterviewQuestionContent = ({
       </div>
 
       {actions && actions.length > 0 && (
-        <div className='mt-8 pt-6 border-t border-border/80 w-full flex flex-wrap items-center gap-3'>
+        <div className='mt-5 pt-4 border-t border-border/80 w-full flex flex-wrap items-center gap-3'>
           {actions}
         </div>
       )}

@@ -55,7 +55,7 @@ const TabbedCodeBlock = ({
 
   return (
     <div
-      className={`border rounded-xl overflow-hidden my-5 shadow-2xs ${
+      className={`border rounded-xl overflow-hidden my-3 shadow-2xs ${
         isDark
           ? 'bg-[#0f0f11] border-gray-800'
           : 'bg-[#F8F9FD] border-border/80'
@@ -174,7 +174,7 @@ const PlainTextBlock = ({ content, theme = 'light' }: PlainTextBlockProps) => {
 
   return (
     <div
-      className={`relative group border rounded-xl my-4 overflow-hidden shadow-2xs ${
+      className={`relative group border rounded-xl my-3 overflow-hidden shadow-2xs ${
         isDark
           ? 'bg-[#0f0f11] border-gray-800'
           : 'bg-[#F8F9FD] border-border/80'
@@ -281,7 +281,7 @@ export const InterviewSheetMDXRenderer = ({
           'text-purple-600 font-semibold text-xs uppercase tracking-wider';
       }
 
-      return `<div class="mt-6 mb-3"><h3 class="${headingColorClass} flex items-center gap-1.5">${prefixIcon}<span>`;
+      return `<div class="mt-4 mb-2"><h3 class="${headingColorClass} flex items-center gap-1.5">${prefixIcon}<span>`;
     };
 
     instance.renderer.rules.heading_close = () => {
@@ -306,14 +306,14 @@ export const InterviewSheetMDXRenderer = ({
     instance.renderer.rules.em_close = () => `</em>`;
 
     instance.renderer.rules.ordered_list_open = () =>
-      `<ol class="list-decimal pl-5 mb-3 space-y-1.5 ${textColorClass}">`;
+      `<ol class="list-decimal pl-5 mb-2 space-y-1 ${textColorClass}">`;
     instance.renderer.rules.bullet_list_open = () =>
-      `<ul class="list-disc pl-5 mb-3 space-y-1.5 ${textColorClass}">`;
+      `<ul class="list-disc pl-5 mb-2 space-y-1 ${textColorClass}">`;
     instance.renderer.rules.list_item_open = () =>
       `<li class="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-normal">`;
     instance.renderer.rules.list_item_close = () => `</li>`;
     instance.renderer.rules.paragraph_open = () =>
-      `<p class="mb-3 text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-normal">`;
+      `<p class="mb-2 text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-normal">`;
 
     instance.renderer.rules.link_open = (tokens: any, idx: any) => {
       const token = tokens[idx];
@@ -509,7 +509,7 @@ export const InterviewSheetMDXRenderer = ({
 
   return (
     <div className='w-full flex flex-col justify-between'>
-      <div className={`space-y-6 ${textColorClass}`}>
+      <div className={`space-y-3 sm:space-y-3.5 ${textColorClass}`}>
         {segments.map((seg, idx) => {
           if (seg.type === 'html') {
             const html = renderHTMLSegment(seg.content);
