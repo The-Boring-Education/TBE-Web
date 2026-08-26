@@ -1,4 +1,5 @@
 import { sanitizeHTML } from '@tbe/components';
+import { Check, Copy } from 'lucide-react';
 import MarkdownIt from 'markdown-it';
 import { useMemo, useState } from 'react';
 
@@ -7,9 +8,15 @@ const LANGUAGE_LABELS: Record<string, string> = {
   java: 'Java',
   cpp: 'C++',
   javascript: 'JavaScript',
+  js: 'JavaScript',
+  jsx: 'JSX',
+  ts: 'TypeScript',
+  tsx: 'TSX',
   go: 'Go',
   typescript: 'TypeScript',
   sql: 'SQL',
+  html: 'HTML',
+  css: 'CSS',
 };
 
 interface TabbedCodeBlockProps {
@@ -27,7 +34,7 @@ const TabbedCodeBlock = ({
   const [activeLanguage, setActiveLanguage] = useState(
     availableLanguages.includes(defaultLanguage)
       ? defaultLanguage
-      : availableLanguages[0] || 'python',
+      : availableLanguages[0] || 'javascript',
   );
   const [copied, setCopied] = useState(false);
 
@@ -44,91 +51,102 @@ const TabbedCodeBlock = ({
   };
 
   const codeLines = currentCode.split('\n');
-
   const isDark = theme === 'dark';
 
   return (
     <div
-      className={`border rounded-lg overflow-hidden my-6 -mx-4 sm:mx-0 max-sm:rounded-none max-sm:border-x-0 ${
-        isDark ? 'bg-[#141414] border-gray-800/80' : 'bg-white border-gray-200'
+      className={`border rounded-xl overflow-hidden my-3 shadow-2xs ${
+        isDark
+          ? 'bg-[#0f0f11] border-gray-800'
+          : 'bg-[#F8F9FD] border-border/80'
       }`}
     >
-      {/* Language tabs */}
+      {/* Code Header: Languages & Copy */}
       <div
-        className={`flex border-b overflow-x-auto ${
+        className={`flex items-center justify-between px-4 py-2.5 border-b ${
           isDark
-            ? 'border-gray-800/50 bg-[#111]'
-            : 'border-gray-200 bg-[#fbfbfb]'
+            ? 'border-gray-800/80 bg-[#151518]'
+            : 'border-border/60 bg-muted/40'
         }`}
       >
-        {availableLanguages.map((lang) => {
-          const isActive = activeLanguage === lang;
-          return (
-            <button
-              key={lang}
-              onClick={() => {
-                setActiveLanguage(lang);
-                setCopied(false);
-              }}
-              className={`px-3.5 py-2 text-xs font-mono transition-all duration-200 whitespace-nowrap border-b-2 cursor-pointer ${
-                isActive
-                  ? isDark
-                    ? 'text-red-400 border-red-500 bg-red-950/10'
-                    : 'text-red-500 border-red-500 bg-red-50/30'
-                  : isDark
-                    ? 'text-gray-500 border-transparent hover:text-gray-300 hover:bg-[#1a1a1a]'
-                    : 'text-gray-400 border-transparent hover:text-gray-700 hover:bg-gray-50'
+        <div className='flex items-center gap-2 overflow-x-auto'>
+          {availableLanguages.length === 1 ? (
+            <span
+              className={`text-xs font-bold font-mono uppercase tracking-wider ${
+                isDark ? 'text-purple-400' : 'text-purple-600'
               }`}
             >
-              {LANGUAGE_LABELS[lang] ||
-                lang.charAt(0).toUpperCase() + lang.slice(1)}
-            </button>
-          );
-        })}
-      </div>
+              {LANGUAGE_LABELS[availableLanguages[0]] ||
+                availableLanguages[0].toUpperCase()}
+            </span>
+          ) : (
+            availableLanguages.map((lang) => {
+              const isActive = activeLanguage === lang;
+              return (
+                <button
+                  key={lang}
+                  onClick={() => {
+                    setActiveLanguage(lang);
+                    setCopied(false);
+                  }}
+                  className={`px-2.5 py-1 text-xs font-mono rounded-md transition-all duration-150 cursor-pointer ${
+                    isActive
+                      ? isDark
+                        ? 'text-purple-400 bg-purple-950/40 font-semibold'
+                        : 'text-purple-700 bg-purple-100/70 font-semibold'
+                      : isDark
+                        ? 'text-gray-400 hover:text-gray-200'
+                        : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {LANGUAGE_LABELS[lang] ||
+                    lang.charAt(0).toUpperCase() + lang.slice(1)}
+                </button>
+              );
+            })
+          )}
+        </div>
 
-      {/* Code block with line numbers and copy */}
-      <div className='relative group'>
         <button
           onClick={handleCopy}
-          className={`absolute top-2 right-2 px-2 py-1 text-[10px] font-mono rounded border transition-all duration-200 opacity-0 group-hover:opacity-100 z-10 cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-md transition-all duration-150 cursor-pointer ${
             isDark
-              ? 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600'
-              : 'bg-white border-gray-255 text-gray-500 hover:text-gray-850 hover:border-gray-355'
+              ? 'text-gray-400 hover:text-white hover:bg-gray-800'
+              : 'text-muted-foreground hover:text-foreground hover:bg-muted'
           }`}
         >
-          {copied ? '✓ Copied' : 'Copy'}
+          {copied ? (
+            <Check className='w-3.5 h-3.5 text-emerald-500' />
+          ) : (
+            <Copy className='w-3.5 h-3.5' />
+          )}
+          <span>{copied ? 'Copied' : 'Copy'}</span>
         </button>
+      </div>
+
+      {/* Code with Line numbers */}
+      <div className='flex overflow-x-auto text-xs sm:text-[13px] font-mono leading-relaxed'>
         <div
-          className={`flex overflow-x-auto ${isDark ? 'bg-[#0d0d0d]' : 'bg-[#fafafa]'}`}
+          className={`py-3 pl-3 pr-2.5 select-none border-r shrink-0 text-right ${
+            isDark
+              ? 'border-gray-800/40 text-gray-600 bg-[#0d0d0f]'
+              : 'border-border/40 text-muted-foreground/40 bg-muted/10'
+          }`}
         >
-          {/* Line numbers */}
-          <div
-            className={`py-3 pl-3 pr-2 select-none border-r shrink-0 hidden sm:block ${
-              isDark ? 'border-gray-800/30' : 'border-gray-200/50'
+          {codeLines.map((_, i) => (
+            <div key={i} className='min-w-[20px]'>
+              {i + 1}
+            </div>
+          ))}
+        </div>
+        <div className='py-3 px-4 flex-1 min-w-0'>
+          <pre
+            className={`font-mono bg-transparent p-0 m-0 border-0 shadow-none whitespace-pre overflow-x-auto ${
+              isDark ? 'text-gray-200' : 'text-gray-800'
             }`}
           >
-            {codeLines.map((_, i) => (
-              <div
-                key={i}
-                className={`font-mono text-[11px] leading-relaxed text-right min-w-[20px] ${
-                  isDark ? 'text-gray-600' : 'text-gray-400'
-                }`}
-              >
-                {i + 1}
-              </div>
-            ))}
-          </div>
-          {/* Code */}
-          <div className='py-3 px-3 flex-1 min-w-0'>
-            <pre
-              className={`font-mono text-[11px] sm:text-[13px] leading-relaxed whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal bg-transparent p-0 m-0 border-0 shadow-none ${
-                isDark ? 'text-gray-300' : 'text-gray-800'
-              }`}
-            >
-              {currentCode}
-            </pre>
-          </div>
+            {currentCode}
+          </pre>
         </div>
       </div>
     </div>
@@ -156,26 +174,31 @@ const PlainTextBlock = ({ content, theme = 'light' }: PlainTextBlockProps) => {
 
   return (
     <div
-      className={`relative group border rounded-lg my-6 overflow-hidden -mx-4 sm:mx-0 max-sm:rounded-none max-sm:border-x-0 ${
+      className={`relative group border rounded-xl my-3 overflow-hidden shadow-2xs ${
         isDark
-          ? 'bg-[#0A0A0A] border-gray-800/40'
-          : 'bg-[#fafafa] border-gray-200'
+          ? 'bg-[#0f0f11] border-gray-800'
+          : 'bg-[#F8F9FD] border-border/80'
       }`}
     >
       <button
         onClick={handleCopy}
-        className={`absolute top-2.5 right-2.5 px-2 py-1 text-[10px] font-mono rounded border transition-all duration-200 opacity-0 group-hover:opacity-100 z-10 cursor-pointer ${
+        className={`absolute top-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-md border transition-all duration-150 opacity-0 group-hover:opacity-100 z-10 cursor-pointer ${
           isDark
-            ? 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600'
-            : 'bg-white border-gray-255 text-gray-500 hover:text-gray-850 hover:border-gray-355'
+            ? 'bg-gray-800 border-gray-700 text-gray-300 hover:text-white'
+            : 'bg-card border-border text-muted-foreground hover:text-foreground'
         }`}
       >
-        {copied ? '✓ Copied' : 'Copy'}
+        {copied ? (
+          <Check className='w-3.5 h-3.5 text-emerald-500' />
+        ) : (
+          <Copy className='w-3.5 h-3.5' />
+        )}
+        <span>{copied ? 'Copied' : 'Copy'}</span>
       </button>
-      <div className='overflow-x-auto p-4 scrollbar-thin-grey'>
+      <div className='overflow-x-auto p-4'>
         <pre
-          className={`font-mono text-[11px] sm:text-[12.5px] leading-relaxed whitespace-pre-wrap break-words sm:whitespace-pre sm:break-normal bg-transparent p-0 m-0 border-0 shadow-none ${
-            isDark ? 'text-gray-300' : 'text-gray-800'
+          className={`font-mono text-xs sm:text-[13px] leading-relaxed whitespace-pre-wrap break-words bg-transparent p-0 m-0 border-0 shadow-none ${
+            isDark ? 'text-gray-200' : 'text-gray-800'
           }`}
         >
           {content}
@@ -206,73 +229,133 @@ export const InterviewSheetMDXRenderer = ({
       typographer: true,
     });
 
-    // Custom heading renderer to assign classes matching packages/components
+    // Custom heading renderer with icons matching reference styling
     instance.renderer.rules.heading_open = (tokens: any[], idx: number) => {
       const token = tokens[idx];
-      const { tag } = token;
-      const level = parseInt(tag.charAt(1)) || 1;
-
       const nextToken = tokens[idx + 1];
       const titleText =
         nextToken && nextToken.type === 'inline' ? nextToken.content : '';
-      const idAttr = titleText
-        ? ` id="${titleText
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)/g, '')}"`
-        : '';
+      const normalizedTitle = titleText.trim().toLowerCase();
 
-      const headingSizes = {
-        1: 'text-2xl',
-        2: 'text-xl',
-        3: 'text-lg',
-        4: 'text-base',
-        5: 'text-sm',
-        6: 'text-xs',
-      };
-      const sizeClass =
-        headingSizes[level as keyof typeof headingSizes] || 'text-base';
-      const headingClass = isDark
-        ? `text-contentDark font-bold mb-2 ${sizeClass}`
-        : `text-contentLight font-bold mb-2 ${sizeClass}`;
-      return `<${tag}${idAttr} class="${headingClass}">`;
+      let prefixIcon = '';
+      let headingColorClass = 'text-foreground font-semibold text-base';
+
+      if (normalizedTitle.includes('problem statement')) {
+        prefixIcon = '<span class="font-semibold">—</span> ';
+        headingColorClass =
+          'text-primary font-semibold text-xs uppercase tracking-wider';
+      } else if (normalizedTitle.includes('answer')) {
+        prefixIcon = '';
+        headingColorClass =
+          'text-primary font-semibold text-xs uppercase tracking-wider';
+      } else if (
+        normalizedTitle.includes('concept') ||
+        normalizedTitle.includes('explanation')
+      ) {
+        prefixIcon = '<span class="text-amber-500 text-sm">💡</span> ';
+        headingColorClass =
+          'text-amber-500 font-semibold text-xs uppercase tracking-wider';
+      } else if (
+        normalizedTitle.includes('practical') ||
+        normalizedTitle.includes('implementation')
+      ) {
+        prefixIcon =
+          '<span class="font-mono text-primary text-xs font-semibold">&lt;/&gt;</span> ';
+        headingColorClass =
+          'text-primary font-semibold text-xs uppercase tracking-wider';
+      } else if (normalizedTitle.includes('best practice')) {
+        prefixIcon = '<span class="text-amber-500 text-sm">⭐</span> ';
+        headingColorClass =
+          'text-amber-500 font-semibold text-xs uppercase tracking-wider';
+      } else if (normalizedTitle.includes('error handling')) {
+        prefixIcon =
+          '<span class="font-mono text-primary text-xs font-semibold">&lt;/&gt;</span> ';
+        headingColorClass =
+          'text-primary font-semibold text-xs uppercase tracking-wider';
+      } else if (
+        normalizedTitle.includes('real-world') ||
+        normalizedTitle.includes('application')
+      ) {
+        prefixIcon = '<span class="text-purple-600 text-sm">🗂</span> ';
+        headingColorClass =
+          'text-purple-600 font-semibold text-xs uppercase tracking-wider';
+      }
+
+      return `<div class="mt-4 mb-2"><h3 class="${headingColorClass} flex items-center gap-1.5">${prefixIcon}<span>`;
     };
 
-    instance.renderer.rules.heading_close = (tokens: any[], idx: number) => {
+    instance.renderer.rules.heading_close = () => {
+      return `</span></h3></div>`;
+    };
+
+    instance.renderer.rules.code_inline = (tokens: any[], idx: number) => {
       const token = tokens[idx];
-      return `</${token.tag}>`;
+      const code = token.content;
+      return `<code class="font-mono text-xs sm:text-[13px] px-1.5 py-0.5 rounded-md ${
+        isDark
+          ? 'bg-muted/40 text-red-400 border border-gray-800'
+          : 'bg-red-50 text-primary border border-red-200/50'
+      } font-medium mx-0.5">${code}</code>`;
     };
 
     instance.renderer.rules.strong_open = () =>
-      `<strong class="font-bold ${textColorClass}">`;
+      `<strong class="font-semibold ${textColorClass}">`;
     instance.renderer.rules.strong_close = () => `</strong>`;
     instance.renderer.rules.em_open = () =>
       `<em class="italic ${textColorClass}">`;
     instance.renderer.rules.em_close = () => `</em>`;
 
     instance.renderer.rules.ordered_list_open = () =>
-      `<ol class="md-list list-decimal pl-5 mb-3 ${textColorClass}">`;
+      `<ol class="list-decimal pl-5 mb-2 space-y-1 ${textColorClass}">`;
     instance.renderer.rules.bullet_list_open = () =>
-      `<ul class="md-list list-disc pl-5 mb-3 ${textColorClass}">`;
+      `<ul class="list-disc pl-5 mb-2 space-y-1 ${textColorClass}">`;
+    instance.renderer.rules.list_item_open = () =>
+      `<li class="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-normal">`;
+    instance.renderer.rules.list_item_close = () => `</li>`;
     instance.renderer.rules.paragraph_open = () =>
-      `<p class="mb-2 ${textColorClass}">`;
+      `<p class="mb-2 text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-normal">`;
 
     instance.renderer.rules.link_open = (tokens: any, idx: any) => {
       const token = tokens[idx];
-      const href = token.attrGet('href');
+      const href = token.attrGet('href') || '';
       if (href.includes('youtube.com') || href.includes('youtu.be')) {
         if (href.includes('list=')) {
-          return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
         } else {
           let embedHref = href;
           if (href.includes('watch')) {
-            const videoId = href.split('v=')[1].split('&')[0];
+            const videoId = href.split('v=')[1]?.split('&')[0];
+            embedHref = `https://www.youtube.com/embed/${videoId}`;
+          } else if (href.includes('youtu.be/')) {
+            const videoId = href.split('youtu.be/')[1]?.split('?')[0];
             embedHref = `https://www.youtube.com/embed/${videoId}`;
           }
-          return `<iframe width="100%" height="550" class="rounded" src="${embedHref}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+
+          // Clear any child text tokens so URL text doesn't show after iframe
+          for (let j = idx + 1; j < tokens.length; j++) {
+            if (tokens[j].type === 'link_close') break;
+            tokens[j].content = '';
+            if (tokens[j].children) {
+              tokens[j].children.forEach((c: any) => (c.content = ''));
+            }
+          }
+          token.meta = { isIframe: true };
+
+          return `<div class="my-4 aspect-video w-full overflow-hidden rounded-xl shadow-xs"><iframe width="100%" height="100%" class="w-full h-full rounded-xl" src="${embedHref}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
         }
       }
-      return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
+    };
+
+    instance.renderer.rules.link_close = (tokens: any, idx: any) => {
+      let openIdx = idx - 1;
+      while (openIdx >= 0 && tokens[openIdx].type !== 'link_open') {
+        openIdx--;
+      }
+      if (openIdx >= 0 && tokens[openIdx]?.meta?.isIframe) {
+        return '';
+      }
+      return '</a>';
     };
 
     // Explicit image renderer
@@ -439,19 +522,19 @@ export const InterviewSheetMDXRenderer = ({
         if (match.includes('<') || match.includes('>')) {
           return match;
         }
-        return `<strong class="font-bold ${textColorClass}">${text.trim()}</strong>`;
+        return `<strong class="font-semibold ${textColorClass}">${text.trim()}</strong>`;
       });
     }
     return sanitizeHTML(html);
   };
 
   const containerClass = isDark
-    ? 'break-words text-contentDark [&_*]:text-contentDark [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-bold [&_strong]:text-contentDark [&_em]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-left [&_th]:px-4 [&_th]:py-2 [&_th]:border-b [&_th]:border-gray-800 [&_th]:text-gray-200 [&_th]:font-bold [&_th]:text-sm [&_td]:px-4 [&_td]:py-2 [&_td]:border-b [&_td]:border-gray-900 [&_td]:text-gray-400 [&_td]:text-sm'
-    : 'break-words text-contentLight [&_*]:text-contentLight [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-bold [&_strong]:text-contentLight [&_em]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-left [&_th]:px-4 [&_th]:py-2 [&_th]:border-b [&_th]:border-gray-200 [&_th]:text-gray-700 [&_th]:font-bold [&_th]:text-sm [&_td]:px-4 [&_td]:py-2 [&_td]:border-b [&_td]:border-gray-100 [&_td]:text-gray-600 [&_td]:text-sm';
+    ? 'break-words text-contentDark [&_*]:text-contentDark [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-semibold [&_strong]:text-contentDark [&_em]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-left [&_th]:px-4 [&_th]:py-2 [&_th]:border-b [&_th]:border-gray-800 [&_th]:text-gray-200 [&_th]:font-semibold [&_th]:text-sm [&_td]:px-4 [&_td]:py-2 [&_td]:border-b [&_td]:border-gray-900 [&_td]:text-gray-400 [&_td]:text-sm [&_code]:font-mono [&_code]:text-xs [&_code]:sm:text-[13px] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:bg-muted/40 [&_code]:text-red-400 [&_code]:border [&_code]:border-gray-800'
+    : 'break-words text-contentLight [&_*]:text-contentLight [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs [&_h1]:mt-4 [&_h2]:mt-3 [&_h3]:mt-2 [&_h4]:mt-2 [&_h5]:mt-2 [&_h6]:mt-2 [&_strong]:font-semibold [&_strong]:text-contentLight [&_em]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-xl [&_img]:my-6 [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-left [&_th]:px-4 [&_th]:py-2 [&_th]:border-b [&_th]:border-gray-200 [&_th]:text-gray-700 [&_th]:font-semibold [&_th]:text-sm [&_td]:px-4 [&_td]:py-2 [&_td]:border-b [&_td]:border-gray-100 [&_td]:text-gray-600 [&_td]:text-sm [&_code]:font-mono [&_code]:text-xs [&_code]:sm:text-[13px] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:bg-red-50 [&_code]:text-primary [&_code]:border [&_code]:border-red-200/50';
 
   return (
     <div className='w-full flex flex-col justify-between'>
-      <div className={`space-y-6 ${textColorClass}`}>
+      <div className={`space-y-3 sm:space-y-3.5 ${textColorClass}`}>
         {segments.map((seg, idx) => {
           if (seg.type === 'html') {
             const html = renderHTMLSegment(seg.content);
