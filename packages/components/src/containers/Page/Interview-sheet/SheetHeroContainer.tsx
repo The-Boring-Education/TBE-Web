@@ -20,8 +20,11 @@ const SheetHeroContainer = ({
   isPurchased,
   redirectTo,
   backHref,
+  backText = "Back to Courses",
+  trackType = "sheet",
   theme,
   onEnrollSuccess,
+  onCustomEnroll,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -32,41 +35,67 @@ const SheetHeroContainer = ({
     setIsEnrolled(initialIsEnrolled);
   }, [initialIsEnrolled]);
 
-  const { makeRequest, loading } = useApi("interview-prep/enrollSheet");
+  const { makeRequest, loading } = useApi(
+    trackType === "course"
+      ? "shiksha/enrollCourse"
+      : "interview-prep/enrollSheet",
+  );
 
   const enrollSheet = () => {
+    if (onCustomEnroll) {
+      onCustomEnroll();
+      return;
+    }
+
+    const apiUrl =
+      trackType === "course" ? routes.api.enrollCourse : routes.api.enrollSheet;
+    const bodyPayload =
+      trackType === "course"
+        ? { userId: user?.id, courseId: id }
+        : { userId: user?.id, sheetId: id };
+
     makeRequest({
       method: "POST",
-      url: routes.api.enrollSheet,
-      body: {
-        userId: user?.id,
-        sheetId: id,
-      },
+      url: apiUrl,
+      body: bodyPayload,
     })
       .then(async () => {
         setIsEnrolled(true);
 
+        const actionName =
+          trackType === "course" ? "COURSE_ENROLL" : "INTERVIEW_SHEET_ENROLL";
+        const categoryName =
+          trackType === "course" ? "Course" : "InterviewSheet";
+        const labelName =
+          trackType === "course"
+            ? "Course Enrolled"
+            : "Interview Sheet Enrolled";
+
         trackEvent({
-          action: "INTERVIEW_SHEET_ENROLL",
-          category: "InterviewSheet",
-          label: "Interview Sheet Enrolled",
+          action: actionName,
+          category: categoryName,
+          label: labelName,
           value: {
             userId: user?.id,
-            sheetId: id,
+            id,
           },
         });
 
         await gamifiedAction.triggerGamifiedAction({
-          gamificationAction: "ENROLL_SHEET",
+          gamificationAction:
+            trackType === "course" ? "ENROLL_COURSE" : "ENROLL_SHEET",
           analytics: {
-            action: "INTERVIEW_SHEET_ENROLL",
-            category: "InterviewSheet",
-            label: "Interview Sheet Enrolled",
+            action: actionName,
+            category: categoryName,
+            label: labelName,
           },
-          customMessage: "Interview sheet enrolled! Time to practice!",
+          customMessage:
+            trackType === "course"
+              ? "Course enrolled! Happy learning!"
+              : "Interview sheet enrolled! Time to practice!",
           metadata: {
-            sheetId: id,
-            sheetName: name,
+            id,
+            name,
           },
         });
 
@@ -78,6 +107,13 @@ const SheetHeroContainer = ({
       })
       .catch((error) => error);
   };
+
+  const enrollButtonLabel =
+    trackType === "course" ? "Enroll in Course" : "Enroll in Sheet";
+  const trackLabel =
+    trackType === "course"
+      ? `COURSE TRACK - ${name}`
+      : `PRACTICE TRACK - ${name}`;
 
   let headerActionButton;
 
@@ -95,7 +131,7 @@ const SheetHeroContainer = ({
         className="w-full bg-[#EF4444] hover:bg-[#DC2626] text-white font-medium py-2 px-4 rounded-lg shadow-xs text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.98]"
       >
         <Rocket className="w-3.5 h-3.5 text-white shrink-0 fill-white" />
-        <span>Enroll in Sheet</span>
+        <span>{enrollButtonLabel}</span>
       </button>
     );
   } else if (isAuth && !isEnrolled && isPremium && isPurchased) {
@@ -105,7 +141,7 @@ const SheetHeroContainer = ({
         className="w-full bg-[#EF4444] hover:bg-[#DC2626] text-white font-medium py-2 px-4 rounded-lg shadow-xs text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.98]"
       >
         <Rocket className="w-3.5 h-3.5 text-white shrink-0 fill-white" />
-        <span>Enroll in Sheet</span>
+        <span>{enrollButtonLabel}</span>
       </button>
     );
   }
@@ -132,7 +168,7 @@ const SheetHeroContainer = ({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-card hover:bg-muted/70 text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-2xs group cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-150 group-hover:-translate-x-0.5" />
-                <span>Back to Courses</span>
+                <span>{backText}</span>
               </Link>
             </div>
             <div className="space-y-1">
@@ -140,7 +176,7 @@ const SheetHeroContainer = ({
                 className="text-xs font-semibold text-primary uppercase tracking-wider"
                 level="p"
               >
-                PRACTICE TRACK - {name}
+                {trackLabel}
               </Text>
               <h1 className="font-semibold text-2xl sm:text-3xl text-foreground tracking-tight">
                 Hello {user?.name ?? "Learner"}! 👋

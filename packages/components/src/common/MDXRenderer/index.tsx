@@ -363,10 +363,32 @@ const MDXRenderer = ({
       const embedSrc = md.utils.escapeHtml(
         `https://www.youtube.com/embed/${youtube.videoId}`,
       );
-      return `<iframe width="100%" height="550" class="rounded" src="${embedSrc}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+
+      // Clear any child text tokens so URL text doesn't show after iframe
+      for (let j = idx + 1; j < tokens.length; j++) {
+        if (tokens[j].type === "link_close") break;
+        tokens[j].content = "";
+        if (tokens[j].children) {
+          tokens[j].children.forEach((c: any) => (c.content = ""));
+        }
+      }
+      token.meta = { isIframe: true };
+
+      return `<div class="my-4 aspect-video w-full overflow-hidden rounded-xl shadow-xs"><iframe width="100%" height="100%" class="w-full h-full rounded-xl" src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
     }
 
     return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
+  };
+
+  md.renderer.rules.link_close = (tokens: any, idx: any) => {
+    let openIdx = idx - 1;
+    while (openIdx >= 0 && tokens[openIdx].type !== "link_open") {
+      openIdx--;
+    }
+    if (openIdx >= 0 && tokens[openIdx]?.meta?.isIframe) {
+      return "";
+    }
+    return "</a>";
   };
 
   md.renderer.rules.link_block = (tokens: any, idx: any) => {

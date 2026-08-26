@@ -1,413 +1,73 @@
 import {
-  ActionBanner,
-  Alert,
-  Button,
-  CertificateBanner,
-  ChapterLink,
-  ContentFeedbackWidget,
   CourseHeroContainer,
-  FeedbackPopup,
   LinerProgressBar,
   LoadingSpinner,
   MDXRenderer,
   SEO,
   Text,
 } from '@tbe/components';
-import { routes, SCREEN_BREAKPOINTS } from '@tbe/constants';
+import type { CoursePageProps } from '@tbe/interface';
+import { getCoursePageProps } from '@tbe/utils';
 import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-  useGamifiedAction,
-} from '@tbe/gamification';
-import { useAnalytics, useMediaQuery, useUser } from '@tbe/hooks';
-import type {
-  AddCertificateRequestPayloadProps,
-  CoursePageProps,
-} from '@tbe/interface';
-import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
-import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
-import { BookOpen } from 'lucide-react';
-import router from 'next/router';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaLock, FaTrophy } from 'react-icons/fa';
+  BookOpen,
+  CheckCircle2,
+  Circle,
+  GraduationCap,
+  Lock,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Fragment, useState } from 'react';
 
-const CoursePage = ({
-  course,
+const CourseLandingPage = ({
+  course: initialCourse,
   meta,
   slug,
   seoMeta,
-  currentChapterId,
 }: CoursePageProps) => {
-  const [courseMeta, setCourseMeta] = useState<string>(meta || '');
-  const [chapters, setChapters] = useState(course.chapters || []);
-  const firstChapterId = chapters?.[0]?._id?.toString() || '';
-  const [currentChapterIdState, setCurrentChapterIdState] = useState(
-    currentChapterId || firstChapterId,
+  const router = useRouter();
+  const [course, setCourse] = useState(initialCourse);
+  const [isEnrolled, setIsEnrolled] = useState(
+    initialCourse?.isEnrolled || false,
   );
-  const [isChapterCompleted, setIsChapterCompleted] = useState(
-    chapters.find((chapter) => chapter._id.toString() === currentChapterIdState)
-      ?.isCompleted,
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [isGeneratingCertificate, setIsGeneratingCertificate] = useState(false);
-  const [isCourseCompleted, setIsCourseCompleted] = useState(
-    course.isCompleted ?? false,
-  );
-  const [certificateId, setCertificateId] = useState(course.certificateId);
-  const isSmallScreen = useMediaQuery(SCREEN_BREAKPOINTS.SM);
+  const chapters = course?.chapters || [];
+  const rawSlug =
+    (router.query.courseSlug as string) || slug || course?.slug || '';
+  const cleanSlug = rawSlug.replace(/^\/?(shiksha\/)?/, '');
+  const learnHref = `/shiksha/${cleanSlug}/learn`;
 
-  const [showChapterFeedback, setShowChapterFeedback] = useState(false);
-  const [showCourseFeedback, setShowCourseFeedback] = useState(false);
-  const contentSectionRef = useRef<HTMLDivElement>(null);
-
-  const { user } = useUser();
-  // All courses are free now - only check enrollment
-  const isLocked = !course?.isEnrolled;
-
-  // Calculate the total chapters and completed chapters
   const totalChapters = chapters.length;
   const completedChapters = chapters.filter(
     (chapter) => chapter.isCompleted,
   ).length;
-
-  // Check if all chapters are completed and update course completion status
-  const checkCourseCompletion = () => {
-    const allChaptersCompleted =
-      chapters.length > 0 && chapters.every((chapter) => chapter.isCompleted);
-    if (allChaptersCompleted && !isCourseCompleted) {
-      setIsCourseCompleted(true);
-    }
-  };
-
-  // Generate certificate if all chapters are completed but no certificate exists
-  const generateCertificateIfNeeded = async () => {
-    const allChaptersCompleted =
-      chapters.length > 0 && chapters.every((chapter) => chapter.isCompleted);
-    if (
-      allChaptersCompleted &&
-      !certificateId &&
-      user?.id &&
-      !isGeneratingCertificate
-    ) {
-      setIsGeneratingCertificate(true);
-      try {
-        const { status, data } = await makeRequest({
-          method: 'POST',
-          url: routes.api.certificate,
-          body: {
-            type: 'SHIKSHA',
-            userId: user.id,
-            userName: user.name,
-            programId: course._id,
-            programName: course.name,
-            date: formatDate({
-              dateFormat: {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              },
-            }).date,
-          } as AddCertificateRequestPayloadProps,
-        });
-
-        if (status && data?._id) {
-          setCertificateId(data._id);
-          console.log('Certificate generated:', data._id);
-        }
-      } catch (error) {
-        console.error('Error generating certificate:', error);
-      } finally {
-        setIsGeneratingCertificate(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const currentChapter = chapters.find(
-      (chapter) => chapter._id.toString() === currentChapterIdState,
-    );
-    setIsChapterCompleted(currentChapter?.isCompleted);
-
-    if (currentChapter) {
-      setCourseMeta(currentChapter.content);
-    }
-
-    // Check course completion status
-    checkCourseCompletion();
-
-    // Generate certificate if needed
-    generateCertificateIfNeeded();
-
-    // Show feedback popup if all chapters are completed
-    const allCompleted =
-      chapters.length > 0 && chapters.every((c) => c.isCompleted);
-
-    if (allCompleted && !showChapterFeedback) {
-      // Trigger course completion celebration
-      gamifiedAction.triggerGamifiedAction({
-        gamificationAction: 'COMPLETE_COURSE_CERTIFICATE',
-        analytics: {
-          action: 'CERTIFICATE_GENERATED',
-          category: 'Achievement',
-          label: 'Certificate Generated',
-        },
-        celebrationType: 'achievement',
-        customMessage: 'Congratulations! Course completed!',
-        metadata: {
-          courseId: course._id,
-          courseName: course.name,
-          totalChapters: chapters.length,
-        },
-      });
-    }
-
-    setShowChapterFeedback(allCompleted);
-  }, [currentChapterIdState, chapters]);
-
-  // Generate certificate when user is available and all chapters are completed
-  useEffect(() => {
-    if (user?.id && chapters.length > 0) {
-      generateCertificateIfNeeded();
-    }
-  }, [user?.id, chapters, certificateId]);
-
-  const { mutateAsync: makeRequest } = useMutation({
-    mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
-      sendRequest(params),
-  });
-  const { trackEvent } = useAnalytics();
-  const gamifiedAction = useGamifiedAction();
-  const queryClient = useQueryClient();
-  const { triggerCelebration, showToast } = useGamificationContext();
-
-  if (!course) return null;
-
-  const handleChapterClick = (chapterMeta: string, chapterId: string) => {
-    if (!isLocked) {
-      setCourseMeta(chapterMeta);
-      setCurrentChapterIdState(chapterId);
-
-      // Track chapter start
-      trackEvent({
-        action: 'COURSE_CHAPTER_START',
-        category: 'Learning',
-        label: 'Chapter Started',
-        value: {
-          userId: user?.id,
-          courseId: course._id,
-          chapterId,
-        },
-      });
-    }
-  };
-
-  const handleFeedbackComplete = () => {
-    setShowChapterFeedback(false);
-  };
-
-  const toggleCompletion = async () => {
-    // Don't allow completion if user is not enrolled
-    if (!course.isEnrolled) {
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const newCompletionStatus = !isChapterCompleted;
-
-      const response = await makeRequest({
-        method: 'PATCH',
-        url: routes.api.markCourseChapterAsCompleted,
-        body: {
-          userId: user?.id,
-          courseId: course._id,
-          chapterId: currentChapterIdState,
-          isCompleted: newCompletionStatus,
-        },
-      });
-
-      // Only proceed if the API call was successful
-      if (response?.status) {
-        if (newCompletionStatus) {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ''),
-          });
-          const pointsEarned = calculateUserPointsForAction(
-            'COMPLETE_COURSE_CHAPTER',
-          );
-          const intensity =
-            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
-          triggerCelebration({ type: 'points', intensity });
-          showToast({
-            type: 'points',
-            message: 'Chapter completed! Keep learning!',
-            points: pointsEarned,
-          });
-          trackEvent({
-            action: 'COURSE_CHAPTER_COMPLETE',
-            category: 'Learning',
-            label: 'Chapter Completed',
-            value: {
-              userId: user?.id,
-              courseId: course._id,
-              chapterId: currentChapterIdState,
-              courseName: course.name,
-            },
-          });
-        } else {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ''),
-          });
-          trackEvent({
-            action: 'COURSE_PROGRESS',
-            category: 'Course',
-            label: 'Course Progress',
-            value: {
-              userId: user?.id,
-              courseId: course._id,
-            },
-          });
-        }
-
-        // Update local state (mark chapter completed)
-        const updatedChapters = chapters.map((chapter) =>
-          chapter._id.toString() === currentChapterIdState
-            ? { ...chapter, isCompleted: newCompletionStatus }
-            : chapter,
-        );
-
-        setChapters(updatedChapters);
-        setIsChapterCompleted(newCompletionStatus);
-
-        // Check if course is now completed
-        const allChaptersCompleted = updatedChapters.every(
-          (chapter) => chapter.isCompleted,
-        );
-        if (allChaptersCompleted && !isCourseCompleted) {
-          setIsCourseCompleted(true);
-        }
-
-        // Move to next chapter if completed
-        if (newCompletionStatus) {
-          // Show feedback popup for chapter completion
-          setShowChapterFeedback(true);
-
-          // Find next incomplete chapter
-          const currentIndex = chapters.findIndex(
-            (c) => c._id.toString() === currentChapterIdState,
-          );
-
-          const next =
-            chapters.slice(currentIndex + 1).find((c) => !c.isCompleted) ||
-            chapters.find((c) => !c.isCompleted); // Loop to beginning if none left
-
-          if (next) {
-            const chapterId = next._id.toString();
-            setCurrentChapterIdState(chapterId);
-            setCourseMeta(next.content);
-
-            // Auto-scroll to content section for better UX
-            setTimeout(() => {
-              contentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-          } else {
-            // All chapters completed - generate certificate
-            const { status, data } = await makeRequest({
-              method: 'POST',
-              url: routes.api.certificate,
-              body: {
-                type: 'SHIKSHA',
-                userId: user?.id,
-                userName: user?.name,
-                programId: course._id,
-                programName: course.name,
-                date: formatDate({
-                  dateFormat: {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  },
-                }).date,
-              } as AddCertificateRequestPayloadProps,
-            });
-
-            if (status && data?._id) {
-              setIsCourseCompleted(true);
-              setCertificateId(data._id);
-              setShowCourseFeedback(true);
-
-              // Trigger course completion celebration
-              await gamifiedAction.triggerGamifiedAction({
-                gamificationAction: 'COMPLETE_COURSE_CERTIFICATE',
-                analytics: {
-                  action: 'CERTIFICATE_GENERATED',
-                  category: 'Achievement',
-                  label: 'Certificate Generated',
-                },
-                celebrationType: 'achievement',
-                customMessage: 'Congratulations! Course completed!',
-                metadata: {
-                  courseId: course._id,
-                  courseName: course.name,
-                  certificateId: data._id,
-                },
-              });
-            }
-          }
-        }
-      } else {
-        // Handle API error - don't update local state
-        console.error(
-          'Failed to update chapter completion:',
-          response?.message,
-        );
-      }
-    } catch (error) {
-      console.error('Error toggling chapter completion:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const alertContainer = isSmallScreen && (
-    <div className='max-w-7xl mx-auto px-4 pt-4'>
-      <Alert
-        className='rounded-xl border border-amber-200 bg-amber-50 text-amber-800'
-        message='This course includes hands-on code examples. We recommend using a laptop or desktop for the best experience.'
-        type='INFO'
-      />
-    </div>
-  );
-
-  // Show small loader if data is not ready
-  const isDataLoading = !course || !chapters || chapters.length === 0;
+  const isDataLoading = !course || chapters.length === 0;
 
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
       <div className='bg-background min-h-screen font-body text-foreground'>
-        {alertContainer}
-
-        {/* Hero Section */}
+        {/* Course Hero Section */}
         <CourseHeroContainer
-          id={course._id ?? ''}
-          isEnrolled={course.isEnrolled}
+          id={course?._id ?? ''}
+          isEnrolled={isEnrolled}
           isPremium={false}
-          name={course.name ?? ''}
-          slug={slug || course.slug || ''}
+          name={course?.name ?? ''}
+          slug={cleanSlug}
           completedChapters={completedChapters}
           totalChapters={totalChapters}
+          onEnrollSuccess={() => setIsEnrolled(true)}
+          startLearningHref={learnHref}
         />
 
         {isDataLoading && (
-          <div className='max-w-7xl mx-auto px-4 py-16 text-center'>
+          <div className='w-full max-w-[1536px] mx-auto px-4 py-16 text-center'>
             <div className='inline-flex items-center justify-center gap-3 bg-card border border-border px-6 py-4 rounded-xl shadow-xs'>
               <LoadingSpinner height={6} width={6} />
               <Text
                 level='p'
                 className='text-muted-foreground font-medium text-sm'
               >
-                Loading course content...
+                Loading course information...
               </Text>
             </div>
           </div>
@@ -416,202 +76,103 @@ const CoursePage = ({
         {!isDataLoading && (
           <div
             id='course-content'
-            className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10'
-            ref={contentSectionRef}
+            className='w-full max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8 sm:py-12 font-primary'
           >
-            <div className='flex flex-col lg:flex-row gap-8 items-start'>
-              {/* Left Sidebar (Chapters Navigation) */}
-              <aside className='w-full lg:w-96 xl:w-[420px] shrink-0 self-start sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-2'>
-                <div className='w-full sticky top-0 bg-card z-10 pb-2 border-b border-border/60 space-y-1.5'>
-                  <div className='flex items-center justify-between'>
-                    <h2 className='font-headings font-bold text-lg text-foreground'>
-                      Chapters
-                    </h2>
-                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20'>
-                      {chapters.length} chapters
-                    </span>
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-start'>
+              {/* Left Column (2 Cols): Overview */}
+              <div className='lg:col-span-2 space-y-6'>
+                <div className='bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4'>
+                  <div className='flex items-center gap-2 text-primary font-semibold text-xs uppercase tracking-wider'>
+                    <BookOpen className='w-4 h-4' />
+                    <span>About This Course</span>
                   </div>
-                  {!isLocked && (
-                    <LinerProgressBar
-                      completedChapters={completedChapters}
-                      totalChapters={totalChapters}
-                    />
-                  )}
-                </div>
-
-                {/* Chapter List */}
-                <div className='flex flex-col gap-1 flex-1 overflow-y-auto pt-1'>
-                  {chapters?.map(
-                    ({ _id, name, content, isCompleted }, index) => {
-                      const chapterId = _id?.toString();
-
-                      return (
-                        <ChapterLink
-                          key={chapterId}
-                          chapterId={chapterId}
-                          content={content}
-                          currentChapterId={currentChapterIdState}
-                          handleChapterClick={handleChapterClick}
-                          href='#'
-                          isCompleted={isCompleted}
-                          name={`${index + 1}. ${name}`}
-                          isLocked={isLocked}
-                        />
-                      );
-                    },
-                  )}
-                </div>
-
-                {/* Bottom Banners */}
-                {!isLocked && (
-                  <div className='pt-3 border-t border-border/60 space-y-2'>
-                    <CertificateBanner
-                      backgroundColor={
-                        isCourseCompleted ? 'bg-purple-600' : 'bg-purple-400'
-                      }
-                      heading={
-                        isGeneratingCertificate
-                          ? 'Generating Certificate...'
-                          : isCourseCompleted
-                            ? 'View Certificate'
-                            : 'Certificate Locked'
-                      }
-                      icon={isCourseCompleted ? FaTrophy : FaLock}
-                      isLocked={!isCourseCompleted || isGeneratingCertificate}
-                      subtext={
-                        isGeneratingCertificate
-                          ? 'Generating your verified certificate...'
-                          : isCourseCompleted
-                            ? 'Download your course certificate'
-                            : 'Complete all chapters to unlock'
-                      }
-                      onClick={() => {
-                        if (
-                          isCourseCompleted &&
-                          certificateId &&
-                          !isGeneratingCertificate
-                        ) {
-                          router.push(`/certificate/${certificateId}`);
-                        }
-                      }}
-                    />
-
-                    {isCourseCompleted && (
-                      <ActionBanner
-                        backgroundColor='bg-blue-400'
-                        heading='Start Interview Prep'
-                        icon={FaTrophy}
-                        isLocked={false}
-                        subtext='Prepare for coding interviews next'
-                        onClick={() => {
-                          router.push(routes.interviewPrep);
-                        }}
-                      />
+                  <h2 className='font-headings font-bold text-2xl sm:text-3xl text-foreground'>
+                    Master {course.name}
+                  </h2>
+                  <div className='prose prose-slate max-w-none text-muted-foreground text-sm sm:text-base leading-relaxed'>
+                    {course.meta ? (
+                      <MDXRenderer mdxSource={course.meta} />
+                    ) : (
+                      <p>
+                        Welcome to {course.name}! This course is crafted to take
+                        you step-by-step through core principles, practical
+                        implementations, and real-world software concepts.
+                      </p>
                     )}
                   </div>
-                )}
-              </aside>
+                </div>
+              </div>
 
-              {/* Main Content Viewer */}
-              <main className='flex-1 w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs min-h-[500px]'>
-                {isLocked ? (
-                  <div className='w-full space-y-6'>
-                    <div>
-                      <h2 className='font-headings font-bold text-2xl text-foreground mb-4'>
-                        Course Overview
-                      </h2>
-                      <div className='prose prose-slate max-w-none'>
-                        <MDXRenderer mdxSource={course.meta || ''} />
-                      </div>
+              {/* Right Column (1 Col): Curriculum Syllabus */}
+              <div className='lg:col-span-1 space-y-6 sticky top-6'>
+                <div className='bg-card border border-border/80 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4'>
+                  <div className='flex items-center justify-between pb-3 border-b border-border/60'>
+                    <div className='flex items-center gap-2'>
+                      <GraduationCap className='w-4 h-4 text-primary' />
+                      <h3 className='font-semibold text-base text-foreground'>
+                        Curriculum
+                      </h3>
                     </div>
+                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20'>
+                      {totalChapters} Chapters
+                    </span>
+                  </div>
 
-                    <div className='rounded-xl border border-border bg-card p-4 sm:p-5 shadow-xs flex items-start gap-3'>
-                      <div className='text-primary shrink-0 mt-1'>
-                        <BookOpen className='w-5 h-5 text-primary' />
+                  {isEnrolled && totalChapters > 0 && (
+                    <div className='space-y-2'>
+                      <div className='flex items-center justify-between text-xs font-medium text-muted-foreground'>
+                        <span>Your Progress</span>
+                        <span>
+                          {completedChapters}/{totalChapters} completed
+                        </span>
                       </div>
-                      <div className='space-y-1 flex-1'>
-                        <h3 className='font-headings font-bold text-base text-foreground'>
-                          Enroll to Access Course
-                        </h3>
-                        <p className='text-xs sm:text-sm text-muted-foreground leading-relaxed'>
-                          This course is 100% free! Simply enroll to access all
-                          chapters, track your learning progress, and claim your
-                          certificate.
-                        </p>
-                      </div>
+                      <LinerProgressBar
+                        completedChapters={completedChapters}
+                        totalChapters={totalChapters}
+                      />
                     </div>
+                  )}
+
+                  {/* Chapter List formatted identical to QuestionLink */}
+                  <div className='flex flex-col gap-1.5 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar scroll-smooth'>
+                    {chapters.map((ch, idx) => {
+                      const chId = ch._id?.toString();
+                      const targetUrl = `${learnHref}?chapterId=${chId}`;
+
+                      return (
+                        <Link
+                          key={chId || idx}
+                          href={isEnrolled ? targetUrl : '#'}
+                          onClick={(e) => {
+                            if (!isEnrolled) {
+                              e.preventDefault();
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                          }}
+                          className={`flex items-start gap-2.5 w-full px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-primary transition-all duration-150 ${
+                            isEnrolled
+                              ? 'text-foreground hover:bg-muted/60 rounded-xl cursor-pointer'
+                              : 'text-muted-foreground/60 cursor-not-allowed opacity-75'
+                          }`}
+                        >
+                          {ch.isCompleted ? (
+                            <CheckCircle2 className='w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[1.5]' />
+                          ) : !isEnrolled ? (
+                            <Lock className='w-3.5 h-3.5 text-muted-foreground/60 shrink-0 mt-0.5 stroke-[1.5]' />
+                          ) : (
+                            <Circle className='w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground/35 stroke-[1.25]' />
+                          )}
+                          <span className='leading-snug break-words flex-1 font-medium'>
+                            {ch.name || ch.title}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </div>
-                ) : (
-                  <div className='w-full space-y-6'>
-                    <MDXRenderer
-                      mdxSource={courseMeta}
-                      actions={
-                        currentChapterIdState
-                          ? [
-                              <Button
-                                key='complete'
-                                className='w-fit mt-4 px-6 py-2.5 rounded-lg font-semibold shadow-xs'
-                                isLoading={isLoading}
-                                disabled={!course.isEnrolled}
-                                text={
-                                  isLoading
-                                    ? 'Marking...'
-                                    : !course.isEnrolled
-                                      ? 'Enroll to Mark Complete'
-                                      : isChapterCompleted
-                                        ? 'Completed'
-                                        : 'Mark As Completed'
-                                }
-                                variant={
-                                  isChapterCompleted
-                                    ? 'SUCCESS'
-                                    : !course.isEnrolled
-                                      ? 'SECONDARY'
-                                      : isLoading
-                                        ? 'SECONDARY'
-                                        : 'PRIMARY'
-                                }
-                                onClick={toggleCompletion}
-                              />,
-                            ]
-                          : []
-                      }
-                    />
-                  </div>
-                )}
-              </main>
+                </div>
+              </div>
             </div>
           </div>
-        )}
-
-        {showChapterFeedback && (
-          <FeedbackPopup
-            refId={currentChapterIdState}
-            type='SHIKSHA_CHAPTER'
-            onSubmit={handleFeedbackComplete}
-          />
-        )}
-
-        {showCourseFeedback && (
-          <FeedbackPopup refId={course._id} type='SHIKSHA_COURSE' />
-        )}
-
-        {/* Per-chapter feedback widget */}
-        {currentChapterIdState && course.isEnrolled && (
-          <ContentFeedbackWidget
-            contentType='SHIKSHA_CHAPTER'
-            contentId={currentChapterIdState}
-            title='Rate this chapter'
-            meta={{
-              courseId: course._id.toString(),
-              courseName: course.name || course.title || '',
-              chapterId: currentChapterIdState,
-              chapterName:
-                chapters.find((c) => c._id.toString() === currentChapterIdState)
-                  ?.title || '',
-            }}
-            theme='light'
-          />
         )}
       </div>
     </Fragment>
@@ -620,4 +181,4 @@ const CoursePage = ({
 
 export const getServerSideProps = getCoursePageProps;
 
-export default CoursePage;
+export default CourseLandingPage;

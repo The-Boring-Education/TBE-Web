@@ -317,20 +317,45 @@ export const InterviewSheetMDXRenderer = ({
 
     instance.renderer.rules.link_open = (tokens: any, idx: any) => {
       const token = tokens[idx];
-      const href = token.attrGet('href');
+      const href = token.attrGet('href') || '';
       if (href.includes('youtube.com') || href.includes('youtu.be')) {
         if (href.includes('list=')) {
-          return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
         } else {
           let embedHref = href;
           if (href.includes('watch')) {
-            const videoId = href.split('v=')[1].split('&')[0];
+            const videoId = href.split('v=')[1]?.split('&')[0];
+            embedHref = `https://www.youtube.com/embed/${videoId}`;
+          } else if (href.includes('youtu.be/')) {
+            const videoId = href.split('youtu.be/')[1]?.split('?')[0];
             embedHref = `https://www.youtube.com/embed/${videoId}`;
           }
-          return `<iframe width="100%" height="550" class="rounded" src="${embedHref}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+
+          // Clear any child text tokens so URL text doesn't show after iframe
+          for (let j = idx + 1; j < tokens.length; j++) {
+            if (tokens[j].type === 'link_close') break;
+            tokens[j].content = '';
+            if (tokens[j].children) {
+              tokens[j].children.forEach((c: any) => (c.content = ''));
+            }
+          }
+          token.meta = { isIframe: true };
+
+          return `<div class="my-4 aspect-video w-full overflow-hidden rounded-xl shadow-xs"><iframe width="100%" height="100%" class="w-full h-full rounded-xl" src="${embedHref}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
         }
       }
-      return `<a href=${href} target="_blank" class="text-primary underline strong-text">`;
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary underline strong-text">`;
+    };
+
+    instance.renderer.rules.link_close = (tokens: any, idx: any) => {
+      let openIdx = idx - 1;
+      while (openIdx >= 0 && tokens[openIdx].type !== 'link_open') {
+        openIdx--;
+      }
+      if (openIdx >= 0 && tokens[openIdx]?.meta?.isIframe) {
+        return '';
+      }
+      return '</a>';
     };
 
     // Explicit image renderer

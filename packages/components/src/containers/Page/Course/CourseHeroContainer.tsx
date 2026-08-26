@@ -82,6 +82,8 @@ const CourseHeroContainer = ({
   isPremium,
   completedChapters = 0,
   totalChapters = 0,
+  onEnrollSuccess,
+  startLearningHref,
 }: CourseHeroContainerProps) => {
   const { user, isAuth } = useUser();
   const { trackEvent } = useAnalytics();
@@ -120,11 +122,22 @@ const CourseHeroContainer = ({
         },
       });
 
-      window.location.reload();
+      if (onEnrollSuccess) {
+        onEnrollSuccess();
+      } else {
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Failed to enroll", error);
     }
   };
+
+  const cleanSlug = useMemo(() => {
+    return (slug || "").replace(/^\/?(shiksha\/)?/, "");
+  }, [slug]);
+
+  const resolvedLearnHref =
+    startLearningHref || (cleanSlug ? `/shiksha/${cleanSlug}/learn` : "");
 
   let headerActionButton;
 
@@ -136,7 +149,22 @@ const CourseHeroContainer = ({
         text="Enroll in Course →"
         variant="PRIMARY"
         onClick={enrollCourse}
-        className="px-8 py-3.5 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white border-none"
+        className="px-8 py-3.5 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white border-none cursor-pointer"
+      />
+    );
+  } else if (isAuth && isEnrolled) {
+    headerActionButton = (
+      <Button
+        text={
+          completedChapters > 0 ? "Continue Learning →" : "Start Learning →"
+        }
+        variant="PRIMARY"
+        onClick={() => {
+          if (resolvedLearnHref) {
+            window.location.href = resolvedLearnHref;
+          }
+        }}
+        className="px-8 py-3.5 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white border-none cursor-pointer"
       />
     );
   }
@@ -377,14 +405,18 @@ const CourseHeroContainer = ({
                         variant="PRIMARY"
                         className="w-full py-3 rounded-xl font-bold text-sm shadow-lg bg-gradient-to-r from-red-500 to-rose-600 text-white border-none"
                         onClick={() => {
-                          const contentSection =
-                            document.getElementById("course-content");
-                          if (contentSection) {
-                            const offset = 80;
-                            window.scrollTo({
-                              top: contentSection.offsetTop - offset,
-                              behavior: "smooth",
-                            });
+                          if (resolvedLearnHref) {
+                            window.location.href = resolvedLearnHref;
+                          } else {
+                            const contentSection =
+                              document.getElementById("course-content");
+                            if (contentSection) {
+                              const offset = 80;
+                              window.scrollTo({
+                                top: contentSection.offsetTop - offset,
+                                behavior: "smooth",
+                              });
+                            }
                           }
                         }}
                       />
