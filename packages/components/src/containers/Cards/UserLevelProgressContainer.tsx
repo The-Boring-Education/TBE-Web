@@ -62,20 +62,21 @@ const UserLevelProgressContainer = ({
           </div>
           <div className="flex-1 min-w-0">
             <p
-              className={`text-[9px] uppercase tracking-widest font-semibold ${
+              className={`text-[11px] font-semibold ${
                 isDark ? "text-white/40" : "text-gray-400"
               }`}
+              style={{ textTransform: "none", letterSpacing: "normal" }}
             >
               Your Points
             </p>
             <p
-              className={`text-2xl font-black leading-none ${
+              className={`text-4xl font-black leading-tight ${
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
               {points}{" "}
               <span
-                className={`text-base font-bold ${
+                className={`text-xl font-semibold ${
                   isDark ? "text-white/40" : "text-gray-400"
                 }`}
               >
@@ -108,14 +109,15 @@ const UserLevelProgressContainer = ({
         />
         <div className="flex-1 min-w-0">
           <p
-            className={`text-[9px] uppercase tracking-widest font-semibold ${
+            className={`text-[11px] font-semibold ${
               isDark ? "text-white/40" : "text-gray-400"
             }`}
+            style={{ textTransform: "none", letterSpacing: "normal" }}
           >
             Current Level
           </p>
           <p
-            className={`text-xs font-bold mt-0.5 ${
+            className={`text-base font-bold mt-0.5 ${
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
@@ -140,14 +142,15 @@ const UserLevelProgressContainer = ({
             />
             <div className="flex-1 min-w-0">
               <p
-                className={`text-[9px] uppercase tracking-widest font-semibold ${
+                className={`text-[11px] font-semibold ${
                   isDark ? "text-white/40" : "text-gray-400"
                 }`}
+                style={{ textTransform: "none", letterSpacing: "normal" }}
               >
                 Next Milestone
               </p>
               <p
-                className={`text-xs font-bold mt-0.5 ${
+                className={`text-base font-bold mt-0.5 ${
                   isDark ? "text-white" : "text-gray-900"
                 }`}
               >
