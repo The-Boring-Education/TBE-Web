@@ -425,6 +425,7 @@ export interface SheetHeroContainerProps {
   redirectTo?: string;
   backHref?: string;
   theme?: "dark" | "light";
+  onEnrollSuccess?: () => void;
 }
 
 export interface AccordionProps {
