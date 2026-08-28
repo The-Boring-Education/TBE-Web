@@ -76,6 +76,7 @@ export interface LeaderboardEntry {
 export interface PointsBadgeProps {
   variant?: "navbar" | "inline";
   className?: string;
+  theme?: ThemeType;
 }
 
 export interface CelebrationAnimationProps {

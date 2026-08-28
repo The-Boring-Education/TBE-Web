@@ -23,8 +23,6 @@ vi.mock("@tbe/gamification", () => ({
     theme: "light",
     showToast: vi.fn(),
     triggerCelebration: vi.fn(),
-    clearCelebration: vi.fn(),
-    celebrationState: null,
   }),
 }));
 
@@ -62,7 +60,7 @@ describe("UserPointButton", () => {
     await user.click(screen.getByRole("button", { name: /42/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Your Points/i)).toBeVisible();
+      expect(screen.getByText(/YOU'RE AT/i)).toBeVisible();
       expect(screen.getByText(/Builder/i)).toBeInTheDocument();
     });
   });

@@ -7,13 +7,19 @@ import {
 import { UserLevelProgressContainer } from "@tbe/components";
 import { useGamification, useGamificationContext } from "@tbe/gamification";
 import { useUser } from "@tbe/hooks";
-import { Flame } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 
-const UserPointButton = () => {
+interface UserPointButtonProps {
+  theme?: "light" | "dark";
+}
+
+const UserPointButton = ({ theme: propTheme }: UserPointButtonProps) => {
   const [isClient, setIsClient] = useState(false);
   const { isAuth, loading } = useUser();
-  const { theme } = useGamificationContext();
+  const gamificationContext = useGamificationContext();
+  const theme = propTheme ?? gamificationContext?.theme ?? "light";
+  const isDark = theme === "dark";
+
   const {
     points,
     currentLevel,
@@ -29,44 +35,30 @@ const UserPointButton = () => {
 
   if (!isClient || !isAuth || loading) return null;
 
-  const isDark = theme === "dark";
-
   return (
     <Popover className="relative">
-      {/* ── Trigger pill: 🔥 + points ── */}
       <PopoverButton
-        className={`
-          flex items-center gap-1.5 px-3 py-1.5 rounded-full
-          font-semibold text-sm outline-none
-          transition-all duration-200 select-none
-          ${
-            isDark
-              ? "bg-primary/20 border border-primary/30 text-white hover:bg-primary/30 hover:border-primary/50"
-              : "bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 hover:border-primary/40"
-          }
-        `}
+        className={`flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary outline-none font-bold transition-colors ${
+          isDark
+            ? "hover:bg-primary hover:text-white bg-black/40"
+            : "hover:text-white hover:bg-primary bg-white"
+        }`}
         aria-label={`${points} points`}
       >
-        <Flame
-          size={15}
-          className={isDark ? "text-primary" : "text-primary"}
-          aria-hidden="true"
-        />
-        <span className={isDark ? "text-white" : "text-primary"}>
-          {loading ? "…" : points}
+        <span className="w-full h-full flex text-xs items-center justify-center">
+          {points}
         </span>
       </PopoverButton>
-
       <Transition
         as={Fragment}
         enter="transition ease-out duration-200"
-        enterFrom="opacity-0 translate-y-1 scale-95"
-        enterTo="opacity-100 translate-y-0 scale-100"
+        enterFrom="opacity-0 translate-y-1"
+        enterTo="opacity-100 translate-y-0"
         leave="transition ease-in duration-150"
-        leaveFrom="opacity-100 translate-y-0 scale-100"
-        leaveTo="opacity-0 translate-y-1 scale-95"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 translate-y-1"
       >
-        <PopoverPanel className="absolute z-50 mt-2 flex w-screen max-w-max right-0">
+        <PopoverPanel className="absolute z-50 mt-2 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4">
           <UserLevelProgressContainer
             currentLevel={currentLevel}
             currentLevelName={currentLevelName}
