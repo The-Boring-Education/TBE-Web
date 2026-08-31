@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn for Developers Guide 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP / STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 10px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1px 0 14px 18px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .step-desc strong {
+            color: var(--dark);
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── LINK CHIPS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        .yt-link.plain::before {
+            content: '✔';
+            font-size: 8px;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS ROW ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .resource-viewer {
+                padding: 0;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .print-bar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px 16px;
+                margin-bottom: 0;
+                background: #1a1a1a;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+                margin: 0;
+            }
+
+            .page + .page {
+                margin-top: 4px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 16px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 16px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .cover-quote-block {
+                padding: 20px 18px;
+                max-width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+            }
+
+            .page-body {
+                padding: 16px 16px;
+                overflow: visible;
+            }
+
+            .page-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 14px;
+            }
+
+            .step-content {
+                padding: 1px 0 12px 10px;
+            }
+
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .tip-block {
+                padding: 10px 12px;
+            }
+
+            .tip-text {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                min-height: 297mm;
+            }
+
+            .inner-page {
+                min-height: 297mm;
+            }
+
+            .step,
+            .resource-card,
+            .tip-block,
+            .cta-block,
+            .social-card,
+            .stack-table tr,
+            .check-item,
+            .cover-quote-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" data-action="print">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">Your profile is a live production system</div>
+
+                <h1 class="cover-title">
+                    LinkedIn for<br>Developers<span> Guide</span><br>2026
+                </h1>
+
+                <p class="cover-subtitle">
+                    A phase-by-phase playbook for turning a half-finished profile into a real inbound channel — profile setup, proof of work, content, networking, and recruiter-ready positioning, in the order that actually compounds.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Your GitHub proves you can build. Your LinkedIn is what decides whether anyone finds out. Most developers treat it like a digital resume — the ones who get inbound treat it like a product they ship weekly."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">30</div>
+                        <div class="stat-label">Playbook milestones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Growth phases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">90</div>
+                        <div class="stat-label">Days to real traction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">0</div>
+                        <div class="stat-label">Cost — every step is free</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — PROFILE FOUNDATIONS (1–5) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 01 · Profile Foundations</div>
+                <h2 class="section-title">Fix the Basics Before You Post a Single Update</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 1 · First impressions in 3 seconds</div>
+                            <div class="step-heading">Photo & Headline That Actually Say Something</div>
+                            <div class="step-desc">Use a clear, well-lit headshot — not a group photo crop or a low-res selfie. Your headline is prime real estate that shows up everywhere you comment: replace <strong>"Software Engineer at X"</strong> with what you actually do and for whom, e.g. "Backend Engineer building payment infra · Node.js, Go, AWS."</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start here</span>
+                                <span class="tag">15 minutes</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Headline formula: role + stack + outcome</a>
+                                <a class="yt-link plain">Banner image with your focus area</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 2 · Where recruiters actually read</div>
+                            <div class="step-heading">Write an About Section for Developers</div>
+                            <div class="step-desc">Open with what you build and the impact, not a chronological history. Structure it in three short blocks: <strong>what you do now, the stack you're strongest in, and what you're currently learning or shipping.</strong> End with a clear call to action — open to roles, open to collabs, or just "DMs open."</div>
+                            <div class="step-tags">
+                                <span class="tag red">Skimmable, not a resume dump</span>
+                                <span class="tag">150–300 words</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Lead with impact, not job titles</a>
+                                <a class="yt-link plain">Close with a clear CTA</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 3 · The 2-minute fixes people skip</div>
+                            <div class="step-heading">Custom URL, Contact Info & Featured Setup</div>
+                            <div class="step-desc">Claim a clean custom URL (<strong>linkedin.com/in/yourname</strong>) instead of the default string of numbers, add your email or portfolio link to Contact Info, and turn on Creator Mode if you plan to post regularly — it surfaces a follow button and topic tags instead of just "connect."</div>
+                            <div class="step-tags">
+                                <span class="tag red">One-time setup</span>
+                                <span class="tag">Creator Mode optional</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Claim your custom URL</a>
+                                <a class="yt-link plain">When Creator Mode is worth it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 4 · Match the search, not the resume buzzwords</div>
+                            <div class="step-heading">List Skills That Match Your Real Stack</div>
+                            <div class="step-desc">Recruiter search is keyword-driven — list the specific languages, frameworks, and tools you actually use (React, PostgreSQL, Docker, AWS) rather than vague terms like "Full Stack Development." Pin your top 3 skills so they're the first thing anyone sees on your profile.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Recruiter search relies on this</span>
+                                <span class="tag">Pin top 3</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Specific tools beat vague titles</a>
+                                <a class="yt-link plain">Reorder skills to match target roles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 5 · Know who sees what</div>
+                            <div class="step-heading">Visibility & Privacy Settings</div>
+                            <div class="step-desc">Review who can see your connections, activity, and profile changes before you start posting publicly. Turn on <strong>public profile visibility</strong> so your posts and profile are discoverable outside your network — a locked-down profile quietly caps everything you do in later phases.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Do this before posting</span>
+                                <span class="tag">Public visibility</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Public profile vs. connections-only</a>
+                                <a class="yt-link plain">Control activity broadcasts</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-text"><strong>Don't skip to posting before this phase is solid.</strong> A polished post that lands on a half-finished profile sends visitors nowhere useful. Spend a real afternoon here — everything else in this guide performs better once the profile itself is worth clicking into.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — PROOF OF WORK (6–10) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 02 · Proof of Work & Credibility</div>
+                <h2 class="section-title">Show the Work Instead of Just Claiming It</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 6 · Your profile's shop window</div>
+                            <div class="step-heading">Build Out the Featured Section</div>
+                            <div class="step-desc">Pin your <strong>2–4 strongest projects, articles, or posts</strong> to the Featured section — this is the first thing a recruiter clicks after your headline. Include a live demo link, a short GIF or screenshot, and a one-line description of the problem it solves, not just the tech stack.</div>
+                            <div class="step-tags">
+                                <span class="tag red">First click after headline</span>
+                                <span class="tag">2–4 pinned items</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pin your strongest 2–4 projects</a>
+                                <a class="yt-link plain">Lead with the problem, not the stack</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 7 · Make it clickable, not just mentioned</div>
+                            <div class="step-heading">Link GitHub, Live Demos & Case Studies</div>
+                            <div class="step-desc">Add your GitHub as a website link, and for each major project include a working deployed link — a repo alone asks too much effort from a busy recruiter. Where possible, write a short case study post: what the project does, what was hard about it, and what you'd do differently.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Deployed &gt; repo-only</span>
+                                <span class="tag">Case study format</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Deploy before you link</a>
+                                <a class="yt-link plain">Case study: problem, hard part, result</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 8 · Social proof from people who know</div>
+                            <div class="step-heading">Get Skill Endorsements From Real Collaborators</div>
+                            <div class="step-desc">Endorsements carry the most weight when they come from people who've actually seen you work — teammates, mentors, hackathon collaborators. Reach out directly rather than mass-requesting, and endorse their relevant skills first; reciprocity moves faster than a cold ask.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Quality over quantity</span>
+                                <span class="tag">Reciprocity works</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Ask people who've actually seen you work</a>
+                                <a class="yt-link plain">Endorse first, ask second</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 9 · The single strongest trust signal</div>
+                            <div class="step-heading">Request Written Recommendations</div>
+                            <div class="step-desc">A short, specific recommendation from a manager, senior teammate, or client outperforms a dozen skill endorsements. When asking, make it easy: remind them of a specific project you worked on together and what impact it had, so they don't have to start from a blank page.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Strongest trust signal</span>
+                                <span class="tag">Give them a starting point</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Ask with context, not a generic request</a>
+                                <a class="yt-link plain">Aim for 2–3 strong ones over many weak ones</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 10 · Keep it current</div>
+                            <div class="step-heading">Add Certifications, Courses & Licenses</div>
+                            <div class="step-desc">List relevant certifications (cloud, security, specific frameworks) under the Licenses & Certifications section with the issuing body and date — this is another field recruiter search filters key off of. Remove outdated or irrelevant ones so the section stays focused on where you're headed, not where you started.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Filterable by recruiters</span>
+                                <span class="tag">Prune old entries</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Add issuer, date, credential ID</a>
+                                <a class="yt-link plain">Prune what no longer represents you</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧪</div>
+                    <div class="tip-text"><strong>Proof of work compounds — one strong featured project outperforms ten vague bullet points.</strong> Before moving to content and networking, make sure someone landing on your profile cold can tell within 20 seconds what you build and that you can actually build it.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">What Recruiters Filter On — Fill These First</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Profile Field</th>
+                                <th>Why It Matters</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Skills section</td>
+                                <td>Directly indexed by LinkedIn Recruiter's keyword search</td>
+                                <td>High</td>
+                            </tr>
+                            <tr>
+                                <td>Headline</td>
+                                <td>Shown in every search result row before a profile is opened</td>
+                                <td>High</td>
+                            </tr>
+                            <tr>
+                                <td>Featured section</td>
+                                <td>First proof-of-work a recruiter clicks into after the headline</td>
+                                <td>Medium</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — CONTENT STRATEGY (11–15) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 03 · Content Strategy</div>
+                <h2 class="section-title">Turning Your Work Into Something People Actually See</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 11 · Pick a lane before you post</div>
+                            <div class="step-heading">Decide Your Content Pillars</div>
+                            <div class="step-desc">Choose <strong>2–3 recurring themes</strong> — build-in-public updates, technical breakdowns, career lessons — so your profile builds a recognizable identity instead of scattershot posts. Consistency in topic is what turns casual scrollers into people who recognize your name in their feed.</div>
+                            <div class="step-tags">
+                                <span class="tag red">2–3 pillars max</span>
+                                <span class="tag">Consistency &gt; variety</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pick pillars tied to your target role</a>
+                                <a class="yt-link plain">Write them down, revisit monthly</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">12</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 12 · The easiest content to start with</div>
+                            <div class="step-heading">Post Build-in-Public Updates</div>
+                            <div class="step-desc">Share what you're building as you build it — a bug you solved, a design decision, a before/after screenshot. These posts need no polish or big idea, just a real moment from your actual work, which makes them the lowest-effort, most sustainable habit to start with.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Lowest effort to start</span>
+                                <span class="tag">Real, not polished</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Screenshot + one honest sentence</a>
+                                <a class="yt-link plain">Post the bug, not just the win</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">13</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 13 · Where real authority gets built</div>
+                            <div class="step-heading">Write Technical Breakdowns & Carousels</div>
+                            <div class="step-desc">Take a concept you understand well — a design pattern, a debugging story, an architecture decision — and break it into a short carousel or step-by-step post. These posts have the longest shelf life and are what people actually save and share, since they solve a real problem for the reader.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Highest save/share rate</span>
+                                <span class="tag">Carousel or thread format</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">One concept per post, explained simply</a>
+                                <a class="yt-link plain">End with a takeaway, not just info</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">14</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 14 · The algorithm rewards this first</div>
+                            <div class="step-heading">Engage Before You Post</div>
+                            <div class="step-desc">Spend 10–15 minutes leaving thoughtful comments on posts in your field before publishing your own — this warms up your visibility and puts your name in front of other people's audiences. A specific, useful comment does more for discoverability than a generic "Great post!"</div>
+                            <div class="step-tags">
+                                <span class="tag red">10–15 min before posting</span>
+                                <span class="tag">Specific &gt; generic comments</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Comment with a real opinion or example</a>
+                                <a class="yt-link plain">Engage on posts 30–90 minutes old</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">15</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 15 · Play the long game</div>
+                            <div class="step-heading">Set a Cadence & Watch Your Analytics</div>
+                            <div class="step-desc">Commit to a sustainable posting rhythm — 2–3 times a week beats a daily burst that burns out in two weeks. Check your post analytics for which pillar and format actually resonates, and double down on what works rather than chasing every new format trend.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Sustainable &gt; intense</span>
+                                <span class="tag">Follow what the data says</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">2–3 posts a week, realistically</a>
+                                <a class="yt-link plain">Read your own analytics monthly</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">✍️</div>
+                    <div class="tip-text"><strong>Content is what makes your profile findable, not just impressive.</strong> Beginners obsess over going viral — the developers who actually see career results post consistently for months, showing up in feeds long before any single post takes off.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — NETWORKING & ENGAGEMENT (16–20) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 04 · Networking & Community</div>
+                <h2 class="section-title">Where Most Opportunities Actually Come From</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">16</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 16 · Skip the generic template</div>
+                            <div class="step-heading">Send Personalized Connection Requests</div>
+                            <div class="step-desc">Never send the default "I'd like to add you to my network." Reference something specific — a shared alma mater, a post they made, a mutual project — in one or two sentences. A personalized note roughly doubles acceptance rates and starts an actual relationship instead of a silent connection count.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Never send blank requests</span>
+                                <span class="tag">One specific reference</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Reference something real, every time</a>
+                                <a class="yt-link plain">Keep the note under 3 sentences</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">17</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 17 · Get on the radar of people worth learning from</div>
+                            <div class="step-heading">Engage With Industry Leaders & Peers</div>
+                            <div class="step-desc">Follow engineers, founders, and hiring managers in your target space, and engage genuinely with their posts over time. Being a consistent, thoughtful voice in someone's comments is a legitimate, low-pressure way to build familiarity long before you ever need to ask them for anything.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Low pressure, high payoff</span>
+                                <span class="tag">Consistency over time</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Follow 10–15 people in your target space</a>
+                                <a class="yt-link plain">Show up in their comments regularly</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">18</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 18 · Community over cold outreach</div>
+                            <div class="step-heading">Join & Participate in Developer Groups</div>
+                            <div class="step-desc">LinkedIn Groups and niche communities around your stack or specialization are lower-competition spaces to ask questions, share work, and get noticed than the main feed. Show up with useful contributions rather than link-dropping — communities remember who actually helps.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Lower competition than main feed</span>
+                                <span class="tag">Contribute, don't just promote</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Find 2–3 active niche groups</a>
+                                <a class="yt-link plain">Answer before you self-promote</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">19</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 19 · Don't burn the connection you just made</div>
+                            <div class="step-heading">DM Etiquette That Actually Gets Replies</div>
+                            <div class="step-desc">Never pitch or ask for a job in your very first message. Open with genuine interest in their work, keep it short, and let any ask come naturally after a real exchange — or on a second message once context exists. A wall of text asking for a referral from a stranger gets ignored almost every time.</div>
+                            <div class="step-tags">
+                                <span class="tag red">No cold pitches in message one</span>
+                                <span class="tag">Short, genuine, specific</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Open with genuine interest, not an ask</a>
+                                <a class="yt-link plain">Let the ask come naturally, later</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">20</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 20 · Build the well before you're thirsty</div>
+                            <div class="step-heading">Connect With Recruiters Before You Need Them</div>
+                            <div class="step-desc">Follow and engage with recruiters at companies you admire long before you're actively job hunting. When you eventually do reach out or apply, you're a familiar name reacting to their content rather than a cold inbound message competing with a hundred others.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Do this before you need it</span>
+                                <span class="tag">Familiar &gt; cold</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Follow recruiters at target companies now</a>
+                                <a class="yt-link plain">Engage months before you need to reach out</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Common Mistakes at This Stage</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Mass-connecting without notes</div>
+                        <div class="resource-card-desc">Sending dozens of blank connection requests a day builds a large, meaningless network instead of real relationships that lead anywhere.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Pitching in the first DM</div>
+                        <div class="resource-card-desc">Asking a stranger for a referral or job in message one, before any real exchange, is the fastest way to get ignored or blocked.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Only showing up when job hunting</div>
+                        <div class="resource-card-desc">Vanishing from the platform between job searches means starting from zero recognition every single time you need it most.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Generic, copy-paste comments</div>
+                        <div class="resource-card-desc">"Great post!" on every third post in your feed reads as engagement-farming and rarely gets a reply or builds real recognition.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — JOB SEARCH & RECRUITER OUTREACH (21–25) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 05 · Job Search & Recruiter Outreach</div>
+                <h2 class="section-title">Turning the Profile Into an Inbound Channel</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">21</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 21 · One toggle, used strategically</div>
+                            <div class="step-heading">Turn On "Open to Work" the Right Way</div>
+                            <div class="step-desc">Use the <strong>recruiter-only visibility option</strong> if you're currently employed, and set specific job titles, locations, and work preferences rather than leaving fields generic — vague settings return vague, low-relevance recruiter outreach instead of roles that actually fit.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Recruiter-only if employed</span>
+                                <span class="tag">Be specific, not generic</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Recruiter-only vs. public visibility</a>
+                                <a class="yt-link plain">Specific titles get specific outreach</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">22</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 22 · Reverse-engineer the search</div>
+                            <div class="step-heading">Optimize Your Profile for Recruiter Search</div>
+                            <div class="step-desc">Study a few job descriptions for roles you want and mirror their exact terminology — "microservices," "CI/CD," specific framework names — across your headline, About, and Skills sections. LinkedIn Recruiter is fundamentally a keyword search tool, and matching its language directly affects how often you surface.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Mirror real job description language</span>
+                                <span class="tag">Keyword-driven search</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pull keywords from 5–10 target JDs</a>
+                                <a class="yt-link plain">Place them in headline, About, Skills</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">23</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 23 · Find the door before you knock</div>
+                            <div class="step-heading">Research Companies & Warm Intro Paths</div>
+                            <div class="step-desc">Before applying cold, check if you have any 2nd-degree connections at the company through mutual contacts — a warm introduction, even a brief one, dramatically outperforms an application into a black-hole ATS. Use the company page's "People" tab to map who actually works there.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Warm &gt; cold every time</span>
+                                <span class="tag">Check 2nd-degree connections</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Use the company People tab to map contacts</a>
+                                <a class="yt-link plain">Ask for a short intro, not a favor</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">24</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 24 · Specific beats polished</div>
+                            <div class="step-heading">Write Cold Outreach That Gets Replies</div>
+                            <div class="step-desc">Skip generic "I'd love to work at your company" messages. Reference a specific team, project, or blog post from the company, connect it to something concrete you've built, and keep the message short enough to read in ten seconds — busy hiring managers respond to specificity, not enthusiasm.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Ten-second read</span>
+                                <span class="tag">Specific reference, not flattery</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Reference something specific and real</a>
+                                <a class="yt-link plain">Keep it under 80 words</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">25</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 25 · Let your activity work in your favor</div>
+                            <div class="step-heading">Use LinkedIn Signals to Prep for Interviews</div>
+                            <div class="step-desc">Before an interview, review the interviewer's or team's recent posts and company updates — it gives you real talking points and questions that show genuine interest, not generic ones pulled from a template. Your own recent posts may also come up, so make sure they reflect how you want to be seen.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Research the interviewer, not just the company</span>
+                                <span class="tag">Real questions &gt; template ones</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Check the interviewer's recent activity</a>
+                                <a class="yt-link plain">Bring one specific, informed question</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">📩</div>
+                    <div class="tip-text"><strong>Recruiters filter fast — give them a reason to stop scrolling.</strong> A specific headline, a matching skills list, and one warm connection will outperform a hundred cold applications sent into company career pages with no context.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — PERSONAL BRAND & LONG-TERM GROWTH (26–30) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 06 · Personal Brand & Long-Term Growth</div>
+                <h2 class="section-title">From "Active Profile" to Recognized Voice</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">26</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 26 · Depth beats a quick post</div>
+                            <div class="step-heading">Publish Long-Form Articles</div>
+                            <div class="step-desc">Once you're posting consistently, expand your strongest ideas into full LinkedIn Articles — a deep architecture walkthrough, a lessons-learned retrospective, a detailed tutorial. Long-form content has a longer shelf life in search and positions you as someone who genuinely understands a topic, not just reacts to trends.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Longer shelf life</span>
+                                <span class="tag">Expand your best posts</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Turn your best post into a full article</a>
+                                <a class="yt-link plain">One deep piece a month is enough</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">27</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 27 · Real-world presence, documented</div>
+                            <div class="step-heading">Speak at & Post About Events</div>
+                            <div class="step-desc">Attend meetups, hackathons, or conferences and post short recaps or key takeaways afterward — tagging organizers and speakers extends your reach into their networks too. If you're ready, apply to speak at a local meetup; even a 10-minute lightning talk is strong, postable proof of expertise.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Tag organizers and speakers</span>
+                                <span class="tag">Even a lightning talk counts</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Post a recap within 24 hours</a>
+                                <a class="yt-link plain">Apply to speak at a local meetup</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">28</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 28 · A direct line to your audience</div>
+                            <div class="step-heading">Start a LinkedIn Newsletter</div>
+                            <div class="step-desc">If one of your content pillars has real recurring value — weekly dev tips, a build-in-public log, curated resources — package it as a Newsletter. Subscribers get notified on every issue, giving you a direct, algorithm-independent channel back to the people who care most about your work.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Algorithm-independent reach</span>
+                                <span class="tag">Only if you have a real pillar</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Pick one pillar with real recurring value</a>
+                                <a class="yt-link plain">Consistent schedule matters more than length</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">29</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 29 · Measure what's actually working</div>
+                            <div class="step-heading">Track Analytics & Your Social Selling Index</div>
+                            <div class="step-desc">Check LinkedIn's free <strong>Social Selling Index (SSI)</strong> score periodically — it breaks down your profile strength, network quality, and engagement across four factors. Combine it with your own post analytics to spot which content pillar is actually driving profile views and connection requests.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Free SSI score</span>
+                                <span class="tag">Check monthly, not obsessively</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Check your SSI score once a month</a>
+                                <a class="yt-link plain">Match post analytics to profile view spikes</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">30</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 30 · Where this leads</div>
+                            <div class="step-heading">Choose Your Long-Term Direction</div>
+                            <div class="step-desc">A consistent LinkedIn presence compounds into different outcomes depending on your goal: <strong>inbound recruiter interest, freelance/consulting leads, speaking invitations, or simply a stronger professional network</strong> that pays off years later. Pick the direction that matches your actual goals and let the earlier phases serve it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Multiple valid outcomes</span>
+                                <span class="tag">Let goals drive the strategy</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Inbound jobs vs. freelance vs. network</a>
+                                <a class="yt-link plain">Revisit your goal every few months</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Profile Strength Checklist — Beginner → Advanced</div>
+                <div style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:10px; letter-spacing:-0.01em;">
+                    Where You Are vs. Where You're Headed</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Foundational</div>
+                        <div class="skill-item">Photo, headline, About done</div>
+                        <div class="skill-item">Custom URL claimed</div>
+                        <div class="skill-item">Skills list matches real stack</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Active</div>
+                        <div class="skill-item">Posting 2–3x a week</div>
+                        <div class="skill-item">Featured section filled</div>
+                        <div class="skill-item">Personalized connection requests</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Established</div>
+                        <div class="skill-item">Recognized voice in a niche</div>
+                        <div class="skill-item">Inbound recruiter/client messages</div>
+                        <div class="skill-item">Newsletter or long-form articles live</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Weekly Practice Rhythm</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">Once Past the Foundations Phase
+                </div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Post 2–3 times, mixing build-in-public and technical breakdowns
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Spend 10–15 minutes commenting before each post you publish
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Send 3–5 personalized connection requests to people in your target space
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Review post and SSI analytics, double down on what's working
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Follow up on one warm conversation or DM thread from the prior week
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">LinkedIn for Developers · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free Creators & Tools for LinkedIn Growth</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — Dev Career Voices</div>
+                        <div class="resource-card-desc">Follow working engineers who post consistently about career growth, interviews, and dev culture — study their hooks and formats, not just their advice.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — Build-in-Public Founders</div>
+                        <div class="resource-card-desc">Indie hackers and founders documenting real progress publicly are the clearest examples of the build-in-public format done well.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — Recruiters Who Post</div>
+                        <div class="resource-card-desc">Technical recruiters who share what actually gets a profile noticed give you the recruiter's-eye view most guides only guess at.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — Technical Educators</div>
+                        <div class="resource-card-desc">Educators breaking down system design, DSA, and architecture in carousel format are a strong model for the technical-breakdown content pillar.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🛠️ LinkedIn Creator Mode</div>
+                        <div class="resource-card-desc">Built-in tool that adds a Follow button, topic tags, and access to newsletters and analytics once you're posting regularly.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🛠️ Social Selling Index (SSI)</div>
+                        <div class="resource-card-desc">LinkedIn's own free scorecard breaking your profile down into brand, network, and engagement strength — check it monthly.</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">Community — Peer study groups</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Show Up Consistently, Everything Compounds 🔗</div>
+                    <div class="cta-sub">A great profile with zero activity is invisible. A rough profile that posts and engages every week beats it within a month. Consistency beats intensity — a little every day compounds into real visibility.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
