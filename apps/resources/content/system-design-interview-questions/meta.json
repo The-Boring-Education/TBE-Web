@@ -1,0 +1,19 @@
+{
+  "title": "Top 30 System Design Interview Questions & Answers 2026",
+  "description": "The most repeated system design questions actually asked at MNCs and startups — curated by frequency, not by guesswork. Organized in the order interviewers build on them, from fundamentals to the classic \"design X\" rounds.",
+  "keywords": [
+    "system design",
+    "system design interview",
+    "hld",
+    "lld",
+    "scalability",
+    "load balancing",
+    "caching",
+    "microservices",
+    "cap theorem",
+    "distributed systems",
+    "interview questions"
+  ],
+  "tags": ["interview", "systemdesign", "backend"],
+  "ogImage": "https://theboringeducation.com/images/system-design-interview-questions-og.png"
+}

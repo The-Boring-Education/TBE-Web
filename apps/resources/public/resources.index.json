@@ -304,6 +304,24 @@
     ]
   },
   {
+    "slug": "linkedin-for-developers-guide",
+    "title": "LinkedIn for Developers Guide 2026",
+    "description": "A phase-by-phase playbook for turning a half-finished profile into a real inbound channel — profile setup, proof of work, content, networking, and recruiter-ready positioning, in the order that actually compounds.",
+    "keywords": [
+      "linkedin",
+      "linkedin for developers",
+      "developer branding",
+      "career advice",
+      "job search",
+      "networking",
+      "inbound leads",
+      "software engineer career",
+      "tech resume",
+      "personal branding"
+    ],
+    "tags": ["guide", "career", "networking"]
+  },
+  {
     "slug": "mobile-app-developer-roadmap",
     "title": "Mobile App Developer Roadmap 2026",
     "description": "A complete step-by-step roadmap to becoming a Mobile App Developer, covering Android, iOS, Flutter, React Native, app architecture, APIs, databases, UI/UX, deployment, performance optimization, and real-world mobile applications.",
@@ -393,6 +411,25 @@
       "resume referral"
     ],
     "tags": ["guide", "career", "networking"]
+  },
+  {
+    "slug": "system-design-interview-questions",
+    "title": "Top 30 System Design Interview Questions & Answers 2026",
+    "description": "The most repeated system design questions actually asked at MNCs and startups — curated by frequency, not by guesswork. Organized in the order interviewers build on them, from fundamentals to the classic \"design X\" rounds.",
+    "keywords": [
+      "system design",
+      "system design interview",
+      "hld",
+      "lld",
+      "scalability",
+      "load balancing",
+      "caching",
+      "microservices",
+      "cap theorem",
+      "distributed systems",
+      "interview questions"
+    ],
+    "tags": ["interview", "systemdesign", "backend"]
   },
   {
     "slug": "system-design-roadmap",
