@@ -796,10 +796,12 @@ export interface StepOccupationProps {
 }
 
 export interface StepPhoneNumberProps {
-  countryCode: string;
-  phoneNumber: string;
-  onChangeCode: (code: string) => void;
-  onChangeNumber: (number: string) => void;
+  countryCode?: string;
+  phoneNumber?: string;
+  onChangeCode?: (code: string) => void;
+  onChangeNumber?: (number: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 export interface StepUsageProps {

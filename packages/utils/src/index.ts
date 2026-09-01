@@ -27,6 +27,7 @@ export * from "./dsaHelpers";
 export * from "./dsaUrlParams";
 export * from "./health";
 export * from "./paymentRedirect";
+export * from "./phone";
 export * from "./profileUrl";
 export * from "./socialMediaTemplates";
 export * from "./subscriptionPlanCatalog";

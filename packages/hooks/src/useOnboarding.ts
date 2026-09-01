@@ -6,7 +6,12 @@ import type {
   UseOnboardingProps,
   UseOnboardingReturn,
 } from "@tbe/types";
-import { sendRequest, trackEvent, trackUserActivated } from "@tbe/utils";
+import {
+  isPhoneNumberValid,
+  sendRequest,
+  trackEvent,
+  trackUserActivated,
+} from "@tbe/utils";
 import { useEffect, useState } from "react";
 
 export default function useOnboarding({
@@ -181,6 +186,11 @@ export default function useOnboarding({
       }
 
       const hasValue = !!val && val.toString().trim() !== "";
+
+      if (currentField.type === "tel") {
+        if (!currentField.required && !hasValue) return true;
+        return hasValue && isPhoneNumberValid(val as string);
+      }
 
       if (currentField.checkAvailability && hasValue) {
         return usernameAvailable && !usernameChecking;

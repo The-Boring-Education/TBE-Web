@@ -54,6 +54,8 @@ export { default as CertificateModal } from "./common/CertificateModal";
 export { default as ComingSoon } from "./common/ComingSoon";
 export { default as CheckboxButton } from "./common/Form/CheckboxButton";
 export { default as InputFieldContainer } from "./common/Form/InputFieldContainer";
+export { default as PhoneInput } from "./common/Form/PhoneInput";
+export * from "./common/Form/PhoneInput";
 export { default as RadioButton } from "./common/Form/RadioButton";
 export { default as RadioInputField } from "./common/Form/RadioInputField";
 export { default as SelectInput } from "./common/Form/SelectInput";

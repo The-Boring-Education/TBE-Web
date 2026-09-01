@@ -1,45 +1,62 @@
-import {
-  FlexContainer,
-  InputFieldContainer,
-  SelectInput,
-  Text,
-} from "@tbe/components";
-import { COUNTRY_CODES } from "@tbe/constants";
+import { FlexContainer, Text } from "@tbe/components";
 import type { StepPhoneNumberProps } from "@tbe/interface";
+import type { CountryCode } from "@tbe/utils";
+import { getCountryInfo } from "@tbe/utils";
+
+import PhoneInput from "../../../common/Form/PhoneInput";
 
 const StepPhoneNumber = ({
-  countryCode,
-  phoneNumber,
+  countryCode = "+91",
+  phoneNumber = "",
   onChangeCode,
   onChangeNumber,
+  value,
+  onChange,
 }: StepPhoneNumberProps) => {
-  const codeList = COUNTRY_CODES.map((c) => c.code);
+  const currentFullValue =
+    value !== undefined
+      ? value
+      : countryCode && phoneNumber
+        ? `${countryCode} ${phoneNumber}`.trim()
+        : phoneNumber || countryCode || "+91";
+
+  const defaultCountry: CountryCode =
+    (getCountryInfo(countryCode).country as CountryCode) || "IN";
+
+  const handlePhoneChange = (
+    fullVal: string,
+    meta: {
+      isValid: boolean;
+      country: CountryCode;
+      dialCode: string;
+      nationalNumber: string;
+    },
+  ) => {
+    if (onChange) {
+      onChange(fullVal);
+    }
+    if (onChangeCode) {
+      onChangeCode(meta.dialCode);
+    }
+    if (onChangeNumber) {
+      onChangeNumber(meta.nationalNumber);
+    }
+  };
 
   return (
-    <FlexContainer className="gap-2" direction="col">
-      <Text className="paragraph" level="p">
+    <FlexContainer className="gap-2 w-full" direction="col" itemCenter={false}>
+      <Text
+        className="paragraph text-xs sm:text-sm font-bold text-slate-800"
+        level="p"
+      >
         Your Contact No
       </Text>
 
-      <FlexContainer className="gap-2 w-full items-center flex-nowrap">
-        <SelectInput
-          aria-label="Country Code"
-          className=""
-          list={codeList}
-          selectedItem={countryCode}
-          onChange={onChangeCode}
-        />
-
-        <InputFieldContainer
-          className="w-full"
-          isOptional
-          label="Phone Number"
-          labelClass="sr-only"
-          type="tel"
-          value={phoneNumber}
-          onChange={onChangeNumber}
-        />
-      </FlexContainer>
+      <PhoneInput
+        value={currentFullValue}
+        defaultCountry={defaultCountry}
+        onChange={handlePhoneChange}
+      />
     </FlexContainer>
   );
 };

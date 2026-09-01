@@ -1,7 +1,8 @@
-import { COUNTRY_CODES, USER_ROLE_OPTIONS } from "@tbe/constants";
+import { USER_ROLE_OPTIONS } from "@tbe/constants";
 import { useUsername } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import {
+  isPhoneNumberValid,
   normalizeContactNoForForm,
   normalizeOptionalProfileUrl,
 } from "@tbe/utils";
@@ -15,6 +16,7 @@ import {
   LuUser,
 } from "react-icons/lu";
 
+import PhoneInput from "../common/Form/PhoneInput";
 import {
   Dialog,
   DialogContent,
@@ -304,10 +306,19 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     setCustomSkillInput("");
   };
 
+  const isContactValid = () => {
+    const trimmed = form.contactNo.trim();
+    if (!trimmed || trimmed === "+91") return true;
+    const digitsOnly = trimmed.replace(/\D/g, "");
+    if (digitsOnly.length === 0 || digitsOnly === "91") return true;
+    return isPhoneNumberValid(trimmed);
+  };
+
   const isFormValid = () => {
     if (!form.name.trim()) return false;
     if (!form.userName.trim() || form.userName.trim().length < 3) return false;
     if (form.userName !== initialUserName && !isUsernameAvailable) return false;
+    if (!isContactValid()) return false;
     return true;
   };
 
@@ -336,19 +347,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       codeforcesUrl: normalizeOptionalProfileUrl(form.codeforcesUrl),
     });
   };
-
-  const [countryCode, phoneNumber] = (() => {
-    const raw = form.contactNo.trim();
-    const parts = raw.split(/\s+/);
-    if (parts.length > 1) {
-      return [parts[0] || "+91", parts.slice(1).join(" ")];
-    }
-    const match = raw.match(/^(\+\d{1,3})(.*)$/);
-    if (match) {
-      return [match[1] || "+91", (match[2] || "").trim()];
-    }
-    return ["+91", raw];
-  })();
 
   const steps = [
     { number: 1, title: "Identity", icon: <LuUser className="w-3.5 h-3.5" /> },
@@ -488,39 +486,25 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
                 {/* Mobile / Contact Number */}
                 <div className="flex flex-col gap-1.5 pt-1">
-                  <label className="text-xs font-bold text-slate-800">
-                    Mobile / WhatsApp Number
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      value={countryCode}
-                      onChange={(e) =>
-                        updateField(
-                          "contactNo",
-                          `${e.target.value} ${phoneNumber}`,
-                        )
-                      }
-                      className="px-2.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 bg-white outline-none cursor-pointer"
-                    >
-                      {COUNTRY_CODES.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.code}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) =>
-                        updateField(
-                          "contactNo",
-                          `${countryCode} ${e.target.value}`,
-                        )
-                      }
-                      placeholder="98765 43210"
-                      className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none text-xs sm:text-sm text-slate-900 transition"
-                    />
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-800">
+                      Mobile / WhatsApp Number
+                    </label>
+                    {isPhoneNumberValid(form.contactNo) && (
+                      <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
+                        <LuCheck className="w-3.5 h-3.5 stroke-[2.5]" /> Valid
+                      </span>
+                    )}
                   </div>
+                  <PhoneInput
+                    value={form.contactNo}
+                    onChange={(val) => updateField("contactNo", val)}
+                  />
+                  {!isContactValid() && (
+                    <span className="text-[11px] font-medium text-rose-500">
+                      Please enter a valid phone number
+                    </span>
+                  )}
                 </div>
 
                 {/* Headline & Location */}

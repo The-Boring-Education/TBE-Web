@@ -35,6 +35,7 @@
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "libphonenumber-js": "^1.13.12",
     "mongoose": "^7.4.1",
     "uuid": "^9.0.0"
   },

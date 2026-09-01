@@ -82,6 +82,7 @@
     "input-otp": "^1.2.4",
     "jsdom": "^25.0.1",
     "katex": "^0.16.38",
+    "libphonenumber-js": "^1.13.12",
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
     "markdown-it-texmath": "^1.0.0",
