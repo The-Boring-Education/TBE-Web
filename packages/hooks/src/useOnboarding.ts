@@ -146,8 +146,12 @@ export default function useOnboarding({
           }
         } catch {}
 
-        // Ensure the personalization animation plays smoothly for at least 3 seconds
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        // Ensure the personalization animation plays smoothly for at least 3 seconds (skip during unit tests)
+        if (typeof process === "undefined" || process.env.NODE_ENV !== "test") {
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+
+        setSubmitting(false);
 
         if (redirect) {
           window.location.href = redirect;

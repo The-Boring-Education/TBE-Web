@@ -24,7 +24,7 @@ import {
   mapUserPlaylistResponseToCard,
 } from '@tbe/utils';
 import { useRouter } from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 
 const UserDashboard = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -39,31 +39,34 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
   });
 
   const courses: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
-    response?.data.enrolledCourses,
+    response?.data?.enrolledCourses,
     mapCourseResponseToCard,
   );
 
   const projects: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
-    response?.data.enrolledProjects,
+    response?.data?.enrolledProjects,
     mapProjectResponseToCard,
     { isEnrolled: true },
   );
 
   const interviewSheets: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
-    response?.data.enrolledSheets,
+    response?.data?.enrolledSheets,
     mapInterviewSheetResponseToCard,
   );
 
   const userPlaylist: PrimaryCardWithCTAProps[] = useAPIResponseMapper(
-    response?.data.enrolledPlaylists,
+    response?.data?.enrolledPlaylists,
     mapUserPlaylistResponseToCard,
   );
 
-  if (loadingUser) return;
-  if (!isAuth) {
-    router.push(routes.home);
-    return;
-  }
+  useEffect(() => {
+    if (!loadingUser && !isAuth) {
+      router.push(routes.home);
+    }
+  }, [isAuth, loadingUser, router]);
+
+  if (loadingUser) return <LoadingSpinner />;
+  if (!isAuth) return null;
 
   if (loading) return <LoadingSpinner />;
 

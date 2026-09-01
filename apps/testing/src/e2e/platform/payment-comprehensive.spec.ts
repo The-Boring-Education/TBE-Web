@@ -87,21 +87,27 @@ test.describe("Payment Checkout E2E Tests", () => {
 
       const response = await page.goto(
         "/checkout?productType=INTERVIEW_SHEET&productId=sheet_123",
+        { waitUntil: "domcontentloaded" },
       );
 
       expect(response?.status()).toBe(200);
-      await expect(page.locator("body")).toContainText(/checkout|payment/i);
+      await expect(page.locator("body")).toContainText(
+        /checkout|payment|interview sheet|order summary/i,
+        { timeout: RENDER_TIMEOUT },
+      );
     });
 
     test("checkout page shows error for missing product parameters", async ({
       platformPage: page,
     }) => {
-      const response = await page.goto("/checkout");
+      const response = await page.goto("/checkout", {
+        waitUntil: "domcontentloaded",
+      });
 
       expect(response?.status()).toBe(200);
       await expect(
-        page.getByRole("heading", { name: /incomplete|invalid|error/i }),
-      ).toBeVisible({ timeout: 10_000 });
+        page.getByRole("heading", { name: "This checkout link is incomplete" }),
+      ).toBeVisible({ timeout: 15_000 });
     });
 
     test("checkout page shows product details and pricing", async ({

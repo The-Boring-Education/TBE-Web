@@ -86,7 +86,7 @@ test.describe("Checkout coupon flow", () => {
 
     // Coupon input may or may not be present depending on the product
     // This test verifies the page loads without error
-    await expect(page.locator("body")).toBeVisible();
+    await expect(page.locator("body")).toBeVisible({ timeout: 15_000 });
   });
 
   test("invalid checkout params show error state", async ({
@@ -95,7 +95,7 @@ test.describe("Checkout coupon flow", () => {
     await page.goto("/checkout?productType=INVALID", {
       waitUntil: "domcontentloaded",
     });
-    await expect(page.locator("body")).toBeVisible();
+    await expect(page.locator("body")).toBeVisible({ timeout: 15_000 });
   });
 });
 

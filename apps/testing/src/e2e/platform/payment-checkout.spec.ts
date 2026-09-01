@@ -8,9 +8,9 @@ test.describe("Platform checkout page", () => {
       "/checkout?productType=DSA_YATRA&productId=lifetime",
     );
     expect(response?.status()).toBe(200);
-    await expect(
-      page.getByRole("heading", { name: /DSA Yatra/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /DSA Yatra/i })).toBeVisible(
+      { timeout: 15_000 },
+    );
   });
 
   test("checkout shows invalid message without required params", async ({

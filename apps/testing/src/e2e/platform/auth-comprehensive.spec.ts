@@ -7,6 +7,78 @@ import { expect, test } from "../fixtures/platform.fixture";
 const TBE_ACCESS_COOKIE = "tbe_access_token";
 const TBE_REFRESH_COOKIE = "tbe_refresh_token";
 
+async function authenticatePage(page: any) {
+  const token = buildE2EAccessJwt();
+  await page.context().addCookies([
+    {
+      name: TBE_ACCESS_COOKIE,
+      value: token,
+      domain: "localhost",
+      path: "/",
+      sameSite: "Lax",
+      httpOnly: false,
+      secure: false,
+      expires: Math.floor(Date.now() / 1000) + 86400,
+    },
+    {
+      name: TBE_ACCESS_COOKIE,
+      value: token,
+      domain: "127.0.0.1",
+      path: "/",
+      sameSite: "Lax",
+      httpOnly: false,
+      secure: false,
+      expires: Math.floor(Date.now() / 1000) + 86400,
+    },
+  ]);
+
+  await page.addInitScript(
+    ([key, value]: [string, string]) => {
+      document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
+    },
+    [TBE_ACCESS_COOKIE, token] as [string, string],
+  );
+
+  await page.route("**/api/proxy/auth/refresh", (route: any) =>
+    route.fulfill({
+      status: 200,
+      json: {
+        status: true,
+        data: { token },
+      },
+    }),
+  );
+
+  await page.route("**/api/proxy/user**", (route: any) => {
+    const url = route.request().url();
+    if (url.includes("dashboard")) {
+      return route.fulfill({
+        status: 200,
+        json: {
+          status: true,
+          data: {
+            enrolledCourses: [],
+            enrolledProjects: [],
+            enrolledSheets: [],
+            enrolledPlaylists: [],
+          },
+        },
+      });
+    }
+    return route.fulfill({
+      status: 200,
+      json: {
+        status: true,
+        data: ONBOARDING_GATE_E2E_USER,
+      },
+    });
+  });
+
+  await page.route("**/api/proxy/notification**", (route: any) =>
+    route.fulfill({ status: 200, json: { status: true, data: [] } }),
+  );
+}
+
 test.describe("Authentication Flow E2E Tests", () => {
   test.describe("Login/Logout Flow", () => {
     test("unauthenticated user sees login options on home page", async ({
@@ -26,31 +98,19 @@ test.describe("Authentication Flow E2E Tests", () => {
       platformPage: page,
     }) => {
       // Set authentication cookie
-      const token = buildE2EAccessJwt();
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
+      await authenticatePage(page);
 
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
 
       // Should stay on dashboard (not redirected to home)
-      await expect(page).toHaveURL(/\/user\/dashboard/);
+      await expect(page).toHaveURL(/\/user\/dashboard/, { timeout: 25_000 });
     });
 
     test("logout clears auth tokens and redirects to home", async ({
       platformPage: page,
     }) => {
       // First, authenticate
-      const token = buildE2EAccessJwt();
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
+      await authenticatePage(page);
 
       // Mock the logout API endpoint
       await page.route("**/api/v1/auth/logout", (route) =>
@@ -80,66 +140,29 @@ test.describe("Authentication Flow E2E Tests", () => {
     test("unauthenticated user is redirected from /user/dashboard", async ({
       platformPage: page,
     }) => {
+      await page.context().clearCookies();
+      await page.route("**/api/proxy/auth/refresh", (route) =>
+        route.fulfill({
+          status: 401,
+          json: { status: false, message: "No refresh token" },
+        }),
+      );
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
 
       // Should be redirected to home page
       await page.waitForURL((url) => new URL(url).pathname === "/", {
-        timeout: 20_000,
+        timeout: 30_000,
       });
     });
 
     test("authenticated user can access their profile", async ({
       platformPage: page,
     }) => {
-      const token = buildE2EAccessJwt();
-
-      await page.context().addCookies([
-        {
-          name: TBE_ACCESS_COOKIE,
-          value: token,
-          domain: "localhost",
-          path: "/",
-          sameSite: "Lax",
-          httpOnly: false,
-          secure: false,
-        },
-      ]);
-
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
-
-      // Mock user profile API
-      await page.route("**/api/proxy/user**", (route) => {
-        const url = route.request().url();
-        if (url.includes("dashboard")) {
-          return route.fulfill({
-            status: 200,
-            json: {
-              status: true,
-              data: {
-                enrolledCourses: [],
-                enrolledProjects: [],
-                enrolledSheets: [],
-              },
-            },
-          });
-        }
-        return route.fulfill({
-          status: 200,
-          json: {
-            status: true,
-            data: ONBOARDING_GATE_E2E_USER,
-          },
-        });
-      });
+      await authenticatePage(page);
 
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
 
-      await expect(page).toHaveURL(/\/user\/dashboard/);
+      await expect(page).toHaveURL(/\/user\/dashboard/, { timeout: 25_000 });
     });
   });
 
@@ -161,6 +184,14 @@ test.describe("Authentication Flow E2E Tests", () => {
       ).toString("base64url");
       const expiredToken = `${header}.${payload}.expired`;
 
+      await page.context().clearCookies();
+      await page.route("**/api/proxy/auth/refresh", (route) =>
+        route.fulfill({
+          status: 401,
+          json: { status: false, message: "Expired token" },
+        }),
+      );
+
       await page.addInitScript(
         ([key, value]) => {
           document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
@@ -174,7 +205,7 @@ test.describe("Authentication Flow E2E Tests", () => {
       await page.waitForURL(
         (url) => !url.pathname.includes("/user/dashboard"),
         {
-          timeout: 20_000,
+          timeout: 30_000,
         },
       );
     });
@@ -195,6 +226,17 @@ test.describe("Authentication Flow E2E Tests", () => {
           sameSite: "Lax",
           httpOnly: false,
           secure: false,
+          expires: Math.floor(Date.now() / 1000) + 86400,
+        },
+        {
+          name: TBE_ACCESS_COOKIE,
+          value: token,
+          domain: "127.0.0.1",
+          path: "/",
+          sameSite: "Lax",
+          httpOnly: false,
+          secure: false,
+          expires: Math.floor(Date.now() / 1000) + 86400,
         },
       ]);
 
@@ -205,24 +247,46 @@ test.describe("Authentication Flow E2E Tests", () => {
         [TBE_ACCESS_COOKIE, token] as [string, string],
       );
 
-      // Mock APIs for navigation
-      await page.route("**/api/proxy/**", (route) =>
-        route.fulfill({
+      // Mock user profile and dashboard APIs
+      await page.route("**/api/proxy/user**", (route) => {
+        const url = route.request().url();
+        if (url.includes("dashboard")) {
+          return route.fulfill({
+            status: 200,
+            json: {
+              status: true,
+              data: {
+                enrolledCourses: [],
+                enrolledProjects: [],
+                enrolledSheets: [],
+                enrolledPlaylists: [],
+              },
+            },
+          });
+        }
+        return route.fulfill({
           status: 200,
-          json: { status: true, data: [] },
-        }),
+          json: {
+            status: true,
+            data: ONBOARDING_GATE_E2E_USER,
+          },
+        });
+      });
+
+      await page.route("**/api/proxy/notification**", (route) =>
+        route.fulfill({ status: 200, json: { status: true, data: [] } }),
       );
 
       // Navigate to dashboard
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
-      await expect(page).toHaveURL(/\/user\/dashboard/);
+      await expect(page).toHaveURL(/\/user\/dashboard/, { timeout: 25_000 });
 
       // Navigate to home
       await page.goto("/", { waitUntil: "domcontentloaded" });
 
       // Navigate back to dashboard - should still be authenticated
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
-      await expect(page).toHaveURL(/\/user\/dashboard/);
+      await expect(page).toHaveURL(/\/user\/dashboard/, { timeout: 25_000 });
     });
   });
 

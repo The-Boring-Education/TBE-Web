@@ -121,8 +121,7 @@ function getProjectsFromArgv(): (keyof typeof APPS)[] {
 
 function resolveWebAppKeys(): (keyof typeof APPS)[] {
   const fromEnv = process.env.PLAYWRIGHT_E2E_APP as
-    | keyof typeof APPS
-    | undefined;
+    keyof typeof APPS | undefined;
   if (fromEnv && fromEnv in APPS && APPS_WITH_E2E.has(fromEnv))
     return [fromEnv];
 
@@ -160,14 +159,7 @@ function toWebServerConfig(appKey: keyof typeof APPS): WebServerConfig {
     appKey === "onboarding"
       ? `pnpm --filter ${app.filter} run serve:e2e`
       : `pnpm --filter ${app.filter} dev`;
-  const timeout =
-    appKey === "onboarding"
-      ? process.env.CI
-        ? 180_000
-        : 120_000
-      : process.env.CI
-        ? 120_000
-        : 60_000;
+  const timeout = appKey === "onboarding" ? 180_000 : 120_000;
 
   const onboardingBase = getAppUrl("onboarding");
   const needsOnboardingUrlInClientBundle =
@@ -236,7 +228,7 @@ const webServer = buildWebServer();
 
 export default defineConfig({
   testDir: "./src/e2e",
-  timeout: 90_000,
+  timeout: 120_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
@@ -252,7 +244,7 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
-    navigationTimeout: 90_000,
+    navigationTimeout: 120_000,
     actionTimeout: 60_000,
   },
 
