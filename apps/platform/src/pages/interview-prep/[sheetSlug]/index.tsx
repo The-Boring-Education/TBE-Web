@@ -585,10 +585,10 @@ const SheetPage = ({
                         <Button
                           key='complete'
                           className={`w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white shadow-xs transition-all duration-150 cursor-pointer ${!isEnrolled
-                              ? 'bg-primary hover:bg-primary/90 border-none text-white'
-                              : isQuestionCompleted
-                                ? 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
-                                : 'bg-primary hover:bg-primary/90 border-none text-white'
+                            ? 'bg-primary hover:bg-primary/90 border-none text-white'
+                            : isQuestionCompleted
+                              ? 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                              : 'bg-primary hover:bg-primary/90 border-none text-white'
                             }`}
                           isLoading={isLoading}
                           text={

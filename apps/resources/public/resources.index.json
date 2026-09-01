@@ -180,7 +180,31 @@
       "web application security",
       "roadmap"
     ],
-    "tags": ["roadmap", "ethicalhacking"]
+    "tags": [
+      "roadmap",
+      "ethicalhacking"
+    ]
+  },
+  {
+    "slug": "ethical-hacking-roadmap",
+    "title": "Ethical Hacking Roadmap 2026",
+    "description": "A structured, phase-by-phase path from networking fundamentals to penetration testing and bug bounty — the exact skill order security teams and CTF players actually build in, not a random list of tools.",
+    "keywords": [
+      "ethical hacking",
+      "cyber security",
+      "penetration testing",
+      "bug bounty",
+      "kali linux",
+      "network security",
+      "infosec",
+      "ctf",
+      "web application security",
+      "roadmap"
+    ],
+    "tags": [
+      "roadmap",
+      "ethicalhacking"
+    ]
   },
   {
     "slug": "freelance-developer-guide",
@@ -319,7 +343,33 @@
       "tech resume",
       "personal branding"
     ],
-    "tags": ["guide", "career", "networking"]
+    "tags": [
+      "guide",
+      "career",
+      "networking"
+    ]
+  },
+  {
+    "slug": "linkedin-for-developers-guide",
+    "title": "LinkedIn for Developers Guide 2026",
+    "description": "A phase-by-phase playbook for turning a half-finished profile into a real inbound channel — profile setup, proof of work, content, networking, and recruiter-ready positioning, in the order that actually compounds.",
+    "keywords": [
+      "linkedin",
+      "linkedin for developers",
+      "developer branding",
+      "career advice",
+      "job search",
+      "networking",
+      "inbound leads",
+      "software engineer career",
+      "tech resume",
+      "personal branding"
+    ],
+    "tags": [
+      "guide",
+      "career",
+      "networking"
+    ]
   },
   {
     "slug": "mobile-app-developer-roadmap",
@@ -410,7 +460,33 @@
       "career advice",
       "resume referral"
     ],
-    "tags": ["guide", "career", "networking"]
+    "tags": [
+      "react",
+      "interview",
+      "frontend"
+    ]
+  },
+  {
+    "slug": "referral-strategy-guide",
+    "title": "Referral Strategy Guide 2026",
+    "description": "A referral gets your resume in front of a human instead of an ATS filter. This guide covers exactly who to ask, how to ask without feeling awkward, what to send, and how to follow up — so referrals stop being luck and start being a repeatable system.",
+    "keywords": [
+      "referral",
+      "job referral",
+      "referral strategy",
+      "job search",
+      "networking",
+      "linkedin outreach",
+      "cold outreach",
+      "interview prep",
+      "career advice",
+      "resume referral"
+    ],
+    "tags": [
+      "guide",
+      "career",
+      "networking"
+    ]
   },
   {
     "slug": "system-design-interview-questions",
@@ -429,7 +505,11 @@
       "distributed systems",
       "interview questions"
     ],
-    "tags": ["interview", "systemdesign", "backend"]
+    "tags": [
+      "interview",
+      "systemdesign",
+      "backend"
+    ]
   },
   {
     "slug": "system-design-roadmap",

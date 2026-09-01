@@ -33,8 +33,8 @@ const QuestionLink = ({
       analyticsLabel={`question:${title}`}
       key={questionId}
       className={`flex items-start gap-2.5 w-full px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-primary transition-all duration-150 ${isLocked
-          ? "text-muted-foreground/60 cursor-not-allowed opacity-75"
-          : activeClasses
+        ? "text-muted-foreground/60 cursor-not-allowed opacity-75"
+        : activeClasses
         }`}
       href={href}
       onClick={(e) => {
