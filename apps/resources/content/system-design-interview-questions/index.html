@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 30 System Design Interview Questions & Answers 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer { font-family: var(--sans); background: #0a0a0b; display: flex; flex-direction: column; align-items: center; gap: 0; padding: 32px 16px; }
+
+        .print-bar { width: 794px; max-width: 100%; display: flex; justify-content: flex-end; margin-bottom: 12px; gap: 10px; }
+        .print-btn { background: var(--red); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-family: var(--mono); font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .print-btn:hover { background: #e04040; }
+        .print-btn svg { width: 16px; height: 16px; }
+
+        .page { width: 794px; max-width: 100%; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18); position: relative; overflow: visible; margin-bottom: 0; }
+        .page+.page { margin-top: 2px; }
+
+        /* ── COVER ── */
+        .cover { background: var(--white); min-height: 1122px; display: flex; flex-direction: column; overflow: hidden; }
+        .cover-header { padding: 28px 48px 0; display: flex; justify-content: space-between; align-items: center; }
+        .cover-badge { font-family: var(--mono); font-size: 11px; color: var(--red); background: var(--red-light); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--red-mid); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+        .cover-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 48px 40px; position: relative; }
+        .cover-hook { font-family: var(--mono); font-size: 12px; color: var(--red); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .cover-hook::before { content: ''; display: block; width: 30px; height: 2px; background: var(--red); }
+        .cover-title { font-size: 48px; font-weight: 800; color: var(--dark); line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 16px; }
+        .cover-title span { color: var(--red); }
+        .cover-subtitle { font-size: 16px; color: var(--mid); font-weight: 400; max-width: 520px; line-height: 1.7; margin-bottom: 40px; }
+        .cover-quote-block { background: var(--dark); color: white; padding: 28px 36px; border-radius: 16px; max-width: 580px; position: relative; margin-bottom: 48px; }
+        .cover-quote-block::before { content: '"'; font-size: 80px; color: var(--red); font-family: Georgia, serif; position: absolute; top: -12px; left: 24px; line-height: 1; }
+        .cover-quote-text { font-size: 17px; font-weight: 600; line-height: 1.5; padding-top: 24px; }
+        .cover-quote-sub { font-size: 13px; color: #aaa; margin-top: 10px; font-family: var(--mono); }
+        .cover-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+        .stat-item { display: flex; flex-direction: column; gap: 4px; }
+        .stat-num { font-size: 32px; font-weight: 800; color: var(--red); font-family: var(--mono); line-height: 1; }
+        .stat-label { font-size: 12px; color: var(--soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+        .cover-decoration { position: absolute; right: -30px; top: 50%; transform: translateY(-50%); width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, #ffe0e0 0%, transparent 70%); pointer-events: none; }
+        .cover-footer { border-top: 1px solid var(--border); padding: 16px 48px; display: flex; justify-content: space-between; align-items: center; }
+        .cover-footer-text { font-family: var(--mono); font-size: 11px; color: var(--soft); }
+        .page-num { font-family: var(--mono); font-size: 11px; color: var(--soft); }
+
+        /* ── INNER PAGES ── */
+        .inner-page { min-height: 1122px; display: flex; flex-direction: column; background: var(--white); }
+        .page-header { padding: 24px 48px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .page-header-logo { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--soft); }
+        .page-header-title { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+        .page-body { flex: 1; padding: 28px 48px; overflow: visible; }
+        .page-footer { border-top: 1px solid var(--border); padding: 14px 48px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+
+        .section-label { font-family: var(--mono); font-size: 11px; color: var(--red); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .section-label::before { content: '//'; opacity: 0.5; }
+        .section-title { font-size: 24px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; margin-bottom: 18px; line-height: 1.25; }
+
+        /* ── QA CARD ── */
+        .qa-card { display: flex; gap: 14px; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--border); }
+        .qa-card:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .qa-left { flex-shrink: 0; }
+        .qa-num { width: 34px; height: 34px; border-radius: 8px; background: var(--red); color: white; font-family: var(--mono); font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+        .qa-body { flex: 1; min-width: 0; }
+        .qa-meta { font-family: var(--mono); font-size: 9.5px; color: var(--red); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+        .qa-question { font-size: 14.5px; font-weight: 700; color: var(--dark); margin-bottom: 8px; line-height: 1.4; }
+        .qa-answer-label { font-family: var(--mono); font-size: 9.5px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 4px; }
+        .qa-answer { font-size: 12px; color: var(--mid); line-height: 1.7; margin-bottom: 8px; }
+        .qa-answer strong { color: var(--dark); }
+        .qa-answer em.framework { color: var(--red); font-style: normal; font-weight: 600; }
+        .qa-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+        .tag { font-family: var(--mono); font-size: 9.5px; background: var(--bg); color: var(--mid); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+        .tag.red { background: var(--red-light); color: var(--red); border-color: var(--red-mid); }
+
+        /* ── DIAGRAM BOX ── */
+        .diagram-box { margin: 10px 0 12px; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; background: var(--bg); }
+        .diagram-label { font-family: var(--mono); font-size: 9px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 8px; }
+        .diagram-box svg { width: 100%; height: auto; display: block; }
+
+        .tip-block { background: var(--red-light); border: 1px solid var(--red-mid); border-radius: 10px; padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; }
+        .tip-icon { font-size: 16px; flex-shrink: 0; }
+        .tip-text { font-size: 12px; color: var(--dark); line-height: 1.6; }
+        .tip-text strong { color: var(--red); }
+
+        .divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+        .skills-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+        .skill-col { display: flex; flex-direction: column; gap: 5px; }
+        .skill-col-title { font-family: var(--mono); font-size: 10px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; font-weight: 700; }
+        .skill-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dark); }
+        .skill-item::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+
+        .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+        .resource-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 13px 14px; position: relative; overflow: hidden; }
+        .resource-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--red); }
+        .resource-card-name { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+        .resource-card-desc { font-size: 11px; color: var(--mid); line-height: 1.5; margin-bottom: 7px; }
+
+        .yt-links { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+        .yt-link { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 9.5px; color: #cc0000; background: #fff5f5; border: 1px solid #ffd6d6; padding: 2px 8px; border-radius: 4px; text-decoration: none; font-weight: 600; }
+        .yt-link::before { content: '▶'; font-size: 8px; }
+
+        .checklist { display: flex; flex-direction: column; gap: 6px; }
+        .check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--dark); line-height: 1.5; }
+        .check-box { width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+
+        .socials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .social-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; text-align: center; text-decoration: none; }
+        .social-icon { width: 24px; height: 24px; display: block; margin: 0 auto; }
+        .social-name { font-family: var(--mono); font-size: 10px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 2px; }
+        .social-handle { font-size: 11px; font-weight: 600; color: var(--dark); }
+
+        .cta-block { background: var(--dark); border-radius: 14px; padding: 22px 32px; text-align: center; position: relative; overflow: hidden; }
+        .cta-block::before { content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%); top: -60px; right: -60px; pointer-events: none; }
+        .cta-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 6px; position: relative; }
+        .cta-sub { font-size: 13px; color: #aaa; margin-bottom: 14px; line-height: 1.5; position: relative; }
+        .cta-link { display: inline-block; background: var(--red); color: white; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; letter-spacing: 0.02em; position: relative; }
+
+        @media (max-width: 900px) {
+            .resource-viewer { padding: 0; align-items: stretch; gap: 0; }
+            .print-bar { width: 100%; box-sizing: border-box; padding: 10px 16px; margin-bottom: 0; background: #1a1a1a; position: sticky; top: 0; z-index: 100; }
+            .print-btn { width: 100%; justify-content: center; }
+            .page { width: 100%; box-sizing: border-box; box-shadow: none; border-radius: 0; overflow: visible; margin: 0; }
+            .page + .page { margin-top: 4px; }
+            .cover { height: auto; }
+            .cover-header { padding: 20px 16px 0; }
+            .cover-hero { padding: 24px 16px 24px; justify-content: flex-start; }
+            .cover-title { font-size: 30px; }
+            .cover-subtitle { font-size: 13px; max-width: 100%; margin-bottom: 24px; }
+            .cover-quote-block { padding: 20px 18px; max-width: 100%; margin-bottom: 28px; }
+            .cover-quote-text { font-size: 14px; }
+            .cover-stats { gap: 14px; flex-wrap: wrap; }
+            .stat-num { font-size: 24px; }
+            .stat-label { font-size: 10px; }
+            .cover-footer { padding: 12px 16px; flex-wrap: wrap; gap: 4px; }
+            .cover-decoration { display: none; }
+            .inner-page { height: auto; }
+            .page-header { padding: 14px 16px 12px; flex-wrap: wrap; gap: 4px; }
+            .page-header-title { font-size: 10px; }
+            .page-body { padding: 16px 16px; overflow: visible; }
+            .page-footer { padding: 12px 16px; flex-wrap: wrap; gap: 4px; }
+            .section-title { font-size: 18px; margin-bottom: 14px; }
+            .qa-question { font-size: 13px; }
+            .qa-answer { font-size: 11px; }
+            .skills-row { grid-template-columns: 1fr; gap: 14px; }
+            .resource-grid { grid-template-columns: 1fr; }
+            .cta-block { padding: 18px 16px; }
+            .socials-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .social-card { padding: 10px 6px; }
+            .social-handle { font-size: 10px; word-break: break-word; }
+            .page-num { display: none; }
+            .tip-block { padding: 10px 12px; }
+            .tip-text { font-size: 11px; }
+        }
+
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            .resource-viewer { margin: 0; padding: 0; background: white; display: block; width: 210mm; }
+            .print-bar { display: none !important; }
+            .page { width: 210mm; min-height: 297mm; max-width: none; box-shadow: none; margin: 0; padding: 0; page-break-after: always; break-after: page; overflow: visible; }
+            .page+.page { margin-top: 0; }
+            .cover { min-height: 297mm; }
+            .inner-page { min-height: 297mm; }
+            .qa-card, .resource-card, .tip-block, .cta-block, .social-card, .check-item, .cover-quote-block, .diagram-box { page-break-inside: avoid; break-inside: avoid; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .page:last-child { page-break-after: avoid; break-after: avoid; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <div class="print-bar">
+            <button class="print-btn" data-action="print">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+             <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+ 
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+ 
+                <div class="cover-hook">The exact questions, not random trivia</div>
+ 
+                <h1 class="cover-title">
+                    Top 30 System<br>Design<span> Interview</span><br>Questions
+                </h1>
+ 
+                <p class="cover-subtitle">
+                    The most repeated system design questions actually asked at MNCs and startups — curated by frequency, not by guesswork. Organized in the order interviewers build on them, from fundamentals to the classic "design X" rounds.
+                </p>
+ 
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "System design interviews don't test if you've memorized Kafka's internals — they test if you can reason about tradeoffs out loud. Learn the 30 questions that show up again and again, and you've covered 90% of what actually gets asked."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+ 
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">30</div>
+                        <div class="stat-label">Curated questions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Question categories</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">30+</div>
+                        <div class="stat-label">Companies referenced</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">#1</div>
+                        <div class="stat-label">Most repeated, ranked first</div>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — FUNDAMENTALS (Q1–5) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Category 01 · Fundamentals & Core Concepts</div>
+                <h2 class="section-title">The Vocabulary Every Interview Starts With</h2>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q1</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is scalability, and what's the difference between vertical and horizontal scaling?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Scalability is a system's ability to handle growing load — more users, more data, more requests — without a drop in performance. <strong>Vertical scaling ("scale up")</strong> means adding more power to a single machine: more CPU, RAM, or faster disks. It's simple (no code changes) but has a hard ceiling — eventually you can't buy a bigger box, and it's a single point of failure. <strong>Horizontal scaling ("scale out")</strong> means adding more machines and distributing load across them. It scales almost indefinitely and survives individual machine failure, but introduces real complexity: you now need a load balancer, and any state (sessions, data) must be shared or replicated across machines instead of living in one process's memory. Example: a database that outgrows one server gets vertically scaled first (bigger instance), then horizontally scaled via read replicas or sharding once vertical scaling hits its ceiling.</div>
+                        <div class="qa-tags"><span class="tag red">Warm-up question</span><span class="tag">Asked everywhere</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q2</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Explain the CAP theorem and give a real-world example of the tradeoff.</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">CAP theorem states a distributed system can only guarantee two of three properties at any moment: <strong>Consistency</strong> (every read sees the latest write), <strong>Availability</strong> (every request gets a response), and <strong>Partition tolerance</strong> (the system keeps working when nodes can't talk to each other). In practice, network partitions <em>will</em> happen, so partition tolerance isn't optional — the real choice is between C and A during a partition. A banking ledger picks <strong>CP</strong>: it would rather reject a request than show a stale balance. DynamoDB and Cassandra pick <strong>AP</strong> by default: they'd rather serve a slightly stale value than return an error, because for a shopping cart or a social feed, availability matters more than perfect freshness.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — the CAP triangle</div>
+                            <svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="320,70 100,255 540,255" fill="none" stroke="#e5e5e5" stroke-width="2"/>
+                                <circle cx="320" cy="70" r="30" fill="#FF5757"/>
+                                <text x="320" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#fff">C</text>
+                                <text x="320" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#444" font-weight="600">Consistency</text>
+                                <circle cx="100" cy="255" r="30" fill="#111"/>
+                                <text x="100" y="261" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#fff">A</text>
+                                <text x="100" y="305" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#444" font-weight="600">Availability</text>
+                                <circle cx="540" cy="255" r="30" fill="#111"/>
+                                <text x="540" y="261" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#fff">P</text>
+                                <text x="540" y="305" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#444" font-weight="600">Partition Tolerance</text>
+                                <text x="320" y="180" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#888">pick 2 of 3 — P is non-negotiable</text>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Very high frequency</span><span class="tag">FAANG + startups</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q3</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is a load balancer, and what algorithms can it use to distribute traffic?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">A load balancer sits in front of multiple backend servers and routes each incoming request to one of them, so no single server gets overwhelmed and traffic keeps flowing if one server dies. Common algorithms: <strong>Round Robin</strong> (cycle through servers in order — simple, ignores server load), <strong>Least Connections</strong> (send to the server with fewest active connections — better for uneven request durations), and <strong>Consistent Hashing</strong> (map both requests and servers onto a hash ring, so a request always lands near the "same" server — critical for caching layers, because adding/removing one server only reshuffles a small slice of keys instead of all of them).</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — consistent hashing ring</div>
+                            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="200" cy="150" r="115" fill="none" stroke="#e5e5e5" stroke-width="2"/>
+                                <circle cx="200" cy="35" r="9" fill="#111"/><text x="200" y="20" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#444">Server A</text>
+                                <circle cx="308" cy="105" r="9" fill="#111"/><text x="345" y="102" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#444">Server B</text>
+                                <circle cx="268" cy="248" r="9" fill="#111"/><text x="278" y="272" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#444">Server C</text>
+                                <circle cx="92" cy="228" r="9" fill="#111"/><text x="65" y="252" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#444">Server D</text>
+                                <circle cx="130" cy="75" r="6" fill="#FF5757"/><text x="88" y="65" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#FF5757">key1</text>
+                                <circle cx="245" cy="185" r="6" fill="#FF5757"/><text x="262" y="205" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#FF5757">key2</text>
+                                <text x="200" y="154" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#888">hash ring</text>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Building block</span><span class="tag">Consistent hashing = bonus points</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q4</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What's the difference between strong consistency, eventual consistency, and causal consistency?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><strong>Strong consistency</strong> guarantees every read gets the most recent write immediately, everywhere — needed for a bank balance. <strong>Eventual consistency</strong> guarantees that if writes stop, all replicas will converge to the same value eventually, but a read right after a write might see stale data — fine for a "like" count or follower count. <strong>Causal consistency</strong> sits in between: operations that are causally related (a comment reply must appear after the original comment) are seen in the correct order everywhere, even though unrelated operations might not be. Picking the weakest model that's still acceptable for the feature is usually the right move, since stronger consistency always costs latency and availability. This is also the model interviewers expect you to reuse when they ask you to justify a database choice later in the round.</div>
+                        <div class="qa-tags"><span class="tag red">Ties back to CAP</span><span class="tag">Give concrete examples</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q5</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How do you do back-of-the-envelope capacity estimation (QPS, storage, bandwidth)?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Work top-down with round numbers, out loud. Example for a photo-sharing app with 100M daily active users: if each user posts 1 photo/day, that's 100M writes/day ≈ <strong>1,160 writes/sec average</strong> (100M ÷ 86,400s). Peak traffic is usually 2–3x average, so design for ~3,000 writes/sec. If each photo averages 2MB, storage grows by 100M × 2MB = <strong>200TB/day</strong>. Reads are typically 10–100x writes for a social app, so plan read capacity accordingly and lean on caching/CDN rather than scaling the database for reads. The exact numbers matter less than showing you can derive scale from assumptions methodically.</div>
+                        <div class="qa-tags"><span class="tag red">Practice out loud</span><span class="tag">Sets the scale for the whole answer</span></div>
+                    </div>
+                </div>
+
+                <div class="tip-block">
+                    <div class="tip-icon">🎯</div>
+                    <div class="tip-text"><strong>These 5 answers are the building blocks for every "design X" question later.</strong> Interviewers expect you to drop CAP, consistency models, and capacity math into a bigger answer without being prompted — that's what "fluent" looks like.</div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — NETWORKING & APIs (Q6–11) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Category 02 · Networking, APIs & Communication</div>
+                <h2 class="section-title">How Systems Actually Talk to Each Other</h2>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q6</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Walk me through what happens, step by step, when you type a URL and hit enter.</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">1) The browser checks its cache for the DNS record; if missing, it queries a <strong>DNS resolver</strong>, which walks root → TLD → authoritative nameservers to get the IP. 2) The browser opens a <strong>TCP connection</strong> to that IP (3-way handshake), then negotiates <strong>TLS</strong> for HTTPS. 3) It sends an HTTP request, which may first hit a <strong>CDN edge node</strong> (returns cached static content directly) or a <strong>load balancer</strong>, which forwards it to an app server. 4) The server processes the request — hitting cache, then the database if needed — and returns an HTTP response. 5) The browser parses the HTML, discovers more resources (CSS/JS/images), and repeats the process for each, often in parallel.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — request lifecycle</div>
+                            <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="10" y="55" width="90" height="50" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="55" y="85" text-anchor="middle">Browser</text>
+                                <rect x="150" y="55" width="90" height="50" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="195" y="80" text-anchor="middle">DNS</text><text x="195" y="93" text-anchor="middle" font-size="9" fill="#888">resolver</text>
+                                <rect x="290" y="55" width="90" height="50" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="335" y="80" text-anchor="middle">CDN</text><text x="335" y="93" text-anchor="middle" font-size="9" fill="#888">edge node</text>
+                                <rect x="430" y="55" width="90" height="50" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="475" y="80" text-anchor="middle">Load</text><text x="475" y="93" text-anchor="middle">Balancer</text>
+                                <rect x="570" y="55" width="110" height="50" rx="8" fill="#FF5757" stroke="#FF5757" stroke-width="2"/><text x="625" y="80" text-anchor="middle" fill="#fff">App Server</text><text x="625" y="93" text-anchor="middle" fill="#fff" font-size="9">+ DB</text>
+                                </g>
+                                <path d="M100 80 H150" stroke="#888" stroke-width="1.5" marker-end="url(#ah)"/>
+                                <path d="M240 80 H290" stroke="#888" stroke-width="1.5" marker-end="url(#ah)"/>
+                                <path d="M380 80 H430" stroke="#888" stroke-width="1.5" marker-end="url(#ah)"/>
+                                <path d="M520 80 H570" stroke="#888" stroke-width="1.5" marker-end="url(#ah)"/>
+                                <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Extremely common</span><span class="tag">Tests breadth in one shot</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q7</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is a CDN, and how does it reduce latency for users far from your servers?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">A CDN is a network of geographically distributed <strong>edge servers</strong> that cache content close to users. When a user in Mumbai requests a static asset (image, video segment, CSS file), it's served from a Mumbai edge node instead of round-tripping to an origin server in Virginia — cutting latency from hundreds of milliseconds to tens. Static content (images, videos) can be cached for long periods; dynamic content is either not cached or cached with short TTLs and invalidated on update. Origin servers only get hit on a "cache miss," which also shields them from most of the traffic.</div>
+                        <div class="qa-tags"><span class="tag red">Reused in design rounds</span><span class="tag">Static vs. dynamic content</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q8</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">REST vs. GraphQL vs. gRPC — when would you choose each?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><strong>REST</strong>: resource-based URLs over HTTP, simple, cacheable, universally understood — good default for public APIs. <strong>GraphQL</strong>: clients specify exactly which fields they need in one query, avoiding over-fetching (getting fields you don't need) or under-fetching (needing multiple round trips) — great for mobile apps with varied screen needs and many nested relationships. <strong>gRPC</strong>: binary protocol (protobuf) over HTTP/2, very low latency, strict typed schemas, supports streaming — the default choice for internal service-to-service calls in a microservices backend where every millisecond and byte matters, but not ideal for public-facing APIs since it's harder for external clients to consume.</div>
+                        <div class="qa-tags"><span class="tag red">Backend-heavy roles</span><span class="tag">Give a scenario per option</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q9</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is a message queue, and when would you pick Kafka over RabbitMQ (or vice versa)?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">A message queue lets producers publish messages that consumers process independently, decoupling the two in time and load. <strong>Kafka</strong> is a distributed, append-only log built for very high throughput and durability — messages persist and can be replayed, and multiple consumer groups can read the same stream independently. It's the right choice for event streaming, analytics pipelines, and audit logs. <strong>RabbitMQ</strong> is a traditional message broker with flexible routing (direct, topic, fanout exchanges) and simpler per-message acknowledgment — better suited for task queues where each message should be processed exactly once by one worker, like sending a single email or resizing an image.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — pub/sub message queue</div>
+                            <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="10" y="75" width="110" height="50" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="65" y="105" text-anchor="middle">Producer</text>
+                                <rect x="230" y="40" width="160" height="120" rx="8" fill="#FF5757"/><text x="310" y="95" text-anchor="middle" fill="#fff" font-weight="700">Queue / Topic</text><text x="310" y="112" text-anchor="middle" fill="#fff" font-size="9">(Kafka / RabbitMQ)</text>
+                                <rect x="500" y="15" width="120" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="560" y="41" text-anchor="middle">Consumer A</text>
+                                <rect x="500" y="77" width="120" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="560" y="103" text-anchor="middle">Consumer B</text>
+                                <rect x="500" y="139" width="120" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="560" y="165" text-anchor="middle">Consumer C</text>
+                                </g>
+                                <path d="M120 100 H230" stroke="#888" stroke-width="1.5" marker-end="url(#ah2)"/>
+                                <path d="M390 60 L500 37" stroke="#888" stroke-width="1.5" marker-end="url(#ah2)"/>
+                                <path d="M390 100 H500" stroke="#888" stroke-width="1.5" marker-end="url(#ah2)"/>
+                                <path d="M390 140 L500 161" stroke="#888" stroke-width="1.5" marker-end="url(#ah2)"/>
+                                <defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Very high frequency</span><span class="tag">Kafka vs. RabbitMQ</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q10</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How does WebSocket differ from long polling for building real-time features?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><strong>Long polling</strong>: the client sends a request, the server holds it open until new data is available (or a timeout), responds, and the client immediately re-requests. It works over plain HTTP and is easy to deploy, but each cycle has connection overhead and doesn't scale well to very high message frequency. <strong>WebSocket</strong> upgrades an HTTP connection into a persistent, full-duplex TCP connection — either side can push data anytime with minimal overhead per message, which is why it's the standard choice for chat apps, live scoreboards, and collaborative editing. The tradeoff is infrastructure: load balancers and servers need to support long-lived stateful connections rather than simple stateless request/response.</div>
+                        <div class="qa-tags"><span class="tag red">Real-time systems</span><span class="tag">Feeds into chat design Qs</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q11</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How would you design an API rate limiter? (token bucket vs. leaky bucket vs. sliding window)</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><strong>Token bucket</strong>: a bucket refills with tokens at a fixed rate; each request consumes one token, and requests are rejected when the bucket is empty — allows short bursts up to the bucket size. <strong>Leaky bucket</strong>: requests queue up and are processed at a fixed constant rate, smoothing out bursts entirely. <strong>Sliding window</strong>: counts requests in a rolling time window (e.g. last 60 seconds), giving more accurate limiting than a fixed window that resets abruptly. For a distributed system, the limiter's counters need to live in a shared store like <strong>Redis</strong> (using atomic INCR + TTL) so every API gateway instance sees the same count instead of each enforcing its own local limit. In production, return standard <code>X-RateLimit-Remaining</code> and <code>Retry-After</code> headers so clients can back off gracefully.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — token bucket algorithm</div>
+                            <svg viewBox="0 0 500 190" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="180" y="25" width="140" height="110" rx="12" fill="none" stroke="#111" stroke-width="2"/>
+                                <circle cx="220" cy="105" r="8" fill="#FF5757"/><circle cx="250" cy="95" r="8" fill="#FF5757"/><circle cx="280" cy="110" r="8" fill="#FF5757"/><circle cx="235" cy="75" r="8" fill="#FF5757"/><circle cx="270" cy="80" r="8" fill="#FF5757"/>
+                                <text x="250" y="160" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#444">refills at a fixed rate</text>
+                                <path d="M250 25 V10" stroke="#888" stroke-width="1.5" marker-end="url(#ah3)"/>
+                                <path d="M320 80 H400" stroke="#888" stroke-width="1.5" marker-end="url(#ah3)"/>
+                                <text x="440" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#111">Request</text>
+                                <text x="440" y="83" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#111">(consumes</text>
+                                <text x="440" y="101" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#111">1 token)</text>
+                                <defs><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Frequently asked solo</span><span class="tag">Redis-backed answer scores well</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — DATABASES & STORAGE (Q12–16) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Category 03 · Databases & Storage</div>
+                <h2 class="section-title">Where Most Interviews Spend the Most Time</h2>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q12</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">SQL vs. NoSQL — how do you decide which to use for a given system?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><strong>SQL</strong> databases (Postgres, MySQL) enforce a fixed schema, support strong ACID transactions, and let you run complex joins — ideal when data is relational and correctness/consistency matters, like orders, payments, or inventory. <strong>NoSQL</strong> databases trade some of that structure for flexibility and horizontal scalability: document stores (MongoDB) suit varied, nested data; wide-column stores (Cassandra) suit massive write-heavy workloads; key-value stores (DynamoDB, Redis) suit simple, ultra-fast lookups. Example: use Postgres for a checkout/order system where correctness is critical, and Cassandra for a write-heavy activity log or sensor data feed where you need to ingest millions of writes per second across many nodes.</div>
+                        <div class="qa-tags"><span class="tag red">#1 most repeated</span><span class="tag">Every company asks this</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q13</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How does database sharding actually work, and what breaks when you do it?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">You pick a <strong>shard key</strong> (e.g. user_id), route each row to a shard based on that key (via hashing, ranges, or a lookup table), and each shard runs as an independent database holding only its slice of data. What breaks: a query that needs data from multiple shards (e.g. "top 10 users across the whole platform") now requires scatter-gather across shards and merging results in the app layer instead of one SQL query. Transactions spanning multiple shards lose native ACID guarantees. And resharding — adding a new shard as data grows — means physically moving data between machines, which is why consistent hashing is often used to minimize how much data moves.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — sharded database</div>
+                            <svg viewBox="0 0 600 190" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="230" y="10" width="140" height="45" rx="8" fill="#111"/><text x="300" y="37" text-anchor="middle" fill="#fff">App / Router</text>
+                                <rect x="10" y="110" width="140" height="60" rx="8" fill="#fff" stroke="#FF5757" stroke-width="2"/><text x="80" y="135" text-anchor="middle">Shard 1</text><text x="80" y="152" text-anchor="middle" font-size="9" fill="#888">users A–I</text>
+                                <rect x="230" y="110" width="140" height="60" rx="8" fill="#fff" stroke="#FF5757" stroke-width="2"/><text x="300" y="135" text-anchor="middle">Shard 2</text><text x="300" y="152" text-anchor="middle" font-size="9" fill="#888">users J–R</text>
+                                <rect x="450" y="110" width="140" height="60" rx="8" fill="#fff" stroke="#FF5757" stroke-width="2"/><text x="520" y="135" text-anchor="middle">Shard 3</text><text x="520" y="152" text-anchor="middle" font-size="9" fill="#888">users S–Z</text>
+                                </g>
+                                <path d="M270 55 L80 110" stroke="#888" stroke-width="1.5" marker-end="url(#ah4)"/>
+                                <path d="M300 55 V110" stroke="#888" stroke-width="1.5" marker-end="url(#ah4)"/>
+                                <path d="M330 55 L520 110" stroke="#888" stroke-width="1.5" marker-end="url(#ah4)"/>
+                                <defs><marker id="ah4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Deep-dive question</span><span class="tag">Cross-shard joins = key pain point</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q14</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Explain leader-follower (master-slave) replication vs. multi-leader replication.</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">In <strong>leader-follower replication</strong>, all writes go to a single leader, which then propagates changes to one or more followers; followers can serve read traffic, spreading read load, but the leader remains a single point of write failure and a potential bottleneck. In <strong>multi-leader replication</strong>, multiple nodes (often in different regions) can each accept writes, improving write availability and latency for geographically distributed users — but now concurrent writes to the same data on different leaders can conflict, requiring conflict-resolution logic (e.g. last-write-wins, or app-specific merge rules). Most systems default to leader-follower with read replicas unless multi-region write availability is a hard requirement.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — leader-follower replication</div>
+                            <svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="190" y="15" width="140" height="50" rx="8" fill="#FF5757"/><text x="260" y="45" text-anchor="middle" fill="#fff" font-weight="700">Leader (writes)</text>
+                                <rect x="20" y="105" width="140" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="90" y="132" text-anchor="middle">Follower A (reads)</text>
+                                <rect x="360" y="105" width="140" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="430" y="132" text-anchor="middle">Follower B (reads)</text>
+                                </g>
+                                <path d="M230 65 L110 105" stroke="#888" stroke-width="1.5" marker-end="url(#ah5)"/>
+                                <path d="M290 65 L410 105" stroke="#888" stroke-width="1.5" marker-end="url(#ah5)"/>
+                                <text x="150" y="90" font-family="JetBrains Mono,monospace" font-size="9" fill="#888">replicate</text>
+                                <text x="340" y="90" font-family="JetBrains Mono,monospace" font-size="9" fill="#888">replicate</text>
+                                <defs><marker id="ah5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Read replicas come up here</span><span class="tag">Conflict resolution follow-up</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q15</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is a database index, and how does a B-tree index actually speed up queries?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Without an index, finding a row means scanning every row (O(n)). An index is a separate, sorted data structure — usually a <strong>B-tree</strong> — that maps column values to row locations, so lookups, range scans, and sorted retrieval become O(log n). A B-tree keeps data sorted across a shallow, wide tree of nodes, so the database can binary-search its way to the right leaf in just a few disk reads. The tradeoff: every index speeds up reads on that column but slows down writes (the index must be updated on every insert/update/delete) and takes extra storage — so indexing every column is a common beginner mistake.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — B-tree index structure</div>
+                            <svg viewBox="0 0 480 170" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="JetBrains Mono,monospace" font-size="10" fill="#fff" text-anchor="middle">
+                                <rect x="190" y="10" width="100" height="34" rx="6" fill="#111"/><text x="240" y="31">[ 30 | 60 ]</text>
+                                <rect x="40" y="90" width="90" height="34" rx="6" fill="#FF5757"/><text x="85" y="111">[10|20]</text>
+                                <rect x="195" y="90" width="90" height="34" rx="6" fill="#FF5757"/><text x="240" y="111">[40|50]</text>
+                                <rect x="350" y="90" width="90" height="34" rx="6" fill="#FF5757"/><text x="395" y="111">[70|80]</text>
+                                </g>
+                                <path d="M215 44 L85 90" stroke="#888" stroke-width="1.5"/>
+                                <path d="M240 44 V90" stroke="#888" stroke-width="1.5"/>
+                                <path d="M265 44 L395 90" stroke="#888" stroke-width="1.5"/>
+                                <text x="240" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#888">Sorted, shallow tree → O(log n) lookups</text>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Backend & DBA-adjacent roles</span><span class="tag">Know the tradeoff, not just the benefit</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q16</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How would you design a caching layer? (cache-aside vs. write-through vs. write-back)</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><strong>Cache-aside (lazy loading)</strong>: the app checks the cache first; on a miss, it reads from the database and populates the cache for next time. Most common pattern — simple, and the cache only holds data that's actually been requested. <strong>Write-through</strong>: every write goes to the cache and the database at the same time, keeping them always in sync, at the cost of slightly slower writes. <strong>Write-back</strong>: writes hit the cache immediately and are flushed to the database asynchronously later — very fast writes, but risks data loss if the cache fails before flushing. Redis and Memcached are the standard tools; TTLs and explicit invalidation on write are how you keep cache-aside data from going stale. Also mention eviction: when the cache fills up, LRU (evict the least recently used entry) is the default policy in almost every real system.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — cache-aside pattern</div>
+                            <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="10" y="50" width="100" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="60" y="77" text-anchor="middle">App</text>
+                                <rect x="220" y="10" width="120" height="45" rx="8" fill="#FF5757"/><text x="280" y="37" text-anchor="middle" fill="#fff">Cache (Redis)</text>
+                                <rect x="220" y="90" width="120" height="45" rx="8" fill="#111"/><text x="280" y="117" text-anchor="middle" fill="#fff">Database</text>
+                                </g>
+                                <path d="M110 65 L220 35" stroke="#888" stroke-width="1.5" marker-end="url(#ah6)"/><text x="150" y="35" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">1. check</text>
+                                <path d="M110 90 L220 112" stroke="#888" stroke-width="1.5" marker-end="url(#ah6)"/><text x="150" y="118" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">2. miss → DB</text>
+                                <path d="M280 90 L280 55" stroke="#888" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#ah6)"/><text x="410" y="75" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">3. populate cache</text>
+                                <defs><marker id="ah6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Nearly guaranteed</span><span class="tag">Redis / Memcached</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — DISTRIBUTED SYSTEMS & RELIABILITY (Q17–20) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Category 04 · Distributed Systems & Reliability</div>
+                <h2 class="section-title">Where Mid-to-Senior Interviews Separate Candidates</h2>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q17</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is idempotency, and why does it matter for distributed APIs?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">An operation is idempotent if performing it multiple times has the same effect as performing it once. In distributed systems, network failures force clients to retry requests when they don't get a response — but if "charge $50" isn't idempotent, a retried request could charge the customer twice. The standard fix is an <strong>idempotency key</strong>: the client generates a unique ID per logical operation and sends it with the request; the server stores which keys it's already processed and simply returns the original result for a duplicate key instead of repeating the side effect. This is why payment APIs like Stripe require an idempotency key on every charge request.</div>
+                        <div class="qa-tags"><span class="tag red">Payment systems love this</span><span class="tag">Retries & network failures</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q18</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How do you design a system to be fault-tolerant, with graceful degradation instead of a full outage?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Build in redundancy so no single machine, zone, or region failing takes down the whole system — run multiple instances behind a load balancer, replicate data across availability zones. Use <strong>timeouts and retries with exponential backoff</strong> so a slow dependency doesn't hang callers forever or hammer a struggling service. Add <strong>fallbacks</strong>: if a recommendation service is down, show generic/cached results instead of an error page. And <strong>isolate failures</strong> with patterns like bulkheads, so one overwhelmed dependency (say, a third-party API) can't exhaust the thread pool or resources needed by unrelated features. The mindset shift interviewers want: design for "some functionality degrades" rather than "everything works or everything's down."</div>
+                        <div class="qa-tags"><span class="tag red">Reliability mindset</span><span class="tag">Graceful degradation over perfection</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q19</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">What is a circuit breaker pattern, and when would you use one?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">A circuit breaker wraps calls to a downstream dependency and tracks failures. In the <strong>Closed</strong> state, requests pass through normally. If failures exceed a threshold, it trips to <strong>Open</strong>: requests fail immediately without even trying the downstream call, protecting both the caller (fails fast instead of timing out slowly) and the struggling downstream service (stops piling on load it can't handle). After a cooldown period, it moves to <strong>Half-Open</strong>, letting a small number of test requests through — if they succeed, it closes again; if they fail, it re-opens. Netflix's Hystrix library popularized this pattern for microservice resilience.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — circuit breaker state machine</div>
+                            <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">
+                                <circle cx="90" cy="90" r="52" fill="#111"/><text x="90" y="95">Closed</text>
+                                <circle cx="280" cy="90" r="52" fill="#FF5757"/><text x="280" y="95">Open</text>
+                                <circle cx="470" cy="90" r="52" fill="#444"/><text x="470" y="87">Half-</text><text x="470" y="102">Open</text>
+                                </g>
+                                <path d="M140 75 Q210 45 228 72" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#ah7)"/><text x="185" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">too many failures</text>
+                                <path d="M332 105 Q400 135 420 100" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#ah7)"/><text x="375" y="158" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">cooldown timer</text>
+                                <path d="M420 80 Q400 45 332 75" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#ah7)"/><text x="375" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">test fails</text>
+                                <path d="M228 108 Q210 145 140 108" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#ah7)"/><text x="185" y="160" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#888">test succeeds</text>
+                                <defs><marker id="ah7" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Fails fast, not slow</span><span class="tag">Netflix Hystrix reference</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q20</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How would you design a distributed unique ID generator (like Twitter's Snowflake)?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Auto-increment IDs work fine on one database, but break once you shard: two shards would both generate "ID 501" independently. Snowflake solves this by packing a 64-bit integer into three parts: a <strong>timestamp</strong> (milliseconds since a custom epoch, giving rough time-ordering), a <strong>machine/worker ID</strong> (so different nodes never collide), and a <strong>sequence number</strong> (to handle multiple IDs generated on the same machine within the same millisecond). No central coordinator is needed — each node generates IDs independently and they're guaranteed unique and roughly sortable by creation time, which is valuable for pagination and indexing.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — Snowflake 64-bit ID layout</div>
+                            <svg viewBox="0 0 600 110" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="JetBrains Mono,monospace" font-size="10.5" fill="#fff" text-anchor="middle">
+                                <rect x="10" y="20" width="30" height="40" fill="#e5e5e5"/><text x="25" y="90" fill="#444" font-size="9">sign</text>
+                                <rect x="40" y="20" width="290" height="40" fill="#FF5757"/><text x="185" y="45">41-bit timestamp</text>
+                                <rect x="330" y="20" width="110" height="40" fill="#111"/><text x="385" y="45">10-bit machine ID</text>
+                                <rect x="440" y="20" width="150" height="40" fill="#444"/><text x="515" y="45">12-bit sequence</text>
+                                </g>
+                                <text x="185" y="95" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#888">ms since epoch</text>
+                                <text x="385" y="95" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#888">which node</text>
+                                <text x="515" y="95" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#888">per-ms counter</text>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Very popular standalone Q</span><span class="tag">Snowflake ID structure</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — CLASSIC "DESIGN X" QUESTIONS (Q21–27) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Category 05 · Classic "Design X" Questions — Most Asked</div>
+                <h2 class="section-title">The Actual Interview, Where Everything Above Gets Combined</h2>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q21</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a URL shortener (like Bit.ly or TinyURL).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> clarify scale first (expected reads vs. writes, whether custom aliases or link expiry are needed — you'll find this is a heavily read-skewed system, often 100:1), then walk from write path to read path. <strong>Write path:</strong> a client submits a long URL → the server generates a short, unique code (base62-encode an auto-incrementing ID, or a Snowflake-style ID from Q20, to avoid collisions without a global lock) → store the mapping {short_code → long_url} in a key-value store like DynamoDB. <strong>Read path:</strong> the request hits a <strong>cache</strong> first (Redis, since reads vastly outnumber writes), falling back to the database on a miss, and issues a 301/302 redirect. Then layer in the details that show depth: an <strong>expiry field</strong> for optional link expiration, and sharding the mapping table by short_code hash once it outgrows one machine. Naming the read-heavy access pattern explicitly, and reaching for caching before anything fancier, is what a strong answer sounds like here.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — URL shortener architecture</div>
+                            <svg viewBox="0 0 620 150" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="10" y="55" width="90" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="55" y="82" text-anchor="middle">Client</text>
+                                <rect x="150" y="55" width="100" height="45" rx="8" fill="#111"/><text x="200" y="82" text-anchor="middle" fill="#fff">API Server</text>
+                                <rect x="310" y="10" width="110" height="45" rx="8" fill="#FF5757"/><text x="365" y="37" text-anchor="middle" fill="#fff">Cache (Redis)</text>
+                                <rect x="310" y="95" width="110" height="45" rx="8" fill="#444"/><text x="365" y="122" text-anchor="middle" fill="#fff">KV Store (DB)</text>
+                                <rect x="480" y="55" width="120" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="540" y="82" text-anchor="middle">ID Generator</text>
+                                </g>
+                                <path d="M100 77 H150" stroke="#888" stroke-width="1.5" marker-end="url(#ah8)"/>
+                                <path d="M250 65 L310 40" stroke="#888" stroke-width="1.5" marker-end="url(#ah8)"/>
+                                <path d="M250 90 L310 112" stroke="#888" stroke-width="1.5" marker-end="url(#ah8)"/>
+                                <path d="M420 90 L310 40" stroke="#888" stroke-width="1" stroke-dasharray="3" marker-end="url(#ah8)"/>
+                                <path d="M480 70 L250 70" stroke="#888" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#ah8)"/>
+                                <defs><marker id="ah8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Most common first design Q</span><span class="tag">Amazon, startups, most SDE rounds</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q22</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a distributed key-value store (like Redis or DynamoDB).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> start by asking what this store is for — a cache in front of a primary database, or the primary store itself — since that changes how much durability and consistency you need. Then design outward from data placement to replication to consistency. Use <strong>consistent hashing</strong> (Q3) to map keys to nodes so scaling the cluster only moves a small fraction of keys. Replicate each key to N nodes (say 3) for durability, using leader-follower or leaderless (quorum-based) replication — a leaderless design (like DynamoDB) uses read/write quorums (e.g. W+R > N) to balance consistency and availability per request. Pick your consistency model deliberately (Q4): DynamoDB defaults to eventual consistency for speed but offers a strongly consistent read option at higher latency cost. Close by naming what happens under a network partition — vector clocks or a Merkle tree to detect and resolve conflicting writes across replicas.</div>
+                        <div class="qa-tags"><span class="tag red">Combines Categories 3 & 4</span><span class="tag">Infra & platform roles</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q23</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a chat application (like WhatsApp or Messenger).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> clarify 1:1 vs. group chat, whether delivery/read receipts are needed, and rough concurrent-connection scale — this determines whether you need a real-time transport at all. Then trace one message end to end. Each client holds a persistent <strong>WebSocket</strong> connection (Q10) to a chat server. Sending a message: client → chat server → write to a message store (partitioned by conversation ID) → if the recipient is online, push directly over their WebSocket connection; if offline, the message waits in a per-user queue and is delivered (or triggers a push notification) on reconnect. Use a sequence number per conversation for message ordering, and keep "sent/delivered/read" state as its own lightweight, frequently-updated record rather than bloating the message row itself. For group chats, fan the message out to all N members' queues; for scale, shard chat servers and route users to the same server consistently via a connection-routing layer.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — chat app message flow</div>
+                            <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10.5" fill="#111">
+                                <rect x="10" y="55" width="100" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="60" y="82" text-anchor="middle">Sender</text>
+                                <rect x="180" y="55" width="120" height="45" rx="8" fill="#FF5757"/><text x="240" y="82" text-anchor="middle" fill="#fff">Chat Server (WS)</text>
+                                <rect x="360" y="10" width="120" height="45" rx="8" fill="#111"/><text x="420" y="37" text-anchor="middle" fill="#fff">Message Store</text>
+                                <rect x="360" y="95" width="120" height="45" rx="8" fill="#444"/><text x="420" y="118" text-anchor="middle" fill="#fff">Offline Queue</text>
+                                <rect x="530" y="55" width="80" height="45" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="570" y="82" text-anchor="middle">Recipient</text>
+                                </g>
+                                <path d="M110 77 H180" stroke="#888" stroke-width="1.5" marker-end="url(#ah9)"/>
+                                <path d="M300 65 L360 35" stroke="#888" stroke-width="1.5" marker-end="url(#ah9)"/>
+                                <path d="M300 90 L360 115" stroke="#888" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#ah9)"/>
+                                <path d="M300 77 H530" stroke="#888" stroke-width="1.5" marker-end="url(#ah9)"/>
+                                <defs><marker id="ah9" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">One of the top-3 most asked</span><span class="tag">Meta, startups, most product companies</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q24</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a news feed system (like Facebook or Instagram's feed).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> establish the read/write ratio and whether ranking matters or the feed is purely chronological, then reason explicitly about the two ways to assemble a feed. <strong>Fan-out on write</strong>: when a user posts, immediately push the post into every follower's precomputed feed (stored in a fast store like Redis). Reading the feed is then a single cheap lookup — great for typical users, but breaks down for celebrities with millions of followers, since one post triggers millions of writes. <strong>Fan-out on read</strong>: the feed is assembled at request time by pulling recent posts from everyone the user follows and merging/ranking them — no write explosion, but read latency grows with follow count. Most real systems use a <strong>hybrid</strong>: fan-out on write for normal users, fan-out on read (or a separate path) for high-follower accounts, merging both at feed-read time. Naming this celebrity edge case unprompted is what typically distinguishes a strong answer here.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — fan-out on write vs. read</div>
+                            <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg">
+                                <g font-family="Inter,sans-serif" font-size="10" fill="#111">
+                                <text x="150" y="18" text-anchor="middle" font-weight="700">Fan-out on WRITE</text>
+                                <rect x="100" y="30" width="100" height="35" rx="6" fill="#FF5757"/><text x="150" y="52" text-anchor="middle" fill="#fff">New Post</text>
+                                <rect x="10" y="100" width="70" height="35" rx="6" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="45" y="122" text-anchor="middle">Feed A</text>
+                                <rect x="105" y="100" width="70" height="35" rx="6" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="140" y="122" text-anchor="middle">Feed B</text>
+                                <rect x="200" y="100" width="70" height="35" rx="6" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="235" y="122" text-anchor="middle">Feed C</text>
+                                <text x="470" y="18" text-anchor="middle" font-weight="700">Fan-out on READ</text>
+                                <rect x="420" y="100" width="100" height="35" rx="6" fill="#111"/><text x="470" y="122" text-anchor="middle" fill="#fff">Read Request</text>
+                                <rect x="350" y="30" width="70" height="35" rx="6" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="385" y="52" text-anchor="middle">Post 1</text>
+                                <rect x="445" y="30" width="70" height="35" rx="6" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="480" y="52" text-anchor="middle">Post 2</text>
+                                <rect x="540" y="30" width="70" height="35" rx="6" fill="#fff" stroke="#e5e5e5" stroke-width="2"/><text x="575" y="52" text-anchor="middle">Post 3</text>
+                                </g>
+                                <path d="M130 65 L45 100" stroke="#888" stroke-width="1.2" marker-end="url(#ah10)"/>
+                                <path d="M150 65 V100" stroke="#888" stroke-width="1.2" marker-end="url(#ah10)"/>
+                                <path d="M170 65 L235 100" stroke="#888" stroke-width="1.2" marker-end="url(#ah10)"/>
+                                <path d="M450 100 L385 65" stroke="#888" stroke-width="1.2" marker-end="url(#ah10)"/>
+                                <path d="M470 100 V65" stroke="#888" stroke-width="1.2" marker-end="url(#ah10)"/>
+                                <path d="M490 100 L480 65" stroke="#888" stroke-width="1.2" marker-end="url(#ah10)"/>
+                                <defs><marker id="ah10" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#888"/></marker></defs>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">Meta, social platforms</span><span class="tag">Fan-out tradeoff is the key insight</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q25</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a ride-sharing system (like Uber or Ola).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> recognize early that this is fundamentally a real-time geospatial indexing and matching problem, not a generic CRUD app — say that out loud before diving into components. Drivers continuously report GPS location to a location service, which indexes them using <strong>geohashing</strong> or a <strong>quadtree</strong> — dividing the map into cells so "find nearby drivers" becomes a cheap lookup in one or a few cells instead of scanning every driver's coordinates. When a rider requests a trip, the matching service queries nearby available drivers, ranks them by ETA/rating, and offers the trip (with a timeout to move to the next driver if it's declined). Use a message queue to decouple location updates from matching, and a separate pricing service that factors in real-time supply/demand for surge pricing.</div>
+                        <div class="qa-tags"><span class="tag red">Uber, Ola, delivery startups</span><span class="tag">Geospatial indexing focus</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q26</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a video streaming platform (like YouTube or Netflix).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> clarify live vs. on-demand, since live streaming adds real-time transcoding and much tighter latency budgets — most interviews mean video-on-demand unless stated otherwise. Then split the design into upload/processing and playback. On upload, the video goes into object storage, then a <strong>transcoding pipeline</strong> converts it into multiple resolutions and bitrates (240p to 4K), split into small segments. Playback uses <strong>adaptive bitrate streaming</strong> (HLS/DASH): the client's player continuously monitors network conditions and switches segment quality up or down in real time to avoid buffering. All video segments and thumbnails are served through a <strong>CDN</strong> (Q7) so playback comes from an edge node near the viewer, not the origin. Keep metadata (titles, view counts, recommendations) in a separate database from the actual video bytes, since their access and scaling patterns are completely different.</div>
+                        <div class="qa-tags"><span class="tag red">Netflix, YouTube, media companies</span><span class="tag">Reuses CDN concept from Q7</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q27</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">Design a distributed file storage system (like Google Drive or Dropbox).</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer"><em class="framework">How to structure the answer:</em> clarify whether multi-device sync and offline editing are in scope — that's what makes this harder than plain object storage. Split large files into fixed-size <strong>chunks</strong>, store each chunk's content hash, and store chunks in a distributed blob store (deduplicating identical chunks across users to save space). Keep <strong>metadata</strong> (file names, folder structure, chunk list, permissions, version history) in a separate database from the actual chunk data, since metadata is small and query-heavy while chunk storage is large and read/write-heavy. For sync, each client tracks a local version vector and uses a delta-sync protocol to upload/download only changed chunks, with conflict resolution (e.g. "keep both versions") when two devices edit offline and reconnect with diverging changes.</div>
+                        <div class="qa-tags"><span class="tag red">Senior/staff-level</span><span class="tag">Google, Dropbox-style rounds</span></div>
+                    </div>
+                </div>
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧩</div>
+                    <div class="tip-text"><strong>Notice the pattern:</strong> every one of these answers just recombines Categories 01–04, and opens by clarifying requirements before drawing a single box. That's deliberate — it's exactly how real interviews work.</div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — SCALING, MONITORING & STRATEGY (Q28–30) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Category 06 · Scaling, Monitoring & Interview Strategy</div>
+                <h2 class="section-title">The Closing Questions That Decide the Verdict</h2>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q28</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How would you design monitoring and alerting for the system you just built?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Track the four <strong>golden signals</strong>: latency (how slow requests are), traffic (requests per second), errors (rate of failed requests), and saturation (how "full" the system is — CPU, memory, queue depth). Build dashboards for causes (per-service latency, DB query times, queue backlogs) but only <strong>page a human</strong> for symptom-based alerts that directly affect users (elevated error rate, p99 latency breach) — paging on every internal metric blip causes alert fatigue and trains engineers to ignore pages. Use tools like Prometheus/Grafana for metrics and a proper on-call rotation with clear escalation paths for anything that fires after hours.</div>
+                        <div class="qa-tags"><span class="tag red">Often the closing question</span><span class="tag">Golden signals</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q29</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How would you design a checkout/inventory system that avoids overselling an item?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">Use <strong>optimistic locking</strong> for normal-traffic items: read the current stock with a version number, decrement it in an update that only succeeds if the version hasn't changed since the read — if it fails, retry. For extremely high-contention items (a flash sale on one product), a database row lock becomes a bottleneck itself, so instead <strong>reserve stock</strong> in a fast atomic counter (e.g. Redis DECR) with a short-lived hold, converting it to a confirmed sale only once payment succeeds, and releasing the hold automatically on timeout if checkout is abandoned. Combine this with <strong>idempotency keys</strong> (Q17) so a retried "confirm payment" call can never decrement inventory twice for the same order.</div>
+                        <div class="qa-tags"><span class="tag red">E-commerce & fintech</span><span class="tag">Ties back to idempotency (Q17)</span></div>
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-left"><div class="qa-num">Q30</div></div>
+                    <div class="qa-body">
+                        <div class="qa-question">How do you structure your answer in a 45-minute system design interview?</div>
+                        <div class="qa-answer-label">Answer</div>
+                        <div class="qa-answer">A structure that consistently works: <strong>(1) Clarify requirements & scale</strong> (2-3 min) — ask about scope, users, read/write ratio; <strong>(2) High-level design</strong> (5-10 min) — sketch the main components and API before any deep dive; <strong>(3) Deep dive</strong> (20-25 min) — the interviewer will steer you toward 2-3 components they care about most (usually the database design and one tricky component like the feed or the matching algorithm); <strong>(4) Discuss bottlenecks & tradeoffs</strong> (10 min) — proactively name what breaks at 10x scale and how you'd fix it; <strong>(5) Wrap with monitoring/failure handling</strong> if time allows. This exact five-step shape is the "how to answer" framework used throughout Category 05 — apply it to any "design X" prompt you haven't seen before. Interviewers consistently say structure and clear tradeoff reasoning matter more than knowing every buzzword.</div>
+                        <div class="diagram-box">
+                            <div class="diagram-label">Diagram — 45-minute interview timeline</div>
+                            <svg viewBox="0 0 640 100" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="10" y="35" width="60" height="30" fill="#111"/><text x="40" y="55" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#fff">Clarify</text>
+                                <rect x="70" y="35" width="120" height="30" fill="#444"/><text x="130" y="55" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#fff">High-level design</text>
+                                <rect x="190" y="35" width="280" height="30" fill="#FF5757"/><text x="330" y="55" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#fff">Deep dive (2-3 components)</text>
+                                <rect x="470" y="35" width="120" height="30" fill="#444"/><text x="530" y="55" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#fff">Bottlenecks</text>
+                                <rect x="590" y="35" width="40" height="30" fill="#111"/><text x="610" y="55" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#fff">Wrap</text>
+                                <text x="40" y="20" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#888">2-3m</text>
+                                <text x="130" y="20" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#888">5-10m</text>
+                                <text x="330" y="20" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#888">20-25m</text>
+                                <text x="530" y="20" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#888">10m</text>
+                            </svg>
+                        </div>
+                        <div class="qa-tags"><span class="tag red">The meta-question</span><span class="tag">Structure beats raw knowledge</span></div>
+                    </div>
+                </div>
+
+                <div class="tip-block" style="margin-top: 4px;">
+                    <div class="tip-icon">✅</div>
+                    <div class="tip-text"><strong>You've now covered all 6 categories.</strong> Every "design X" question you'll face in a real interview is some combination of Q1–Q20 — practice re-deriving Q21–Q27 without looking, then try an unfamiliar prompt using the Q30 structure.</div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <span class="page-header-logo">THE BORING EDUCATION</span>
+                <span class="page-header-title">System Design Q&A · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free Channels & References for System Design</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Gaurav Sen</div>
+                        <div class="resource-card-desc">Clear, whiteboard-style breakdowns of classic system design questions — a strong starting point for interview prep.</div>
+                        <div class="yt-links"><a class="yt-link" href="https://www.youtube.com/@gkcs" target="_blank">@gkcs</a></div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 ByteByteGo (Alex Xu)</div>
+                        <div class="resource-card-desc">Visual, diagram-heavy explanations from the author of the widely used "System Design Interview" book series.</div>
+                        <div class="yt-links"><a class="yt-link" href="https://www.youtube.com/@ByteByteGo" target="_blank">@ByteByteGo</a></div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Hussein Nasser</div>
+                        <div class="resource-card-desc">Deep, engineer-to-engineer explanations of networking, databases, and backend internals behind most design answers.</div>
+                        <div class="yt-links"><a class="yt-link" href="https://www.youtube.com/@hnasr" target="_blank">@hnasr</a></div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 System Design Interview</div>
+                        <div class="resource-card-desc">Focused entirely on mock interviews and structured walkthroughs of the exact "design X" questions in Category 05.</div>
+                        <div class="yt-links"><a class="yt-link" href="https://www.youtube.com/@SystemDesignInterview" target="_blank">@SystemDesignInterview</a></div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📄 High Scalability (blog)</div>
+                        <div class="resource-card-desc">Real architecture writeups from engineers at Netflix, Uber, and Discord — the source material behind most of these questions.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📄 "Designing Data-Intensive Applications"</div>
+                        <div class="resource-card-desc">The most recommended book for the concepts behind Categories 01, 03, and 04 — consistency, replication, and partitioning.</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">Community — Peer mock interviews</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Redraw Every Diagram From Memory 🖊️</div>
+                    <div class="cta-sub">Reading these answers is step one. The real test is closing this page and redrawing the CAP triangle, the cache-aside flow, and the Snowflake ID layout from scratch — that's when it actually sticks.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelector('[data-action="print"]').addEventListener('click', function () {
+            window.print();
+        });
+    </script>
+</body>
+
+</html>
