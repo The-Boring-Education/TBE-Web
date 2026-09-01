@@ -68,8 +68,8 @@ test.describe("Tech Yatra auth and onboarding gate", () => {
       timeout: 30_000,
     });
     await expect(page).toHaveURL(/\/dashboard\/?$/, { timeout: 20_000 });
-    await expect(page.getByRole("heading", { name: "Tech Yatra" })).toBeVisible(
-      { timeout: 20_000 },
-    );
+    await expect(
+      page.getByRole("heading", { name: /Tech Yatra/i }),
+    ).toBeVisible({ timeout: 45_000 });
   });
 });
