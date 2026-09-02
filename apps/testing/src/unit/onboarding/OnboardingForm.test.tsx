@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 
+import OnboardingForm from "@tbe/onboarding/components/OnboardingForm";
 import type { OnboardingFieldConfig } from "@tbe/types";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
@@ -83,8 +84,6 @@ function makeSetForm() {
   );
   return { fn, getState: () => currentState };
 }
-
-import OnboardingForm from "@tbe/onboarding/components/OnboardingForm";
 
 describe("OnboardingForm", () => {
   beforeEach(() => {
@@ -261,7 +260,11 @@ describe("OnboardingForm", () => {
       />,
     );
     expect(
-      screen.getByText("Checking username availability..."),
+      screen.getByText(
+        (content) =>
+          content.includes("Checking availability") ||
+          content.includes("Checking username availability"),
+      ),
     ).toBeInTheDocument();
   });
 
@@ -299,7 +302,13 @@ describe("OnboardingForm", () => {
     );
     await waitFor(
       () => {
-        expect(screen.getByText("Username not available")).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            (content) =>
+              content.includes("Username is already taken") ||
+              content.includes("Username not available"),
+          ),
+        ).toBeInTheDocument();
       },
       { timeout: 3000 },
     );

@@ -5,6 +5,8 @@
  * including field configurations, product configs, and onboarding state
  */
 
+import type { Dispatch, SetStateAction } from "react";
+
 import type { BaseUser } from "./common";
 
 // ================================
@@ -120,7 +122,7 @@ export interface UseOnboardingReturn extends OnboardingState {
   handleBack: () => void;
   handleFinish: () => Promise<void>;
   isFieldValid: boolean;
-  setForm: (form: Record<string, unknown>) => void;
+  setForm: Dispatch<SetStateAction<Record<string, unknown>>>;
   setUsernameAvailability: (available: boolean) => void;
   setUsernameChecking: (checking: boolean) => void;
 }
