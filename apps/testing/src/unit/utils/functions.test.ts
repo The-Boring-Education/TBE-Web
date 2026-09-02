@@ -7,6 +7,7 @@ import {
   getDiscountDisplayInfo,
   getDiscountPercentage,
   getLocalStorageItem,
+  getRedirectUrl,
   getSavingsPercentage,
   removeLocalStorageItem,
   setLocalStorageItem,
@@ -679,6 +680,48 @@ describe("Utility Functions", () => {
       const result = getSavingsPercentage(originalPrice, finalPrice);
       expect(result).toBeDefined();
       expect(result).toBe(20);
+    });
+  });
+
+  describe("getRedirectUrl", () => {
+    it("should return default routes.learn when no redirect param is present", () => {
+      const result = getRedirectUrl("http://localhost:3000/onboarding");
+      expect(result).toBe("/learn");
+    });
+
+    it("should return safe relative redirect url", () => {
+      const result = getRedirectUrl(
+        "http://localhost:3000/onboarding?redirect=/dashboard",
+      );
+      expect(result).toBe("/dashboard");
+    });
+
+    it("should reject javascript: protocol XSS attacks and fallback to /learn", () => {
+      const result = getRedirectUrl(
+        "http://localhost:3000/onboarding?redirect=javascript:alert(1)",
+      );
+      expect(result).toBe("/learn");
+    });
+
+    it("should reject protocol-relative URLs (//evil.com) and fallback to /learn", () => {
+      const result = getRedirectUrl(
+        "http://localhost:3000/onboarding?redirect=//evil.com",
+      );
+      expect(result).toBe("/learn");
+    });
+
+    it("should reject untrusted external domains and fallback to /learn", () => {
+      const result = getRedirectUrl(
+        "http://localhost:3000/onboarding?redirect=https://evil.com/phishing",
+      );
+      expect(result).toBe("/learn");
+    });
+
+    it("should allow trusted domain URLs", () => {
+      const result = getRedirectUrl(
+        "http://localhost:3000/onboarding?redirect=https://prepyatra.theboringeducation.com/dashboard",
+      );
+      expect(result).toBe("https://prepyatra.theboringeducation.com/dashboard");
     });
   });
 });

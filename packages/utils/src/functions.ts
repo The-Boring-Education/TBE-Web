@@ -558,12 +558,66 @@ const calculateProgressPercentage = (
   return (progress / nextMinPoints) * 100;
 };
 
-const getRedirectUrl = (url?: string) => {
-  const redirect =
-    new URL(url || window.location.href).searchParams.get("redirect") ||
-    routes.learn;
+const getRedirectUrl = (url?: string): string => {
+  try {
+    const sourceUrl =
+      url || (typeof window !== "undefined" ? window.location.href : "");
+    if (!sourceUrl) {
+      return routes.learn;
+    }
 
-  return redirect;
+    const baseOrigin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "http://localhost";
+    const parsedSource = new URL(sourceUrl, baseOrigin);
+    const redirectParam = parsedSource.searchParams.get("redirect");
+
+    if (!redirectParam) {
+      return routes.learn;
+    }
+
+    const trimmed = redirectParam.trim();
+
+    // Prevent control characters
+    if (/[\u0000-\u001F\u007F-\u009F]/.test(trimmed)) {
+      return routes.learn;
+    }
+
+    // Allow safe relative paths (prevent protocol-relative '//' and Windows '\')
+    if (
+      trimmed.startsWith("/") &&
+      !trimmed.startsWith("//") &&
+      !trimmed.startsWith("/\\") &&
+      !trimmed.startsWith("\\")
+    ) {
+      return trimmed;
+    }
+
+    // Check if it's a valid absolute URL with http or https protocol to trusted domains
+    const redirectUrlObj = new URL(trimmed);
+    if (
+      redirectUrlObj.protocol === "http:" ||
+      redirectUrlObj.protocol === "https:"
+    ) {
+      const hostname = redirectUrlObj.hostname.toLowerCase();
+      const isLocalhost = hostname === "localhost" || hostname === "127.0.0.1";
+      const isTrustedDomain =
+        hostname === "theboringeducation.com" ||
+        hostname.endsWith(".theboringeducation.com");
+      const isCurrentOrigin =
+        typeof window !== "undefined" &&
+        redirectUrlObj.origin === window.location.origin;
+
+      if (isLocalhost || isTrustedDomain || isCurrentOrigin) {
+        return redirectUrlObj.toString();
+      }
+    }
+
+    return routes.learn;
+  } catch {
+    return routes.learn;
+  }
 };
 
 const normalizeAPIPayload = (
