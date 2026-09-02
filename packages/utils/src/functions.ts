@@ -31,7 +31,21 @@ import crypto from "crypto";
 import { twMerge } from "tailwind-merge";
 
 const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.API_URL}/${url}`);
+  const baseUrl = envConfig.API_URL;
+  if (!baseUrl) {
+    throw new Error("API_URL is not configured");
+  }
+
+  const base = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+  const sanitizedPath = url.replace(/^[/\\]+/, "");
+  const targetUrl = new URL(sanitizedPath, base);
+
+  const baseOrigin = new URL(baseUrl).origin;
+  if (targetUrl.origin !== baseOrigin) {
+    throw new Error("Invalid API destination");
+  }
+
+  const response = await fetch(targetUrl.toString());
   return await response.json();
 };
 
@@ -559,11 +573,24 @@ const calculateProgressPercentage = (
 };
 
 const getRedirectUrl = (url?: string) => {
-  const redirect =
-    new URL(url || window.location.href).searchParams.get("redirect") ||
-    routes.learn;
+  try {
+    const targetUrl =
+      url || (typeof window !== "undefined" ? window.location.href : "");
+    if (!targetUrl) return routes.learn;
 
-  return redirect;
+    const redirect =
+      new URL(targetUrl, "http://localhost").searchParams.get("redirect") || "";
+
+    const isSafeInternalRedirect =
+      redirect.startsWith("/") &&
+      !redirect.startsWith("//") &&
+      !redirect.startsWith("/\\") &&
+      !/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(redirect);
+
+    return isSafeInternalRedirect ? redirect : routes.learn;
+  } catch {
+    return routes.learn;
+  }
 };
 
 const normalizeAPIPayload = (

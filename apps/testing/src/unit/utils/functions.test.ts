@@ -1,3 +1,4 @@
+import { routes } from "@tbe/constants";
 import {
   calculatePriceBreakdown,
   cn,
@@ -7,6 +8,7 @@ import {
   getDiscountDisplayInfo,
   getDiscountPercentage,
   getLocalStorageItem,
+  getRedirectUrl,
   getSavingsPercentage,
   removeLocalStorageItem,
   setLocalStorageItem,
@@ -679,6 +681,60 @@ describe("Utility Functions", () => {
       const result = getSavingsPercentage(originalPrice, finalPrice);
       expect(result).toBeDefined();
       expect(result).toBe(20);
+    });
+  });
+
+  describe("getRedirectUrl", () => {
+    it("should return safe relative redirect URL", () => {
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=/dashboard",
+        ),
+      ).toBe("/dashboard");
+      expect(getRedirectUrl("/onboarding?redirect=/profile")).toBe("/profile");
+    });
+
+    it("should fallback to routes.learn when redirect param is missing", () => {
+      expect(getRedirectUrl("https://theboringeducation.com/onboarding")).toBe(
+        routes.learn,
+      );
+      expect(getRedirectUrl("")).toBe(routes.learn);
+    });
+
+    it("should reject external URLs and return routes.learn", () => {
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=https://evil.com",
+        ),
+      ).toBe(routes.learn);
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=http://evil.com",
+        ),
+      ).toBe(routes.learn);
+    });
+
+    it("should reject protocol-relative and scheme-based URLs", () => {
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=//evil.com",
+        ),
+      ).toBe(routes.learn);
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=/\\evil.com",
+        ),
+      ).toBe(routes.learn);
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=javascript:alert(1)",
+        ),
+      ).toBe(routes.learn);
+      expect(
+        getRedirectUrl(
+          "https://theboringeducation.com/onboarding?redirect=data:text/html,test",
+        ),
+      ).toBe(routes.learn);
     });
   });
 });

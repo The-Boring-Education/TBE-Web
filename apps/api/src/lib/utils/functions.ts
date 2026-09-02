@@ -34,7 +34,21 @@ const sendAPIResponse = ({
 });
 
 const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.API_URL}/${url}`);
+  const baseUrl = envConfig.API_URL;
+  if (!baseUrl) {
+    throw new Error("API_URL is not configured");
+  }
+
+  const base = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+  const sanitizedPath = url.replace(/^[/\\]+/, "");
+  const targetUrl = new URL(sanitizedPath, base);
+
+  const baseOrigin = new URL(baseUrl).origin;
+  if (targetUrl.origin !== baseOrigin) {
+    throw new Error("Invalid API destination");
+  }
+
+  const response = await fetch(targetUrl.toString());
 
   return await response.json();
 };
