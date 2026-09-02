@@ -4,6 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { bulkUploadAptitudeDataToDB } from "@/lib/database";
 import type { AptitudeUploadPayload } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { verifyAdminSecret } from "@/middleware/adminSecret";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -16,12 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const adminSecret = req.headers["x-admin-secret"];
-  if (adminSecret !== process.env.ADMIN_SECRET) {
-    return res
-      .status(apiStatusCodes.UNAUTHORIZED)
-      .json(sendAPIResponse({ status: false, message: "Unauthorized" }));
-  }
+  if (!verifyAdminSecret(req, res)) return;
 
   const { topic, questions } = req.body as AptitudeUploadPayload;
 

@@ -19,7 +19,9 @@
       "@test-utils/*": ["./src/test-utils/*"],
       "@/lib/*": ["../api/src/lib/*"],
       "@/middleware/*": ["../api/src/middleware/*"],
-      "@api/*": ["../api/src/*"]
+      "@api/*": ["../api/src/*"],
+      "@tbe/onboarding/*": ["../onboarding/src/*"],
+      "@dsayatra/*": ["../dsayatra/src/*"]
     },
     "noEmit": true,
     "incremental": true,

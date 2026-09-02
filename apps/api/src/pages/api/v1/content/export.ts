@@ -8,6 +8,7 @@ import {
   exportQuizzesFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { verifyAdminSecret } from "@/middleware/adminSecret";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -35,12 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const adminSecret = req.headers["x-admin-secret"];
-  if (adminSecret !== process.env.ADMIN_SECRET) {
-    return res
-      .status(apiStatusCodes.UNAUTHORIZED)
-      .json(sendAPIResponse({ status: false, message: "Unauthorized" }));
-  }
+  if (!verifyAdminSecret(req, res)) return;
 
   const { type, topics, slugs, roadmap, domain, difficulty, categoryNames } =
     req.query;

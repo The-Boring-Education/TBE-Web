@@ -11,6 +11,14 @@ export { default as AdminLayout } from "./admin/AdminLayout";
 export { default as AdminStats } from "./admin/AdminStats";
 export { default as AdminTable } from "./admin/AdminTable";
 
+// Learn Page Components
+export type { LearnDashboardContainerProps } from "./learn/LearnDashboardContainer";
+export { LearnDashboardContainer } from "./learn/LearnDashboardContainer";
+export type { PersonalizationLoaderProps } from "./learn/PersonalizationLoader";
+export { PersonalizationLoader } from "./learn/PersonalizationLoader";
+export type { PersonalizationQuizData } from "./learn/PersonalizationQuiz";
+export { PersonalizationQuiz } from "./learn/PersonalizationQuiz";
+
 // Common Components
 export { default as Accordion } from "./common/Accordion";
 export { default as AccordionLinkItem } from "./common/Accordion/AccordionLinkItem";
@@ -319,6 +327,7 @@ export type { PageHeaderProps } from "./layout/PageHeader";
 export { default as PageHeader } from "./layout/PageHeader";
 export { default as QuestionDetails } from "./layout/QuestionDetails";
 export { default as QuestionSidebar } from "./layout/QuestionSidebar";
+export * from "./profile";
 export * from "./techyatra";
 export * from "./ui";
 export * from "./visualizers";

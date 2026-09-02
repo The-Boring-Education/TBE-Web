@@ -1,4 +1,4 @@
-import { FaRegStar, FaStar } from 'react-icons/fa';
+import { Bookmark } from 'lucide-react';
 
 import { InterviewSheetMDXRenderer } from './InterviewSheetMDXRenderer';
 
@@ -28,17 +28,19 @@ const InterviewQuestionContent = ({
   theme = 'light',
 }: InterviewQuestionContentProps) => {
   const isDark = theme === 'dark';
-  const proseClass = `prose max-w-none prose-red prose-headings:scroll-mt-6 ${
-    isDark ? 'prose-invert' : ''
+  const proseClass = `prose max-w-none prose-headings:scroll-mt-6 prose-strong:font-semibold prose-code:font-mono prose-code:text-xs prose-code:sm:text-[13px] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none ${
+    isDark
+      ? 'prose-invert prose-code:bg-muted/40 prose-code:text-red-400 prose-code:border prose-code:border-gray-800'
+      : 'prose-code:bg-red-50 prose-code:text-primary prose-code:border prose-code:border-red-200/50'
   }`;
 
   return (
-    <div className='w-full flex flex-col'>
-      {/* Sleek Minimal Title */}
-      <div className='flex items-start justify-between gap-4 mb-4'>
+    <div className='w-full flex flex-col font-primary'>
+      {/* Question Title and Bookmark */}
+      <div className='flex items-start justify-between gap-4 mb-3'>
         <h1
-          className={`text-2xl sm:text-3xl font-black tracking-tight leading-tight ${
-            isDark ? 'text-white' : 'text-contentLight'
+          className={`text-xl sm:text-2xl font-semibold tracking-tight leading-snug ${
+            isDark ? 'text-white' : 'text-foreground'
           }`}
         >
           {questionTitle}
@@ -48,50 +50,38 @@ const InterviewQuestionContent = ({
             e.stopPropagation();
             onToggleStar?.();
           }}
-          className={`p-1.5 rounded-full transition-all duration-200 active:scale-95 shrink-0 cursor-pointer text-xl ${
-            isDark ? 'hover:bg-white/5' : 'hover:bg-black/5'
-          }`}
+          className='p-1 rounded-md transition-all duration-200 active:scale-95 shrink-0 cursor-pointer text-primary hover:bg-primary/5'
           aria-label={isStarred ? 'Unstar question' : 'Star question'}
         >
-          {isStarred ? (
-            <FaStar className='text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]' />
-          ) : (
-            <FaRegStar
-              className={
-                isDark
-                  ? 'text-white/30 hover:text-white/60'
-                  : 'text-gray-400 hover:text-gray-600'
-              }
-            />
-          )}
+          <Bookmark
+            className={`w-4 h-4 transition-colors ${
+              isStarred
+                ? 'fill-primary text-primary'
+                : 'text-primary hover:text-primary/80'
+            }`}
+          />
         </button>
       </div>
 
-      {/* Sleek aesthetic breadcrumb & priority / frequency / companies row */}
+      {/* Metadata Row: Priority, Frequency, Company Types */}
       <div
-        className={`flex items-center gap-3 text-xs pb-4 border-b mb-6 flex-wrap ${
+        className={`flex items-center gap-3 text-xs pb-3.5 border-b mb-4 flex-wrap ${
           isDark
-            ? 'text-gray-400 border-gray-900'
-            : 'text-gray-500 border-gray-200'
+            ? 'text-gray-400 border-gray-800'
+            : 'text-muted-foreground border-border/80'
         }`}
       >
         {priority && (
-          <span className='text-[10px] font-bold text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded'>
+          <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-0.5 rounded-md'>
             {priority} Priority
           </span>
         )}
         {frequency && (
           <>
             {priority && (
-              <span
-                className={`font-semibold ${isDark ? 'text-gray-700' : 'text-gray-300'}`}
-              >
-                •
-              </span>
+              <span className='font-bold text-muted-foreground/50'>·</span>
             )}
-            <span
-              className={`font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
-            >
+            <span className='font-medium text-muted-foreground text-xs'>
               {frequency}
             </span>
           </>
@@ -99,17 +89,13 @@ const InterviewQuestionContent = ({
         {companyTypes && companyTypes.length > 0 && (
           <>
             {(priority || frequency) && (
-              <span
-                className={`font-semibold ${isDark ? 'text-gray-700' : 'text-gray-300'}`}
-              >
-                •
-              </span>
+              <span className='font-bold text-muted-foreground/50'>·</span>
             )}
             <div className='flex items-center gap-1.5 flex-wrap'>
               {companyTypes.map((ct) => (
                 <span
                   key={ct}
-                  className={`font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                  className='font-medium text-muted-foreground text-xs'
                 >
                   {ct}
                 </span>
@@ -119,15 +105,13 @@ const InterviewQuestionContent = ({
         )}
       </div>
 
-      {/* Structured Content matching Core Subjects */}
-      <div className='space-y-8 w-full'>
+      {/* Structured Content matching core interview layout */}
+      <div className='space-y-4 w-full'>
         {question && (
-          <div
-            className={`space-y-4 pb-8 border-b ${isDark ? 'border-gray-900' : 'border-gray-200'}`}
-          >
-            <h2 className='text-xs font-bold text-red-500 uppercase tracking-widest flex items-center gap-2'>
-              <span className='w-4 h-[2px] bg-red-500 rounded-full' />
-              Problem Statement
+          <div className='space-y-1.5'>
+            <h2 className='text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5'>
+              <span className='font-bold'>—</span>
+              <span>PROBLEM STATEMENT</span>
             </h2>
             <div className={proseClass}>
               <InterviewSheetMDXRenderer mdxSource={question} theme={theme} />
@@ -136,7 +120,7 @@ const InterviewQuestionContent = ({
         )}
 
         {answer && (
-          <div className='space-y-4'>
+          <div className='space-y-2'>
             <div className={proseClass}>
               <InterviewSheetMDXRenderer mdxSource={answer} theme={theme} />
             </div>
@@ -145,11 +129,7 @@ const InterviewQuestionContent = ({
       </div>
 
       {actions && actions.length > 0 && (
-        <div
-          className={`mt-8 pt-6 border-t flex flex-wrap items-center gap-2 ${
-            isDark ? 'border-gray-900' : 'border-gray-200'
-          }`}
-        >
+        <div className='mt-5 pt-4 border-t border-border/80 w-full flex flex-wrap items-center gap-3'>
           {actions}
         </div>
       )}

@@ -19,6 +19,11 @@ vi.mock("@tbe/gamification", () => ({
     percentageProgress: 35,
     refetch: vi.fn(),
   }),
+  useGamificationContext: () => ({
+    theme: "light",
+    showToast: vi.fn(),
+    triggerCelebration: vi.fn(),
+  }),
 }));
 
 vi.mock("@tbe/hooks", async (importOriginal) => {
@@ -34,19 +39,6 @@ vi.mock("@tbe/hooks", async (importOriginal) => {
     }),
   };
 });
-
-vi.mock("@tbe/gamification", () => ({
-  useGamification: () => ({
-    loading: false,
-    error: null,
-    points: 42,
-    currentLevel: 2,
-    currentLevelName: "Builder",
-    nextLevelName: "Pro",
-    pointsLeftToNextLevel: 58,
-    percentageProgress: 35,
-  }),
-}));
 
 describe("UserPointButton", () => {
   beforeEach(() => {

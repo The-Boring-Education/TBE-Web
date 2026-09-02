@@ -1,3 +1,5 @@
+"use client";
+
 import { sanitizeHTML } from "@tbe/components";
 
 import type { ResourceMeta } from "@/lib/types";
@@ -12,14 +14,14 @@ type Props = {
   articleClassName?: string;
 };
 
-export function ResourceArticle({
+export const ResourceArticle = ({
   meta,
   pageUrl,
   styleTags,
   bodyHtml,
   includeJsonLd = true,
   articleClassName,
-}: Props) {
+}: Props) => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -40,6 +42,15 @@ export function ResourceArticle({
     : null;
   const sanitizedBodyHtml = sanitizeHTML(bodyHtml);
 
+  const handleArticleClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement | null;
+    const printBtn = target?.closest(".print-btn, [data-action='print']");
+    if (printBtn) {
+      e.preventDefault();
+      window.print();
+    }
+  };
+
   return (
     <>
       {includeJsonLd ? (
@@ -48,7 +59,7 @@ export function ResourceArticle({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <article className={articleClassName}>
+      <article className={articleClassName} onClick={handleArticleClick}>
         {styleTags ? (
           <div
             className="resource-embed-styles"
@@ -62,4 +73,4 @@ export function ResourceArticle({
       </article>
     </>
   );
-}
+};

@@ -46,6 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const updateData: Record<string, unknown> = {
+          isOnboarded: true,
           "techYatra.tyOnboarded": true,
           "techYatra.focus": focus,
         };

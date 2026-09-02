@@ -43,6 +43,10 @@ export interface UserModel {
   linkedInUrl?: string;
   githubUrl?: string;
   leetCodeUrl?: string;
+  codeforcesUrl?: string;
+  location?: string;
+  headline?: string;
+  aboutMe?: string;
   userSkills?: string[];
   userSkillsLastUpdated?: Date;
   from?: string;

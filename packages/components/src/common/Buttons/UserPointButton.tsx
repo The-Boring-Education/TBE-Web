@@ -5,13 +5,21 @@ import {
   Transition,
 } from "@headlessui/react";
 import { UserLevelProgressContainer } from "@tbe/components";
-import { useGamification } from "@tbe/gamification";
+import { useGamification, useGamificationContext } from "@tbe/gamification";
 import { useUser } from "@tbe/hooks";
 import { Fragment, useEffect, useState } from "react";
 
-const UserPointButton = () => {
+interface UserPointButtonProps {
+  theme?: "light" | "dark";
+}
+
+const UserPointButton = ({ theme: propTheme }: UserPointButtonProps) => {
   const [isClient, setIsClient] = useState(false);
   const { isAuth, loading } = useUser();
+  const gamificationContext = useGamificationContext();
+  const theme = propTheme ?? gamificationContext?.theme ?? "light";
+  const isDark = theme === "dark";
+
   const {
     points,
     currentLevel,
@@ -29,7 +37,14 @@ const UserPointButton = () => {
 
   return (
     <Popover className="relative">
-      <PopoverButton className="flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary hover:text-white hover:bg-primary outline-none font-bold">
+      <PopoverButton
+        className={`flex p-1 w-10 h-10 justify-center items-center rounded-full border-2 border-primary text-primary outline-none font-bold transition-colors ${
+          isDark
+            ? "hover:bg-primary hover:text-white bg-black/40"
+            : "hover:text-white hover:bg-primary bg-white"
+        }`}
+        aria-label={`${points} points`}
+      >
         <span className="w-full h-full flex text-xs items-center justify-center">
           {points}
         </span>
@@ -43,7 +58,7 @@ const UserPointButton = () => {
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 translate-y-1"
       >
-        <PopoverPanel className="absolute z-10 mt-1 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4">
+        <PopoverPanel className="absolute z-50 mt-2 flex w-screen max-w-max md:-translate-x-2/3 -translate-x-2/4">
           <UserLevelProgressContainer
             currentLevel={currentLevel}
             currentLevelName={currentLevelName}
@@ -51,6 +66,7 @@ const UserPointButton = () => {
             percentageProgress={percentageProgress}
             points={points}
             pointsLeftToNextLevel={pointsLeftToNextLevel}
+            theme={theme}
           />
         </PopoverPanel>
       </Transition>

@@ -150,7 +150,13 @@ const getProjectPageProps = async (context: any) => {
 
 const getPlaylistPageProps = async (context: any) => {
   const { req, query } = context;
-  const { playlistId } = query;
+  const rawPlaylistId = query?.playlistId;
+  const playlistId =
+    typeof rawPlaylistId === "string"
+      ? rawPlaylistId
+      : Array.isArray(rawPlaylistId)
+        ? rawPlaylistId[0]
+        : "";
   const user = await isUserAuthenticated(req);
 
   let slug = routes.home;

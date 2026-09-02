@@ -555,9 +555,14 @@ export interface ProjectHeroContainerProps {
 
 export interface CourseHeroContainerProps {
   name: string;
+  slug?: string;
   isEnrolled?: boolean;
   id: string;
   isPremium?: boolean;
+  completedChapters?: number;
+  totalChapters?: number;
+  onEnrollSuccess?: () => void;
+  startLearningHref?: string;
 }
 
 export interface SheetHeroContainerProps {
@@ -568,7 +573,11 @@ export interface SheetHeroContainerProps {
   isPurchased?: boolean;
   redirectTo?: string;
   backHref?: string;
+  backText?: string;
+  trackType?: "course" | "sheet";
   theme?: "dark" | "light";
+  onEnrollSuccess?: () => void;
+  onCustomEnroll?: () => Promise<void> | void;
 }
 
 // ================================

@@ -190,6 +190,18 @@ const UserSchema: Schema<UserModel> = new Schema(
     leetCodeUrl: {
       type: String,
     },
+    codeforcesUrl: {
+      type: String,
+    },
+    location: {
+      type: String,
+    },
+    headline: {
+      type: String,
+    },
+    aboutMe: {
+      type: String,
+    },
     userSkills: {
       type: [String],
       default: [],

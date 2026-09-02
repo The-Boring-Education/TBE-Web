@@ -7,10 +7,7 @@ import {
   onboardUserToDB,
 } from "@/lib/database";
 import { User } from "@/lib/database/models";
-import type {
-  AddOnboardingPayloadProps,
-  AddPrepYatraOnboardingPayloadProps,
-} from "@/lib/interfaces";
+import type { AddPrepYatraOnboardingPayloadProps } from "@/lib/interfaces";
 import { emailTriggerService } from "@/lib/services";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
@@ -109,19 +106,6 @@ const handleUserOnboarding = async (
   userId: string,
 ) => {
   try {
-    const { userName, occupation, purpose, contactNo, from } =
-      req.body as AddOnboardingPayloadProps;
-
-    if (!userId || !userName || !occupation || !purpose || !contactNo) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({
-          status: false,
-          error: "Missing required fields",
-          message: "Please provide all required fields",
-        }),
-      );
-    }
-
     // Validate userId is a valid MongoDB ObjectId to prevent NoSQL injection
     if (!isMongoObjectIdString(userId)) {
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -136,6 +120,24 @@ const handleUserOnboarding = async (
     const existingUser = await User.findById(userId);
     const alreadyOnboarded = existingUser?.isOnboarded;
 
+    const userName =
+      req.body?.userName || existingUser?.userName || existingUser?.name || "";
+    const occupation =
+      req.body?.occupation || existingUser?.occupation || "TECH_STUDENT";
+    const purpose = req.body?.purpose || existingUser?.purpose || ["web_dev"];
+    const contactNo = req.body?.contactNo || existingUser?.contactNo || "+91";
+    const from = req.body?.from;
+
+    if (!userId || !userName || !occupation || !purpose) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: "Missing required fields",
+          message: "Please provide all required fields",
+        }),
+      );
+    }
+
     const { data, error: updateUserError } = await onboardUserToDB(
       userId,
       userName,
@@ -143,6 +145,7 @@ const handleUserOnboarding = async (
       purpose,
       contactNo,
       from,
+      req.body,
     );
 
     if (updateUserError) {

@@ -331,29 +331,30 @@ const SheetLandingPage = ({
         </svg>
 
         {/* Floating Watermarked Technology Logos (Bottom Left of Hero, Mobile Responsive) */}
-        {techIconUrls.length > 0 && (
-          <div className="absolute top-[260px] -left-6 sm:top-[240px] sm:-left-8 lg:top-[200px] lg:-left-12 pointer-events-none select-none z-0">
-            <div className="relative flex flex-col items-center gap-2 sm:gap-3">
-              <div className="absolute inset-0 bg-rose-500/15 blur-3xl rounded-full scale-125" />
-              {techIconUrls.map((url, idx) => (
-                <img
-                  key={idx}
-                  src={url}
-                  alt=""
-                  className={`${
-                    techIconUrls.length > 1
+        {
+          techIconUrls.length > 0 && (
+            <div className="absolute top-[260px] -left-6 sm:top-[240px] sm:-left-8 lg:top-[200px] lg:-left-12 pointer-events-none select-none z-0">
+              <div className="relative flex flex-col items-center gap-2 sm:gap-3">
+                <div className="absolute inset-0 bg-rose-500/15 blur-3xl rounded-full scale-125" />
+                {techIconUrls.map((url, idx) => (
+                  <img
+                    key={idx}
+                    src={url}
+                    alt=""
+                    className={`${techIconUrls.length > 1
                       ? "w-16 h-16 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44"
                       : "w-28 h-28 sm:w-44 sm:h-44 md:w-56 md:h-56 lg:w-72 lg:h-72"
-                  } object-contain opacity-25 dark:opacity-20 rotate-[-12deg] transition-all duration-300`}
-                />
-              ))}
+                      } object-contain opacity-25 dark:opacity-20 rotate-[-12deg] transition-all duration-300`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )
+        }
+      </div >
 
       {/* Page Content Layer (z-10 above ambient backdrop) */}
-      <div className="relative z-10">
+      < div className="relative z-10" >
         <SEO seoMeta={seoMeta} />
 
         {/* Hero Section */}
@@ -525,32 +526,33 @@ const SheetLandingPage = ({
                 </div>
 
                 {/* What You'll Learn */}
-                {sheet?.features && sheet.features.length > 0 && (
-                  <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
-                    <div className="flex items-center gap-2.5 border-b border-border/60 pb-3.5">
-                      <Sparkles className="w-5 h-5 text-primary shrink-0" />
-                      <h3 className="font-headings font-bold text-xl text-foreground">
-                        What You'll Learn
-                      </h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                      {sheet.features.map((feature, index) => (
-                        <div
-                          key={index}
-                          className="flex items-start gap-2.5 bg-muted/30 rounded-lg p-3 border border-border/50 text-xs sm:text-sm"
-                        >
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                          <Text
-                            level="p"
-                            className="text-foreground font-medium leading-snug"
+                {
+                  sheet?.features && sheet.features.length > 0 && (
+                    <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+                      <div className="flex items-center gap-2.5 border-b border-border/60 pb-3.5">
+                        <Sparkles className="w-5 h-5 text-primary shrink-0" />
+                        <h3 className="font-headings font-bold text-xl text-foreground">
+                          What You'll Learn
+                        </h3>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                        {sheet.features.map((feature, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-2.5 bg-muted/30 rounded-lg p-3 border border-border/50 text-xs sm:text-sm"
                           >
-                            {feature}
-                          </Text>
-                        </div>
-                      ))}
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                            <Text
+                              level="p"
+                              className="text-foreground font-medium leading-snug"
+                            >
+                              {feature}
+                            </Text>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {/* Preview Questions Section (Subtle & Compact) */}
                 <div
@@ -601,78 +603,83 @@ const SheetLandingPage = ({
                 </div>
 
                 {/* Locked Content Section (Subtle & Compact) */}
-                {lockedQuestions.length > 0 && (
-                  <div className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
-                    <div className="flex items-center justify-between border-b border-border/60 pb-3">
-                      <div className="flex items-center gap-2">
-                        {isPurchased ? (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                        ) : (
-                          <Lock className="w-4 h-4 text-primary shrink-0" />
-                        )}
-                        <h3 className="font-headings font-bold text-base sm:text-lg text-foreground">
-                          {lockedQuestions.length} More Questions
-                        </h3>
+                {
+                  lockedQuestions.length > 0 && (
+                    <div className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
+                      <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                        <div className="flex items-center gap-2">
+                          {isPurchased ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                          ) : (
+                            <Lock className="w-4 h-4 text-primary shrink-0" />
+                          )}
+                          <h3 className="font-headings font-bold text-base sm:text-lg text-foreground">
+                            {lockedQuestions.length} More Questions
+                          </h3>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {isPurchased ? "All unlocked" : "Locked content"}
+                        </span>
                       </div>
-                      <span className="text-xs text-muted-foreground">
-                        {isPurchased ? "All unlocked" : "Locked content"}
-                      </span>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {lockedQuestions.slice(0, 6).map((q, index) => (
-                        <div
-                          key={q._id.toString()}
-                          className={`flex items-center gap-2 p-2.5 rounded-lg border transition-all text-xs ${
-                            isPurchased
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {lockedQuestions.slice(0, 6).map((q, index) => (
+                          <div
+                            key={q._id.toString()}
+                            className={`flex items-center gap-2 p-2.5 rounded-lg border transition-all text-xs ${isPurchased
                               ? "bg-emerald-500/5 border-emerald-500/20 text-foreground"
                               : "bg-muted/20 border-border/50 text-muted-foreground"
-                          }`}
-                        >
-                          {isPurchased ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                          ) : (
-                            <Lock className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
-                          )}
-                          <span className="font-medium truncate flex-1">
-                            {previewQuestions.length + index + 1}. {q.title}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {lockedQuestions.length > 6 && (
-                      <p className="text-center text-[11px] text-muted-foreground">
-                        + {lockedQuestions.length - 6} additional questions
-                        included...
-                      </p>
-                    )}
-
-                    {isLocked && !isPurchased && (
-                      <Button
-                        text={`Unlock All ${sheet.questions?.length} Questions · ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
-                        variant="PRIMARY"
-                        onClick={handleShowPayment}
-                        className="w-full py-2.5 text-xs sm:text-sm font-semibold rounded-lg shadow-xs"
-                      />
-                    )}
-                    {isPurchased && (
-                      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 text-center space-y-0.5">
-                        <p className="text-xs font-bold text-emerald-600">
-                          ✓ All Questions Unlocked
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          You have full access to all {sheet.questions?.length}{" "}
-                          questions.
-                        </p>
+                              }`}
+                          >
+                            {isPurchased ? (
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : (
+                              <Lock className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
+                            )}
+                            <span className="font-medium truncate flex-1">
+                              {previewQuestions.length + index + 1}. {q.title}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
-                )}
-              </div>
+
+                      {lockedQuestions.length > 6 && (
+                        <p className="text-center text-[11px] text-muted-foreground">
+                          + {lockedQuestions.length - 6} additional questions
+                          included...
+                        </p>
+                      )}
+
+                      {
+                        isLocked && !isPurchased && (
+                          <Button
+                            text={`Unlock All ${sheet.questions?.length} Questions · ${priceBreakdown ? formatPrice(priceBreakdown.finalPrice) : formatPrice(sheet.price || 0)}`}
+                            variant="PRIMARY"
+                            onClick={handleShowPayment}
+                            className="w-full py-2.5 text-xs sm:text-sm font-semibold rounded-lg shadow-xs"
+                          />
+                        )
+                      }
+                      {
+                        isPurchased && (
+                          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 text-center space-y-0.5">
+                            <p className="text-xs font-bold text-emerald-600">
+                              ✓ All Questions Unlocked
+                            </p>
+                            <p className="text-[11px] text-muted-foreground">
+                              You have full access to all {sheet.questions?.length}{" "}
+                              questions.
+                            </p>
+                          </div>
+                        )
+                      }
+                    </div >
+                  )
+                }
+              </div >
 
               {/* Sidebar (Right 1 col) */}
-              <div className="lg:col-span-1">
+              < div className="lg:col-span-1" >
                 <div className="sticky top-6 space-y-5">
                   {/* Action Card */}
                   <div className="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-5">
@@ -853,29 +860,31 @@ const SheetLandingPage = ({
                       )}
 
                       {/* Main CTA Button */}
-                      {!isAuth ? (
-                        <LoginRedirectButton text="Login to Get Started" />
-                      ) : (
-                        <Button
-                          text={
-                            loading
-                              ? "Loading..."
-                              : isPurchased
-                                ? "Start Practicing Now →"
-                                : canStartNow
-                                  ? "Start Now →"
-                                  : !sheet?.isEnrolled && !sheet?.isPremium
-                                    ? "Enroll Free →"
-                                    : priceBreakdown
-                                      ? `Get Access · ${formatPrice(priceBreakdown.finalPrice)}`
-                                      : "Get Access"
-                          }
-                          variant="PRIMARY"
-                          className="w-full py-3 text-sm font-bold rounded-xl shadow-xs"
-                          onClick={handleStartNow}
-                          isLoading={loading}
-                        />
-                      )}
+                      {
+                        !isAuth ? (
+                          <LoginRedirectButton text="Login to Get Started" />
+                        ) : (
+                          <Button
+                            text={
+                              loading
+                                ? "Loading..."
+                                : isPurchased
+                                  ? "Start Practicing Now →"
+                                  : canStartNow
+                                    ? "Start Now →"
+                                    : !sheet?.isEnrolled && !sheet?.isPremium
+                                      ? "Enroll Free →"
+                                      : priceBreakdown
+                                        ? `Get Access · ${formatPrice(priceBreakdown.finalPrice)}`
+                                        : "Get Access"
+                            }
+                            variant="PRIMARY"
+                            className="w-full py-3 text-sm font-bold rounded-xl shadow-xs"
+                            onClick={handleStartNow}
+                            isLoading={loading}
+                          />
+                        )
+                      }
 
                       {/* Trust Badges */}
                       <div className="flex items-center justify-center gap-2 flex-wrap text-[11px] text-muted-foreground pt-1">
@@ -886,11 +895,11 @@ const SheetLandingPage = ({
                           ✓ Lifetime Access
                         </span>
                       </div>
-                    </div>
-                  </div>
+                    </div >
+                  </div >
 
                   {/* Quick Info */}
-                  <div className="bg-card border border-border rounded-2xl p-5 shadow-xs space-y-3">
+                  < div className="bg-card border border-border rounded-2xl p-5 shadow-xs space-y-3" >
                     <h4 className="font-headings font-bold text-sm text-foreground">
                       📚 This sheet includes:
                     </h4>
@@ -923,43 +932,44 @@ const SheetLandingPage = ({
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </Section>
+            </div >
+          </div >
+        </Section >
 
         {/* Payment Modal */}
-        {showPayment && (
-          <div
-            ref={paymentSectionRef}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="payment-modal-title"
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4"
-            onClick={(e) =>
-              e.target === e.currentTarget && setShowPayment(false)
-            }
-            onKeyDown={(e) => e.key === "Escape" && setShowPayment(false)}
-          >
-            <div className="bg-card border border-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
-              <PaymentCard
-                course={{
-                  ...sheet,
-                  price: priceBreakdown?.finalPrice || sheet.price || 0,
-                  ...(priceBreakdown && {
-                    originalPrice: priceBreakdown.originalPrice,
-                    discountAmount: priceBreakdown.totalDiscount,
-                    savings: priceBreakdown.savings,
-                  }),
-                  ...(appliedCoupon && {
-                    appliedCoupon: appliedCoupon._id || appliedCoupon,
-                  }),
-                }}
-                onClose={() => setShowPayment(false)}
-                productType="INTERVIEW_SHEET"
-              />
+        {
+          showPayment && (
+            <div
+              ref={paymentSectionRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="payment-modal-title"
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4"
+              onClick={(e) =>
+                e.target === e.currentTarget && setShowPayment(false)
+              }
+              onKeyDown={(e) => e.key === "Escape" && setShowPayment(false)}
+            >
+              <div className="bg-card border border-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
+                <PaymentCard
+                  course={{
+                    ...sheet,
+                    price: priceBreakdown?.finalPrice || sheet.price || 0,
+                    ...(priceBreakdown && {
+                      originalPrice: priceBreakdown.originalPrice,
+                      discountAmount: priceBreakdown.totalDiscount,
+                      savings: priceBreakdown.savings,
+                    }),
+                    ...(appliedCoupon && {
+                      appliedCoupon: appliedCoupon._id || appliedCoupon,
+                    }),
+                  }}
+                  onClose={() => setShowPayment(false)}
+                  productType="INTERVIEW_SHEET"
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   );

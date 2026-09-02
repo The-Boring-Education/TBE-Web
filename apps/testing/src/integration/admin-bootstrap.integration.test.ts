@@ -125,6 +125,46 @@ describe("Admin Bootstrap Integration", () => {
     expect(mockCreateAdminUserFromDB).not.toHaveBeenCalled();
   });
 
+  it("rejects bootstrap for an email other than the authenticated user's", async () => {
+    // Allowlisted + authenticated as admin@example.com, but trying to bootstrap
+    // a different address — the identity check must block it (403).
+    mockCountAllAdminUsersFromDB.mockResolvedValue({ data: 0 });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { email: "someone-else@example.com" },
+    });
+
+    await bootstrapHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(403);
+    expect(mockCreateAdminUserFromDB).not.toHaveBeenCalled();
+  });
+
+  it("invalidates the admin cache after creating the first admin so it resolves immediately", async () => {
+    mockCountAllAdminUsersFromDB.mockResolvedValue({ data: 0 });
+    mockCreateAdminUserFromDB.mockResolvedValue({
+      data: {
+        _id: "507f191e810c19729de860eb",
+        email: "admin@example.com",
+        isActive: true,
+      },
+    });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { email: "admin@example.com" },
+    });
+
+    await bootstrapHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(201);
+    // The cache must be invalidated so the next isAdminEmail() lookup reloads
+    // from the DB and recognizes the newly-created admin (same path a
+    // script-created admin relies on).
+    expect(mockInvalidateAdminCache).toHaveBeenCalled();
+  });
+
   afterAll(() => {
     process.env.ADMIN_BOOTSTRAP_EMAILS = originalBootstrapEmails;
   });

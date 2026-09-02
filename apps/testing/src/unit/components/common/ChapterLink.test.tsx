@@ -96,7 +96,7 @@ describe("ChapterLink", () => {
       />,
     );
     const link = screen.getByText("Intro").closest("a");
-    expect(link?.className).toContain("bg-green-200");
+    expect(link?.className).toContain("bg-primary/10");
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 });

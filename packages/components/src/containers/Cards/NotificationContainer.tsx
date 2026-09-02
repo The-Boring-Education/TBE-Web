@@ -15,7 +15,7 @@ const NotificationContainer = () => {
   return (
     <Section>
       <FlexContainer
-        className="px-2 py-4 m-auto gradient-6 md:w-1/3 w-full rounded-2 border gap-4"
+        className="px-2 py-4 m-auto gradient-6 max-w-xl w-full rounded-2 border gap-4"
         direction="col"
       >
         <FlexContainer className="gap-4 w-full" direction="col">

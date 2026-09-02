@@ -16,7 +16,7 @@ import { useApi, useUser } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps, getRedirectUrl } from '@tbe/utils';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 const steps = [StepUsername, StepOccupation, StepUsage, StepPhoneNumber];
 
@@ -39,6 +39,13 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
     type?: 'success' | 'error';
   } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (user?.isOnboarded) {
+      const redirectTo = getRedirectUrl();
+      router.replace(redirectTo);
+    }
+  }, [user?.isOnboarded, router]);
 
   const { userName, occupation, purpose, contactNo } = form;
 

@@ -13,15 +13,23 @@ import {
   sendRequest,
 } from "@tbe/utils";
 import { motion } from "framer-motion";
-import { ArrowLeft, GraduationCap, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  BarChart3,
+  BookOpen,
+  CheckCircle2,
+  Code2,
+  GraduationCap,
+  Sparkles,
+  Star,
+  Tag,
+} from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   ONCAMPUS_PRICING_FAQ_ITEMS,
-  ONCAMPUS_PRICING_STATS,
-  ONCAMPUS_PRICING_TRUST_SIGNALS,
   ONCAMPUS_PRODUCT_TYPE,
 } from "@/lib/oncampusPricingPageConstants";
 
@@ -38,6 +46,7 @@ const OnCampusPricingPage = () => {
     }
     void router.push(routes.oncampus.dashboard);
   };
+
   const [plans, setPlans] = useState<SubscriptionPlanCatalogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,12 +120,13 @@ const OnCampusPricingPage = () => {
         />
       </Head>
 
-      <div className="bg-[#040505] min-h-screen">
-        <div className="sticky top-0 z-20 flex justify-start px-4 pt-4 pb-2 bg-[#040505]/90 backdrop-blur-sm border-b border-white/5">
+      <div className="bg-[#050505] min-h-screen text-white font-sans antialiased selection:bg-[#ff4d4d]/30 selection:text-white">
+        {/* Sticky Navbar Back Button */}
+        <div className="sticky top-0 z-20 flex justify-start px-6 py-4 bg-[#050505]/80 backdrop-blur-md border-b border-white/5">
           <button
             type="button"
             onClick={handleBack}
-            className="inline-flex items-center gap-2 text-sm font-medium text-[#b0b0b0] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[#a0a0a0] hover:text-white transition-colors cursor-pointer"
             aria-label="Go back"
           >
             <ArrowLeft className="w-4 h-4 shrink-0" aria-hidden />
@@ -124,17 +134,17 @@ const OnCampusPricingPage = () => {
           </button>
         </div>
 
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
+        {/* Hero Section */}
+        <section className="relative overflow-hidden pt-8 pb-10">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#ff4d4d]/10 rounded-full blur-[140px] pointer-events-none" />
 
-          <div className="relative max-w-4xl mx-auto px-4 pt-6 pb-8 text-center">
+          <div className="relative max-w-4xl mx-auto px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-1.5 bg-sky-500/10 border border-sky-500/25 text-sky-300 text-[10px] font-bold px-4 py-1.5 rounded-full mb-5"
+              className="inline-flex items-center gap-2 bg-[#ff4d4d]/10 border border-[#ff4d4d]/30 text-[#ff4d4d] text-[11px] font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider"
             >
-              <Sparkles className="w-3 h-3" />
+              <Star className="w-3.5 h-3.5 fill-[#ff4d4d]" />
               ON CAMPUS PRICING
             </motion.div>
 
@@ -142,61 +152,100 @@ const OnCampusPricingPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight"
+              className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight leading-tight"
             >
-              Plans Built for{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">
-                Campus Placements
-              </span>
+              Plans built for your{" "}
+              <span className="text-[#ff4d4d]">placement season.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-[#808080] text-sm md:text-base max-w-xl mx-auto leading-relaxed"
+              className="text-[#909090] text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-normal"
             >
-              Aptitude, core CS, DSA, interview sheets, and quizzes — choose a
-              duration that matches your preparation window.
+              Aptitude, DSA, core CS, interview prep and practice — everything
+              you need, in one place.
             </motion.p>
 
+            {/* Feature Metrics Bar */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-8"
+              className="mt-6 border-t border-b border-white/10 py-3"
             >
-              {ONCAMPUS_PRICING_STATS.map((stat, i) => (
-                <div key={i} className="text-center min-w-[100px]">
-                  <p className="text-lg md:text-xl font-bold text-white">
-                    {stat.value}
-                  </p>
-                  <p className="text-[10px] md:text-xs text-[#606060] font-medium">
-                    {stat.label}
-                  </p>
+              {/* Desktop & Tablet: One Single Horizontal Line without Scroll */}
+              <div className="hidden sm:flex flex-row items-center justify-center gap-4 lg:gap-8 max-w-4xl mx-auto text-xs font-medium whitespace-nowrap">
+                <div className="flex items-center gap-1.5 text-[#a0a0a0]">
+                  <BarChart3 className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">4+</span> Prep Tracks
                 </div>
-              ))}
+
+                <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
+
+                <div className="flex items-center gap-1.5 text-[#a0a0a0]">
+                  <BookOpen className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">Aptitude</span> Practice
+                </div>
+
+                <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
+
+                <div className="flex items-center gap-1.5 text-[#a0a0a0]">
+                  <Code2 className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">DSA + Sheets</span> Interview
+                </div>
+
+                <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
+
+                <div className="flex items-center gap-1.5 text-[#a0a0a0]">
+                  <Tag className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">Coupons</span> Campus deals
+                </div>
+              </div>
+
+              {/* Mobile: Compact 2-column Grid without Scroll */}
+              <div className="grid grid-cols-2 gap-2 sm:hidden text-[11px] font-medium text-[#a0a0a0] px-2">
+                <div className="flex items-center justify-center gap-1.5">
+                  <BarChart3 className="w-3 h-3 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">4+</span> Prep Tracks
+                </div>
+                <div className="flex items-center justify-center gap-1.5">
+                  <BookOpen className="w-3 h-3 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">Aptitude</span> Practice
+                </div>
+                <div className="flex items-center justify-center gap-1.5">
+                  <Code2 className="w-3 h-3 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">DSA + Sheets</span> Interview
+                </div>
+                <div className="flex items-center justify-center gap-1.5">
+                  <Tag className="w-3 h-3 text-[#ff4d4d] shrink-0" />
+                  <span className="font-bold text-white">Coupons</span> Campus deals
+                </div>
+              </div>
             </motion.div>
+
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-8">
+        {/* Pricing Cards Grid Section */}
+        <section className="mx-auto max-w-6xl px-4 py-8">
           {loading && (
             <div className="flex justify-center py-20">
               <div className="flex flex-col items-center gap-3">
                 <LoadingSpinner height={10} width={10} />
-                <p className="text-[#606060] text-xs">Loading plans…</p>
+                <p className="text-[#707070] text-xs">Loading plans…</p>
               </div>
             </div>
           )}
 
           {error && (
             <div className="text-center py-16">
-              <p className="text-red-400 mb-4 text-sm">{error}</p>
+              <p className="text-[#ff4d4d] mb-4 text-sm">{error}</p>
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="text-sm text-sky-400 underline hover:text-sky-300 transition-colors"
+                className="text-sm text-[#ff4d4d] underline hover:text-[#ff6666] transition-colors"
               >
                 Try again
               </button>
@@ -218,7 +267,7 @@ const OnCampusPricingPage = () => {
                   key={plan.planUuid ?? plan.planKey}
                   plan={plan}
                   onSubscribe={handleSubscribe}
-                  accentTheme="sky"
+                  accentTheme="dark"
                   paidCtaLabel="Subscribe"
                 />
               ))}
@@ -228,20 +277,26 @@ const OnCampusPricingPage = () => {
 
         {showPricingContent && (
           <>
+            {/* Cancel anytime trust banner matching image */}
+            <div className="flex items-center justify-center gap-2 text-[#909090] text-xs py-4 mb-8">
+              <CheckCircle2 className="w-4 h-4 text-[#ff4d4d]" />
+              <span>Cancel anytime. No hidden charges.</span>
+            </div>
+
             <section className="max-w-3xl mx-auto px-4 py-6">
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-r from-[#0f1418] to-[#111] border border-[#1a1a1a] rounded-2xl p-6 text-center"
+                className="bg-[#0c0c0c] border border-[#1f1f1f] rounded-2xl p-6 text-center shadow-lg"
               >
                 <div className="inline-flex items-center gap-2 mb-3">
-                  <GraduationCap className="w-4 h-4 text-sky-400" />
-                  <span className="text-xs font-bold text-sky-400 uppercase tracking-wider">
+                  <GraduationCap className="w-4 h-4 text-[#ff4d4d]" />
+                  <span className="text-xs font-bold text-[#ff4d4d] uppercase tracking-wider">
                     Built for students
                   </span>
                 </div>
-                <p className="text-[#b0b0b0] text-sm leading-relaxed max-w-lg mx-auto">
+                <p className="text-[#a0a0a0] text-sm leading-relaxed max-w-lg mx-auto">
                   Use your dashboard to move between aptitude, sheets, DSA, and
                   quizzes — all under one On Campus subscription for the plan
                   duration you choose.
@@ -254,10 +309,10 @@ const OnCampusPricingPage = () => {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="text-lg font-bold text-white text-center mb-8"
+                className="text-xl font-bold text-white text-center mb-8"
               >
                 Why Choose{" "}
-                <span className="text-sky-400">{productConfig.name}</span>
+                <span className="text-[#ff4d4d]">{productConfig.name}</span>
               </motion.h2>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -268,15 +323,15 @@ const OnCampusPricingPage = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-[#0f0f0f] border border-[#1a1a1a] rounded-xl p-4 hover:border-sky-500/30 hover:shadow-[0_0_30px_rgba(14,165,233,0.06)] transition-all group"
+                    className="bg-[#0c0c0c] border border-[#1f1f1f] rounded-xl p-4 hover:border-[#ff4d4d]/40 transition-all group"
                   >
-                    <div className="w-9 h-9 bg-sky-500/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-sky-500/15 transition-colors">
-                      <reason.icon className="w-4 h-4 text-sky-400" />
+                    <div className="w-9 h-9 bg-[#ff4d4d]/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-[#ff4d4d]/20 transition-colors">
+                      <reason.icon className="w-4 h-4 text-[#ff4d4d]" />
                     </div>
                     <h3 className="font-semibold text-white text-xs mb-1">
                       {reason.title}
                     </h3>
-                    <p className="text-[#606060] text-[10px] leading-relaxed">
+                    <p className="text-[#707070] text-[11px] leading-relaxed">
                       {reason.description}
                     </p>
                   </motion.div>
@@ -284,42 +339,27 @@ const OnCampusPricingPage = () => {
               </div>
             </section>
 
-            <section className="max-w-3xl mx-auto px-4 py-8">
-              <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-                {ONCAMPUS_PRICING_TRUST_SIGNALS.map(
-                  ({ icon: Icon, text }, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2 text-[#707070]"
-                    >
-                      <Icon className="w-4 h-4 text-sky-500/60" />
-                      <span className="text-xs font-medium">{text}</span>
-                    </div>
-                  ),
-                )}
-              </div>
-            </section>
-
-            <section className="max-w-xl mx-auto px-4 py-12">
+            <section className="max-w-md mx-auto px-4 py-8">
               <motion.h2
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="text-lg font-bold text-white text-center mb-6"
+                className="text-base font-bold text-white text-center mb-4"
               >
                 Frequently Asked Questions
               </motion.h2>
 
               <PricingFaqAccordion
                 items={ONCAMPUS_PRICING_FAQ_ITEMS}
-                accentTheme="sky"
+                accentTheme="dark"
               />
             </section>
 
+
             <div className="pb-12">
-              <p className="text-center text-[#404040] text-[10px]">
+              <p className="text-center text-[#505050] text-[11px]">
                 Secure payment powered by{" "}
-                <span className="text-[#606060]">Cashfree</span>. All prices
+                <span className="text-[#808080]">Cashfree</span>. All prices
                 include applicable taxes.
               </p>
             </div>
@@ -331,3 +371,4 @@ const OnCampusPricingPage = () => {
 };
 
 export default OnCampusPricingPage;
+

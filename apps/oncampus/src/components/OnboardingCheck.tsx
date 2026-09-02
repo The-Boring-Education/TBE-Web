@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "@tbe/components";
+import { PersonalizationLoader } from "@tbe/components";
 import { useProductOnboardingGate } from "@tbe/hooks";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -11,7 +11,7 @@ export const OnboardingCheck = () => {
     return `${window.location.origin}/dashboard`;
   }, []);
 
-  const { isChecking } = useProductOnboardingGate({
+  const { isChecking, isActivating } = useProductOnboardingGate({
     pathname: router.pathname,
     publicRoutes: ["/login", "/", "/auth", "/onboarding"],
     productId: "oncampus",
@@ -22,11 +22,14 @@ export const OnboardingCheck = () => {
         ?.onboardingCompleted === true,
   });
 
-  if (isChecking) {
+  if (isActivating) {
     return (
-      <div className="fixed inset-0 bg-[#0A0A0A] z-[9999] flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <PersonalizationLoader
+        title="Setting up OnCampus placement portal..."
+        subtitle="Preparing mock assessments and campus drive roadmaps"
+        fullScreen
+        theme="dark"
+      />
     );
   }
 

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { addAptitudeQuestionToDB } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
+import { verifyAdminSecret } from "@/middleware/adminSecret";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -15,12 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  const adminSecret = req.headers["x-admin-secret"];
-  if (adminSecret !== process.env.ADMIN_SECRET) {
-    return res
-      .status(apiStatusCodes.UNAUTHORIZED)
-      .json(sendAPIResponse({ status: false, message: "Unauthorized" }));
-  }
+  if (!verifyAdminSecret(req, res)) return;
 
   const { topic, question, options, answer, difficulty, order } = req.body;
 

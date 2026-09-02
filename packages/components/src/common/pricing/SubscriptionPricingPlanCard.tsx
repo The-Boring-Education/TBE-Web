@@ -1,9 +1,8 @@
 import type { SubscriptionPlanCatalogRow } from "@tbe/types";
 import { calculateDiscountPercent, cn, formatPriceInr } from "@tbe/utils";
 import { motion } from "framer-motion";
-import { CheckCircle2, Crown } from "lucide-react";
+import { ArrowRight, CheckCircle2, Crown } from "lucide-react";
 
-import Button from "../Buttons/Button";
 import {
   getPricingPlanThemeClasses,
   type PricingAccentTheme,
@@ -13,7 +12,6 @@ import {
 export type SubscriptionPricingPlanCardProps = {
   plan: SubscriptionPlanCatalogRow;
   onSubscribe: (planKey: string) => void;
-  /** Visual accent preset; default matches DSA Yatra pricing. */
   accentTheme?: PricingAccentTheme;
   popularLabel?: string;
   freeCtaLabel?: string;
@@ -23,10 +21,10 @@ export type SubscriptionPricingPlanCardProps = {
 export const SubscriptionPricingPlanCard = ({
   plan,
   onSubscribe,
-  accentTheme = "rose",
+  accentTheme = "dark",
   popularLabel = "MOST POPULAR",
   freeCtaLabel = "Start Free",
-  paidCtaLabel = "Get Started",
+  paidCtaLabel = "Subscribe",
 }: SubscriptionPricingPlanCardProps) => {
   const t = getPricingPlanThemeClasses(accentTheme);
   const discount = calculateDiscountPercent(
@@ -37,15 +35,15 @@ export const SubscriptionPricingPlanCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
       className={pricingPlanCardClassName(accentTheme, plan.isPopular)}
     >
       {plan.isPopular && (
         <div
           className={cn(
-            "absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg",
+            "absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md z-10",
             t.badgePopular,
           )}
         >
@@ -55,78 +53,78 @@ export const SubscriptionPricingPlanCard = ({
       )}
 
       {discount > 0 && (
-        <div className="absolute -top-2 -right-2 bg-[#10b981] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg">
+        <div className="absolute top-3 right-3 bg-[#ff4d4d] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
           {discount}% OFF
         </div>
       )}
 
-      <div className="text-center mb-5 pt-2">
+      <div className="text-center mb-3 pt-1">
         <p
           className={cn(
-            "text-[10px] font-bold uppercase tracking-[0.2em] mb-2",
+            "text-[11px] font-bold uppercase tracking-[0.15em] mb-1.5",
             t.labelUppercase,
           )}
         >
           {plan.displayName || plan.planKey}
         </p>
 
-        <div className="mb-2">
+        <div className="mb-1">
           {isFree ? (
-            <span className="text-4xl font-bold text-[#10b981]">FREE</span>
+            <span className={cn("text-3xl font-extrabold", t.priceText)}>FREE</span>
           ) : (
-            <div className="flex items-baseline justify-center gap-2">
+            <div className="flex items-baseline justify-center gap-1.5">
+              <span className={cn("text-3xl md:text-4xl font-extrabold tracking-tight", t.priceText)}>
+                {formatPriceInr(plan.amountInr)}
+              </span>
               {plan.originalAmountInr > plan.amountInr && (
-                <span className="text-lg text-[#505050] line-through">
+                <span className="text-xs font-normal text-[#606060] line-through">
                   {formatPriceInr(plan.originalAmountInr)}
                 </span>
               )}
-              <span className="text-4xl font-bold text-white">
-                {formatPriceInr(plan.amountInr)}
-              </span>
             </div>
           )}
         </div>
 
-        <p className="text-[#606060] text-xs">
+        <p className={cn("text-[11px] font-normal text-[#707070]", t.subText)}>
           {plan.accessType === "ONE_TIME"
             ? "one-time payment"
-            : `${plan.durationMonths} month${plan.durationMonths > 1 ? "s" : ""} access`}
+            : plan.description || `Full access coverage`}
         </p>
-
-        {plan.description ? (
-          <p className="text-[#808080] text-[11px] mt-2 leading-relaxed">
-            {plan.description}
-          </p>
-        ) : null}
       </div>
 
-      <div className="border-t border-[#2a2a2a] mb-4" />
+      <div className={cn("border-t my-3", t.divider)} />
 
-      <ul className="space-y-2.5 mb-6 flex-1">
+      <ul className="space-y-2 mb-5 flex-1">
         {plan.features.map((feature, i) => (
           <li
             key={`${i}-${feature}`}
-            className="flex items-start gap-2.5 text-xs"
+            className="flex items-start gap-2 text-[11px]"
           >
             <CheckCircle2
-              className={cn("w-4 h-4 shrink-0 mt-0.5", t.checkIcon)}
+              className={cn("w-3.5 h-3.5 shrink-0 mt-0.5", t.checkIcon)}
             />
-            <span className="text-[#c0c0c0] leading-relaxed">{feature}</span>
+            <span className={cn("leading-tight font-normal", t.featureText)}>
+              {feature}
+            </span>
           </li>
         ))}
       </ul>
 
-      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-        <Button
-          text={isFree ? freeCtaLabel : paidCtaLabel}
-          variant="PRIMARY"
+      <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+        <button
+          type="button"
           onClick={() => onSubscribe(plan.planKey)}
           className={cn(
-            "w-full py-3 font-semibold",
-            plan.isPopular && cn("shadow-lg", t.buttonShadow),
+            "w-full py-2 px-3.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer",
+            plan.isPopular ? t.buttonPopular : t.buttonDefault,
           )}
-        />
+        >
+          <span>{isFree ? freeCtaLabel : paidCtaLabel}</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </motion.div>
     </motion.div>
   );
 };
+
+

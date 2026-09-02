@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Flame } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useGamificationContext } from "./GamificationProvider";
 import type { PointsBadgeProps } from "./types";
 import useGamification from "./useGamification";
 
@@ -12,6 +13,8 @@ import useGamification from "./useGamification";
  * Shows a circular badge with current points. On click, expands to reveal
  * a card with level progress, next-level target, and a circular progress ring.
  *
+ * Supports light and dark themes.
+ *
  * Variants:
  * - "navbar" (default): fixed-size circle designed for top navbars
  * - "inline": smaller badge that fits inside text rows
@@ -19,6 +22,7 @@ import useGamification from "./useGamification";
 const PointsBadge = ({
   variant = "navbar",
   className = "",
+  theme: propTheme,
 }: PointsBadgeProps) => {
   const {
     points,
@@ -29,6 +33,10 @@ const PointsBadge = ({
     pointsLeftToNextLevel,
     percentageProgress,
   } = useGamification();
+
+  const context = useGamificationContext();
+  const theme = propTheme ?? context?.theme ?? "light";
+  const isDark = theme === "dark";
 
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,12 +63,20 @@ const PointsBadge = ({
   if (variant === "inline") {
     return (
       <button
-        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors text-sm font-semibold ${className}`}
+        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold transition-colors ${
+          isDark
+            ? "bg-primary/20 text-white border border-primary/30 hover:bg-primary/30"
+            : "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20"
+        } ${className}`}
         onClick={() => setIsOpen((v) => !v)}
       >
         <Flame size={14} />
         {loading ? "..." : points}
-        <span className="text-xs opacity-60">L{currentLevel}</span>
+        <span
+          className={`text-xs ${isDark ? "opacity-60 text-white" : "opacity-60 text-primary"}`}
+        >
+          L{currentLevel}
+        </span>
       </button>
     );
   }
@@ -86,7 +102,13 @@ const PointsBadge = ({
             initial={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
-            <div className="bg-white rounded-2xl shadow-xl p-5 w-80 border border-gray-200">
+            <div
+              className={`rounded-2xl shadow-xl p-5 w-80 border ${
+                isDark
+                  ? "bg-[#121216] border-white/10 text-white"
+                  : "bg-white border-gray-200 text-gray-900"
+              }`}
+            >
               <div className="flex items-center gap-4">
                 {/* Progress ring */}
                 <div className="flex-shrink-0 relative">
@@ -98,9 +120,9 @@ const PointsBadge = ({
                     <circle
                       cx={radius + 8}
                       cy={radius + 8}
-                      fill="white"
+                      fill={isDark ? "transparent" : "white"}
                       r={radius}
-                      stroke="#f3f4f6"
+                      stroke={isDark ? "#2A2A2A" : "#f3f4f6"}
                       strokeWidth="7"
                     />
                     <circle
@@ -117,7 +139,11 @@ const PointsBadge = ({
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="text-xl font-bold text-gray-900">
+                    <span
+                      className={`text-xl font-bold ${
+                        isDark ? "text-white" : "text-gray-900"
+                      }`}
+                    >
                       {points}
                     </span>
                   </div>
@@ -125,7 +151,11 @@ const PointsBadge = ({
 
                 {/* Level info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] uppercase text-gray-400 font-semibold tracking-widest">
+                  <p
+                    className={`text-[10px] uppercase font-semibold tracking-widest ${
+                      isDark ? "text-gray-400" : "text-gray-400"
+                    }`}
+                  >
                     YOU&apos;RE AT
                   </p>
                   <p className="text-lg font-bold text-[#ef4444] leading-tight mt-0.5">
@@ -133,13 +163,13 @@ const PointsBadge = ({
                   </p>
 
                   {nextLevel && pointsLeftToNextLevel > 0 ? (
-                    <div className="mt-2 bg-gradient-to-r from-pink-500 to-yellow-400 rounded-lg px-3 py-1.5">
+                    <div className="mt-2 bg-primary rounded-lg px-3 py-1.5">
                       <p className="text-xs font-bold text-white text-center">
                         {pointsLeftToNextLevel} pts to {nextLevelName}
                       </p>
                     </div>
                   ) : (
-                    <div className="mt-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg px-3 py-1.5">
+                    <div className="mt-2 bg-primary rounded-lg px-3 py-1.5">
                       <p className="text-xs font-bold text-white text-center">
                         Max Level Achieved!
                       </p>

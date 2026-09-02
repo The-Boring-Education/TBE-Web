@@ -78,11 +78,9 @@ describe("UserAvatar", () => {
       await screen.findByRole("button", { name: /user profile menu/i }),
     );
 
-    expect(
-      await screen.findByRole("link", { name: "Dashboard" }),
-    ).toBeVisible();
-    expect(screen.getByRole("link", { name: "Profile" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Logout" })).toBeVisible();
+    expect(await screen.findByRole("link", { name: /Learn/i })).toBeVisible();
+    expect(screen.getByRole("link", { name: /Profile/i })).toBeVisible();
+    expect(screen.getByRole("button", { name: /Logout/i })).toBeVisible();
   });
 
   it("uses dashboardRoute override for dashboard link", async () => {
@@ -96,14 +94,14 @@ describe("UserAvatar", () => {
       refreshSession: vi.fn(),
     });
 
-    render(<UserAvatar dashboardRoute="/dashboard" />);
+    render(<UserAvatar variant="prepyatra" dashboardRoute="/dashboard" />);
 
     await user.click(
       await screen.findByRole("button", { name: /user profile menu/i }),
     );
 
     const dashboardLink = await screen.findByRole("link", {
-      name: "Dashboard",
+      name: /Dashboard/i,
     });
     expect(dashboardLink).toHaveAttribute("href", "/dashboard");
   });
@@ -124,7 +122,7 @@ describe("UserAvatar", () => {
     await user.click(
       await screen.findByRole("button", { name: /user profile menu/i }),
     );
-    await user.click(await screen.findByRole("button", { name: "Logout" }));
+    await user.click(await screen.findByRole("button", { name: /Logout/i }));
 
     expect(mockSignOut).toHaveBeenCalledWith("/login");
   });

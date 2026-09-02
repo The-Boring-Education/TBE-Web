@@ -7,12 +7,7 @@ import {
   Testimonials,
   WeAlreadyTaughtAt,
 } from '@tbe/components';
-import {
-  generateSectionPath,
-  PAGE_REFRESH_TIMEOUT,
-  routes,
-  STATIC_FILE_PATH,
-} from '@tbe/constants';
+import { PAGE_REFRESH_TIMEOUT, routes, STATIC_FILE_PATH } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
@@ -27,10 +22,7 @@ const Home = ({ seoMeta }: PageProps) => {
       <main className='relative min-h-screen w-full bg-[#FAFAFC] overflow-hidden'>
         <PlatformLandingHero
           ctaText='Start Learning Now →'
-          ctaHref={generateSectionPath({
-            basePath: router.basePath,
-            sectionID: routes.internals.landing.products,
-          })}
+          ctaHref={routes.learn}
         />
 
         <AppShowcaseSections theme='light' />

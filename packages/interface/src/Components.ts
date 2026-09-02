@@ -408,9 +408,14 @@ export interface LevelInfoProps {
 }
 export interface CourseHeroContainerProps {
   name: string;
+  slug?: string;
   isEnrolled?: boolean;
   id: string;
   isPremium?: boolean;
+  completedChapters?: number;
+  totalChapters?: number;
+  onEnrollSuccess?: () => void;
+  startLearningHref?: string;
 }
 
 export interface SheetHeroContainerProps {
@@ -421,7 +426,11 @@ export interface SheetHeroContainerProps {
   isPurchased?: boolean;
   redirectTo?: string;
   backHref?: string;
+  backText?: string;
+  trackType?: "course" | "sheet";
   theme?: "dark" | "light";
+  onEnrollSuccess?: () => void;
+  onCustomEnroll?: () => Promise<void> | void;
 }
 
 export interface AccordionProps {
@@ -744,6 +753,7 @@ export interface TabProps {
 export interface ProgressRingProps {
   progress: number;
   point: number;
+  theme?: "light" | "dark";
 }
 
 export interface LevelProgressCardProps {
@@ -753,6 +763,7 @@ export interface LevelProgressCardProps {
   nextLevelName?: string;
   pointsLeftToNextLevel: number;
   percentageProgress: number;
+  theme?: "light" | "dark";
 }
 
 export interface LoginRedirectButtonProps {
@@ -954,11 +965,16 @@ export interface PrepLog {
 export interface UserProfile {
   name: string;
   userName: string;
+  email?: string;
   createdAt: string;
   linkedInUrl?: string;
   image?: string;
   githubUrl?: string;
   leetCodeUrl?: string;
+  codeforcesUrl?: string;
+  location?: string;
+  headline?: string;
+  aboutMe?: string;
   userSkills?: string[];
   userSkillsLastUpdated?: string;
   occupation?: string;
@@ -966,7 +982,7 @@ export interface UserProfile {
   contactNo?: string;
   portfolioUrl?: string;
   purpose?: string[];
-  prepYatra: {
+  prepYatra?: {
     goal?: string;
     experienceLevel?: string;
     workDomain?: string;
@@ -983,12 +999,22 @@ export interface UserProfile {
     experienceLevel?: string;
     preferredLanguage?: string;
     companies?: string[];
+    targetTopics?: string[];
+    dyOnboarded?: boolean;
   };
   oncampus?: {
     onboardingCompleted?: boolean;
     experienceLevel?: string;
     duration?: string;
     offCampus?: boolean;
+  };
+  resumeYatra?: {
+    ryOnboarded?: boolean;
+    experienceBand?: string;
+  };
+  techYatra?: {
+    tyOnboarded?: boolean;
+    focus?: string;
   };
 }
 

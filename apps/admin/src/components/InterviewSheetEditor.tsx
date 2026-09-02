@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import {
   AlertCircle,
   Edit,
@@ -42,11 +41,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-
-// Constants for Agents API (copied from interviewSheetModifyApi for direct use if needed)
-const AGENTS_API_BASE =
-  (import.meta as any).env?.VITE_AGENTS_API_BASE ||
-  "http://localhost:8000/api/v1";
+import { agentsClient } from "@/lib/agentsClient";
 
 interface InterviewSheetEditorProps {
   id: string;
@@ -122,8 +117,8 @@ const InterviewSheetEditor = ({
       questionId: string;
       updates: Partial<IQuestion>;
     }) => {
-      const response = await axios.put(
-        `${AGENTS_API_BASE}/interview/session/${id}/questions/${questionId}`,
+      const response = await agentsClient.put(
+        `/interview/session/${id}/questions/${questionId}`,
         updates,
       );
       return response.data;
@@ -143,8 +138,8 @@ const InterviewSheetEditor = ({
 
   const deleteSessionQuestion = useMutation({
     mutationFn: async (questionId: string) => {
-      const response = await axios.delete(
-        `${AGENTS_API_BASE}/interview/session/${id}/questions/${questionId}`,
+      const response = await agentsClient.delete(
+        `/interview/session/${id}/questions/${questionId}`,
       );
       return response.data;
     },
@@ -165,8 +160,8 @@ const InterviewSheetEditor = ({
     mutationFn: async (
       question: Omit<IQuestion, "id" | "created_at" | "updated_at">,
     ) => {
-      const response = await axios.post(
-        `${AGENTS_API_BASE}/interview/session/${id}/questions`,
+      const response = await agentsClient.post(
+        `/interview/session/${id}/questions`,
         question,
       );
       return response.data;

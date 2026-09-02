@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "@tbe/components";
+import { PersonalizationLoader } from "@tbe/components";
 import { useProductOnboardingGate } from "@tbe/hooks";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -11,7 +11,7 @@ export const OnboardingCheck = () => {
     return `${window.location.origin}/dashboard`;
   }, []);
 
-  const { isChecking } = useProductOnboardingGate({
+  const { isChecking, isActivating } = useProductOnboardingGate({
     pathname: router.pathname,
     publicRoutes: ["/login", "/", "/auth", "/journey/[username]"],
     productId: "dsayatra",
@@ -22,11 +22,14 @@ export const OnboardingCheck = () => {
         ?.dyOnboarded === true,
   });
 
-  if (isChecking) {
+  if (isActivating) {
     return (
-      <div className="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <PersonalizationLoader
+        title="Personalizing your DSA Yatra roadmap..."
+        subtitle="Configuring curated coding patterns and problem sheets"
+        fullScreen
+        theme="dark"
+      />
     );
   }
 

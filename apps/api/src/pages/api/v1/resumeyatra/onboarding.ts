@@ -85,6 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const alreadyOnboarded = (existingUser as any)?.resumeYatra
           ?.ryOnboarded;
         const updateData: Record<string, unknown> = {
+          isOnboarded: true,
           "resumeYatra.ryOnboarded": true,
         };
 
