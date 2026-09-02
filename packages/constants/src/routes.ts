@@ -182,44 +182,46 @@ const routes = {
       return url;
     },
     courseBySlugWithUser: (slug: string, userId?: string) => {
-      let url = `/shiksha?slug=${slug}`;
-      if (userId) url += `&userId=${userId}`;
+      let url = `/shiksha?slug=${encodeURIComponent(slug)}`;
+      if (userId) url += `&userId=${encodeURIComponent(userId)}`;
       return url;
     },
     sheetByIdWithUser: (slug: string, userId?: string, sheetId?: string) => {
-      let url = `/interview-prep?slug=${slug}`;
-      if (userId) url += `&userId=${userId}`;
-      if (sheetId) url += `&sheetId=${sheetId}`;
+      let url = `/interview-prep?slug=${encodeURIComponent(slug)}`;
+      if (userId) url += `&userId=${encodeURIComponent(userId)}`;
+      if (sheetId) url += `&sheetId=${encodeURIComponent(sheetId)}`;
       return url;
     },
 
-    projectById: (project: string) => `/projects/${project}`,
+    projectById: (project: string) => `/projects/${encodeURIComponent(project)}`,
     projectByIdWithUser: (project: string, userId?: string) => {
-      let url = `/projects/${project}`;
+      let url = `/projects/${encodeURIComponent(project)}`;
       if (userId) {
-        url += `?userId=${userId}`;
+        url += `?userId=${encodeURIComponent(userId)}`;
       }
       return url;
     },
     projectBySlugWithUser: (slug: string, userId?: string) => {
-      let url = `/projects?slug=${slug}`;
-      if (userId) url += `&userId=${userId}`;
+      let url = `/projects?slug=${encodeURIComponent(slug)}`;
+      if (userId) url += `&userId=${encodeURIComponent(userId)}`;
       return url;
     },
     gamification: "/gamification",
-    webinarBySlug: (webinar: string) => `/webinar/${webinar}`,
+    webinarBySlug: (webinar: string) => `/webinar/${encodeURIComponent(webinar)}`,
     certificate: "/certificate",
-    certificateById: (certificate: string) => `/certificate/${certificate}`,
+    certificateById: (certificate: string) =>
+      `/certificate/${encodeURIComponent(certificate)}`,
     youfocusPlaylist: "/youfocus",
     youfocusExplore: "/youfocus/explore",
     youfocusUserPlaylistById: (playlistId: string, userId?: string) => {
-      let url = `/youfocus/${playlistId}`;
+      let url = `/youfocus/${encodeURIComponent(playlistId)}`;
       if (userId) {
-        url += `?userId=${userId}`;
+        url += `?userId=${encodeURIComponent(userId)}`;
       }
       return url;
     },
-    playlistByQuery: (query: string) => `/youfocus/explore?q=${query}`,
+    playlistByQuery: (query: string) =>
+      `/youfocus/explore?q=${encodeURIComponent(query)}`,
     userDashboard: "/user/dashboard",
     notification: "/notification",
     unskilled: "/unskilled",
