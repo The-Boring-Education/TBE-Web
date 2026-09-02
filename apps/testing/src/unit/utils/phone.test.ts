@@ -4,7 +4,7 @@ import {
   getCountryInfo,
   isPhoneNumberValid,
   parseAndFormatPhone,
-} from "@tbe/utils/phone";
+} from "@tbe/utils";
 
 describe("phone utilities", () => {
   describe("getCountryFlagEmoji", () => {

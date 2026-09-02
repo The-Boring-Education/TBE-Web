@@ -36,6 +36,7 @@ const OnboardingCountryFlag: React.FC<{
       srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
       alt={name}
       loading="lazy"
+      referrerPolicy="no-referrer"
       onError={() => setHasError(true)}
       className="w-4 h-3 object-cover rounded-[2px] shadow-2xs border border-slate-200/50 shrink-0 inline-block"
     />

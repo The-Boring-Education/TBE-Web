@@ -1,3 +1,5 @@
+import type { Page, Route } from "@playwright/test";
+
 import {
   buildE2EAccessJwt,
   ONBOARDING_GATE_E2E_USER,
@@ -5,9 +7,8 @@ import {
 import { expect, test } from "../fixtures/platform.fixture";
 
 const TBE_ACCESS_COOKIE = "tbe_access_token";
-const TBE_REFRESH_COOKIE = "tbe_refresh_token";
 
-async function authenticatePage(page: any) {
+async function authenticatePage(page: Page) {
   const token = buildE2EAccessJwt();
   await page.context().addCookies([
     {
@@ -39,7 +40,7 @@ async function authenticatePage(page: any) {
     [TBE_ACCESS_COOKIE, token] as [string, string],
   );
 
-  await page.route("**/api/proxy/auth/refresh", (route: any) =>
+  await page.route("**/api/proxy/auth/refresh", (route: Route) =>
     route.fulfill({
       status: 200,
       json: {
@@ -49,7 +50,7 @@ async function authenticatePage(page: any) {
     }),
   );
 
-  await page.route("**/api/proxy/user**", (route: any) => {
+  await page.route("**/api/proxy/user**", (route: Route) => {
     const url = route.request().url();
     if (url.includes("dashboard")) {
       return route.fulfill({

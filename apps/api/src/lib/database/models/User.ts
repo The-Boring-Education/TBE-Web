@@ -1,3 +1,4 @@
+import { isPhoneNumberValid } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
 import {
@@ -180,6 +181,13 @@ const UserSchema: Schema<UserModel> = new Schema(
     },
     contactNo: {
       type: String,
+      validate: {
+        validator(v: string | null | undefined) {
+          if (!v || v === "+91") return true;
+          return isPhoneNumberValid(v);
+        },
+        message: "Invalid phone number format",
+      },
     },
     linkedInUrl: {
       type: String,

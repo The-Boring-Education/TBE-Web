@@ -143,6 +143,7 @@ export const parseAndFormatPhone = (
 ): PhoneParseResult => {
   const trimmed = (raw || "").trim();
   const asYouType = new AsYouType(currentCountry);
+  const formattedFromCurrent = asYouType.input(trimmed);
   let parsed = parsePhoneNumberFromString(trimmed, currentCountry);
   if (!parsed && !trimmed.startsWith("+")) {
     const fallbackDialCode = getCountryInfo(currentCountry).dialCode;
@@ -161,10 +162,16 @@ export const parseAndFormatPhone = (
       ? `+${asYouType.getCallingCode()}`
       : countryInfo.dialCode;
 
-  const formatted = new AsYouType(detectedCountry).input(trimmed);
-  const isValid = parsed
-    ? parsed.isValid()
-    : new AsYouType(detectedCountry).isValid();
+  let formatted = formattedFromCurrent;
+  let isValid = false;
+  if (detectedCountry !== currentCountry) {
+    const detectedAsYouType = new AsYouType(detectedCountry);
+    formatted = detectedAsYouType.input(trimmed);
+    isValid = parsed ? parsed.isValid() : detectedAsYouType.isValid();
+  } else {
+    isValid = parsed ? parsed.isValid() : asYouType.isValid();
+  }
+
   const isPossible = parsed ? parsed.isPossible() : isValid;
   const nationalNumber = parsed
     ? new AsYouType(detectedCountry).input(parsed.nationalNumber)

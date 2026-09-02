@@ -795,14 +795,26 @@ export interface StepOccupationProps {
   onChange: (value: string) => void;
 }
 
-export interface StepPhoneNumberProps {
-  countryCode?: string;
-  phoneNumber?: string;
-  onChangeCode?: (code: string) => void;
-  onChangeNumber?: (number: string) => void;
-  value?: string;
-  onChange?: (value: string) => void;
-}
+export type StepPhoneNumberControlledProps = {
+  value: string;
+  onChange: (value: string) => void;
+  countryCode?: never;
+  phoneNumber?: never;
+  onChangeCode?: never;
+  onChangeNumber?: never;
+};
+
+export type StepPhoneNumberLegacyProps = {
+  countryCode: string;
+  phoneNumber: string;
+  onChangeCode: (code: string) => void;
+  onChangeNumber: (number: string) => void;
+  value?: never;
+  onChange?: never;
+};
+
+export type StepPhoneNumberProps =
+  StepPhoneNumberControlledProps | StepPhoneNumberLegacyProps;
 
 export interface StepUsageProps {
   selected: string[];

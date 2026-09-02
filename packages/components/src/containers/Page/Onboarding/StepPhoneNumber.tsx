@@ -5,21 +5,16 @@ import { getCountryInfo } from "@tbe/utils";
 
 import PhoneInput from "../../../common/Form/PhoneInput";
 
-const StepPhoneNumber = ({
-  countryCode = "+91",
-  phoneNumber = "",
-  onChangeCode,
-  onChangeNumber,
-  value,
-  onChange,
-}: StepPhoneNumberProps) => {
-  const currentFullValue =
-    value !== undefined
-      ? value
-      : countryCode && phoneNumber
-        ? `${countryCode} ${phoneNumber}`.trim()
-        : phoneNumber || countryCode || "+91";
+const StepPhoneNumber = (props: StepPhoneNumberProps) => {
+  const isControlled = "value" in props && props.value !== undefined;
+  const currentFullValue = isControlled
+    ? props.value
+    : props.countryCode && props.phoneNumber
+      ? `${props.countryCode} ${props.phoneNumber}`.trim()
+      : props.phoneNumber || props.countryCode || "+91";
 
+  const countryCode =
+    !isControlled && props.countryCode ? props.countryCode : "+91";
   const defaultCountry: CountryCode =
     (getCountryInfo(countryCode).country as CountryCode) || "IN";
 
@@ -32,14 +27,14 @@ const StepPhoneNumber = ({
       nationalNumber: string;
     },
   ) => {
-    if (onChange) {
-      onChange(fullVal);
+    if ("onChange" in props && props.onChange) {
+      props.onChange(fullVal);
     }
-    if (onChangeCode) {
-      onChangeCode(meta.dialCode);
+    if ("onChangeCode" in props && props.onChangeCode) {
+      props.onChangeCode(meta.dialCode);
     }
-    if (onChangeNumber) {
-      onChangeNumber(meta.nationalNumber);
+    if ("onChangeNumber" in props && props.onChangeNumber) {
+      props.onChangeNumber(meta.nationalNumber);
     }
   };
 

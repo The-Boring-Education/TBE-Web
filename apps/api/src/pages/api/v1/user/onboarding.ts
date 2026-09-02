@@ -1,3 +1,4 @@
+import { isPhoneNumberValid } from "@tbe/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
@@ -134,6 +135,20 @@ const handleUserOnboarding = async (
           status: false,
           error: "Missing required fields",
           message: "Please provide all required fields",
+        }),
+      );
+    }
+
+    if (
+      req.body?.contactNo &&
+      req.body.contactNo !== "+91" &&
+      !isPhoneNumberValid(req.body.contactNo)
+    ) {
+      return res.status(apiStatusCodes.BAD_REQUEST).json(
+        sendAPIResponse({
+          status: false,
+          error: "Invalid phone number",
+          message: "Please provide a valid phone number",
         }),
       );
     }
