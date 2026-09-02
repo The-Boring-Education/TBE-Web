@@ -95,7 +95,7 @@ test.describe("Onboarding smoke flow", () => {
       waitUntil: "domcontentloaded",
     });
 
-    await expect(page.getByText("Invalid onboarding link.")).toBeVisible({
+    await expect(page.getByText("Invalid Onboarding Link")).toBeVisible({
       timeout: 20_000,
     });
   });

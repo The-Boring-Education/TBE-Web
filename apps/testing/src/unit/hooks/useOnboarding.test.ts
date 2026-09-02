@@ -316,9 +316,12 @@ describe("useOnboarding", () => {
       result.current.handleFinish();
     });
 
-    await waitFor(() => {
-      expect(result.current.submitting).toBe(false);
-    });
+    await waitFor(
+      () => {
+        expect(result.current.submitting).toBe(false);
+      },
+      { timeout: 5000 },
+    );
 
     expect(mockSendRequest).toHaveBeenLastCalledWith(
       expect.objectContaining({
