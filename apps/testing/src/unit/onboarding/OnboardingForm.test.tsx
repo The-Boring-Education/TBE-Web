@@ -174,8 +174,8 @@ describe("OnboardingForm", () => {
         apiBaseUrl="http://localhost:3004/api/v1"
       />,
     );
-    fireEvent.change(screen.getByPlaceholderText("+91 9876543210"), {
-      target: { name: "phone", value: "+91 9876543210" },
+    fireEvent.change(screen.getByPlaceholderText(/9876543210/), {
+      target: { name: "phone", value: "9876543210" },
     });
     expect(getState()).toMatchObject({ phone: "+91 9876543210" });
   });
