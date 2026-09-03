@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@tbe/config": "workspace:*",
+    "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",
     "@tbe/query": "workspace:*",
     "@tbe/types": "workspace:*",

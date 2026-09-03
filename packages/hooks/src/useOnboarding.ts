@@ -6,7 +6,12 @@ import type {
   UseOnboardingProps,
   UseOnboardingReturn,
 } from "@tbe/types";
-import { sendRequest, trackEvent, trackUserActivated } from "@tbe/utils";
+import {
+  isValidPhoneNumber,
+  sendRequest,
+  trackEvent,
+  trackUserActivated,
+} from "@tbe/utils";
 import { useEffect, useState } from "react";
 
 export default function useOnboarding({
@@ -180,6 +185,10 @@ export default function useOnboarding({
 
       if (currentField.type === "multiselect") {
         return Array.isArray(val) && val.length > 0;
+      }
+
+      if (currentField.type === "tel") {
+        return isValidPhoneNumber(val as string);
       }
 
       const hasValue = !!val && val.toString().trim() !== "";

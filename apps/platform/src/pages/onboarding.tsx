@@ -14,7 +14,11 @@ import {
 import { routes } from '@tbe/constants';
 import { useApi, useUser } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
-import { getPreFetchProps, getRedirectUrl } from '@tbe/utils';
+import {
+  getPreFetchProps,
+  getRedirectUrl,
+  isValidPhoneNumber,
+} from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 
@@ -101,12 +105,8 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
         return occupation.trim().length > 0;
       case 2:
         return purpose.length > 0;
-      case 3: {
-        const [code, number] = contactNo.split(' ');
-        return (
-          code.startsWith('+') && number?.replace(/[^0-9]/g, '').length >= 10
-        );
-      }
+      case 3:
+        return isValidPhoneNumber(contactNo);
       default:
         return false;
     }

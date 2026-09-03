@@ -2,15 +2,21 @@ import { COUNTRY_CODES, USER_ROLE_OPTIONS } from "@tbe/constants";
 import { useUsername } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import {
+  getPhoneNumberError,
+  isValidPhoneNumber,
   normalizeContactNoForForm,
   normalizeOptionalProfileUrl,
+  parsePhoneNumber,
 } from "@tbe/utils";
 import React, { useEffect, useState } from "react";
 import {
   LuCheck,
+  LuChevronDown,
   LuClock,
   LuCode2,
+  LuPhone,
   LuPlus,
+  LuSearch,
   LuTarget,
   LuUser,
 } from "react-icons/lu";
@@ -304,10 +310,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     setCustomSkillInput("");
   };
 
+  const isPhoneValid = isValidPhoneNumber(form.contactNo);
+  const phoneError = getPhoneNumberError(form.contactNo);
+
+  const isStep1Valid = Boolean(
+    form.name.trim() &&
+    form.userName.trim().length >= 3 &&
+    (form.userName === initialUserName || isUsernameAvailable) &&
+    isPhoneValid,
+  );
+
   const isFormValid = () => {
     if (!form.name.trim()) return false;
     if (!form.userName.trim() || form.userName.trim().length < 3) return false;
     if (form.userName !== initialUserName && !isUsernameAvailable) return false;
+    if (!isPhoneValid) return false;
     return true;
   };
 
@@ -337,18 +354,20 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     });
   };
 
-  const [countryCode, phoneNumber] = (() => {
-    const raw = form.contactNo.trim();
-    const parts = raw.split(/\s+/);
-    if (parts.length > 1) {
-      return [parts[0] || "+91", parts.slice(1).join(" ")];
-    }
-    const match = raw.match(/^(\+\d{1,3})(.*)$/);
-    if (match) {
-      return [match[1] || "+91", (match[2] || "").trim()];
-    }
-    return ["+91", raw];
-  })();
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+
+  const { countryCode, phoneNumber } = parsePhoneNumber(form.contactNo);
+
+  const currentCountry =
+    (COUNTRY_CODES as any[]).find((c) => c.code === countryCode) ||
+    COUNTRY_CODES[0];
+
+  const filteredCountries = (COUNTRY_CODES as any[]).filter(
+    (c) =>
+      c.country.toLowerCase().includes(countrySearch.toLowerCase()) ||
+      c.code.includes(countrySearch),
+  );
 
   const steps = [
     { number: 1, title: "Identity", icon: <LuUser className="w-3.5 h-3.5" /> },
@@ -488,39 +507,179 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
                 {/* Mobile / Contact Number */}
                 <div className="flex flex-col gap-1.5 pt-1">
-                  <label className="text-xs font-bold text-slate-800">
-                    Mobile / WhatsApp Number
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      value={countryCode}
-                      onChange={(e) =>
-                        updateField(
-                          "contactNo",
-                          `${e.target.value} ${phoneNumber}`,
-                        )
-                      }
-                      className="px-2.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 bg-white outline-none cursor-pointer"
-                    >
-                      {COUNTRY_CODES.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.code}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <LuPhone className="w-3.5 h-3.5 text-slate-500" />
+                      Mobile / WhatsApp Number
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Required
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {/* Custom Country Code Dropdown */}
+                    <div className="relative shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIsCountryDropdownOpen((v) => !v)}
+                        className="h-10 px-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-800 transition cursor-pointer"
+                      >
+                        <span className="w-5 h-3.5 flex items-center justify-center overflow-hidden rounded-[2px] shrink-0">
+                          <img
+                            src={`https://flagcdn.com/w40/${currentCountry?.iso || "in"}.png`}
+                            alt={currentCountry?.country || "flag"}
+                            className="h-full w-auto max-w-none object-contain"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLElement).style.display =
+                                "none";
+                            }}
+                          />
+                        </span>
+                        <span>{countryCode}</span>
+                        <LuChevronDown
+                          className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
+                            isCountryDropdownOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {isCountryDropdownOpen && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => {
+                              setIsCountryDropdownOpen(false);
+                              setCountrySearch("");
+                            }}
+                          />
+                          <div className="absolute left-0 top-11 z-50 w-64 max-h-64 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 flex flex-col gap-1 overflow-hidden animate-in fade-in-0 zoom-in-95">
+                            <div className="relative px-2 py-1 border-b border-slate-100 flex items-center gap-1.5 text-xs text-slate-400">
+                              <LuSearch className="w-3.5 h-3.5 shrink-0" />
+                              <input
+                                type="text"
+                                value={countrySearch}
+                                onChange={(e) =>
+                                  setCountrySearch(e.target.value)
+                                }
+                                placeholder="Search country or code..."
+                                className="w-full bg-transparent outline-none text-xs text-slate-800 placeholder:text-slate-400"
+                                autoFocus
+                              />
+                            </div>
+                            <div className="overflow-y-auto max-h-48 py-0.5 space-y-0.5">
+                              {filteredCountries.map((c, i) => {
+                                const isSelected = c.code === countryCode;
+                                return (
+                                  <button
+                                    key={`${c.code}-${c.country}-${i}`}
+                                    type="button"
+                                    onClick={() => {
+                                      updateField(
+                                        "contactNo",
+                                        `${c.code} ${phoneNumber}`.trim(),
+                                      );
+                                      setIsCountryDropdownOpen(false);
+                                      setCountrySearch("");
+                                    }}
+                                    className={`w-full px-2 py-1.5 rounded-lg flex items-center justify-between text-xs font-medium transition cursor-pointer ${
+                                      isSelected
+                                        ? "bg-[#FF5757]/10 text-[#FF5757] font-bold"
+                                        : "text-slate-700 hover:bg-slate-100"
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2 truncate">
+                                      <span className="w-5 h-3.5 flex items-center justify-center overflow-hidden rounded-[2px] shrink-0">
+                                        <img
+                                          src={`https://flagcdn.com/w40/${c.iso}.png`}
+                                          alt={c.country}
+                                          className="h-full w-auto max-w-none object-contain"
+                                          onError={(e) => {
+                                            (
+                                              e.currentTarget as HTMLElement
+                                            ).style.display = "none";
+                                          }}
+                                        />
+                                      </span>
+                                      <span className="truncate">
+                                        {c.country}
+                                      </span>
+                                    </div>
+                                    <span className="text-[11px] text-slate-400 font-semibold shrink-0 ml-1">
+                                      {c.code}
+                                    </span>
+                                  </button>
+                                );
+                              })}
+                              {filteredCountries.length === 0 && (
+                                <p className="text-xs text-slate-400 text-center py-3">
+                                  No countries found
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Clean Phone Number Input */}
                     <input
                       type="tel"
                       value={phoneNumber}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const cleaned = e.target.value.replace(/\D/g, "");
+                        const maxLen = countryCode === "+91" ? 10 : 15;
+                        const limited = cleaned.slice(0, maxLen);
                         updateField(
                           "contactNo",
-                          `${countryCode} ${e.target.value}`,
-                        )
+                          `${countryCode} ${limited}`.trim(),
+                        );
+                      }}
+                      placeholder={
+                        countryCode === "+91"
+                          ? "9876543210 (10 digits)"
+                          : "Enter phone number"
                       }
-                      placeholder="98765 43210"
-                      className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none text-xs sm:text-sm text-slate-900 transition"
+                      className={`flex-1 h-10 px-3.5 rounded-xl border bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition ${
+                        phoneNumber && phoneError
+                          ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                          : "border-slate-200 focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 hover:border-slate-300"
+                      }`}
                     />
                   </div>
+
+                  {/* Validation feedback message */}
+                  {phoneNumber && phoneError ? (
+                    <p className="text-[11px] text-red-500 font-medium flex items-center gap-1">
+                      <svg
+                        className="w-3.5 h-3.5 shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>{phoneError}</span>
+                    </p>
+                  ) : phoneNumber && isPhoneValid ? (
+                    <p className="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                      <svg
+                        className="w-3.5 h-3.5 shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>Valid phone number</span>
+                    </p>
+                  ) : null}
                 </div>
 
                 {/* Headline & Location */}
@@ -916,8 +1075,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               {activeStep < 4 ? (
                 <button
                   type="button"
+                  disabled={activeStep === 1 && !isStep1Valid}
                   onClick={() => setActiveStep((s) => s + 1)}
-                  className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer shadow-xs"
+                  className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white text-xs font-bold transition cursor-pointer shadow-xs"
                 >
                   Next Step →
                 </button>

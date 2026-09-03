@@ -6,6 +6,7 @@ import {
 } from "@tbe/components";
 import { COUNTRY_CODES } from "@tbe/constants";
 import type { StepPhoneNumberProps } from "@tbe/interface";
+import { getPhoneNumberError, isValidPhoneNumber } from "@tbe/utils";
 
 const StepPhoneNumber = ({
   countryCode,
@@ -13,7 +14,15 @@ const StepPhoneNumber = ({
   onChangeCode,
   onChangeNumber,
 }: StepPhoneNumberProps) => {
-  const codeList = COUNTRY_CODES.map((c) => c.code);
+  const selectedFlagCode = (() => {
+    const item = COUNTRY_CODES.find((c) => c.code === countryCode);
+    return item ? `${item.flag} ${item.code}` : countryCode;
+  })();
+
+  const codeList = COUNTRY_CODES.map((c) => `${c.flag} ${c.code}`);
+  const fullContact = `${countryCode} ${phoneNumber}`.trim();
+  const isPhoneValid = isValidPhoneNumber(fullContact);
+  const phoneError = getPhoneNumberError(fullContact);
 
   return (
     <FlexContainer className="gap-2" direction="col">
@@ -26,8 +35,11 @@ const StepPhoneNumber = ({
           aria-label="Country Code"
           className=""
           list={codeList}
-          selectedItem={countryCode}
-          onChange={onChangeCode}
+          selectedItem={selectedFlagCode}
+          onChange={(val: string) => {
+            const rawCode = val.split(" ").pop() || "+91";
+            onChangeCode(rawCode);
+          }}
         />
 
         <InputFieldContainer
@@ -37,9 +49,21 @@ const StepPhoneNumber = ({
           labelClass="sr-only"
           type="tel"
           value={phoneNumber}
-          onChange={onChangeNumber}
+          onChange={(val: string) => {
+            const cleaned = val.replace(/\D/g, "");
+            const maxLen = countryCode === "+91" ? 10 : 15;
+            onChangeNumber(cleaned.slice(0, maxLen));
+          }}
         />
       </FlexContainer>
+
+      {phoneNumber && phoneError ? (
+        <p className="text-xs text-red-500 font-medium">{phoneError}</p>
+      ) : phoneNumber && isPhoneValid ? (
+        <p className="text-xs text-emerald-600 font-medium">
+          ✓ Valid contact number
+        </p>
+      ) : null}
     </FlexContainer>
   );
 };
