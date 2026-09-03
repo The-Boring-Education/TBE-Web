@@ -1,3 +1,4 @@
+import { getAccessToken } from "@tbe/auth";
 import type { FeedbackType } from "@tbe/constants";
 import { routes } from "@tbe/constants";
 import { sendRequest } from "@tbe/utils";
@@ -46,8 +47,14 @@ const useContentFeedback = ({
     setState((prev) => ({ ...prev, isFetching: true }));
 
     try {
+      const token = typeof window !== "undefined" ? getAccessToken() : null;
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const url = `${routes.api.contentFeedback}?userId=${user.id}&contentType=${contentType}&contentId=${encodeURIComponent(contentId)}`;
-      const response = await sendRequest({ url, method: "GET" });
+      const response = await sendRequest({ url, method: "GET", headers });
 
       if (response?.status && response.data) {
         setState((prev) => ({
@@ -88,9 +95,16 @@ const useContentFeedback = ({
     const metaToSubmit = overrideMeta || meta;
 
     try {
+      const token = typeof window !== "undefined" ? getAccessToken() : null;
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const response = await sendRequest({
         url: routes.api.contentFeedback,
         method: "POST",
+        headers,
         body: {
           userId: user.id,
           contentType,
