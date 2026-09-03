@@ -74,12 +74,14 @@ async function proxyRequest(
       status: response.status,
       headers: responseHeaders,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Proxy error:", error);
+    const message =
+      error instanceof Error ? error.message : "Internal Proxy Error";
     return NextResponse.json(
       {
         error: "Proxy error",
-        message: error?.message || "Internal Proxy Error",
+        message,
       },
       { status: 500 },
     );
