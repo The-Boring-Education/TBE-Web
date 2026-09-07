@@ -59,6 +59,7 @@ function QuizContent() {
       const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
       const response = await fetch(
         `${base}/user?email=${encodeURIComponent(email)}`,
+        { credentials: "include" },
       );
       const data = await response.json();
 
@@ -69,6 +70,7 @@ function QuizContent() {
       // If not found by email, try to create user or get by Google ID
       const createResponse = await fetch(`${base}/user`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -109,6 +111,7 @@ function QuizContent() {
         const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
         const resp = await fetch(
           `${base}/user?email=${encodeURIComponent(user!.email!)}`,
+          { credentials: "include" },
         );
         const json = await resp.json();
         const dbId = json?.data?._id;

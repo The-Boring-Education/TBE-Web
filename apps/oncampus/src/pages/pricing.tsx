@@ -20,7 +20,6 @@ import {
   CheckCircle2,
   Code2,
   GraduationCap,
-  Sparkles,
   Star,
   Tag,
 } from "lucide-react";
@@ -186,21 +185,26 @@ const OnCampusPricingPage = () => {
 
                 <div className="flex items-center gap-1.5 text-[#a0a0a0]">
                   <BookOpen className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">Aptitude</span> Practice
+                  <span className="font-bold text-white">Aptitude</span>{" "}
+                  Practice
                 </div>
 
                 <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
 
                 <div className="flex items-center gap-1.5 text-[#a0a0a0]">
                   <Code2 className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">DSA + Sheets</span> Interview
+                  <span className="font-bold text-white">
+                    DSA + Sheets
+                  </span>{" "}
+                  Interview
                 </div>
 
                 <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
 
                 <div className="flex items-center gap-1.5 text-[#a0a0a0]">
                   <Tag className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">Coupons</span> Campus deals
+                  <span className="font-bold text-white">Coupons</span> Campus
+                  deals
                 </div>
               </div>
 
@@ -212,19 +216,23 @@ const OnCampusPricingPage = () => {
                 </div>
                 <div className="flex items-center justify-center gap-1.5">
                   <BookOpen className="w-3 h-3 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">Aptitude</span> Practice
+                  <span className="font-bold text-white">Aptitude</span>{" "}
+                  Practice
                 </div>
                 <div className="flex items-center justify-center gap-1.5">
                   <Code2 className="w-3 h-3 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">DSA + Sheets</span> Interview
+                  <span className="font-bold text-white">
+                    DSA + Sheets
+                  </span>{" "}
+                  Interview
                 </div>
                 <div className="flex items-center justify-center gap-1.5">
                   <Tag className="w-3 h-3 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">Coupons</span> Campus deals
+                  <span className="font-bold text-white">Coupons</span> Campus
+                  deals
                 </div>
               </div>
             </motion.div>
-
           </div>
         </section>
 
@@ -355,7 +363,6 @@ const OnCampusPricingPage = () => {
               />
             </section>
 
-
             <div className="pb-12">
               <p className="text-center text-[#505050] text-[11px]">
                 Secure payment powered by{" "}
@@ -371,4 +378,3 @@ const OnCampusPricingPage = () => {
 };
 
 export default OnCampusPricingPage;
-
