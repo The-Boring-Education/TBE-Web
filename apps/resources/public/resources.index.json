@@ -15,10 +15,7 @@
       "python",
       "generative ai"
     ],
-    "tags": [
-      "roadmap",
-      "agenticai"
-    ]
+    "tags": ["roadmap", "agenticai"]
   },
   {
     "slug": "aiml-engineer-roadmap",
@@ -33,10 +30,7 @@
       "data science",
       "models"
     ],
-    "tags": [
-      "roadmap",
-      "aiml"
-    ]
+    "tags": ["roadmap", "aiml"]
   },
   {
     "slug": "backend-engineer-roadmap",
@@ -51,10 +45,7 @@
       "sql",
       "apis"
     ],
-    "tags": [
-      "roadmap",
-      "backend"
-    ]
+    "tags": ["roadmap", "backend"]
   },
   {
     "slug": "blockchain-engineer-roadmap",
@@ -70,10 +61,7 @@
       "dapps",
       "smart contracts"
     ],
-    "tags": [
-      "roadmap",
-      "blockchain"
-    ]
+    "tags": ["roadmap", "blockchain"]
   },
   {
     "slug": "cloud-engineer-roadmap",
@@ -91,10 +79,7 @@
       "ci cd",
       "networking"
     ],
-    "tags": [
-      "roadmap",
-      "cloud"
-    ]
+    "tags": ["roadmap", "cloud"]
   },
   {
     "slug": "cold-email-guide",
@@ -122,10 +107,7 @@
       "linux",
       "cloud security"
     ],
-    "tags": [
-      "roadmap",
-      "cybersecurity"
-    ]
+    "tags": ["roadmap", "cybersecurity"]
   },
   {
     "slug": "devops-engineer-roadmap",
@@ -140,10 +122,7 @@
       "linux",
       "automation"
     ],
-    "tags": [
-      "roadmap",
-      "devops"
-    ]
+    "tags": ["roadmap", "devops"]
   },
   {
     "slug": "dsa-escape-plan-2026",
@@ -158,11 +137,7 @@
       "problem solving",
       "roadmap"
     ],
-    "tags": [
-      "dsa",
-      "roadmap",
-      "interview-prep"
-    ]
+    "tags": ["dsa", "roadmap", "interview-prep"]
   },
   {
     "slug": "ethical-hacking-roadmap",
@@ -180,31 +155,43 @@
       "web application security",
       "roadmap"
     ],
-    "tags": [
-      "roadmap",
-      "ethicalhacking"
-    ]
+    "tags": ["roadmap", "ethicalhacking"]
   },
   {
-    "slug": "ethical-hacking-roadmap",
-    "title": "Ethical Hacking Roadmap 2026",
-    "description": "A structured, phase-by-phase path from networking fundamentals to penetration testing and bug bounty — the exact skill order security teams and CTF players actually build in, not a random list of tools.",
+    "slug": "free-apis-every-developer-should-know",
+    "title": "Free APIs Every Developer Should Know 2026",
+    "description": "30 real, production-usable free APIs organized by category — weather, geolocation, auth, AI, media, communication, and payments — with direct links to actual docs, not a random copy-pasted list.",
     "keywords": [
-      "ethical hacking",
-      "cyber security",
-      "penetration testing",
-      "bug bounty",
-      "kali linux",
-      "network security",
-      "infosec",
-      "ctf",
-      "web application security",
-      "roadmap"
+      "free apis",
+      "public apis",
+      "apis for developers",
+      "rest api",
+      "weather api",
+      "geolocation api",
+      "auth api",
+      "ai apis",
+      "developer resources",
+      "free tier"
     ],
-    "tags": [
-      "roadmap",
-      "ethicalhacking"
-    ]
+    "tags": ["apis", "guide", "backend", "frontend"]
+  },
+  {
+    "slug": "free-stuff-developers-can-get-with-student-email-2026",
+    "title": "Free Stuff Developers Can Get With a Student Email 2026",
+    "description": "30 real perks a verified school email unlocks — IDEs, cloud credits, AI coding tools, design software, and learning platforms — with direct links to where to actually claim each one.",
+    "keywords": [
+      "student email",
+      "github student developer pack",
+      "student discounts",
+      "developer tools",
+      "free software for students",
+      "free cloud credits",
+      "free developer perks",
+      "student benefits",
+      "free apis and tools",
+      "coding tools"
+    ],
+    "tags": ["guide", "student", "perks"]
   },
   {
     "slug": "freelance-developer-guide",
@@ -222,10 +209,7 @@
       "software developer",
       "tech freelancing"
     ],
-    "tags": [
-      "guide",
-      "freelancing"
-    ]
+    "tags": ["guide", "freelancing"]
   },
   {
     "slug": "frontend-engineer-roadmap",
@@ -241,10 +225,7 @@
       "css",
       "web development"
     ],
-    "tags": [
-      "roadmap",
-      "frontend"
-    ]
+    "tags": ["roadmap", "frontend"]
   },
   {
     "slug": "genai-engineer-roadmap",
@@ -259,10 +240,7 @@
       "langchain",
       "vector database"
     ],
-    "tags": [
-      "roadmap",
-      "genai"
-    ]
+    "tags": ["roadmap", "genai"]
   },
   {
     "slug": "git-github-contributor-playbook",
@@ -280,11 +258,7 @@
       "version control",
       "contributor playbook"
     ],
-    "tags": [
-      "git",
-      "github",
-      "open-source"
-    ]
+    "tags": ["git", "github", "open-source"]
   },
   {
     "slug": "hr-interview-questions",
@@ -301,11 +275,7 @@
       "mock interview",
       "hiring manager questions"
     ],
-    "tags": [
-      "interview",
-      "career",
-      "behavioral"
-    ]
+    "tags": ["interview", "career", "behavioral"]
   },
   {
     "slug": "javascript-interview-questions",
@@ -321,11 +291,7 @@
       "dom",
       "interview prep"
     ],
-    "tags": [
-      "javascript",
-      "interview",
-      "frontend"
-    ]
+    "tags": ["javascript", "interview", "frontend"]
   },
   {
     "slug": "linkedin-for-developers-guide",
@@ -343,33 +309,7 @@
       "tech resume",
       "personal branding"
     ],
-    "tags": [
-      "guide",
-      "career",
-      "networking"
-    ]
-  },
-  {
-    "slug": "linkedin-for-developers-guide",
-    "title": "LinkedIn for Developers Guide 2026",
-    "description": "A phase-by-phase playbook for turning a half-finished profile into a real inbound channel — profile setup, proof of work, content, networking, and recruiter-ready positioning, in the order that actually compounds.",
-    "keywords": [
-      "linkedin",
-      "linkedin for developers",
-      "developer branding",
-      "career advice",
-      "job search",
-      "networking",
-      "inbound leads",
-      "software engineer career",
-      "tech resume",
-      "personal branding"
-    ],
-    "tags": [
-      "guide",
-      "career",
-      "networking"
-    ]
+    "tags": ["guide", "career", "networking"]
   },
   {
     "slug": "mobile-app-developer-roadmap",
@@ -387,10 +327,7 @@
       "firebase",
       "cross platform apps"
     ],
-    "tags": [
-      "roadmap",
-      "mobiledevelopment"
-    ]
+    "tags": ["roadmap", "mobiledevelopment"]
   },
   {
     "slug": "nodejs-express-interview-questions",
@@ -403,11 +340,7 @@
       "javascript",
       "interview questions"
     ],
-    "tags": [
-      "nodejs",
-      "express",
-      "interview"
-    ]
+    "tags": ["nodejs", "express", "interview"]
   },
   {
     "slug": "placement-preparation-roadmap",
@@ -422,27 +355,14 @@
       "core cs",
       "engineering"
     ],
-    "tags": [
-      "roadmap",
-      "placement"
-    ]
+    "tags": ["roadmap", "placement"]
   },
   {
     "slug": "react-interview-questions",
     "title": "40 React Interview Questions",
     "description": "A curated set of 40 essential React interview questions covering fundamentals, hooks, lifecycle, state management, and performance optimization.",
-    "keywords": [
-      "react",
-      "javascript",
-      "frontend",
-      "hooks",
-      "web development"
-    ],
-    "tags": [
-      "react",
-      "interview",
-      "frontend"
-    ]
+    "keywords": ["react", "javascript", "frontend", "hooks", "web development"],
+    "tags": ["react", "interview", "frontend"]
   },
   {
     "slug": "referral-strategy-guide",
@@ -460,33 +380,7 @@
       "career advice",
       "resume referral"
     ],
-    "tags": [
-      "react",
-      "interview",
-      "frontend"
-    ]
-  },
-  {
-    "slug": "referral-strategy-guide",
-    "title": "Referral Strategy Guide 2026",
-    "description": "A referral gets your resume in front of a human instead of an ATS filter. This guide covers exactly who to ask, how to ask without feeling awkward, what to send, and how to follow up — so referrals stop being luck and start being a repeatable system.",
-    "keywords": [
-      "referral",
-      "job referral",
-      "referral strategy",
-      "job search",
-      "networking",
-      "linkedin outreach",
-      "cold outreach",
-      "interview prep",
-      "career advice",
-      "resume referral"
-    ],
-    "tags": [
-      "guide",
-      "career",
-      "networking"
-    ]
+    "tags": ["guide", "career", "networking"]
   },
   {
     "slug": "system-design-interview-questions",
@@ -505,11 +399,7 @@
       "distributed systems",
       "interview questions"
     ],
-    "tags": [
-      "interview",
-      "systemdesign",
-      "backend"
-    ]
+    "tags": ["interview", "systemdesign", "backend"]
   },
   {
     "slug": "system-design-roadmap",
@@ -527,9 +417,6 @@
       "microservices",
       "load balancing"
     ],
-    "tags": [
-      "roadmap",
-      "systemdesign"
-    ]
+    "tags": ["roadmap", "systemdesign"]
   }
 ]
