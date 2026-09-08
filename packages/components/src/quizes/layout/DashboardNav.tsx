@@ -35,12 +35,16 @@ export function DashboardNav() {
   };
 
   const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    return (
+      name
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2) || "U"
+    );
   };
 
   return (
