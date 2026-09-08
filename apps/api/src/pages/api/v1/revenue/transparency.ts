@@ -118,13 +118,14 @@ const handleGetRevenueData = async (
       date: payment.date,
       type: payment.type,
       // Anonymize user data for privacy
-      userInitials: payment.user?.name
-        ? payment.user.name
-            .split(" ")
-            .map((n: string) => n[0])
-            .join("")
-            .toUpperCase()
-        : "U",
+      userInitials:
+        payment.user?.name
+          ?.trim()
+          .split(" ")
+          .filter(Boolean)
+          .map((n: string) => n[0])
+          .join("")
+          .toUpperCase() || "U",
     }));
 
     return res.status(apiStatusCodes.OKAY).json(
