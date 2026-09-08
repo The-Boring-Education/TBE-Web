@@ -3,13 +3,16 @@ import React from "react";
 import { toast } from "sonner";
 
 const getInitials = (name?: string): string => {
-  if (!name) return "PY";
-  return name
-    .split(" ")
+  if (!name?.trim()) return "PY";
+  const initials = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
     .map((p) => p[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
+  return initials || "PY";
 };
 
 // Inline SVG icons matching exact design spec
