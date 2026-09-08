@@ -149,7 +149,12 @@ jobs:
           echo "## 🏗️ Build Check Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.build-packages.result }}" == "success" ] && [ "${{ needs.build-apps.result }}" == "success" ]; then
+          pkg="${{ needs.build-packages.result }}"
+          apps="${{ needs.build-apps.result }}"
+
+          # Treat skipped as OK — draft PRs intentionally skip builds to save CI resources
+          if ([ "$pkg" == "success" ] || [ "$pkg" == "skipped" ]) && \
+             ([ "$apps" == "success" ] || [ "$apps" == "skipped" ]); then
             echo "### ✅ All Builds Passed!" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "- ✅ Shared packages built successfully" >> $GITHUB_STEP_SUMMARY
@@ -160,10 +165,10 @@ jobs:
           else
             echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "${{ needs.build-packages.result }}" != "success" ]; then
+            if [ "$pkg" != "success" ] && [ "$pkg" != "skipped" ]; then
               echo "- ❌ Shared packages build failed" >> $GITHUB_STEP_SUMMARY
             fi
-            if [ "${{ needs.build-apps.result }}" != "success" ]; then
+            if [ "$apps" != "success" ] && [ "$apps" != "skipped" ]; then
               echo "- ❌ One or more application builds failed" >> $GITHUB_STEP_SUMMARY
             fi
             echo "" >> $GITHUB_STEP_SUMMARY
