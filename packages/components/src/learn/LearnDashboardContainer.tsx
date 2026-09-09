@@ -417,7 +417,8 @@ const RECOMMENDED_DISCOVERY_ITEMS: RecommendedItem[] = [
     url: "https://resources.theboringeducation.com/resources/git-github-contributor-playbook",
     isExternal: true,
     category: "GIT PLAYBOOK",
-    categoryStyle: "bg-slate-100 text-slate-800 border-slate-200",
+    categoryStyle:
+      "bg-slate-100 dark:bg-muted text-slate-800 border-slate-200 dark:border-border",
     iconType: "code",
   },
   // 21
@@ -807,7 +808,7 @@ export const LearnDashboardContainer: React.FC<
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#F8FAFC] flex relative font-sans">
+    <div className="w-full min-h-screen bg-[#F8FAFC] dark:bg-background flex relative font-sans">
       <div
         className={`w-full flex ${
           !showQuiz || isCookingQuiz || isSavingQuiz ? "flex" : "hidden"
@@ -819,7 +820,7 @@ export const LearnDashboardContainer: React.FC<
             isSidebarCollapsed
               ? "w-[56px] sm:w-[64px] px-1 sm:px-1.5"
               : "w-[220px] sm:w-[240px] px-2 sm:px-2.5"
-          } border-r border-[#E8ECF2] bg-white min-h-screen sticky top-0 flex flex-col justify-between py-3 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 overflow-hidden`}
+          } border-r border-[#E8ECF2] dark:border-border bg-white dark:bg-card min-h-screen sticky top-0 flex flex-col justify-between py-3 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 overflow-hidden`}
         >
           <div className="space-y-2">
             {/* Top Collapse Toggle Button */}
@@ -830,7 +831,7 @@ export const LearnDashboardContainer: React.FC<
             >
               <button
                 onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+                className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 dark:text-muted-foreground hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-muted dark:bg-muted transition-colors cursor-pointer shrink-0"
                 title={
                   isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
                 }
@@ -854,7 +855,7 @@ export const LearnDashboardContainer: React.FC<
                   } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
                     activeTab === "dashboard"
                       ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                      : "text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal"
                   }`}
                 >
                   {activeTab === "dashboard" && (
@@ -865,7 +866,7 @@ export const LearnDashboardContainer: React.FC<
                       className={`w-[17px] h-[17px] ${
                         activeTab === "dashboard"
                           ? "text-[#FF4D4D]"
-                          : "text-slate-500"
+                          : "text-slate-500 dark:text-muted-foreground"
                       }`}
                     />
                   </div>
@@ -897,7 +898,7 @@ export const LearnDashboardContainer: React.FC<
               {/* LEARNING Section */}
               <div className="space-y-0.5">
                 <div
-                  className={`px-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                  className={`px-2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
                     isSidebarCollapsed
                       ? "opacity-0 h-0 my-0"
                       : "opacity-100 py-0.5"
@@ -916,7 +917,7 @@ export const LearnDashboardContainer: React.FC<
                     } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "mylearning"
                         ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                        : "text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal"
                     }`}
                   >
                     {activeTab === "mylearning" && (
@@ -927,7 +928,7 @@ export const LearnDashboardContainer: React.FC<
                         className={`w-[17px] h-[17px] ${
                           activeTab === "mylearning"
                             ? "text-[#FF4D4D]"
-                            : "text-slate-500"
+                            : "text-slate-500 dark:text-muted-foreground"
                         }`}
                       />
                     </div>
@@ -965,7 +966,7 @@ export const LearnDashboardContainer: React.FC<
                     } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "explore"
                         ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                        : "text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal"
                     }`}
                   >
                     {activeTab === "explore" && (
@@ -976,7 +977,7 @@ export const LearnDashboardContainer: React.FC<
                         className={`w-[17px] h-[17px] ${
                           activeTab === "explore"
                             ? "text-[#FF4D4D]"
-                            : "text-slate-500"
+                            : "text-slate-500 dark:text-muted-foreground"
                         }`}
                       />
                     </div>
@@ -1011,10 +1012,10 @@ export const LearnDashboardContainer: React.FC<
                       isSidebarCollapsed
                         ? "justify-center px-0"
                         : "px-2 gap-2.5"
-                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal transition-colors overflow-hidden`}
                   >
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <FiPlayCircle className="w-[17px] h-[17px] text-slate-500" />
+                      <FiPlayCircle className="w-[17px] h-[17px] text-slate-500 dark:text-muted-foreground" />
                     </div>
                     <span
                       className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
@@ -1035,7 +1036,7 @@ export const LearnDashboardContainer: React.FC<
                     } py-1.5 rounded-lg text-[13px] transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "ecosystem"
                         ? "bg-red-50/70 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal"
+                        : "text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal"
                     }`}
                   >
                     {activeTab === "ecosystem" && (
@@ -1046,7 +1047,7 @@ export const LearnDashboardContainer: React.FC<
                         className={`w-[17px] h-[17px] ${
                           activeTab === "ecosystem"
                             ? "text-[#FF4D4D]"
-                            : "text-slate-500"
+                            : "text-slate-500 dark:text-muted-foreground"
                         }`}
                       />
                     </div>
@@ -1082,7 +1083,7 @@ export const LearnDashboardContainer: React.FC<
               {/* PRACTICE Section */}
               <div className="space-y-0.5">
                 <div
-                  className={`px-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                  className={`px-2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
                     isSidebarCollapsed
                       ? "opacity-0 h-0 my-0"
                       : "opacity-100 py-0.5"
@@ -1100,10 +1101,10 @@ export const LearnDashboardContainer: React.FC<
                       isSidebarCollapsed
                         ? "justify-center px-0"
                         : "px-2 gap-2.5"
-                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal transition-colors overflow-hidden`}
                   >
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <FiCode className="w-[17px] h-[17px] text-slate-500" />
+                      <FiCode className="w-[17px] h-[17px] text-slate-500 dark:text-muted-foreground" />
                     </div>
                     <span
                       className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
@@ -1121,10 +1122,10 @@ export const LearnDashboardContainer: React.FC<
                       isSidebarCollapsed
                         ? "justify-center px-0"
                         : "px-2 gap-2.5"
-                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal transition-colors overflow-hidden`}
                   >
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <FiTarget className="w-[17px] h-[17px] text-slate-500" />
+                      <FiTarget className="w-[17px] h-[17px] text-slate-500 dark:text-muted-foreground" />
                     </div>
                     <span
                       className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
@@ -1144,10 +1145,10 @@ export const LearnDashboardContainer: React.FC<
                       isSidebarCollapsed
                         ? "justify-center px-0"
                         : "px-2 gap-2.5"
-                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal transition-colors overflow-hidden`}
                   >
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <FiBarChart2 className="w-[17px] h-[17px] text-slate-500" />
+                      <FiBarChart2 className="w-[17px] h-[17px] text-slate-500 dark:text-muted-foreground" />
                     </div>
                     <span
                       className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
@@ -1166,7 +1167,7 @@ export const LearnDashboardContainer: React.FC<
               {/* COMMUNITY Section */}
               <div className="space-y-0.5">
                 <div
-                  className={`px-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                  className={`px-2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
                     isSidebarCollapsed
                       ? "opacity-0 h-0 my-0"
                       : "opacity-100 py-0.5"
@@ -1184,10 +1185,10 @@ export const LearnDashboardContainer: React.FC<
                       isSidebarCollapsed
                         ? "justify-center px-0"
                         : "px-2 gap-2.5"
-                    } py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg text-[13px] text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground font-normal transition-colors overflow-hidden`}
                   >
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <FiFileText className="w-[17px] h-[17px] text-slate-500" />
+                      <FiFileText className="w-[17px] h-[17px] text-slate-500 dark:text-muted-foreground" />
                     </div>
                     <span
                       className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
@@ -1207,12 +1208,12 @@ export const LearnDashboardContainer: React.FC<
             <Link
               href="/user/profile"
               title="Settings"
-              className={`w-full bg-slate-50/70 hover:bg-slate-100 text-slate-600 hover:text-slate-900 rounded-lg ${
+              className={`w-full bg-slate-50 dark:bg-muted/70 hover:bg-slate-100 dark:hover:bg-muted dark:bg-muted text-slate-600 dark:text-muted-foreground hover:text-slate-900 dark:text-foreground rounded-lg ${
                 isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2.5"
               } py-1.5 text-[13px] font-normal flex items-center border border-[#E8ECF2] transition-colors cursor-pointer overflow-hidden`}
             >
               <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                <FiSettings className="w-[17px] h-[17px] text-slate-500" />
+                <FiSettings className="w-[17px] h-[17px] text-slate-500 dark:text-muted-foreground" />
               </div>
               <span
                 className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
@@ -1223,7 +1224,7 @@ export const LearnDashboardContainer: React.FC<
               </span>
               {!isSidebarCollapsed && (
                 <svg
-                  className="w-3.5 h-3.5 text-slate-400 shrink-0"
+                  className="w-3.5 h-3.5 text-slate-400 dark:text-muted-foreground shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -1246,7 +1247,7 @@ export const LearnDashboardContainer: React.FC<
             /* Ecosystem Tab */
             <div className="space-y-4">
               <section className="space-y-3">
-                <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-foreground">
                   Quick access to TBE Ecosystem
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -1256,7 +1257,7 @@ export const LearnDashboardContainer: React.FC<
                       href={app.url}
                       target={app.isExternal ? "_blank" : undefined}
                       rel={app.isExternal ? "noopener noreferrer" : undefined}
-                      className={`group bg-white hover:bg-slate-50/80 border border-slate-200/80 hover:border-[#FF3B30]/50 transition-all hover:shadow-md rounded-2xl p-3.5 sm:p-4 flex min-w-0 overflow-hidden ${i % 2 === 0 ? "flex-col" : "flex-col-reverse"}`}
+                      className={`group bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-muted dark:bg-muted/80 border border-slate-200/80 dark:border-border hover:border-[#FF3B30]/50 transition-all hover:shadow-md rounded-2xl p-3.5 sm:p-4 flex min-w-0 overflow-hidden ${i % 2 === 0 ? "flex-col" : "flex-col-reverse"}`}
                     >
                       {/* Image */}
                       <div className="w-full h-32 sm:h-40 flex items-center justify-center py-2 sm:py-3">
@@ -1279,12 +1280,12 @@ export const LearnDashboardContainer: React.FC<
                         }
                       >
                         <div className="flex items-center justify-between gap-1">
-                          <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#FF3B30] transition-colors leading-tight">
+                          <h3 className="text-sm font-extrabold text-slate-900 dark:text-foreground group-hover:text-[#FF3B30] transition-colors leading-tight">
                             {app.name}
                           </h3>
-                          <FiArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF3B30] shrink-0" />
+                          <FiArrowUpRight className="w-3.5 h-3.5 text-slate-400 dark:text-muted-foreground group-hover:text-[#FF3B30] shrink-0" />
                         </div>
-                        <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                        <p className="text-[11px] text-slate-500 dark:text-muted-foreground font-medium leading-snug mt-0.5">
                           {app.desc}
                         </p>
                       </div>
@@ -1301,7 +1302,7 @@ export const LearnDashboardContainer: React.FC<
                 <h1 className="text-lg sm:text-xl md:text-2xl font-extrabold text-[#10162F] tracking-tight">
                   {getGreeting()}, {user?.name?.split(" ")[0] || "Nitin"} 👋
                 </h1>
-                <p className="text-xs text-slate-500 font-semibold">
+                <p className="text-xs text-slate-500 dark:text-muted-foreground font-semibold">
                   Keep learning, keep growing!
                 </p>
               </div>
@@ -1310,7 +1311,7 @@ export const LearnDashboardContainer: React.FC<
               <section className="space-y-2.5 sm:space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                    <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-foreground">
                       Recommended for you
                     </h2>
                   </div>
@@ -1326,10 +1327,10 @@ export const LearnDashboardContainer: React.FC<
                 <div className="relative group overflow-x-clip">
                   <div
                     id="recommended-scroll-container"
-                    className="flex items-stretch gap-3 sm:gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400"
+                    className="flex items-stretch gap-3 sm:gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 dark:bg-muted [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400"
                   >
                     {/* Bulb Card */}
-                    <div className="w-52 sm:w-60 md:w-64 shrink-0 bg-white border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between text-center shadow-xs hover:border-slate-300 transition-all snap-start">
+                    <div className="w-52 sm:w-60 md:w-64 shrink-0 bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between text-center shadow-xs hover:border-slate-300 transition-all snap-start">
                       <div>
                         <div className="w-full flex items-center justify-center py-1 mb-2">
                           <img
@@ -1338,10 +1339,10 @@ export const LearnDashboardContainer: React.FC<
                             className="h-20 sm:h-24 md:h-28 object-contain mx-auto"
                           />
                         </div>
-                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-foreground leading-tight">
                           Explore courses & sheets
                         </h3>
-                        <p className="text-[11px] text-slate-500 mt-1.5 leading-snug">
+                        <p className="text-[11px] text-slate-500 dark:text-muted-foreground mt-1.5 leading-snug">
                           Browse all interview sheets, core CS subjects & free
                           roadmaps.
                         </p>
@@ -1400,7 +1401,7 @@ export const LearnDashboardContainer: React.FC<
                       return (
                         <div
                           key={item.id}
-                          className="w-52 sm:w-60 md:w-64 shrink-0 bg-white border border-slate-200/80 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:border-slate-300 transition-all snap-start group"
+                          className="w-52 sm:w-60 md:w-64 shrink-0 bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:border-slate-300 transition-all snap-start group"
                         >
                           <div>
                             <div
@@ -1409,15 +1410,15 @@ export const LearnDashboardContainer: React.FC<
                               {badgeText}
                             </div>
                             <div className="p-3 sm:p-3.5 space-y-1.5 sm:space-y-2">
-                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug group-hover:text-[#FF3B30] transition-colors">
+                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-foreground leading-snug group-hover:text-[#FF3B30] transition-colors">
                                 {item.title}
                               </h3>
-                              <p className="text-[11px] text-slate-600 leading-snug line-clamp-3">
+                              <p className="text-[11px] text-slate-600 dark:text-muted-foreground leading-snug line-clamp-3">
                                 {item.desc}
                               </p>
                               {isInProgress && (
                                 <div className="pt-1.5 space-y-1">
-                                  <div className="w-full bg-slate-100 rounded-full h-1.5">
+                                  <div className="w-full bg-slate-100 dark:bg-muted rounded-full h-1.5">
                                     <div
                                       className="bg-[#FF3B30] h-1.5 rounded-full"
                                       style={{
@@ -1432,7 +1433,7 @@ export const LearnDashboardContainer: React.FC<
                               )}
                             </div>
                           </div>
-                          <div className="px-3 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-medium text-slate-400">
+                          <div className="px-3 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-medium text-slate-400 dark:text-muted-foreground">
                             <span>
                               {item.type === "core-subject"
                                 ? "OnCampus"
@@ -1471,7 +1472,7 @@ export const LearnDashboardContainer: React.FC<
               {/* My learning section */}
               <section className="space-y-2.5 sm:space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 border-b border-slate-100 pb-2">
-                  <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                  <h2 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-foreground tracking-tight">
                     My learning
                   </h2>
                   <Link
@@ -1482,9 +1483,9 @@ export const LearnDashboardContainer: React.FC<
                   </Link>
                 </div>
 
-                <div className="flex items-stretch gap-3 sm:gap-4 overflow-x-auto snap-x pb-3 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+                <div className="flex items-stretch gap-3 sm:gap-4 overflow-x-auto snap-x pb-3 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 dark:bg-muted [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
                   {loadingLearning ? (
-                    <div className="w-full py-8 flex items-center justify-center text-xs font-bold text-slate-400">
+                    <div className="w-full py-8 flex items-center justify-center text-xs font-bold text-slate-400 dark:text-muted-foreground">
                       Loading your learning sheets...
                     </div>
                   ) : activeSheetsWithProgress &&
@@ -1544,7 +1545,7 @@ export const LearnDashboardContainer: React.FC<
                       return (
                         <div
                           key={sheet.slug || sheet._id || index}
-                          className="w-[260px] sm:w-[290px] md:w-[320px] shrink-0 bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group snap-start"
+                          className="w-[260px] sm:w-[290px] md:w-[320px] shrink-0 bg-white dark:bg-card border border-slate-200/80 dark:border-border hover:border-slate-300 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group snap-start"
                         >
                           {/* Top border badge strip */}
                           <div
@@ -1567,22 +1568,22 @@ export const LearnDashboardContainer: React.FC<
                                     <FiFileText className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
                                   )}
                                   <div className="min-w-0">
-                                    <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                    <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 dark:text-foreground leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
                                       {sheet.title}
                                     </h3>
                                   </div>
                                 </div>
                                 <div className="shrink-0 text-right">
-                                  <span className="text-xs font-black text-slate-900">
+                                  <span className="text-xs font-black text-slate-900 dark:text-foreground">
                                     {progressPercentage}%
                                   </span>
-                                  <div className="text-[9px] font-bold text-slate-400">
+                                  <div className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground">
                                     Solved
                                   </div>
                                 </div>
                               </div>
 
-                              <p className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
                                 {sheet.description ||
                                   "Curated list of topic-wise interview preparation problems."}
                               </p>
@@ -1590,13 +1591,13 @@ export const LearnDashboardContainer: React.FC<
 
                             <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-slate-100 space-y-2.5 sm:space-y-3">
                               <div className="space-y-1.5">
-                                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                <div className="w-full bg-slate-100 dark:bg-muted rounded-full h-1.5 overflow-hidden">
                                   <div
                                     className={`${progressColor} h-1.5 rounded-full`}
                                     style={{ width: `${progressPercentage}%` }}
                                   />
                                 </div>
-                                <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                                <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 dark:text-muted-foreground font-semibold">
                                   <span>
                                     {completedCount} / {totalCount} Problems
                                     Solved
@@ -1627,14 +1628,14 @@ export const LearnDashboardContainer: React.FC<
                       );
                     })
                   ) : (
-                    <div className="w-full py-8 bg-white border border-slate-200/80 rounded-2xl flex flex-col items-center justify-center text-center space-y-2 p-4 sm:p-6">
-                      <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
+                    <div className="w-full py-8 bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-2xl flex flex-col items-center justify-center text-center space-y-2 p-4 sm:p-6">
+                      <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-muted border border-slate-100 flex items-center justify-center text-slate-400 dark:text-muted-foreground">
                         <FiBookOpen className="w-5 h-5" />
                       </div>
                       <span className="text-xs font-bold text-slate-700">
                         No active sheets in progress yet
                       </span>
-                      <p className="text-[11px] text-slate-400 max-w-sm">
+                      <p className="text-[11px] text-slate-400 dark:text-muted-foreground max-w-sm">
                         Start solving questions in any interview sheet to see
                         your progress here.
                       </p>
@@ -1651,7 +1652,7 @@ export const LearnDashboardContainer: React.FC<
 
               {/* More features to explore */}
               <section className="space-y-2.5">
-                <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-foreground">
                   More features to explore
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
@@ -1659,66 +1660,66 @@ export const LearnDashboardContainer: React.FC<
                     href="https://quiz.theboringeducation.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group"
+                    className="bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <div className="w-7 h-7 sm:w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <FiHelpCircle className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#FF3B30] transition-colors truncate">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-foreground group-hover:text-[#FF3B30] transition-colors truncate">
                           Tech Quizzes
                         </h4>
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-muted-foreground line-clamp-1">
                           Topic-wise quizzes &amp; skill assessments.
                         </p>
                       </div>
                     </div>
-                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2" />
+                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-muted-foreground group-hover:text-slate-600 dark:text-muted-foreground shrink-0 ml-2" />
                   </a>
 
                   <a
                     href="https://oncampus.theboringeducation.com/aptitude"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group"
+                    className="bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <div className="w-7 h-7 sm:w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <FiBarChart2 className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#FF3B30] transition-colors truncate">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-foreground group-hover:text-[#FF3B30] transition-colors truncate">
                           Aptitude Practice
                         </h4>
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-muted-foreground line-clamp-1">
                           Company mock tests &amp; placement questions.
                         </p>
                       </div>
                     </div>
-                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2" />
+                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-muted-foreground group-hover:text-slate-600 dark:text-muted-foreground shrink-0 ml-2" />
                   </a>
 
                   <a
                     href="https://oncampus.theboringeducation.com/coresubjects"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white border border-slate-200/80 rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group sm:col-span-2 lg:col-span-1"
+                    className="bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-xl p-3 sm:p-3.5 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer group sm:col-span-2 lg:col-span-1"
                   >
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <div className="w-7 h-7 sm:w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <FiBookOpen className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#FF3B30] transition-colors truncate">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-foreground group-hover:text-[#FF3B30] transition-colors truncate">
                           Core Subjects
                         </h4>
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-muted-foreground line-clamp-1">
                           Master OS, DBMS, CN &amp; OOPs for interviews.
                         </p>
                       </div>
                     </div>
-                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0 ml-2" />
+                    <FiExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-muted-foreground group-hover:text-slate-600 dark:text-muted-foreground shrink-0 ml-2" />
                   </a>
                 </div>
               </section>
@@ -1728,17 +1729,17 @@ export const LearnDashboardContainer: React.FC<
             <div className="space-y-5 sm:space-y-6">
               {/* Header */}
               <div className="space-y-0.5 sm:space-y-1">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-foreground tracking-tight">
                   Explore Courses, Sheets &amp; Resources
                 </h1>
-                <p className="text-xs text-slate-500 font-normal">
+                <p className="text-xs text-slate-500 dark:text-muted-foreground font-normal">
                   Master interview questions, college core subjects &amp; full
                   stack engineering.
                 </p>
               </div>
 
               {/* Filters & Search Bar */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 bg-white p-2.5 sm:p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 bg-white dark:bg-card p-2.5 sm:p-3.5 rounded-2xl border border-slate-200/80 dark:border-border shadow-2xs">
                 {/* Category Pills */}
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none flex-nowrap">
                   {[
@@ -1754,7 +1755,7 @@ export const LearnDashboardContainer: React.FC<
                       className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${
                         exploreCategory === tab.id
                           ? "bg-[#FF3B30] text-white shadow-xs"
-                          : "bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          : "bg-slate-50 dark:bg-muted text-slate-600 dark:text-muted-foreground hover:bg-slate-100 dark:hover:bg-muted dark:bg-muted hover:text-slate-900 dark:text-foreground"
                       }`}
                     >
                       {tab.label}
@@ -1764,13 +1765,13 @@ export const LearnDashboardContainer: React.FC<
 
                 {/* Search Input */}
                 <div className="relative w-full sm:w-56 md:w-64 shrink-0">
-                  <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5 pointer-events-none" />
+                  <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-muted-foreground w-3.5 h-3.5 pointer-events-none" />
                   <input
                     type="text"
                     placeholder="Search topics, languages..."
                     value={exploreSearchQuery}
                     onChange={(e) => setExploreSearchQuery(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#FF3B30] transition-all"
+                    className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border rounded-xl text-xs font-medium placeholder:text-slate-400 dark:text-muted-foreground focus:outline-none focus:bg-white dark:bg-card focus:border-[#FF3B30] transition-all"
                   />
                 </div>
               </div>
@@ -1851,10 +1852,10 @@ export const LearnDashboardContainer: React.FC<
                   return (
                     <div
                       key={item.id}
-                      className={`bg-white border rounded-2xl flex flex-col shadow-xs hover:shadow-md transition-all group overflow-hidden ${
+                      className={`bg-white dark:bg-card border rounded-2xl flex flex-col shadow-xs hover:shadow-md transition-all group overflow-hidden ${
                         isInProgress
-                          ? "border-slate-200"
-                          : "border-slate-200/80 hover:border-slate-300"
+                          ? "border-slate-200 dark:border-border"
+                          : "border-slate-200/80 dark:border-border hover:border-slate-300"
                       }`}
                     >
                       {/* Full-width top badge strip */}
@@ -1879,12 +1880,12 @@ export const LearnDashboardContainer: React.FC<
                       {/* Title + Description */}
                       <div className="px-3.5 sm:px-5 pt-2 pb-3.5 sm:pb-4 flex-1 flex flex-col gap-1.5 sm:gap-2">
                         <h3
-                          className="text-sm sm:text-[15px] font-bold text-slate-900 leading-snug"
+                          className="text-sm sm:text-[15px] font-bold text-slate-900 dark:text-foreground leading-snug"
                           title={item.title}
                         >
                           {item.title}
                         </h3>
-                        <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed line-clamp-3 sm:line-clamp-none">
                           {item.desc}
                         </p>
 
@@ -1893,13 +1894,13 @@ export const LearnDashboardContainer: React.FC<
                           {isInProgress ? (
                             <div className="space-y-1.5">
                               {/* Thin colored bar */}
-                              <div className="w-full bg-slate-100 rounded-full h-1 overflow-hidden">
+                              <div className="w-full bg-slate-100 dark:bg-muted rounded-full h-1 overflow-hidden">
                                 <div
                                   className="h-1 rounded-full bg-[#FF3B30]"
                                   style={{ width: `${progressPercentage}%` }}
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500">
+                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-muted-foreground">
                                 <span className="font-bold text-slate-700">
                                   {progressPercentage}% Solved
                                 </span>
@@ -1910,7 +1911,7 @@ export const LearnDashboardContainer: React.FC<
                             </div>
                           ) : (
                             /* Gray pill */
-                            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[10px] sm:text-[11px] font-semibold text-slate-500">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border rounded-lg text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-muted-foreground">
                               <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                               {item.type === "core-subject"
                                 ? "Core CS Subject"
@@ -1926,7 +1927,7 @@ export const LearnDashboardContainer: React.FC<
 
                       {/* Footer */}
                       <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                        <span className="flex items-center gap-1.5 text-slate-400 font-medium">
+                        <span className="flex items-center gap-1.5 text-slate-400 dark:text-muted-foreground font-medium">
                           {item.type === "course" ? (
                             <FiPlayCircle className="w-3.5 h-3.5" />
                           ) : (
@@ -1970,7 +1971,7 @@ export const LearnDashboardContainer: React.FC<
             /* My Learning Tab */
             <div className="space-y-4 sm:space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 border-b border-slate-100 pb-2.5">
-                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-foreground tracking-tight">
                   My Active Learning
                 </h2>
                 <Link
@@ -1983,7 +1984,7 @@ export const LearnDashboardContainer: React.FC<
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {loadingLearning ? (
-                  <div className="col-span-full py-12 flex items-center justify-center text-xs font-bold text-slate-400">
+                  <div className="col-span-full py-12 flex items-center justify-center text-xs font-bold text-slate-400 dark:text-muted-foreground">
                     Loading your enrolled sheets...
                   </div>
                 ) : activeSheetsWithProgress &&
@@ -2041,7 +2042,7 @@ export const LearnDashboardContainer: React.FC<
                     return (
                       <div
                         key={sheet.slug || sheet._id || index}
-                        className="bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
+                        className="bg-white dark:bg-card border border-slate-200/80 dark:border-border hover:border-slate-300 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
                       >
                         {/* Top border badge strip */}
                         <div
@@ -2064,22 +2065,22 @@ export const LearnDashboardContainer: React.FC<
                                   <FiFileText className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
                                 )}
                                 <div className="min-w-0">
-                                  <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                  <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 dark:text-foreground leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
                                     {sheet.title}
                                   </h3>
                                 </div>
                               </div>
                               <div className="shrink-0 text-right">
-                                <span className="text-xs font-black text-slate-900">
+                                <span className="text-xs font-black text-slate-900 dark:text-foreground">
                                   {progressPercentage}%
                                 </span>
-                                <div className="text-[9px] font-bold text-slate-400">
+                                <div className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground">
                                   Solved
                                 </div>
                               </div>
                             </div>
 
-                            <p className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                            <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
                               {sheet.description ||
                                 "Curated list of topic-wise interview preparation problems."}
                             </p>
@@ -2087,13 +2088,13 @@ export const LearnDashboardContainer: React.FC<
 
                           <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-slate-100 space-y-2.5 sm:space-y-3">
                             <div className="space-y-1.5">
-                              <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                              <div className="w-full bg-slate-100 dark:bg-muted rounded-full h-1.5 overflow-hidden">
                                 <div
                                   className={`${progressColor} h-1.5 rounded-full`}
                                   style={{ width: `${progressPercentage}%` }}
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 dark:text-muted-foreground font-semibold">
                                 <span>
                                   {completedCount} / {totalCount} Problems
                                   Solved
@@ -2143,7 +2144,7 @@ export const LearnDashboardContainer: React.FC<
                     return (
                       <div
                         key={course.slug || course._id || index}
-                        className="bg-white border border-slate-200/80 hover:border-[#FF3B30]/30 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
+                        className="bg-white dark:bg-card border border-slate-200/80 dark:border-border hover:border-[#FF3B30]/30 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
                       >
                         <div className="px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase bg-[#FF3B30] text-white">
                           SHIKSHA COURSE
@@ -2161,20 +2162,20 @@ export const LearnDashboardContainer: React.FC<
                                 ) : (
                                   <FiPlayCircle className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
                                 )}
-                                <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 dark:text-foreground leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
                                   {course.title}
                                 </h3>
                               </div>
                               <div className="shrink-0 text-right">
-                                <span className="text-xs font-black text-slate-900">
+                                <span className="text-xs font-black text-slate-900 dark:text-foreground">
                                   {progressPct}%
                                 </span>
-                                <div className="text-[9px] font-bold text-slate-400">
+                                <div className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground">
                                   Done
                                 </div>
                               </div>
                             </div>
-                            <p className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                            <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
                               {course.description ||
                                 courseDef?.desc ||
                                 "Full-stack course on Shiksha."}
@@ -2182,13 +2183,13 @@ export const LearnDashboardContainer: React.FC<
                           </div>
                           <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-slate-100 space-y-2.5 sm:space-y-3">
                             <div className="space-y-1.5">
-                              <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                              <div className="w-full bg-slate-100 dark:bg-muted rounded-full h-1.5 overflow-hidden">
                                 <div
                                   className="bg-[#FF3B30] h-1.5 rounded-full"
                                   style={{ width: `${progressPct}%` }}
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 dark:text-muted-foreground font-semibold">
                                 <span>
                                   {completedChapters} / {totalChapters} Chapters
                                   Done
@@ -2217,14 +2218,14 @@ export const LearnDashboardContainer: React.FC<
                   (!activeSheetsWithProgress ||
                     activeSheetsWithProgress.length === 0) &&
                   (!enrolledCourses || enrolledCourses.length === 0) && (
-                    <div className="col-span-full py-8 bg-white border border-slate-200/80 rounded-2xl flex flex-col items-center justify-center text-center space-y-2 p-4 sm:p-6">
-                      <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
+                    <div className="col-span-full py-8 bg-white dark:bg-card border border-slate-200/80 dark:border-border rounded-2xl flex flex-col items-center justify-center text-center space-y-2 p-4 sm:p-6">
+                      <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-muted border border-slate-100 flex items-center justify-center text-slate-400 dark:text-muted-foreground">
                         <FiBookOpen className="w-5 h-5" />
                       </div>
                       <span className="text-xs font-bold text-slate-700">
                         No active learning in progress yet
                       </span>
-                      <p className="text-[11px] text-slate-400 max-w-sm">
+                      <p className="text-[11px] text-slate-400 dark:text-muted-foreground max-w-sm">
                         Start solving questions in any interview sheet or course
                         to track your progress here.
                       </p>

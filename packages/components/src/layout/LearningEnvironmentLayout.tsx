@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Fragment, useState } from "react";
 
 import { FlexContainer, LearningSidebarPanel, LoadingSpinner, Text } from "..";
+import { useColorTheme, useHasThemeProvider } from "../common/Theme";
 import LearningNavbar from "./LearningNavbar";
 
 export interface LearningEnvironmentLayoutProps {
@@ -29,10 +30,14 @@ const LearningEnvironmentLayout = ({
   completedItems = 0,
 }: LearningEnvironmentLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const hasThemeProvider = useHasThemeProvider();
+  const colorTheme = useColorTheme();
+  // Preserve prior dark learning chrome when no ThemeProvider is present.
+  const sidebarTheme = hasThemeProvider ? colorTheme : "dark";
 
   return (
     <div
-      className={`flex flex-col bg-black text-white ${layoutMode === "workspace" ? "min-h-screen md:h-screen md:overflow-hidden" : "min-h-screen"}`}
+      className={`flex flex-col bg-background text-foreground ${layoutMode === "workspace" ? "min-h-screen md:h-screen md:overflow-hidden" : "min-h-screen"}`}
     >
       {/* Top Navbar */}
       <LearningNavbar
@@ -42,76 +47,66 @@ const LearningEnvironmentLayout = ({
         showGamification={showGamification}
       />
 
-      {/* Main Content Area */}
-      <main
-        className={`flex-1 min-h-0 w-full pt-[72px] flex flex-col items-center ${layoutMode === "workspace" ? "overflow-y-auto md:overflow-hidden" : ""}`}
+      <div
+        className={`flex-1 flex flex-col ${layoutMode === "workspace" ? "pt-[72px] min-h-0" : "pt-[72px]"}`}
       >
         {isLoading ? (
-          <div className="flex flex-col h-full min-h-[60vh] w-full items-center justify-center">
-            <LoadingSpinner height={8} width={8} />
-            <Text level="p" className="mt-4 text-gray-400">
+          <FlexContainer className="flex-1 items-center justify-center">
+            <LoadingSpinner />
+            <Text level="p" className="mt-4 text-muted-foreground">
               Loading environment...
             </Text>
-          </div>
-        ) : layoutMode === "centered" ? (
-          <FlexContainer
-            className="w-full max-w-[1000px] shrink-0 mx-auto px-4 py-6 gap-4"
-            itemCenter={false}
-            justifyCenter={false}
-          >
-            <div className="w-full h-full">{children}</div>
           </FlexContainer>
         ) : (
-          /* Workspace Mode (e.g. DSA Split Panes) - Full height minus navbar */
-          <div className="flex-1 w-full flex flex-col min-h-0">{children}</div>
+          children
         )}
-      </main>
+      </div>
 
-      {/* Slide-out Sidebar Drawer for Mobile & Desktop */}
+      {/* Mobile Sidebar */}
       {sidebarContent && (
-        <Transition show={sidebarOpen} as={Fragment}>
-          <Dialog as="div" className="relative z-50" onClose={setSidebarOpen}>
+        <Transition.Root as={Fragment} show={sidebarOpen}>
+          <Dialog
+            as="div"
+            className="relative z-50 lg:hidden"
+            onClose={setSidebarOpen}
+          >
             <Transition.Child
               as={Fragment}
-              enter="transition-opacity ease-out duration-200"
+              enter="transition-opacity ease-linear duration-300"
               enterFrom="opacity-0"
               enterTo="opacity-100"
-              leave="transition-opacity ease-in duration-150"
+              leave="transition-opacity ease-linear duration-300"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+              <div className="fixed inset-0 bg-black/80" />
             </Transition.Child>
 
-            <div className="fixed inset-0 overflow-hidden">
-              <div className="absolute inset-0 overflow-hidden">
-                <div className="pointer-events-none fixed inset-y-0 left-0 flex max-w-full">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="transform transition ease-in-out duration-200"
-                    enterFrom="-translate-x-full"
-                    enterTo="translate-x-0"
-                    leave="transform transition ease-in-out duration-150"
-                    leaveFrom="translate-x-0"
-                    leaveTo="-translate-x-full"
+            <div className="fixed inset-0 flex">
+              <Transition.Child
+                as={Fragment}
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="-translate-x-full"
+                enterTo="translate-x-0"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="translate-x-0"
+                leaveTo="-translate-x-full"
+              >
+                <Dialog.Panel className="pointer-events-auto w-[380px] max-w-md bg-card text-foreground border-r border-border">
+                  <LearningSidebarPanel
+                    title="Questions"
+                    totalItems={totalItems}
+                    completedItems={completedItems}
+                    theme={sidebarTheme}
+                    onClose={() => setSidebarOpen(false)}
                   >
-                    <Dialog.Panel className="pointer-events-auto w-[380px] max-w-md bg-[#111111] text-white">
-                      <LearningSidebarPanel
-                        title="Questions"
-                        totalItems={totalItems}
-                        completedItems={completedItems}
-                        theme="dark"
-                        onClose={() => setSidebarOpen(false)}
-                      >
-                        {sidebarContent}
-                      </LearningSidebarPanel>
-                    </Dialog.Panel>
-                  </Transition.Child>
-                </div>
-              </div>
+                    {sidebarContent}
+                  </LearningSidebarPanel>
+                </Dialog.Panel>
+              </Transition.Child>
             </div>
           </Dialog>
-        </Transition>
+        </Transition.Root>
       )}
     </div>
   );

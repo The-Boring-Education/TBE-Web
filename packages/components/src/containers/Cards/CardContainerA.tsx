@@ -16,7 +16,9 @@ const CardContainerA = ({
   theme = "light",
 }: CardContainerAProps) => (
   <Section
-    className={`md:px-8 md:py-8 px-2 py-4${theme === "dark" ? " bg-[#0A0A0A]" : ""}`}
+    className={`md:px-8 md:py-8 px-2 py-4${
+      theme === "dark" ? " bg-[#0A0A0A]" : " bg-transparent"
+    }`}
   >
     <FlexContainer className="gap-4" direction="col">
       <SectionHeaderContainer

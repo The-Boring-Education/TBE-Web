@@ -210,7 +210,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       <motion.div
         whileHover={{ y: -4, scale: 1.03, rotate: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className={`bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-[0_8px_25px_-8px_rgba(0,0,0,0.06)] hover:shadow-xl hover:shadow-red-500/10 border border-slate-100/90 transition-all duration-300 w-full lg:w-[235px] xl:w-[250px] transform ${rotateClass}`}
+        className={`bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-[0_8px_25px_-8px_rgba(0,0,0,0.06)] hover:shadow-xl hover:shadow-red-500/10 border border-slate-100/90 dark:border-zinc-700/90 transition-all duration-300 w-full lg:w-[235px] xl:w-[250px] transform ${rotateClass}`}
       >
         <div className="flex items-center gap-3">
           <div
@@ -219,10 +219,10 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
             {icon}
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight group-hover:text-[#FF4D4D] transition-colors duration-200 truncate">
+            <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-contentDark leading-tight group-hover:text-[#FF4D4D] transition-colors duration-200 truncate">
               {title}
             </h4>
-            <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 leading-tight line-clamp-2 font-normal">
+            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5 leading-tight line-clamp-2 font-normal">
               {subtitle}
             </p>
           </div>
@@ -251,7 +251,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
     });
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#FAFAFC] py-6 sm:py-12 md:py-16 lg:py-24">
+    <section className="relative w-full overflow-hidden bg-[#FAFAFC] dark:bg-dark py-6 sm:py-12 md:py-16 lg:py-24">
       {/* --- Responsive Ambient Background Lights & Orbit Rings --- */}
       <div
         aria-hidden
@@ -597,7 +597,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] sm:leading-[1.12]"
+              className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-contentDark tracking-tight leading-[1.15] sm:leading-[1.12]"
             >
               Everything You Need <br className="hidden sm:inline" />
               to Learn. <span className="text-[#FF4D4D]">Practice.</span>{" "}
@@ -610,7 +610,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-slate-600 font-medium text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 max-w-md sm:max-w-lg leading-relaxed"
+              className="text-slate-600 dark:text-zinc-200 font-medium text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 max-w-md sm:max-w-lg leading-relaxed"
             >
               From core subjects to real world questions,{" "}
               <br className="hidden sm:inline" />

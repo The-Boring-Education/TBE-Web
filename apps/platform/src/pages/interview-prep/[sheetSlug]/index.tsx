@@ -10,6 +10,7 @@ import {
   SEO,
   SheetHeroContainer,
   Text,
+  useColorTheme,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import {
@@ -40,6 +41,7 @@ const SheetPage = ({
   slug,
   seoMeta,
 }: SheetPageProps) => {
+  const pageTheme = useColorTheme();
   const router = useRouter();
   const [sheet, setSheet] = useState(initialSheet);
   const [isEnrolled, setIsEnrolled] = useState(
@@ -339,7 +341,7 @@ const SheetPage = ({
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <div className='bg-[#FAFAFA] min-h-screen font-body text-foreground'>
+      <div className='bg-background min-h-screen font-body text-foreground'>
         <SheetHeroContainer
           id={sheet._id ?? ''}
           isEnrolled={isEnrolled}
@@ -393,10 +395,11 @@ const SheetPage = ({
 
             {/* Mobile Drawer Panel (Solid White Background) */}
             <div
-              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
+              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-card text-foreground border-r border-border p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${
+                isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+              }`}
             >
-              <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
+              <div className='flex items-center justify-between pb-3 border-b border-border bg-card'>
                 <div className='flex items-center gap-2'>
                   <h2 className='font-semibold text-base text-gray-900'>
                     Questions
@@ -414,7 +417,7 @@ const SheetPage = ({
               </div>
 
               {!isLocked && (
-                <div className='pb-2 bg-white'>
+                <div className='pb-2 bg-card'>
                   <LinerProgressBar
                     completedChapters={completedQuestions}
                     totalChapters={totalQuestions}
@@ -422,7 +425,7 @@ const SheetPage = ({
                 </div>
               )}
 
-              <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-white'>
+              <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-card'>
                 {questions?.map(
                   ({
                     _id,
@@ -531,7 +534,7 @@ const SheetPage = ({
                       <div className='prose prose-slate max-w-none'>
                         <InterviewSheetMDXRenderer
                           mdxSource={sheet.meta || ''}
-                          theme='light'
+                          theme={pageTheme}
                         />
                       </div>
                     </div>
@@ -577,19 +580,20 @@ const SheetPage = ({
                     frequency={currentQuestion?.frequency}
                     priority={currentQuestion?.priority}
                     companyTypes={currentQuestion?.companyTypes}
-                    theme='light'
+                    theme={pageTheme}
                     isStarred={isStarred}
                     onToggleStar={handleStarToggle}
                     actions={[
                       currentQuestionId && (
                         <Button
                           key='complete'
-                          className={`w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white shadow-xs transition-all duration-150 cursor-pointer ${!isEnrolled
-                            ? 'bg-primary hover:bg-primary/90 border-none text-white'
-                            : isQuestionCompleted
-                              ? 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
-                              : 'bg-primary hover:bg-primary/90 border-none text-white'
-                            }`}
+                          className={`w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white shadow-xs transition-all duration-150 cursor-pointer ${
+                            !isEnrolled
+                              ? 'bg-primary hover:bg-primary/90 border-none text-white'
+                              : isQuestionCompleted
+                                ? 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                                : 'bg-primary hover:bg-primary/90 border-none text-white'
+                          }`}
                           isLoading={isLoading}
                           text={
                             isLoading
@@ -616,7 +620,7 @@ const SheetPage = ({
                         <ResourceTooltip
                           key='resources'
                           resources={questionResources}
-                          theme='light'
+                          theme={pageTheme}
                           className='mt-2'
                         />
                       ),
@@ -646,18 +650,18 @@ const SheetPage = ({
           meta={
             currentQuestionId
               ? {
-                sheetId: sheet._id.toString(),
-                sheetName: sheet.name || '',
-                questionId: currentQuestionId,
-                questionName:
-                  currentQuestion?.title || currentQuestion?.question || '',
-              }
+                  sheetId: sheet._id.toString(),
+                  sheetName: sheet.name || '',
+                  questionId: currentQuestionId,
+                  questionName:
+                    currentQuestion?.title || currentQuestion?.question || '',
+                }
               : {
-                sheetId: sheet._id.toString(),
-                sheetName: sheet.name || '',
-              }
+                  sheetId: sheet._id.toString(),
+                  sheetName: sheet.name || '',
+                }
           }
-          theme='light'
+          theme={pageTheme}
         />
       )}
     </Fragment>

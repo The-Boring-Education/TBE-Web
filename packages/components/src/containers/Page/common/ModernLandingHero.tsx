@@ -35,7 +35,7 @@ const ModernLandingHero = ({
   stats,
   previewContent,
 }: ModernLandingHeroProps) => (
-  <Section className="bg-lightBG">
+  <Section className="bg-background">
     <div className="max-w-7xl mx-auto px-8 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
         {/* Left: Content */}
@@ -51,7 +51,7 @@ const ModernLandingHero = ({
                 className="text-4xl lg:text-5xl font-bold leading-tight"
                 level="h1"
               >
-                <span className="text-black">{heading}</span>{" "}
+                <span className="text-foreground">{heading}</span>{" "}
                 <span className="text-primary">{focusText}</span>
               </Text>
             </motion.div>
@@ -61,7 +61,10 @@ const ModernLandingHero = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Text level="p" className="text-xl text-gray-600 leading-relaxed">
+              <Text
+                level="p"
+                className="text-xl text-muted-foreground leading-relaxed"
+              >
                 {heroText}
               </Text>
             </motion.div>
@@ -78,7 +81,7 @@ const ModernLandingHero = ({
               {stats.map((stat, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <span className="text-primary">{stat.icon}</span>
-                  <span className="text-gray-600">{stat.text}</span>
+                  <span className="text-muted-foreground">{stat.text}</span>
                 </div>
               ))}
             </motion.div>
@@ -101,7 +104,7 @@ const ModernLandingHero = ({
             {React.isValidElement(secondaryButton)
               ? React.cloneElement(secondaryButton as any, {
                   className:
-                    `${(secondaryButton as any).props.className || ""} bg-white border-1 border-primary text-black rounded-lg hover:bg-primary/10 focus:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200`.trim(),
+                    `${(secondaryButton as any).props.className || ""} bg-card border-1 border-primary text-foreground rounded-lg hover:bg-primary/10 focus:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200`.trim(),
                 })
               : secondaryButton}
           </motion.div>
@@ -115,20 +118,20 @@ const ModernLandingHero = ({
             transition={{ duration: 0.6, delay: 0.8 }}
             className="lg:col-span-1"
           >
-            <div className="bg-white rounded-lg shadow-2xl p-6 text-gray-900 transform hover:scale-105 transition-transform duration-300">
-              <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-card text-card-foreground rounded-lg shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 border border-border">
+              <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 dark:from-zinc-800 dark:to-zinc-700 rounded-lg flex items-center justify-center mb-4">
                 <FaPlay className="text-4xl text-primary" />
               </div>
               <Text level="p" className="font-semibold mb-2">
                 {previewContent.title}
               </Text>
-              <Text level="p" className="text-sm text-gray-600 mb-4">
+              <Text level="p" className="text-sm text-muted-foreground mb-4">
                 {previewContent.description}
               </Text>
               <Button
                 text={previewContent.buttonText}
                 variant="PRIMARY"
-                className="w-full hover:bg-gray-100 hover:text-primary"
+                className="w-full hover:bg-muted hover:text-primary"
                 onClick={previewContent.onPreviewClick}
               />
             </div>

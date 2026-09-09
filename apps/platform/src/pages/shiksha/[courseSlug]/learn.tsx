@@ -10,6 +10,7 @@ import {
   SEO,
   SheetHeroContainer,
   Text,
+  useColorTheme,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import {
@@ -38,6 +39,7 @@ const CourseLearnPage = ({
   seoMeta,
   currentChapterId,
 }: CoursePageProps) => {
+  const pageTheme = useColorTheme();
   const router = useRouter();
   const [course, setCourse] = useState(initialCourse);
   const [isEnrolled, setIsEnrolled] = useState(
@@ -356,11 +358,11 @@ const CourseLearnPage = ({
 
             {/* Mobile Drawer Panel (Solid White Background) */}
             <div
-              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${
+              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-card text-foreground border-r border-border p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${
                 isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
               }`}
             >
-              <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
+              <div className='flex items-center justify-between pb-3 border-b border-border bg-card'>
                 <div className='flex items-center gap-2'>
                   <h2 className='font-semibold text-base text-gray-900'>
                     Chapters
@@ -378,7 +380,7 @@ const CourseLearnPage = ({
               </div>
 
               {!isLocked && (
-                <div className='pb-2 bg-white'>
+                <div className='pb-2 bg-card'>
                   <LinerProgressBar
                     completedChapters={completedChapters}
                     totalChapters={totalChapters}
@@ -386,7 +388,7 @@ const CourseLearnPage = ({
                 </div>
               )}
 
-              <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-white'>
+              <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-card'>
                 {chapters?.map(({ _id, name, content, isCompleted }, index) => {
                   const chapterId = _id?.toString();
 
@@ -516,7 +518,7 @@ const CourseLearnPage = ({
                       <div className='prose prose-slate max-w-none text-muted-foreground'>
                         <InterviewSheetMDXRenderer
                           mdxSource={course.meta || ''}
-                          theme='light'
+                          theme={pageTheme}
                         />
                       </div>
                     </div>
@@ -557,7 +559,7 @@ const CourseLearnPage = ({
                     <div className='w-full'>
                       <InterviewSheetMDXRenderer
                         mdxSource={displayContent}
-                        theme='light'
+                        theme={pageTheme}
                       />
                     </div>
 
@@ -620,7 +622,7 @@ const CourseLearnPage = ({
                 chapters.find((c) => c._id.toString() === currentChapterIdState)
                   ?.name || '',
             }}
-            theme='light'
+            theme={pageTheme}
           />
         )}
       </div>

@@ -11,7 +11,10 @@ const GradientContainer = ({
 }: GradientContainerProps) => (
   <div
     className={`flex-auto rounded-2 border ${className} ${
-      backgroundColor ?? (theme === "dark" ? "bg-[#111]" : "bg-white")
+      backgroundColor ??
+      (theme === "dark"
+        ? "bg-[#111] border-zinc-800"
+        : "bg-white dark:bg-card border-transparent dark:border-border")
     } hover:shadow-2xl
       transition-all duration-300 ${suppressHoverScale ? "" : "hover:scale-105"}`}
   >

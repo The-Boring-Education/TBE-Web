@@ -1284,3 +1284,23 @@ export interface PatternQuizBannerProps {
   className?: string;
   compact?: boolean;
 }
+
+export interface ThemeProviderProps {
+  /** App tree that should receive theme context */
+  children: ReactNode;
+  /** Initial theme before user preference is read. Defaults to `"light"`. */
+  defaultTheme?: "light" | "dark";
+  /** Persist preference and apply as `class` on `<html>`. */
+  attribute?: "class" | "data-theme";
+  /** Whether to follow OS preference. Defaults to `false` for light-first apps. */
+  enableSystem?: boolean;
+  /** Disable CSS transitions while theme is applying */
+  disableTransitionOnChange?: boolean;
+}
+
+export interface ThemeToggleProps {
+  /** Extra classes for the toggle control */
+  className?: string;
+  /** Visual style when the shell is dark-themed */
+  theme?: "light" | "dark";
+}

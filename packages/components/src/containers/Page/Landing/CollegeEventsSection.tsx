@@ -12,7 +12,7 @@ const CollegeEventsSection = () => (
         textCenter
       />
 
-      <Text className="paragraph text-grey max-w-2xl mx-auto" level="p">
+      <Text className="paragraph max-w-2xl mx-auto" level="p">
         Bring cutting-edge tech education to your campus! Join our network of
         college partners and host exciting tech events, workshops, and learning
         sessions.
@@ -32,7 +32,7 @@ const CollegeEventsSection = () => (
           href={LINKS.viewSessionDetails}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-xs font-bold sm:text-sm text-zinc-800 transition-colors duration-200 hover:bg-zinc-50"
+          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-xs font-bold sm:text-sm text-zinc-800 transition-colors duration-200 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
         >
           View Session Details
         </a>

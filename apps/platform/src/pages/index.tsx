@@ -5,27 +5,27 @@ import {
   PlatformLandingHero,
   SEO,
   Testimonials,
+  useColorTheme,
   WeAlreadyTaughtAt,
 } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes, STATIC_FILE_PATH } from '@tbe/constants';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
-import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 
 const Home = ({ seoMeta }: PageProps) => {
-  const router = useRouter();
+  const pageTheme = useColorTheme();
 
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <main className='relative min-h-screen w-full bg-[#FAFAFC] overflow-hidden'>
+      <main className='relative min-h-screen w-full bg-background overflow-hidden'>
         <PlatformLandingHero
           ctaText='Start Learning Now →'
           ctaHref={routes.learn}
         />
 
-        <AppShowcaseSections theme='light' />
+        <AppShowcaseSections theme={pageTheme} />
 
         <Banner
           buttonLink={routes.devRels}

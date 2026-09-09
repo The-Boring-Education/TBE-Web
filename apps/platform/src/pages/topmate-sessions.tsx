@@ -19,7 +19,7 @@ import { Fragment } from 'react';
 
 // Custom card component specifically for topmate-sessions
 const TopmateServiceCard = ({ card }: { card: any }) => (
-  <div className='w-full bg-white rounded-2 shadow-sm border-2 border-accent hover:shadow-lg transition-all duration-300 p-6 h-full flex flex-col'>
+  <div className='w-full bg-card text-card-foreground rounded-2 shadow-sm border-2 border-border hover:shadow-lg transition-all duration-300 p-6 h-full flex flex-col'>
     {card.image && (
       <div className='flex justify-center mb-4'>
         <Image

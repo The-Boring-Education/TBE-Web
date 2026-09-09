@@ -7,6 +7,34 @@
   html {
     @apply scroll-smooth;
   }
+
+  :root {
+    --background: 0 0% 97%;
+    --foreground: 240 4% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 4% 10%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 40%;
+    --border: 214 20% 90%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 4% 10%;
+  }
+
+  .dark {
+    --background: 180 11% 2%;
+    --foreground: 0 0% 99%;
+    --card: 240 4% 8%;
+    --card-foreground: 0 0% 99%;
+    --muted: 240 4% 12%;
+    --muted-foreground: 240 5% 65%;
+    --border: 240 4% 16%;
+    --popover: 240 4% 8%;
+    --popover-foreground: 0 0% 99%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* Custom Classes */
@@ -54,57 +82,57 @@
 
   /* 2. Fonts */
   .heading-1 {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight text-slate-900 leading-[1.1];
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight text-slate-900 dark:text-contentDark leading-[1.1];
   }
 
   .heading-2 {
-    @apply text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15];
+    @apply text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-contentDark leading-[1.15];
   }
 
   .heading-3 {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight text-slate-900 leading-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight text-slate-900 dark:text-contentDark leading-tight;
   }
 
   .heading-4,
   .md-1 {
-    @apply text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900;
+    @apply text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-contentDark;
   }
 
   .heading-5 {
-    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900;
+    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-contentDark;
   }
 
   .subtitle {
-    @apply text-base sm:text-lg md:text-xl font-medium text-slate-600 leading-relaxed;
+    @apply text-base sm:text-lg md:text-xl font-medium text-slate-600 dark:text-zinc-300 leading-relaxed;
   }
 
   .paragraph {
-    @apply text-sm sm:text-base md:text-lg font-normal text-slate-600 leading-relaxed;
+    @apply text-sm sm:text-base md:text-lg font-normal text-slate-600 dark:text-zinc-300 leading-relaxed;
   }
 
   .strong-text {
-    @apply text-strong-text font-semibold text-contentLight;
+    @apply text-strong-text font-semibold text-contentLight dark:text-contentDark;
   }
 
   .pre-title {
-    @apply text-pre-title font-normal text-contentLight;
+    @apply text-pre-title font-normal text-contentLight dark:text-grey;
   }
 
   .button-text {
-    @apply text-button-text font-bold text-contentLight;
+    @apply text-button-text font-bold text-contentLight dark:text-contentDark;
   }
 
   .label {
-    @apply text-label font-semibold text-greyDark;
+    @apply text-label font-semibold text-greyDark dark:text-muted-foreground;
   }
 
   /* Link */
   .link {
-    @apply text-button-text text-contentLight;
+    @apply text-button-text text-contentLight dark:text-contentDark;
   }
 
   .button {
-    @apply rounded-1 text-button-text font-bold text-contentLight;
+    @apply rounded-1 text-button-text font-bold text-contentLight dark:text-contentDark;
   }
 
   .disabled {

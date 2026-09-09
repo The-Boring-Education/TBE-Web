@@ -340,7 +340,7 @@ const UnskilledLandingPage = ({
               {evaluationData && (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className='mt-12 bg-white shadow-md rounded-xl border border-gray-100 p-8 flex flex-col gap-8'
+                  className='mt-12 bg-card text-card-foreground shadow-md rounded-xl border border-border p-8 flex flex-col gap-8'
                   initial={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.5 }}
                 >

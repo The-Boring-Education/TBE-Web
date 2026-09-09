@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 import '@/styles/colors.css';
 
 import { AuthProvider, getAccessToken } from '@tbe/auth';
-import { Layout } from '@tbe/components';
+import { Layout, ThemeProvider } from '@tbe/components';
 // import { envConfig, googleAnalyticsScript, gtag, routes } from '@tbe/constants';
 import { envConfig, routes } from '@tbe/constants';
 import { GamificationProvider } from '@tbe/gamification';
@@ -233,9 +233,11 @@ const AppContent = ({
 const TheBoringEducation = ({ Component, pageProps }: AppProps) => {
   return (
     <Fragment>
-      <AuthProvider>
-        <AppContent Component={Component} pageProps={pageProps} />
-      </AuthProvider>
+      <ThemeProvider defaultTheme='light' enableSystem={false}>
+        <AuthProvider>
+          <AppContent Component={Component} pageProps={pageProps} />
+        </AuthProvider>
+      </ThemeProvider>
     </Fragment>
   );
 };

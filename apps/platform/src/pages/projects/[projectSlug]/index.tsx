@@ -350,7 +350,7 @@ const ProjectPage = ({
           <FlexContainer className='w-full gap-4' itemCenter={false}>
             {/* Sidebar with Progress Bar and Chapters */}
             <FlexContainer
-              className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[80vh] overflow-y-auto bg-white'
+              className='border md:w-3/12 w-full px-2 gap-1 rounded self-baseline max-h-[80vh] overflow-y-auto bg-card border-border'
               itemCenter={false}
             >
               <div className='w-full sticky top-0 bg-inherit py-2'>

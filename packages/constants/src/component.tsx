@@ -48,7 +48,7 @@ const socialLinks = [
 const productLinks = [
   {
     name: "The Boring Education",
-    href: "https://www.theboringeducation.com/",
+    href: toPlatformUrl("/"),
   },
 ];
 
@@ -66,7 +66,7 @@ const links: NavbarDropdownLink[] = [
   {
     id: "explore-courses",
     name: "Explore Courses",
-    href: "https://www.theboringeducation.com/shiksha",
+    href: toPlatformUrl(routes.shiksha),
     description: "Learn Tech with Courses",
   },
   {
@@ -341,7 +341,7 @@ export const getFooterVariantConfig = (
   Logo: ComponentType<any>,
 ): Record<string, FooterVariantConfig> => ({
   default: {
-    branding: <Logo />,
+    branding: <Logo isDark />,
     subtitle:
       "Making tech education accessible for everyone. Learn, build, and grow with our comprehensive platform designed for students and professionals.",
   },

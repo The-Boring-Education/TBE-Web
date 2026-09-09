@@ -18,7 +18,7 @@ const LearnPage = ({ seoMeta }: PageProps) => {
 
   if (loadingUser) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-[#FAFAFC]'>
+      <div className='min-h-screen flex items-center justify-center bg-background'>
         <LoadingSpinner />
       </div>
     );

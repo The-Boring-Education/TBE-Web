@@ -46,6 +46,12 @@ export { default as StarButton } from "./common/Buttons/StarButton";
 export { default as ToggleButton } from "./common/Buttons/ToggleButton";
 export { default as UserPointButton } from "./common/Buttons/UserPointButton";
 export { default as Carousel } from "./common/Carousel";
+export {
+  ThemeProvider,
+  ThemeToggle,
+  useColorTheme,
+  useHasThemeProvider,
+} from "./common/Theme";
 /** @deprecated Use `CelebrationAnimation` from `@tbe/gamification` instead */
 export { default as CelebrationAnimation } from "./common/CelebrationAnimation";
 export { default as CertificateBanner } from "./common/Certificate/CertificateBanner";

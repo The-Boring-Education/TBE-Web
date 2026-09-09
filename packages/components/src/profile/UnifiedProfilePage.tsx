@@ -14,6 +14,7 @@ import { sendRequest } from "@tbe/utils";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
+import { useColorTheme, useHasThemeProvider } from "../common/Theme";
 import Toast from "../common/Toast";
 import Navbar from "../layout/Navbar";
 import SEO from "../layout/SEO";
@@ -52,9 +53,12 @@ export const UnifiedProfilePage: React.FC<UnifiedProfilePageProps> = ({
   const queryClient = useQueryClient();
   const { signOut } = useAuth();
   const { user, isAuth, loading: loadingUser, updateSession } = useUser();
+  const hasThemeProvider = useHasThemeProvider();
+  const colorTheme = useColorTheme();
 
-  const isDark =
-    theme !== undefined
+  const isDark = hasThemeProvider
+    ? colorTheme === "dark"
+    : theme !== undefined
       ? theme === "dark"
       : navbarVariant === "dsayatra" || navbarVariant === "oncampus";
 
