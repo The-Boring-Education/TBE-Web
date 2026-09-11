@@ -19,7 +19,6 @@ import {
   CheckCircle2,
   Code2,
   Layers,
-  Sparkles,
   Star,
   Zap,
 } from "lucide-react";
@@ -177,21 +176,24 @@ const DsaYatraPricingPage = () => {
               <div className="hidden sm:flex flex-row items-center justify-center gap-6 md:gap-10 max-w-4xl mx-auto text-xs font-medium whitespace-nowrap">
                 <div className="flex items-center gap-1.5 text-[#a0a0a0]">
                   <Code2 className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">400+</span> DSA Problems
+                  <span className="font-bold text-white">400+</span> DSA
+                  Problems
                 </div>
 
                 <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
 
                 <div className="flex items-center gap-1.5 text-[#a0a0a0]">
                   <BookOpen className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">25+</span> Curated Sheets
+                  <span className="font-bold text-white">25+</span> Curated
+                  Sheets
                 </div>
 
                 <div className="w-[1px] h-3.5 bg-white/15 shrink-0" />
 
                 <div className="flex items-center gap-1.5 text-[#a0a0a0]">
                   <Layers className="w-3.5 h-3.5 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">Company</span> Patterns & Tracks
+                  <span className="font-bold text-white">Company</span> Patterns
+                  & Tracks
                 </div>
               </div>
 
@@ -209,11 +211,11 @@ const DsaYatraPricingPage = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <Layers className="w-3 h-3 text-[#ff4d4d] shrink-0" />
-                  <span className="font-bold text-white">Company</span> Patterns & Tracks
+                  <span className="font-bold text-white">Company</span> Patterns
+                  & Tracks
                 </div>
               </div>
             </motion.div>
-
           </div>
         </section>
 
@@ -347,7 +349,6 @@ const DsaYatraPricingPage = () => {
               />
             </section>
 
-
             <div className="pb-12">
               <p className="text-center text-[#505050] text-[11px]">
                 Secure payment powered by{" "}
@@ -363,4 +364,3 @@ const DsaYatraPricingPage = () => {
 };
 
 export default DsaYatraPricingPage;
-
