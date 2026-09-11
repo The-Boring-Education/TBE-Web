@@ -1,5 +1,7 @@
 "use client";
 
+import { USER_LEVELS } from "@tbe/constants";
+
 import { useGamificationContext } from "./context/GamificationContext";
 
 interface GamificationCardProps {
@@ -7,20 +9,6 @@ interface GamificationCardProps {
   onClose: () => void;
   variant?: "popup" | "dashboard";
 }
-
-// User levels configuration
-const USER_LEVELS = [
-  { name: "Noob", value: "NOOB", minPoints: 0, level: 1 },
-  { name: "Coder", value: "CODER", minPoints: 500, level: 2 },
-  { name: "Debugger", value: "DEBUGGER", minPoints: 1000, level: 3 },
-  { name: "Ninja", value: "NINJA", minPoints: 2000, level: 4 },
-  { name: "Squasher", value: "SQUASHER", minPoints: 3000, level: 5 },
-  { name: "Hacker", value: "HACKER", minPoints: 4500, level: 6 },
-  { name: "Wizard", value: "WIZARD", minPoints: 6000, level: 7 },
-  { name: "Guru", value: "GURU", minPoints: 7500, level: 8 },
-  { name: "Architect", value: "ARCHITECT", minPoints: 9000, level: 9 },
-  { name: "Legend", value: "LEGEND", minPoints: 10000, level: 10 },
-];
 
 export function GamificationCard({
   isOpen,
