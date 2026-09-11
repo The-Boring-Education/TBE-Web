@@ -51,7 +51,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         }
         const base = (config.API_BASE_URL || "").replace(/\/$/, "");
         const resp = await fetch(
-          `${base}/user?email=${encodeURIComponent(user!.email!)}`,
+          `/api/proxy/user?email=${encodeURIComponent(user!.email!)}`,
         );
         const json = await resp.json();
         const dbId = json?.data?._id;
