@@ -73,8 +73,9 @@ pnpm install
 ### 3. Set Up Environment Variables
 
 ```bash
-# Copy the example env file
-cp .env.example .env.local
+# Copy the examples for the apps you plan to run
+cp apps/platform/.env.example apps/platform/.env.local
+cp apps/api/.env.example apps/api/.env.local
 
 # Fill in the required values (see Environment Variables section)
 ```
