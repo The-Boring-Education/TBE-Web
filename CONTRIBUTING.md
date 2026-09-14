@@ -47,7 +47,7 @@ Make sure you have the following installed before anything else:
 | Tool | Required Version | Install |
 |------|-----------------|---------|
 | **Node.js** | >= 20.x | [nodejs.org](https://nodejs.org) |
-| **pnpm** | >= 9.12.0 | `npm install -g pnpm@9.15.9` |
+| **pnpm** | 10.30.3 (pinned) | `corepack enable` |
 | **Git** | Latest | [git-scm.com](https://git-scm.com) |
 | **MongoDB** | Local or Cloud | [mongodb.com](https://mongodb.com) |
 
@@ -107,10 +107,13 @@ TBE-Web/
 │   ├── api/                       # Centralized API (Next.js API routes, Port 3004)
 │   ├── prep-yatra/                # Interview prep tool (Next.js, Port 3001)
 │   ├── quizes/                    # Quiz platform (Next.js, Port 3002)
-│   ├── onboarding/                # User onboarding (Vite + React, Port 3003)
+│   ├── onboarding/                # User onboarding (Vite + React, Port 5173)
 │   ├── techyatra/                 # Tech learning journeys (Next.js)
 │   ├── dsayatra/                  # DSA practice (Next.js)
 │   ├── resume-yatra/              # Resume builder (Next.js)
+│   ├── admin/                     # Admin panel (Next.js)
+│   ├── resources/                 # Resources & roadmaps (Next.js)
+│   ├── oncampus/                  # Campus-focused learning (Next.js)
 │   └── testing/                   # Test suite (Vitest + MSW)
 │
 ├── packages/                      # Shared internal packages
@@ -387,16 +390,16 @@ const handleChange = (value: any) => { ... };
 - Use **functional components** with hooks — no class components.
 - Keep components **small and single-purpose** (< 150 lines ideally).
 - Use `@tbe/components` shared components before creating new ones.
-- Prefer `Server Components` in Next.js app router — only use `"use client"` when you need browser APIs or event handlers.
+- Follow the existing **Next.js Pages Router** patterns (`pages/` directory) — do **not** use the App Router (`app/` directory) as the codebase has not migrated to it.
 - Always handle loading and error states.
 
 ```tsx
 // ✅ Good — uses shared component, handles states
-import { Button, Spinner } from "@tbe/components";
+import { Button, LoadingSpinner } from "@tbe/components";
 
 const SaveButton = ({ isLoading, onClick }: SaveButtonProps) => (
   <Button onClick={onClick} disabled={isLoading}>
-    {isLoading ? <Spinner /> : "Save"}
+    {isLoading ? <LoadingSpinner /> : "Save"}
   </Button>
 );
 ```
@@ -404,14 +407,18 @@ const SaveButton = ({ isLoading, onClick }: SaveButtonProps) => (
 ### API Routes (apps/api)
 
 - Validate all request inputs before touching the database.
-- Return consistent response shapes using the project's `sendResponse` / `sendError` utilities.
+- Return consistent response shapes using the project's `sendAPIResponse` utility.
 - Always handle `try/catch` and return appropriate HTTP status codes.
 - Never log or expose sensitive data (tokens, passwords, PII).
 
 ```typescript
 // ✅ Good
+import { apiStatusCodes } from "@tbe/constants";
+
 if (!contactNo || !/^\+\d{1,4}\d{10}$/.test(contactNo)) {
-  return res.status(422).json({ message: "Invalid phone number format" });
+  return res
+    .status(apiStatusCodes.BAD_REQUEST)
+    .json({ message: "Invalid phone number format" });
 }
 ```
 
@@ -471,6 +478,8 @@ describe("MyComponent", () => {
 |--------|-----------|
 | Statements | 70% |
 | Branches | 65% |
+| Functions | 70% |
+| Lines | 70% |
 
 ```bash
 pnpm test:coverage    # View coverage report
@@ -519,7 +528,7 @@ When you modify `packages/components`, `packages/hooks`, etc., those changes are
 
 ```bash
 # Confirm no type errors after modifying a package
-pnpm --filter @tbe/components build
+pnpm exec tsc --noEmit -p packages/components/tsconfig.json
 ```
 
 ---
@@ -606,10 +615,11 @@ GitHub Actions run automatically on every PR to `development` and `production`. 
 
 | Check | Command | Validates |
 |-------|---------|-----------|
-| **Build** | `pnpm build:api` / `pnpm build:platform` | No compile/type errors, successful builds |
+| **Build** | `pnpm build` (or affected app's `build:<app>` script) | No compile/type errors, successful builds |
 | **Lint** | `pnpm lint` | ESLint rules pass |
 | **Type Check** | `pnpm check-types` | No TypeScript errors |
-| **Unit Tests** | `pnpm test:unit` | All tests pass, coverage thresholds met |
+| **Unit Tests** | `pnpm test:unit` | All tests pass |
+| **Coverage** | `pnpm test:coverage` | Statements 70%, Branches 65%, Functions 70%, Lines 70% |
 
 ### Running CI Checks Locally
 
