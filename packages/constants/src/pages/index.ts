@@ -81,6 +81,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: products.interviewPrep!.slug,
     },
     {
+      id: "learn-resources",
+      name: products.resources!.label,
+      description: products.resources!.description,
+      href: products.resources!.slug,
+      target: "_blank",
+    },
+    {
       id: "learn-youfocus",
       name: products.youfocus!.label,
       description: products.youfocus!.description,
