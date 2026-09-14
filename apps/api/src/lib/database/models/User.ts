@@ -186,7 +186,7 @@ const UserSchema: Schema<UserModel> = new Schema(
           const trimmed = v.trim();
           const parts = trimmed.split(/\s+/);
           if (parts.length >= 2) {
-            const code = parts[0];
+            const code = parts[0] ?? "";
             const num = parts.slice(1).join("").replace(/\D/g, "");
             return /^\+\d{1,4}$/.test(code) && num.length === 10;
           }
