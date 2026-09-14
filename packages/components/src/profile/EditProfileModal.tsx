@@ -308,6 +308,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     if (!form.name.trim()) return false;
     if (!form.userName.trim() || form.userName.trim().length < 3) return false;
     if (form.userName !== initialUserName && !isUsernameAvailable) return false;
+    if (phoneNumber && phoneNumber.trim().length > 0) {
+      const digitsOnly = phoneNumber.replace(/\D/g, "");
+      if (digitsOnly.length !== 10) return false;
+    }
     return true;
   };
 
@@ -497,7 +501,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       onChange={(e) =>
                         updateField(
                           "contactNo",
-                          `${e.target.value} ${phoneNumber}`,
+                          `${e.target.value} ${phoneNumber}`.trim(),
                         )
                       }
                       className="px-2.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 bg-white outline-none cursor-pointer"
@@ -511,12 +515,26 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     <input
                       type="tel"
                       value={phoneNumber}
-                      onChange={(e) =>
+                      inputMode="numeric"
+                      maxLength={10}
+                      onChange={(e) => {
+                        let digits = e.target.value.replace(/\D/g, "");
+                        const codeDigits = countryCode.replace(/\D/g, "");
+                        if (
+                          codeDigits &&
+                          digits.startsWith(codeDigits) &&
+                          digits.length > 10
+                        ) {
+                          digits = digits.slice(codeDigits.length);
+                        }
+                        if (digits.length > 10) {
+                          digits = digits.slice(0, 10);
+                        }
                         updateField(
                           "contactNo",
-                          `${countryCode} ${e.target.value}`,
-                        )
-                      }
+                          `${countryCode} ${digits}`.trim(),
+                        );
+                      }}
                       placeholder="98765 43210"
                       className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none text-xs sm:text-sm text-slate-900 transition"
                     />

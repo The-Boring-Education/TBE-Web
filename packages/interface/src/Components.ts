@@ -285,6 +285,18 @@ export interface InputFieldContainerProps {
   value?: string;
   labelClass?: string;
   isOptional?: boolean;
+  maxLength?: number;
+  placeholder?: string;
+  pattern?: string;
+  inputMode?:
+    | "none"
+    | "text"
+    | "decimal"
+    | "numeric"
+    | "tel"
+    | "search"
+    | "email"
+    | "url";
 }
 
 export interface LoadingSpinnerProps {

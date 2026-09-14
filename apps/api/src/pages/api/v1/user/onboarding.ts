@@ -138,12 +138,35 @@ const handleUserOnboarding = async (
       );
     }
 
+    let sanitizedContactNo = contactNo;
+    if (contactNo && contactNo.trim() !== "+91") {
+      const trimmed = contactNo.trim();
+      const parts = trimmed.split(/\s+/);
+      const code = parts[0];
+      const number = parts.slice(1).join("").replace(/\D/g, "");
+      const isValidCountryCode = /^\+\d{1,4}$/.test(code);
+      const isValidNumber = number.length === 10;
+
+      if (!isValidCountryCode || !isValidNumber) {
+        return res.status(apiStatusCodes.BAD_REQUEST).json(
+          sendAPIResponse({
+            status: false,
+            error: "Invalid contact number format",
+            message:
+              "Please provide a valid 10-digit contact number with country code (e.g. +91 9876543210)",
+          }),
+        );
+      }
+
+      sanitizedContactNo = `${code} ${number}`;
+    }
+
     const { data, error: updateUserError } = await onboardUserToDB(
       userId,
       userName,
       occupation,
       purpose,
-      contactNo,
+      sanitizedContactNo,
       from,
       req.body,
     );

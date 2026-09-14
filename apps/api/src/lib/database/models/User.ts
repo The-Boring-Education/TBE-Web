@@ -180,6 +180,21 @@ const UserSchema: Schema<UserModel> = new Schema(
     },
     contactNo: {
       type: String,
+      validate: {
+        validator: function (v: string) {
+          if (!v || v === "+91") return true;
+          const trimmed = v.trim();
+          const parts = trimmed.split(/\s+/);
+          if (parts.length >= 2) {
+            const code = parts[0];
+            const num = parts.slice(1).join("").replace(/\D/g, "");
+            return /^\+\d{1,4}$/.test(code) && num.length === 10;
+          }
+          return /^\+\d{1,4}\d{10}$/.test(trimmed);
+        },
+        message: (props: { value: string }) =>
+          `${props.value} is not a valid contact number format!`,
+      },
     },
     linkedInUrl: {
       type: String,

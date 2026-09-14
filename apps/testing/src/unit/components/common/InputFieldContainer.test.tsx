@@ -1,6 +1,7 @@
-import { InputFieldContainer } from "@tbe/components";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+
+import InputFieldContainer from "@tbe/components/common/Form/InputFieldContainer";
 
 describe("InputFieldContainer", () => {
   it("renders label and forwards input value changes", () => {
@@ -43,5 +44,24 @@ describe("InputFieldContainer", () => {
 
     const label = screen.getByText("Nickname").closest("label");
     expect(label?.textContent).not.toContain("*");
+  });
+
+  it("applies maxLength, placeholder, pattern, and inputMode to input", () => {
+    render(
+      <InputFieldContainer
+        label="Phone"
+        type="tel"
+        maxLength={10}
+        placeholder="Enter 10 digits"
+        pattern="[0-9]*"
+        inputMode="numeric"
+        onChange={() => {}}
+      />,
+    );
+
+    const input = screen.getByPlaceholderText("Enter 10 digits");
+    expect(input).toHaveAttribute("maxLength", "10");
+    expect(input).toHaveAttribute("pattern", "[0-9]*");
+    expect(input).toHaveAttribute("inputMode", "numeric");
   });
 });

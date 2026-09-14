@@ -103,9 +103,8 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
         return purpose.length > 0;
       case 3: {
         const [code, number] = contactNo.split(' ');
-        return (
-          code.startsWith('+') && number?.replace(/[^0-9]/g, '').length >= 10
-        );
+        const digitsOnly = number?.replace(/\D/g, '') || '';
+        return Boolean(code?.startsWith('+') && digitsOnly.length === 10);
       }
       default:
         return false;
@@ -145,8 +144,12 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
           <StepPhoneNumber
             countryCode={code}
             phoneNumber={number}
-            onChangeCode={(val) => updateForm('contactNo', `${val} ${number}`)}
-            onChangeNumber={(val) => updateForm('contactNo', `${code} ${val}`)}
+            onChangeCode={(val) =>
+              updateForm('contactNo', `${val} ${number}`.trim())
+            }
+            onChangeNumber={(val) =>
+              updateForm('contactNo', `${code} ${val}`.trim())
+            }
           />
         );
       }

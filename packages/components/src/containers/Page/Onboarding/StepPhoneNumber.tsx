@@ -1,11 +1,10 @@
-import {
-  FlexContainer,
-  InputFieldContainer,
-  SelectInput,
-  Text,
-} from "@tbe/components";
 import { COUNTRY_CODES } from "@tbe/constants";
 import type { StepPhoneNumberProps } from "@tbe/interface";
+
+import InputFieldContainer from "../../../common/Form/InputFieldContainer";
+import SelectInput from "../../../common/Form/SelectInput";
+import Text from "../../../common/Typography/Text";
+import FlexContainer from "../common/FlexContainer";
 
 const StepPhoneNumber = ({
   countryCode,
@@ -14,6 +13,18 @@ const StepPhoneNumber = ({
   onChangeNumber,
 }: StepPhoneNumberProps) => {
   const codeList = COUNTRY_CODES.map((c) => c.code);
+
+  const handleNumberChange = (raw: string) => {
+    let digits = raw.replace(/\D/g, "");
+    const codeDigits = countryCode.replace(/\D/g, "");
+    if (codeDigits && digits.startsWith(codeDigits) && digits.length > 10) {
+      digits = digits.slice(codeDigits.length);
+    }
+    if (digits.length > 10) {
+      digits = digits.slice(0, 10);
+    }
+    onChangeNumber(digits);
+  };
 
   return (
     <FlexContainer className="gap-2" direction="col">
@@ -36,8 +47,11 @@ const StepPhoneNumber = ({
           label="Phone Number"
           labelClass="sr-only"
           type="tel"
+          inputMode="numeric"
+          placeholder="10-digit mobile number"
+          maxLength={10}
           value={phoneNumber}
-          onChange={onChangeNumber}
+          onChange={handleNumberChange}
         />
       </FlexContainer>
     </FlexContainer>

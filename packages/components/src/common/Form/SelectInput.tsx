@@ -1,8 +1,9 @@
 import { Listbox } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { Text } from "@tbe/components";
 import type { SelectInputProps } from "@tbe/interface";
 import clsx from "clsx";
+
+import Text from "../Typography/Text";
 
 const SelectInput = ({
   list,
