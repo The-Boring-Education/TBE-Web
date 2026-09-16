@@ -8,19 +8,59 @@ import {
   toPlatformUrl,
 } from "@tbe/constants";
 import type { FooterProps } from "@tbe/interface";
-import { useMemo } from "react";
+import { cn } from "@tbe/utils";
+import {
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { FaGithub, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
+
+type FooterLinkItem = {
+  name: string;
+  href?: string;
+  description: string;
+  external?: boolean;
+};
 
 const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
   const currentYear = new Date().getFullYear();
+  const [shellIsDark, setShellIsDark] = useState(false);
 
-  // Get variant configuration - memoized for performance
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncTheme = () => {
+      setShellIsDark(root.classList.contains("dark"));
+    };
+
+    syncTheme();
+
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
+
   const VARIANT_CONFIG = useMemo(() => getFooterVariantConfig(Logo), []);
   const variantConfig = useMemo(() => {
     return VARIANT_CONFIG[variant] || VARIANT_CONFIG.default;
   }, [variant, VARIANT_CONFIG]) as FooterVariantConfig;
 
-  const footerSections = {
+  const branding = isValidElement(variantConfig.branding)
+    ? cloneElement(
+        variantConfig.branding as ReactElement<{ isDark?: boolean }>,
+        { isDark: shellIsDark },
+      )
+    : variantConfig.branding;
+
+  const footerSections: {
+    products: FooterLinkItem[];
+    tools: FooterLinkItem[];
+    company: FooterLinkItem[];
+  } = {
     products: [
       {
         name: "Shiksha",
@@ -37,7 +77,6 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
         href: products.youfocus?.slug,
         description: "YouTube Learning",
       },
-
       {
         name: "Projects",
         href: products.projects?.slug,
@@ -72,6 +111,12 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
         name: "Resume Yatra",
         href: products.resumeYatra?.slug,
         description: "Resume Builder",
+        external: true,
+      },
+      {
+        name: "Resources",
+        href: "https://resources.theboringeducation.com",
+        description: "Guides & Roadmaps",
         external: true,
       },
     ],
@@ -110,191 +155,154 @@ const Footer = ({ variant = "default", isMini = false }: FooterProps = {}) => {
     },
   ];
 
+  const renderLinkList = (items: FooterLinkItem[]) => (
+    <ul className="space-y-2 sm:space-y-2.5">
+      {items.map(({ name, href, description, external }) => (
+        <li key={name}>
+          {href ? (
+            <Link
+              href={href}
+              target={external ? "_blank" : undefined}
+              className="inline-block text-slate-600 transition-colors hover:text-slate-900 group dark:text-gray-300 dark:hover:text-white"
+            >
+              <Text
+                className="text-sm font-medium group-hover:text-primary"
+                level="span"
+              >
+                {name}
+                {external ? " ↗" : ""}
+              </Text>
+              <Text
+                className="mt-0.5 hidden text-xs text-slate-500 dark:text-gray-400 sm:block"
+                level="span"
+              >
+                {description}
+              </Text>
+            </Link>
+          ) : (
+            <div className="text-slate-600 dark:text-gray-300">
+              <Text className="text-sm font-medium" level="span">
+                {name}
+              </Text>
+              <Text
+                className="mt-0.5 hidden text-xs text-slate-500 dark:text-gray-400 sm:block"
+                level="span"
+              >
+                {description}
+              </Text>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
-    <footer className="bg-dark w-full border-t border-gray-800">
-      <div className={`max-w-7xl mx-auto px-4 ${isMini ? "py-6" : "py-12"}`}>
-        {/* Main Footer Content */}
+    <footer className="w-full border-t border-slate-200 bg-white text-slate-900 dark:border-gray-800 dark:bg-[#0A0A0A] dark:text-white">
+      <div
+        className={cn(
+          "mx-auto max-w-7xl px-4 sm:px-6",
+          isMini ? "py-5 sm:py-6" : "py-8 sm:py-10 lg:py-12",
+        )}
+      >
         {!isMini && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-            {/* Brand Section */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-4">
-                {variantConfig.branding}
-              </div>
-              <Text className="text-gray-300 mb-4 max-w-md" level="p">
+          <div className="mb-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:mb-8 sm:gap-8 lg:grid-cols-5">
+            <div className="col-span-2 lg:col-span-2">
+              <div className="mb-3 flex items-center sm:mb-4">{branding}</div>
+              <Text
+                className="mb-4 max-w-md text-sm leading-relaxed text-slate-600 dark:text-gray-300"
+                level="p"
+              >
                 {variantConfig.subtitle}
               </Text>
-              <FlexContainer className="gap-4" justifyCenter={false}>
+              <FlexContainer className="gap-2.5 sm:gap-3" justifyCenter={false}>
                 {socialLinks.map(({ icon: Icon, href, label }) => (
                   <Link
                     key={label}
                     href={href}
                     target="_blank"
-                    className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-700 transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white dark:border-gray-700 dark:bg-gray-800/80 dark:text-white dark:hover:border-primary dark:hover:bg-primary"
                     aria-label={label}
                   >
-                    <Icon color="white" size="1.5em" />
+                    <Icon size="1.05em" />
                   </Link>
                 ))}
               </FlexContainer>
             </div>
 
-            {/* Products */}
             <div>
-              <Text className="text-white font-semibold mb-4" level="h4">
+              <Text
+                className="mb-3 text-sm font-semibold text-slate-900 dark:text-white sm:mb-4 sm:text-base"
+                level="h4"
+              >
                 Products
               </Text>
-              <ul className="space-y-2">
-                {footerSections.products.map(({ name, href, description }) => (
-                  <li key={name}>
-                    {href ? (
-                      <Link
-                        href={href}
-                        className="text-gray-300 hover:text-white transition-colors group"
-                      >
-                        <div>
-                          <Text
-                            className="group-hover:text-primary"
-                            level="span"
-                          >
-                            {name}
-                          </Text>
-                          <br />
-                          <Text className="text-xs text-gray-400" level="span">
-                            {description}
-                          </Text>
-                        </div>
-                      </Link>
-                    ) : (
-                      <div className="text-gray-300">
-                        <Text level="span">{name}</Text>
-                        <br />
-                        <Text className="text-xs text-gray-400" level="span">
-                          {description}
-                        </Text>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              {renderLinkList(footerSections.products)}
             </div>
 
-            {/* Tools */}
             <div>
-              <Text className="text-white font-semibold mb-4" level="h4">
+              <Text
+                className="mb-3 text-sm font-semibold text-slate-900 dark:text-white sm:mb-4 sm:text-base"
+                level="h4"
+              >
                 Tools
               </Text>
-              <ul className="space-y-2">
-                {footerSections.tools.map((item: any) => (
-                  <li key={item.name}>
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        className="text-gray-300 hover:text-white transition-colors group"
-                      >
-                        <div>
-                          <Text
-                            className="group-hover:text-primary"
-                            level="span"
-                          >
-                            {item.name}
-                            {item.external && " ↗"}
-                          </Text>
-                          <br />
-                          <Text className="text-xs text-gray-400" level="span">
-                            {item.description}
-                          </Text>
-                        </div>
-                      </Link>
-                    ) : (
-                      <div className="text-gray-300">
-                        <Text level="span">{item.name}</Text>
-                        <br />
-                        <Text className="text-xs text-gray-400" level="span">
-                          {item.description}
-                        </Text>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              {renderLinkList(footerSections.tools)}
             </div>
 
-            {/* Company */}
-            <div>
-              <Text className="text-white font-semibold mb-4" level="h4">
+            <div className="col-span-2 sm:col-span-1">
+              <Text
+                className="mb-3 text-sm font-semibold text-slate-900 dark:text-white sm:mb-4 sm:text-base"
+                level="h4"
+              >
                 Company
               </Text>
-              <ul className="space-y-2">
-                {footerSections.company.map((item: any) => (
-                  <li key={item.name}>
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        className="text-gray-300 hover:text-white transition-colors group"
-                      >
-                        <div>
-                          <Text
-                            className="group-hover:text-primary"
-                            level="span"
-                          >
-                            {item.name}
-                            {item.external && " ↗"}
-                          </Text>
-                          <br />
-                          <Text className="text-xs text-gray-400" level="span">
-                            {item.description}
-                          </Text>
-                        </div>
-                      </Link>
-                    ) : (
-                      <div className="text-gray-300">
-                        <Text level="span">{item.name}</Text>
-                        <br />
-                        <Text className="text-xs text-gray-400" level="span">
-                          {item.description}
-                        </Text>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              {renderLinkList(footerSections.company)}
             </div>
           </div>
         )}
 
-        {/* Bottom Section */}
-        <div className={isMini ? "" : "border-t border-gray-800 pt-8"}>
+        <div
+          className={cn(
+            isMini
+              ? ""
+              : "border-t border-slate-200 pt-5 dark:border-gray-800 sm:pt-6",
+          )}
+        >
           <FlexContainer
-            className="flex-col md:flex-row justify-between items-center gap-4"
+            className="flex-col items-center justify-between gap-2 text-center sm:flex-row sm:gap-4 sm:text-left"
             justifyCenter={false}
           >
-            <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="flex flex-col items-center gap-1 sm:flex-row sm:gap-3">
               <Text
-                className="text-gray-400 text-center md:text-left"
+                className="text-xs text-slate-500 dark:text-gray-400 sm:text-sm"
                 level="p"
               >
                 © {currentYear} The Boring Education. All rights reserved.
               </Text>
-              <Text className="text-gray-400 hidden md:block" level="span">
-                |
+              <Text
+                className="hidden text-slate-500 dark:text-gray-400 sm:inline"
+                level="span"
+              >
+                ·
               </Text>
-              <Text className="text-gray-400" level="p">
+              <Text
+                className="text-xs text-slate-500 dark:text-gray-400 sm:text-sm"
+                level="p"
+              >
                 Built with ❤️ in 🇮🇳
               </Text>
             </div>
 
-            <div className="flex items-center gap-4">
-              <Text className="text-gray-400 text-xs" level="span">
-                Made for developers, by developers
-              </Text>
-            </div>
+            <Text
+              className="text-xs text-slate-500 dark:text-gray-400"
+              level="span"
+            >
+              Made for developers, by developers
+            </Text>
           </FlexContainer>
         </div>
 
-        {/* SEO Enhancement */}
         <div className="sr-only">
           <Text level="span">
             The Boring Education - Tech education platform offering free
