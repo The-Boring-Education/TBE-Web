@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Code for Developers Guide 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP / STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 10px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1px 0 14px 18px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .step-desc strong {
+            color: var(--dark);
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── LINK CHIPS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        .yt-link.plain::before {
+            content: '✔';
+            font-size: 8px;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS ROW ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .resource-viewer {
+                padding: 0;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .print-bar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px 16px;
+                margin-bottom: 0;
+                background: #1a1a1a;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+                margin: 0;
+            }
+
+            .page + .page {
+                margin-top: 4px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 16px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 16px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .cover-quote-block {
+                padding: 20px 18px;
+                max-width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+            }
+
+            .page-body {
+                padding: 16px 16px;
+                overflow: visible;
+            }
+
+            .page-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 14px;
+            }
+
+            .step-content {
+                padding: 1px 0 12px 10px;
+            }
+
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .tip-block {
+                padding: 10px 12px;
+            }
+
+            .tip-text {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                min-height: 297mm;
+            }
+
+            .inner-page {
+                min-height: 297mm;
+            }
+
+            .step,
+            .resource-card,
+            .tip-block,
+            .cta-block,
+            .social-card,
+            .stack-table tr,
+            .check-item,
+            .cover-quote-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" data-action="print">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">Code is read far more often than it's written</div>
+
+                <h1 class="cover-title">
+                    Clean Code for<br>Developers<span> Guide</span><br>2026
+                </h1>
+
+                <p class="cover-subtitle">
+                    A phase-by-phase playbook for writing code your teammates — and future you — can actually read: naming, functions, modularity, abstraction, error handling, code smells, refactoring, and the habits that keep a codebase maintainable for years.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Any fool can write code a computer can understand. Good developers write code humans can understand — and clean code is what makes a codebase something people still want to work in a year from now."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">30</div>
+                        <div class="stat-label">Playbook milestones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Core practice phases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">15+</div>
+                        <div class="stat-label">Code smells covered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">0</div>
+                        <div class="stat-label">Cost — every step is free</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — NAMING FUNDAMENTALS (1–5) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 01 · Naming Fundamentals</div>
+                <h2 class="section-title">Get the Names Right Before You Touch Anything Else</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 1 · The cheapest fix with the biggest payoff</div>
+                            <div class="step-heading">Names That Reveal Intent</div>
+                            <div class="step-desc">A name should answer why it exists, what it does, and how it's used without needing a comment. Replace <strong>`d`, `tmp`, `data2`</strong> with <strong>`elapsedTimeInDays`, `activeUserCount`</strong> — if you need a comment to explain a name, the name has already failed.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start here</span>
+                                <span class="tag">No comment needed</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Name reveals purpose, not just type</a>
+                                <a class="yt-link plain">If it needs a comment, rename it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 2 · Words that quietly lie to the reader</div>
+                            <div class="step-heading">Avoid Disinformation & Noise Words</div>
+                            <div class="step-desc">Never call something a `list` if it's not a List type, and don't let `accountList` and `accountGroup` mean the same thing in different files. Drop noise words like <strong>`Info`, `Data`, `Manager`</strong> that add length without adding meaning — `userInfo` rarely says more than `user`.</div>
+                            <div class="step-tags">
+                                <span class="tag red">No misleading types</span>
+                                <span class="tag">Cut noise words</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Don't name a Map "userList"</a>
+                                <a class="yt-link plain">Distinguish similar names meaningfully</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 3 · Names your team can actually talk about</div>
+                            <div class="step-heading">Pronounceable & Searchable Names</div>
+                            <div class="step-desc">If you can't say it out loud in a code review, rename it — `genymdhms` becomes `generationTimestamp`. Avoid single-letter names and magic numbers that can't be grepped; a constant named <strong>`MAX_RETRY_COUNT`</strong> is searchable, the bare number `3` scattered through the file is not.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Say it in a standup</span>
+                                <span class="tag">Grep-able, not magic</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Replace magic numbers with named constants</a>
+                                <a class="yt-link plain">If you can't pronounce it, rename it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 4 · One word, one meaning, everywhere</div>
+                            <div class="step-heading">Consistent Vocabulary Across the Codebase</div>
+                            <div class="step-desc">Pick one verb per concept and stick to it — don't mix `fetch`, `retrieve`, and `get` for the same kind of operation across different modules. A consistent vocabulary means a new teammate can guess a method's name correctly before ever seeing it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">One verb per concept</span>
+                                <span class="tag">Guessable by newcomers</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Standardize get/fetch/retrieve as a team</a>
+                                <a class="yt-link plain">Keep a shared glossary for core terms</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 5 · Different kinds of names, different rules</div>
+                            <div class="step-heading">Naming Classes, Functions & Booleans Correctly</div>
+                            <div class="step-desc">Classes and objects should be <strong>nouns</strong> (`Invoice`, `PaymentProcessor`), functions should be <strong>verbs</strong> (`calculateTotal`, `sendEmail`), and booleans should read like yes/no questions (`isValid`, `hasPermission`) — never `flag` or `check`.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Nouns for classes</span>
+                                <span class="tag">is/has for booleans</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Classes are nouns, functions are verbs</a>
+                                <a class="yt-link plain">Booleans should read as a question</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-text"><strong>Naming isn't cosmetic — it's the interface your teammates think through.</strong> Every minute spent finding the right name saves everyone who reads that code later from having to reverse-engineer your intent. Get this phase right before worrying about clever function design.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — FUNCTIONS & SIMPLICITY (6–10) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 02 · Functions & Simplicity</div>
+                <h2 class="section-title">Write Functions That Do One Thing Well</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 6 · The single most useful rule in this guide</div>
+                            <div class="step-heading">Keep Functions Small and Single-Purpose</div>
+                            <div class="step-desc">A function should do <strong>one thing</strong>, do it well, and do nothing else — if you can extract another function from it with a meaningful name, it was doing too much. Aim for functions short enough to read without scrolling; that constraint alone forces better design.</div>
+                            <div class="step-tags">
+                                <span class="tag red">One thing only</span>
+                                <span class="tag">Short enough to read at a glance</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Extract until each function does one thing</a>
+                                <a class="yt-link plain">If it needs "and" to describe it, split it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 7 · Don't mix altitudes</div>
+                            <div class="step-heading">One Level of Abstraction Per Function</div>
+                            <div class="step-desc">Don't mix high-level business logic (`processOrder()`) with low-level details (string parsing, raw SQL) in the same function — it reads like a story jumping between chapters. Push the low-level details down into their own well-named helper functions.</div>
+                            <div class="step-tags">
+                                <span class="tag red">No mixed altitudes</span>
+                                <span class="tag">Push details down</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Read top to bottom like a newspaper</a>
+                                <a class="yt-link plain">Move raw details into named helpers</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 8 · Every parameter is a mental burden</div>
+                            <div class="step-heading">Minimize Function Arguments</div>
+                            <div class="step-desc">Zero or one argument is ideal, two is acceptable, three should raise an eyebrow, and more than three usually means you need an object. Watch out for <strong>boolean flag arguments</strong> (`createUser(name, true)`) — they're a sign the function is secretly doing two different things.</div>
+                            <div class="step-tags">
+                                <span class="tag red">3+ args → use an object</span>
+                                <span class="tag">No boolean flag params</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Group related args into one object</a>
+                                <a class="yt-link plain">Split functions instead of flag arguments</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 9 · The bugs that hide for months</div>
+                            <div class="step-heading">Avoid Side Effects & Hidden State</div>
+                            <div class="step-desc">A function called `checkPassword()` that secretly also logs the user in is lying about what it does — hidden side effects are one of the hardest bug classes to trace. If a function must mutate something, its name should say so plainly (`saveAndLogin()`), not hide it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Name must match behavior</span>
+                                <span class="tag">No secret mutations</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Say what the function actually changes</a>
+                                <a class="yt-link plain">Prefer pure functions where possible</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 10 · Don't make a function do both jobs</div>
+                            <div class="step-heading">Command-Query Separation</div>
+                            <div class="step-desc">A function should either <strong>do something</strong> (a command that changes state) or <strong>answer something</strong> (a query that returns a value) — never both. `setAndCheck()`-style functions that mutate and return a status make call sites unpredictable and hard to reason about.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Commands OR queries</span>
+                                <span class="tag">Never both in one call</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Split "do and tell" functions in two</a>
+                                <a class="yt-link plain">Predictable call sites, fewer surprises</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧪</div>
+                    <div class="tip-text"><strong>Small, honest functions compound — a codebase built from them is easier to test, debug, and extend.</strong> Before moving on to modularity and abstraction, make sure any function you write can be understood fully just by reading its name and signature.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Quick Function Health Check</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Signal</th>
+                                <th>What It Usually Means</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Needs "and" to describe it</td>
+                                <td>Doing more than one thing — split it</td>
+                                <td>High</td>
+                            </tr>
+                            <tr>
+                                <td>4+ parameters</td>
+                                <td>Missing an object to group related data</td>
+                                <td>High</td>
+                            </tr>
+                            <tr>
+                                <td>Boolean flag argument</td>
+                                <td>Two behaviors hiding in one function</td>
+                                <td>Medium</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — MODULARITY & ABSTRACTION (11–15) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 03 · Modularity & Abstraction</div>
+                <h2 class="section-title">Drawing Boundaries That Make Change Cheap</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 11 · Stop letting everything touch everything</div>
+                            <div class="step-heading">Separate Concerns Into Modules</div>
+                            <div class="step-desc">Keep <strong>business logic, data access, and presentation</strong> in clearly separate modules so a change to how data is stored doesn't ripple into your UI code. If editing one feature means touching five unrelated files, your boundaries are in the wrong place.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Logic, data, UI stay separate</span>
+                                <span class="tag">One feature, few files</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Draw boundaries around concerns, not files</a>
+                                <a class="yt-link plain">One change shouldn't ripple everywhere</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">12</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 12 · Depend on the contract, not the concrete class</div>
+                            <div class="step-heading">Design to Interfaces, Not Implementations</div>
+                            <div class="step-desc">Code that depends on an interface (`PaymentGateway`) instead of a concrete class (`StripeGateway`) can swap providers without touching every call site. This single habit is what makes mocking in tests and replacing vendors later actually painless.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Swap implementations freely</span>
+                                <span class="tag">Easier to mock in tests</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Depend on abstractions, not concretions</a>
+                                <a class="yt-link plain">Interfaces make testing trivial</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">13</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 13 · One reason to change, ever</div>
+                            <div class="step-heading">Apply the Single Responsibility Principle</div>
+                            <div class="step-desc">A class or module should have <strong>exactly one reason to change</strong> — a `UserService` that also formats emails and writes to logs will get modified for three unrelated reasons over its lifetime, and each one risks breaking the other two.</div>
+                            <div class="step-tags">
+                                <span class="tag red">One reason to change</span>
+                                <span class="tag">Split unrelated responsibilities</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Ask "why would this file change?"</a>
+                                <a class="yt-link plain">More than one answer means split it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">14</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 14 · Layers exist for a reason</div>
+                            <div class="step-heading">Use Abstraction Layers Deliberately</div>
+                            <div class="step-desc">A typical layering — <strong>controller → service → repository</strong> — exists so each layer only knows about the one directly below it. Skipping layers (a controller calling the database directly) saves a few lines today and costs you every time that boundary needs to move.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Each layer knows only its neighbor</span>
+                                <span class="tag">No shortcuts across layers</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Controller → service → repository</a>
+                                <a class="yt-link plain">Don't let a shortcut become the norm</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">15</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 15 · Abstraction has a cost too</div>
+                            <div class="step-heading">Avoid Premature Abstraction</div>
+                            <div class="step-desc">Don't build a generic, configurable, plugin-based system for a problem you've only seen once — a rule of thumb is to wait until you have <strong>three real repetitions</strong> before extracting a shared abstraction. Over-engineered flexibility is just complexity with a good excuse.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Wait for 3 real repetitions</span>
+                                <span class="tag">Flexibility isn't free</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Duplicate twice before abstracting</a>
+                                <a class="yt-link plain">Unused flexibility is hidden complexity</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧱</div>
+                    <div class="tip-text"><strong>Good boundaries are what let a team of ten work on the same codebase without stepping on each other.</strong> Modularity isn't about having more files — it's about making sure each file has a job nobody else's file is also trying to do.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — ERROR HANDLING & ROBUSTNESS (16–20) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 04 · Error Handling & Robustness</div>
+                <h2 class="section-title">Failures Are Normal — Design for Them</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">16</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 16 · Stop threading error codes through every return</div>
+                            <div class="step-heading">Use Exceptions, Not Error Codes</div>
+                            <div class="step-desc">Returning `-1` or `null` on failure forces every caller to remember to check it — and someone eventually won't. Exceptions separate the happy path from error handling entirely, so the calling code stays clean and errors can't be silently ignored by accident.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Separate happy path from errors</span>
+                                <span class="tag">Can't be silently ignored</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Error codes get forgotten, exceptions don't</a>
+                                <a class="yt-link plain">Keep the main logic readable</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">17</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 17 · Handle the edge case first, not last</div>
+                            <div class="step-heading">Fail Fast With Guard Clauses</div>
+                            <div class="step-desc">Check for invalid input, null values, or missing permissions at the <strong>top of a function</strong> and return early, instead of nesting your real logic three levels deep inside an `if (isValid)` block. Guard clauses flatten functions and put the important logic at the least indented level.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Return early</span>
+                                <span class="tag">Flatten nested conditionals</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Check the edge case, then return</a>
+                                <a class="yt-link plain">Keep the happy path unindented</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">18</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 18 · The bug that costs you a 2am page</div>
+                            <div class="step-heading">Don't Swallow Errors Silently</div>
+                            <div class="step-desc">An empty `catch {}` block is one of the most dangerous patterns in any codebase — it turns a real failure into total silence, and you only find out weeks later when the missing data surfaces somewhere unrelated. At minimum, log it; ideally, handle or re-throw it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Never an empty catch block</span>
+                                <span class="tag">Log, handle, or re-throw</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Empty catch blocks hide real failures</a>
+                                <a class="yt-link plain">Always log or re-throw, never ignore</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">19</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 19 · "Something went wrong" helps no one</div>
+                            <div class="step-heading">Provide Context in Error Messages</div>
+                            <div class="step-desc">A good error message includes <strong>what failed, why, and what data was involved</strong> — "Failed to process payment for order #4821: card declined" is debuggable at 2am; "Error occurred" is not. Future you, reading a log at 2am, will thank present you for the extra ten seconds this takes.</div>
+                            <div class="step-tags">
+                                <span class="tag red">What, why, and which data</span>
+                                <span class="tag">Debuggable from the log alone</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Include the identifiers that matter</a>
+                                <a class="yt-link plain">Write messages for 2am-you, not now-you</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">20</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 20 · Don't let recovery logic pollute the logic</div>
+                            <div class="step-heading">Separate Error Handling From Business Logic</div>
+                            <div class="step-desc">Push try/catch blocks and retry logic to dedicated boundary points — middleware, wrapper functions, a global handler — rather than scattering them through core business functions. Business logic should describe <strong>what</strong> happens, not spend half its lines describing what to do when things go wrong.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Push handling to boundaries</span>
+                                <span class="tag">Logic describes "what," not "what if"</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Centralize retries and recovery logic</a>
+                                <a class="yt-link plain">Keep core logic focused on the "what"</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Common Error-Handling Mistakes</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 The empty catch block</div>
+                        <div class="resource-card-desc">Swallowing an exception with no log line and no fallback turns a real bug into a silent, invisible failure that surfaces weeks later.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Vague, generic messages</div>
+                        <div class="resource-card-desc">"Something went wrong" gives on-call engineers nothing to search for and forces them to reproduce the bug from scratch.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Mixing recovery into logic</div>
+                        <div class="resource-card-desc">Business functions littered with retry loops and fallback branches become unreadable and untestable in isolation.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Returning null on failure</div>
+                        <div class="resource-card-desc">Every caller now needs a null check it will eventually forget, turning one missing check into a production incident.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — CODE SMELLS & REFACTORING (21–25) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 05 · Code Smells & Refactoring</div>
+                <h2 class="section-title">Learning to Notice When Code Needs Attention</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">21</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 21 · Train the instinct before the fix</div>
+                            <div class="step-heading">Recognize Common Code Smells</div>
+                            <div class="step-desc">Learn to spot the classics: <strong>long functions, large classes, duplicated code, feature envy, long parameter lists, and shotgun surgery</strong> (one small change forcing edits across a dozen files). A smell isn't a bug — it's a warning that a bug is getting easier to introduce.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Not a bug — a warning sign</span>
+                                <span class="tag">Learn the classic smells</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Long functions, feature envy, shotgun surgery</a>
+                                <a class="yt-link plain">Smells tell you where to look, not what to fix</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">22</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 22 · Never rewrite when you can refactor</div>
+                            <div class="step-heading">Refactor in Small, Safe Steps</div>
+                            <div class="step-desc">Change behavior and structure in <strong>separate commits, never the same one</strong> — rename, extract, or reorganize first, verify nothing broke, then make the actual behavior change. Small steps mean that when something does break, you know exactly which five-line diff caused it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Structure and behavior, separately</span>
+                                <span class="tag">Small commits, easy to bisect</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Never mix a rename with a behavior change</a>
+                                <a class="yt-link plain">Commit small enough to bisect easily</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">23</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 23 · Every duplicate is a future inconsistency</div>
+                            <div class="step-heading">Eliminate Duplication (DRY)</div>
+                            <div class="step-desc">The same logic copy-pasted in three places means three places to remember to update — and eventually, one gets missed. Extract repeated logic into a single shared function or module so a fix or change only ever needs to happen once.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Fix once, everywhere</span>
+                                <span class="tag">Don't Repeat Yourself</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Three copies means one will drift</a>
+                                <a class="yt-link plain">Extract shared logic into one place</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">24</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 24 · The pyramid of doom is optional</div>
+                            <div class="step-heading">Simplify Conditionals & Nested Logic</div>
+                            <div class="step-desc">Deeply nested `if/else` chains are one of the hardest things to hold in your head while reading. Replace them with guard clauses, early returns, or polymorphism where it fits — and give complex boolean expressions a name (`isEligibleForDiscount`) instead of leaving them inline.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Flatten nested if/else</span>
+                                <span class="tag">Name complex conditions</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Replace nesting with early returns</a>
+                                <a class="yt-link plain">Name the condition, don't just write it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">25</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 25 · Refactoring without tests is just risk</div>
+                            <div class="step-heading">Use Tests as a Refactoring Safety Net</div>
+                            <div class="step-desc">Never refactor code that has zero test coverage without writing tests first — even a handful of basic tests that capture current behavior are enough to catch you if a "safe" restructuring quietly changes something. Green tests before and after are what let you refactor with confidence, not hope.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Tests before restructuring</span>
+                                <span class="tag">Confidence, not hope</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Capture current behavior before changing it</a>
+                                <a class="yt-link plain">Green before, green after — every time</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🔍</div>
+                    <div class="tip-text"><strong>Refactoring is a skill you build gradually, not a one-time cleanup sprint.</strong> The goal isn't a perfect codebase — it's leaving every file slightly better than you found it, every single time you touch it.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — MAINTAINABLE CODEBASES (26–30) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 06 · Maintainable Codebases & Long-Term Practice</div>
+                <h2 class="section-title">From "It Works" to "It Stays Working"</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">26</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 26 · Comments explain why, code explains what</div>
+                            <div class="step-heading">Write Self-Documenting Code Over Comments</div>
+                            <div class="step-desc">A comment explaining <strong>what</strong> a confusing line does is a sign the code should be rewritten, not commented — rename the variable or extract a function instead. Reserve comments for <strong>why</strong> a non-obvious decision was made, since that context can't live in the code itself.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Rewrite before you comment</span>
+                                <span class="tag">Comments explain "why"</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">A confusing line needs a rename, not a comment</a>
+                                <a class="yt-link plain">Save comments for non-obvious decisions</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">27</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 27 · Stop relitigating style in every PR</div>
+                            <div class="step-heading">Establish Team Coding Standards</div>
+                            <div class="step-desc">Agree as a team on formatting, naming conventions, and folder structure, and enforce them automatically with a linter and formatter rather than through review comments. Consistency removes an entire category of bikeshedding from every pull request.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Enforce with tooling, not opinions</span>
+                                <span class="tag">Removes review bikeshedding</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Set up a linter and formatter early</a>
+                                <a class="yt-link plain">Write the standard down once, reference it forever</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">28</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 28 · Reviews are how standards actually spread</div>
+                            <div class="step-heading">Practice Code Reviews That Teach</div>
+                            <div class="step-desc">A good review comment explains the <strong>why</strong> behind a suggestion, not just the what — "extract this into a function since it's used three times below" teaches something a bare "fix this" never will. Praise good decisions in review too, not just flag problems.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Explain the "why," not just "fix this"</span>
+                                <span class="tag">Praise good decisions too</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Reviews should teach, not just gatekeep</a>
+                                <a class="yt-link plain">Call out what was done well</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">29</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 29 · Debt is fine — untracked debt isn't</div>
+                            <div class="step-heading">Track Technical Debt Deliberately</div>
+                            <div class="step-desc">Shortcuts taken under deadline pressure are normal — the mistake is not writing them down. Keep a visible backlog of known debt with a short note on the risk it carries, so cleanup becomes a planned decision instead of something only noticed when it causes an incident.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Write the shortcut down</span>
+                                <span class="tag">Plan cleanup, don't wait for a fire</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Keep a visible technical debt backlog</a>
+                                <a class="yt-link plain">Note the risk, not just the shortcut</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">30</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 30 · The habit that outlasts any single project</div>
+                            <div class="step-heading">Build a Culture of Continuous Cleanup</div>
+                            <div class="step-desc">Follow the <strong>Boy Scout Rule</strong> — leave the code a little cleaner than you found it, every time you touch it. Applied consistently across a team, small improvements compound into a codebase that stays pleasant to work in for years instead of one that needs a rewrite every eighteen months.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Boy Scout Rule</span>
+                                <span class="tag">Small improvements compound</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Leave every file slightly better</a>
+                                <a class="yt-link plain">Small habits beat rewrite cycles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Clean Code Maturity — Beginner → Advanced</div>
+                <div style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:10px; letter-spacing:-0.01em;">
+                    Where You Are vs. Where You're Headed</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Foundational</div>
+                        <div class="skill-item">Names reveal intent</div>
+                        <div class="skill-item">Functions stay small</div>
+                        <div class="skill-item">No empty catch blocks</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Practicing</div>
+                        <div class="skill-item">Modules have single responsibility</div>
+                        <div class="skill-item">Refactors in small, tested steps</div>
+                        <div class="skill-item">Recognizes smells before review flags them</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Mastered</div>
+                        <div class="skill-item">Reviews teach, not just gatekeep</div>
+                        <div class="skill-item">Debt tracked and planned, not accidental</div>
+                        <div class="skill-item">Team standards enforced by tooling</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Weekly Practice Rhythm</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">Once Past the Naming & Functions Phase
+                </div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Rename at least one unclear variable or function you encounter this week
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Extract one function from anything you write that's doing more than one thing
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Leave one review comment that explains "why," not just "fix this"
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Add one known shortcut to the technical debt backlog with a risk note
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Refactor one small piece of code with tests as your safety net
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Clean Code for Developers · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free Resources & Tools for Writing Clean Code</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">📚 Foundational Reading</div>
+                        <div class="resource-card-desc">Classic texts on naming, functions, and code smells remain the clearest reference points — reread a chapter a week instead of trying to absorb it all at once.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — Refactoring Deep Dives</div>
+                        <div class="resource-card-desc">Engineers who record live refactoring sessions show the actual decision-making behind each small step, not just the finished result.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — System Design Educators</div>
+                        <div class="resource-card-desc">Channels breaking down modularity, layering, and abstraction with real diagrams are a strong model for the modularity phase in this guide.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📺 Creator Spotlight — Language-Specific Style Guides</div>
+                        <div class="resource-card-desc">Official style guides for your primary language codify naming and formatting conventions so your team isn't inventing rules from scratch.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🛠️ Linters & Formatters</div>
+                        <div class="resource-card-desc">Automated tools that catch naming issues, complexity, and duplication before a human reviewer ever needs to mention them.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🛠️ Static Analysis & Code Smell Detectors</div>
+                        <div class="resource-card-desc">Tools that flag long functions, high complexity, and duplication automatically — treat their warnings as a starting checklist, not gospel.</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">Community — Peer study groups</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Clean Code Is a Habit, Not a Sprint 🔗</div>
+                    <div class="cta-sub">Nobody writes perfect code on the first pass. A codebase gets clean through hundreds of small, deliberate decisions — a better name here, a smaller function there — repeated every single day you write code.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelector('.print-btn').addEventListener('click', function () {
+            window.print();
+        });
+    </script>
+</body>
+
+</html>
