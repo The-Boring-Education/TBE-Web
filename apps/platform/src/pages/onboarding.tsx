@@ -104,7 +104,8 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
       case 3: {
         const [code, number] = contactNo.split(' ');
         return (
-          code.startsWith('+') && number?.replace(/[^0-9]/g, '').length >= 10
+          Boolean(code?.startsWith('+')) &&
+          number?.replace(/\D/g, '').length === 10
         );
       }
       default:
@@ -146,7 +147,10 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
             countryCode={code}
             phoneNumber={number}
             onChangeCode={(val) => updateForm('contactNo', `${val} ${number}`)}
-            onChangeNumber={(val) => updateForm('contactNo', `${code} ${val}`)}
+            onChangeNumber={(val) => {
+              const cleanNumber = val.replace(/\D/g, '').slice(0, 10);
+              updateForm('contactNo', `${code} ${cleanNumber}`);
+            }}
           />
         );
       }
