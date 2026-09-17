@@ -64,6 +64,25 @@
     "tags": ["roadmap", "blockchain"]
   },
   {
+    "slug": "clean-code-for-developers",
+    "title": "Clean Code for Developers Guide 2026",
+    "description": "A phase-by-phase playbook for writing code your teammates — and future you — can actually read: naming, functions, modularity, abstraction, error handling, code smells, refactoring, and the habits that keep a codebase maintainable for years.",
+    "keywords": [
+      "clean code",
+      "software engineering",
+      "refactoring",
+      "code smells",
+      "solid principles",
+      "design patterns",
+      "code quality",
+      "readable code",
+      "code review",
+      "software architecture",
+      "maintainable code"
+    ],
+    "tags": ["guide", "cleancode", "bestpractices"]
+  },
+  {
     "slug": "cloud-engineer-roadmap",
     "title": "Cloud Engineer Roadmap 2026",
     "description": "A complete step-by-step roadmap to becoming a Cloud Engineer, covering cloud computing fundamentals, AWS, Azure, Google Cloud, DevOps, networking, containers, Kubernetes, CI/CD, security, and real-world deployment practices.",
@@ -418,5 +437,26 @@
       "load balancing"
     ],
     "tags": ["roadmap", "systemdesign"]
+  },
+  {
+    "slug": "testing-guide-for-developers",
+    "title": "Testing Guide for Developers 2026",
+    "description": "A phase-by-phase playbook for building real testing discipline — unit tests, integration tests, E2E coverage, mocking, TDD, and CI, in the order that actually makes your codebase trustworthy.",
+    "keywords": [
+      "testing",
+      "unit testing",
+      "integration testing",
+      "e2e testing",
+      "tdd",
+      "test driven development",
+      "jest",
+      "vitest",
+      "playwright",
+      "cypress",
+      "software testing",
+      "ci cd",
+      "test coverage"
+    ],
+    "tags": ["guide", "testing", "bestpractices"]
   }
 ]

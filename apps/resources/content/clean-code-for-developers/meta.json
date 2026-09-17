@@ -1,0 +1,19 @@
+{
+  "title": "Clean Code for Developers Guide 2026",
+  "description": "A phase-by-phase playbook for writing code your teammates — and future you — can actually read: naming, functions, modularity, abstraction, error handling, code smells, refactoring, and the habits that keep a codebase maintainable for years.",
+  "keywords": [
+    "clean code",
+    "software engineering",
+    "refactoring",
+    "code smells",
+    "solid principles",
+    "design patterns",
+    "code quality",
+    "readable code",
+    "code review",
+    "software architecture",
+    "maintainable code"
+  ],
+  "tags": ["guide", "cleancode", "bestpractices"],
+  "ogImage": "https://theboringeducation.com/images/clean-code-for-developers-og.png"
+}
