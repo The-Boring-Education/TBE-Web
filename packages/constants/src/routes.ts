@@ -56,6 +56,8 @@ const routes = {
     patternQuiz: "/pattern-quiz",
     /** Public shareable progress page */
     journey: (username: string) => `/journey/${encodeURIComponent(username)}`,
+    visualizers: "/visualizers",
+    visualizer: (slug: string) => `/visualizers/${slug}`,
     baseUrl: "https://dsayatra.theboringeducation.com",
   },
   // Quizes
