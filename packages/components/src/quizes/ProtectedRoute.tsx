@@ -49,7 +49,6 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         if (isMongoObjectId(user?.id)) {
           setResolvedUserId(user!.id);
         }
-        const base = (config.API_BASE_URL || "").replace(/\/$/, "");
         const resp = await fetch(
           `/api/proxy/user?email=${encodeURIComponent(user!.email!)}`,
         );

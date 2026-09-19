@@ -459,22 +459,63 @@ const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [
   { label: "Job Search", value: "JOB_SEARCH" },
 ];
 
+// Mobile lengths and national prefixes: google/libphonenumber resources/PhoneNumberMetadata.xml.
 const COUNTRY_CODES = [
-  { code: "+91", country: "INDIA" },
-  { code: "+1", country: "UNITED STATES" },
-  { code: "+44", country: "UNITED KINGDOM" },
-  { code: "+81", country: "JAPAN" },
-  { code: "+49", country: "GERMANY" },
-  { code: "+33", country: "FRANCE" },
-  { code: "+61", country: "AUSTRALIA" },
-  { code: "+86", country: "CHINA" },
-  { code: "+39", country: "ITALY" },
-  { code: "+7", country: "RUSSIA" },
-  { code: "+34", country: "SPAIN" },
-  { code: "+82", country: "SOUTH KOREA" },
-  { code: "+31", country: "NETHERLANDS" },
-  { code: "+47", country: "NORWAY" },
-  { code: "+46", country: "SWEDEN" },
+  { code: "+91", country: "INDIA", mobileNumberLengths: [10], trunkPrefix: "0" },
+  { code: "+1", country: "UNITED STATES", mobileNumberLengths: [10], trunkPrefix: "1" },
+  {
+    code: "+44",
+    country: "UNITED KINGDOM",
+    mobileNumberLengths: [10],
+    trunkPrefix: "0",
+  },
+  {
+    code: "+81",
+    country: "JAPAN",
+    mobileNumberLengths: [10],
+    trunkPrefix: "0",
+  },
+  {
+    code: "+49",
+    country: "GERMANY",
+    mobileNumberLengths: [10, 11],
+    trunkPrefix: "0",
+  },
+  {
+    code: "+33",
+    country: "FRANCE",
+    mobileNumberLengths: [9],
+    trunkPrefix: "0",
+  },
+  {
+    code: "+61",
+    country: "AUSTRALIA",
+    mobileNumberLengths: [9],
+    trunkPrefix: "0",
+  },
+  { code: "+86", country: "CHINA", mobileNumberLengths: [11], trunkPrefix: "0" },
+  { code: "+39", country: "ITALY", mobileNumberLengths: [9, 10] },
+  { code: "+7", country: "RUSSIA", mobileNumberLengths: [10], trunkPrefix: "8" },
+  { code: "+34", country: "SPAIN", mobileNumberLengths: [9] },
+  {
+    code: "+82",
+    country: "SOUTH KOREA",
+    mobileNumberLengths: [9, 10],
+    trunkPrefix: "0",
+  },
+  {
+    code: "+31",
+    country: "NETHERLANDS",
+    mobileNumberLengths: [9, 11],
+    trunkPrefix: "0",
+  },
+  { code: "+47", country: "NORWAY", mobileNumberLengths: [8] },
+  {
+    code: "+46",
+    country: "SWEDEN",
+    mobileNumberLengths: [9],
+    trunkPrefix: "0",
+  },
 ];
 
 const JOB_EXPERIENCE_LEVEL: {

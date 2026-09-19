@@ -108,7 +108,7 @@ export default function StringBasicsVisualizer() {
   const handleRun = () => {
     setPlaying(false);
     const c = input.toLowerCase().replace(/[^a-z0-9]/g, "");
-    setCleaned(c || input);
+    setCleaned(c);
     setSteps(generateSteps(input));
     setIdx(0);
   };

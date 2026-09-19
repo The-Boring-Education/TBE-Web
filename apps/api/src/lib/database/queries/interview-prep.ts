@@ -1,5 +1,10 @@
-import { compareDsaTopicKeysForApi } from "@tbe/constants";
-import mongoose, { type PipelineStage, Types } from "mongoose";
+import {
+  applyDSAFreemiumGating,
+  compareDsaTopicKeysForApi,
+  getDSAFreemiumBucket,
+} from "@tbe/constants";
+import type { DsaTopicSummaryRow } from "@tbe/types";
+import { Types } from "mongoose";
 
 import { modelSelectParams } from "@/lib/constants";
 import type {
@@ -787,48 +792,30 @@ const getAllDSAQuestionsFromDB = async (
 
 /**
  * Topic list + counts by primary topic only (`topics[0]`), aligned with DSA Yatra UI.
- * When `userId` is set, each row includes `solved` (completed questions in that topic,
- * same company-type filter as counts).
+ * Accessible counts use the same personalized ordering and freemium caps as the sheet.
  */
 const getDSATopicSummariesFromDB = async (
   userId?: string,
   productType: "DSA_YATRA" | "ONCAMPUS" = "DSA_YATRA",
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const matchStages: PipelineStage[] = [];
-
-    // targetCompanies is no longer used to filter topics. We want to show all topics
-    // and questions regardless of user preferences.
-
-    const countPipeline: PipelineStage[] = [
-      ...matchStages,
-      {
-        $unwind: "$topics",
-      },
-      {
-        $addFields: {
-          primaryTopic: { $toUpper: "$topics" },
-        },
-      },
-      {
-        $match: {
-          primaryTopic: { $exists: true, $nin: [null, ""] },
-        },
-      },
-      {
-        $group: {
-          _id: "$primaryTopic",
-          count: { $sum: 1 },
-        },
-      },
-    ];
-
-    const rows = await DSAQuestion.aggregate(countPipeline);
-
-    const solvedByTopic = new Map<string, number>();
+    const targetCompanies = userId
+      ? await getUserDSATargetCompanies(userId)
+      : [];
+    let isPaidUser = false;
+    const completedIds = new Set<string>();
 
     if (userId) {
+      const paymentResult = await checkPaymentStatusFromDB(
+        userId,
+        "lifetime",
+        productType,
+      );
+      if (paymentResult.error) return { error: paymentResult.error };
+      isPaidUser = paymentResult.data?.purchased === true;
+
       const progressResult = await getDsaYatraProgressFromDB(userId);
+      if (progressResult.error) return { error: progressResult.error };
       const completed =
         progressResult.data &&
         typeof progressResult.data === "object" &&
@@ -840,57 +827,59 @@ const getDSATopicSummariesFromDB = async (
             ).completedQuestionIds
           : [];
 
-      const validIds = completed
-        .map((id) => String(id))
-        .filter((id) => mongoose.isValidObjectId(id))
-        .map((id) => new mongoose.Types.ObjectId(id));
+      completed.forEach((id) => completedIds.add(String(id)));
+    }
 
-      if (validIds.length > 0) {
-        const solvedPipeline: PipelineStage[] = [
-          ...matchStages,
-          { $match: { _id: { $in: validIds } } },
-          {
-            $addFields: {
-              primaryTopic: { $toUpper: { $arrayElemAt: ["$topics", 0] } },
-            },
-          },
-          {
-            $match: {
-              primaryTopic: { $exists: true, $nin: [null, ""] },
-            },
-          },
-          {
-            $group: {
-              _id: "$primaryTopic",
-              solved: { $sum: 1 },
-            },
-          },
-        ];
-        const solvedRows = await DSAQuestion.aggregate(solvedPipeline);
-        for (const row of solvedRows) {
-          solvedByTopic.set(
-            String(row._id).toUpperCase(),
-            row.solved as number,
+    const rows = await DSAQuestion.aggregate<{
+      _id: Types.ObjectId;
+      topics?: string[];
+      difficulty?: string;
+      isRealWorldProblem?: boolean;
+      isLocked?: boolean;
+    }>([
+      buildDsaSortFieldsStage(targetCompanies),
+      DSA_SORT_STAGE,
+      { $project: { _id: 1, topics: 1, difficulty: 1, isRealWorldProblem: 1 } },
+    ]);
+    const topicMap = new Map<string, DsaTopicSummaryRow>();
+    for (const row of rows) {
+      const topic = row.topics?.[0]?.toUpperCase();
+      if (!topic) continue;
+      const summary = topicMap.get(topic) ?? {
+        topic,
+        count: 0,
+        solved: 0,
+        accessibleCount: 0,
+        accessibleSolved: 0,
+      };
+      const solved = completedIds.has(String(row._id)) ? 1 : 0;
+      summary.count += 1;
+      summary.solved += solved;
+      topicMap.set(topic, summary);
+    }
+    for (const summary of topicMap.values()) {
+      const topicRows = rows.filter((row) =>
+        row.topics?.some((topic) => topic.toUpperCase() === summary.topic),
+      );
+      const accessibleRows = isPaidUser
+        ? topicRows
+        : applyDSAFreemiumGating(topicRows, (row) =>
+            getDSAFreemiumBucket(row.difficulty, row.isRealWorldProblem),
           );
+      for (const row of accessibleRows) {
+        if (
+          row.topics?.[0]?.toUpperCase() !== summary.topic ||
+          (!isPaidUser && row.isLocked)
+        ) {
+          continue;
         }
+        summary.accessibleCount += 1;
+        summary.accessibleSolved += completedIds.has(String(row._id)) ? 1 : 0;
       }
     }
-
-    if (!rows || rows.length === 0) {
-      return { data: { topics: [] } };
-    }
-
-    const topics = rows
-      .map((row) => {
-        const topic = String(row._id).toUpperCase();
-        return {
-          topic,
-          count: row.count as number,
-          solved: solvedByTopic.get(topic) ?? 0,
-        };
-      })
-      .filter((t) => t.topic)
-      .sort((a, b) => compareDsaTopicKeysForApi(a.topic, b.topic));
+    const topics = Array.from(topicMap.values()).sort((a, b) =>
+      compareDsaTopicKeysForApi(a.topic, b.topic),
+    );
 
     return { data: { topics } };
   } catch (error) {

@@ -56,7 +56,6 @@ function QuizContent() {
   ): Promise<string | null> => {
     try {
       // First try to get user by email
-      const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
       const response = await fetch(
         `/api/proxy/user?email=${encodeURIComponent(email)}`,
       );
@@ -106,7 +105,6 @@ function QuizContent() {
           return;
         }
         // Fallback: fetch by email to get _id
-        const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
         const resp = await fetch(
           `/api/proxy/user?email=${encodeURIComponent(user!.email!)}`,
         );

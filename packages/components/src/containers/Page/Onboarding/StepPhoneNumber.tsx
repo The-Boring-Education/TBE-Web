@@ -38,7 +38,7 @@ const StepPhoneNumber = ({
           type="tel"
           value={phoneNumber}
           onChange={(val) => {
-            const cleanNumber = val.replace(/\D/g, "").slice(0, 10);
+            const cleanNumber = val.replace(/\D/g, "");
             onChangeNumber(cleanNumber);
           }}
         />

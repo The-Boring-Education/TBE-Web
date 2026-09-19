@@ -28,6 +28,7 @@
     "@sentry/nextjs": "^9.38.0",
     "@tbe/auth": "workspace:*",
     "@tbe/constants": "workspace:*",
+    "@tbe/types": "workspace:*",
     "@tbe/utils": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",

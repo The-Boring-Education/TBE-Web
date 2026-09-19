@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Node {
   id: number;
@@ -36,8 +36,16 @@ export default function LinkedListBasicsVisualizer() {
   );
   const flash = useCallback((id: number, kind: Highlight["kind"]) => {
     setHighlight({ id, kind });
-    setTimeout(() => setHighlight({ id: null, kind: null }), 800);
   }, []);
+
+  useEffect(() => {
+    if (highlight.id === null) return;
+    const timer = setTimeout(
+      () => setHighlight({ id: null, kind: null }),
+      800,
+    );
+    return () => clearTimeout(timer);
+  }, [highlight]);
 
   const parsedValue = () => {
     const v = Number.parseInt(valueInput, 10);
@@ -74,11 +82,9 @@ export default function LinkedListBasicsVisualizer() {
       return;
     }
     const head = list[0]!;
-    flash(head.id, "delete");
-    setTimeout(() => {
-      setList((prev) => prev.slice(1));
-      pushLog(`Delete head (${head.value}) → head = head.next`);
-    }, 400);
+    setHighlight({ id: null, kind: null });
+    setList(list.slice(1));
+    pushLog(`Delete head (${head.value}) → head = head.next`);
   };
 
   const handleReverse = () => {
@@ -93,6 +99,7 @@ export default function LinkedListBasicsVisualizer() {
 
   const handleReset = () => {
     ID = 1;
+    setHighlight({ id: null, kind: null });
     setList([
       { id: nextId(), value: 10 },
       { id: nextId(), value: 20 },

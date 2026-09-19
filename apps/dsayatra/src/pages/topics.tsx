@@ -124,7 +124,10 @@ function TopicsClient() {
   const nodes: RoadmapNode[] = useMemo(() => {
     const topicMap = new Map<string, { total: number; solved: number }>();
     (topicRows || []).forEach((row) => {
-      topicMap.set(row.topic, { total: row.count, solved: row.solved ?? 0 });
+      topicMap.set(row.topic, {
+        total: row.accessibleCount,
+        solved: row.accessibleSolved,
+      });
     });
 
     const sortedKeys = Object.keys(TOPIC_LABELS).sort(compareDsaTopicKeys);
@@ -138,7 +141,7 @@ function TopicsClient() {
         name,
         total: data.total,
         solved: data.solved,
-        isLocked: false,
+        isLocked: data.total === 0,
         explanation:
           EXPLANATIONS[name] || `Master the fundamentals of ${name}.`,
         difficulty: 1 + (idx % 5),

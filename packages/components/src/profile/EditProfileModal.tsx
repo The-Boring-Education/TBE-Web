@@ -2,8 +2,10 @@ import { COUNTRY_CODES, USER_ROLE_OPTIONS } from "@tbe/constants";
 import { useUsername } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import {
+  isPossibleMobileNumber,
   normalizeContactNoForForm,
   normalizeOptionalProfileUrl,
+  splitContactNumber,
 } from "@tbe/utils";
 import React, { useEffect, useState } from "react";
 import {
@@ -304,25 +306,15 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     setCustomSkillInput("");
   };
 
-  const [countryCode, phoneNumber] = (() => {
-    const raw = form.contactNo.trim();
-    const parts = raw.split(/\s+/);
-    if (parts.length > 1) {
-      return [parts[0] || "+91", parts.slice(1).join(" ")];
-    }
-    const match = raw.match(/^(\+\d{1,3})(.*)$/);
-    if (match) {
-      return [match[1] || "+91", (match[2] || "").trim()];
-    }
-    return ["+91", raw];
-  })();
+  const [countryCode, phoneNumber] = splitContactNumber(form.contactNo);
 
   const isFormValid = () => {
     if (!form.name.trim()) return false;
     if (!form.userName.trim() || form.userName.trim().length < 3) return false;
     if (form.userName !== initialUserName && !isUsernameAvailable) return false;
-    const cleanPhone = phoneNumber.replace(/\D/g, "");
-    if (cleanPhone && cleanPhone.length !== 10) return false;
+    if (phoneNumber.trim() && !isPossibleMobileNumber(countryCode, phoneNumber)) {
+      return false;
+    }
     return true;
   };
 
@@ -330,7 +322,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     e.preventDefault();
     if (!isFormValid() || isSaving) return;
 
-    const cleanPhone = phoneNumber.replace(/\D/g, "").slice(0, 10);
+    const cleanPhone = phoneNumber.replace(/\D/g, "");
     const finalContactNo = cleanPhone
       ? `${countryCode} ${cleanPhone}`
       : form.contactNo.trim();
@@ -519,13 +511,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       type="tel"
                       value={phoneNumber}
                       onChange={(e) => {
-                        const cleanVal = e.target.value
-                          .replace(/\D/g, "")
-                          .slice(0, 10);
+                        const cleanVal = e.target.value.replace(/\D/g, "");
                         updateField("contactNo", `${countryCode} ${cleanVal}`);
                       }}
                       placeholder="9876543210"
-                      maxLength={10}
                       className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#FF5757] focus:ring-2 focus:ring-[#FF5757]/20 outline-none text-xs sm:text-sm text-slate-900 transition"
                     />
                   </div>
