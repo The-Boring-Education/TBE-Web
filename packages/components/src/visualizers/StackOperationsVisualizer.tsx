@@ -127,6 +127,12 @@ export default function StackOperationsVisualizer() {
     [],
   );
 
+  useEffect(() => {
+    if (flashId === null) return;
+    const timer = setTimeout(() => setFlashId(null), 500);
+    return () => clearTimeout(timer);
+  }, [flashId]);
+
   const handlePush = () => {
     if (!valueInput) {
       pushLog("Value required");
@@ -135,7 +141,6 @@ export default function StackOperationsVisualizer() {
     const item = { id: nid(), value: valueInput };
     setStack((prev) => [...prev, item]);
     setFlashId(item.id);
-    setTimeout(() => setFlashId(null), 500);
     pushLog(`push("${valueInput}") — size ${stack.length + 1}`);
   };
   const handlePop = () => {
@@ -144,15 +149,13 @@ export default function StackOperationsVisualizer() {
       return;
     }
     const top = stack[stack.length - 1]!;
-    setFlashId(top.id);
-    setTimeout(() => {
-      setStack((prev) => prev.slice(0, -1));
-      pushLog(`pop() → "${top.value}"`);
-      setFlashId(null);
-    }, 350);
+    setStack(stack.slice(0, -1));
+    pushLog(`pop() → "${top.value}"`);
+    setFlashId(null);
   };
   const handleClear = () => {
     setStack([]);
+    setFlashId(null);
     pushLog("Stack cleared");
   };
 

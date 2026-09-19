@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const CONTAINER: React.CSSProperties = {
   background: "#09090b",
@@ -31,8 +31,16 @@ export default function ArrayBasicsVisualizer() {
 
   const flash = useCallback((index: number, kind: Highlight["kind"]) => {
     setHighlight({ index, kind });
-    setTimeout(() => setHighlight({ index: null, kind: null }), 700);
   }, []);
+
+  useEffect(() => {
+    if (highlight.index === null) return;
+    const timer = setTimeout(
+      () => setHighlight({ index: null, kind: null }),
+      700,
+    );
+    return () => clearTimeout(timer);
+  }, [highlight]);
 
   const parsedIndex = () => {
     const n = Number.parseInt(indexInput, 10);
@@ -61,12 +69,10 @@ export default function ArrayBasicsVisualizer() {
       return;
     }
     flash(i, "delete");
-    setTimeout(() => {
-      setArr((prev) => [...prev.slice(0, i), ...prev.slice(i + 1)]);
-      pushLog(
-        `Delete at index ${i} — shifted ${arr.length - i - 1} element(s) left`,
-      );
-    }, 300);
+    setArr([...arr.slice(0, i), ...arr.slice(i + 1)]);
+    pushLog(
+      `Delete at index ${i} — shifted ${arr.length - i - 1} element(s) left`,
+    );
   };
 
   const handleAccess = () => {
@@ -81,6 +87,7 @@ export default function ArrayBasicsVisualizer() {
 
   const handleReset = () => {
     setArr(INITIAL);
+    setHighlight({ index: null, kind: null });
     setLog(["Reset to default array"]);
   };
 
