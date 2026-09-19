@@ -24,6 +24,8 @@ export const setTokens = (accessToken: string, refreshToken: string): void => {
       ? "; Secure"
       : "";
 
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
   document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${accessToken}; path=/; max-age=${AUTH_CONFIG.ACCESS_TOKEN_MAX_AGE}; SameSite=Lax${domainAttr}${secureAttr}`;
   document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${refreshToken}; path=/; max-age=${AUTH_CONFIG.REFRESH_TOKEN_MAX_AGE}; SameSite=Lax${domainAttr}${secureAttr}`;
 };
@@ -40,6 +42,12 @@ export const clearTokens = (): void => {
   if (typeof document === "undefined") return;
   const domain = getCookieDomain();
   const domainAttr = domain ? `; domain=${domain}` : "";
+
+  // Clear host-only variant
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+
+  // Clear domain-scoped variant (if applicable)
   document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0${domainAttr}`;
   document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0${domainAttr}`;
 };
