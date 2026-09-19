@@ -1,11 +1,12 @@
+import { AUTH_CONFIG } from "@tbe/auth";
+
 import {
   buildE2EAccessJwt,
   ONBOARDING_GATE_E2E_USER,
 } from "../fixtures/onboarding-redirect";
 import { expect, test } from "../fixtures/platform.fixture";
 
-const TBE_ACCESS_COOKIE = "tbe_access_token";
-const TBE_REFRESH_COOKIE = "tbe_refresh_token";
+const TBE_ACCESS_COOKIE = AUTH_CONFIG.ACCESS_TOKEN_KEY;
 
 test.describe("Authentication Flow E2E Tests", () => {
   test.describe("Login/Logout Flow", () => {
@@ -183,46 +184,44 @@ test.describe("Authentication Flow E2E Tests", () => {
   test.describe("Auth State Persistence", () => {
     test("auth state persists across page navigation", async ({
       platformPage: page,
+      baseURL,
     }) => {
+      if (!baseURL) throw new Error("Platform baseURL is required");
       const token = buildE2EAccessJwt();
 
       await page.context().addCookies([
         {
           name: TBE_ACCESS_COOKIE,
           value: token,
-          domain: "localhost",
-          path: "/",
+          url: baseURL,
           sameSite: "Lax",
           httpOnly: false,
           secure: false,
         },
       ]);
 
-      await page.addInitScript(
-        ([key, value]) => {
-          document.cookie = `${key}=${value}; path=/; max-age=86400; SameSite=Lax`;
-        },
-        [TBE_ACCESS_COOKIE, token] as [string, string],
-      );
-
-      // Mock APIs for navigation
-      await page.route("**/api/proxy/**", (route) =>
-        route.fulfill({
-          status: 200,
-          json: { status: true, data: [] },
-        }),
-      );
-
       // Navigate to dashboard
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
       await expect(page).toHaveURL(/\/user\/dashboard/);
+      await expect(
+        page.getByRole("heading", { name: "Leaderboard", exact: true }),
+      ).toBeVisible();
 
       // Navigate to home
       await page.goto("/", { waitUntil: "domcontentloaded" });
+      await expect(page).toHaveURL("/");
 
       // Navigate back to dashboard - should still be authenticated
       await page.goto("/user/dashboard", { waitUntil: "domcontentloaded" });
       await expect(page).toHaveURL(/\/user\/dashboard/);
+      await expect(
+        page.getByRole("heading", { name: "Leaderboard", exact: true }),
+      ).toBeVisible();
+      expect(
+        (await page.context().cookies(baseURL)).find(
+          (cookie) => cookie.name === TBE_ACCESS_COOKIE,
+        )?.value,
+      ).toBe(token);
     });
   });
 
