@@ -270,6 +270,9 @@ importers:
       "@tbe/constants":
         specifier: workspace:*
         version: link:../../packages/constants
+      "@tbe/types":
+        specifier: workspace:*
+        version: link:../../packages/types
       "@tbe/utils":
         specifier: workspace:*
         version: link:../../packages/utils

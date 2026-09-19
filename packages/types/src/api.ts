@@ -82,6 +82,14 @@ export type DatabaseQueryResponseType = {
   details?: any;
 };
 
+export interface DsaTopicSummaryRow {
+  topic: string;
+  count: number;
+  solved: number;
+  accessibleCount: number;
+  accessibleSolved: number;
+}
+
 // ================================
 // PROJECT API TYPES
 // ================================
