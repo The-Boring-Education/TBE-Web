@@ -1,6 +1,6 @@
 import { COUNTRY_CODES } from "@tbe/constants";
 
-export const isValidPhoneNumber = (
+export const isPossibleMobileNumber = (
   countryCode: string,
   phoneNumber: string,
 ): boolean => {

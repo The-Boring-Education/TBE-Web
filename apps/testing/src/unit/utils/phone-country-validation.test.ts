@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  isValidPhoneNumber,
+  isPossibleMobileNumber,
   splitContactNumber,
 } from "../../../../../packages/utils/src/phoneNumber";
 
@@ -15,24 +15,36 @@ vi.mock("@tbe/constants", async () => {
 describe("country-aware mobile number validation", () => {
   it.each([
     ["+91", "9876543210"],
+    ["+91", "09876543210"],
     ["+1", "2025550123"],
+    ["+1", "12025550123"],
     ["+44", "7700900123"],
     ["+44", "07700900123"],
     ["+81", "9012345678"],
+    ["+81", "09012345678"],
     ["+49", "15123456789"],
     ["+49", "015123456789"],
     ["+33", "612345678"],
+    ["+33", "0612345678"],
     ["+61", "412345678"],
+    ["+61", "0412345678"],
     ["+86", "13800138000"],
+    ["+86", "013800138000"],
     ["+39", "3123456789"],
     ["+7", "9123456789"],
+    ["+7", "89123456789"],
     ["+34", "612345678"],
     ["+82", "1012345678"],
+    ["+82", "01012345678"],
     ["+31", "612345678"],
+    ["+31", "0612345678"],
+    ["+31", "97012345678"],
+    ["+31", "097012345678"],
     ["+47", "41234567"],
     ["+46", "701234567"],
+    ["+46", "0701234567"],
   ])("accepts %s %s without a universal ten-digit rule", (code, number) => {
-    expect(isValidPhoneNumber(code, number)).toBe(true);
+    expect(isPossibleMobileNumber(code, number)).toBe(true);
   });
 
   it.each([
@@ -47,13 +59,20 @@ describe("country-aware mobile number validation", () => {
     ["+999", "1234567890"],
     ["", "9876543210"],
     ["+91", "abc9876543210"],
+    ["+44", "---"],
+    ["+44", "07700abc900123"],
+    ["+44", "+447700900123"],
+    ["+44", "007700900123"],
+    ["+86", "13800138000 ext 2"],
+    ["+31", "9701234567"],
+    ["+91", "   "],
   ])("rejects %s %s", (code, number) => {
-    expect(isValidPhoneNumber(code, number)).toBe(false);
+    expect(isPossibleMobileNumber(code, number)).toBe(false);
   });
 
   it("accepts presentation formatting without modifying the input", () => {
     const number = "(07700) 900-123";
-    expect(isValidPhoneNumber("+44", number)).toBe(true);
+    expect(isPossibleMobileNumber("+44", number)).toBe(true);
     expect(number).toBe("(07700) 900-123");
   });
 });

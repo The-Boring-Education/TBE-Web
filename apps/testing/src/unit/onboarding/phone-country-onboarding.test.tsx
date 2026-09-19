@@ -21,11 +21,11 @@ vi.mock("@tbe/constants", async () => {
 });
 
 vi.mock("@tbe/utils", async () => {
-  const { isValidPhoneNumber, splitContactNumber } = await import(
+  const { isPossibleMobileNumber, splitContactNumber } = await import(
     "../../../../../packages/utils/src/phoneNumber"
   );
   return {
-    isValidPhoneNumber,
+    isPossibleMobileNumber,
     splitContactNumber,
     getPreFetchProps: vi.fn(),
     getRedirectUrl: () => "/",
@@ -176,6 +176,7 @@ describe("onboarding international phone regression", () => {
     ["+44", "07700900123"],
     ["+47", "41234567"],
     ["+91", "9876543210"],
+    ["+31", "97012345678"],
   ])("submits the complete %s number", async (code, number) => {
     renderPhoneStep();
     fireEvent.change(screen.getByLabelText("Country Code"), {
@@ -207,6 +208,11 @@ describe("onboarding international phone regression", () => {
       target: { value: "+86" },
     });
     expect(submit).toBeEnabled();
+    expect(screen.getByLabelText("Phone Number")).toHaveValue("13800138000");
+    fireEvent.change(screen.getByLabelText("Country Code"), {
+      target: { value: "+91" },
+    });
+    expect(submit).toBeDisabled();
     expect(screen.getByLabelText("Phone Number")).toHaveValue("13800138000");
     fireEvent.change(screen.getByLabelText("Phone Number"), {
       target: { value: "1380013800012345" },

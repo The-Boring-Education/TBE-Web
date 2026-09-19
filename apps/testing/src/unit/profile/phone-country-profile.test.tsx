@@ -19,7 +19,7 @@ vi.mock("@tbe/hooks", () => ({
 }));
 
 vi.mock("@tbe/utils", async () => {
-  const { isValidPhoneNumber, splitContactNumber } = await import(
+  const { isPossibleMobileNumber, splitContactNumber } = await import(
     "../../../../../packages/utils/src/phoneNumber"
   );
   const { normalizeContactNoForForm } = await import(
@@ -31,7 +31,7 @@ vi.mock("@tbe/utils", async () => {
   return {
     cn: (...values: unknown[]) =>
       values.filter((value) => typeof value === "string").join(" "),
-    isValidPhoneNumber,
+    isPossibleMobileNumber,
     splitContactNumber,
     normalizeContactNoForForm,
     normalizeOptionalProfileUrl,
@@ -64,6 +64,8 @@ describe("profile international phone regression", () => {
     ["+44 07700 900123", "+44", "07700900123"],
     ["+12025550123", "+1", "2025550123"],
     ["+47 41234567", "+47", "41234567"],
+    ["+3197012345678", "+31", "97012345678"],
+    ["+91 09876543210", "+91", "09876543210"],
   ])("saves %s without losing digits", async (contact, code, number) => {
     const { onSave, save, country } = renderProfile(contact);
     expect(country).toHaveValue(code);
@@ -85,6 +87,10 @@ describe("profile international phone regression", () => {
     fireEvent.change(country, { target: { value: "+86" } });
     expect(phone).toHaveValue("13800138000");
     expect(save).toBeEnabled();
+    fireEvent.change(country, { target: { value: "+91" } });
+    expect(phone).toHaveValue("13800138000");
+    expect(save).toBeDisabled();
+    fireEvent.change(country, { target: { value: "+86" } });
     fireEvent.click(save);
     await waitFor(() =>
       expect(onSave).toHaveBeenCalledWith(
@@ -97,6 +103,18 @@ describe("profile international phone regression", () => {
     const { onSave, phone, save } = renderProfile("+86");
     fireEvent.change(phone, { target: { value: "1380013800012345" } });
     expect(phone).toHaveValue("1380013800012345");
+    expect(save).toBeDisabled();
+    fireEvent.click(save);
+    expect(onSave).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    "+999 1234567890",
+    "+44 abc7700900123",
+    "+44 ---",
+    "+86 138001380001",
+  ])("does not treat invalid stored contact %s as optional", (contact) => {
+    const { onSave, save } = renderProfile(contact);
     expect(save).toBeDisabled();
     fireEvent.click(save);
     expect(onSave).not.toHaveBeenCalled();

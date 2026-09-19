@@ -17,7 +17,7 @@ import type { PageProps } from '@tbe/interface';
 import {
   getPreFetchProps,
   getRedirectUrl,
-  isValidPhoneNumber,
+  isPossibleMobileNumber,
   splitContactNumber,
 } from '@tbe/utils';
 import { useRouter } from 'next/router';
@@ -108,7 +108,7 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
         return purpose.length > 0;
       case 3: {
         const [code, number] = splitContactNumber(contactNo);
-        return isValidPhoneNumber(code, number);
+        return isPossibleMobileNumber(code, number);
       }
       default:
         return false;

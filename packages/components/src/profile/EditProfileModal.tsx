@@ -2,7 +2,7 @@ import { COUNTRY_CODES, USER_ROLE_OPTIONS } from "@tbe/constants";
 import { useUsername } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import {
-  isValidPhoneNumber,
+  isPossibleMobileNumber,
   normalizeContactNoForForm,
   normalizeOptionalProfileUrl,
   splitContactNumber,
@@ -312,7 +312,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     if (!form.name.trim()) return false;
     if (!form.userName.trim() || form.userName.trim().length < 3) return false;
     if (form.userName !== initialUserName && !isUsernameAvailable) return false;
-    if (phoneNumber.trim() && !isValidPhoneNumber(countryCode, phoneNumber)) {
+    if (phoneNumber.trim() && !isPossibleMobileNumber(countryCode, phoneNumber)) {
       return false;
     }
     return true;

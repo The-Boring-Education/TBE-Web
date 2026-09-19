@@ -459,9 +459,10 @@ const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [
   { label: "Job Search", value: "JOB_SEARCH" },
 ];
 
+// Mobile lengths and national prefixes: google/libphonenumber resources/PhoneNumberMetadata.xml.
 const COUNTRY_CODES = [
-  { code: "+91", country: "INDIA", mobileNumberLengths: [10] },
-  { code: "+1", country: "UNITED STATES", mobileNumberLengths: [10] },
+  { code: "+91", country: "INDIA", mobileNumberLengths: [10], trunkPrefix: "0" },
+  { code: "+1", country: "UNITED STATES", mobileNumberLengths: [10], trunkPrefix: "1" },
   {
     code: "+44",
     country: "UNITED KINGDOM",
@@ -492,9 +493,9 @@ const COUNTRY_CODES = [
     mobileNumberLengths: [9],
     trunkPrefix: "0",
   },
-  { code: "+86", country: "CHINA", mobileNumberLengths: [11] },
+  { code: "+86", country: "CHINA", mobileNumberLengths: [11], trunkPrefix: "0" },
   { code: "+39", country: "ITALY", mobileNumberLengths: [9, 10] },
-  { code: "+7", country: "RUSSIA", mobileNumberLengths: [10] },
+  { code: "+7", country: "RUSSIA", mobileNumberLengths: [10], trunkPrefix: "8" },
   { code: "+34", country: "SPAIN", mobileNumberLengths: [9] },
   {
     code: "+82",
@@ -505,7 +506,7 @@ const COUNTRY_CODES = [
   {
     code: "+31",
     country: "NETHERLANDS",
-    mobileNumberLengths: [9],
+    mobileNumberLengths: [9, 11],
     trunkPrefix: "0",
   },
   { code: "+47", country: "NORWAY", mobileNumberLengths: [8] },
