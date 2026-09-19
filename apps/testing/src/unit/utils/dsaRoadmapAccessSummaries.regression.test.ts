@@ -1,3 +1,4 @@
+import type { DsaTopicSummaryRow } from "@tbe/types";
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -40,7 +41,7 @@ import { getDSATopicSummariesFromDB } from "@/lib/database/queries/interview-pre
 
 const question = (
   index: number,
-  topics: string[],
+  topics?: string[],
   difficulty = "EASY",
   isRealWorldProblem = false,
 ) => ({
@@ -64,6 +65,46 @@ const rows = [
   question(11, ["DESIGN"], "HARD", true),
   question(12, ["DESIGN"], "HARD", true),
 ];
+const completedQuestionIds = [
+  String(rows[0]._id),
+  String(rows[0]._id),
+  ...rows.slice(3).map((row) => String(row._id)),
+  "deleted-question",
+];
+
+const expectTopicSheetParity = (
+  summaries: DsaTopicSummaryRow[],
+  sortedRows: ReturnType<typeof question>[],
+  completedIds: string[] = [],
+) => {
+  for (const summary of summaries) {
+    const topicRows = sortedRows.filter((row) =>
+      row.topics?.some((topic) => topic.toUpperCase() === summary.topic),
+    );
+    const primaryRows = topicRows.filter(
+      (row) => row.topics?.[0]?.toUpperCase() === summary.topic,
+    );
+    const primaryIds = new Set(primaryRows.map((row) => String(row._id)));
+    const accessibleRows = applyDsaFreemiumGate(
+      topicRows,
+      1,
+      topicRows.length,
+    ).questions.filter(
+      (row) => !row.isLocked && primaryIds.has(String(row._id)),
+    );
+    expect(summary).toEqual({
+      topic: summary.topic,
+      count: primaryRows.length,
+      solved: primaryRows.filter((row) =>
+        completedIds.includes(String(row._id)),
+      ).length,
+      accessibleCount: accessibleRows.length,
+      accessibleSolved: accessibleRows.filter((row) =>
+        completedIds.includes(String(row._id)),
+      ).length,
+    });
+  }
+};
 
 describe("roadmap accessible primary-topic summaries regression", () => {
   beforeEach(() => {
@@ -76,14 +117,7 @@ describe("roadmap accessible primary-topic summaries regression", () => {
     });
     mocks.payment.mockResolvedValue({ data: { purchased: false } });
     mocks.progress.mockResolvedValue({
-      data: {
-        completedQuestionIds: [
-          String(rows[0]._id),
-          String(rows[0]._id),
-          ...rows.slice(3).map((row) => String(row._id)),
-          "deleted-question",
-        ],
-      },
+      data: { completedQuestionIds },
     });
   });
 
@@ -103,8 +137,8 @@ describe("roadmap accessible primary-topic summaries regression", () => {
           topic: "STRING",
           count: 1,
           solved: 1,
-          accessibleCount: 0,
-          accessibleSolved: 0,
+          accessibleCount: 1,
+          accessibleSolved: 1,
         },
         {
           topic: "GRAPH",
@@ -130,8 +164,8 @@ describe("roadmap accessible primary-topic summaries regression", () => {
       ]),
     );
     expect(result.data.topics).toHaveLength(5);
-    const gated = applyDsaFreemiumGate(rows, 1, rows.length).questions;
-    expect(gated.filter((row) => !row.isLocked)).toHaveLength(7);
+    expectTopicSheetParity(result.data.topics, rows, completedQuestionIds);
+    expect(mocks.aggregate).toHaveBeenCalledTimes(1);
     expect(mocks.aggregate).toHaveBeenCalledWith([
       buildDsaSortFieldsStage(["MNC", "FAANG"]),
       DSA_SORT_STAGE,
@@ -159,9 +193,10 @@ describe("roadmap accessible primary-topic summaries regression", () => {
       topic: "STRING",
       count: 1,
       solved: 0,
-      accessibleCount: 0,
+      accessibleCount: 1,
       accessibleSolved: 0,
     });
+    expectTopicSheetParity(result.data.topics, rows);
   });
 
   it("returns an empty summary for an empty sheet", async () => {
@@ -171,13 +206,82 @@ describe("roadmap accessible primary-topic summaries regression", () => {
     });
   });
 
-  it("gates before dropping questions without a primary topic", async () => {
-    mocks.aggregate.mockResolvedValue([
+  it("unlocks STRING on its topic sheet after three EASY ARRAY questions", async () => {
+    const sortedRows = [
+      question(1, ["ARRAY"]),
+      question(2, ["ARRAY"]),
+      question(3, ["ARRAY"]),
+      question(4, ["STRING"]),
+    ];
+    mocks.aggregate.mockResolvedValue(sortedRows);
+    const result = await getDSATopicSummariesFromDB("user");
+    expect(result.data.topics).toContainEqual({
+      topic: "STRING",
+      count: 1,
+      solved: 1,
+      accessibleCount: 1,
+      accessibleSolved: 1,
+    });
+    expectTopicSheetParity(
+      result.data.topics,
+      sortedRows,
+      completedQuestionIds,
+    );
+  });
+
+  it("lets secondary tags compete for slots without counting them as primary progress", async () => {
+    const sortedRows = [
+      question(1, ["array", "string", "STRING"]),
+      question(2, ["ARRAY", "STRING"]),
+      question(3, ["STRING"]),
+      question(4, ["string"]),
+    ];
+    mocks.aggregate.mockResolvedValue(sortedRows);
+    const completedIds = sortedRows.map((row) => String(row._id));
+    mocks.progress.mockResolvedValue({
+      data: { completedQuestionIds: completedIds },
+    });
+    const result = await getDSATopicSummariesFromDB("user");
+    expect(result.data.topics).toContainEqual({
+      topic: "STRING",
+      count: 2,
+      solved: 2,
+      accessibleCount: 1,
+      accessibleSolved: 1,
+    });
+    expectTopicSheetParity(result.data.topics, sortedRows, completedIds);
+    expect(mocks.aggregate).toHaveBeenCalledTimes(1);
+  });
+
+  it("excludes untagged rows from topic gates", async () => {
+    const sortedRows = [
       question(1, []),
-      question(2, []),
-      question(3, []),
+      question(2),
+      question(3, [""]),
       question(4, ["ARRAY"]),
+    ];
+    mocks.aggregate.mockResolvedValue(sortedRows);
+    const result = await getDSATopicSummariesFromDB();
+    expect(result.data.topics).toEqual([
+      {
+        topic: "ARRAY",
+        count: 1,
+        solved: 0,
+        accessibleCount: 1,
+        accessibleSolved: 0,
+      },
     ]);
+    expectTopicSheetParity(result.data.topics, sortedRows);
+  });
+
+  it("lets rows without a primary topic compete when a secondary tag matches", async () => {
+    const sortedRows = [
+      question(1, ["", "ARRAY"]),
+      question(2, ["", "array"]),
+      question(3, ["", "ARRAY"]),
+      question(4, ["ARRAY"]),
+    ];
+    mocks.aggregate.mockResolvedValue(sortedRows);
     const result = await getDSATopicSummariesFromDB();
     expect(result.data.topics).toEqual([
       {
@@ -188,6 +292,7 @@ describe("roadmap accessible primary-topic summaries regression", () => {
         accessibleSolved: 0,
       },
     ]);
+    expectTopicSheetParity(result.data.topics, sortedRows);
   });
 
   it.each(["payment", "progress"] as const)(

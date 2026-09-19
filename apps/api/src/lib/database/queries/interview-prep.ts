@@ -841,14 +841,8 @@ const getDSATopicSummariesFromDB = async (
       DSA_SORT_STAGE,
       { $project: { _id: 1, topics: 1, difficulty: 1, isRealWorldProblem: 1 } },
     ]);
-    const accessibleRows = isPaidUser
-      ? rows.map((row) => ({ ...row, isLocked: false }))
-      : applyDSAFreemiumGating(rows, (row) =>
-          getDSAFreemiumBucket(row.difficulty, row.isRealWorldProblem),
-        );
-
     const topicMap = new Map<string, DsaTopicSummaryRow>();
-    for (const row of accessibleRows) {
+    for (const row of rows) {
       const topic = row.topics?.[0]?.toUpperCase();
       if (!topic) continue;
       const summary = topicMap.get(topic) ?? {
@@ -861,11 +855,27 @@ const getDSATopicSummariesFromDB = async (
       const solved = completedIds.has(String(row._id)) ? 1 : 0;
       summary.count += 1;
       summary.solved += solved;
-      if (!row.isLocked) {
-        summary.accessibleCount += 1;
-        summary.accessibleSolved += solved;
-      }
       topicMap.set(topic, summary);
+    }
+    for (const summary of topicMap.values()) {
+      const topicRows = rows.filter((row) =>
+        row.topics?.some((topic) => topic.toUpperCase() === summary.topic),
+      );
+      const accessibleRows = isPaidUser
+        ? topicRows
+        : applyDSAFreemiumGating(topicRows, (row) =>
+            getDSAFreemiumBucket(row.difficulty, row.isRealWorldProblem),
+          );
+      for (const row of accessibleRows) {
+        if (
+          row.topics?.[0]?.toUpperCase() !== summary.topic ||
+          (!isPaidUser && row.isLocked)
+        ) {
+          continue;
+        }
+        summary.accessibleCount += 1;
+        summary.accessibleSolved += completedIds.has(String(row._id)) ? 1 : 0;
+      }
     }
     const topics = Array.from(topicMap.values()).sort((a, b) =>
       compareDsaTopicKeysForApi(a.topic, b.topic),
