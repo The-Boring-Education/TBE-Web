@@ -64,14 +64,14 @@ export function ResourceView({
 
       {/* Top unlock banner — shown to unauthenticated users only, full-width */}
       {!hideShell && (
-        <div className="-mx-4 -mt-4 mb-6">
+        <div className="print:hidden -mx-4 -mt-4 mb-6">
           <SignUpBanner />
         </div>
       )}
 
       <div className={hideShell ? "min-h-screen bg-[var(--shell-bg)]" : ""}>
         {!hideShell && (
-          <div className="mb-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end text-xs sm:text-sm">
+          <div className="print:hidden mb-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end text-xs sm:text-sm">
             {/* Game button — shown when game.json exists */}
             {game && (
               <button
