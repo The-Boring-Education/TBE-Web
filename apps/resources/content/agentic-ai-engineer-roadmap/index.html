@@ -962,8 +962,8 @@
                 box-shadow: none;
                 margin: 0;
                 padding: 0;
-                page-break-after: always;
-                break-after: page;
+                page-break-before: auto;
+                break-after: auto;
                 overflow: hidden;
             }
 
@@ -1101,7 +1101,8 @@
                                 schemas. Learn <strong>environment management</strong> with dotenv and secrets handling.
                                 Practice <strong>REST API consumption</strong> with httpx and requests. Understand JSON
                                 schema, function signatures, and dict manipulation — these are how agents communicate
-                                with tools.</div>
+                                with tools.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Non-negotiable</span>
                                 <span class="tag">Python async/await</span>
@@ -1146,7 +1147,8 @@
                                 need deterministic behavior (low temp), humans want creativity (high temp). Understand
                                 <strong>context windows</strong>: 8k vs 128k vs 1M — and what fits inside. Study the
                                 differences between GPT-4o, Claude 3.5, Gemini 1.5, Llama 3.1 — each has different
-                                strengths for agentic tasks. This knowledge will save you hours of debugging.</div>
+                                strengths for agentic tasks. This knowledge will save you hours of debugging.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Core knowledge</span>
                                 <span class="tag">Tokenization / BPE</span>
@@ -1191,7 +1193,8 @@
                                 Understand <strong>ReAct pattern</strong> (Reason + Act): the primary loop used in all
                                 production agents. Learn prompt injection defense — a critical security skill. Practice
                                 <strong>output structuring</strong>: JSON-mode, XML tags, and function-calling schemas.
-                                Reliable prompting = reliable agents.</div>
+                                Reliable prompting = reliable agents.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Agent backbone</span>
                                 <span class="tag">System prompts</span>
@@ -1271,7 +1274,8 @@
                                 <strong>database queries</strong>, and <strong>external API calls</strong>. Understand
                                 <strong>tool selection strategy</strong>: how to design tool schemas so LLMs reliably
                                 pick the right tool. Study <strong>parallel tool execution</strong> for speed. Learn
-                                error handling when tools fail — agents must retry gracefully.</div>
+                                error handling when tools fail — agents must retry gracefully.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">What makes agents agents</span>
                                 <span class="tag">Function calling</span>
@@ -1321,7 +1325,8 @@
                                 <strong>RAG pipeline</strong>: chunking strategies, embedding models (OpenAI
                                 text-embedding-3, BGE, Nomic), vector DB indexing, hybrid search (dense + sparse), and
                                 <strong>re-ranking</strong> with Cohere Rerank or BGE. Build a memory manager that
-                                decides what to store, retrieve, and forget.</div>
+                                decides what to store, retrieve, and forget.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Core architecture</span>
                                 <span class="tag">Vector DBs (Qdrant)</span>
@@ -1441,7 +1446,8 @@
                                 sub-question decomposition, and agentic RAG. Study <strong>LangSmith</strong> for
                                 tracing and debugging agent runs — you cannot debug an agent without observability.
                                 Understand when to use frameworks vs. building from scratch (LangGraph for complex
-                                state, raw API calls for simple agents).</div>
+                                state, raw API calls for simple agents).
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Orchestration layer</span>
                                 <span class="tag">LangChain v0.3</span>
@@ -1490,7 +1496,8 @@
                                     protocols</strong>: how agents pass structured messages vs free-form conversation.
                                 Study <strong>supervisor patterns</strong>: one LLM orchestrating a team of specialized
                                 sub-agents. Learn when multi-agent adds value vs. when a single agent loop is simpler
-                                and more reliable.</div>
+                                and more reliable.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Multi-agent systems</span>
                                 <span class="tag">CrewAI</span>
@@ -1618,7 +1625,8 @@
                                 <strong>Braintrust</strong>, <strong>LangSmith evals</strong>, and <strong>Weights &
                                     Biases Weave</strong> for structured eval pipelines. Build a <strong>regression test
                                     suite</strong> — every time you change a prompt or model, run your evals. Agents
-                                without evals degrade silently.</div>
+                                without evals degrade silently.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Ship-or-fail gate</span>
                                 <span class="tag">LLM-as-judge</span>
@@ -1665,7 +1673,8 @@
                                 environment (E2B, Docker). Implement <strong>human-in-the-loop (HITL)</strong> for
                                 high-stakes actions: confirm before sending emails, deleting files, or spending money.
                                 Study <strong>principle of least privilege</strong> for agent tool access. Learn
-                                <strong>Constitutional AI</strong> principles for alignment.</div>
+                                <strong>Constitutional AI</strong> principles for alignment.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Non-negotiable for prod</span>
                                 <span class="tag">NeMo Guardrails</span>
@@ -1787,7 +1796,8 @@
                                 Loguru, tracing with LangSmith/Langfuse, metrics with Prometheus. Monitor
                                 <strong>latency, token usage, and cost per agent run</strong>. Set up alerts for agent
                                 failures. Study <strong>rate limiting and cost controls</strong> — uncapped agents can
-                                burn $1000s in minutes.</div>
+                                burn $1000s in minutes.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Production essentials</span>
                                 <span class="tag">FastAPI + SSE streaming</span>
@@ -1837,7 +1847,8 @@
                                 Study <strong>MCP (Model Context Protocol)</strong> — Anthropic's standard for
                                 agent-tool integration. Learn <strong>OpenAI Assistants API</strong> and
                                 <strong>Responses API</strong> for managed agent infrastructure. These are the skills
-                                unlocking senior and research roles.</div>
+                                unlocking senior and research roles.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Frontier skills</span>
                                 <span class="tag">Computer Use API</span>
