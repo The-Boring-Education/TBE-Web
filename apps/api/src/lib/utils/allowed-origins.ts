@@ -68,7 +68,11 @@ export const isAllowedTbeUrl = (
   extraOrigins = process.env.ALLOWED_AUTH_ORIGINS || "",
 ): boolean => {
   try {
-    const { hostname } = new URL(url);
+    const parsedUrl = new URL(url);
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+      return false;
+    }
+    const { hostname } = parsedUrl;
     if (isAllowedTbeHostname(hostname)) {
       return true;
     }
