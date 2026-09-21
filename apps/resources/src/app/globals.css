@@ -368,6 +368,28 @@ main {
     print-color-adjust: exact;
   }
 
+  .resource-print-container {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mx-auto.w-full.px-4.pb-8.pt-4 {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  main,
+  main > div {
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+  }
+
   /* -------- Hide interactive UI -------- */
   header,
   footer,

@@ -50,7 +50,7 @@ export function ResourceView({
       )}
 
       {isZenMode && (
-        <div className="fixed right-4 top-4 z-[400]">
+        <div className="print:hidden fixed right-4 top-4 z-[400]">
           <button
             type="button"
             onClick={() => setIsZenMode(false)}
