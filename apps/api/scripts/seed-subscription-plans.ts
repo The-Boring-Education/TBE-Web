@@ -1,107 +1,143 @@
 /**
  * One-time / occasional seed of subscription SKU prices into MongoDB.
  *
+ * Env files (next to `apps/api/package.json`): `.env.local`, `.env.development`,
+ * `.env.production` — same as migrate / backfill / manage-admin. Each must
+ * define `ADMIN_SECRET` (the value the API expects on `x-admin-secret`).
+ *
  * 1. Copy subscription-plans.example.json → subscription-plans.json (gitignored).
  * 2. Fill real INR amounts (amountInr).
- * 3. Ensure API is running (or use deployed API URL).
- * 4. Set ADMIN_JWT (or ADMIN_JWT_PROD for --env production) in env.
- * 5. Run: pnpm seed:subscription-plans (from apps/api)
+ * 3. Ensure the target API is running (local) or reachable (dev/prod).
+ * 4. Run from `apps/api/` or the monorepo root.
  *
- * Uses POST /api/v1/admin/subscription-plans with an Authorization header — never commit secrets or local JSON.
+ * Uses POST /api/v1/admin/subscription-plans with `x-admin-secret`. The admin
+ * panel still authenticates with a user JWT.
  *
- * Each plan in JSON should include the full catalog (displayName, features, etc.). Optional `planUuid`
- * must be a valid RFC 4122 id; if omitted, the API derives a stable UUID v5 from (productType, planKey).
- * Re-seeding updates the same Mongo row (unique on productType + planKey) — no duplicates.
+ * Each plan in JSON should include the full catalog (displayName, features, etc.).
+ * Optional `planUuid` must be a valid RFC 4122 id; if omitted, the API derives a
+ * stable UUID v5 from (productType, planKey). Re-seeding updates the same Mongo
+ * row (unique on productType + planKey) — no duplicates.
  *
- * Usage:
- *   pnpm seed:subscription-plans                   # local (default)
- *   pnpm seed:subscription-plans -- --env development
- *   pnpm seed:subscription-plans -- --env production --yes
+ * From monorepo root:
+ *   pnpm --filter @tbe/api run seed:subscription-plans
+ *   pnpm --filter @tbe/api run seed:subscription-plans -- --env dev
+ *   pnpm --filter @tbe/api run seed:subscription-plans -- --env prod --yes
+ *
+ * From `apps/api/`: `pnpm seed:subscription-plans -- --env local`
  */
-import dotenv from "dotenv";
+import chalk from "chalk";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
+import yargs from "yargs";
+
+import {
+  type ScriptEnv,
+  API_ROOT,
+  SCRIPT_ENV_CHOICES,
+  assertProdConfirmed,
+  cliArgv,
+  loadScriptEnv,
+  requireParsedValue,
+} from "./lib/script-env";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-type TargetEnv = "local" | "development" | "production";
-
-const arg = (name: string): string | undefined => {
-  const idx = process.argv.indexOf(name);
-  if (idx < 0) return undefined;
-  return process.argv[idx + 1];
-};
-
-const hasFlag = (name: string): boolean => process.argv.includes(name);
-
-const resolveTargetEnv = (): TargetEnv => {
-  const value = (arg("--env") || "local").toLowerCase();
-  if (value === "dev") return "development";
-  if (value === "prod") return "production";
-  if (value === "local" || value === "development" || value === "production") {
-    return value;
-  }
-  console.error(
-    `[seed-subscription-plans] Invalid --env '${value}'. Use one of: local | development | production.`,
-  );
-  process.exit(1);
-};
-
-const loadEnvFiles = (targetEnv: TargetEnv) => {
-  const candidates = [
-    path.join(__dirname, "../.env"),
-    path.join(__dirname, "../.env.local"),
-    path.join(__dirname, `../.env.${targetEnv}`),
-    path.join(__dirname, `../.env.${targetEnv}.local`),
-    path.join(__dirname, `../.env.${targetEnv}`),
-  ];
-
-  for (const file of candidates) {
-    dotenv.config({ path: file, override: true });
-  }
-};
-
-const DEFAULT_API_BASE_BY_ENV: Record<TargetEnv, string> = {
+const DEFAULT_API_BASE_BY_ENV: Record<ScriptEnv, string> = {
   local: "http://localhost:3004/api/v1",
-  development: "https://tbe-api-dev.vercel.app/api/v1",
-  production: "https://api.theboringeducation.com/api/v1",
+  dev: "https://tbe-api-dev.vercel.app/api/v1",
+  prod: "https://api.theboringeducation.com/api/v1",
 };
 
 const LOCAL_FILE = path.join(__dirname, "subscription-plans.json");
 const EXAMPLE_FILE = path.join(__dirname, "subscription-plans.example.json");
 
+interface SeedArgs {
+  env: ScriptEnv;
+  yes: boolean;
+  api?: string;
+}
+
+export const resolveSeedAdminSecret = (
+  adminSecret: string | undefined,
+  envPath?: string,
+): { ok: true; secret: string } | { ok: false; error: string } => {
+  const secret = adminSecret?.trim();
+  if (!secret) {
+    return {
+      ok: false,
+      error: envPath
+        ? `ADMIN_SECRET not found in ${envPath}`
+        : "ADMIN_SECRET is missing for this environment.",
+    };
+  }
+  return { ok: true, secret };
+};
+
+export const normalizeSeedApiBase = (rawBase: string): string => {
+  const trimmed = rawBase.replace(/\/$/, "");
+  return /\/api\/v\d+$/i.test(trimmed) ? trimmed : `${trimmed}/api/v1`;
+};
+
+const parseArgs = async (): Promise<SeedArgs> => {
+  const argv = await yargs(cliArgv())
+    .option("env", {
+      type: "string",
+      choices: SCRIPT_ENV_CHOICES,
+      default: "local" as const,
+      describe: "Target environment",
+    })
+    .option("yes", {
+      type: "boolean",
+      default: false,
+      describe: "Required to seed production",
+    })
+    .option("api", {
+      type: "string",
+      describe: "Override API base (origin or .../api/v1)",
+    })
+    .strict()
+    .parse();
+
+  return {
+    env: argv.env,
+    yes: Boolean(argv.yes),
+    api: argv.api,
+  };
+};
+
 async function main() {
-  const targetEnv = resolveTargetEnv();
-  loadEnvFiles(targetEnv);
+  const args = await parseArgs();
 
   if (!fs.existsSync(LOCAL_FILE)) {
     console.error(
-      `[seed-subscription-plans] Missing ${LOCAL_FILE}\n` +
-        `Copy ${EXAMPLE_FILE} to subscription-plans.json and set amountInr values.`,
+      chalk.red(
+        `[seed-subscription-plans] Missing ${LOCAL_FILE}\n` +
+          `Copy ${EXAMPLE_FILE} to subscription-plans.json and set amountInr values.`,
+      ),
     );
     process.exit(1);
   }
 
-  const adminJwt =
-    targetEnv === "production"
-      ? process.env.ADMIN_JWT_PROD || process.env.ADMIN_JWT
-      : process.env.ADMIN_JWT;
-
-  if (!adminJwt) {
-    console.error(
-      `[seed-subscription-plans] ${
-        targetEnv === "production" ? "ADMIN_JWT_PROD" : "ADMIN_JWT"
-      } is required in environment for --env ${targetEnv}.`,
-    );
+  const loaded = loadScriptEnv(args.env);
+  if (!loaded.ok) {
+    console.error(chalk.red(`[seed-subscription-plans] ${loaded.error}`));
     process.exit(1);
   }
 
-  if (targetEnv === "production" && !hasFlag("--yes")) {
-    console.error(
-      "[seed-subscription-plans] Refusing to seed production without explicit confirmation. Re-run with --yes.",
-    );
+  const secretResult = resolveSeedAdminSecret(
+    loaded.parsed.ADMIN_SECRET,
+    loaded.envPath,
+  );
+  if (!secretResult.ok) {
+    console.error(chalk.red(`[seed-subscription-plans] ${secretResult.error}`));
+    process.exit(1);
+  }
+
+  const prodGuard = assertProdConfirmed(args.env, args.yes);
+  if (!prodGuard.ok) {
+    console.error(chalk.red(`[seed-subscription-plans] ${prodGuard.error}`));
     process.exit(1);
   }
 
@@ -113,34 +149,39 @@ async function main() {
     parsed.plans.length === 0
   ) {
     console.error(
-      "[seed-subscription-plans] JSON must contain a non-empty plans array.",
+      chalk.red(
+        "[seed-subscription-plans] JSON must contain a non-empty plans array.",
+      ),
     );
     process.exit(1);
   }
 
+  const seedApiBase = requireParsedValue(loaded, "SEED_API_BASE");
   const rawBase =
-    arg("--api") ||
-    process.env.SEED_API_BASE ||
-    (targetEnv === "local" ? process.env.NEXT_PUBLIC_API_URL : undefined) ||
-    DEFAULT_API_BASE_BY_ENV[targetEnv];
+    args.api ||
+    (seedApiBase.ok ? seedApiBase.value : undefined) ||
+    (args.env === "local"
+      ? loaded.parsed.NEXT_PUBLIC_API_URL || DEFAULT_API_BASE_BY_ENV.local
+      : DEFAULT_API_BASE_BY_ENV[args.env]);
 
-  // NEXT_PUBLIC_API_URL is often the origin only (e.g. http://localhost:3004).
-  // This handler lives at POST /api/v1/admin/subscription-plans.
-  const trimmed = rawBase.replace(/\/$/, "");
-  const apiBase = /\/api\/v\d+$/i.test(trimmed) ? trimmed : `${trimmed}/api/v1`;
-  console.log(`[seed-subscription-plans] Using API base URL: ${apiBase}`);
-
+  const apiBase = normalizeSeedApiBase(rawBase);
   const url = `${apiBase}/admin/subscription-plans`;
 
   console.log(
-    `[seed-subscription-plans] env=${targetEnv} url=${url} plans=${parsed.plans.length}`,
+    chalk.yellow(
+      `\nSeed subscription plans — env: ${args.env} (${path.relative(API_ROOT, loaded.envPath)})`,
+    ),
+  );
+  console.log(chalk.yellow("=".repeat(50)));
+  console.log(
+    `[seed-subscription-plans] url=${url} plans=${parsed.plans.length}`,
   );
 
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + adminJwt,
+      "x-admin-secret": secretResult.secret,
     },
     body: JSON.stringify({ plans: parsed.plans }),
   });
@@ -148,15 +189,28 @@ async function main() {
   const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
 
   if (!res.ok) {
-    console.error("[seed-subscription-plans] Request failed", res.status, body);
+    console.error(
+      chalk.red("[seed-subscription-plans] Request failed"),
+      res.status,
+      body,
+    );
     process.exit(1);
   }
 
   console.log(
-    "[seed-subscription-plans] OK",
+    chalk.green("[seed-subscription-plans] OK"),
     res.status,
     JSON.stringify(body, null, 2),
   );
 }
 
-void main();
+/** Only auto-run when invoked directly, so tests can import the pure helpers. */
+const invokedDirectly =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (invokedDirectly) {
+  void main().catch((error) => {
+    console.error(chalk.red("Fatal error:"), error);
+    process.exit(1);
+  });
+}

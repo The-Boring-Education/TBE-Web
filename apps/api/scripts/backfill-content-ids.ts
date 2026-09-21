@@ -14,53 +14,38 @@
  * Then use `migrate-content.ts` to copy data between environments after backfill.
  */
 import chalk from "chalk";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
-import path from "path";
-import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
 import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
 import { CONTENT_ENTITY_MAP } from "../src/lib/migration/content-entity-map";
-
-/** `apps/api/` — scripts run as ESM (`"type": "module"`), so use import.meta.url not __dirname */
-const API_ROOT = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
-
-type EnvOption = "local" | "dev" | "prod";
+import {
+  type ScriptEnv,
+  SCRIPT_ENV_CHOICES,
+  cliArgv,
+  loadScriptEnv,
+  requireParsedValue,
+} from "./lib/script-env";
 
 interface BackfillArgs {
-  env: EnvOption;
+  env: ScriptEnv;
   "confirm-prod": boolean;
 }
 
-const ENV_FILE_MAP: Record<EnvOption, string> = {
-  local: ".env.local",
-  dev: ".env.development",
-  prod: ".env.production",
-};
-
-function loadEnv(env: EnvOption): string {
-  const envFile = ENV_FILE_MAP[env];
-  const envPath = path.resolve(API_ROOT, envFile);
-  const result = dotenv.config({ path: envPath });
-
-  if (result.error) {
-    console.error(chalk.red(`Failed to load env file: ${envPath}`));
-    console.error(chalk.red(result.error.message));
+function loadEnv(env: ScriptEnv): string {
+  const loaded = loadScriptEnv(env);
+  if (!loaded.ok) {
+    console.error(chalk.red(loaded.error));
     process.exit(1);
   }
 
-  const uri = result.parsed?.MONGODB_URI;
-  if (!uri) {
-    console.error(chalk.red(`MONGODB_URI not found in ${envPath}`));
+  const uri = requireParsedValue(loaded, "MONGODB_URI");
+  if (!uri.ok) {
+    console.error(chalk.red(uri.error));
     process.exit(1);
   }
 
-  return uri;
+  return uri.value;
 }
 
 async function backfillCollection(
@@ -108,16 +93,11 @@ async function backfillCollection(
   return { total: totalDocs, updated };
 }
 
-/** pnpm/tsx sometimes pass a bare `--` in argv; yargs then misses `--env`. */
-function cliArgv(): string[] {
-  return hideBin(process.argv).filter((a) => a !== "--");
-}
-
 async function main() {
   const argv = (await yargs(cliArgv())
     .option("env", {
       type: "string",
-      choices: ["local", "dev", "prod"] as const,
+      choices: SCRIPT_ENV_CHOICES,
       demandOption: true,
       describe: "Target environment",
     })

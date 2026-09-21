@@ -35,7 +35,7 @@ vi.mock("../../../../api/src/lib/constants/products", () => ({
 
 const mockEnsureAdminAccess = vi.fn();
 vi.mock("../../../../api/src/middleware/admin", () => ({
-  withVerifiedAdminAuth:
+  withVerifiedAdminAuthOrSecret:
     (
       wrappedHandler: (
         req: NextApiRequest,
