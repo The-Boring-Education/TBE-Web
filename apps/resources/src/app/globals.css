@@ -402,6 +402,22 @@ main {
     display: none !important;
   }
 
+  /* Hide floating widgets/buttons in print */
+  .fixed.bottom-4.right-4,
+  .fixed.bottom-6.right-6,
+  [data-floating-widget],
+  [data-feedback-widget] {
+    display: none !important;
+  }
+
+  /* Hide TSQD floating widget in PDF */
+  .tsqd-parent-container,
+  .tsqd-transitions-container,
+  .tsqd-open-btn-container {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
   /* Remove the first empty inner page after the cover */
   .page.inner-page:first-of-type {
     display: none !important;
