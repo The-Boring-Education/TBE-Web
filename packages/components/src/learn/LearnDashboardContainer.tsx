@@ -492,6 +492,28 @@ const RECOMMENDED_DISCOVERY_ITEMS: RecommendedItem[] = [
     categoryStyle: "bg-amber-50 text-amber-800 border-amber-200",
     iconType: "file",
   },
+  {
+    id: "res-ethical-hacking-2026",
+    type: "resource",
+    title: "Ethical Hacking Roadmap 2026",
+    desc: "A practical path through networking, Linux, web security, penetration testing and responsible disclosure.",
+    url: "https://resources.theboringeducation.com/resources/ethical-hacking-roadmap",
+    isExternal: true,
+    category: "SECURITY ROADMAP",
+    categoryStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    iconType: "code",
+  },
+  {
+    id: "res-system-design-2026",
+    type: "resource",
+    title: "System Design Engineer Roadmap 2026",
+    desc: "Learn scalable system design from fundamentals through APIs, databases, caching and distributed systems.",
+    url: "https://resources.theboringeducation.com/resources/system-design-roadmap",
+    isExternal: true,
+    category: "SYSTEM DESIGN",
+    categoryStyle: "bg-blue-50 text-blue-700 border-blue-200",
+    iconType: "layer",
+  },
 ];
 
 const LANGUAGE_LOGOS: Record<string, string> = {
