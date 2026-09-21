@@ -841,7 +841,7 @@
                 margin: 0;
             }
 
-            .page + .page {
+            .page+.page {
                 margin-top: 4px;
             }
 
@@ -1021,8 +1021,8 @@
                 box-shadow: none;
                 margin: 0;
                 padding: 0;
-                page-break-after: always;
-                break-after: page;
+                page-break-before: auto;
+                break-after: auto;
                 overflow: visible;
             }
 
@@ -1095,12 +1095,15 @@
                 </h1>
 
                 <p class="cover-subtitle">
-                    Every Git command you'll actually use, explained — then the complete path to finding a project, understanding a codebase, and getting your first pull request merged into a real open source repo.
+                    Every Git command you'll actually use, explained — then the complete path to finding a project,
+                    understanding a codebase, and getting your first pull request merged into a real open source repo.
                 </p>
 
                 <div class="cover-quote-block">
                     <div class="cover-quote-text">
-                        "Your first merged pull request teaches you more about real-world engineering than six months of solo tutorials. Open source is the only 'job' where you can start today, with zero interviews, and the commit history is the resume."
+                        "Your first merged pull request teaches you more about real-world engineering than six months of
+                        solo tutorials. Open source is the only 'job' where you can start today, with zero interviews,
+                        and the commit history is the resume."
                     </div>
                     <div class="cover-quote-sub">— The Boring Education Team</div>
                 </div>
@@ -1126,7 +1129,8 @@
             </div>
 
             <div class="cover-footer">
-                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for
+                    Everyone</span>
                 <span class="page-num">01</span>
             </div>
         </div>
@@ -1153,7 +1157,10 @@
                         <div class="step-content">
                             <div class="step-phase">Setup & Config</div>
                             <div class="step-heading">Tell Git Who You Are — Before Anything Else</div>
-                            <div class="step-desc">Run this once per machine before your first commit anywhere, so every commit is correctly attributed to you. Use <code>--global</code> to set it for every repo on your machine, or drop the flag inside a specific repo to override it for that project only (useful for keeping work and personal commits separate).</div>
+                            <div class="step-desc">Run this once per machine before your first commit anywhere, so every
+                                commit is correctly attributed to you. Use <code>--global</code> to set it for every
+                                repo on your machine, or drop the flag inside a specific repo to override it for that
+                                project only (useful for keeping work and personal commits separate).</div>
                             <div class="step-tags">
                                 <span class="tag red">Run once</span>
                                 <span class="tag">Identity</span>
@@ -1174,7 +1181,11 @@
                         <div class="step-content">
                             <div class="step-phase">Starting a Repository</div>
                             <div class="step-heading">Init a New Repo, or Clone an Existing One</div>
-                            <div class="step-desc"><code>git init</code> turns any folder into a Git repository, tracked from that point forward. <code>git clone</code> copies a full remote repository — history, branches, and all — onto your machine, and automatically wires it up as the <code>origin</code> remote so you can push and pull immediately.</div>
+                            <div class="step-desc"><code>git init</code> turns any folder into a Git repository, tracked
+                                from that point forward. <code>git clone</code> copies a full remote repository —
+                                history, branches, and all — onto your machine, and automatically wires it up as the
+                                <code>origin</code> remote so you can push and pull immediately.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Non-negotiable</span>
                                 <span class="tag">Day one commands</span>
@@ -1195,7 +1206,13 @@
                         <div class="step-content">
                             <div class="step-phase">The Staging Cycle</div>
                             <div class="step-heading">Stage, Check, and Commit — the Loop You Repeat Constantly</div>
-                            <div class="step-desc"><code>git status</code> shows what's changed, staged, or untracked — run it constantly, it's free and it prevents mistakes. <code>git add</code> stages files for the next commit; use <code>git add .</code> to stage everything in the current directory, or add files individually when you want a cleaner, more intentional commit. <code>git commit</code> saves the staged snapshot with a message describing what changed and why.</div>
+                            <div class="step-desc"><code>git status</code> shows what's changed, staged, or untracked —
+                                run it constantly, it's free and it prevents mistakes. <code>git add</code> stages files
+                                for the next commit; use <code>git add .</code> to stage everything in the current
+                                directory, or add files individually when you want a cleaner, more intentional commit.
+                                <code>git commit</code> saves the staged snapshot with a message describing what changed
+                                and why.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Used constantly</span>
                                 <span class="tag">Core workflow</span>
@@ -1216,7 +1233,12 @@
                         <div class="step-content">
                             <div class="step-phase">Inspecting History</div>
                             <div class="step-heading">Reading What Actually Happened — Diff & Log</div>
-                            <div class="step-desc"><code>git diff</code> shows exact line-by-line changes before you stage them — always read this before committing, it catches accidental debug code and leftover console logs. <code>git log</code> shows commit history; add <code>--oneline --graph</code> for a compact, visual view of branches and merges that's far easier to scan than the default verbose output.</div>
+                            <div class="step-desc"><code>git diff</code> shows exact line-by-line changes before you
+                                stage them — always read this before committing, it catches accidental debug code and
+                                leftover console logs. <code>git log</code> shows commit history; add
+                                <code>--oneline --graph</code> for a compact, visual view of branches and merges that's
+                                far easier to scan than the default verbose output.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Read before you commit</span>
                                 <span class="tag">History</span>
@@ -1235,7 +1257,13 @@
                 <div style="margin-top:16px;">
                     <div class="tip-block">
                         <div class="tip-icon">💡</div>
-                        <div class="tip-text"><strong>Write commit messages for the next person reading your history, not for right now.</strong> "fixed stuff" tells nobody anything six months later. Use the format <code>type: short description</code> — e.g. <code>fix: handle null user on login</code> or <code>feat: add pagination to search results</code>. This single habit makes code review and debugging dramatically faster for everyone on the project, including future-you.</div>
+                        <div class="tip-text"><strong>Write commit messages for the next person reading your history,
+                                not for right now.</strong> "fixed stuff" tells nobody anything six months later. Use
+                            the format <code>type: short description</code> — e.g.
+                            <code>fix: handle null user on login</code> or
+                            <code>feat: add pagination to search results</code>. This single habit makes code review and
+                            debugging dramatically faster for everyone on the project, including future-you.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1268,7 +1296,12 @@
                         <div class="step-content">
                             <div class="step-phase">Branching</div>
                             <div class="step-heading">Never Work Directly on main</div>
-                            <div class="step-desc">Every change — a feature, a fix, an experiment — gets its own branch, keeping <code>main</code> always deployable and clean. <code>git switch -c</code> (or the older <code>git checkout -b</code>) creates and switches to a new branch in one step. Name branches descriptively: <code>fix/login-redirect</code> or <code>feat/dark-mode</code>, not <code>branch1</code>.</div>
+                            <div class="step-desc">Every change — a feature, a fix, an experiment — gets its own branch,
+                                keeping <code>main</code> always deployable and clean. <code>git switch -c</code> (or
+                                the older <code>git checkout -b</code>) creates and switches to a new branch in one
+                                step. Name branches descriptively: <code>fix/login-redirect</code> or
+                                <code>feat/dark-mode</code>, not <code>branch1</code>.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Golden rule</span>
                                 <span class="tag">Branching</span>
@@ -1290,7 +1323,11 @@
                         <div class="step-content">
                             <div class="step-phase">Merging</div>
                             <div class="step-heading">Bringing Branches Back Together</div>
-                            <div class="step-desc"><code>git merge</code> combines the history of another branch into your current one — usually run on <code>main</code> to bring in a finished feature branch. Merge conflicts happen when the same lines were changed on both sides; Git marks the conflicting sections directly in the file for you to resolve manually, then you stage and commit the resolution.</div>
+                            <div class="step-desc"><code>git merge</code> combines the history of another branch into
+                                your current one — usually run on <code>main</code> to bring in a finished feature
+                                branch. Merge conflicts happen when the same lines were changed on both sides; Git marks
+                                the conflicting sections directly in the file for you to resolve manually, then you
+                                stage and commit the resolution.</div>
                             <div class="step-tags">
                                 <span class="tag red">Combining work</span>
                                 <span class="tag">Conflict resolution</span>
@@ -1311,7 +1348,11 @@
                         <div class="step-content">
                             <div class="step-phase">Remotes</div>
                             <div class="step-heading">Syncing Your Local Repo With GitHub</div>
-                            <div class="step-desc"><code>git push</code> uploads your committed local changes to the remote repository; <code>git pull</code> downloads and merges the latest remote changes into your current branch (it's actually <code>fetch</code> + <code>merge</code> combined). <code>git fetch</code> alone downloads changes without merging — safer when you want to review what changed before integrating it.</div>
+                            <div class="step-desc"><code>git push</code> uploads your committed local changes to the
+                                remote repository; <code>git pull</code> downloads and merges the latest remote changes
+                                into your current branch (it's actually <code>fetch</code> + <code>merge</code>
+                                combined). <code>git fetch</code> alone downloads changes without merging — safer when
+                                you want to review what changed before integrating it.</div>
                             <div class="step-tags">
                                 <span class="tag red">Sync commands</span>
                                 <span class="tag">Remote workflow</span>
@@ -1332,7 +1373,13 @@
                         <div class="step-content">
                             <div class="step-phase">Undoing Things</div>
                             <div class="step-heading">Everyone Makes Mistakes — Here's How to Undo Them</div>
-                            <div class="step-desc"><code>git stash</code> temporarily shelves uncommitted changes so you can switch branches cleanly, then <code>git stash pop</code> brings them back. <code>git reset</code> moves your branch pointer backward (use <code>--soft</code> to keep changes staged, <code>--hard</code> to discard them entirely — be careful). <code>git revert</code> is the safe option for shared branches: it creates a new commit that undoes a previous one, without rewriting history.</div>
+                            <div class="step-desc"><code>git stash</code> temporarily shelves uncommitted changes so you
+                                can switch branches cleanly, then <code>git stash pop</code> brings them back.
+                                <code>git reset</code> moves your branch pointer backward (use <code>--soft</code> to
+                                keep changes staged, <code>--hard</code> to discard them entirely — be careful).
+                                <code>git revert</code> is the safe option for shared branches: it creates a new commit
+                                that undoes a previous one, without rewriting history.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Safety net</span>
                                 <span class="tag">Undo commands</span>
@@ -1352,7 +1399,13 @@
 
                 <div class="tip-block">
                     <div class="tip-icon">⚠️</div>
-                    <div class="tip-text"><strong>Never use <code>git reset --hard</code> or force-push on a shared branch.</strong> <code>--hard</code> permanently discards uncommitted work with no undo. <code>git push --force</code> overwrites remote history and can erase a teammate's commits. If you must force-push your own feature branch after a rebase, use <code>git push --force-with-lease</code> instead — it refuses to overwrite work you haven't seen yet.</div>
+                    <div class="tip-text"><strong>Never use <code>git reset --hard</code> or force-push on a shared
+                            branch.</strong> <code>--hard</code> permanently discards uncommitted work with no undo.
+                        <code>git push --force</code> overwrites remote history and can erase a teammate's commits. If
+                        you must force-push your own feature branch after a rebase, use
+                        <code>git push --force-with-lease</code> instead — it refuses to overwrite work you haven't seen
+                        yet.
+                    </div>
                 </div>
 
                 <div style="margin-top:14px;">
@@ -1419,7 +1472,11 @@
                         <div class="step-content">
                             <div class="step-phase">Rebasing</div>
                             <div class="step-heading">A Cleaner Alternative to Merge Commits</div>
-                            <div class="step-desc"><code>git rebase</code> replays your branch's commits on top of another branch's latest history, producing a clean, linear timeline instead of a merge-commit web. <code>git rebase -i</code> (interactive) lets you reorder, edit, squash, or drop commits before opening a pull request — most maintainers prefer a tidy, squashed commit history over a dozen "wip" commits.</div>
+                            <div class="step-desc"><code>git rebase</code> replays your branch's commits on top of
+                                another branch's latest history, producing a clean, linear timeline instead of a
+                                merge-commit web. <code>git rebase -i</code> (interactive) lets you reorder, edit,
+                                squash, or drop commits before opening a pull request — most maintainers prefer a tidy,
+                                squashed commit history over a dozen "wip" commits.</div>
                             <div class="step-tags">
                                 <span class="tag red">Clean history</span>
                                 <span class="tag">PR hygiene</span>
@@ -1441,7 +1498,11 @@
                         <div class="step-content">
                             <div class="step-phase">Cherry-Picking & Tags</div>
                             <div class="step-heading">Grabbing One Commit, Marking a Release</div>
-                            <div class="step-desc"><code>git cherry-pick</code> applies a single specific commit from another branch onto your current one — useful for backporting a fix without merging an entire branch. <code>git tag</code> marks a specific commit as a named release point (e.g. <code>v1.2.0</code>), which most projects use to track version history and generate changelogs.</div>
+                            <div class="step-desc"><code>git cherry-pick</code> applies a single specific commit from
+                                another branch onto your current one — useful for backporting a fix without merging an
+                                entire branch. <code>git tag</code> marks a specific commit as a named release point
+                                (e.g. <code>v1.2.0</code>), which most projects use to track version history and
+                                generate changelogs.</div>
                             <div class="step-tags">
                                 <span class="tag red">Selective merging</span>
                                 <span class="tag">Releases</span>
@@ -1461,7 +1522,12 @@
                         <div class="step-content">
                             <div class="step-phase">The Panic-Button Command</div>
                             <div class="step-heading">git reflog — Your Undo History for Undo Commands</div>
-                            <div class="step-desc">Accidentally deleted a branch or reset too far back? <code>git reflog</code> logs every place <code>HEAD</code> has pointed to, even commits that look "lost" after a hard reset. Find the commit hash you need in the reflog, then <code>git reset --hard &lt;hash&gt;</code> or <code>git checkout &lt;hash&gt;</code> to recover it. Almost nothing in Git is truly gone until garbage collection runs.</div>
+                            <div class="step-desc">Accidentally deleted a branch or reset too far back?
+                                <code>git reflog</code> logs every place <code>HEAD</code> has pointed to, even commits
+                                that look "lost" after a hard reset. Find the commit hash you need in the reflog, then
+                                <code>git reset --hard &lt;hash&gt;</code> or <code>git checkout &lt;hash&gt;</code> to
+                                recover it. Almost nothing in Git is truly gone until garbage collection runs.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Recovery</span>
                                 <span class="tag">Know this exists</span>
@@ -1479,7 +1545,8 @@
                 <hr class="divider">
 
                 <div class="section-label">.gitignore Essentials</div>
-                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:8px;">Stop Committing Files That Don't Belong in History</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:8px;">Stop Committing
+                    Files That Don't Belong in History</div>
                 <div class="skills-row">
                     <div class="skill-col">
                         <div class="skill-col-title">🟥 Dependencies</div>
@@ -1503,7 +1570,12 @@
 
                 <div class="tip-block">
                     <div class="tip-icon">🔑</div>
-                    <div class="tip-text"><strong>Already committed a secret by accident?</strong> Adding it to <code>.gitignore</code> afterward doesn't remove it from history — anyone can still find it in an old commit. Rotate the leaked credential immediately, then use a tool like <code>git filter-repo</code> or BFG Repo-Cleaner to scrub it from history if it's genuinely sensitive.</div>
+                    <div class="tip-text"><strong>Already committed a secret by accident?</strong> Adding it to
+                        <code>.gitignore</code> afterward doesn't remove it from history — anyone can still find it in
+                        an old commit. Rotate the leaked credential immediately, then use a tool like
+                        <code>git filter-repo</code> or BFG Repo-Cleaner to scrub it from history if it's genuinely
+                        sensitive.
+                    </div>
                 </div>
             </div>
 
@@ -1535,7 +1607,11 @@
                         <div class="step-content">
                             <div class="step-phase">Why It Matters</div>
                             <div class="step-heading">Open Source Is the Fastest Way to Practice Real Engineering</div>
-                            <div class="step-desc">Tutorials teach syntax; open source teaches you how real production codebases are structured, reviewed, and maintained by teams you've never met. It builds a public portfolio that outlasts any single job, gives you direct exposure to senior engineers' code review feedback for free, and is one of the strongest signals recruiters look for on a resume with limited work experience.</div>
+                            <div class="step-desc">Tutorials teach syntax; open source teaches you how real production
+                                codebases are structured, reviewed, and maintained by teams you've never met. It builds
+                                a public portfolio that outlasts any single job, gives you direct exposure to senior
+                                engineers' code review feedback for free, and is one of the strongest signals recruiters
+                                look for on a resume with limited work experience.</div>
                             <div class="step-tags">
                                 <span class="tag red">Public portfolio</span>
                                 <span class="tag">Free mentorship</span>
@@ -1555,7 +1631,13 @@
                         <div class="step-content">
                             <div class="step-phase">Finding Beginner-Friendly Issues</div>
                             <div class="step-heading">Look for the Labels That Signal "Start Here"</div>
-                            <div class="step-desc">Search GitHub for issues labeled <code>good first issue</code>, <code>help wanted</code>, or <code>beginner-friendly</code> — maintainers tag these specifically for newcomers, and they're usually scoped small enough to finish in a few hours. Use GitHub's own search filters (<code>is:issue is:open label:"good first issue"</code>) combined with a language filter to match your skill set.</div>
+                            <div class="step-desc">Search GitHub for issues labeled <code>good first issue</code>,
+                                <code>help wanted</code>, or <code>beginner-friendly</code> — maintainers tag these
+                                specifically for newcomers, and they're usually scoped small enough to finish in a few
+                                hours. Use GitHub's own search filters
+                                (<code>is:issue is:open label:"good first issue"</code>) combined with a language filter
+                                to match your skill set.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Look for labels</span>
                                 <span class="tag">Scope matters</span>
@@ -1576,7 +1658,11 @@
                         <div class="step-content">
                             <div class="step-phase">Pick the Right Project</div>
                             <div class="step-heading">Not Every Popular Repo Is a Good Starting Point</div>
-                            <div class="step-desc">Prioritize projects you already use or genuinely find interesting — motivation matters more than star count. Check the project's activity: recent commits, responsive maintainers on issues, and an active PR review cadence are better signals than raw popularity. A huge, slow-moving repo with maintainers who haven't replied to an issue in months is a frustrating first experience.</div>
+                            <div class="step-desc">Prioritize projects you already use or genuinely find interesting —
+                                motivation matters more than star count. Check the project's activity: recent commits,
+                                responsive maintainers on issues, and an active PR review cadence are better signals
+                                than raw popularity. A huge, slow-moving repo with maintainers who haven't replied to an
+                                issue in months is a frustrating first experience.</div>
                             <div class="step-tags">
                                 <span class="tag red">Check activity, not just stars</span>
                                 <span class="tag">Pick something you use</span>
@@ -1595,7 +1681,12 @@
                         <div class="step-content">
                             <div class="step-phase">Read Before You Write Any Code</div>
                             <div class="step-heading">CONTRIBUTING.md Is Not Optional</div>
-                            <div class="step-desc">Almost every serious open source project has a <code>CONTRIBUTING.md</code> file outlining exact expectations: coding style, branch naming, commit conventions, how to run tests locally, and the PR review process. Skipping this is the single most common reason first-time PRs get rejected or sent back with change requests — read it fully before opening your editor.</div>
+                            <div class="step-desc">Almost every serious open source project has a
+                                <code>CONTRIBUTING.md</code> file outlining exact expectations: coding style, branch
+                                naming, commit conventions, how to run tests locally, and the PR review process.
+                                Skipping this is the single most common reason first-time PRs get rejected or sent back
+                                with change requests — read it fully before opening your editor.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Read this first</span>
                                 <span class="tag">Prevents rejected PRs</span>
@@ -1614,7 +1705,10 @@
 
                 <div class="tip-block">
                     <div class="tip-icon">🎯</div>
-                    <div class="tip-text"><strong>Start with documentation, not code.</strong> Fixing a typo, clarifying a confusing setup step, or improving a README is a genuinely valuable, low-risk first contribution. It teaches you the entire PR workflow — fork, branch, commit, push, open PR, respond to review — without the pressure of shipping a feature on your very first attempt.</div>
+                    <div class="tip-text"><strong>Start with documentation, not code.</strong> Fixing a typo, clarifying
+                        a confusing setup step, or improving a README is a genuinely valuable, low-risk first
+                        contribution. It teaches you the entire PR workflow — fork, branch, commit, push, open PR,
+                        respond to review — without the pressure of shipping a feature on your very first attempt.</div>
                 </div>
             </div>
 
@@ -1646,7 +1740,12 @@
                         <div class="step-content">
                             <div class="step-phase">Step 1 · Fork & Clone</div>
                             <div class="step-heading">Get Your Own Copy to Work In</div>
-                            <div class="step-desc">Since you don't have direct write access to most projects, click "Fork" on GitHub to create your own copy under your account, then clone <em>your fork</em> locally — not the original repo. Add the original as an <code>upstream</code> remote so you can pull in the latest changes from the real project as it evolves while you work.</div>
+                            <div class="step-desc">Since you don't have direct write access to most projects, click
+                                "Fork" on GitHub to create your own copy under your account, then clone <em>your
+                                    fork</em> locally — not the original repo. Add the original as an
+                                <code>upstream</code> remote so you can pull in the latest changes from the real project
+                                as it evolves while you work.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Your own sandbox</span>
                                 <span class="tag">Fork workflow</span>
@@ -1667,7 +1766,11 @@
                         <div class="step-content">
                             <div class="step-phase">Step 2 · Branch & Build</div>
                             <div class="step-heading">One Branch Per Fix — Test It Locally First</div>
-                            <div class="step-desc">Create a clearly named branch off the latest <code>main</code>, and run the project's existing test suite before you touch anything, to confirm you're starting from a working baseline. Make focused, minimal changes — a PR that fixes one issue is far easier to review and merge than one that also refactors unrelated code "while you're in there."</div>
+                            <div class="step-desc">Create a clearly named branch off the latest <code>main</code>, and
+                                run the project's existing test suite before you touch anything, to confirm you're
+                                starting from a working baseline. Make focused, minimal changes — a PR that fixes one
+                                issue is far easier to review and merge than one that also refactors unrelated code
+                                "while you're in there."</div>
                             <div class="step-tags">
                                 <span class="tag red">Keep PRs focused</span>
                                 <span class="tag">Test before and after</span>
@@ -1687,7 +1790,12 @@
                         <div class="step-content">
                             <div class="step-phase">Step 3 · Commit & Push</div>
                             <div class="step-heading">Clean Commits, Then Push to Your Fork</div>
-                            <div class="step-desc">Follow the project's commit message convention if one exists (many use Conventional Commits: <code>fix:</code>, <code>feat:</code>, <code>docs:</code>). Squash noisy work-in-progress commits into one clean commit with <code>git rebase -i</code> before pushing, then push the branch to <strong>your fork</strong>, not the original repository.</div>
+                            <div class="step-desc">Follow the project's commit message convention if one exists (many
+                                use Conventional Commits: <code>fix:</code>, <code>feat:</code>, <code>docs:</code>).
+                                Squash noisy work-in-progress commits into one clean commit with
+                                <code>git rebase -i</code> before pushing, then push the branch to <strong>your
+                                    fork</strong>, not the original repository.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Squash before pushing</span>
                                 <span class="tag">Push to your fork</span>
@@ -1706,7 +1814,13 @@
                         <div class="step-content">
                             <div class="step-phase">Step 4 · Open the Pull Request</div>
                             <div class="step-heading">Write a PR Description That Respects the Reviewer's Time</div>
-                            <div class="step-desc">Reference the issue number (e.g. <code>Closes #123</code>) so GitHub links and auto-closes it on merge. Explain <strong>what</strong> changed, <strong>why</strong>, and <strong>how you tested it</strong> — screenshots or short clips for UI changes are especially appreciated. Expect review comments; treat them as collaboration, not rejection, and respond to every comment even if just to confirm a change was made.</div>
+                            <div class="step-desc">Reference the issue number (e.g. <code>Closes #123</code>) so GitHub
+                                links and auto-closes it on merge. Explain <strong>what</strong> changed,
+                                <strong>why</strong>, and <strong>how you tested it</strong> — screenshots or short
+                                clips for UI changes are especially appreciated. Expect review comments; treat them as
+                                collaboration, not rejection, and respond to every comment even if just to confirm a
+                                change was made.
+                            </div>
                             <div class="step-tags">
                                 <span class="tag red">Link the issue</span>
                                 <span class="tag">Expect review rounds</span>
@@ -1725,7 +1839,11 @@
 
                 <div class="tip-block">
                     <div class="tip-icon">🔄</div>
-                    <div class="tip-text"><strong>Keep your fork in sync as review drags on.</strong> Long-lived PRs often need a rebase before merge if <code>main</code> moved forward. Regularly <code>git fetch upstream && git rebase upstream/main</code> on your branch keeps conflicts small and manageable instead of one giant merge fight at the end.</div>
+                    <div class="tip-text"><strong>Keep your fork in sync as review drags on.</strong> Long-lived PRs
+                        often need a rebase before merge if <code>main</code> moved forward. Regularly
+                        <code>git fetch upstream && git rebase upstream/main</code> on your branch keeps conflicts small
+                        and manageable instead of one giant merge fight at the end.
+                    </div>
                 </div>
 
                 <div style="margin-top:14px;">
@@ -1785,42 +1903,53 @@
                 <div class="resource-grid">
                     <div class="resource-card">
                         <div class="resource-card-name">🎯 Good First Issue (goodfirstissue.dev)</div>
-                        <div class="resource-card-desc">Aggregates beginner-friendly issues across GitHub by language and topic. The single fastest way to find a scoped, approachable task without manually searching dozens of repos.</div>
+                        <div class="resource-card-desc">Aggregates beginner-friendly issues across GitHub by language
+                            and topic. The single fastest way to find a scoped, approachable task without manually
+                            searching dozens of repos.</div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://goodfirstissue.dev" target="_blank">goodfirstissue.dev</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">🌱 Up For Grabs</div>
-                        <div class="resource-card-desc">A curated list of projects that actively maintain "up for grabs" style labels for newcomers, across nearly every language and framework.</div>
+                        <div class="resource-card-desc">A curated list of projects that actively maintain "up for grabs"
+                            style labels for newcomers, across nearly every language and framework.</div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://up-for-grabs.net" target="_blank">up-for-grabs.net</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">🧑‍🤝‍🧑 First Timers Only</div>
-                        <div class="resource-card-desc">Specifically targets people who have literally never contributed to open source before — extra patient maintainers and very low-stakes issues by design.</div>
+                        <div class="resource-card-desc">Specifically targets people who have literally never contributed
+                            to open source before — extra patient maintainers and very low-stakes issues by design.
+                        </div>
                         <div class="yt-links">
-                            <a class="yt-link" href="https://www.firsttimersonly.com" target="_blank">firsttimersonly.com</a>
+                            <a class="yt-link" href="https://www.firsttimersonly.com"
+                                target="_blank">firsttimersonly.com</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">📬 CodeTriage</div>
-                        <div class="resource-card-desc">Emails you a small batch of open issues from projects you subscribe to, so you build a steady contribution habit without constantly searching manually.</div>
+                        <div class="resource-card-desc">Emails you a small batch of open issues from projects you
+                            subscribe to, so you build a steady contribution habit without constantly searching
+                            manually.</div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://www.codetriage.com" target="_blank">codetriage.com</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">🎃 Hacktoberfest</div>
-                        <div class="resource-card-desc">Annual event every October where thousands of projects welcome new contributors, with extra guidance, swag, and lower-pressure onboarding for first-timers.</div>
+                        <div class="resource-card-desc">Annual event every October where thousands of projects welcome
+                            new contributors, with extra guidance, swag, and lower-pressure onboarding for first-timers.
+                        </div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://hacktoberfest.com" target="_blank">hacktoberfest.com</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">🔍 GitHub Explore & Topics</div>
-                        <div class="resource-card-desc">Browse github.com/topics and github.com/trending filtered by your language to discover active projects you might genuinely want to use and improve.</div>
+                        <div class="resource-card-desc">Browse github.com/topics and github.com/trending filtered by
+                            your language to discover active projects you might genuinely want to use and improve.</div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://github.com/topics" target="_blank">github.com/topics</a>
                         </div>
@@ -1829,29 +1958,38 @@
 
                 <hr class="divider">
 
-                <div class="section-label">Community Etiquette — What Separates Welcome Contributors From Ignored Ones</div>
+                <div class="section-label">Community Etiquette — What Separates Welcome Contributors From Ignored Ones
+                </div>
                 <div class="checklist">
                     <div class="check-item">
-                        <div class="check-box"></div> Comment on the issue and wait to be assigned before starting work — avoids duplicate effort with another contributor
+                        <div class="check-box"></div> Comment on the issue and wait to be assigned before starting work
+                        — avoids duplicate effort with another contributor
                     </div>
                     <div class="check-item">
-                        <div class="check-box"></div> Ask clarifying questions on the issue itself rather than guessing silently for hours
+                        <div class="check-box"></div> Ask clarifying questions on the issue itself rather than guessing
+                        silently for hours
                     </div>
                     <div class="check-item">
-                        <div class="check-box"></div> Keep pull requests small and focused on exactly one issue — never bundle unrelated changes
+                        <div class="check-box"></div> Keep pull requests small and focused on exactly one issue — never
+                        bundle unrelated changes
                     </div>
                     <div class="check-item">
-                        <div class="check-box"></div> Be patient with review turnaround — most maintainers are volunteers reviewing in their spare time
+                        <div class="check-box"></div> Be patient with review turnaround — most maintainers are
+                        volunteers reviewing in their spare time
                     </div>
                     <div class="check-item">
-                        <div class="check-box"></div> Say thank you, even on a closed or rejected PR — maintainers remember contributors who handle feedback gracefully
+                        <div class="check-box"></div> Say thank you, even on a closed or rejected PR — maintainers
+                        remember contributors who handle feedback gracefully
                     </div>
                 </div>
 
                 <div style="margin-top:14px;">
                     <div class="tip-block">
                         <div class="tip-icon">🗓️</div>
-                        <div class="tip-text"><strong>Consistency beats intensity.</strong> One small, well-reviewed PR every week for three months builds a far stronger open source profile than a single large contribution followed by months of silence. Maintainers and future employers both notice a steady commit history more than a single impressive-looking spike.</div>
+                        <div class="tip-text"><strong>Consistency beats intensity.</strong> One small, well-reviewed PR
+                            every week for three months builds a far stronger open source profile than a single large
+                            contribution followed by months of silence. Maintainers and future employers both notice a
+                            steady commit history more than a single impressive-looking spike.</div>
                     </div>
                 </div>
             </div>
@@ -1877,44 +2015,55 @@
                 <div class="resource-grid">
                     <div class="resource-card">
                         <div class="resource-card-name">📺 freeCodeCamp</div>
-                        <div class="resource-card-desc">Full-length Git and GitHub courses covering everything from first commit to advanced rebasing, plus dedicated open source contribution walkthroughs for beginners.</div>
+                        <div class="resource-card-desc">Full-length Git and GitHub courses covering everything from
+                            first commit to advanced rebasing, plus dedicated open source contribution walkthroughs for
+                            beginners.</div>
                         <div class="yt-links">
-                            <a class="yt-link" href="https://www.youtube.com/@freecodecamp" target="_blank">@freecodecamp</a>
+                            <a class="yt-link" href="https://www.youtube.com/@freecodecamp"
+                                target="_blank">@freecodecamp</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">📺 The Coding Train</div>
-                        <div class="resource-card-desc">Approachable, friendly explanations of Git fundamentals and a dedicated series specifically on making your first open source contribution.</div>
+                        <div class="resource-card-desc">Approachable, friendly explanations of Git fundamentals and a
+                            dedicated series specifically on making your first open source contribution.</div>
                         <div class="yt-links">
-                            <a class="yt-link" href="https://www.youtube.com/@TheCodingTrain" target="_blank">@TheCodingTrain</a>
+                            <a class="yt-link" href="https://www.youtube.com/@TheCodingTrain"
+                                target="_blank">@TheCodingTrain</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">📺 Fireship</div>
-                        <div class="resource-card-desc">Fast, dense explainers on Git internals, GitHub features, and workflow tricks — perfect for quickly filling specific knowledge gaps.</div>
+                        <div class="resource-card-desc">Fast, dense explainers on Git internals, GitHub features, and
+                            workflow tricks — perfect for quickly filling specific knowledge gaps.</div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://www.youtube.com/@Fireship" target="_blank">@Fireship</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">📺 GitHub (Official Channel)</div>
-                        <div class="resource-card-desc">Straight from the source — feature walkthroughs, GitHub Actions, GitHub CLI, and official guidance on maintaining and contributing to projects.</div>
+                        <div class="resource-card-desc">Straight from the source — feature walkthroughs, GitHub Actions,
+                            GitHub CLI, and official guidance on maintaining and contributing to projects.</div>
                         <div class="yt-links">
                             <a class="yt-link" href="https://www.youtube.com/@GitHub" target="_blank">@GitHub</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">📺 Tech With Tim</div>
-                        <div class="resource-card-desc">Clear, practical Git tutorials and a specific "how to contribute to open source as a beginner" series that mirrors this guide's workflow.</div>
+                        <div class="resource-card-desc">Clear, practical Git tutorials and a specific "how to contribute
+                            to open source as a beginner" series that mirrors this guide's workflow.</div>
                         <div class="yt-links">
-                            <a class="yt-link" href="https://www.youtube.com/@TechWithTim" target="_blank">@TechWithTim</a>
+                            <a class="yt-link" href="https://www.youtube.com/@TechWithTim"
+                                target="_blank">@TechWithTim</a>
                         </div>
                     </div>
                     <div class="resource-card">
                         <div class="resource-card-name">📺 Codevolution</div>
-                        <div class="resource-card-desc">In-depth Git and GitHub playlists covering branching strategies, rebasing, and collaborative workflows used in real engineering teams.</div>
+                        <div class="resource-card-desc">In-depth Git and GitHub playlists covering branching strategies,
+                            rebasing, and collaborative workflows used in real engineering teams.</div>
                         <div class="yt-links">
-                            <a class="yt-link" href="https://www.youtube.com/@Codevolution" target="_blank">@Codevolution</a>
+                            <a class="yt-link" href="https://www.youtube.com/@Codevolution"
+                                target="_blank">@Codevolution</a>
                         </div>
                     </div>
                 </div>
@@ -1933,8 +2082,10 @@
 
                 <div class="cta-block">
                     <div class="cta-title">Your First Commit Is One Weekend Away 🌱</div>
-                    <div class="cta-sub">Every maintainer you'll ever look up to started with a typo fix in someone else's README.<br>Pick one issue, open one PR, and start today.</div>
-                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                    <div class="cta-sub">Every maintainer you'll ever look up to started with a typo fix in someone
+                        else's README.<br>Pick one issue, open one PR, and start today.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→
+                        theboringeducation.com</a>
                 </div>
 
                 <hr class="divider">
@@ -1942,17 +2093,20 @@
                 <div class="section-label">Find Us Everywhere</div>
                 <div class="socials-grid">
                     <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
-                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                            alt="Instagram">
                         <span class="social-name">Instagram</span>
                         <div class="social-handle">@theboringeducation</div>
                     </a>
                     <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
-                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                            alt="LinkedIn">
                         <span class="social-name">LinkedIn</span>
                         <div class="social-handle">The Boring Education</div>
                     </a>
                     <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
-                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"
+                            alt="GitHub">
                         <span class="social-name">GitHub</span>
                         <div class="social-handle">The-Boring-Education</div>
                     </a>

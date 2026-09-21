@@ -31,6 +31,8 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
 
+  const questionSetKey = questions.map((question) => question._id).join(",");
+
   // Reset explanation when changing questions
   useEffect(() => {
     setShowExplanation(false);
@@ -39,7 +41,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
   // Reset if questions change
   useEffect(() => {
     setCurrentIndex(0);
-  }, [questions]);
+  }, [questionSetKey]);
 
   if (!questions || questions.length === 0) {
     return (

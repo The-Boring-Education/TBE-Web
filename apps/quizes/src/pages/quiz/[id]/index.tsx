@@ -56,9 +56,8 @@ function QuizContent() {
   ): Promise<string | null> => {
     try {
       // First try to get user by email
-      const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
       const response = await fetch(
-        `${base}/user?email=${encodeURIComponent(email)}`,
+        `/api/proxy/user?email=${encodeURIComponent(email)}`,
       );
       const data = await response.json();
 
@@ -67,7 +66,7 @@ function QuizContent() {
       }
 
       // If not found by email, try to create user or get by Google ID
-      const createResponse = await fetch(`${base}/user`, {
+      const createResponse = await fetch(`/api/proxy/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,9 +105,8 @@ function QuizContent() {
           return;
         }
         // Fallback: fetch by email to get _id
-        const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
         const resp = await fetch(
-          `${base}/user?email=${encodeURIComponent(user!.email!)}`,
+          `/api/proxy/user?email=${encodeURIComponent(user!.email!)}`,
         );
         const json = await resp.json();
         const dbId = json?.data?._id;

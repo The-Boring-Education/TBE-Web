@@ -17,8 +17,8 @@
     "backfill": "tsx scripts/backfill-content-ids.ts",
     "migrate": "tsx scripts/migrate-content.ts",
     "seed:subscription-plans": "tsx scripts/seed-subscription-plans.ts",
-    "seed:subscription-plans:dev": "tsx scripts/seed-subscription-plans.ts --env development",
-    "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env production --yes",
+    "seed:subscription-plans:dev": "tsx scripts/seed-subscription-plans.ts --env dev",
+    "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env prod --yes",
     "admin:add": "tsx scripts/manage-admin.ts add",
     "admin:list": "tsx scripts/manage-admin.ts list",
     "admin:deactivate": "tsx scripts/manage-admin.ts deactivate"
@@ -28,6 +28,7 @@
     "@sentry/nextjs": "^9.38.0",
     "@tbe/auth": "workspace:*",
     "@tbe/constants": "workspace:*",
+    "@tbe/types": "workspace:*",
     "@tbe/utils": "workspace:*",
     "axios": "^1.4.0",
     "cors": "^2.8.5",

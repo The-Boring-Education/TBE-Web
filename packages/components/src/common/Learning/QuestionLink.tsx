@@ -21,10 +21,19 @@ const QuestionLink = ({
 }: QuestionLinkProps) => {
   const { trackEvent } = useAnalytics();
   const isCurrent = currentQuestionId === questionId;
+  const isDark = theme === "dark";
 
-  const activeClasses = isCurrent
-    ? "bg-primary/10 text-foreground font-medium rounded-xl shadow-2xs"
-    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground rounded-xl";
+  const activeClasses = isDark
+    ? isCurrent
+      ? "bg-primary/15 !text-white font-semibold border border-primary/30 shadow-[0_0_12px_rgba(255,87,87,0.15)] rounded-xl"
+      : "!text-gray-300 hover:bg-white/[0.06] hover:!text-white rounded-xl"
+    : isCurrent
+      ? "bg-primary/10 !text-primary font-semibold border border-primary/20 shadow-xs rounded-xl"
+      : "!text-gray-600 hover:bg-gray-100/80 hover:!text-gray-900 rounded-xl";
+
+  const lockedClasses = isDark
+    ? "!text-gray-500/60 cursor-not-allowed opacity-60"
+    : "!text-gray-400 cursor-not-allowed opacity-60";
 
   return (
     <LinkText
@@ -32,10 +41,9 @@ const QuestionLink = ({
       analyticsId={`learning_question_${questionId}`}
       analyticsLabel={`question:${title}`}
       key={questionId}
-      className={`flex items-start gap-2.5 w-full px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-primary transition-all duration-150 ${isLocked
-        ? "text-muted-foreground/60 cursor-not-allowed opacity-75"
-        : activeClasses
-        }`}
+      className={`flex items-start gap-2.5 w-full px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-primary transition-all duration-150 ${
+        isLocked ? lockedClasses : activeClasses
+      }`}
       href={href}
       onClick={(e) => {
         if (isLocked) {
@@ -72,18 +80,28 @@ const QuestionLink = ({
       }}
     >
       {isLocked ? (
-        <Lock className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0 mt-0.5 stroke-[1.5]" />
+        <Lock
+          className={`w-3.5 h-3.5 ${isDark ? "text-gray-500/60" : "text-gray-400"} shrink-0 mt-0.5 stroke-[1.5]`}
+        />
       ) : isCompleted ? (
-        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5 stroke-[1.5]" />
+        <CheckCircle2
+          className={`w-3.5 h-3.5 ${isDark ? "text-emerald-400" : "text-emerald-500"} shrink-0 mt-0.5 stroke-[1.5]`}
+        />
       ) : isCurrent ? (
-        <div className="w-3.5 h-3.5 rounded-full border-[1.25px] border-primary flex items-center justify-center shrink-0 mt-0.5">
+        <div
+          className={`w-3.5 h-3.5 rounded-full border-[1.5px] border-primary flex items-center justify-center shrink-0 mt-0.5 ${isDark ? "shadow-[0_0_8px_rgba(255,87,87,0.35)]" : ""}`}
+        >
           <div className="w-1.5 h-1.5 rounded-full bg-primary" />
         </div>
       ) : (
-        <Circle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground/35 stroke-[1.25]" />
+        <Circle
+          className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isDark ? "text-gray-600" : "text-gray-400"} stroke-[1.25]`}
+        />
       )}
       {isStarred && (
-        <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0 mt-0.5" />
+        <Star
+          className={`w-3.5 h-3.5 ${isDark ? "text-amber-400 fill-amber-400" : "text-amber-500 fill-amber-500"} shrink-0 mt-0.5`}
+        />
       )}
       <span className="leading-snug break-words flex-1 font-medium">
         {title}

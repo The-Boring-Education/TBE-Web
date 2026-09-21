@@ -1,14 +1,11 @@
 import { routes, TOPIC_LABELS } from "@tbe/constants";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
+import type { DsaTopicSummaryRow } from "@tbe/types";
 import { sendRequest } from "@tbe/utils";
 
 import type { TopicWithCount } from "./useDsaTopics";
 
-export interface DsaTopicSummaryRow {
-  topic: string;
-  count: number;
-  solved: number;
-}
+export type { DsaTopicSummaryRow } from "@tbe/types";
 
 import useUser from "./useUser";
 
@@ -41,32 +38,40 @@ export const useDsaTopicSummaries = (
       if (!Array.isArray(raw)) {
         throw new Error(result.message || "Failed to fetch DSA topics");
       }
-      const rows: TopicWithCount[] = raw
-        .map((item: any) => {
-          const topic = typeof item === "string" ? item : item.topic;
-          const count = typeof item === "string" ? 0 : item.count || 0;
-          const solved =
-            typeof item === "string" || typeof item.solved !== "number"
-              ? 0
-              : item.solved;
+      const rows = raw
+        .map((item: unknown): (TopicWithCount & DsaTopicSummaryRow) | null => {
+          const row =
+            typeof item === "object" && item !== null
+              ? (item as Record<string, unknown>)
+              : {};
+          const topic = typeof item === "string" ? item : row.topic;
+          if (typeof topic !== "string" || !TOPIC_LABELS[topic]) return null;
           return {
             topic,
-            count,
-            solved,
+            count: typeof row.count === "number" ? row.count : 0,
+            solved: typeof row.solved === "number" ? row.solved : 0,
+            accessibleCount:
+              typeof row.accessibleCount === "number" ? row.accessibleCount : 0,
+            accessibleSolved:
+              typeof row.accessibleSolved === "number"
+                ? row.accessibleSolved
+                : 0,
             label: TOPIC_LABELS[topic],
           };
         })
-        .filter((row: any) => !!row.label)
+        .filter(
+          (row): row is TopicWithCount & DsaTopicSummaryRow => row !== null,
+        )
         .sort((a, b) => {
           const keys = Object.keys(TOPIC_LABELS);
           const idxA = keys.indexOf(a.topic);
           const idxB = keys.indexOf(b.topic);
           if (idxA !== -1 && idxB !== -1) return idxA - idxB;
           return a.label!.localeCompare(b.label!);
-        }) as TopicWithCount[];
+        });
       return rows;
     },
     enabled: !!userId,
-    ...CACHE_TIMES.STABLE,
+    ...CACHE_TIMES.STANDARD,
   });
 };

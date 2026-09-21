@@ -56,6 +56,7 @@ const mockGetCouponById = vi.fn();
 const mockUpdateCoupon = vi.fn();
 const mockDeleteCoupon = vi.fn();
 const mockApplyCouponToSheets = vi.fn();
+const mockRemoveCouponFromSheet = vi.fn();
 
 vi.mock("@/lib/database", () => ({
   getAllCouponsFromDB: (...args: any[]) => mockGetAllCoupons(...args),
@@ -65,6 +66,8 @@ vi.mock("@/lib/database", () => ({
   deleteCouponFromDB: (...args: any[]) => mockDeleteCoupon(...args),
   applyCouponToSheetsFromDB: (...args: any[]) =>
     mockApplyCouponToSheets(...args),
+  removeCouponFromSheetFromDB: (...args: any[]) =>
+    mockRemoveCouponFromSheet(...args),
 }));
 
 /* ------------------------------------------------------------------ */
@@ -73,7 +76,9 @@ vi.mock("@/lib/database", () => ({
 
 import couponIdHandler from "../../../../api/src/pages/api/v1/admin/coupon/[couponId]";
 import bulkApplyHandler from "../../../../api/src/pages/api/v1/admin/coupon/[couponId]/bulk-apply";
+import sheetHandler from "../../../../api/src/pages/api/v1/admin/coupon/[couponId]/sheets/[sheetId]";
 import indexHandler from "../../../../api/src/pages/api/v1/admin/coupon/index";
+import couponAliasHandler from "../../../../api/src/pages/api/v1/coupon/index";
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -511,5 +516,132 @@ describe("Admin Coupon Bulk Apply – POST", () => {
     await bulkApplyHandler(req, res);
 
     expect(res._getStatusCode()).toBe(400);
+  });
+});
+
+/* ================================================================== */
+/*  POST / DELETE  /admin/coupon/:couponId/sheets/:sheetId             */
+/* ================================================================== */
+
+describe("Admin Coupon Sheet – POST", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("adds a sheet to a coupon", async () => {
+    mockApplyCouponToSheets.mockResolvedValue({
+      data: { ...VALID_COUPON, applicableProducts: ["sheet1"] },
+    });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: {
+        couponId: "507f191e810c19729de860ea",
+        sheetId: "sheet1",
+      },
+    });
+    await sheetHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    expect(mockApplyCouponToSheets).toHaveBeenCalledWith(
+      "507f191e810c19729de860ea",
+      ["sheet1"],
+    );
+  });
+
+  it("returns 400 when coupon is missing", async () => {
+    mockApplyCouponToSheets.mockResolvedValue({ error: "Coupon not found" });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: {
+        couponId: "000000000000000000000000",
+        sheetId: "sheet1",
+      },
+    });
+    await sheetHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(400);
+  });
+
+  it("returns 400 when couponId or sheetId is missing", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: { couponId: "507f191e810c19729de860ea" },
+    });
+    await sheetHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(mockApplyCouponToSheets).not.toHaveBeenCalled();
+  });
+});
+
+describe("Admin Coupon Sheet – DELETE", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("removes a sheet from a coupon", async () => {
+    mockRemoveCouponFromSheet.mockResolvedValue({
+      data: { ...VALID_COUPON, applicableProducts: [] },
+    });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "DELETE",
+      query: {
+        couponId: "507f191e810c19729de860ea",
+        sheetId: "sheet1",
+      },
+    });
+    await sheetHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    expect(mockRemoveCouponFromSheet).toHaveBeenCalledWith(
+      "507f191e810c19729de860ea",
+      "sheet1",
+    );
+  });
+
+  it("returns 404 when coupon is missing", async () => {
+    mockRemoveCouponFromSheet.mockResolvedValue({ error: "Coupon not found" });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "DELETE",
+      query: {
+        couponId: "000000000000000000000000",
+        sheetId: "sheet1",
+      },
+    });
+    await sheetHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(404);
+  });
+});
+
+describe("Admin Coupon Sheet – unsupported method", () => {
+  it("rejects GET", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {
+        couponId: "507f191e810c19729de860ea",
+        sheetId: "sheet1",
+      },
+    });
+    await sheetHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(405);
+  });
+});
+
+describe("Coupon list compatibility alias", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("re-exports the admin coupon index handler", () => {
+    expect(couponAliasHandler).toBe(indexHandler);
+  });
+
+  it("serves GET /coupon through the admin handler", async () => {
+    mockGetAllCoupons.mockResolvedValue({ data: [VALID_COUPON] });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      headers: { "x-admin-secret": "test-secret" },
+    });
+    await couponAliasHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    const body = JSON.parse(res._getData());
+    expect(body.data).toHaveLength(1);
   });
 });

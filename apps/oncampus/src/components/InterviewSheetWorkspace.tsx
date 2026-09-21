@@ -7,6 +7,7 @@ import {
   FeedbackPopup,
   FlexContainer,
   FreemiumLockBanner,
+  mapInterviewPriorityToDifficultyGroup,
   PaymentCard,
   QuestionLink,
   ResourceTooltip,
@@ -408,7 +409,12 @@ export const InterviewSheetWorkspace = ({
       <DifficultyGroupedList
         className="gap-px flex-grow"
         items={questions ?? []}
-        getDifficulty={(q) => (q as { difficulty?: string }).difficulty}
+        getDifficulty={(q) =>
+          (q as { difficulty?: string; priority?: string }).difficulty ||
+          mapInterviewPriorityToDifficultyGroup(
+            (q as { priority?: string }).priority,
+          )
+        }
         getItemKey={(q) => getSafeId(q._id)}
         initialExpandedGroups={STANDARD_DIFFICULTY_GROUPS_DEFAULT_EXPANDED}
         difficultyOrder={STANDARD_DIFFICULTY_ORDER}
@@ -725,14 +731,14 @@ export const InterviewSheetWorkspace = ({
             currentQuestionId
               ? {
                   sheetId: sheet._id.toString(),
-                  sheetName: sheet.title || sheet.name || "",
+                  sheetName: sheet.name || "",
                   questionId: currentQuestionId,
                   questionName:
                     currentQuestion?.title || currentQuestion?.question || "",
                 }
               : {
                   sheetId: sheet._id.toString(),
-                  sheetName: sheet.title || sheet.name || "",
+                  sheetName: sheet.name || "",
                 }
           }
         />
