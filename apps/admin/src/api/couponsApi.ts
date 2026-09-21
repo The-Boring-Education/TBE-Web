@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { couponAdminPaths } from "@/api/couponPaths";
 import api from "@/lib/axios";
 import type { Coupon, CouponFormData } from "@/types";
 import { logApiError } from "@/utils/errorLogger";
@@ -10,7 +11,7 @@ export const useCoupons = () => {
     queryKey: ["coupon"],
     queryFn: async () => {
       try {
-        const res = await api.get("/coupon");
+        const res = await api.get(couponAdminPaths.collection);
         return { data: res.data?.data || [] };
       } catch (error) {
         logApiError(error, "Fetch Coupons", false);
@@ -34,7 +35,7 @@ export const useCreateCoupon = () => {
 
   return useMutation({
     mutationFn: async (couponData: CouponFormData) => {
-      const res = await api.post("/coupon", couponData);
+      const res = await api.post(couponAdminPaths.collection, couponData);
       return res.data;
     },
     onSuccess: () => {
@@ -55,7 +56,7 @@ export const useUpdateCoupon = () => {
       couponId: string;
       updatedData: CouponFormData;
     }) => {
-      const res = await api.put(`/coupon/${couponId}`, updatedData);
+      const res = await api.put(couponAdminPaths.item(couponId), updatedData);
       return res.data;
     },
     onSuccess: () => {
@@ -70,7 +71,7 @@ export const useDeleteCoupon = () => {
 
   return useMutation({
     mutationFn: async (couponId: string) => {
-      const res = await api.delete(`/coupon/${couponId}`);
+      const res = await api.delete(couponAdminPaths.item(couponId));
       return res.data;
     },
     onSuccess: () => {
@@ -91,7 +92,7 @@ export const useAddSheetToCoupon = () => {
       couponId: string;
       sheetId: string;
     }) => {
-      const res = await api.post(`/coupon/${couponId}/sheets/${sheetId}`);
+      const res = await api.post(couponAdminPaths.sheet(couponId, sheetId));
       return res.data;
     },
     onSuccess: () => {
@@ -113,7 +114,7 @@ export const useRemoveSheetFromCoupon = () => {
       couponId: string;
       sheetId: string;
     }) => {
-      const res = await api.delete(`/coupon/${couponId}/sheets/${sheetId}`);
+      const res = await api.delete(couponAdminPaths.sheet(couponId, sheetId));
       return res.data;
     },
     onSuccess: () => {
@@ -135,7 +136,7 @@ export const useBulkApplyCoupon = () => {
       couponId: string;
       sheetIds: string[];
     }) => {
-      const res = await api.post(`/coupon/${couponId}/bulk-apply`, {
+      const res = await api.post(couponAdminPaths.bulkApply(couponId), {
         sheetIds,
       });
       return res.data;
