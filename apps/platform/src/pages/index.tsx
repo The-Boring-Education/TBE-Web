@@ -13,6 +13,8 @@ import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 
+import { TopContributorsSection } from '../components/TopContributorsSection';
+
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();
 
@@ -37,6 +39,8 @@ const Home = ({ seoMeta }: PageProps) => {
         />
 
         <CollegeEventsSection />
+
+        <TopContributorsSection />
 
         <Testimonials />
 
