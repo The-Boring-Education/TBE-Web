@@ -368,6 +368,49 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
 
+  apps/contributor:
+    dependencies:
+      next:
+        specifier: 14.2.35
+        version: 14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      "@tbe/eslint-config":
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      "@tbe/typescript-config":
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      "@types/node":
+        specifier: ^18.19.124
+        version: 18.19.130
+      "@types/react":
+        specifier: 18.3.24
+        version: 18.3.24
+      "@types/react-dom":
+        specifier: 18.3.7
+        version: 18.3.7(@types/react@18.3.24)
+      autoprefixer:
+        specifier: ^10.4.18
+        version: 10.5.2(postcss@8.5.16)
+      eslint:
+        specifier: ^9.34.0
+        version: 9.39.4(jiti@1.21.7)
+      postcss:
+        specifier: ^8.4.35
+        version: 8.5.16
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.19(tsx@4.22.4)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
   apps/dsayatra:
     dependencies:
       "@hookform/resolvers":

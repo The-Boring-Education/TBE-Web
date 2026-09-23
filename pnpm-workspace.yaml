@@ -11,6 +11,7 @@ packages:
   - apps/resume-yatra
   - apps/oncampus
   - apps/testing
+  - apps/contributor
   - packages/*
 
 onlyBuiltDependencies:
