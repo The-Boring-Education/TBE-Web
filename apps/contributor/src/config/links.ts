@@ -15,5 +15,5 @@ export const LINKS = {
 export const SITE = {
   name: "The Boring Education",
   programName: "TBE Contributor Program",
-  baseUrl: "https://devrels.theboringeducation.com",
+  baseUrl: "https://contributors.theboringeducation.com",
 };
