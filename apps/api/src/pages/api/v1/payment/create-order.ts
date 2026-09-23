@@ -14,7 +14,9 @@ import {
   generatePaymentOrderId,
   sendAPIResponse,
 } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 import { rateLimit } from "@/lib/utils/rateLimit";
+import { captureAPIError } from "@/lib/utils/sentry";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -154,6 +156,20 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     } = resolved.data;
 
     const orderId = generatePaymentOrderId();
+    const requestId =
+      typeof req.headers["x-request-id"] === "string"
+        ? req.headers["x-request-id"]
+        : undefined;
+
+    logger.info("Payment create-order resolved amount", {
+      requestId,
+      userId,
+      productId,
+      productType,
+      orderId,
+      finalAmount,
+      couponCode: resolvedCoupon,
+    });
 
     const orderPayload = buildOrderPayload({
       orderId,
@@ -163,7 +179,7 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       customerEmail,
     });
 
-    const { data, ok, gatewayMessage, httpStatus } =
+    const { data, ok, gatewayMessage, gatewayCode, gatewayType, httpStatus } =
       await createCashfreeOrder(orderPayload);
 
     const paymentSessionId =
@@ -180,6 +196,19 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       const message = gatewayMessage
         ? `${base}: ${gatewayMessage}`
         : `${base} (HTTP ${httpStatus})`;
+      logger.warn("Payment create-order gateway failure", {
+        requestId,
+        userId,
+        productId,
+        productType,
+        orderId,
+        finalAmount,
+        httpStatus,
+        gatewayMessage,
+        gatewayCode,
+        gatewayType,
+        hasPaymentSessionId: Boolean(paymentSessionId),
+      });
       return res.status(apiStatusCodes.BAD_REQUEST).json(
         sendAPIResponse({
           status: false,
@@ -203,6 +232,21 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (error) {
+      logger.error("Payment create-order failed to persist", {
+        requestId,
+        userId,
+        productId,
+        productType,
+        orderId,
+        error,
+      });
+      captureAPIError(
+        new Error(typeof error === "string" ? error : "Failed to save payment"),
+        "/api/v1/payment/create-order",
+        "POST",
+        apiStatusCodes.INTERNAL_SERVER_ERROR,
+        { userId, productId, productType, orderId },
+      );
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
         sendAPIResponse({
           status: false,
@@ -210,6 +254,15 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         }),
       );
     }
+
+    logger.info("Payment create-order succeeded", {
+      requestId,
+      userId,
+      productId,
+      productType,
+      orderId,
+      finalAmount,
+    });
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
@@ -225,6 +278,19 @@ const handleCreateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : "";
     const isPlatformUrlConfig = errMsg.includes("NEXT_PUBLIC_PLATFORM_URL");
+    logger.error("Payment create-order crashed", {
+      requestId:
+        typeof req.headers["x-request-id"] === "string"
+          ? req.headers["x-request-id"]
+          : undefined,
+      error: errMsg,
+    });
+    captureAPIError(
+      error instanceof Error ? error : new Error(errMsg || "create-order"),
+      "/api/v1/payment/create-order",
+      "POST",
+      apiStatusCodes.INTERNAL_SERVER_ERROR,
+    );
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
       sendAPIResponse({
         status: false,

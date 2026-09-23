@@ -18,6 +18,12 @@ import {
 } from "../constants";
 import { POINTS_RULES, SUBSCRIPTION_FEATURES } from "../constants";
 import { routes } from "../constants";
+import {
+  extractCashfreeErrorDetails,
+  getCashfreeConfigSnapshot,
+  sanitizeCashfreeGatewayBody,
+} from "./cashfreeDiagnostics";
+import { logger } from "./logger";
 
 const sendAPIResponse = ({
   success,
@@ -101,33 +107,13 @@ const buildCashfreeHostedCheckoutLink = (paymentSessionId: string): string => {
   return `${hostBase}/checkout?paymentSessionId=${encodeURIComponent(paymentSessionId)}`;
 };
 
-/** Best-effort parse of Cashfree Orders API error JSON for clearer 400 responses. */
-const extractCashfreeErrorMessage = (data: unknown): string | undefined => {
-  if (!data || typeof data !== "object") return undefined;
-  const d = data as Record<string, unknown>;
-  if (typeof d.message === "string" && d.message.trim())
-    return d.message.trim();
-  if (typeof d.error === "string" && d.error.trim()) return d.error.trim();
-  if (Array.isArray(d.message) && d.message.length > 0) {
-    const first = d.message[0];
-    if (typeof first === "string") return first;
-  }
-  if (d.error && typeof d.error === "object" && d.error !== null) {
-    const nested = d.error as Record<string, unknown>;
-    if (typeof nested.message === "string" && nested.message.trim()) {
-      return nested.message.trim();
-    }
-  }
-  const sub = d.sub_code;
-  if (typeof sub === "string" && sub.trim()) return sub.trim();
-  return undefined;
-};
-
 type CreateCashfreeOrderResult = {
   data: unknown;
   ok: boolean;
   httpStatus: number;
   gatewayMessage?: string;
+  gatewayCode?: string;
+  gatewayType?: string;
 };
 
 const createCashfreeOrder = async (
@@ -135,10 +121,36 @@ const createCashfreeOrder = async (
 ): Promise<CreateCashfreeOrderResult> => {
   const clientId = paymentConfig.CASHFREE_CLIENT_ID;
   const secretKey = paymentConfig.CASHFREE_SECRET_KEY;
+  const diagnostics = getCashfreeConfigSnapshot();
+  const returnUrl = orderPayload.order_meta.return_url;
+  const requestMeta = {
+    ...diagnostics,
+    orderId: orderPayload.order_id,
+    orderAmount: orderPayload.order_amount,
+    returnUrl,
+    returnUrlProtocol: (() => {
+      try {
+        return new URL(returnUrl).protocol.replace(":", "");
+      } catch {
+        return "invalid";
+      }
+    })(),
+  };
 
   if (!clientId || !secretKey) {
+    logger.error("Cashfree create order skipped — credentials missing", {
+      ...requestMeta,
+      clientIdConfigured: Boolean(clientId),
+      secretConfigured: Boolean(secretKey),
+    });
     throw new Error("Cashfree credentials not configured");
   }
+
+  if (diagnostics.modeUrlMismatch) {
+    logger.warn("Cashfree mode and CASHFREE_BASE_URL disagree", requestMeta);
+  }
+
+  logger.info("Cashfree create order request", requestMeta);
 
   const response = await fetch(`${getCashfreePgBaseUrl()}/orders`, {
     method: "POST",
@@ -152,13 +164,34 @@ const createCashfreeOrder = async (
   });
 
   const data = await response.json();
-  const gatewayMessage = extractCashfreeErrorMessage(data);
+  const details = extractCashfreeErrorDetails(data);
+
+  if (!response.ok) {
+    logger.warn("Cashfree create order rejected", {
+      ...requestMeta,
+      httpStatus: response.status,
+      gatewayMessage: details.message,
+      gatewayCode: details.code,
+      gatewayType: details.type,
+      gatewayHelp: details.help,
+      gatewayBody: sanitizeCashfreeGatewayBody(data),
+    });
+  } else {
+    logger.info("Cashfree create order accepted", {
+      orderId: orderPayload.order_id,
+      httpStatus: response.status,
+      mode: diagnostics.mode,
+      pgBaseUrl: diagnostics.pgBaseUrl,
+    });
+  }
 
   return {
     data,
     ok: response.ok,
     httpStatus: response.status,
-    gatewayMessage,
+    gatewayMessage: details.message,
+    gatewayCode: details.code,
+    gatewayType: details.type,
   };
 };
 
