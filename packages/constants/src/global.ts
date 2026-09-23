@@ -78,6 +78,12 @@ const products: ProductDataProps = {
     slug: toPlatformUrl(routes.unskilled),
     description: "Find Your Next Tech Job with Insights",
   },
+  // Resources - External Platform
+  resources: {
+    label: "Resources",
+    slug: "https://resources.theboringeducation.com",
+    description: "Free Roadmaps & Learning Guides for Tech",
+  },
   // PrepYatra - External Product
   prepYatra: {
     label: "Prep Yatra",
