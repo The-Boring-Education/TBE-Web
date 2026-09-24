@@ -116,6 +116,15 @@ export const queryKeys = {
     points: (userId: string) =>
       [...queryKeys.gamification.all, "points", userId] as const,
     leaderboard: () => [...queryKeys.gamification.all, "leaderboard"] as const,
+    board: (type: string, limit?: number) =>
+      [...queryKeys.gamification.leaderboard(), "board", type, limit] as const,
+    publicBoard: (type: string, limit?: number) =>
+      [...queryKeys.gamification.leaderboard(), "public", type, limit] as const,
+    myStanding: () => [...queryKeys.gamification.leaderboard(), "me"] as const,
+    champions: (type: string) =>
+      [...queryKeys.gamification.leaderboard(), "champions", type] as const,
+    preferences: () =>
+      [...queryKeys.gamification.all, "leaderboard-preferences"] as const,
   },
 
   // ── Prep Yatra ──

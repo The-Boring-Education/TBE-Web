@@ -91,6 +91,7 @@ const routes = {
   refund: "/refund",
   termsAndConditions: "/terms-and-conditions",
   contribute: "/contribute",
+  leaderboard: "/leaderboard",
   user: {
     profile: "/user/profile",
     dashboard: "/dashboard",
@@ -233,6 +234,13 @@ const routes = {
     unskilledEvaluationHealth: "/api/v1/evaluate/health",
     markSheetQuestionAsStarred: "/user/interview-prep/starred",
     leaderboard: "/leaderboard",
+    leaderboardMe: "/leaderboard/me",
+    leaderboardPublic: "/leaderboard/public",
+    leaderboardChampions: "/leaderboard/champions",
+    leaderboardPreferences: "/user/leaderboard-preferences",
+    adminLeaderboard: "/admin/leaderboard",
+    adminLeaderboardExclusion: "/admin/leaderboard/exclusion",
+    closeLeaderboardPeriod: "/leaderboard/close-period",
   },
 };
 

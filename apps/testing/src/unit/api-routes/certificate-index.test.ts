@@ -130,6 +130,7 @@ describe("Certificate Index API Route", () => {
     expect(mockUpdateUserPointsInDB).toHaveBeenCalledWith(
       "u1",
       "COMPLETE_COURSE_CERTIFICATE",
+      { itemId: "p1" },
     );
   });
 

@@ -1,6 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { addUserQuizAttemptToDB, getQuizByIdFromDB } from "@/lib/database";
+import {
+  addUserQuizAttemptToDB,
+  awardPoints,
+  getQuizByIdFromDB,
+  mergeGamificationSummaries,
+} from "@/lib/database";
 import { updateUserAnalyticsInDB } from "@/lib/database/queries/enhancedQuiz";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
@@ -171,10 +176,33 @@ async function handleSubmitQuiz(
     }),
   );
 
+  // Points are awarded here, never by the browser. A quiz counts toward Period
+  // Score once per learner; a perfect score needs every question answered correctly.
+  const completion = await awardPoints({
+    userId,
+    actionType: "COMPLETE_QUIZ",
+    itemId: quizId,
+    app: "QUIZ",
+  });
+  const distinctCorrect = new Set(
+    detailedResults.filter((r) => r.isCorrect).map((r) => r.questionIndex),
+  ).size;
+  const isPerfect =
+    quiz.questions.length > 0 && distinctCorrect === quiz.questions.length;
+  const perfect = isPerfect
+    ? await awardPoints({
+        userId,
+        actionType: "QUIZ_PERFECT_SCORE",
+        itemId: quizId,
+        app: "QUIZ",
+      })
+    : undefined;
+
   // Return results
   return res.status(200).json(
     sendAPIResponse({
       status: true,
+      gamification: mergeGamificationSummaries(completion, perfect),
       data: {
         attemptId: attempt._id,
         score,

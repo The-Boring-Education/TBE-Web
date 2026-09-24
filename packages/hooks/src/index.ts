@@ -34,8 +34,6 @@ export type { TopicWithCount } from "./useDsaTopics";
 export { default as useDsaTopics } from "./useDsaTopics";
 export { useDsaTopicSummaries } from "./useDsaTopicSummaries";
 export * from "./useInstallPrompt";
-/** @deprecated Use `useLeaderboard` from `@tbe/gamification` instead */
-export { default as useLeaderboard } from "./useLeaderboard";
 export { default as useMediaQuery } from "./useMediaQuery";
 export { default as useNotifications } from "./useNotifications";
 export { default as useOnboarding } from "./useOnboarding";

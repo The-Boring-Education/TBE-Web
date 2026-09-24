@@ -3,13 +3,12 @@ import mongoose from "mongoose";
 import type {
   DatabaseQueryResponseType,
   TBEAppType,
-  UserPointsAction,
   UserPointsActionType,
 } from "@/lib/interfaces";
-import { calculateUserPointsForAction } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
 import { Gamification, UserActivityLog } from "../models";
+import { recordPointEvent } from "./pointLedger";
 
 const getMongoUserId = (userId: string) => {
   const cleanId = typeof userId === "string" ? userId.trim() : String(userId);
@@ -62,49 +61,40 @@ const getUserPointsFromDB = async (
   }
 };
 
+export interface AwardPointsOptions {
+  app?: TBEAppType;
+  /** The Learning Item this action is about — required for it to count toward Period Score. */
+  itemId?: string;
+}
+
+/**
+ * Award points for an action. Thin wrapper over the Point Ledger kept for existing callers.
+ */
 const updateUserPointsInDB = async (
   userId: string,
   actionType: UserPointsActionType,
-  app?: TBEAppType,
+  options: AwardPointsOptions = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const pointsEarned = calculateUserPointsForAction(actionType);
-
-    const action: UserPointsAction = {
+    const data = await recordPointEvent({
+      userId,
       actionType,
-      pointsEarned,
-      ...(app ? { app } : {}),
-    };
-
-    const filterId = getMongoUserId(userId);
-
-    let updatedGamification = await Gamification.findOneAndUpdate(
-      { userId: { $eq: filterId } },
-      {
-        $push: { actions: action },
-        $inc: { points: pointsEarned },
-      },
-      { new: true, select: "-actions" },
-    );
-
-    if (!updatedGamification) {
-      updatedGamification = await Gamification.create({
-        userId: filterId,
-        points: pointsEarned,
-        actions: [action],
-      });
-    }
+      itemId: options.itemId,
+      app: options.app,
+    });
 
     // Log activity for streak tracking (intentionally unawaited, best-effort)
-    if (app) {
-      void logUserActivityForStreak(userId, app, actionType).catch((err) => {
-        logger.error("DB: logUserActivityForStreak failed silently", {
-          error: err instanceof Error ? err.message : String(err),
-        });
-      });
+    if (options.app) {
+      void logUserActivityForStreak(userId, options.app, actionType).catch(
+        (err) => {
+          logger.error("DB: logUserActivityForStreak failed silently", {
+            error: err instanceof Error ? err.message : String(err),
+          });
+        },
+      );
     }
 
-    return { data: updatedGamification };
+    return { data };
   } catch (error) {
     logger.error("DB: updateUserPointsInDB failed", {
       error: error instanceof Error ? error.message : String(error),
@@ -145,61 +135,34 @@ const logUserActivityForStreak = async (
   }
 };
 
-const deductUserPointsFromDB = async (
-  userId: string,
-  actionType: UserPointsActionType,
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const pointsToDeduct = calculateUserPointsForAction(actionType);
-    const filterId = getMongoUserId(userId);
-
-    const updatedGamification = await Gamification.findOneAndUpdate(
-      { userId: { $eq: filterId } },
-      [
-        {
-          $set: {
-            points: {
-              $max: [{ $subtract: ["$points", pointsToDeduct] }, 0],
-            },
-          },
-        },
-      ],
-      { new: true, select: "-actions" },
-    );
-
-    if (!updatedGamification) {
-      return { error: "User not found" };
-    }
-
-    return { data: updatedGamification };
-  } catch (error) {
-    logger.error("DB: deductUserPointsFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Error reducing points", details: error };
-  }
-};
-
+/**
+ * Award (isCompleted) or reverse (!isCompleted) an action through the Point Ledger.
+ * Reversals are recorded as negative Point Events and never drop Lifetime Points below 0.
+ */
 const handleGamificationPoints = async (
   isCompleted: boolean,
   userId: string,
   actionType: UserPointsActionType,
-  app?: TBEAppType,
+  options: AwardPointsOptions = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const { error, data } = isCompleted
-      ? await updateUserPointsInDB(userId, actionType, app)
-      : await deductUserPointsFromDB(userId, actionType);
+    if (isCompleted) {
+      const { data, error } = await updateUserPointsInDB(
+        userId,
+        actionType,
+        options,
+      );
+      return error ? { error: "Gamification action failed" } : { data };
+    }
 
-    if (error)
-      return {
-        error: "Gamification action failed",
-      };
-
-    return {
-      data,
-    };
+    const data = await recordPointEvent({
+      userId,
+      actionType,
+      itemId: options.itemId,
+      app: options.app,
+      isReversal: true,
+    });
+    return { data };
   } catch (error) {
     logger.error("DB: handleGamificationPoints failed", {
       error: error instanceof Error ? error.message : String(error),
@@ -212,68 +175,8 @@ const handleGamificationPoints = async (
   }
 };
 
-const getLeaderboardFromDB = async (
-  limit = 10,
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const leaderboard = await Gamification.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      { $unwind: "$user" },
-      {
-        $project: {
-          userId: 1,
-          points: 1,
-          "user.name": 1,
-          "user.image": 1,
-          "user.email": 1,
-        },
-      },
-      { $sort: { points: -1 } },
-      { $limit: limit },
-    ]);
-
-    return { data: leaderboard };
-  } catch (error) {
-    logger.error("DB: getLeaderboardFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Error fetching leaderboard", details: error };
-  }
-};
-
-const getActionsWithinDateRange = async (
-  start: Date,
-  end: Date,
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const data = await Gamification.find({
-      createdAt: { $gte: start, $lte: end },
-    }).lean();
-    return { data };
-  } catch (error) {
-    logger.error("DB: getActionsWithinDateRange failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return {
-      error: "Failed to fetch actions within date range",
-      details: error,
-    };
-  }
-};
-
 export {
   addGamificationDocInDB,
-  getActionsWithinDateRange,
-  getLeaderboardFromDB,
   getUserPointsFromDB,
   handleGamificationPoints,
   logUserActivityForStreak,

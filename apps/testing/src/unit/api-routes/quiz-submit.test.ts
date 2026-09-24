@@ -4,11 +4,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockAddUserQuizAttemptToDB = vi.fn();
 const mockGetQuizByIdFromDB = vi.fn();
+const mockAwardPoints = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   addUserQuizAttemptToDB: (...args: unknown[]) =>
     mockAddUserQuizAttemptToDB(...args),
   getQuizByIdFromDB: (...args: unknown[]) => mockGetQuizByIdFromDB(...args),
+  awardPoints: (...args: unknown[]) => mockAwardPoints(...args),
+  mergeGamificationSummaries: (a: unknown, b: unknown) => ({ merged: [a, b] }),
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -367,5 +370,70 @@ describe("Quiz Submit API Route", () => {
     expect(res._getStatusCode()).toBe(500);
     const data = JSON.parse(res._getData());
     expect(data.message).toContain("Internal server error");
+  });
+
+  describe("server-side quiz points", () => {
+    const answer = (questionIndex: number, selectedAnswer: number) => ({
+      questionIndex,
+      selectedAnswer,
+      isCorrect: true,
+      timeSpent: 5,
+    });
+
+    const submit = async (answers: ReturnType<typeof answer>[]) => {
+      mockGetQuizByIdFromDB.mockResolvedValue({ data: mockQuiz, error: null });
+      mockAddUserQuizAttemptToDB.mockResolvedValue({
+        data: { _id: "attempt-1" },
+        error: null,
+      });
+      mockAwardPoints.mockImplementation(async ({ actionType }) => ({
+        actionType,
+      }));
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "POST",
+        query: { id: "quiz-123" },
+        body: { userId: "user-1", answers, totalTimeSpent: 15 },
+      });
+      await handler(req, res);
+      return JSON.parse(res._getData());
+    };
+
+    it("awards completion and perfect score for the quiz, and returns both", async () => {
+      const data = await submit([answer(0, 0), answer(1, 1), answer(2, 2)]);
+
+      expect(mockAwardPoints).toHaveBeenCalledWith({
+        userId: "user-1",
+        actionType: "COMPLETE_QUIZ",
+        itemId: "quiz-123",
+        app: "QUIZ",
+      });
+      expect(mockAwardPoints).toHaveBeenCalledWith(
+        expect.objectContaining({
+          actionType: "QUIZ_PERFECT_SCORE",
+          itemId: "quiz-123",
+        }),
+      );
+      expect(data.gamification).toEqual({
+        merged: [
+          { actionType: "COMPLETE_QUIZ" },
+          { actionType: "QUIZ_PERFECT_SCORE" },
+        ],
+      });
+    });
+
+    it("does not award a perfect score for a partial submission", async () => {
+      await submit([answer(0, 0)]);
+      expect(mockAwardPoints).toHaveBeenCalledTimes(1);
+      expect(mockAwardPoints).toHaveBeenCalledWith(
+        expect.objectContaining({ actionType: "COMPLETE_QUIZ" }),
+      );
+    });
+
+    it("does not award a perfect score for one correct answer repeated", async () => {
+      await submit([answer(0, 0), answer(0, 0), answer(0, 0)]);
+      expect(mockAwardPoints).not.toHaveBeenCalledWith(
+        expect.objectContaining({ actionType: "QUIZ_PERFECT_SCORE" }),
+      );
+    });
   });
 });

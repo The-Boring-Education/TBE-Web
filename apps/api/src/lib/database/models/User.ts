@@ -228,8 +228,24 @@ const UserSchema: Schema<UserModel> = new Schema(
     oncampus: OncampusSchema,
     techYatra: TechYatraSchema,
     resumeYatra: ResumeYatraSchema,
+    /** Leaderboard Visibility, email preference and admin Leaderboard Exclusion (see CONTEXT.md) */
+    leaderboard: {
+      visible: { type: Boolean, default: true },
+      emails: { type: Boolean, default: true },
+      excluded: { type: Boolean, default: false },
+    },
   },
   { timestamps: true },
+);
+
+// Leaderboard Reader looks up the (small) set of hidden/excluded learners.
+UserSchema.index(
+  { "leaderboard.visible": 1 },
+  { partialFilterExpression: { "leaderboard.visible": false } },
+);
+UserSchema.index(
+  { "leaderboard.excluded": 1 },
+  { partialFilterExpression: { "leaderboard.excluded": true } },
 );
 
 const User: Model<UserModel> =

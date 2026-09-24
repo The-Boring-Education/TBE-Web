@@ -8,6 +8,7 @@ import {
   WeAlreadyTaughtAt,
 } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes, STATIC_FILE_PATH } from '@tbe/constants';
+import { PublicLeaderboardStrip } from '@tbe/gamification';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
@@ -28,6 +29,8 @@ const Home = ({ seoMeta }: PageProps) => {
         />
 
         <AppShowcaseSections theme='light' />
+
+        <PublicLeaderboardStrip ctaHref={routes.learn} />
 
         <Banner
           buttonLink={routes.devRels}
