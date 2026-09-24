@@ -16,6 +16,8 @@ export const LANDING = {
       "https://ik.imagekit.io/riufvimprm/devrel/cta-same-students.png?updatedAt=1790057820325",
     leadBuildRepresent:
       "https://ik.imagekit.io/riufvimprm/devrel/lead-build-represent.png",
+    certificateHero:
+      "https://ik.imagekit.io/riufvimprm/devrel/tbe-contributor-certificate-hero.png",
     logo: "https://ik.imagekit.io/tbe/webapp/logo.svg",
   },
   hero: {
@@ -138,6 +140,30 @@ export const LANDING = {
           "Direct collaboration with the core team",
           "Featured across TBE platforms",
         ],
+      },
+    ],
+  },
+  certificate: {
+    badge: "CONTRIBUTOR PROGRAM",
+    headlinePrefix: "Earn Your",
+    headlineHighlight: "Contributor Certificate",
+    description:
+      "Complete tasks, contribute consistently and get an official TBE Contributor Program certificate to showcase your impact.",
+    features: [
+      {
+        title: "Official TBE Certificate",
+        desc: "Get a verified Contributor Program certificate for your contributions.",
+        iconType: "certificate",
+      },
+      {
+        title: "Showcase Your Work",
+        desc: "Stand out on your resume, LinkedIn and portfolios with real contributions.",
+        iconType: "showcase",
+      },
+      {
+        title: "Unlock New Opportunities",
+        desc: "The more you contribute, the more you grow with TBE.",
+        iconType: "opportunities",
       },
     ],
   },

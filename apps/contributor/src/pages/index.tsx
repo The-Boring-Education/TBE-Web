@@ -3,6 +3,7 @@ import Head from "next/head";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import CallToActionSection from "@/components/sections/CallToActionSection";
+import CertificateSection from "@/components/sections/CertificateSection";
 import HeroSection from "@/components/sections/HeroSection";
 import HiringProcessSection from "@/components/sections/HiringProcessSection";
 import PerksSection from "@/components/sections/PerksSection";
@@ -58,6 +59,7 @@ export default function ContributorPage({ seo }: ContributorPageProps) {
         <PerksSection />
         <TracksSection />
         <RolesGrowthSection />
+        <CertificateSection />
         <WhyJoinSection />
         <HiringProcessSection />
         <CallToActionSection />

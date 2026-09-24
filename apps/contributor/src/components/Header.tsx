@@ -13,6 +13,7 @@ export default function Header() {
     { name: "Perks", href: "#perks" },
     { name: "Tracks", href: "#tracks" },
     { name: "Roles", href: "#roles" },
+    { name: "Certificate", href: "#certificate" },
     { name: "Why Join", href: "#why-join" },
     { name: "Process", href: "#process" },
   ];
