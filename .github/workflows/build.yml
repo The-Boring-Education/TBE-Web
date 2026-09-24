@@ -149,7 +149,10 @@ jobs:
           echo "## 🏗️ Build Check Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.build-packages.result }}" == "success" ] && [ "${{ needs.build-apps.result }}" == "success" ]; then
+          PKG="${{ needs.build-packages.result }}"
+          APP="${{ needs.build-apps.result }}"
+
+          if [ "$PKG" == "success" ] && [ "$APP" == "success" ]; then
             echo "### ✅ All Builds Passed!" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "- ✅ Shared packages built successfully" >> $GITHUB_STEP_SUMMARY
@@ -157,13 +160,18 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "🎉 Build completed successfully! Ready for merge." >> $GITHUB_STEP_SUMMARY
             exit 0
+          elif [ "$PKG" == "skipped" ] && [ "$APP" == "skipped" ]; then
+            echo "### ⏭️ Builds Skipped (Draft PR)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Build jobs are skipped for draft pull requests." >> $GITHUB_STEP_SUMMARY
+            exit 0
           else
             echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "${{ needs.build-packages.result }}" != "success" ]; then
+            if [ "$PKG" != "success" ] && [ "$PKG" != "skipped" ]; then
               echo "- ❌ Shared packages build failed" >> $GITHUB_STEP_SUMMARY
             fi
-            if [ "${{ needs.build-apps.result }}" != "success" ]; then
+            if [ "$APP" != "success" ] && [ "$APP" != "skipped" ]; then
               echo "- ❌ One or more application builds failed" >> $GITHUB_STEP_SUMMARY
             fi
             echo "" >> $GITHUB_STEP_SUMMARY

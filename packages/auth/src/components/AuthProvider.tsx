@@ -101,7 +101,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const accessToken = getAccessToken();
       if (accessToken && !isTokenExpired(accessToken)) {
         setUser(getUserFromToken(accessToken));
-        setIsLoading(false);
         return;
       }
 
@@ -131,7 +130,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const expiresIn = payload.exp * 1000 - Date.now();
     const refreshAt = expiresIn - 5 * 60 * 1000;
-    if (refreshAt <= 0) return;
+
+    if (refreshAt <= 0) {
+      // Token expires in < 5 min or is already expired — refresh immediately
+      refreshAccessToken();
+      return;
+    }
 
     const timer = setTimeout(() => {
       refreshAccessToken();
