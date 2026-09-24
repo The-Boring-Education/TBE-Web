@@ -2,35 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { buildGoogleAuthUrl, signOAuthState } from "@/lib/auth";
 import { sendAPIResponse } from "@/lib/utils";
+import { isAllowedTbeUrl } from "@/lib/utils/allowed-origins";
 
 const ALLOWED_PROVIDERS = ["google"] as const;
-
-const isAllowedRedirect = (url: string): boolean => {
-  try {
-    const { hostname } = new URL(url);
-    if (hostname === "localhost" || hostname === "127.0.0.1") return true;
-    if (hostname.endsWith(".theboringeducation.com")) return true;
-    // TBE Vercel previews only: require both the `tbe-` prefix and the `-tbe`
-    // team-slug suffix so an attacker-created `evil-tbe.vercel.app` can't be used
-    // as an OAuth redirect target.
-    if (hostname.startsWith("tbe-") && hostname.endsWith("-tbe.vercel.app"))
-      return true;
-
-    const allowed = (process.env.ALLOWED_AUTH_ORIGINS || "")
-      .split(",")
-      .filter(Boolean);
-
-    return allowed.some((origin) => {
-      try {
-        return new URL(origin).hostname === hostname;
-      } catch {
-        return false;
-      }
-    });
-  } catch {
-    return false;
-  }
-};
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -54,7 +28,7 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    if (!isAllowedRedirect(redirect_uri)) {
+    if (!isAllowedTbeUrl(redirect_uri)) {
       return res.status(400).json(
         sendAPIResponse({
           status: false,
