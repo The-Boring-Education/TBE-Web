@@ -1,0 +1,47 @@
+name: Leaderboard Period Close
+
+# Closes finished leaderboard Periods: freezes Champions and emails top finishers.
+# Runs just after midnight IST (18:35 UTC). A single call closes the previous
+# Daily, Weekly and Monthly Period; closing an already-closed Period is a no-op,
+# so Weekly/Monthly only do work on the first run after they end.
+on:
+  schedule:
+    - cron: "35 18 * * *"
+  workflow_dispatch:
+    inputs:
+      type:
+        description: "Optional: DAILY, WEEKLY or MONTHLY (blank = all)"
+        required: false
+      periodKey:
+        description: "Optional period key, e.g. 2026-09-24, 2026-W39, 2026-09 (requires type)"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  close-period:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Close leaderboard periods
+        env:
+          API_URL: ${{ vars.LEADERBOARD_API_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+          TYPE: ${{ github.event.inputs.type }}
+          PERIOD_KEY: ${{ github.event.inputs.periodKey }}
+        run: |
+          set -euo pipefail
+          if [ -z "${API_URL}" ] || [ -z "${ADMIN_SECRET}" ]; then
+            echo "::error::Set the LEADERBOARD_API_URL variable and ADMIN_SECRET secret"
+            exit 1
+          fi
+          body=$(jq -n --arg type "${TYPE:-}" --arg key "${PERIOD_KEY:-}" \
+            '{} + (if $type != "" then {type: $type} else {} end)
+                + (if $key != "" then {periodKey: $key} else {} end)')
+          curl --fail-with-body --silent --show-error \
+            --retry 3 --retry-all-errors --retry-delay 20 \
+            -X POST "${API_URL%/}/api/v1/leaderboard/close-period" \
+            -H "Content-Type: application/json" \
+            -H "x-admin-secret: ${ADMIN_SECRET}" \
+            -d "${body}" | jq .
