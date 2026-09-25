@@ -6,6 +6,11 @@ vi.mock("@tbe/utils", () => ({
   sendRequest: vi.fn(),
 }));
 
+let mockUserId: string | undefined = "viewer-1";
+vi.mock("@tbe/hooks", () => ({
+  useUser: () => ({ user: mockUserId ? { id: mockUserId } : null }),
+}));
+
 import useLeaderboard from "@tbe/gamification/useLeaderboard";
 import { sendRequest } from "@tbe/utils";
 
@@ -78,5 +83,39 @@ describe("useLeaderboard (@tbe/gamification)", () => {
     });
     expect(daily.result.current.entries[0]?.displayName).toBe("Daily Dev");
     expect(monthly.result.current.entries[0]?.displayName).toBe("Monthly Maya");
+  });
+
+  it("surfaces a failed request as an error instead of an empty board", async () => {
+    mockSendRequest.mockResolvedValue({
+      success: false,
+      status: 500,
+      message: "Leaderboard unavailable",
+      data: null,
+    });
+
+    const { result } = renderHookWithQuery(() => useLeaderboard("WEEKLY"));
+
+    await waitFor(() =>
+      expect(result.current.error).toBe("Leaderboard unavailable"),
+    );
+    expect(result.current.board).toBeNull();
+  });
+
+  it("keys the cache by viewer so another account never sees a previous learner's rank", async () => {
+    mockSendRequest.mockResolvedValue(board("WEEKLY", "Priya"));
+
+    mockUserId = "viewer-1";
+    const first = renderHookWithQuery(() => useLeaderboard("WEEKLY"));
+    await waitFor(() => expect(first.result.current.loading).toBe(false));
+
+    mockUserId = "viewer-2";
+    const second = renderHookWithQuery(
+      () => useLeaderboard("WEEKLY"),
+      first.queryClient,
+    );
+    await waitFor(() => expect(second.result.current.loading).toBe(false));
+
+    expect(mockSendRequest).toHaveBeenCalledTimes(2);
+    mockUserId = "viewer-1";
   });
 });

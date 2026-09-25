@@ -1,9 +1,11 @@
 import { LEADERBOARD_LIMITS, routes } from "@tbe/constants";
+import { useUser } from "@tbe/hooks";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import type { LeaderboardType } from "@tbe/types";
 import { sendRequest } from "@tbe/utils";
 
 import type { LeaderboardBoard } from "./types";
+import { unwrapData } from "./unwrap";
 
 /**
  * Live leaderboard for the current Period of `type`.
@@ -16,14 +18,15 @@ const useLeaderboard = (
     enabled = true,
   }: { limit?: number; enabled?: boolean } = {},
 ) => {
+  const { user } = useUser();
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.gamification.board(type, limit),
+    queryKey: queryKeys.gamification.board(type, limit, user?.id),
     queryFn: async () => {
       const res = await sendRequest({
         method: "GET",
         url: `${routes.api.leaderboard}?type=${type}&limit=${limit}`,
       });
-      return (res?.data ?? null) as LeaderboardBoard | null;
+      return unwrapData<LeaderboardBoard | null>(res);
     },
     ...CACHE_TIMES.DYNAMIC,
     enabled,

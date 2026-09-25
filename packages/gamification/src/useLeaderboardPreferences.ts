@@ -10,6 +10,7 @@ import {
 import { sendRequest } from "@tbe/utils";
 
 import type { LeaderboardPreferences } from "./types";
+import { unwrapData } from "./unwrap";
 
 /** Read and change Leaderboard Visibility and leaderboard email preferences. */
 const useLeaderboardPreferences = () => {
@@ -17,13 +18,13 @@ const useLeaderboardPreferences = () => {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: queryKeys.gamification.preferences(),
+    queryKey: queryKeys.gamification.preferences(user?.id ?? ""),
     queryFn: async () => {
       const res = await sendRequest({
         method: "GET",
         url: routes.api.leaderboardPreferences,
       });
-      return (res?.data ?? null) as LeaderboardPreferences | null;
+      return unwrapData<LeaderboardPreferences | null>(res);
     },
     ...CACHE_TIMES.STANDARD,
     enabled: !!user?.id,
@@ -45,7 +46,7 @@ const useLeaderboardPreferences = () => {
     },
     // Optimistic: the toggle flips immediately and rolls back on failure.
     onMutate: async (changes) => {
-      const key = queryKeys.gamification.preferences();
+      const key = queryKeys.gamification.preferences(user?.id ?? "");
       await queryClient.cancelQueries({ queryKey: key });
       const previous = queryClient.getQueryData<LeaderboardPreferences | null>(
         key,
@@ -58,13 +59,16 @@ const useLeaderboardPreferences = () => {
     onError: (_error, _changes, context) => {
       if (context?.previous) {
         queryClient.setQueryData(
-          queryKeys.gamification.preferences(),
+          queryKeys.gamification.preferences(user?.id ?? ""),
           context.previous,
         );
       }
     },
     onSuccess: (prefs) => {
-      queryClient.setQueryData(queryKeys.gamification.preferences(), prefs);
+      queryClient.setQueryData(
+        queryKeys.gamification.preferences(user?.id ?? ""),
+        prefs,
+      );
       void queryClient.invalidateQueries({
         queryKey: queryKeys.gamification.leaderboard(),
       });

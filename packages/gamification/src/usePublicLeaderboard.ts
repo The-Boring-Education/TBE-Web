@@ -4,6 +4,7 @@ import type { LeaderboardType } from "@tbe/types";
 import { sendRequest } from "@tbe/utils";
 
 import type { LeaderboardBoard } from "./types";
+import { unwrapData } from "./unwrap";
 
 /** Masked, logged-out leaderboard for social proof surfaces. */
 const usePublicLeaderboard = (
@@ -17,7 +18,7 @@ const usePublicLeaderboard = (
         method: "GET",
         url: `${routes.api.leaderboardPublic}?type=${type}&limit=${limit}`,
       });
-      return (res?.data ?? null) as LeaderboardBoard | null;
+      return unwrapData<LeaderboardBoard | null>(res);
     },
     ...CACHE_TIMES.DYNAMIC,
   });

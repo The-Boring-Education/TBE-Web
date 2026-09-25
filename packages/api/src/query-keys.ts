@@ -116,15 +116,33 @@ export const queryKeys = {
     points: (userId: string) =>
       [...queryKeys.gamification.all, "points", userId] as const,
     leaderboard: () => [...queryKeys.gamification.all, "leaderboard"] as const,
-    board: (type: string, limit?: number) =>
-      [...queryKeys.gamification.leaderboard(), "board", type, limit] as const,
+    // Keys that carry a viewer's standing or names include the viewer id, so an
+    // account switch in the same tab never reuses another learner's data.
+    board: (type: string, limit?: number, viewerId?: string) =>
+      [
+        ...queryKeys.gamification.leaderboard(),
+        "board",
+        type,
+        limit,
+        viewerId ?? "anonymous",
+      ] as const,
     publicBoard: (type: string, limit?: number) =>
       [...queryKeys.gamification.leaderboard(), "public", type, limit] as const,
-    myStanding: () => [...queryKeys.gamification.leaderboard(), "me"] as const,
-    champions: (type: string) =>
-      [...queryKeys.gamification.leaderboard(), "champions", type] as const,
-    preferences: () =>
-      [...queryKeys.gamification.all, "leaderboard-preferences"] as const,
+    myStanding: (userId: string) =>
+      [...queryKeys.gamification.leaderboard(), "me", userId] as const,
+    champions: (type: string, viewerId?: string) =>
+      [
+        ...queryKeys.gamification.leaderboard(),
+        "champions",
+        type,
+        viewerId ?? "anonymous",
+      ] as const,
+    preferences: (userId: string) =>
+      [
+        ...queryKeys.gamification.all,
+        "leaderboard-preferences",
+        userId,
+      ] as const,
   },
 
   // ── Prep Yatra ──
