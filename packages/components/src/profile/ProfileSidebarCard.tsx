@@ -61,6 +61,56 @@ const resolveHeadline = (
   return `${occ} at The Boring Education`;
 };
 
+interface InfoRowProps {
+  /** Icon rendered inside the circular badge; sized to 16px by the wrapper */
+  icon: React.ReactNode;
+  /** Primary detail text, e.g. the email address or location */
+  value: string;
+  /** Caption shown beneath the value, e.g. "Email" */
+  label: string;
+  /** Renders the dark theme palette */
+  isDark: boolean;
+  /** Clamps the value to one line and exposes the full text on hover */
+  truncate?: boolean;
+}
+
+const InfoRow: React.FC<InfoRowProps> = ({
+  icon,
+  value,
+  label,
+  isDark,
+  truncate = false,
+}) => (
+  <div className="flex items-center gap-3.5">
+    <div
+      className={`w-8 h-8 rounded-full ${
+        isDark
+          ? "bg-neutral-900 border-neutral-800 text-neutral-300"
+          : "bg-slate-50 border-slate-200/70 text-slate-600"
+      } border flex items-center justify-center shrink-0 [&>svg]:w-4 [&>svg]:h-4`}
+    >
+      {icon}
+    </div>
+    <div className="flex flex-col min-w-0 flex-1 gap-0.5">
+      <span
+        className={`${
+          isDark ? "text-neutral-100" : "text-slate-900"
+        } text-sm font-semibold leading-5 ${truncate ? "truncate" : "break-words"}`}
+        title={truncate ? value : undefined}
+      >
+        {value}
+      </span>
+      <span
+        className={`${
+          isDark ? "text-neutral-400" : "text-slate-500"
+        } text-xs font-medium leading-4`}
+      >
+        {label}
+      </span>
+    </div>
+  </div>
+);
+
 export const ProfileSidebarCard: React.FC<ProfileSidebarCardProps> = ({
   userProfile,
   currentUser,
@@ -167,136 +217,44 @@ export const ProfileSidebarCard: React.FC<ProfileSidebarCardProps> = ({
         />
 
         {/* Info Rows */}
-        <div className="w-full space-y-4 text-xs sm:text-sm">
-          {/* Email */}
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-8 h-8 rounded-full ${
-                isDark
-                  ? "bg-neutral-900 border-neutral-800 text-neutral-300"
-                  : "bg-slate-50 border-slate-100 text-slate-600"
-              } border flex items-center justify-center shrink-0`}
-            >
-              <LuMail className="w-4 h-4" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span
-                className={`${
-                  isDark ? "text-neutral-100" : "text-slate-900"
-                } font-semibold text-xs sm:text-sm truncate`}
-                title={displayEmail}
-              >
-                {displayEmail}
-              </span>
-              <span className="text-[11px] text-neutral-500 font-medium">
-                Email
-              </span>
-            </div>
-          </div>
-
-          {/* Occupation */}
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-8 h-8 rounded-full ${
-                isDark
-                  ? "bg-neutral-900 border-neutral-800 text-neutral-300"
-                  : "bg-slate-50 border-slate-100 text-slate-600"
-              } border flex items-center justify-center shrink-0`}
-            >
-              {occupation?.toLowerCase().includes("student") ? (
-                <LuGraduationCap className="w-4 h-4" />
+        <div className="w-full flex flex-col gap-5">
+          <InfoRow
+            icon={<LuMail />}
+            value={displayEmail}
+            label="Email"
+            isDark={isDark}
+            truncate
+          />
+          <InfoRow
+            icon={
+              occupation?.toLowerCase().includes("student") ? (
+                <LuGraduationCap />
               ) : (
-                <LuBriefcase className="w-4 h-4" />
-              )}
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span
-                className={`${
-                  isDark ? "text-neutral-100" : "text-slate-900"
-                } font-semibold text-xs sm:text-sm`}
-              >
-                {formatOccupation(occupation)}
-              </span>
-              <span className="text-[11px] text-neutral-500 font-medium">
-                Occupation
-              </span>
-            </div>
-          </div>
-
-          {/* Contact Number */}
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-8 h-8 rounded-full ${
-                isDark
-                  ? "bg-neutral-900 border-neutral-800 text-neutral-300"
-                  : "bg-slate-50 border-slate-100 text-slate-600"
-              } border flex items-center justify-center shrink-0`}
-            >
-              <LuPhone className="w-4 h-4" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span
-                className={`${
-                  isDark ? "text-neutral-100" : "text-slate-900"
-                } font-semibold text-xs sm:text-sm`}
-              >
-                {contactNo || "Not added"}
-              </span>
-              <span className="text-[11px] text-neutral-500 font-medium">
-                Contact Number
-              </span>
-            </div>
-          </div>
-
-          {/* Joined TBE */}
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-8 h-8 rounded-full ${
-                isDark
-                  ? "bg-neutral-900 border-neutral-800 text-neutral-300"
-                  : "bg-slate-50 border-slate-100 text-slate-600"
-              } border flex items-center justify-center shrink-0`}
-            >
-              <LuCalendar className="w-4 h-4" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span
-                className={`${
-                  isDark ? "text-neutral-100" : "text-slate-900"
-                } font-semibold text-xs sm:text-sm`}
-              >
-                {joinedDate}
-              </span>
-              <span className="text-[11px] text-neutral-500 font-medium">
-                Joined TBE
-              </span>
-            </div>
-          </div>
-
-          {/* Location */}
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-8 h-8 rounded-full ${
-                isDark
-                  ? "bg-neutral-900 border-neutral-800 text-neutral-300"
-                  : "bg-slate-50 border-slate-100 text-slate-600"
-              } border flex items-center justify-center shrink-0`}
-            >
-              <LuMapPin className="w-4 h-4" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span
-                className={`${
-                  isDark ? "text-neutral-100" : "text-slate-900"
-                } font-semibold text-xs sm:text-sm`}
-              >
-                {location}
-              </span>
-              <span className="text-[11px] text-neutral-500 font-medium">
-                Location
-              </span>
-            </div>
-          </div>
+                <LuBriefcase />
+              )
+            }
+            value={formatOccupation(occupation)}
+            label="Occupation"
+            isDark={isDark}
+          />
+          <InfoRow
+            icon={<LuPhone />}
+            value={contactNo || "Not added"}
+            label="Contact Number"
+            isDark={isDark}
+          />
+          <InfoRow
+            icon={<LuCalendar />}
+            value={joinedDate}
+            label="Joined TBE"
+            isDark={isDark}
+          />
+          <InfoRow
+            icon={<LuMapPin />}
+            value={location}
+            label="Location"
+            isDark={isDark}
+          />
         </div>
 
         {/* Edit Profile Button */}
