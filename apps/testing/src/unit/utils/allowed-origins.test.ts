@@ -79,13 +79,11 @@ describe("allowed TBE origins", () => {
       );
     });
 
-    it("allows extra origins from ALLOWED_AUTH_ORIGINS", () => {
+    it("rejects non-http(s) URLs", () => {
+      expect(isAllowedTbeUrl("javascript:alert(1)")).toBe(false);
       expect(
-        isAllowedTbeUrl(
-          "https://custom-preview.example.com/auth/callback",
-          "https://custom-preview.example.com",
-        ),
-      ).toBe(true);
+        isAllowedTbeUrl("ftp://platform-git-x-tbe.vercel.app/callback"),
+      ).toBe(false);
     });
 
     it("returns false for invalid URLs", () => {

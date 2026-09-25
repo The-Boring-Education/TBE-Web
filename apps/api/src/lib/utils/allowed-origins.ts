@@ -48,36 +48,13 @@ export const isAllowedTbeHostname = (hostname: string): boolean =>
   isTbeProductionHost(hostname) ||
   isTbeVercelPreviewHost(hostname);
 
-const hostnameMatchesExtraOrigins = (
-  hostname: string,
-  extraOrigins: string,
-): boolean =>
-  extraOrigins
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean)
-    .some((origin) => {
-      try {
-        return new URL(origin).hostname === hostname;
-      } catch {
-        return false;
-      }
-    });
-
-export const isAllowedTbeUrl = (
-  url: string,
-  extraOrigins = process.env.ALLOWED_AUTH_ORIGINS || "",
-): boolean => {
+export const isAllowedTbeUrl = (url: string): boolean => {
   try {
     const parsedUrl = new URL(url);
     if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
       return false;
     }
-    const { hostname } = parsedUrl;
-    if (isAllowedTbeHostname(hostname)) {
-      return true;
-    }
-    return hostnameMatchesExtraOrigins(hostname, extraOrigins);
+    return isAllowedTbeHostname(parsedUrl.hostname);
   } catch {
     return false;
   }
