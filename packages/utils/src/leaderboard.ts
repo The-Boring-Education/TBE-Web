@@ -44,8 +44,9 @@ const isoWeekOf = (wallClock: Date) => {
   const thursday = new Date(midnight + (3 - weekday) * DAY_MS);
   const isoYear = thursday.getUTCFullYear();
   const week =
-    Math.floor((thursday.getTime() - isoWeekOneMonday(isoYear)) / (7 * DAY_MS)) +
-    1;
+    Math.floor(
+      (thursday.getTime() - isoWeekOneMonday(isoYear)) / (7 * DAY_MS),
+    ) + 1;
   return { isoYear, week };
 };
 
@@ -98,12 +99,12 @@ const getPeriodBoundsUnchecked = (type: LeaderboardType, key: string) => {
   };
 };
 
-/** UTC instants bounding a Period: start inclusive, end exclusive. Throws on a malformed key. */
+/** UTC instants bounding a Period: start inclusive, end exclusive. Throws on a malformed or impossible key. */
 export const getPeriodBounds = (
   type: LeaderboardType,
   key: string,
 ): { start: Date; end: Date } => {
-  if (!PERIOD_KEY_PATTERNS[type]?.test(key)) {
+  if (!isValidPeriodKey(type, key)) {
     throw new Error(`Invalid ${type} period key: ${key}`);
   }
   return getPeriodBoundsUnchecked(type, key);
@@ -119,11 +120,8 @@ export const getPreviousPeriodKey = (type: LeaderboardType, instant: Date) => {
   return getPeriodKey(type, new Date(start.getTime() - 1));
 };
 
-export const hasPeriodEnded = (
-  type: LeaderboardType,
-  key: string,
-  now: Date,
-) => now.getTime() >= getPeriodBounds(type, key).end.getTime();
+export const hasPeriodEnded = (type: LeaderboardType, key: string, now: Date) =>
+  now.getTime() >= getPeriodBounds(type, key).end.getTime();
 
 /** "Priya Sharma" → "Priya S." — used wherever learners are shown to logged-out viewers. */
 export const maskLearnerName = (name?: string | null): string => {

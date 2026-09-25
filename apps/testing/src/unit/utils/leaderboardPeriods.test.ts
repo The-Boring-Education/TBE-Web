@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import {
   formatResetCountdown,
   getPeriodBounds,
@@ -11,6 +9,7 @@ import {
   isValidPeriodKey,
   maskLearnerName,
 } from "@tbe/utils/leaderboard";
+import { describe, expect, it } from "vitest";
 
 /** Build a UTC instant from an IST wall-clock time. */
 const ist = (iso: string) => new Date(`${iso}+05:30`);
@@ -104,9 +103,7 @@ describe("Period Calendar", () => {
 
   it("getPeriodResetsAt is the end of the current Period", () => {
     const now = ist("2026-09-24T12:00:00");
-    expect(getPeriodResetsAt("DAILY", now)).toEqual(
-      ist("2026-09-25T00:00:00"),
-    );
+    expect(getPeriodResetsAt("DAILY", now)).toEqual(ist("2026-09-25T00:00:00"));
     expect(getPeriodResetsAt("WEEKLY", now)).toEqual(
       ist("2026-09-28T00:00:00"),
     );
@@ -139,6 +136,10 @@ describe("Period Calendar", () => {
     expect(isValidPeriodKey("MONTHLY", "2026-13")).toBe(false);
     expect(isValidPeriodKey("MONTHLY", { $gt: "" })).toBe(false);
     expect(() => getPeriodBounds("DAILY", "nope")).toThrow();
+    // Impossible dates and weeks are rejected, not normalised.
+    expect(() => getPeriodBounds("DAILY", "2026-02-31")).toThrow();
+    expect(() => getPeriodBounds("WEEKLY", "2026-W60")).toThrow();
+    expect(() => getPeriodBounds("MONTHLY", "2026-13")).toThrow();
   });
 });
 
