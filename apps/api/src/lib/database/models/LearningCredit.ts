@@ -4,8 +4,9 @@ import { DATABASE_MODELS, USER_POINTS_ACTION } from "@/lib/constants";
 import type { LearningCreditModel } from "@/lib/interfaces";
 
 /**
- * Whether a learner's Learning Action on a Learning Item currently counts toward
- * Period Score. Enforces "at most once per item, ever" (see CONTEXT.md).
+ * A learner's state for one Learning Action on one Learning Item (see CONTEXT.md):
+ * `completed` drives Lifetime Points (they move only when it flips) and
+ * `credited` drives Period Score, so an item's net contribution never exceeds its value.
  */
 const LearningCreditSchema = new Schema<LearningCreditModel>(
   {
@@ -16,6 +17,7 @@ const LearningCreditSchema = new Schema<LearningCreditModel>(
     },
     actionType: { type: String, enum: USER_POINTS_ACTION, required: true },
     itemId: { type: String, required: true },
+    completed: { type: Boolean, required: true, default: false },
     credited: { type: Boolean, required: true },
     creditedAt: { type: Date },
   },

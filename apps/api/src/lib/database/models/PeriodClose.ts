@@ -12,6 +12,8 @@ const RankedUserSchema = new Schema(
     },
     rank: { type: Number, required: true },
     score: { type: Number },
+    /** Set when a close run claims this recipient, before the email is sent. */
+    claimedAt: { type: Date },
     sentAt: { type: Date },
   },
   { _id: false },

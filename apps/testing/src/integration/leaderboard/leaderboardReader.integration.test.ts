@@ -7,6 +7,7 @@ import {
   getLeaderboardBoard,
   getViewerStanding,
   invalidateHiddenLearnerCache,
+  periodFilter,
 } from "@api/lib/database/queries/leaderboard";
 import type mongoose from "mongoose";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -150,7 +151,11 @@ describe("Leaderboard Reader (integration)", () => {
     await learner("Visible One", 10, NOW);
     await learner("Visible Two", 5, NOW);
 
-    const board = await getLeaderboardBoard({ type: "WEEKLY", limit: 2, now: NOW });
+    const board = await getLeaderboardBoard({
+      type: "WEEKLY",
+      limit: 2,
+      now: NOW,
+    });
     expect(board.entries.map((e) => e.displayName)).toEqual([
       "Visible One",
       "Visible Two",
@@ -164,7 +169,45 @@ describe("Leaderboard Reader (integration)", () => {
 
   it("caps the limit", async () => {
     await learner("Alice", 10, NOW);
-    const board = await getLeaderboardBoard({ type: "WEEKLY", limit: 10_000, now: NOW });
+    const board = await getLeaderboardBoard({
+      type: "WEEKLY",
+      limit: 10_000,
+      now: NOW,
+    });
     expect(board.entries).toHaveLength(1);
+  });
+
+  it("counts only visible learners outside the admin view", async () => {
+    await learner("Alice", 30, NOW);
+    await learner("Hidden Hari", 20, NOW, { visible: false });
+    await learner("Excluded Eve", 10, NOW, { excluded: true });
+
+    const member = await getLeaderboardBoard({ type: "WEEKLY", now: NOW });
+    const publicBoard = await getLeaderboardBoard({
+      type: "WEEKLY",
+      audience: "public",
+      now: NOW,
+    });
+    const admin = await getLeaderboardBoard({
+      type: "WEEKLY",
+      audience: "admin",
+      now: NOW,
+    });
+
+    expect(member.totalLearners).toBe(1);
+    expect(publicBoard.totalLearners).toBe(1);
+    expect(admin.totalLearners).toBe(3);
+  });
+
+  it("builds period filters only from validated values", () => {
+    expect(periodFilter("WEEKLY", WEEK)).toEqual({
+      type: { $eq: "WEEKLY" },
+      periodKey: { $eq: WEEK },
+    });
+    expect(() => periodFilter("WEEKLY", "2026-02-31")).toThrow();
+    expect(() => periodFilter("YEARLY" as never, WEEK)).toThrow();
+    expect(() =>
+      periodFilter("DAILY", { $gt: "" } as unknown as string),
+    ).toThrow();
   });
 });

@@ -633,6 +633,7 @@ export interface LearningCreditModel {
   userId: Types.ObjectId;
   actionType: UserPointsActionType;
   itemId: string;
+  completed: boolean;
   credited: boolean;
   creditedAt?: Date;
 }
@@ -659,7 +660,12 @@ export interface PeriodCloseModel {
   periodKey: string;
   champions: PeriodChampion[];
   standings: PeriodChampion[];
-  notified: { userId: Types.ObjectId; rank: number; sentAt: Date }[];
+  notified: {
+    userId: Types.ObjectId;
+    rank: number;
+    claimedAt?: Date;
+    sentAt?: Date;
+  }[];
   closedAt: Date;
 }
 

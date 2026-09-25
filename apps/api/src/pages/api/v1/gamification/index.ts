@@ -80,6 +80,12 @@ const handleUpdateGamificationRecord = async (
     userId,
     actionType as UserPointsActionType,
   );
+  if (result.error) {
+    return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Failed to update gamification record",
+    });
+  }
   return res.status(apiStatusCodes.OKAY).json({
     success: true,
     message: "Gamification record updated successfully",

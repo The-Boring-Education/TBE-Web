@@ -38,7 +38,7 @@ A Point Event type that rewards platform engagement rather than learning — enr
 _Avoid_: Bonus
 
 **Learning Item**:
-The specific thing a Learning Action is about (a chapter, a question, a quiz…). A learner's Learning Action on a given Learning Item contributes to Period Score **at most once, ever** — retakes and re-completions never add again.
+The specific thing a Learning Action is about (a chapter, a question, a quiz…). A learner's **net** contribution from one Learning Item never exceeds its value: repeating it (a retake, a second click) changes nothing, and un-completing then re-completing it nets to one award. The same holds for Lifetime Points — they only move when the item flips between done and not done.
 _Avoid_: Content, resource
 
 ### Leaderboards

@@ -17,7 +17,7 @@ import type { LeaderboardEmailRecipient } from "@/lib/services/leaderboardEmail"
 import { logger } from "@/lib/utils/logger";
 
 import { PeriodClose, User } from "../models";
-import { getLeaderboardBoard } from "./leaderboard";
+import { getLeaderboardBoard, periodFilter } from "./leaderboard";
 
 export type NotifyTopFinisher = (
   type: LeaderboardType,
@@ -50,7 +50,9 @@ const freezeStandings = async (
   periodKey: string,
   now: Date,
 ) => {
-  const existing = await PeriodClose.findOne({ type, periodKey }).lean();
+  const existing = await PeriodClose.findOne(
+    periodFilter(type, periodKey),
+  ).lean();
   if (existing) return { record: existing, alreadyClosed: true };
 
   const size = Math.max(
@@ -83,7 +85,9 @@ const freezeStandings = async (
   } catch (error) {
     // A concurrent close won the race — use its frozen standings.
     if ((error as { code?: number })?.code === DUPLICATE_KEY) {
-      const record = await PeriodClose.findOne({ type, periodKey }).lean();
+      const record = await PeriodClose.findOne(
+        periodFilter(type, periodKey),
+      ).lean();
       if (record) return { record, alreadyClosed: true };
     }
     throw error;
@@ -143,6 +147,29 @@ export const closePeriod = async ({
       skipped++;
       continue;
     }
+    // Claim the recipient atomically *before* sending, so overlapping close runs
+    // (cron + manual, HTTP retries) can never both email the same learner. If a
+    // process dies between claim and send the email is skipped, never duplicated.
+    const claim = await PeriodClose.updateOne(
+      { _id: record._id, "notified.userId": { $ne: standing.userId } },
+      {
+        $push: {
+          notified: {
+            userId: standing.userId,
+            rank: standing.rank,
+            claimedAt: new Date(),
+          },
+        },
+      },
+    );
+    if (claim.modifiedCount !== 1) continue; // another run owns this recipient
+
+    const release = () =>
+      PeriodClose.updateOne(
+        { _id: record._id },
+        { $pull: { notified: { userId: standing.userId, sentAt: null } } },
+      );
+
     try {
       const ok = await notify(type, {
         userId: standing.userId.toString(),
@@ -153,23 +180,17 @@ export const closePeriod = async ({
       });
       if (!ok) {
         failed++;
+        await release(); // let a retry try again
         continue;
       }
       await PeriodClose.updateOne(
-        { _id: record._id, "notified.userId": { $ne: standing.userId } },
-        {
-          $push: {
-            notified: {
-              userId: standing.userId,
-              rank: standing.rank,
-              sentAt: new Date(),
-            },
-          },
-        },
+        { _id: record._id, "notified.userId": standing.userId },
+        { $set: { "notified.$.sentAt": new Date() } },
       );
       sent++;
     } catch (error) {
       failed++;
+      await release();
       logger.error("PeriodClose: notify failed", {
         type,
         periodKey,

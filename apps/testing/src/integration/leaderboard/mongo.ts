@@ -1,10 +1,15 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { MongoMemoryReplSet } from "mongodb-memory-server";
 import mongoose from "mongoose";
 
-/** Connects the default mongoose connection (used by the API models) to an in-memory MongoDB. */
+/**
+ * Connects the default mongoose connection (used by the API models) to an
+ * in-memory single-node replica set, so the Point Ledger's transactions run for real.
+ */
 export const startMongo = async (dbName: string) => {
-  const mongod = await MongoMemoryServer.create();
-  await mongoose.connect(`${mongod.getUri()}${dbName}`);
+  const mongod = await MongoMemoryReplSet.create({
+    replSet: { count: 1, storageEngine: "wiredTiger" },
+  });
+  await mongoose.connect(mongod.getUri(dbName));
   // Unique indexes are part of the behaviour under test (once-per-item, one counter per Period).
   const leaderboardModels = [
     "Gamification",

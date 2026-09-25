@@ -107,8 +107,8 @@ export const awardPoints = async ({
 };
 
 /**
- * Award (or reverse) the COMPLETE_INTERVIEW_SHEET bonus when a question toggle
- * finishes (or un-finishes) a sheet. The Ledger's once-per-item credit makes
+ * Award (or reverse) the COMPLETE_INTERVIEW_SHEET bonus only when a question toggle
+ * finishes a sheet or un-finishes a complete one. The Ledger's per-item state makes
  * repeated calls harmless.
  */
 export const awardSheetCompletion = async ({
@@ -123,23 +123,23 @@ export const awardSheetCompletion = async ({
   isCompleted: boolean;
 }): Promise<GamificationSummary | undefined> => {
   try {
-    if (!isCompleted) {
-      return await awardPoints({
-        isCompleted: false,
-        userId,
-        actionType: "COMPLETE_INTERVIEW_SHEET",
-        itemId: String(sheetId),
-      });
-    }
     const progress = userSheet?.questions ?? [];
-    if (progress.length === 0 || progress.some((q) => !q.isCompleted)) {
-      return undefined;
-    }
-    const sheet = await InterviewSheet.findById(sheetId, { questions: 1 }).lean();
-    const total = (sheet as { questions?: unknown[] } | null)?.questions?.length ?? 0;
+    const incomplete = progress.filter((q) => !q.isCompleted).length;
+    // Completing: every question is now done. Un-completing: this toggle broke a
+    // sheet that was complete (exactly one question is now undone). Anything else
+    // never earned — or never had — the bonus, so there is nothing to change.
+    const crossesCompletion = isCompleted ? incomplete === 0 : incomplete === 1;
+    if (progress.length === 0 || !crossesCompletion) return undefined;
+
+    const sheet = await InterviewSheet.findById(sheetId, {
+      questions: 1,
+    }).lean();
+    const total =
+      (sheet as { questions?: unknown[] } | null)?.questions?.length ?? 0;
     if (total === 0 || progress.length < total) return undefined;
 
     return await awardPoints({
+      isCompleted,
       userId,
       actionType: "COMPLETE_INTERVIEW_SHEET",
       itemId: String(sheetId),

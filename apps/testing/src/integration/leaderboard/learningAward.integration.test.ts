@@ -1,7 +1,11 @@
 /**
  * awardPoints (integration): the summary the client toast renders.
  */
-import { awardPoints } from "@api/lib/database/queries/learningAward";
+import { Gamification, InterviewSheet } from "@api/lib/database/models";
+import {
+  awardPoints,
+  awardSheetCompletion,
+} from "@api/lib/database/queries/learningAward";
 import { recordPointEvent } from "@api/lib/database/queries/pointLedger";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
@@ -38,7 +42,11 @@ describe("awardPoints (integration)", () => {
       [oid().toString(), "quiz-a"],
       [oid().toString(), "quiz-b"],
     ] as const) {
-      await recordPointEvent({ userId: rival, actionType: "COMPLETE_QUIZ", itemId: item });
+      await recordPointEvent({
+        userId: rival,
+        actionType: "COMPLETE_QUIZ",
+        itemId: item,
+      });
     }
     await recordPointEvent({
       userId: me,
@@ -58,7 +66,11 @@ describe("awardPoints (integration)", () => {
 
   it("explains a Pace Limit miss and never throws", async () => {
     const me = oid().toString();
-    await awardPoints({ userId: me, actionType: "COMPLETE_QUESTION", itemId: "q1" });
+    await awardPoints({
+      userId: me,
+      actionType: "COMPLETE_QUESTION",
+      itemId: "q1",
+    });
     const summary = await awardPoints({
       userId: me,
       actionType: "COMPLETE_QUESTION",
@@ -71,7 +83,72 @@ describe("awardPoints (integration)", () => {
     });
 
     expect(
-      await awardPoints({ userId: "not-an-id", actionType: "COMPLETE_QUESTION" }),
+      await awardPoints({
+        userId: "not-an-id",
+        actionType: "COMPLETE_QUESTION",
+      }),
     ).toBeUndefined();
+  });
+});
+
+describe("awardSheetCompletion (integration)", () => {
+  let stop: () => Promise<void>;
+
+  beforeAll(async () => {
+    stop = await startMongo("sheet_completion");
+  }, 180_000);
+
+  afterAll(async () => stop?.(), 30_000);
+
+  beforeEach(async () => clearCollections());
+
+  const done = (n: number, of: number) =>
+    Array.from({ length: of }, (_, i) => ({ isCompleted: i < n }));
+
+  const seedSheet = async (questions: number) => {
+    const _id = oid();
+    await InterviewSheet.collection.insertOne({
+      _id,
+      questions: Array.from({ length: questions }, () => oid()),
+    });
+    return _id.toString();
+  };
+
+  it("never touches Lifetime Points when a partially done sheet loses a question", async () => {
+    const userId = oid().toString();
+    const sheetId = await seedSheet(3);
+    await recordPointEvent({ userId, actionType: "ENROLL_SHEET" }); // 50 pts
+
+    const result = await awardSheetCompletion({
+      userId,
+      sheetId,
+      userSheet: { questions: done(1, 3) },
+      isCompleted: false,
+    });
+
+    expect(result).toBeUndefined();
+    expect((await Gamification.findOne({ userId }).lean())?.points).toBe(50);
+  });
+
+  it("awards on finishing the sheet and reverses only when un-finishing it", async () => {
+    const userId = oid().toString();
+    const sheetId = await seedSheet(3);
+
+    const finished = await awardSheetCompletion({
+      userId,
+      sheetId,
+      userSheet: { questions: done(3, 3) },
+      isCompleted: true,
+    });
+    expect(finished?.pointsEarned).toBe(80);
+
+    const unfinished = await awardSheetCompletion({
+      userId,
+      sheetId,
+      userSheet: { questions: done(2, 3) },
+      isCompleted: false,
+    });
+    expect(unfinished?.pointsEarned).toBe(-80);
+    expect((await Gamification.findOne({ userId }).lean())?.points).toBe(0);
   });
 });

@@ -9,7 +9,15 @@ import {
   getPeriodChampions,
 } from "@api/lib/database/queries/leaderboard";
 import { closePeriod } from "@api/lib/database/queries/periodClose";
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { clearCollections, ist, oid, startMongo } from "./mongo";
 
@@ -19,7 +27,10 @@ const seed = async (
   type: "DAILY" | "WEEKLY",
   periodKey: string,
   count: number,
-  overrides: Record<number, { visible?: boolean; excluded?: boolean; emails?: boolean }> = {},
+  overrides: Record<
+    number,
+    { visible?: boolean; excluded?: boolean; emails?: boolean }
+  > = {},
 ) => {
   const ids = [];
   for (let i = 0; i < count; i++) {
@@ -150,7 +161,9 @@ describe("Period Close (integration)", () => {
     const ids = await seed("DAILY", "2026-09-24", 3);
     const failing = vi
       .fn()
-      .mockImplementation(async (_t: string, r: { userId: string }) => r.userId !== ids[1]);
+      .mockImplementation(
+        async (_t: string, r: { userId: string }) => r.userId !== ids[1],
+      );
     const first = await closePeriod({
       type: "DAILY",
       periodKey: "2026-09-24",
@@ -201,6 +214,108 @@ describe("Period Close (integration)", () => {
       "Learner 3",
     ]);
     // Daily wins are recorded but not badged.
-    expect(await getChampionBadgeCounts(ids[0]!)).toEqual({ WEEKLY: 1, MONTHLY: 0 });
+    expect(await getChampionBadgeCounts(ids[0]!)).toEqual({
+      WEEKLY: 1,
+      MONTHLY: 0,
+    });
+  });
+
+  it("never emails anyone twice when close runs overlap", async () => {
+    await seed("WEEKLY", "2026-W39", 10);
+    // Slow sends widen the window in which two runs could both see a pending recipient.
+    const notify = vi
+      .fn()
+      .mockImplementation(
+        () =>
+          new Promise<boolean>((resolve) =>
+            setTimeout(() => resolve(true), 20),
+          ),
+      );
+
+    const runs = await Promise.all(
+      Array.from({ length: 3 }, () =>
+        closePeriod({
+          type: "WEEKLY",
+          periodKey: "2026-W39",
+          notify,
+          now: AFTER_WEEK,
+        }),
+      ),
+    );
+
+    expect(notify).toHaveBeenCalledTimes(10);
+    const recipients = notify.mock.calls.map(([, r]) => r.userId);
+    expect(new Set(recipients).size).toBe(10);
+    expect(runs.reduce((n, r) => n + r.sent, 0)).toBe(10);
+    const record = await PeriodClose.findOne().lean();
+    expect(record?.notified.every((n) => n.sentAt)).toBe(true);
+  });
+
+  it("releases a recipient's claim when the send throws, so a retry can deliver", async () => {
+    const ids = await seed("DAILY", "2026-09-24", 1);
+    const now = ist("2026-09-25T00:05:00");
+    const first = await closePeriod({
+      type: "DAILY",
+      periodKey: "2026-09-24",
+      notify: vi.fn().mockRejectedValue(new Error("provider down")),
+      now,
+    });
+    expect(first).toMatchObject({ sent: 0, failed: 1 });
+
+    const retry = vi.fn().mockResolvedValue(true);
+    await closePeriod({
+      type: "DAILY",
+      periodKey: "2026-09-24",
+      notify: retry,
+      now,
+    });
+    expect(retry).toHaveBeenCalledTimes(1);
+    expect(retry.mock.calls[0]![1]).toMatchObject({ userId: ids[0] });
+  });
+
+  it("drops Champions who are hidden or excluded after the Period closed, except for admins", async () => {
+    const ids = await seed("WEEKLY", "2026-W39", 3);
+    await closePeriod({
+      type: "WEEKLY",
+      periodKey: "2026-W39",
+      notify: vi.fn().mockResolvedValue(true),
+      now: AFTER_WEEK,
+    });
+    await User.updateOne(
+      { _id: ids[0] },
+      { $set: { "leaderboard.excluded": true } },
+    );
+
+    const member = await getPeriodChampions("WEEKLY", "2026-W39", AFTER_WEEK);
+    expect(member?.champions.map((c) => c.rank)).toEqual([2, 3]);
+
+    const admin = await getPeriodChampions(
+      "WEEKLY",
+      "2026-W39",
+      AFTER_WEEK,
+      "admin",
+    );
+    expect(admin?.champions.map((c) => c.rank)).toEqual([1, 2, 3]);
+  });
+
+  it("masks Champions for the public audience", async () => {
+    await seed("WEEKLY", "2026-W39", 1);
+    await User.updateOne({}, { $set: { name: "Priya Sharma" } });
+    await closePeriod({
+      type: "WEEKLY",
+      periodKey: "2026-W39",
+      notify: vi.fn().mockResolvedValue(true),
+      now: AFTER_WEEK,
+    });
+
+    const publicView = await getPeriodChampions(
+      "WEEKLY",
+      "2026-W39",
+      AFTER_WEEK,
+      "public",
+    );
+    expect(publicView?.champions).toEqual([
+      { rank: 1, displayName: "Priya S.", image: undefined, score: 1000 },
+    ]);
   });
 });

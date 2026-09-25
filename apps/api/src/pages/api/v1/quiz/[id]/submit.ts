@@ -184,11 +184,16 @@ async function handleSubmitQuiz(
     itemId: quizId,
     app: "QUIZ",
   });
-  const distinctCorrect = new Set(
-    detailedResults.filter((r) => r.isCorrect).map((r) => r.questionIndex),
-  ).size;
+  // Perfect means exactly one answer per quiz question, and every one correct —
+  // extra, duplicate or out-of-range answers disqualify.
+  const answeredQuestions = new Set(
+    detailedResults.map((r) => r.questionIndex),
+  );
   const isPerfect =
-    quiz.questions.length > 0 && distinctCorrect === quiz.questions.length;
+    quiz.questions.length > 0 &&
+    detailedResults.length === quiz.questions.length &&
+    answeredQuestions.size === quiz.questions.length &&
+    detailedResults.every((r) => r.isCorrect);
   const perfect = isPerfect
     ? await awardPoints({
         userId,

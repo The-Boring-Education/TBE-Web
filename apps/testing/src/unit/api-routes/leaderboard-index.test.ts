@@ -3,6 +3,7 @@ import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetLeaderboardBoard = vi.fn();
+const mockGetPeriodChampions = vi.fn();
 const mockClosePeriod = vi.fn();
 const mockVerifyAuthenticatedUser = vi.fn();
 const mockEnsureAdmin = vi.fn();
@@ -34,6 +35,7 @@ vi.mock("../../../../api/src/lib/database", () => {
   }
   return {
     getLeaderboardBoard: (...a: unknown[]) => mockGetLeaderboardBoard(...a),
+    getPeriodChampions: (...a: unknown[]) => mockGetPeriodChampions(...a),
     resolvePeriodKey: (_t: string, key: unknown) =>
       key === undefined ? "2026-W39" : key === "2026-W38" ? key : null,
     closePeriod: (...a: unknown[]) => mockClosePeriod(...a),
@@ -78,6 +80,7 @@ vi.mock("../../../../api/src/middleware/userAuth", () => ({
   },
 }));
 
+import championsHandler from "../../../../api/src/pages/api/v1/leaderboard/champions";
 import closeHandler from "../../../../api/src/pages/api/v1/leaderboard/close-period";
 import boardHandler from "../../../../api/src/pages/api/v1/leaderboard/index";
 import publicHandler from "../../../../api/src/pages/api/v1/leaderboard/public";
@@ -121,7 +124,7 @@ describe("GET /leaderboard", () => {
     expect(mockGetLeaderboardBoard).not.toHaveBeenCalled();
   });
 
-  it("serves anonymous boards from the CDN cache", async () => {
+  it("serves anonymous callers the masked public board from the CDN cache", async () => {
     mockVerifyAuthenticatedUser.mockReturnValue(null);
     const res = await call(boardHandler, {
       method: "GET",
@@ -136,7 +139,7 @@ describe("GET /leaderboard", () => {
         periodKey: "2026-W39",
         limit: 10,
         viewerId: undefined,
-        audience: "member",
+        audience: "public",
       }),
     );
   });
@@ -150,7 +153,11 @@ describe("GET /leaderboard", () => {
 
     expect(res.getHeader("Cache-Control")).toBe("private, no-store");
     expect(mockGetLeaderboardBoard).toHaveBeenCalledWith(
-      expect.objectContaining({ viewerId: "me", type: "DAILY" }),
+      expect.objectContaining({
+        viewerId: "me",
+        type: "DAILY",
+        audience: "member",
+      }),
     );
   });
 });
@@ -319,5 +326,52 @@ describe("GET /leaderboard/unsubscribe", () => {
     });
     expect(res._getStatusCode()).toBe(400);
     expect(mockUserUpdateOne).not.toHaveBeenCalled();
+  });
+});
+
+describe("GET /leaderboard/champions", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockGetPeriodChampions.mockResolvedValue(null);
+  });
+
+  it("gives anonymous callers the masked public Champions, CDN-cached", async () => {
+    mockVerifyAuthenticatedUser.mockReturnValue(null);
+    const res = await call(championsHandler, {
+      method: "GET",
+      query: { type: "WEEKLY" },
+    });
+
+    expect(res._getStatusCode()).toBe(200);
+    expect(res.getHeader("Cache-Control")).toContain("public");
+    expect(mockGetPeriodChampions.mock.calls[0]![3]).toBe("public");
+  });
+
+  it("gives signed-in learners full Champions privately", async () => {
+    mockVerifyAuthenticatedUser.mockReturnValue({ sub: "me" });
+    const res = await call(championsHandler, {
+      method: "GET",
+      query: { type: "WEEKLY" },
+    });
+
+    expect(res.getHeader("Cache-Control")).toBe("private, no-store");
+    expect(mockGetPeriodChampions.mock.calls[0]![3]).toBe("member");
+  });
+
+  it("rejects invalid types and period keys", async () => {
+    expect(
+      (
+        await call(championsHandler, { method: "GET", query: { type: "X" } })
+      )._getStatusCode(),
+    ).toBe(400);
+    expect(
+      (
+        await call(championsHandler, {
+          method: "GET",
+          query: { type: "DAILY", periodKey: "2026-02-31" },
+        })
+      )._getStatusCode(),
+    ).toBe(400);
+    expect(mockGetPeriodChampions).not.toHaveBeenCalled();
   });
 });

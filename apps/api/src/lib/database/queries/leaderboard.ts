@@ -5,7 +5,7 @@
  * Hidden and excluded learners (Leaderboard Visibility / Exclusion) are filtered
  * for member and public audiences; admins see everyone.
  */
-import { LEADERBOARD_LIMITS } from "@tbe/constants";
+import { LEADERBOARD_LIMITS, LEADERBOARD_PERIOD_TYPES } from "@tbe/constants";
 import {
   getPeriodKey,
   getPeriodResetsAt,
@@ -87,6 +87,22 @@ export const invalidateHiddenLearnerCache = () => {
   hiddenCache = null;
 };
 
+/**
+ * `{ type, periodKey }` filter built only from validated values: the type comes
+ * from the constant allow-list and both are matched with `$eq`, so request input
+ * can never become a query operator.
+ */
+export const periodFilter = (type: LeaderboardType, periodKey: string) => {
+  const safeType = LEADERBOARD_PERIOD_TYPES.find((t) => t === type);
+  if (!safeType || !isValidPeriodKey(safeType, periodKey)) {
+    throw new Error(`Invalid ${String(type)} period key`);
+  }
+  return {
+    type: { $eq: safeType },
+    periodKey: { $eq: String(periodKey) },
+  };
+};
+
 const isHidden = (learner?: LearnerRow) =>
   learner?.leaderboard?.visible === false ||
   learner?.leaderboard?.excluded === true;
@@ -156,7 +172,7 @@ const getTopEntries = async (
 
   for (let batch = 0; batch < maxBatches && entries.length < limit; batch++) {
     const rows = (await PeriodScore.find(
-      { type, periodKey, score: { $gt: 0 } },
+      { ...periodFilter(type, periodKey), score: { $gt: 0 } },
       { userId: 1, score: 1, reachedAt: 1 },
     )
       .sort({ score: -1, reachedAt: 1 })
@@ -197,8 +213,9 @@ export const getViewerStanding = async (
     return { rank: null, score: 0, nextTarget: null };
   }
   const userId = new mongoose.Types.ObjectId(viewerId);
+  const period = periodFilter(type, periodKey);
   const mine = (await PeriodScore.findOne(
-    { type, periodKey, userId },
+    { ...period, userId: { $eq: userId } },
     { score: 1, reachedAt: 1, userId: 1 },
   ).lean()) as ScoreRow | null;
 
@@ -208,7 +225,7 @@ export const getViewerStanding = async (
 
   const hiddenIds = await getHiddenLearnerIds();
   const others = hiddenIds.filter((id) => !id.equals(userId));
-  const base = { type, periodKey, ...aheadOf(mine) };
+  const base = { ...period, ...aheadOf(mine) };
 
   const [aheadAll, aheadHidden, nextRow] = await Promise.all([
     PeriodScore.countDocuments(base),
@@ -238,6 +255,20 @@ export const getViewerStanding = async (
   return { rank, score: mine.score, nextTarget };
 };
 
+/** Learners with a positive Period Score; hidden/excluded ones only count for admins. */
+const countRankedLearners = async (
+  type: LeaderboardType,
+  periodKey: string,
+  audience: LeaderboardAudience,
+) => {
+  const filter = { ...periodFilter(type, periodKey), score: { $gt: 0 } };
+  if (audience === "admin") return PeriodScore.countDocuments(filter);
+  const hiddenIds = await getHiddenLearnerIds();
+  return PeriodScore.countDocuments(
+    hiddenIds.length ? { ...filter, userId: { $nin: hiddenIds } } : filter,
+  );
+};
+
 export const getLeaderboardBoard = async ({
   type,
   periodKey,
@@ -261,7 +292,7 @@ export const getLeaderboardBoard = async ({
 
   const [entries, totalLearners, viewer] = await Promise.all([
     getTopEntries(type, key, safeLimit, audience),
-    PeriodScore.countDocuments({ type, periodKey: key, score: { $gt: 0 } }),
+    countRankedLearners(type, key, audience),
     viewerId && audience !== "public"
       ? getViewerStanding(type, key, viewerId)
       : Promise.resolve(undefined),
@@ -280,7 +311,8 @@ export const getLeaderboardBoard = async ({
 
 export interface ChampionView {
   rank: number;
-  userId: string;
+  /** Omitted for the public audience. */
+  userId?: string;
   displayName: string;
   image?: string;
   score: number;
@@ -293,51 +325,82 @@ export interface PeriodChampions {
   champions: ChampionView[];
 }
 
-/** Frozen Champions of a closed Period (defaults to the one just before `now`). */
+/**
+ * Frozen Champions of a closed Period (defaults to the one just before `now`).
+ * The ranking stays frozen, but learners who are hidden or excluded *now* are
+ * left out for member/public viewers; the public audience also gets masked
+ * names and no user ids.
+ */
 export const getPeriodChampions = async (
   type: LeaderboardType,
   periodKey?: string,
   now = new Date(),
+  audience: LeaderboardAudience = "member",
 ): Promise<PeriodChampions | null> => {
   const key = periodKey ?? getPreviousPeriodKey(type, now);
-  const record = await PeriodClose.findOne(
-    { type, periodKey: key },
-    { champions: 1, closedAt: 1, periodKey: 1 },
-  ).lean();
+  const record = await PeriodClose.findOne(periodFilter(type, key), {
+    champions: 1,
+    closedAt: 1,
+    periodKey: 1,
+  }).lean();
   if (!record) return null;
 
   const learners = (await User.find(
     { _id: { $in: record.champions.map((c) => c.userId) } },
-    { name: 1, image: 1 },
+    { name: 1, image: 1, leaderboard: 1 },
   ).lean()) as LearnerRow[];
   const byId = new Map(learners.map((l) => [l._id.toString(), l]));
+
+  const champions: ChampionView[] = [];
+  for (const c of record.champions) {
+    const learner = byId.get(c.userId.toString());
+    if (audience !== "admin" && (!learner || isHidden(learner))) continue;
+    const name = learner?.name ?? "";
+    champions.push(
+      audience === "public"
+        ? {
+            rank: c.rank,
+            displayName: maskLearnerName(name),
+            image: learner?.image,
+            score: c.score,
+          }
+        : {
+            rank: c.rank,
+            userId: c.userId.toString(),
+            displayName: name || "TBE Learner",
+            image: learner?.image,
+            score: c.score,
+          },
+    );
+  }
 
   return {
     type,
     periodKey: key,
     closedAt: new Date(record.closedAt).toISOString(),
-    champions: record.champions.map((c) => {
-      const learner = byId.get(c.userId.toString());
-      return {
-        rank: c.rank,
-        userId: c.userId.toString(),
-        displayName: learner?.name || "TBE Learner",
-        image: learner?.image,
-        score: c.score,
-      };
-    }),
+    champions,
   };
 };
 
-/** Recent Period Close records, newest first, for admin history. */
+/** Recent Period Close records, newest first, for admin history (unfiltered). */
 export const getChampionHistory = async (type: LeaderboardType, limit = 12) => {
-  const records = await PeriodClose.find({ type }, { periodKey: 1 })
+  const safeType = LEADERBOARD_PERIOD_TYPES.find((t) => t === type);
+  if (!safeType) return [];
+  const records = await PeriodClose.find(
+    { type: { $eq: safeType } },
+    { periodKey: 1 },
+  )
     .sort({ periodKey: -1 })
     .limit(Math.min(limit, 52))
     .lean();
   const out: PeriodChampions[] = [];
   for (const r of records) {
-    const champions = await getPeriodChampions(type, r.periodKey);
+    const champions = await getPeriodChampions(
+      safeType,
+      r.periodKey,
+      undefined,
+      "admin",
+    );
     if (champions) out.push(champions);
   }
   return out;

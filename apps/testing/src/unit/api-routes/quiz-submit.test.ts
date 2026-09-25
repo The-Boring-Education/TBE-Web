@@ -429,6 +429,18 @@ describe("Quiz Submit API Route", () => {
       );
     });
 
+    it("does not award a perfect score when extra wrong answers are submitted", async () => {
+      await submit([
+        answer(0, 0),
+        answer(1, 1),
+        answer(2, 2),
+        { questionIndex: 7, selectedAnswer: 0, isCorrect: true, timeSpent: 1 },
+      ]);
+      expect(mockAwardPoints).not.toHaveBeenCalledWith(
+        expect.objectContaining({ actionType: "QUIZ_PERFECT_SCORE" }),
+      );
+    });
+
     it("does not award a perfect score for one correct answer repeated", async () => {
       await submit([answer(0, 0), answer(0, 0), answer(0, 0)]);
       expect(mockAwardPoints).not.toHaveBeenCalledWith(

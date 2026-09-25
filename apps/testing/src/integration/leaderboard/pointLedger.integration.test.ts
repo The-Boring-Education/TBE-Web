@@ -9,6 +9,7 @@ import {
   PointEvent,
 } from "@api/lib/database/models";
 import { recordPointEvent } from "@api/lib/database/queries/pointLedger";
+import mongoose from "mongoose";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import { clearCollections, ist, minutesLater, oid, startMongo } from "./mongo";
@@ -46,7 +47,11 @@ describe("Point Ledger (integration)", () => {
       lifetimePoints: 20,
       countedForLeaderboard: true,
       periodScoreDelta: 20,
-      periodKeys: { DAILY: "2026-09-21", WEEKLY: "2026-W39", MONTHLY: "2026-09" },
+      periodKeys: {
+        DAILY: "2026-09-21",
+        WEEKLY: "2026-W39",
+        MONTHLY: "2026-09",
+      },
       periodScores: { DAILY: 20, WEEKLY: 20, MONTHLY: 20 },
     });
     expect(await scoreOf("DAILY", "2026-09-21", userId)).toBe(20);
@@ -81,7 +86,11 @@ describe("Point Ledger (integration)", () => {
 
   it("complete → un-complete → complete nets the item's value once", async () => {
     const userId = oid().toString();
-    const base = { userId, actionType: "COMPLETE_QUESTION" as const, itemId: "q1" };
+    const base = {
+      userId,
+      actionType: "COMPLETE_QUESTION" as const,
+      itemId: "q1",
+    };
 
     await recordPointEvent({ ...base, now: MONDAY_NOON });
     const undone = await recordPointEvent({
@@ -97,6 +106,52 @@ describe("Point Ledger (integration)", () => {
     expect(await lifetimeOf(userId)).toBe(10);
   });
 
+  it("repeated un-completes take points back only once", async () => {
+    const userId = oid().toString();
+    const base = {
+      userId,
+      actionType: "COMPLETE_QUESTION" as const,
+      itemId: "q1",
+    };
+    await recordPointEvent({
+      userId,
+      actionType: "ENROLL_COURSE",
+      now: MONDAY_NOON,
+    });
+    await recordPointEvent({ ...base, now: MONDAY_NOON });
+    expect(await lifetimeOf(userId)).toBe(60);
+
+    await recordPointEvent({ ...base, isReversal: true, now: MONDAY_NOON });
+    const again = await recordPointEvent({
+      ...base,
+      isReversal: true,
+      now: MONDAY_NOON,
+    });
+
+    expect(again.pointsEarned).toBe(0);
+    expect(await lifetimeOf(userId)).toBe(50);
+    expect(await scoreOf("WEEKLY", "2026-W39", userId)).toBe(0);
+  });
+
+  it("takes back points for an item completed before the ledger existed, once", async () => {
+    const userId = oid().toString();
+    await Gamification.collection.insertOne({
+      userId: new mongoose.Types.ObjectId(userId),
+      points: 100,
+    });
+    const legacy = {
+      userId,
+      actionType: "COMPLETE_QUESTION" as const,
+      itemId: "legacy-q",
+      isReversal: true,
+      now: MONDAY_NOON,
+    };
+
+    expect((await recordPointEvent(legacy)).pointsEarned).toBe(-10);
+    expect((await recordPointEvent(legacy)).pointsEarned).toBe(0);
+    expect(await lifetimeOf(userId)).toBe(90);
+  });
+
   it("un-completing an item that was never credited changes nothing on the board", async () => {
     const userId = oid().toString();
     const result = await recordPointEvent({
@@ -110,9 +165,13 @@ describe("Point Ledger (integration)", () => {
     expect(await PeriodScore.countDocuments({ userId })).toBe(0);
   });
 
-  it("retaking a completed quiz adds no Period Score but still earns Lifetime Points", async () => {
+  it("retaking a completed quiz adds neither Period Score nor Lifetime Points", async () => {
     const userId = oid().toString();
-    const quiz = { userId, actionType: "COMPLETE_QUIZ" as const, itemId: "quiz-1" };
+    const quiz = {
+      userId,
+      actionType: "COMPLETE_QUIZ" as const,
+      itemId: "quiz-1",
+    };
 
     await recordPointEvent({ ...quiz, now: MONDAY_NOON });
     const retake = await recordPointEvent({
@@ -121,8 +180,9 @@ describe("Point Ledger (integration)", () => {
     });
 
     expect(retake.notCountedReason).toBe("ALREADY_CREDITED");
+    expect(retake.pointsEarned).toBe(0);
     expect(await scoreOf("WEEKLY", "2026-W39", userId)).toBe(30);
-    expect(await lifetimeOf(userId)).toBe(60);
+    expect(await lifetimeOf(userId)).toBe(30);
   });
 
   describe("Pace Limit", () => {
@@ -173,7 +233,9 @@ describe("Point Ledger (integration)", () => {
         now: minutesLater(MONDAY_NOON, 5),
       });
       expect(later.countedForLeaderboard).toBe(true);
+      expect(later.pointsEarned).toBe(0); // Lifetime Points were already earned
       expect(await scoreOf("WEEKLY", "2026-W39", userId)).toBe(20);
+      expect(await lifetimeOf(userId)).toBe(20);
     });
 
     it("never paces Bonus Learning Actions (quiz completion + perfect score together)", async () => {
@@ -199,7 +261,11 @@ describe("Point Ledger (integration)", () => {
     it("counts exactly one of many concurrent Base Learning Actions", async () => {
       const userId = oid().toString();
       // Create the learner's gamification doc first, as any real learner has one.
-      await recordPointEvent({ userId, actionType: "DAILY_VISIT", now: MONDAY_NOON });
+      await recordPointEvent({
+        userId,
+        actionType: "DAILY_VISIT",
+        now: MONDAY_NOON,
+      });
 
       const results = await Promise.all(
         Array.from({ length: 6 }, (_, i) =>
@@ -244,7 +310,11 @@ describe("Point Ledger (integration)", () => {
 
   it("never lets Lifetime Points go below zero", async () => {
     const userId = oid().toString();
-    await recordPointEvent({ userId, actionType: "DAILY_VISIT", now: MONDAY_NOON });
+    await recordPointEvent({
+      userId,
+      actionType: "DAILY_VISIT",
+      now: MONDAY_NOON,
+    });
     const result = await recordPointEvent({
       userId,
       actionType: "ENROLL_COURSE",

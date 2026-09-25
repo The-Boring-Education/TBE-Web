@@ -11,8 +11,9 @@ import { withApiHandler } from "@/middleware/requestLogger";
 /**
  * GET /api/v1/leaderboard?type=DAILY|WEEKLY|MONTHLY&limit=10&periodKey=
  *
- * Member leaderboard for a Period. With a valid access token the response also
- * carries the viewer's own standing (and is then private, not CDN-cached).
+ * Leaderboard for a Period. Signed-in learners get full names and their own
+ * standing (private, not CDN-cached). Anonymous callers get the masked public
+ * representation — the same as /leaderboard/public — which is CDN-cacheable.
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
@@ -48,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     periodKey: key,
     limit: Number(limit) || LEADERBOARD_LIMITS.DASHBOARD,
     viewerId,
-    audience: "member",
+    audience: viewerId ? "member" : "public",
     now,
   });
 

@@ -147,6 +147,15 @@ describe("Gamification Index API Route", () => {
       );
     });
 
+    it("reports a failed award instead of claiming success (500)", async () => {
+      mockUpdateUserPointsInDB.mockResolvedValue({ error: "db down" });
+
+      const res = await post({ userId: "u1" }, { actionType: "ENROLL_COURSE" });
+
+      expect(res._getStatusCode()).toBe(500);
+      expect(JSON.parse(res._getData()).success).toBe(false);
+    });
+
     it("requires authentication (401)", async () => {
       mockAuthUserId.mockReturnValue(null);
       const res = await post({ userId: "u1" }, { actionType: "ENROLL_COURSE" });
