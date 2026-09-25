@@ -37,6 +37,18 @@ describe("allowed TBE origins", () => {
       expect(isAllowedTbeHostname("dsayatra-tbe.vercel.app")).toBe(true);
     });
 
+    it("allows the platform feat/leaderboard preview host that was rejected", () => {
+      expect(
+        isAllowedTbeHostname("platform-git-feat-leaderboard-tbe.vercel.app"),
+      ).toBe(true);
+    });
+
+    it("allows the contributor app preview host", () => {
+      expect(
+        isAllowedTbeHostname("contributor-git-development-tbe.vercel.app"),
+      ).toBe(true);
+    });
+
     it("rejects attacker-controlled Vercel hosts", () => {
       expect(isAllowedTbeHostname("evil-tbe.vercel.app")).toBe(false);
       expect(isAllowedTbeHostname("dsayatra.vercel.app")).toBe(false);
@@ -49,6 +61,14 @@ describe("allowed TBE origins", () => {
       expect(
         isAllowedTbeUrl(
           "https://dsayatra-git-development-tbe.vercel.app/auth/callback?returnTo=%2Fpricing",
+        ),
+      ).toBe(true);
+    });
+
+    it("allows the platform preview OAuth redirect_uri from the bug report", () => {
+      expect(
+        isAllowedTbeUrl(
+          "https://platform-git-feat-leaderboard-tbe.vercel.app/auth/callback?returnTo=%2F",
         ),
       ).toBe(true);
     });

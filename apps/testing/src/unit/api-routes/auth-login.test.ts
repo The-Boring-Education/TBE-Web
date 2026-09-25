@@ -99,6 +99,24 @@ describe("Auth login (OAuth start) API route", () => {
     );
   });
 
+  it("redirects to Google OAuth for the platform feat/leaderboard preview redirect_uri", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {
+        redirect_uri:
+          "https://platform-git-feat-leaderboard-tbe.vercel.app/auth/callback?returnTo=%2F",
+      },
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(302);
+    expect(mockSignOAuthState).toHaveBeenCalledWith(
+      "https://platform-git-feat-leaderboard-tbe.vercel.app/auth/callback?returnTo=%2F",
+      "google",
+    );
+  });
+
   it("rejects attacker-created Vercel hosts that only share the -tbe suffix", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",

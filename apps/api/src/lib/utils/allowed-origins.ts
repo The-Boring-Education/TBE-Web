@@ -20,6 +20,7 @@ const TBE_VERCEL_PROJECT_SLUGS = [
   "admin",
   "platform",
   "resources",
+  "contributor",
   "the-boring-education",
   "theboringeducation",
 ] as const;
