@@ -6,7 +6,7 @@ import { Layout } from "@tbe/components/quizes";
 import { ProtectedRoute } from "@tbe/components/quizes";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { useGamification } from "@tbe/hooks";
-import { gamificationApi, quizApi } from "@tbe/services";
+import { quizApi } from "@tbe/services";
 import type { QuizQuestion } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
 import { useRouter } from "next/router";
@@ -268,13 +268,7 @@ function QuizContent() {
         response.success &&
         "data" in response
       ) {
-        // Trigger gamification action for completing quiz (don't await to speed up)
-        gamificationApi
-          .updateuserGamificationPoints({
-            userId,
-            actionType: "COMPLETE_QUIZ",
-          })
-          .catch(() => {}); // Ignore errors
+        // Quiz points are awarded by the submit endpoint itself.
 
         // Redirect immediately using window.location for instant navigation
         const answersParam = JSON.stringify(

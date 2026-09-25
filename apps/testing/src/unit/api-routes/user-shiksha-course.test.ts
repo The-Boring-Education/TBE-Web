@@ -2,12 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mockHandleGamificationPoints = vi.fn();
+const mockAwardPoints = vi.fn();
 const mockUpdateUserCourseChapterInDB = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
-  handleGamificationPoints: (...args: unknown[]) =>
-    mockHandleGamificationPoints(...args),
+  awardPoints: (...args: unknown[]) => mockAwardPoints(...args),
   updateUserCourseChapterInDB: (...args: unknown[]) =>
     mockUpdateUserCourseChapterInDB(...args),
 }));
@@ -55,7 +54,7 @@ import handler from "../../../../api/src/pages/api/v1/user/shiksha/course";
 describe("User Shiksha Course API Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockHandleGamificationPoints.mockResolvedValue(undefined);
+    mockAwardPoints.mockResolvedValue(undefined);
   });
 
   it("rejects non-PATCH with 400", async () => {
@@ -141,11 +140,12 @@ describe("User Shiksha Course API Route", () => {
 
     await handler(req, res);
 
-    expect(mockHandleGamificationPoints).toHaveBeenCalledWith(
-      true,
-      "user-1",
-      "COMPLETE_COURSE_CHAPTER",
-    );
+    expect(mockAwardPoints).toHaveBeenCalledWith({
+      isCompleted: true,
+      userId: "user-1",
+      actionType: "COMPLETE_COURSE_CHAPTER",
+      itemId: "chapter-1",
+    });
   });
 
   it("calls gamification with isCompleted false", async () => {
@@ -166,11 +166,12 @@ describe("User Shiksha Course API Route", () => {
 
     await handler(req, res);
 
-    expect(mockHandleGamificationPoints).toHaveBeenCalledWith(
-      false,
-      "user-1",
-      "COMPLETE_COURSE_CHAPTER",
-    );
+    expect(mockAwardPoints).toHaveBeenCalledWith({
+      isCompleted: false,
+      userId: "user-1",
+      actionType: "COMPLETE_COURSE_CHAPTER",
+      itemId: "chapter-1",
+    });
   });
 
   it("returns 500 on internal error", async () => {

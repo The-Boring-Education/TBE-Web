@@ -151,7 +151,6 @@ export { default as FeedbackPopup } from "./containers/Cards/FeedbackPopup";
 export type { FreemiumLockBannerProps } from "./containers/Cards/FreemiumLockBanner";
 export { default as FreemiumLockBanner } from "./containers/Cards/FreemiumLockBanner";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
-export { default as Leaderboard } from "./containers/Cards/Leaderboard";
 export { default as LoginCard } from "./containers/Cards/LoginCard";
 export { default as LoginCardNew } from "./containers/Cards/LoginCardNew";
 export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";

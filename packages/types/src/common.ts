@@ -95,6 +95,8 @@ export interface APIResponseType<T = any> {
   error?: string;
   message?: string;
   statusCode?: number;
+  /** Points/rank outcome of a server-awarded action, for the celebration toast. */
+  gamification?: unknown;
 }
 
 export interface APIMakeRequestProps {

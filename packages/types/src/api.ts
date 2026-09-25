@@ -66,6 +66,8 @@ export interface APIResponseType extends ClientAPIResponse {
   message?: string;
   error?: any;
   details?: any;
+  /** Points/rank outcome of a server-awarded action, for the celebration toast. */
+  gamification?: unknown;
 }
 
 export interface ApiHookResultProps {

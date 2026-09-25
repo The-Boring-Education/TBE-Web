@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mockAddPrepLogToDB = vi.fn();
 const mockDeletePrepLogInDB = vi.fn();
 const mockGetPrepLogsByUserFromDB = vi.fn();
-const mockHandleGamificationPoints = vi.fn();
+const mockAwardPoints = vi.fn();
 const mockUpdatePrepLogInDB = vi.fn();
 const mockSendEmail = vi.fn();
 
@@ -25,8 +25,7 @@ vi.mock("../../../../api/src/lib/database", () => ({
   deletePrepLogInDB: (...args: unknown[]) => mockDeletePrepLogInDB(...args),
   getPrepLogsByUserFromDB: (...args: unknown[]) =>
     mockGetPrepLogsByUserFromDB(...args),
-  handleGamificationPoints: (...args: unknown[]) =>
-    mockHandleGamificationPoints(...args),
+  awardPoints: (...args: unknown[]) => mockAwardPoints(...args),
   updatePrepLogInDB: (...args: unknown[]) => mockUpdatePrepLogInDB(...args),
 }));
 
@@ -123,7 +122,7 @@ describe("PrepYatra Prep Log API Route", () => {
       data: { _id: "log-1", title: "Log" },
       error: null,
     });
-    mockHandleGamificationPoints.mockResolvedValue(undefined);
+    mockAwardPoints.mockResolvedValue(undefined);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
@@ -139,7 +138,12 @@ describe("PrepYatra Prep Log API Route", () => {
     expect(res._getStatusCode()).toBe(201);
     const data = JSON.parse(res._getData());
     expect(data.status).toBe(true);
-    expect(mockHandleGamificationPoints).toHaveBeenCalled();
+    expect(mockAwardPoints).toHaveBeenCalledWith({
+      userId: "u1",
+      actionType: "PREPLOG_CREATED",
+      itemId: "log-1",
+      app: "PREPYATRA",
+    });
   });
 
   it("POST - addPrepLogToDB error returns 400", async () => {
@@ -164,14 +168,13 @@ describe("PrepYatra Prep Log API Route", () => {
     expect(data.message).toBe("Validation failed");
   });
 
-  it("POST - gamification error does not fail request returns 201", async () => {
+  it("POST - gamification failure does not fail request returns 201", async () => {
     mockAddPrepLogToDB.mockResolvedValue({
       data: { _id: "log-1" },
       error: null,
     });
-    mockHandleGamificationPoints.mockRejectedValue(
-      new Error("Gamification fail"),
-    );
+    // awardPoints swallows ledger errors and resolves undefined.
+    mockAwardPoints.mockResolvedValue(undefined);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",

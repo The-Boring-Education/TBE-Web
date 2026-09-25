@@ -1,6 +1,13 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { getNavbarVariantConfig, LINKS, TOP_NAVIGATION } from "@tbe/constants";
+import {
+  getNavbarVariantConfig,
+  LINKS,
+  routes,
+  toPlatformUrl,
+  TOP_NAVIGATION,
+} from "@tbe/constants";
+import { RankChip } from "@tbe/gamification";
 import { useScrollDirection } from "@tbe/hooks";
 import type {
   MainNavbarProps,
@@ -238,6 +245,12 @@ const Navbar = ({
               {customActions.map((action: React.ReactNode, index: number) => (
                 <div key={index}>{action}</div>
               ))}
+              {showGamification && (
+                <RankChip
+                  href={toPlatformUrl(routes.leaderboard)}
+                  theme={theme === "dark" ? "dark" : "light"}
+                />
+              )}
               {requiresAuth && showNotifications && <NotificationPopover />}
               {/* {showGamification && <UserPointButton />} */}
               {requiresAuth && showLoginButton && (
@@ -334,6 +347,12 @@ const Navbar = ({
                   </PopoverContainer>
                 )}
 
+                {showGamification && (
+                  <RankChip
+                    href={toPlatformUrl(routes.leaderboard)}
+                    theme={theme === "dark" ? "dark" : "light"}
+                  />
+                )}
                 {requiresAuth && showNotifications && <NotificationPopover />}
                 {showGamification && <UserPointButton />}
                 {requiresAuth && showLoginButton && (

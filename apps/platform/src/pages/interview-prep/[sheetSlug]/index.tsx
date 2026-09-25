@@ -12,11 +12,7 @@ import {
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-  useGamifiedAction,
-} from '@tbe/gamification';
+import { useGamificationFeedback, useGamifiedAction } from '@tbe/gamification';
 import {
   useAnalytics,
   usePaymentAccess,
@@ -124,7 +120,7 @@ const SheetPage = ({
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
   const queryClient = useQueryClient();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
 
   // Universal payment access hook - handles all payment status and locked logic
   const { isLocked, isPurchased } = usePaymentAccess({
@@ -242,18 +238,8 @@ const SheetPage = ({
       // Only proceed if the API call was successful
       if (response?.status) {
         if (newCompletionStatus) {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ''),
-          });
-          const pointsEarned =
-            calculateUserPointsForAction('COMPLETE_QUESTION');
-          const intensity =
-            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
-          triggerCelebration({ type: 'points', intensity });
-          showToast({
-            type: 'points',
+          celebrate(response?.gamification, {
             message: 'Question solved! Great work!',
-            points: pointsEarned,
           });
           trackEvent({
             action: 'QUESTION_COMPLETE',
@@ -393,8 +379,9 @@ const SheetPage = ({
 
             {/* Mobile Drawer Panel (Solid White Background) */}
             <div
-              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
+              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${
+                isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+              }`}
             >
               <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
                 <div className='flex items-center gap-2'>
@@ -584,12 +571,13 @@ const SheetPage = ({
                       currentQuestionId && (
                         <Button
                           key='complete'
-                          className={`w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white shadow-xs transition-all duration-150 cursor-pointer ${!isEnrolled
-                            ? 'bg-primary hover:bg-primary/90 border-none text-white'
-                            : isQuestionCompleted
-                              ? 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
-                              : 'bg-primary hover:bg-primary/90 border-none text-white'
-                            }`}
+                          className={`w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white shadow-xs transition-all duration-150 cursor-pointer ${
+                            !isEnrolled
+                              ? 'bg-primary hover:bg-primary/90 border-none text-white'
+                              : isQuestionCompleted
+                                ? 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                                : 'bg-primary hover:bg-primary/90 border-none text-white'
+                          }`}
                           isLoading={isLoading}
                           text={
                             isLoading
@@ -646,16 +634,16 @@ const SheetPage = ({
           meta={
             currentQuestionId
               ? {
-                sheetId: sheet._id.toString(),
-                sheetName: sheet.name || '',
-                questionId: currentQuestionId,
-                questionName:
-                  currentQuestion?.title || currentQuestion?.question || '',
-              }
+                  sheetId: sheet._id.toString(),
+                  sheetName: sheet.name || '',
+                  questionId: currentQuestionId,
+                  questionName:
+                    currentQuestion?.title || currentQuestion?.question || '',
+                }
               : {
-                sheetId: sheet._id.toString(),
-                sheetName: sheet.name || '',
-              }
+                  sheetId: sheet._id.toString(),
+                  sheetName: sheet.name || '',
+                }
           }
           theme='light'
         />

@@ -14,6 +14,7 @@ export * from "./onboarding";
 export * from "./prepLogs";
 // export * from "./socialMedia"
 export * from "./initMiddleware";
+export * from "./leaderboard";
 export * from "./quiz";
 // CORS removed - using proxy pattern instead
 // Note: MDX utilities are Node/SSR-only (use `fs`/`path`).

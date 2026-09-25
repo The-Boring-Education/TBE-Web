@@ -31,12 +31,14 @@ const sendAPIResponse = ({
   error,
   message,
   data,
+  gamification,
 }: APIResponseType): APIResponseType => ({
   success,
   status,
   error,
   message,
   data,
+  ...(gamification !== undefined ? { gamification } : {}),
 });
 
 const fetchAPIData = async (url: string) => {
