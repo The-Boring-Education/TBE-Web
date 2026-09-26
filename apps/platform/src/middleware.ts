@@ -95,13 +95,20 @@ const middleware = async (req: NextRequest) => {
       );
 
       if (isProtectedUIRoute) {
+        const redirectPath = `${req.nextUrl.pathname}${req.nextUrl.search}`;
+        const loginUrl = new URL(routes.login, req.url);
+        loginUrl.searchParams.set('redirect', redirectPath);
+
         Sentry.addBreadcrumb({
           message: 'Unauthenticated user redirected from protected route',
           level: 'info',
-          data: { url: currentUrl, redirectTo: routes.home },
+          data: {
+            url: currentUrl,
+            redirectTo: loginUrl.pathname + loginUrl.search,
+          },
         });
 
-        return NextResponse.redirect(new URL(routes.home, req.url));
+        return NextResponse.redirect(loginUrl);
       }
     }
 
