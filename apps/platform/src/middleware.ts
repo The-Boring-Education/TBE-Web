@@ -104,8 +104,8 @@ const middleware = async (req: NextRequest) => {
           level: 'info',
           data: {
             url: currentUrl,
-            redirectTo: loginUrl.pathname + loginUrl.search,
-          },
+            redirectTo: loginUrl.pathname,
+          }
         });
 
         return NextResponse.redirect(loginUrl);
