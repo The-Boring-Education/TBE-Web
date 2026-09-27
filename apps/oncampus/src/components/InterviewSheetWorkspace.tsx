@@ -18,11 +18,7 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-  useGamifiedAction,
-} from "@tbe/gamification";
+import { useGamificationFeedback, useGamifiedAction } from "@tbe/gamification";
 import { useAnalytics, usePaymentAccess, useUser } from "@tbe/hooks";
 import type { SheetPageProps } from "@tbe/interface";
 import { queryKeys, useMutation, useQueryClient } from "@tbe/query";
@@ -112,7 +108,7 @@ export const InterviewSheetWorkspace = ({
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
   const queryClient = useQueryClient();
 
   const { isLocked } = usePaymentAccess({
@@ -322,18 +318,8 @@ export const InterviewSheetWorkspace = ({
       });
       if (response?.status) {
         if (newCompletionStatus) {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ""),
-          });
-          const pointsEarned =
-            calculateUserPointsForAction("COMPLETE_QUESTION");
-          const intensity =
-            pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
-          triggerCelebration({ type: "points", intensity });
-          showToast({
-            type: "points",
+          celebrate(response?.gamification, {
             message: "Question solved! Great work!",
-            points: pointsEarned,
           });
           trackEvent({
             action: "QUESTION_COMPLETE",

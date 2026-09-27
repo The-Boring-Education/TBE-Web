@@ -694,6 +694,16 @@ const getPlatformSEOMeta = (
         "Onboarding, Online Learning, The Boring Education, User Onboarding, Learning Platform, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn",
       ...seoCommonMeta,
     },
+    [`${routes.leaderboard}`]: {
+      title: "Leaderboard | The Boring Education",
+      siteName: "TBE Leaderboard",
+      description:
+        "See who is learning the most at The Boring Education today, this week and this month.",
+      url: routes.leaderboard,
+      keywords:
+        "Leaderboard, Learning Streak, Gamification, The Boring Education, Coding Practice, DSA, Interview Preparation",
+      ...seoCommonMeta,
+    },
     [`${routes.contribute}`]: {
       title: "Open Source Contribution | The Boring Education",
       siteName: "Contribute at The Boring Education",

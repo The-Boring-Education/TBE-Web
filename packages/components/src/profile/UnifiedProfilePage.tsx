@@ -1,5 +1,6 @@
 import { useAuth } from "@tbe/auth";
 import { routes } from "@tbe/constants";
+import { LeaderboardSettings } from "@tbe/gamification";
 import { useUser } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import {
@@ -251,6 +252,9 @@ export const UnifiedProfilePage: React.FC<UnifiedProfilePageProps> = ({
               onEditClick={() => handleOpenEdit("skills")}
               isDark={isDark}
             />
+
+            {/* Leaderboard Visibility & emails */}
+            <LeaderboardSettings isDark={isDark} />
           </div>
         </div>
       </main>

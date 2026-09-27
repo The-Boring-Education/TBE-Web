@@ -17,11 +17,7 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-  useGamifiedAction,
-} from "@tbe/gamification";
+import { useGamificationFeedback, useGamifiedAction } from "@tbe/gamification";
 import {
   useAnalytics,
   usePaymentAccess,
@@ -69,7 +65,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
   const queryClient = useQueryClient();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
 
   // Universal payment access hook - handles all payment status and locked logic
   const { isLocked, isPurchased } = usePaymentAccess({
@@ -194,21 +190,8 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
       // Only proceed if the API call was successful
       if (response?.status) {
         if (newCompletionStatus) {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ""),
-          });
-          await queryClient.invalidateQueries({
-            queryKey: ["gamification"],
-          });
-          const pointsEarned =
-            calculateUserPointsForAction("COMPLETE_QUESTION");
-          const intensity =
-            pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
-          triggerCelebration({ type: "points", intensity });
-          showToast({
-            type: "points",
+          celebrate(response?.gamification, {
             message: "DSA question solved! Great work!",
-            points: pointsEarned,
           });
           trackEvent({
             action: "QUESTION_COMPLETE",

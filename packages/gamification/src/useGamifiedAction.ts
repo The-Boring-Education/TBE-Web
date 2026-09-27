@@ -1,31 +1,45 @@
-import { ANALYTICS_EVENTS, routes } from "@tbe/constants";
-import { useAnalytics, useApi, useUser } from "@tbe/hooks";
+import { ANALYTICS_EVENTS, isLearningAction, routes } from "@tbe/constants";
+import { useAnalytics, useUser } from "@tbe/hooks";
+import { sendRequest } from "@tbe/utils";
 import { useCallback, useState } from "react";
 
 import { useGamificationContext } from "./GamificationProvider";
-import type {
-  CelebrationIntensity,
-  CelebrationType,
-  GamificationEvent,
-} from "./types";
-import useGamification from "./useGamification";
-import {
-  calculateUserPointsForAction,
-  getUserGamificationLevel,
-} from "./utils";
+import type { GamificationEvent, GamificationSummary } from "./types";
+import useGamificationFeedback from "./useGamificationFeedback";
+
+interface LedgerResult {
+  pointsEarned?: number;
+  lifetimePoints?: number;
+}
+
+/** POST /gamification responds `{ data: { data: ledgerResult } }`. */
+const toEngagementSummary = (response: unknown): GamificationSummary | null => {
+  const ledger = (response as { data?: { data?: LedgerResult } })?.data?.data;
+  if (!ledger || typeof ledger.pointsEarned !== "number") return null;
+  return {
+    pointsEarned: ledger.pointsEarned,
+    lifetimePoints: ledger.lifetimePoints ?? ledger.pointsEarned,
+    countedForLeaderboard: false,
+    notCountedReason: "ENGAGEMENT",
+    weekly: { score: 0, rank: null, previousRank: null },
+  };
+};
 
 /**
- * Hook that ties a learning action to the full gamification pipeline:
- * API call -> analytics -> celebration -> toast.
+ * Ties a learner action to the gamification pipeline: analytics → points → celebration.
+ *
+ * - Engagement Actions (enroll, feedback, share…) are claimed via POST /gamification.
+ * - Learning Actions are awarded by the server endpoint that verified them; pass that
+ *   response's `gamification` block as `serverResult` to celebrate it. Without one,
+ *   a points-free celebration is shown.
  *
  * Must be used within a <GamificationProvider>.
  */
 const useGamifiedAction = () => {
   const { user } = useUser();
   const { trackEvent } = useAnalytics();
-  const { points: currentPoints, refetch: refetchPoints } = useGamification();
-  const { makeRequest } = useApi("gamification");
   const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,95 +55,57 @@ const useGamifiedAction = () => {
           value: { userId: user.id, ...event.metadata },
         });
 
-        if (event.gamificationAction) {
-          const pointsEarned = calculateUserPointsForAction(
-            event.gamificationAction,
-          );
-          const previousLevel = getUserGamificationLevel(currentPoints);
-          const newTotalPoints = currentPoints + pointsEarned;
-          const newLevel = getUserGamificationLevel(newTotalPoints);
+        const action = event.gamificationAction;
+        if (!action) return;
 
-          await makeRequest({
+        let summary: GamificationSummary | null | undefined =
+          event.serverResult;
+
+        if (!isLearningAction(action)) {
+          const response = await sendRequest({
             method: "POST",
-            url: routes.api.gamification,
-            body: { actionType: event.gamificationAction },
+            url: `${routes.api.gamification}?userId=${user.id}`,
+            body: { actionType: action },
           });
-
-          refetchPoints();
-
-          let celebrationType: CelebrationType = "points";
-          let celebrationIntensity: CelebrationIntensity;
-          let toastMessage = event.customMessage || "Great job!";
-
-          if (newLevel.currentLevel > previousLevel.currentLevel) {
-            celebrationType = "levelup";
-            celebrationIntensity = "high";
-            toastMessage = `Level Up! Welcome to ${newLevel.currentLevelName}!`;
-
-            trackEvent({
-              action: ANALYTICS_EVENTS.LEVEL_UP,
-              category: "Gamification",
-              label: "Level Up Achievement",
-              value: {
-                userId: user.id,
-                previousLevel: previousLevel.currentLevel,
-                newLevel: newLevel.currentLevel,
-                previousLevelName: previousLevel.currentLevelName,
-                newLevelName: newLevel.currentLevelName,
-              },
-            });
-          } else if (pointsEarned >= 50) {
-            celebrationIntensity = "high";
-          } else if (pointsEarned >= 20) {
-            celebrationIntensity = "medium";
-          } else {
-            celebrationIntensity = "low";
-          }
-
-          if (event.celebrationType) {
-            celebrationType = event.celebrationType;
-          }
-
-          triggerCelebration({
-            type: celebrationType,
-            intensity: celebrationIntensity,
-          });
-
-          showToast({
-            type: celebrationType,
-            message: toastMessage,
-            points: pointsEarned,
-            level: newLevel.currentLevel,
-            levelName: newLevel.currentLevelName,
-          });
-
-          trackEvent({
-            action: ANALYTICS_EVENTS.POINTS_EARNED,
-            category: "Gamification",
-            label: "Points Earned",
-            value: {
-              userId: user.id,
-              pointsEarned,
-              actionType: event.gamificationAction,
-              totalPoints: newTotalPoints,
-            },
-          });
+          summary = toEngagementSummary(response);
         }
+
+        if (!summary || summary.pointsEarned <= 0) {
+          triggerCelebration({
+            type: event.celebrationType ?? "achievement",
+            intensity: "medium",
+          });
+          showToast({
+            type: event.celebrationType ?? "achievement",
+            message: event.customMessage || "Great job!",
+          });
+          return;
+        }
+
+        celebrate(summary, {
+          message: event.customMessage,
+          celebrationType: event.celebrationType,
+        });
+
+        trackEvent({
+          action: ANALYTICS_EVENTS.POINTS_EARNED,
+          category: "Gamification",
+          label: "Points Earned",
+          value: {
+            userId: user.id,
+            pointsEarned: summary.pointsEarned,
+            actionType: action,
+            totalPoints: summary.lifetimePoints,
+            weeklyRank: summary.weekly.rank,
+          },
+        });
       } catch (error) {
         console.error("[Gamification] Action failed:", error);
       } finally {
         setIsLoading(false);
       }
     },
-    [
-      user?.id,
-      trackEvent,
-      currentPoints,
-      makeRequest,
-      refetchPoints,
-      triggerCelebration,
-      showToast,
-    ],
+    [user?.id, trackEvent, triggerCelebration, showToast, celebrate],
   );
 
   return { triggerGamifiedAction, isLoading };

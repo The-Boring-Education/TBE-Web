@@ -3,6 +3,8 @@ import "./edge-polyfill";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { isAllowedTbeUrl } from "./lib/utils/allowed-origins";
+
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
@@ -20,39 +22,12 @@ const ALLOWED_HEADERS =
  * Allows:
  * - localhost / 127.0.0.1 (development)
  * - *.theboringeducation.com (production domains)
- * - TBE Vercel preview deployments (tbe-*...-tbe.vercel.app)
+ * - TBE Vercel preview deployments ({project}-*-tbe.vercel.app)
  */
 function resolveOrigin(request: NextRequest): string | undefined {
   const origin = request.headers.get("origin");
   if (!origin) return undefined;
-
-  try {
-    const { hostname } = new URL(origin);
-
-    // Allow localhost for development
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      return origin;
-    }
-
-    // Allow production TBE domains
-    if (
-      hostname === "theboringeducation.com" ||
-      hostname.endsWith(".theboringeducation.com")
-    ) {
-      return origin;
-    }
-
-    // Allow TBE Vercel preview deployments only. Requiring both the `tbe-` prefix
-    // and the `-tbe.vercel.app` team-slug suffix scopes this to the TBE namespace
-    // instead of any attacker-created `evil-tbe.vercel.app` project.
-    if (hostname.startsWith("tbe-") && hostname.endsWith("-tbe.vercel.app")) {
-      return origin;
-    }
-
-    return undefined;
-  } catch {
-    return undefined;
-  }
+  return isAllowedTbeUrl(origin) ? origin : undefined;
 }
 
 function generateRequestId(): string {

@@ -31,7 +31,14 @@ import type {
   WorkDomainType,
 } from "./api";
 
+export interface UserLeaderboardPreferences {
+  visible: boolean;
+  emails: boolean;
+  excluded: boolean;
+}
+
 export interface UserModel {
+  leaderboard?: UserLeaderboardPreferences;
   name: string;
   userName?: string;
   email: string;
@@ -605,17 +612,61 @@ export interface UserPointsAction {
 export interface GamificationModel {
   userId: Schema.Types.ObjectId;
   points: number;
+  /** Legacy, read-only: new Point Events are stored in the PointEvent collection. */
   actions: UserPointsAction[];
+  /** When this learner's last BASE Learning Action counted toward Period Score (Pace Limit). */
+  lastBaseCountedAt?: Date | null;
 }
 
-export interface LeaderboardModel extends Document {
-  type: LeaderboardEnum;
+export interface PointEventModel {
+  userId: Types.ObjectId;
+  actionType: UserPointsActionType;
+  /** Signed: reversals are negative. */
+  points: number;
+  itemId?: string;
   app?: TBEAppType;
-  date: Date;
-  entries: {
+  countedForLeaderboard: boolean;
+  createdAt?: Date;
+}
+
+export interface LearningCreditModel {
+  userId: Types.ObjectId;
+  actionType: UserPointsActionType;
+  itemId: string;
+  completed: boolean;
+  credited: boolean;
+  creditedAt?: Date;
+}
+
+export interface PeriodScoreModel {
+  type: LeaderboardEnum;
+  periodKey: string;
+  userId: Types.ObjectId;
+  score: number;
+  /** When the learner last increased their score — earlier wins ties. */
+  reachedAt: Date;
+  /** Portion of `score` written by the legacy backfill (keeps the backfill idempotent). */
+  backfilled?: number;
+}
+
+export interface PeriodChampion {
+  userId: Types.ObjectId;
+  rank: number;
+  score: number;
+}
+
+export interface PeriodCloseModel {
+  type: LeaderboardEnum;
+  periodKey: string;
+  champions: PeriodChampion[];
+  standings: PeriodChampion[];
+  notified: {
     userId: Types.ObjectId;
-    points: number;
+    rank: number;
+    claimedAt?: Date;
+    sentAt?: Date;
   }[];
+  closedAt: Date;
 }
 
 export interface UserActivityLogModel extends Document {

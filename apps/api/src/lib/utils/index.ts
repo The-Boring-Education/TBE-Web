@@ -1,4 +1,5 @@
 // Export all utilities
+export * from "./allowed-origins";
 export * from "./auth";
 export * from "./cashfreeDiagnostics";
 export * from "./cors";

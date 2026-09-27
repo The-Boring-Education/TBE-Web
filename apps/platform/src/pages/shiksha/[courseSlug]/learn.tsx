@@ -12,17 +12,13 @@ import {
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-  useGamifiedAction,
-} from '@tbe/gamification';
+import { useGamificationFeedback, useGamifiedAction } from '@tbe/gamification';
 import { useAnalytics, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
 } from '@tbe/interface';
-import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
+import { useMutation } from '@tbe/query';
 import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
 import { List, X } from 'lucide-react';
 import { useRouter } from 'next/router';
@@ -119,8 +115,7 @@ const CourseLearnPage = ({
   });
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
-  const queryClient = useQueryClient();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
 
   // Generate certificate if needed
   const generateCertificateIfNeeded = async () => {
@@ -246,19 +241,8 @@ const CourseLearnPage = ({
 
       if (response?.status) {
         if (newCompletionStatus) {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ''),
-          });
-          const pointsEarned = calculateUserPointsForAction(
-            'COMPLETE_COURSE_CHAPTER',
-          );
-          const intensity =
-            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
-          triggerCelebration({ type: 'points', intensity });
-          showToast({
-            type: 'points',
+          celebrate(response?.gamification, {
             message: 'Chapter completed! Keep learning!',
-            points: pointsEarned,
           });
           trackEvent({
             action: 'COURSE_CHAPTER_COMPLETE',

@@ -21,7 +21,8 @@ export interface UseDsaCompletedQuestionsOptions {
 
 interface UseDsaCompletedQuestionsReturn {
   completedIds: (string | number)[];
-  toggleComplete: (questionId: string | number) => Promise<void>;
+  /** Resolves with the server's `gamification` outcome (if any) for the toast. */
+  toggleComplete: (questionId: string | number) => Promise<unknown>;
   solvedToday: number;
   /** True while loading server progress for an authenticated user */
   isProgressLoading: boolean;
@@ -215,7 +216,7 @@ const useDsaCompletedQuestions = (
   const isProgressLoading = Boolean(userId && remoteQuery.isPending);
 
   const toggleComplete = useCallback(
-    async (questionId: string | number): Promise<void> => {
+    async (questionId: string | number): Promise<unknown> => {
       const qid = String(questionId);
 
       if (userId) {
@@ -272,6 +273,7 @@ const useDsaCompletedQuestions = (
           await queryClient.invalidateQueries({
             queryKey: ["gamification"],
           });
+          return (res as { gamification?: unknown }).gamification;
         } catch {
           await queryClient.invalidateQueries({
             queryKey: queryKeys.dsa.completedQuestions(userId),
@@ -283,7 +285,7 @@ const useDsaCompletedQuestions = (
             queryKey: ["gamification"],
           });
         }
-        return;
+        return undefined;
       }
 
       setLocalCompletedIds((completedIdsPrev) => {
@@ -317,6 +319,7 @@ const useDsaCompletedQuestions = (
 
         return next;
       });
+      return undefined;
     },
     [userId, remoteQuery.data, queryClient, storageKey, todayStatsKey],
   );
