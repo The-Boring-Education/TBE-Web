@@ -1094,30 +1094,6 @@ const OS_GETTING_STARTED_STEPS = [
   },
 ];
 
-const PORTFOLIO_FEATURES: PrimaryCardProps[] = [
-  {
-    id: v4(),
-    title: "Customizable Templates",
-    content: "Create your portfolio with customizable templates.",
-    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
-    imageAltText: "Customizable Templates",
-  },
-  {
-    id: v4(),
-    title: "Showcase Your Skills",
-    content: "Showcase your skills and projects with our portfolio templates.",
-    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
-    imageAltText: "Showcase Your Skills",
-  },
-  {
-    id: v4(),
-    title: "Showcase Your Projects",
-    content: "Showcase your projects with our portfolio templates.",
-    image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
-    imageAltText: "Showcase Your Projects",
-  },
-];
-
 /* ─────────────────────────────────────────────
    RESUME YATRA LANDING PAGE CONSTANTS
    ───────────────────────────────────────────── */
@@ -1269,7 +1245,6 @@ export {
   MY_PREV_EXPERIENCE,
   OPEN_SOURCE_INFO,
   OS_GETTING_STARTED_STEPS,
-  PORTFOLIO_FEATURES,
   PRODUCTS,
   RESUME_YATRA_FAQS,
   RESUME_YATRA_FEATURE_SPOTLIGHTS,

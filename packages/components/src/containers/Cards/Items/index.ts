@@ -5,8 +5,6 @@ export { default as PlaylistCard } from "./PlaylistCard";
 export { default as PlaylistRecommend } from "./PlaylistRecommend";
 export { default as PlaylistVideoCard } from "./PlaylistVideoCard";
 export { default as PlaylistVideoTimeCard } from "./PlaylistVideoTimeCard";
-export { default as PortfolioCard } from "./PortfolioCard";
-export { default as PortfolioTemplate } from "./PortfolioTemplate";
 export { default as PrimaryCard } from "./PrimaryCard";
 export { default as PrimaryCardWithCTA } from "./PrimaryCardWithCTA";
 export { default as ProgressRing } from "./ProgressRing";

@@ -3,7 +3,6 @@ import type {
   LeaderboardType,
   MentorshipCardProps,
   PlatformUsageType,
-  PortfolioTemplateProps,
   PrimaryCardWithCTAProps,
   ProductDataProps,
   RadioButtonOptionsProps,
@@ -281,111 +280,6 @@ const SCREEN_BREAKPOINTS = {
   LG: "(min-width: 1025px)",
 };
 
-const PORTFOLIO_CARDS = [
-  {
-    id: 1,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-resume.svg`,
-    title: "Resume is not Enough.",
-    description: "Showcase your skills with a personalized portfolio website.",
-  },
-  {
-    id: 2,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-standout.svg`,
-    title: "Stand Out.",
-    description: "Highlight your unique capabilities effectively and clearly.",
-  },
-  {
-    id: 3,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-brand.svg`,
-    title: "Control Your Brand.",
-    description: "Manage your personal brand and online presence efficiently.",
-  },
-  {
-    id: 4,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-professional.svg`,
-    title: "Professionalism.",
-    description:
-      "Show potential employers you are serious about your career growth.",
-  },
-  {
-    id: 5,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-networking.svg`,
-    title: "Networking.",
-    description:
-      "Easily share your work and connect with others in your field.",
-  },
-  {
-    id: 6,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-seo.svg`,
-    title: "SEO Benefits.",
-    description:
-      "Improve your visibility on search engines and attract opportunities.",
-  },
-];
-
-const PORTFOLIO_TEMPLATES: PortfolioTemplateProps[] = [
-  {
-    id: 1,
-    imageUrl: `${STATIC_FILE_PATH.svg}/portfolio-template-1.svg`,
-    title: "DevCanvas by Shaik",
-    description: "HTML, CSS, JavaScript, and GSAP.",
-    previewLink: "https://shaik-sharzil.netlify.app/",
-    repo: "https://github.com/shaiksharzil/portfolio",
-    developer: {
-      name: "Shaik Sharzil",
-      link: "https://github.com/shaiksharzil",
-    },
-  },
-  {
-    id: 2,
-    imageUrl: `${STATIC_FILE_PATH.svg}/portfolio-template-2.svg`,
-    title: "Build with Rahul",
-    description: "Responsive React portfolio.",
-    previewLink: "https://rahul-personal-portfolio-01.netlify.app/",
-    repo: "https://github.com/KumarRahul-01/my_Portfolio/tree/main",
-    developer: {
-      name: "Rahul Kumar Baitha",
-      link: "https://github.com/KumarRahul-01",
-    },
-  },
-  {
-    id: 3,
-    imageUrl: `${STATIC_FILE_PATH.svg}/portfolio-template-3.svg`,
-    title: "Making You Visible",
-    description: "Next.js, Tailwind CSS, and NextUI.",
-    previewLink: "4n5hu.vercel.app",
-    repo: "https://github.com/anshu189/4n5hu",
-    developer: {
-      name: "Anshu Saini",
-      link: "https://github.com/anshu189",
-    },
-  },
-  {
-    id: 4,
-    imageUrl: `${STATIC_FILE_PATH.svg}/portfolio-template-4.svg`,
-    title: "Build with Aayush",
-    description: "React.js and Tailwind.",
-    previewLink: "https://aayushkakkar.netlify.app",
-    repo: "https://github.com/aayushkakkar26/AayushPortfolio",
-    developer: {
-      name: "Aayush Kakkar",
-      link: "https://github.com/aayushkakkar26",
-    },
-  },
-  {
-    id: 5,
-    imageUrl: `${STATIC_FILE_PATH.svg}/portfolio-template-5.svg`,
-    title: "Design to Deploy by Harsh",
-    description: "React.js and Tailwind.",
-    previewLink: "https://portfolio-harshrj1501.netlify.app",
-    repo: "https://github.com/Harshrj1502/Portfoliio-modern",
-    developer: {
-      name: "Harsh Raj",
-      link: "https://github.com/Harshrj1502",
-    },
-  },
-];
-
 const YOUFOCUS_SKILL_PLAYLISTS: RadioButtonOptionsProps[] = [
   { label: "React.js", value: "reactjs" },
   { label: "Node.js", value: "nodejs" },
@@ -605,8 +499,6 @@ export {
   MENTORSHIP_SERVICES_CARDS,
   PAGE_REFRESH_TIMEOUT,
   POINTS_RULES,
-  PORTFOLIO_CARDS,
-  PORTFOLIO_TEMPLATES,
   products,
   projectGroupWhatsapp,
   SCREEN_BREAKPOINTS,

@@ -176,8 +176,6 @@ export { default as PlaylistCard } from "./containers/Cards/Items/PlaylistCard";
 export { default as PlaylistRecommend } from "./containers/Cards/Items/PlaylistRecommend";
 export { default as PlaylistVideoCard } from "./containers/Cards/Items/PlaylistVideoCard";
 export { default as PlaylistVideoTimeCard } from "./containers/Cards/Items/PlaylistVideoTimeCard";
-export { default as PortfolioCard } from "./containers/Cards/Items/PortfolioCard";
-export { default as PortfolioTemplate } from "./containers/Cards/Items/PortfolioTemplate";
 export { default as PrimaryCard } from "./containers/Cards/Items/PrimaryCard";
 export { default as PrimaryCardWithCTA } from "./containers/Cards/Items/PrimaryCardWithCTA";
 export { default as ProgressRing } from "./containers/Cards/Items/ProgressRing";
