@@ -65,8 +65,12 @@ program policy, mailbox provisioning, and release sign-off.
 10. [Hall of Fame](hall-of-fame.md)
 11. [DSA IDE](dsa-ide.md)
 
-Supporting handoff: [evidence and sequencing](evidence-and-sequencing.md) and
-[draft issue briefs](issue-briefs.md). Product decisions and task readiness remain
+Supporting handoff: [evidence and sequencing](evidence-and-sequencing.md),
+[draft issue briefs](issue-briefs.md), the
+[Shiksha learning UX issue breakdown](shiksha-learning-ux-issues.md), which
+supersedes briefs S3-S5, and its
+[ready-to-publish issue bodies](issues/README.md). Product decisions and task
+readiness remain
 explicit; the specification branch is not a product implementation branch yet.
 
 ## Verification Contract

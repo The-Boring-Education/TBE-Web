@@ -11,18 +11,25 @@ before publishing. Identifiers S1-S8 below are local planning identifiers only.
 | --- | --------------------------------------------------------- | ------------------ | ---------------------------- | ---------------------- |
 | S1  | Seed and browse one synthetic Shiksha course              | AFK after approval | None                         | OSS 1-2, 4-12          |
 | S2  | Add DSA fixtures and access/progress scenarios            | AFK after approval | S1                           | OSS 3-4, 10-12         |
-| S3  | Preserve Shiksha chapter URLs and browser history         | AFK after approval | None                         | Shiksha 1-3            |
-| S4  | Handle progress-save failures and chapter-switch races    | AFK after approval | None                         | Shiksha 4-7, 12        |
-| S5  | Make the mobile chapter drawer keyboard-accessible        | AFK after approval | None                         | Shiksha 8-9, 13        |
+| S3  | Preserve Shiksha chapter URLs and browser history         | Superseded         | See note below               | Shiksha 1-3            |
+| S4  | Handle progress-save failures and chapter-switch races    | Superseded         | See note below               | Shiksha 4-7, 12        |
+| S5  | Make the mobile chapter drawer keyboard-accessible        | Superseded         | See note below               | Shiksha 8-9, 13        |
 | S6  | Resolve contributor tracks, intake, and publicity consent | HITL               | Program/form owner decisions | Contributor 1-5, 12-13 |
 | S7  | Reproduce or verify the create-order incident             | HITL               | Redacted incident details    | Pricing 6-8, 12        |
 | S8  | Define icon scope and approve an asset inventory          | HITL               | Design decision              | Standalone sprint task |
 
-After explicit approval, only unblocked S1/S3/S4/S5 are candidates for
-`ready-for-agent`. S2 needs S1 accepted first. S3-S5 are OSS candidates with
-`help wanted`; beginner suitability must be reviewed before adding `good first
-issue`. Do not label payment, data-safety, or unresolved product work as beginner
-tasks simply because its description is short.
+S3, S4, and S5 are superseded by
+[the Shiksha learning UX issue breakdown](shiksha-learning-ux-issues.md) and its
+[ready-to-publish issue bodies](issues/README.md). A
+source-inspection pass found that several behaviors those briefs proposed to
+build already exist, that the three briefs are not independent as assumed, and
+that an award-integrity defect must be fixed before any of them. Use the L1-L5
+slices instead.
+
+After explicit approval, only unblocked S1 is a candidate for `ready-for-agent`.
+S2 needs S1 accepted first. Beginner suitability must be reviewed before adding
+`good first issue`. Do not label payment, data-safety, or unresolved product work
+as beginner tasks simply because its description is short.
 
 ## S1: Seed and Browse One Synthetic Shiksha Course
 

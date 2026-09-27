@@ -53,8 +53,13 @@ tests. Add browser assertions for direct links, refresh, Back/Forward, and drawe
 focus at desktop/mobile widths. Use deferred mocked responses to test chapter
 switches during completion updates and retry after failure. Assert unchanged
 canonical completion and no additional award/certificate side effects caused by
-navigation. Source inspection motivates these checks; no production bug has been
-reproduced as part of this planning pass.
+navigation.
+
+A later source-inspection pass identified concrete defects rather than
+hypothetical risks, and several of the acceptance checks below turned out to
+already pass. See the [issue breakdown](shiksha-learning-ux-issues.md) for what
+is actually broken, what is already satisfied, and the resulting slice order,
+and [issues/](issues/README.md) for the ready-to-publish issue bodies.
 
 ## Out of Scope
 
@@ -64,10 +69,14 @@ or changing certificate eligibility rules.
 
 ## Further Notes
 
-The three narrow behaviors can be published as enhancement slices after approval.
+The narrow behaviors can be published as enhancement slices after approval.
 Visual direction, content-density targets, and any broader layout changes remain
-HITL. Coordinate with open leaderboard PR #1279 before touching shared award
-feedback; do not depend on its unmerged implementation without verification.
+HITL.
+
+Leaderboard PR #1279 merged to `development` on 2026-09-25, after this planning
+snapshot, and introduced award-tracking models absent from the inspected tree.
+Award-related work must be re-verified against current `development` rather than
+against this document.
 
 ## Technical Specification
 
