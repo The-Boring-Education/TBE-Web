@@ -84,6 +84,36 @@ describe("paymentConfig", () => {
     });
   });
 
+  describe("cashfreeModeFromPaymentLink", () => {
+    it("returns production for an api.cashfree.com checkout link", async () => {
+      const { cashfreeModeFromPaymentLink } = await importFresh();
+      expect(
+        cashfreeModeFromPaymentLink(
+          "https://api.cashfree.com/checkout?paymentSessionId=session_1",
+        ),
+      ).toBe("production");
+    });
+
+    it("returns sandbox for a sandbox.cashfree.com checkout link", async () => {
+      const { cashfreeModeFromPaymentLink } = await importFresh();
+      expect(
+        cashfreeModeFromPaymentLink(
+          "https://sandbox.cashfree.com/checkout?paymentSessionId=session_1",
+        ),
+      ).toBe("sandbox");
+    });
+
+    it("returns undefined when the link is missing or not Cashfree", async () => {
+      const { cashfreeModeFromPaymentLink } = await importFresh();
+      expect(cashfreeModeFromPaymentLink(undefined)).toBeUndefined();
+      expect(cashfreeModeFromPaymentLink("")).toBeUndefined();
+      expect(
+        cashfreeModeFromPaymentLink("https://www.theboringeducation.com/pay"),
+      ).toBeUndefined();
+      expect(cashfreeModeFromPaymentLink("not a url")).toBeUndefined();
+    });
+  });
+
   describe("isCashfreeSandbox", () => {
     it("should return true in sandbox mode", async () => {
       vi.stubEnv("NEXT_PUBLIC_CASHFREE_MODE", "sandbox");
