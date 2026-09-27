@@ -2,6 +2,16 @@
 
 Status: proposed narrow behaviors; full visual redesign requires separate review.
 
+Update (2026-09-27): the shared Learning Environment work in
+[learning-environment.md](learning-environment.md) now owns the accessible mobile
+chapter drawer. Issue #1296 is re-scoped into that epic, and its accessibility
+criteria become the acceptance criteria for the shared `useLearningSidebar` hook;
+the Shiksha migration closes it. The "reviewed design sample" gate below is
+narrowed by [docs/adr/0002](../../adr/0002-dark-token-driven-learning-shell.md):
+it no longer blocks making shell **chrome** dark and token-driven, but still
+governs any redesign of the **content area**. Issue #1297 (content containment)
+stays a separate per-surface concern and is unaffected.
+
 ## Problem Statement
 
 Learners need chapter navigation, reliable progress feedback, and a usable mobile

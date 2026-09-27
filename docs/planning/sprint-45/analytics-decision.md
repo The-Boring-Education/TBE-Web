@@ -1,6 +1,14 @@
 # PRD: Product Analytics Contract and Provider Decision
 
-Status: deliberately decision-gated; neither PostHog nor Statsig is selected.
+Status: SUPERSEDED (2026-09-27). The provider decision has since been made:
+PostHog is selected, added as a second sink alongside GA4. See
+[posthog-integration.md](posthog-integration.md) and
+[docs/adr/0001-provider-neutral-analytics-sink-registry.md](../../adr/0001-provider-neutral-analytics-sink-registry.md).
+The provider-neutral contract, privacy rules, and evaluation criteria below
+remain the requirements PostHog is held to; only the "leave the provider open"
+stance is reversed.
+
+Original status: deliberately decision-gated; neither PostHog nor Statsig is selected.
 
 ## Problem Statement
 
@@ -67,10 +75,10 @@ and asserting product performance without a real analytics report.
 
 ## Further Notes
 
-The user explicitly chose to keep the provider decision open. This parent should
-not carry `ready-for-agent`. The existing "Audit All TBE Products" task remains a
-separate human-led report using authorized GA data; SDK installation is not a
-substitute for that report.
+Superseded: the user has since selected PostHog; the provider is no longer open.
+Implementation is specified in [posthog-integration.md](posthog-integration.md).
+The existing "Audit All TBE Products" task remains a separate human-led report
+using authorized GA data; SDK installation is not a substitute for that report.
 
 Decision outputs required: measurement questions, provider, pilot app/events,
 identity/consent policy, retention and residency, budget guardrails, owner, and
