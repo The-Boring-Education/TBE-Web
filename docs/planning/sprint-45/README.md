@@ -12,7 +12,7 @@ It contains no product implementation and does not authorize production changes.
 - Cover authentication, consent, scheduling, progress, payments, and data safety with behavior tests.
 - Publish public-safe requirements; keep business metrics, interview notes, credentials, and customer data out of GitHub.
 - Consolidate specifications and draft task briefs into one documentation PR on `docs/sprint-45-product-specs`, based on `development`.
-- Keep the issue breakdown in the PR for later use; do not open or assign new GitHub issues in this pass.
+- Keep the issue breakdown in the PR for later use; do not open or assign new GitHub issues in this pass. Exception: the Shiksha learning UX slices were published on 2026-09-27 by direct authorization, under epic [#1291](https://github.com/The-Boring-Education/TBE-Web/issues/1291). This gate still applies to every other specification in the packet.
 
 ## Readiness
 
@@ -69,7 +69,7 @@ Supporting handoff: [evidence and sequencing](evidence-and-sequencing.md),
 [draft issue briefs](issue-briefs.md), the
 [Shiksha learning UX issue breakdown](shiksha-learning-ux-issues.md), which
 supersedes briefs S3-S5, and its
-[ready-to-publish issue bodies](issues/README.md). Product decisions and task
+[published issue bodies](issues/README.md). Product decisions and task
 readiness remain
 explicit; the specification branch is not a product implementation branch yet.
 

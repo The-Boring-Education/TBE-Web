@@ -1,46 +1,49 @@
-# Shiksha Learning UX: Ready-to-Publish Issues
+# Shiksha Learning UX: Published Issues
 
-One file per vertical slice, written as the issue body to publish verbatim. No
-GitHub issues are opened by this directory; Sprint 45 keeps issue publication
-gated, so these are staged here until that gate lifts.
+One file per slice, holding the body published to GitHub. These are **published**
+as of 2026-09-27; edit the file and the issue together so they do not drift.
+
+Publication was authorized directly, overriding the "do not open or assign new
+GitHub issues in this pass" line in the [sprint README](../README.md). That line
+still governs the remaining sprint-45 specifications.
 
 Rationale, evidence, and the record of what the PRD got wrong live in the
 [issue breakdown](../shiksha-learning-ux-issues.md). Source requirements live in
-the [Shiksha learning UX PRD](../shiksha-learning-ux.md). Read the breakdown
-before publishing; it explains why the chain is ordered this way.
+the [Shiksha learning UX PRD](../shiksha-learning-ux.md).
 
-## Queue
+## Published
 
-| ID  | Issue                                                                           | Category    | Type | Blocked By | Proposed Labels                |
-| --- | ------------------------------------------------------------------------------- | ----------- | ---- | ---------- | ------------------------------ |
-| LA  | [Honor or remove the ignored Button disabled prop](la-button-disabled-prop.md)  | bug         | AFK  | None       | `bug`, `ready-for-agent`       |
-| L1  | [Award course completion exactly once](l1-award-completion-once.md)             | bug         | AFK  | None       | `bug`, `ready-for-agent`       |
-| L2  | [Resolve chapter selection server-side](l2-chapter-resolution.md)               | bug         | AFK  | L1         | `bug`                          |
-| L3  | [Real enrollment and visible save failures](l3-enrollment-and-save-feedback.md) | bug         | AFK  | L1         | `bug`                          |
-| L4  | [Accessible mobile chapter drawer](l4-accessible-chapter-drawer.md)             | enhancement | AFK  | L2         | `enhancement`, `accessibility` |
-| L5  | [Contain long content on narrow viewports](l5-contain-long-content.md)          | enhancement | AFK  | L4         | `enhancement`                  |
+Epic: [#1291](https://github.com/The-Boring-Education/TBE-Web/issues/1291) (`prd`)
 
-The PRD proposed publishing these as enhancements. Four are defects: they
-describe behavior that is wrong today, not behavior that is missing. Categories
-above reflect that.
+| Issue                                                                | File                                                                     | Category    | Blocked By | Labels                                  |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------- | ---------- | --------------------------------------- |
+| [#1292](https://github.com/The-Boring-Education/TBE-Web/issues/1292) | [la-button-disabled-prop.md](la-button-disabled-prop.md)                 | bug         | None       | `bug`, `help wanted`, `ready-for-agent` |
+| [#1293](https://github.com/The-Boring-Education/TBE-Web/issues/1293) | [l1-award-completion-once.md](l1-award-completion-once.md)               | bug         | None       | `bug`, `help wanted`, `ready-for-agent` |
+| [#1294](https://github.com/The-Boring-Education/TBE-Web/issues/1294) | [l2-chapter-resolution.md](l2-chapter-resolution.md)                     | bug         | #1293      | `bug`, `help wanted`                    |
+| [#1295](https://github.com/The-Boring-Education/TBE-Web/issues/1295) | [l3-enrollment-and-save-feedback.md](l3-enrollment-and-save-feedback.md) | bug         | #1293      | `bug`, `help wanted`                    |
+| [#1296](https://github.com/The-Boring-Education/TBE-Web/issues/1296) | [l4-accessible-chapter-drawer.md](l4-accessible-chapter-drawer.md)       | enhancement | #1294      | `enhancement`, `help wanted`, `UI/UX`   |
+| [#1297](https://github.com/The-Boring-Education/TBE-Web/issues/1297) | [l5-contain-long-content.md](l5-contain-long-content.md)                 | enhancement | #1296      | `enhancement`, `help wanted`, `UI/UX`   |
 
-## Publishing Order and Labels
+The PRD proposed publishing this work as enhancements. Four of the six are
+defects: they describe behavior that is wrong today, not behavior that is
+missing. Labels reflect that.
 
-Publish in dependency order so the "Blocked by" sections can carry real issue
-numbers: LA and L1 first in either order, then L2 and L3, then L4, then L5.
-Replace the `L#` placeholders in each "Blocked by" section with the published
-issue reference as you go.
+## Label Decisions
 
 Following the convention in [issue-briefs.md](../issue-briefs.md), only unblocked
-slices are candidates for `ready-for-agent`. LA and L1 qualify on publication;
-the rest become candidates as their blockers close.
+slices carry `ready-for-agent`: #1292 and #1293. The rest become candidates as
+their blockers close, and the label should be added then.
 
-Do not add `good first issue` to any of these without review. LA looks small but
-changes a shared component consumed across every app, and L1 touches points
-awards.
+No issue carries `good first issue`. #1292 changes a component consumed by every
+app in the monorepo and requires a repository-wide caller audit; #1293 touches
+points awards feeding the leaderboard. Both are well specified and open to
+newcomers through `help wanted`, but neither is unsupervised-beginner work.
+#1297 is the strongest candidate to relabel once #1296 lands.
 
-## Before Publishing L1
+## Before Work Starts on #1293
 
-L1 was scoped against a tree that predates the merged leaderboard work. Re-verify
-its premise against current `development` first. See the evidence section of the
-[issue breakdown](../shiksha-learning-ux-issues.md) for what changed.
+Its premise was established against a tree predating the merged leaderboard
+work. The issue body instructs the implementer to reproduce the behavior on
+current `development` first and record what the merged award handling already
+guarantees. See the evidence section of the
+[issue breakdown](../shiksha-learning-ux-issues.md).

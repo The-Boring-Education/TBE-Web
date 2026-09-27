@@ -20,7 +20,8 @@ before publishing. Identifiers S1-S8 below are local planning identifiers only.
 
 S3, S4, and S5 are superseded by
 [the Shiksha learning UX issue breakdown](shiksha-learning-ux-issues.md) and its
-[ready-to-publish issue bodies](issues/README.md). A
+[published issue bodies](issues/README.md), live on GitHub under epic
+[#1291](https://github.com/The-Boring-Education/TBE-Web/issues/1291). A
 source-inspection pass found that several behaviors those briefs proposed to
 build already exist, that the three briefs are not independent as assumed, and
 that an award-integrity defect must be fixed before any of them. Use the L1-L5

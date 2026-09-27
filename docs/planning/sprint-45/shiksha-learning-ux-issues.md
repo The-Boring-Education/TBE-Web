@@ -4,10 +4,14 @@ Rationale and evidence for the vertical slices derived from the
 [Shiksha learning UX PRD](shiksha-learning-ux.md), following a source-inspection
 pass over the Shiksha learning page and its dependencies.
 
-The publishable issue bodies live in [issues/](issues/README.md), one file per
-slice. This document explains why they are shaped and ordered the way they are;
-it does not repeat their contents. No GitHub issues are opened by either
-document, since the sprint packet keeps issue publication gated.
+These slices were published to GitHub on 2026-09-27 under epic
+[#1291](https://github.com/The-Boring-Education/TBE-Web/issues/1291), by direct
+authorization overriding the sprint packet's issue-publication gate. That gate
+still governs the remaining sprint-45 specifications.
+
+The issue bodies live in [issues/](issues/README.md), one file per slice, kept
+alongside the published issues. This document explains why they are shaped and
+ordered the way they are; it does not repeat their contents.
 
 This breakdown supersedes S3, S4, and S5 in [issue-briefs.md](issue-briefs.md).
 Those briefs assumed no blockers and assumed the described behaviors were
@@ -42,14 +46,14 @@ missing. The issue files categorize them accordingly.
 
 ## Queue
 
-| ID  | Issue                                                                                  | Category    | Type | Blocked By | User Stories |
-| --- | -------------------------------------------------------------------------------------- | ----------- | ---- | ---------- | ------------ |
-| LA  | [Honor or remove the ignored Button disabled prop](issues/la-button-disabled-prop.md)  | bug         | AFK  | None       | Incidental   |
-| L1  | [Award course completion exactly once](issues/l1-award-completion-once.md)             | bug         | AFK  | None       | 7, 12        |
-| L2  | [Resolve chapter selection server-side](issues/l2-chapter-resolution.md)               | bug         | AFK  | L1         | 1, 2, 3      |
-| L3  | [Real enrollment and visible save failures](issues/l3-enrollment-and-save-feedback.md) | bug         | AFK  | L1         | 4, 5, 6, 11  |
-| L4  | [Accessible mobile chapter drawer](issues/l4-accessible-chapter-drawer.md)             | enhancement | AFK  | L2         | 8, 9         |
-| L5  | [Contain long content on narrow viewports](issues/l5-contain-long-content.md)          | enhancement | AFK  | L4         | 10           |
+| ID  | Issue                                                                                        | Category    | Type | Blocked By | User Stories |
+| --- | -------------------------------------------------------------------------------------------- | ----------- | ---- | ---------- | ------------ |
+| LA  | [#1292 Honor or remove the ignored Button disabled prop](issues/la-button-disabled-prop.md)  | bug         | AFK  | None       | Incidental   |
+| L1  | [#1293 Award course completion exactly once](issues/l1-award-completion-once.md)             | bug         | AFK  | None       | 7, 12        |
+| L2  | [#1294 Resolve chapter selection server-side](issues/l2-chapter-resolution.md)               | bug         | AFK  | #1293      | 1, 2, 3      |
+| L3  | [#1295 Real enrollment and visible save failures](issues/l3-enrollment-and-save-feedback.md) | bug         | AFK  | #1293      | 4, 5, 6, 11  |
+| L4  | [#1296 Accessible mobile chapter drawer](issues/l4-accessible-chapter-drawer.md)             | enhancement | AFK  | #1294      | 8, 9         |
+| L5  | [#1297 Contain long content on narrow viewports](issues/l5-contain-long-content.md)          | enhancement | AFK  | #1296      | 10           |
 
 Story 13 (maintainer coverage) is satisfied by the test obligations inside each
 slice rather than by a slice of its own.
