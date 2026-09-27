@@ -8,10 +8,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 type PaymentConfigModule =
   typeof import("../../../../../packages/constants/src/paymentConfig");
+type EnvConfigModule =
+  typeof import("../../../../../packages/constants/src/envConfig");
 
-const importFresh = async (): Promise<PaymentConfigModule> => {
+const importFresh = async (): Promise<
+  PaymentConfigModule & EnvConfigModule
+> => {
   vi.resetModules();
-  return (await import("../../../../../packages/constants/src/paymentConfig")) as PaymentConfigModule;
+  const payment = (await import(
+    "../../../../../packages/constants/src/paymentConfig"
+  )) as PaymentConfigModule;
+  const env = (await import(
+    "../../../../../packages/constants/src/envConfig"
+  )) as EnvConfigModule;
+  return { ...payment, ...env };
 };
 
 describe("paymentConfig", () => {
@@ -36,7 +46,8 @@ describe("paymentConfig", () => {
       vi.stubEnv("NEXT_PUBLIC_CASHFREE_MODE", "production");
       vi.stubEnv("CASHFREE_BASE_URL", "https://sandbox.cashfree.com/pg");
 
-      const { getCashfreeMode } = await importFresh();
+      const { envConfig, getCashfreeMode } = await importFresh();
+      expect(envConfig.CASHFREE_MODE).toBe("production");
       expect(getCashfreeMode()).toBe("production");
     });
 
@@ -132,7 +143,12 @@ describe("paymentConfig", () => {
       vi.stubEnv("CASHFREE_CLIENT_ID", "test-client-id");
       vi.stubEnv("CASHFREE_SECRET_KEY", "test-secret-key");
 
-      const { paymentConfig } = await importFresh();
+      const { envConfig, paymentConfig } = await importFresh();
+      expect(envConfig.CASHFREE_BASE_URL).toBe(
+        "https://sandbox.cashfree.com/pg",
+      );
+      expect(envConfig.CASHFREE_CLIENT_ID).toBe("test-client-id");
+      expect(envConfig.CASHFREE_SECRET_KEY).toBe("test-secret-key");
       expect(paymentConfig.CASHFREE_BASE_URL).toBe(
         "https://sandbox.cashfree.com/pg",
       );

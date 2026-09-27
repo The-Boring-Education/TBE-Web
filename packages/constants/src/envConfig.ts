@@ -24,6 +24,13 @@ const EMAIL_SERVICE_URL = process.env.EMAIL_SERVICE_URL as string;
 const EMAIL_API_KEY = process.env.EMAIL_API_KEY as string;
 const FROM_EMAIL = process.env.FROM_EMAIL as string;
 
+// Cashfree. NEXT_PUBLIC_CASHFREE_MODE must be a direct process.env read so
+// Next.js inlines it into the browser bundle. A typeof process guard does not.
+const CASHFREE_MODE = process.env.NEXT_PUBLIC_CASHFREE_MODE as string;
+const CASHFREE_BASE_URL = process.env.CASHFREE_BASE_URL as string;
+const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID as string;
+const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY as string;
+
 const envConfig = {
   NODE_ENV,
   PLATFORM_URL,
@@ -44,6 +51,10 @@ const envConfig = {
   ONBOARDING_URL,
   QUIZ_APP_URL,
   UNSKILLED_API_URL,
+  CASHFREE_MODE,
+  CASHFREE_BASE_URL,
+  CASHFREE_CLIENT_ID,
+  CASHFREE_SECRET_KEY,
 };
 
 export { envConfig };

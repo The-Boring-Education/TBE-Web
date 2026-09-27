@@ -164,16 +164,7 @@ import { User, APIResponse } from "@tbe/types";
 
 ## 🚀 Deployment
 
-### API Deployment (Google Cloud Run)
-
-```bash
-cd apps/api
-./deploy.sh
-```
-
-### Frontend Deployment (Vercel)
-
-Each app is configured for Vercel deployment with automatic builds on push.
+Each app, including the API, deploys on Vercel with automatic builds on push.
 
 ## 🤖 CI/CD
 
