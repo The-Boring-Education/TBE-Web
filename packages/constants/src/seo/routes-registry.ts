@@ -22,13 +22,7 @@ export type RoutePriority = 1.0 | 0.9 | 0.8 | 0.7 | 0.6 | 0.5;
  * Change frequency options for sitemap
  */
 export type ChangeFrequency =
-  | "always"
-  | "hourly"
-  | "daily"
-  | "weekly"
-  | "monthly"
-  | "yearly"
-  | "never";
+  "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 
 /**
  * SEO Route configuration
@@ -195,13 +189,7 @@ const platformRoutes: SEORouteConfig[] = [
     changefreq: "weekly",
     description: "Skill-based playlists",
   },
-  // Portfolio & Others
-  {
-    path: "/portfolio",
-    priority: 0.7,
-    changefreq: "monthly",
-    description: "Portfolio showcase",
-  },
+  // Others
   {
     path: "/unskilled",
     priority: 0.7,

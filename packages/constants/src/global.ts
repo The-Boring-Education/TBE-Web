@@ -63,11 +63,6 @@ const products: ProductDataProps = {
     slug: toPlatformUrl(routes.contribute),
     description: "Learn and Contribute with Open Source",
   },
-  portfolio: {
-    label: "Portfolio",
-    slug: toPlatformUrl(routes.portfolio),
-    description: "Create Your Personal Portfolio Website",
-  },
   youfocus: {
     label: "YouFocus",
     slug: toPlatformUrl(routes.youfocus),
@@ -467,8 +462,18 @@ const USER_USAGE_OPTIONS: { label: string; value: PlatformUsageType }[] = [
 
 // Mobile lengths and national prefixes: google/libphonenumber resources/PhoneNumberMetadata.xml.
 const COUNTRY_CODES = [
-  { code: "+91", country: "INDIA", mobileNumberLengths: [10], trunkPrefix: "0" },
-  { code: "+1", country: "UNITED STATES", mobileNumberLengths: [10], trunkPrefix: "1" },
+  {
+    code: "+91",
+    country: "INDIA",
+    mobileNumberLengths: [10],
+    trunkPrefix: "0",
+  },
+  {
+    code: "+1",
+    country: "UNITED STATES",
+    mobileNumberLengths: [10],
+    trunkPrefix: "1",
+  },
   {
     code: "+44",
     country: "UNITED KINGDOM",
@@ -499,9 +504,19 @@ const COUNTRY_CODES = [
     mobileNumberLengths: [9],
     trunkPrefix: "0",
   },
-  { code: "+86", country: "CHINA", mobileNumberLengths: [11], trunkPrefix: "0" },
+  {
+    code: "+86",
+    country: "CHINA",
+    mobileNumberLengths: [11],
+    trunkPrefix: "0",
+  },
   { code: "+39", country: "ITALY", mobileNumberLengths: [9, 10] },
-  { code: "+7", country: "RUSSIA", mobileNumberLengths: [10], trunkPrefix: "8" },
+  {
+    code: "+7",
+    country: "RUSSIA",
+    mobileNumberLengths: [10],
+    trunkPrefix: "8",
+  },
   { code: "+34", country: "SPAIN", mobileNumberLengths: [9] },
   {
     code: "+82",

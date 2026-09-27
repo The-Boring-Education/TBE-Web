@@ -532,16 +532,6 @@ const getPlatformSEOMeta = (
         "Explore Sheets, Interview Preparation, The Boring Education, Coding Sheets, Job Preparation, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn",
       ...seoCommonMeta,
     },
-    [`${routes.portfolio}`]: {
-      title: "The Boring Portfolio | The Boring Education",
-      siteName: "Explore Portfolio Templates at The Boring Education",
-      description:
-        "Find and use portfolio templates to showcase your projects and skills at The Boring Education.",
-      url: routes.portfolio,
-      keywords:
-        "Portfolio Templates, Online Learning, The Boring Education, Developer Portfolio, Portfolio Examples, The Boring Education, College Students, Working Professionals, Career Development, Skill Enhancement, GitHub, Instagram, Twitter, LinkedIn",
-      ...seoCommonMeta,
-    },
     // Implement User Shiksha Route
     [`${routes.user.dashboard}`]: {
       title: "Dashboard | The Boring Education",

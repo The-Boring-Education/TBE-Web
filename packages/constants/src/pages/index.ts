@@ -100,12 +100,6 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: products.webinar!.slug,
     },
     {
-      id: "learn-portfolio",
-      name: products.portfolio!.label,
-      description: products.portfolio!.description,
-      href: products.portfolio!.slug,
-    },
-    {
       id: "learn-projects",
       name: products.projects!.label,
       description: products.projects!.description,
@@ -205,16 +199,6 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     href: toPlatformUrl(routes.youfocus),
     active: true,
     ctaText: "Explore YouFocus",
-  },
-  {
-    id: "portfolio",
-    image: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-hero.svg`,
-    imageAltText: products.portfolio!.label,
-    title: products.portfolio!.label,
-    content: products.portfolio!.description,
-    href: products.portfolio!.slug,
-    active: true,
-    ctaText: "Explore Portfolios",
   },
   {
     id: "projects",
