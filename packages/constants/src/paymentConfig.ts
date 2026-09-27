@@ -22,6 +22,26 @@ const getCashfreeMode = (): CashfreeMode => {
 const isCashfreeSandbox = (): boolean => getCashfreeMode() === "sandbox";
 
 /**
+ * SDK mode for a hosted checkout link returned by create-order.
+ * `api.cashfree.com` is production. `sandbox.cashfree.com` is sandbox.
+ * Returns undefined when the link is missing or not a Cashfree host, so the
+ * caller can fall back to `getCashfreeMode()`.
+ */
+const cashfreeModeFromPaymentLink = (
+  paymentLink: string | undefined,
+): CashfreeMode | undefined => {
+  if (!paymentLink) return undefined;
+  let host = "";
+  try {
+    host = new URL(paymentLink).hostname.toLowerCase();
+  } catch {
+    return undefined;
+  }
+  if (!host.endsWith("cashfree.com")) return undefined;
+  return host.includes("sandbox") ? "sandbox" : "production";
+};
+
+/**
  * Cashfree PG REST base URL normalised to include `/pg`.
  * e.g. `https://sandbox.cashfree.com` → `https://sandbox.cashfree.com/pg`
  *
@@ -43,6 +63,7 @@ const paymentConfig = {
 };
 
 export {
+  cashfreeModeFromPaymentLink,
   getCashfreeMode,
   getCashfreePgBaseUrl,
   isCashfreeSandbox,
