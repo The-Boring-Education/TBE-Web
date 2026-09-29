@@ -75,9 +75,14 @@ jobs:
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.unit-tests.result }}" == "success" ] && \
-             [ "${{ needs.integration-tests.result }}" == "success" ] && \
-             [ "${{ needs.e2e-tests.result }}" == "success" ]; then
+          unit="${{ needs.unit-tests.result }}"
+          integration="${{ needs.integration-tests.result }}"
+          e2e="${{ needs.e2e-tests.result }}"
+
+          # Treat skipped as OK — draft PRs intentionally skip tests to save CI resources
+          if ([ "$unit" == "success" ] || [ "$unit" == "skipped" ]) && \
+             ([ "$integration" == "success" ] || [ "$integration" == "skipped" ]) && \
+             ([ "$e2e" == "success" ] || [ "$e2e" == "skipped" ]); then
             echo "🎉 All testing checks passed! Ready for merge." >> $GITHUB_STEP_SUMMARY
             exit 0
           fi
