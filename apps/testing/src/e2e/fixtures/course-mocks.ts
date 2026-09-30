@@ -154,6 +154,15 @@ export async function mockCoursePageSSR(
     pageProps: Record<string, unknown>;
     __N_SSP: boolean;
   },
+  /**
+   * Optional payload used only for the `/learn` route. Lets a spec reach the
+   * learning page (which is only linked from an enrolled overview) while the
+   * learning page itself still renders the unenrolled state.
+   */
+  learnPageData?: {
+    pageProps: Record<string, unknown>;
+    __N_SSP: boolean;
+  },
 ) {
   await page.route(
     (url) => {
@@ -168,7 +177,12 @@ export async function mockCoursePageSSR(
       route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(courseData),
+        body: JSON.stringify(
+          learnPageData &&
+            new URL(route.request().url()).pathname.endsWith("/learn.json")
+            ? learnPageData
+            : courseData,
+        ),
       }),
   );
 }
