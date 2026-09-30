@@ -20,7 +20,11 @@ import type {
   UpdateDSAQuestionRequestPayloadProps,
   UpdateInterviewSheetRequestPayloadProps,
 } from "@/lib/interfaces";
-import { generateYouTubeSearchLink } from "@/lib/utils";
+import {
+  generateYouTubeSearchLink,
+  isPaymentStatusQueryFailure,
+  isUserPurchasedFromPaymentCheck,
+} from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 
 import {
@@ -811,8 +815,10 @@ const getDSATopicSummariesFromDB = async (
         "lifetime",
         productType,
       );
-      if (paymentResult.error) return { error: paymentResult.error };
-      isPaidUser = paymentResult.data?.purchased === true;
+      if (isPaymentStatusQueryFailure(paymentResult)) {
+        return { error: paymentResult.error };
+      }
+      isPaidUser = isUserPurchasedFromPaymentCheck(paymentResult);
 
       const progressResult = await getDsaYatraProgressFromDB(userId);
       if (progressResult.error) return { error: progressResult.error };

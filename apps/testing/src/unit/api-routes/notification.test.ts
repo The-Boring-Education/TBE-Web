@@ -53,24 +53,42 @@ describe("Notification API — /api/v1/notification", () => {
   });
 
   describe("Admin auth gate", () => {
-    it("rejects unauthenticated requests (all methods)", async () => {
+    it("allows GET without admin access", async () => {
+      mockAdminMiddleware.mockResolvedValue(false);
+      mockGetAllNotificationsFromDB.mockResolvedValue({
+        data: [{ _id: "1", title: "Welcome" }],
+        error: null,
+      });
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "GET",
+      });
+
+      await handler(req, res);
+
+      expect(mockAdminMiddleware).not.toHaveBeenCalled();
+      expect(res._getStatusCode()).toBe(200);
+    });
+
+    it("rejects mutating requests when admin check fails", async () => {
       mockAdminMiddleware.mockImplementation(
         async (_req: NextApiRequest, res: NextApiResponse) => {
-          res.statusCode = 401;
+          res.statusCode = 403;
           (res as any).json({
             status: false,
-            message: "Unauthorized. Admin access required.",
+            message: "Admin access required",
           });
           return false;
         },
       );
 
-      for (const method of ["GET", "POST", "PATCH", "DELETE"] as const) {
+      for (const method of ["POST", "PATCH", "DELETE"] as const) {
         const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
           method,
+          body: method === "DELETE" ? { notificationId: "n1" } : { title: "Test" },
         });
         await handler(req, res);
-        expect(res._getStatusCode()).toBe(401);
+        expect(res._getStatusCode()).toBe(403);
       }
     });
   });

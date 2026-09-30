@@ -306,6 +306,16 @@ describe("roadmap accessible primary-topic summaries regression", () => {
     },
   );
 
+  it("serves freemium topic summaries when payment is PENDING (free tier)", async () => {
+    mocks.payment.mockResolvedValue({
+      data: { purchased: false },
+    });
+    const result = await getDSATopicSummariesFromDB("user");
+    expect(result.error).toBeUndefined();
+    expect(result.data?.topics?.length).toBeGreaterThan(0);
+    expect(mocks.aggregate).toHaveBeenCalled();
+  });
+
   it("returns database failures without throwing", async () => {
     mocks.aggregate.mockRejectedValue(new Error("Unavailable"));
     expect(await getDSATopicSummariesFromDB()).toMatchObject({

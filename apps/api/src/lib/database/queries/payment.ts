@@ -91,6 +91,11 @@ const updatePaymentStatusToDB = async ({
   }
 };
 
+/**
+ * Returns `{ data: { purchased: true } }` when paid (subscription or SUCCESS payment).
+ * Unpaid users — no record, PENDING, FAILED — get `{ data: { purchased: false } }` only.
+ * Use `isPaymentStatusQueryFailure` from `@/lib/utils` before treating `error` as fatal.
+ */
 const checkPaymentStatusFromDB = async (
   userId: string,
   productId: string,
@@ -134,10 +139,7 @@ const checkPaymentStatusFromDB = async (
     });
 
     if (!payment) {
-      return {
-        data: { purchased: false },
-        error: "No payment record found",
-      };
+      return { data: { purchased: false } };
     }
 
     if (payment.status === "SUCCESS") {
@@ -147,12 +149,10 @@ const checkPaymentStatusFromDB = async (
           accessType: "DIRECT_PAYMENT",
         },
       };
-    } else {
-      return {
-        data: { purchased: false },
-        error: "Payment not completed",
-      };
     }
+
+    // PENDING / FAILED / etc. — free tier until payment succeeds
+    return { data: { purchased: false } };
   } catch (error) {
     logger.error("DB: checkPaymentStatusFromDB failed", {
       error: error instanceof Error ? error.message : String(error),

@@ -6,15 +6,25 @@ const mockPaymentFindOne = vi.fn();
 const mockPaymentFindOneAndUpdate = vi.fn();
 const mockSubscriptionFindOne = vi.fn();
 
-vi.mock("../../../../api/src/lib/database/models", () => ({
-  Payment: vi.fn().mockImplementation((data) => ({
+vi.mock("../../../../api/src/lib/database/models", () => {
+  const PaymentModel = vi.fn().mockImplementation((data) => ({
     ...data,
     save: mockPaymentSave,
-  })),
-  Subscription: {
-    findOne: (...args: unknown[]) => mockSubscriptionFindOne(...args),
-  },
-}));
+  })) as ReturnType<typeof vi.fn> & {
+    findOne: typeof mockPaymentFindOne;
+    findOneAndUpdate: typeof mockPaymentFindOneAndUpdate;
+  };
+  PaymentModel.findOne = (...args: unknown[]) => mockPaymentFindOne(...args);
+  PaymentModel.findOneAndUpdate = (...args: unknown[]) =>
+    mockPaymentFindOneAndUpdate(...args);
+
+  return {
+    Payment: PaymentModel,
+    Subscription: {
+      findOne: (...args: unknown[]) => mockSubscriptionFindOne(...args),
+    },
+  };
+});
 
 // Set the mock for Payment.findOne and Payment.findOneAndUpdate after import
 vi.mock("../../../../api/src/lib/utils/logger", () => ({
@@ -117,68 +127,7 @@ const updatePaymentStatusToDB = async ({
   }
 };
 
-const checkPaymentStatusFromDB = async (
-  userId: string,
-  productId: string,
-  productType?: string,
-) => {
-  try {
-    if (
-      productType === "PREPYATRA" ||
-      productType === "DSA_YATRA" ||
-      productType === "ONCAMPUS"
-    ) {
-      const activeSubscription = await Subscription.findOne({
-        userId,
-        isActive: true,
-        $or: [
-          { productType },
-          ...(productType === "PREPYATRA"
-            ? [{ productType: { $exists: false } }]
-            : []),
-        ],
-      });
-
-      if (activeSubscription) {
-        return {
-          data: {
-            purchased: true,
-            accessType: "SUBSCRIPTION",
-          },
-        };
-      }
-    }
-
-    const payment = await Payment.findOne({
-      user: userId,
-      productId,
-      ...(productType && { productType }),
-    });
-
-    if (!payment) {
-      return {
-        data: { purchased: false },
-        error: "No payment record found",
-      };
-    }
-
-    if (payment.status === "SUCCESS") {
-      return {
-        data: {
-          purchased: true,
-          accessType: "DIRECT_PAYMENT",
-        },
-      };
-    } else {
-      return {
-        data: { purchased: false },
-        error: "Payment not completed",
-      };
-    }
-  } catch (error: any) {
-    return { error: "Failed to check payment status", details: error };
-  }
-};
+import { checkPaymentStatusFromDB } from "../../../../api/src/lib/database/queries/payment";
 
 describe("Payment Database Queries", () => {
   beforeEach(() => {
@@ -470,7 +419,7 @@ describe("Payment Database Queries", () => {
         );
 
         expect(result.data?.purchased).toBe(false);
-        expect(result.error).toBe("Payment not completed");
+        expect(result.error).toBeUndefined();
       });
 
       it("should return purchased=false for FAILED payment", async () => {
@@ -498,7 +447,24 @@ describe("Payment Database Queries", () => {
         );
 
         expect(result.data?.purchased).toBe(false);
-        expect(result.error).toBe("No payment record found");
+        expect(result.error).toBeUndefined();
+      });
+
+      it("never sets error for unpaid states (free-tier contract)", async () => {
+        mockSubscriptionFindOne.mockResolvedValue(null);
+        mockPaymentFindOne.mockResolvedValue({
+          _id: "payment_pending",
+          status: "PENDING",
+        });
+
+        const result = await checkPaymentStatusFromDB(
+          "user_123",
+          "lifetime",
+          "DSA_YATRA",
+        );
+
+        expect(result.data?.purchased).toBe(false);
+        expect(result.error).toBeUndefined();
       });
     });
 
