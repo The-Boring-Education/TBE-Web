@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { Button } from "@tbe/components";
+import Button from "@tbe/components/common/Buttons/Button";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 // Mock framer-motion to avoid animation issues in tests
 vi.mock("framer-motion", () => ({
@@ -39,6 +39,126 @@ describe("Button Component", () => {
       fireEvent.click(button);
 
       expect(handleClick).toHaveBeenCalled();
+    });
+  });
+
+  describe("Disabled State", () => {
+    it("should be interactive by default", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" onClick={handleClick}>
+          Enabled
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).not.toBeDisabled();
+
+      fireEvent.click(button);
+      expect(handleClick).toHaveBeenCalled();
+    });
+
+    it("should disable the rendered button when disabled is true", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" disabled onClick={handleClick}>
+          Disabled
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).toBeDisabled();
+      expect(button).toHaveAttribute("aria-disabled", "true");
+
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("should let disabled take precedence over active", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" active disabled onClick={handleClick}>
+          Active but disabled
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).toBeDisabled();
+
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("should stay enabled when disabled is explicitly false", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" disabled={false} onClick={handleClick}>
+          Not disabled
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).not.toBeDisabled();
+
+      fireEvent.click(button);
+      expect(handleClick).toHaveBeenCalled();
+    });
+
+    it("should disable the button when active is false", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" active={false} onClick={handleClick}>
+          Inactive
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).toBeDisabled();
+
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("should disable the button while loading", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" isLoading onClick={handleClick}>
+          Loading
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).toBeDisabled();
+
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("should remain disabled when disabled and isLoading are combined", () => {
+      const handleClick = vi.fn();
+      render(
+        <Button variant="PRIMARY" disabled isLoading onClick={handleClick}>
+          Disabled and loading
+        </Button>,
+      );
+
+      const button = screen.getByRole("button");
+      expect(button).toBeDisabled();
+
+      fireEvent.click(button);
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("should apply the inactive styling when disabled", () => {
+      const { container } = render(
+        <Button variant="PRIMARY" disabled>
+          Disabled
+        </Button>,
+      );
+
+      const button = container.querySelector("button");
+      expect(button?.className).toContain("cursor-not-allowed");
+      expect(button?.className).not.toContain("bg-primary");
     });
   });
 
