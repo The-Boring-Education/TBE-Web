@@ -10,6 +10,7 @@ import {
   SEO,
   SheetHeroContainer,
   Text,
+  useTrackEnrollment,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useGamificationFeedback, useGamifiedAction } from '@tbe/gamification';
@@ -19,7 +20,12 @@ import type {
   CoursePageProps,
 } from '@tbe/interface';
 import { useMutation } from '@tbe/query';
-import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
+import {
+  captureException,
+  formatDate,
+  getCoursePageProps,
+  sendRequest,
+} from '@tbe/utils';
 import { List, X } from 'lucide-react';
 import { useRouter } from 'next/router';
 import {
@@ -66,7 +72,9 @@ const CourseLearnPage = ({
       ?.isCompleted,
   );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [pendingChapterIds, setPendingChapterIds] = useState<string[]>([]);
+  const [failedChapterIds, setFailedChapterIds] = useState<string[]>([]);
+  const [enrollmentError, setEnrollmentError] = useState(false);
   const [isGeneratingCertificate, setIsGeneratingCertificate] = useState(false);
   const [isCourseCompleted, setIsCourseCompleted] = useState(
     initialCourse?.isCompleted ?? false,
@@ -99,6 +107,15 @@ const CourseLearnPage = ({
 
   const currentChapter = chapters.find(
     (c) => c._id.toString() === currentChapterIdState,
+  );
+
+  // Pending and failed state belong to the chapter being saved, so an in-flight
+  // save on one chapter never disables the control on another.
+  const isCurrentChapterPending = pendingChapterIds.includes(
+    currentChapterIdState,
+  );
+  const hasCurrentChapterFailed = failedChapterIds.includes(
+    currentChapterIdState,
   );
 
   // Sync router query changes
@@ -170,7 +187,13 @@ const CourseLearnPage = ({
           return message !== 'Certificate already exists';
         })
         .catch((error) => {
-          console.error('Error generating certificate:', error);
+          captureException(
+            error instanceof Error ? error : new Error(String(error)),
+            {
+              tags: { section: 'shiksha', flow: 'certificate_generation' },
+              extra: { courseId: course._id, userId: user?.id },
+            },
+          );
           return false;
         })
         .finally(() => {
@@ -272,27 +295,43 @@ const CourseLearnPage = ({
     setShowChapterFeedback(false);
   };
 
-  const toggleCompletion = async () => {
-    if (!isEnrolled) {
-      return;
-    }
+  const toggleCompletion = useCallback(
+    async (chapterId: string) => {
+      if (!isEnrolled || !chapterId) return;
 
-    setIsLoading(true);
-    try {
-      const newCompletionStatus = !isChapterCompleted;
+      // Capture the chapter identity and the target state at click time so a
+      // response can never be applied to whichever chapter is selected later.
+      const targetChapter = chapters.find(
+        (c) => c._id.toString() === chapterId,
+      );
+      if (!targetChapter) return;
+      const newCompletionStatus = !targetChapter.isCompleted;
 
-      const response = await makeRequest({
-        method: 'PATCH',
-        url: routes.api.markCourseChapterAsCompleted,
-        body: {
-          userId: user?.id,
-          courseId: course._id,
-          chapterId: currentChapterIdState,
-          isCompleted: newCompletionStatus,
-        },
-      });
+      setPendingChapterIds((prev) =>
+        prev.includes(chapterId) ? prev : [...prev, chapterId],
+      );
+      setFailedChapterIds((prev) => prev.filter((id) => id !== chapterId));
 
-      if (response?.status) {
+      try {
+        const response = await makeRequest({
+          method: 'PATCH',
+          url: routes.api.markCourseChapterAsCompleted,
+          body: {
+            userId: user?.id,
+            courseId: course._id,
+            chapterId,
+            isCompleted: newCompletionStatus,
+          },
+        });
+
+        // `sendRequest` resolves with the error payload instead of throwing,
+        // so the response envelope is the only reliable success signal.
+        if (!response?.status) {
+          throw new Error(
+            `Chapter completion save rejected for chapter ${chapterId}`,
+          );
+        }
+
         if (newCompletionStatus) {
           celebrate(response?.gamification, {
             message: 'Chapter completed! Keep learning!',
@@ -304,26 +343,67 @@ const CourseLearnPage = ({
             value: {
               userId: user?.id,
               courseId: course._id,
-              chapterId: currentChapterIdState,
+              chapterId,
             },
           });
         }
 
         setChapters((prevChapters) =>
           prevChapters.map((ch) =>
-            ch._id.toString() === currentChapterIdState
+            ch._id.toString() === chapterId
               ? { ...ch, isCompleted: newCompletionStatus }
               : ch,
           ),
         );
-        setIsChapterCompleted(newCompletionStatus);
+      } catch (error) {
+        // Never surface raw server text to the learner — log it instead.
+        captureException(
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            tags: { section: 'shiksha', flow: 'chapter_completion' },
+            extra: {
+              courseId: course._id,
+              chapterId,
+              userId: user?.id,
+              isCompleted: newCompletionStatus,
+            },
+          },
+        );
+        setFailedChapterIds((prev) =>
+          prev.includes(chapterId) ? prev : [...prev, chapterId],
+        );
+      } finally {
+        setPendingChapterIds((prev) => prev.filter((id) => id !== chapterId));
       }
-    } catch (error) {
-      console.error('Error toggling chapter completion:', error);
-    } finally {
-      setIsLoading(false);
+    },
+    [
+      celebrate,
+      chapters,
+      course._id,
+      isEnrolled,
+      makeRequest,
+      trackEvent,
+      user?.id,
+    ],
+  );
+
+  const { enroll, isEnrolling } = useTrackEnrollment({
+    id: course?._id ?? '',
+    name: course?.name ?? '',
+    trackType: 'course',
+  });
+
+  const handleInContentEnroll = useCallback(async () => {
+    setEnrollmentError(false);
+
+    const didEnroll = await enroll();
+    if (!didEnroll) {
+      setEnrollmentError(true);
+      return;
     }
-  };
+
+    setIsEnrolled(true);
+  }, [enroll]);
 
   // Strip leading # heading from markdown if present to prevent double duplicate title
   const displayContent = useMemo(() => {
@@ -568,11 +648,22 @@ const CourseLearnPage = ({
                         and track your chapter completions.
                       </p>
                       <Button
-                        text='Enroll in Course'
+                        text={isEnrolling ? 'Enrolling...' : 'Enroll in Course'}
                         variant='PRIMARY'
                         className='w-fit px-6 py-2.5 rounded-lg font-semibold shadow-xs mt-2'
-                        onClick={() => setIsEnrolled(true)}
+                        isLoading={isEnrolling}
+                        onClick={handleInContentEnroll}
                       />
+                      {enrollmentError && (
+                        <div
+                          role='alert'
+                          aria-live='assertive'
+                          className='rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs sm:text-sm text-destructive'
+                        >
+                          We couldn&apos;t enroll you in this course. Please
+                          check your connection and try again.
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -601,10 +692,10 @@ const CourseLearnPage = ({
                     <div className='mt-5 pt-4 border-t border-border/80 w-full flex flex-wrap items-center gap-3'>
                       <Button
                         className='w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white bg-primary hover:bg-primary/90 shadow-xs cursor-pointer'
-                        isLoading={isLoading}
-                        disabled={!isEnrolled}
+                        isLoading={isCurrentChapterPending}
+                        active={isEnrolled}
                         text={
-                          isLoading
+                          isCurrentChapterPending
                             ? 'Marking...'
                             : !isEnrolled
                               ? 'Enroll to Mark Complete'
@@ -617,13 +708,35 @@ const CourseLearnPage = ({
                             ? 'SUCCESS'
                             : !isEnrolled
                               ? 'SECONDARY'
-                              : isLoading
+                              : isCurrentChapterPending
                                 ? 'SECONDARY'
                                 : 'PRIMARY'
                         }
-                        onClick={toggleCompletion}
+                        onClick={() => toggleCompletion(currentChapterIdState)}
                       />
                     </div>
+
+                    {hasCurrentChapterFailed && (
+                      <div
+                        role='alert'
+                        aria-live='assertive'
+                        className='w-full rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 flex flex-wrap items-center gap-3'
+                      >
+                        <p className='text-xs sm:text-sm text-destructive flex-1 min-w-[220px]'>
+                          We couldn&apos;t save your progress for this chapter.
+                          Your last saved progress is unchanged.
+                        </p>
+                        <Button
+                          className='w-auto py-2 px-4 rounded-lg font-semibold text-xs sm:text-sm'
+                          variant='OUTLINE'
+                          text='Retry'
+                          isLoading={isCurrentChapterPending}
+                          onClick={() =>
+                            toggleCompletion(currentChapterIdState)
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </main>
