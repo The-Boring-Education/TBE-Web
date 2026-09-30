@@ -509,9 +509,12 @@ export interface LearningChapterListProps {
   chapters: ExtendedCourseChapterModel[];
   currentChapterId: string;
   isLocked?: boolean;
-  href: string;
+  /** Shared destination for every chapter, or a per-chapter destination resolver. */
+  href:
+    string | ((chapter: ExtendedCourseChapterModel, index: number) => string);
   onChapterSelect: (content: string, chapterId: string) => void;
   includeIndex?: boolean;
+  className?: string;
 }
 
 export interface CertificateBannerProps {
