@@ -126,7 +126,6 @@ describe("Payment Check Status API Route", () => {
   it("should return purchased=false when payment not completed", async () => {
     mockCheckPaymentStatusFromDB.mockResolvedValue({
       data: { purchased: false },
-      error: "Payment not completed",
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -145,7 +144,6 @@ describe("Payment Check Status API Route", () => {
   it("should return purchased=false when no payment record exists", async () => {
     mockCheckPaymentStatusFromDB.mockResolvedValue({
       data: { purchased: false },
-      error: "No payment record found",
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({

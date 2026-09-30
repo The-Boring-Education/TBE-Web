@@ -79,6 +79,7 @@ describe("Certificate Index API Route", () => {
     expect(data.data._id).toBe("cert-1");
     expect(data.message).toBe("Certificate already exists");
     expect(mockAddACertificateToDB).not.toHaveBeenCalled();
+    expect(mockUpdateUserPointsInDB).not.toHaveBeenCalled();
   });
 
   it("POST - add new non-SHIKSHA certificate returns 200 without points update", async () => {
@@ -132,6 +133,7 @@ describe("Certificate Index API Route", () => {
       "COMPLETE_COURSE_CERTIFICATE",
       { itemId: "p1" },
     );
+    expect(mockUpdateUserPointsInDB).toHaveBeenCalledTimes(1);
   });
 
   it("POST - addACertificateToDB fails returns 400", async () => {
