@@ -308,7 +308,6 @@ const getNavbarVariantConfig = (
         "learn-interview-prep",
         "learn-youfocus",
         "learn-webinar",
-        "learn-portfolio",
         "learn-projects",
       ],
       tools: [

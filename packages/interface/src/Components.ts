@@ -168,26 +168,6 @@ export interface PrimaryCardProps {
   theme?: "light" | "dark";
 }
 
-export interface PortfolioCardProps {
-  index: number;
-  imageUrl: string;
-  title: string;
-  description: string;
-}
-
-export interface PortfolioTemplateProps {
-  id: number;
-  imageUrl: string;
-  title: string;
-  description: string;
-  repo: string;
-  developer: {
-    name: string;
-    link: string;
-  };
-  previewLink: string;
-}
-
 export interface FlexContainerProps {
   children?: ReactNode;
   itemCenter?: boolean;

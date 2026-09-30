@@ -19,7 +19,6 @@ const routes = {
   roadmaps: "/roadmaps",
   workshops: "/workshops",
   webinar: "/webinar",
-  portfolio: "/portfolio",
   // Projects
   projects: "/projects",
   projectsExplore: "/projects/explore",
@@ -104,7 +103,6 @@ const routes = {
   internals: {
     landing: {
       products: "products",
-      portfolio: "portfolio",
       webinar: "webinar",
       upload: "upload",
       explore: "explore",
