@@ -185,8 +185,7 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
           text="← Prev"
           onClick={onPrev}
           disabled={index === 0}
-          aria-disabled={index === 0}
-          className={`px-5 py-1.5 text-xs border-gray-700 bg-[#111] hover:bg-white hover:text-black transition-colors ${index === 0 ? "opacity-50 cursor-not-allowed hover:bg-[#111] hover:text-white" : ""}`}
+          className="px-5 py-1.5 text-xs border-gray-700 bg-[#111] hover:bg-white hover:text-black transition-colors"
         />
         <Button
           variant="PRIMARY"
@@ -194,8 +193,7 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
           text={index === totalQuestions - 1 ? "Finish" : "Next →"}
           onClick={onNext}
           disabled={index === totalQuestions - 1}
-          aria-disabled={index === totalQuestions - 1}
-          className={`px-5 py-1.5 text-xs ${index === totalQuestions - 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+          className="px-5 py-1.5 text-xs"
         />
       </FlexContainer>
     </div>
