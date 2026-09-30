@@ -22,7 +22,14 @@ import { useMutation } from '@tbe/query';
 import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
 import { List, X } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FaLock, FaTrophy } from 'react-icons/fa';
 
 import { InterviewSheetMDXRenderer } from '@/components/InterviewSheetMDXRenderer';
@@ -71,6 +78,13 @@ const CourseLearnPage = ({
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
   const [showCourseFeedback, setShowCourseFeedback] = useState(false);
   const contentSectionRef = useRef<HTMLDivElement>(null);
+  const courseCompletionFeedbackShown = useRef(
+    initialCourse?.isCompleted ?? false,
+  );
+  const courseCompletionCelebrationShown = useRef(
+    initialCourse?.isCompleted ?? false,
+  );
+  const certificateRequest = useRef<Promise<boolean> | null>(null);
 
   const { user } = useUser();
   const isLocked = !isEnrolled;
@@ -101,63 +115,80 @@ const CourseLearnPage = ({
   }, [router.query.chapterId, chapters]);
 
   // Check if all chapters are completed
-  const checkCourseCompletion = () => {
+  const checkCourseCompletion = useCallback(() => {
     const allChaptersCompleted =
       chapters.length > 0 && chapters.every((chapter) => chapter.isCompleted);
     if (allChaptersCompleted && !isCourseCompleted) {
       setIsCourseCompleted(true);
     }
-  };
+  }, [chapters, isCourseCompleted]);
 
   const { mutateAsync: makeRequest } = useMutation({
     mutationFn: (params: Parameters<typeof sendRequest>[0]) =>
       sendRequest(params),
   });
   const { trackEvent } = useAnalytics();
-  const gamifiedAction = useGamifiedAction();
+  const { triggerGamifiedAction } = useGamifiedAction();
   const { celebrate } = useGamificationFeedback();
 
   // Generate certificate if needed
-  const generateCertificateIfNeeded = async () => {
-    const allChaptersCompleted =
-      chapters.length > 0 && chapters.every((chapter) => chapter.isCompleted);
-    if (
-      allChaptersCompleted &&
-      !certificateId &&
-      user?.id &&
-      !isGeneratingCertificate
-    ) {
+  const generateCertificateIfNeeded =
+    useCallback(async (): Promise<boolean> => {
+      const allChaptersCompleted =
+        chapters.length > 0 && chapters.every((chapter) => chapter.isCompleted);
+      if (!allChaptersCompleted || certificateId || !user?.id) {
+        return false;
+      }
+
+      if (certificateRequest.current) return certificateRequest.current;
+
       setIsGeneratingCertificate(true);
-      try {
-        const { status, data } = await makeRequest({
-          method: 'POST',
-          url: routes.api.certificate,
-          body: {
-            type: 'SHIKSHA',
-            userId: user.id,
-            userName: user.name,
-            programId: course._id,
-            programName: course.name,
-            date: formatDate({
-              dateFormat: {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              },
-            }).date,
-          } as AddCertificateRequestPayloadProps,
+      let certificateWasReturned = false;
+      const request = makeRequest({
+        method: 'POST',
+        url: routes.api.certificate,
+        body: {
+          type: 'SHIKSHA',
+          userId: user.id,
+          userName: user.name,
+          programId: course._id,
+          programName: course.name,
+          date: formatDate({
+            dateFormat: {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            },
+          }).date,
+        } as AddCertificateRequestPayloadProps,
+      })
+        .then(({ status, data, message }) => {
+          if (!status || !data?._id) return false;
+
+          setCertificateId(data._id);
+          certificateWasReturned = true;
+          return message !== 'Certificate already exists';
+        })
+        .catch((error) => {
+          console.error('Error generating certificate:', error);
+          return false;
+        })
+        .finally(() => {
+          setIsGeneratingCertificate(false);
+          if (!certificateWasReturned) certificateRequest.current = null;
         });
 
-        if (status && data?._id) {
-          setCertificateId(data._id);
-        }
-      } catch (error) {
-        console.error('Error generating certificate:', error);
-      } finally {
-        setIsGeneratingCertificate(false);
-      }
-    }
-  };
+      certificateRequest.current = request;
+      return request;
+    }, [
+      chapters,
+      certificateId,
+      course._id,
+      course.name,
+      makeRequest,
+      user?.id,
+      user?.name,
+    ]);
 
   useEffect(() => {
     const targetChapter = chapters.find(
@@ -170,31 +201,53 @@ const CourseLearnPage = ({
     }
 
     checkCourseCompletion();
-    generateCertificateIfNeeded();
 
     const allCompleted =
       chapters.length > 0 && chapters.every((c) => c.isCompleted);
 
-    if (allCompleted && !showChapterFeedback) {
-      gamifiedAction.triggerGamifiedAction({
-        gamificationAction: 'COMPLETE_COURSE_CERTIFICATE',
-        analytics: {
-          action: 'CERTIFICATE_GENERATED',
-          category: 'Achievement',
-          label: 'Certificate Generated',
-        },
-        celebrationType: 'achievement',
-        customMessage: 'Congratulations! Course completed!',
-        metadata: {
-          courseId: course._id,
-          courseName: course.name,
-          totalChapters: chapters.length,
-        },
-      });
-    }
+    if (allCompleted) {
+      if (!courseCompletionFeedbackShown.current) {
+        courseCompletionFeedbackShown.current = true;
+        setShowChapterFeedback(true);
+      }
 
-    setShowChapterFeedback(allCompleted);
-  }, [currentChapterIdState, chapters]);
+      void generateCertificateIfNeeded().then((certificateWasCreated) => {
+        if (
+          !certificateWasCreated ||
+          courseCompletionCelebrationShown.current
+        ) {
+          return;
+        }
+
+        courseCompletionCelebrationShown.current = true;
+        void triggerGamifiedAction({
+          gamificationAction: 'COMPLETE_COURSE_CERTIFICATE',
+          analytics: {
+            action: 'CERTIFICATE_GENERATED',
+            category: 'Achievement',
+            label: 'Certificate Generated',
+          },
+          celebrationType: 'achievement',
+          customMessage: 'Congratulations! Course completed!',
+          metadata: {
+            courseId: course._id,
+            courseName: course.name,
+            totalChapters: chapters.length,
+          },
+        });
+      });
+    } else {
+      setShowChapterFeedback(false);
+    }
+  }, [
+    checkCourseCompletion,
+    chapters,
+    course._id,
+    course.name,
+    currentChapterIdState,
+    generateCertificateIfNeeded,
+    triggerGamifiedAction,
+  ]);
 
   const handleChapterClick = (content: string, chapterId: string) => {
     if (!isLocked) {
