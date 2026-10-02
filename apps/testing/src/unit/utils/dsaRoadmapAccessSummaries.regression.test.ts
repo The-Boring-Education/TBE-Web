@@ -27,6 +27,10 @@ vi.mock("@/lib/database/queries/gamification", () => ({
 }));
 vi.mock("@/lib/utils", () => ({
   generateYouTubeSearchLink: vi.fn(),
+  isPaymentStatusQueryFailure: (result: any) =>
+    Boolean(result?.error) && result?.data == null,
+  isUserPurchasedFromPaymentCheck: (result: any) =>
+    result?.data?.purchased === true,
 }));
 vi.mock("@/lib/utils/logger", () => ({
   logger: { error: vi.fn() },
