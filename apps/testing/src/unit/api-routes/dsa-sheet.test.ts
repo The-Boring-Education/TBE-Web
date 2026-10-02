@@ -24,6 +24,7 @@ vi.mock("../../../../api/src/lib/database", () => ({
 
 vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (data: any) => data,
+  isUserPurchasedFromPaymentCheck: (res: any) => res?.data?.purchased === true,
 }));
 
 vi.mock("../../../../api/src/middleware/api", () => ({

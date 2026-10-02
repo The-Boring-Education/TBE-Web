@@ -2,11 +2,31 @@ import { AUTH_CONFIG } from "./config";
 
 // ── Client-side cookie operations ──
 
+/**
+ * Returns domain and security cookie attributes based on current hostname.
+ * For production TBE hosts (*.theboringeducation.com), scopes cookies to the
+ * shared root domain (.theboringeducation.com) and enforces Secure.
+ * For localhost / preview environments, keeps cookies host-only with no domain.
+ */
+export const getCookieDomainAttributes = (): string => {
+  if (typeof window === "undefined") return "";
+  const hostname = window.location.hostname;
+  if (
+    hostname === "theboringeducation.com" ||
+    hostname.endsWith(".theboringeducation.com")
+  ) {
+    return "; domain=.theboringeducation.com; Secure";
+  }
+  return "";
+};
+
 export const setTokens = (accessToken: string, refreshToken: string): void => {
   if (typeof document === "undefined") return;
 
-  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${accessToken}; path=/; max-age=${AUTH_CONFIG.ACCESS_TOKEN_MAX_AGE}; SameSite=Lax`;
-  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${refreshToken}; path=/; max-age=${AUTH_CONFIG.REFRESH_TOKEN_MAX_AGE}; SameSite=Lax`;
+  const domainAttrs = getCookieDomainAttributes();
+
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${accessToken}; path=/; max-age=${AUTH_CONFIG.ACCESS_TOKEN_MAX_AGE}; SameSite=Lax${domainAttrs}`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${refreshToken}; path=/; max-age=${AUTH_CONFIG.REFRESH_TOKEN_MAX_AGE}; SameSite=Lax${domainAttrs}`;
 };
 
 export const getAccessToken = (): string | null => {
@@ -19,8 +39,13 @@ export const getRefreshToken = (): string | null => {
 
 export const clearTokens = (): void => {
   if (typeof document === "undefined") return;
-  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
-  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+  const domainAttrs = getCookieDomainAttributes();
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0${domainAttrs}`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0${domainAttrs}`;
+  if (domainAttrs) {
+    document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+    document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+  }
 };
 
 // ── JWT payload decoding (client-side only, no signature verification) ──
@@ -75,8 +100,8 @@ export const getRefreshTokenFromCookies = (
 
 // ── Internal ──
 
-function getCookie(name: string): string | null {
+const getCookie = (name: string): string | null => {
   if (typeof document === "undefined") return null;
   const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]+)`));
   return match?.[1] ?? null;
-}
+};

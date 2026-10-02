@@ -11,6 +11,7 @@ export {
   clearTokens,
   decodeToken,
   getAccessToken,
+  getCookieDomainAttributes,
   getRefreshToken,
   getRefreshTokenFromCookies,
   getTokenFromCookies,
