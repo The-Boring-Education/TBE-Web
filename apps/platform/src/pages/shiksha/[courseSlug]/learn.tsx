@@ -506,7 +506,7 @@ const CourseLearnPage = ({
               </aside>
 
               {/* Main Content Viewer */}
-              <main className='flex-1 w-full bg-transparent lg:bg-card border-none lg:border lg:border-border/70 rounded-none lg:rounded-2xl p-0 sm:p-4 lg:p-10 shadow-none lg:shadow-xs min-h-[500px]'>
+              <main className='flex-1 w-full min-w-0 bg-transparent lg:bg-card border-none lg:border lg:border-border/70 rounded-none lg:rounded-2xl p-0 sm:p-4 lg:p-10 shadow-none lg:shadow-xs min-h-[500px]'>
                 {isLocked ? (
                   <div className='w-full space-y-5'>
                     <div>
@@ -554,7 +554,7 @@ const CourseLearnPage = ({
                       </div>
                     )}
 
-                    <div className='w-full'>
+                    <div className='w-full min-w-0 max-w-full'>
                       <InterviewSheetMDXRenderer
                         mdxSource={displayContent}
                         theme='light'
