@@ -267,10 +267,28 @@ const getAllEnrolledCoursesFromDB = async (
       .exec();
 
     return {
-      data: enrolledCourse.map((course) => ({
-        ...course.course.toObject(),
-        isEnrolled: true,
-      })) as unknown as BaseShikshaCourseResponseProps,
+      data: enrolledCourse.map((userCourse) => {
+        const totalChapters = userCourse.chapters.length;
+
+        const completedChapters = userCourse.chapters.filter(
+          (chapter) => chapter.isCompleted,
+        ).length;
+
+        const percentage =
+          totalChapters > 0
+            ? Math.round((completedChapters / totalChapters) * 100)
+            : 0;
+
+        return {
+          ...userCourse.course.toObject(),
+          isEnrolled: true,
+          progress: {
+            completed: completedChapters,
+            total: totalChapters,
+            percentage,
+          },
+        };
+      }) as unknown as BaseShikshaCourseResponseProps,
     };
   } catch (error) {
     logger.error("DB: getAllEnrolledCoursesFromDB failed", {
