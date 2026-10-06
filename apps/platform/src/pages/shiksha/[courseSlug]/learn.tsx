@@ -54,9 +54,17 @@ const CourseLearnPage = ({
   const [chapters, setChapters] = useState(initialCourse?.chapters || []);
   const firstChapterId = chapters?.[0]?._id?.toString() || '';
 
-  // Use query param chapterId if present, else prop or first chapter
-  const activeParamChapterId =
-    (router.query.chapterId as string) || currentChapterId || firstChapterId;
+  // Resolve the chapter from the URL, falling back to the canonical first
+  // chapter so an unknown id never selects (or reports feedback against) a
+  // chapter that does not exist.
+  const resolveChapterId = (candidate?: string) =>
+    candidate && chapters.some((c) => c._id.toString() === candidate)
+      ? candidate
+      : firstChapterId;
+
+  const activeParamChapterId = resolveChapterId(
+    (router.query.chapterId as string) || currentChapterId,
+  );
 
   const [currentChapterIdState, setCurrentChapterIdState] =
     useState(activeParamChapterId);
@@ -109,18 +117,21 @@ const CourseLearnPage = ({
     (c) => c._id.toString() === currentChapterIdState,
   );
 
-  // Sync router query changes
+  // Sync router query changes, including Back/Forward to the bare learn URL
+  // (no chapterId), which resolves to the canonical first chapter.
   useEffect(() => {
-    if (router.query.chapterId) {
-      const qId = router.query.chapterId as string;
-      const found = chapters.find((c) => c._id.toString() === qId);
-      if (found) {
-        setCurrentChapterIdState(qId);
-        setChapterContent(found.content);
-        setIsChapterCompleted(found.isCompleted);
-      }
+    const qId = (router.query.chapterId as string) || '';
+    const resolvedId = chapters.some((c) => c._id.toString() === qId)
+      ? qId
+      : firstChapterId;
+    const found = chapters.find((c) => c._id.toString() === resolvedId);
+
+    if (found) {
+      setCurrentChapterIdState(resolvedId);
+      setChapterContent(found.content);
+      setIsChapterCompleted(found.isCompleted);
     }
-  }, [router.query.chapterId, chapters]);
+  }, [router.query.chapterId, chapters, firstChapterId]);
 
   // Check if all chapters are completed
   const checkCourseCompletion = useCallback(() => {
