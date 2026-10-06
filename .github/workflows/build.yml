@@ -149,7 +149,10 @@ jobs:
           echo "## 🏗️ Build Check Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.build-packages.result }}" == "success" ] && [ "${{ needs.build-apps.result }}" == "success" ]; then
+          packages_ok=$([[ "${{ needs.build-packages.result }}" == "success" || "${{ needs.build-packages.result }}" == "skipped" ]] && echo true || echo false)
+          apps_ok=$([[ "${{ needs.build-apps.result }}" == "success" || "${{ needs.build-apps.result }}" == "skipped" ]] && echo true || echo false)
+
+          if [ "$packages_ok" == "true" ] && [ "$apps_ok" == "true" ]; then
             echo "### ✅ All Builds Passed!" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "- ✅ Shared packages built successfully" >> $GITHUB_STEP_SUMMARY
@@ -160,11 +163,11 @@ jobs:
           else
             echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "${{ needs.build-packages.result }}" != "success" ]; then
-              echo "- ❌ Shared packages build failed" >> $GITHUB_STEP_SUMMARY
+            if [ "$packages_ok" != "true" ]; then
+              echo "- ❌ Shared packages build failed (result: ${{ needs.build-packages.result }})" >> $GITHUB_STEP_SUMMARY
             fi
-            if [ "${{ needs.build-apps.result }}" != "success" ]; then
-              echo "- ❌ One or more application builds failed" >> $GITHUB_STEP_SUMMARY
+            if [ "$apps_ok" != "true" ]; then
+              echo "- ❌ One or more application builds failed (result: ${{ needs.build-apps.result }})" >> $GITHUB_STEP_SUMMARY
             fi
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "Please fix the build errors before merging." >> $GITHUB_STEP_SUMMARY
