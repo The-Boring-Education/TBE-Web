@@ -43,7 +43,7 @@ describe("getCoursePageProps", () => {
     const learnUrl = `/shiksha/${COURSE_SLUG}/learn`;
 
     it("resolves a valid chapter id to that chapter's content", async () => {
-      const result: any = await getCoursePageProps(
+      const result = await getCoursePageProps(
         buildContext(`${learnUrl}?chapterId=${SECOND_CHAPTER_ID}`, {
           chapterId: SECOND_CHAPTER_ID,
         }),

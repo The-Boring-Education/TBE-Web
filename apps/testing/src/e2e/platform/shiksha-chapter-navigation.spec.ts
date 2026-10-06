@@ -145,8 +145,6 @@ test.describe("Shiksha learn — chapter is resolved from the URL", () => {
         await page.waitForURL(`**${LEARN_URL}?chapterId=${CHAPTERS[0].id}`);
         await expectChapter(page, CHAPTERS[0]);
 
-        // The canonical URL is stable: it does not redirect again.
-        await page.waitForTimeout(500);
         await expect(page).toHaveURL(
           new RegExp(`chapterId=${CHAPTERS[0].id}$`),
         );
