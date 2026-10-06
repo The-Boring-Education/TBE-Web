@@ -739,7 +739,25 @@ const verifyWebhookSignature = (
     .update(payloadString)
     .digest("base64");
 
-  return { isValid: signature === generatedSignature };
+  const receivedSignatureBuffer = Buffer.from(signature, "utf8");
+  const generatedSignatureBuffer = Buffer.from(generatedSignature, "utf8");
+
+  if (receivedSignatureBuffer.length !== generatedSignatureBuffer.length) {
+    return {
+      isValid: false,
+      error: "Invalid webhook signature",
+    };
+  }
+
+  const isValid = crypto.timingSafeEqual(
+    receivedSignatureBuffer,
+    generatedSignatureBuffer,
+  );
+
+  return {
+    isValid,
+    error: isValid ? undefined : "Invalid webhook signature",
+  };
 };
 
 const validateWebhookEvent = (

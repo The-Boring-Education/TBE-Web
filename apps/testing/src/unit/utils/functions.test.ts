@@ -12,7 +12,9 @@ import {
   removeLocalStorageItem,
   setLocalStorageItem,
   validateCouponForSheet,
+  verifyWebhookSignature,
 } from "@tbe/utils";
+import crypto from "crypto";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Utility Functions", () => {
@@ -722,6 +724,86 @@ describe("Utility Functions", () => {
         "http://localhost:3000/onboarding?redirect=https://prepyatra.theboringeducation.com/dashboard",
       );
       expect(result).toBe("https://prepyatra.theboringeducation.com/dashboard");
+    });
+  });
+
+  describe("verifyWebhookSignature", () => {
+    const webhookSecret = "test_webhook_secret_key";
+    const payload = JSON.stringify({
+      order_id: "order_123",
+      payment_status: "SUCCESS",
+    });
+
+    it("should return isValid: true for a correctly signed payload", () => {
+      const signature = crypto
+        .createHmac("sha256", webhookSecret)
+        .update(payload)
+        .digest("base64");
+
+      const result = verifyWebhookSignature(payload, signature, webhookSecret);
+
+      expect(result.isValid).toBe(true);
+      expect(result.error).toBeUndefined();
+    });
+
+    it("should return isValid: false when signature is missing", () => {
+      const result = verifyWebhookSignature(payload, undefined, webhookSecret);
+
+      expect(result.isValid).toBe(false);
+      expect(result.error).toBe("Missing webhook signature");
+    });
+
+    it("should return isValid: false for a tampered payload", () => {
+      const signature = crypto
+        .createHmac("sha256", webhookSecret)
+        .update(payload)
+        .digest("base64");
+
+      const tamperedPayload = JSON.stringify({
+        order_id: "order_123",
+        payment_status: "FAILED",
+      });
+      const result = verifyWebhookSignature(
+        tamperedPayload,
+        signature,
+        webhookSecret,
+      );
+
+      expect(result.isValid).toBe(false);
+      expect(result.error).toBe("Invalid webhook signature");
+    });
+
+    it("should return isValid: false when signature length differs from expected digest", () => {
+      const shortSignature = "short_sig";
+      const result = verifyWebhookSignature(
+        payload,
+        shortSignature,
+        webhookSecret,
+      );
+
+      expect(result.isValid).toBe(false);
+      expect(result.error).toBe("Invalid webhook signature");
+    });
+
+    it("should return isValid: false for an incorrect signature of same length", () => {
+      const validSignature = crypto
+        .createHmac("sha256", webhookSecret)
+        .update(payload)
+        .digest("base64");
+
+      // Flip the last character to maintain identical buffer length while having a mismatch
+      const lastChar = validSignature.slice(-1);
+      const mutatedChar = lastChar === "a" ? "b" : "a";
+      const invalidSignature = validSignature.slice(0, -1) + mutatedChar;
+
+      const result = verifyWebhookSignature(
+        payload,
+        invalidSignature,
+        webhookSecret,
+      );
+
+      expect(result.isValid).toBe(false);
+      expect(result.error).toBe("Invalid webhook signature");
     });
   });
 });

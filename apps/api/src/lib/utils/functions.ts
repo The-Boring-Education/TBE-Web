@@ -268,12 +268,25 @@ const verifyWebhookSignature = (
     .createHmac("sha256", webhookSecret)
     .update(signedString)
     .digest("base64");
+
+  const receivedSignatureBuffer = Buffer.from(signature, "utf8");
+  const generatedSignatureBuffer = Buffer.from(generatedSignature, "utf8");
+
+  if (receivedSignatureBuffer.length !== generatedSignatureBuffer.length) {
+    return {
+      isValid: false,
+      error: "Invalid webhook signature",
+    };
+  }
+
+  const isValid = crypto.timingSafeEqual(
+    receivedSignatureBuffer,
+    generatedSignatureBuffer,
+  );
+
   return {
-    isValid: signature === generatedSignature,
-    error:
-      signature === generatedSignature
-        ? undefined
-        : "Invalid webhook signature",
+    isValid,
+    error: isValid ? undefined : "Invalid webhook signature",
   };
 };
 
