@@ -16,12 +16,9 @@ import {
   Clock,
   Eye,
   History,
-  Minus,
   RefreshCw,
   Search,
   Target,
-  TrendingDown,
-  TrendingUp,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -84,42 +81,6 @@ function FilterBar({
         <option value='365'>Last year</option>
         <option value='all'>All time</option>
       </select>
-    </div>
-  );
-}
-
-function PerformanceTrend({
-  currentScore,
-  previousScore,
-}: {
-  currentScore: number;
-  previousScore: number;
-}) {
-  const diff = currentScore - previousScore;
-  const isPositive = diff > 0;
-  const isNeutral = diff === 0;
-
-  if (isNeutral) {
-    return (
-      <div className='flex items-center text-xs text-gray-500 font-medium'>
-        <Minus className='w-3.5 h-3.5 mr-1' />
-        <span>No change</span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={`flex items-center text-xs font-semibold ${
-        isPositive ? 'text-green-600' : 'text-red-600'
-      }`}
-    >
-      {isPositive ? (
-        <TrendingUp className='w-3.5 h-3.5 mr-1' />
-      ) : (
-        <TrendingDown className='w-3.5 h-3.5 mr-1' />
-      )}
-      <span>{Math.abs(diff)}% vs prev avg</span>
     </div>
   );
 }
@@ -239,16 +200,15 @@ function AttemptCard({
 
 function HistoryContent() {
   const { user } = useAuth();
-  const { toast } = useToast();
+  useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTimeRange, setSelectedTimeRange] = useState('30');
-  const [showDetails, setShowDetails] = useState(true);
+  const [showDetails] = useState(true);
 
   const {
     data: attemptsData,
     isLoading: attemptsLoading,
-    error: attemptsError,
     refetch: refetchAttempts,
   } = useQuery<QuizAttempt[]>({
     queryKey: ['quiz-attempts', user?.id],

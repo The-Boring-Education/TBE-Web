@@ -10,7 +10,7 @@ interface QuizzesNavProps {
 
 export const QuizzesNav: React.FC<QuizzesNavProps> = ({ activeTab }) => {
   const router = useRouter();
-  const { user } = useAuth();
+  useAuth();
   const currentPath = router.pathname;
 
   const isCurrent = (tab: string, pathPatterns: string[]) => {
