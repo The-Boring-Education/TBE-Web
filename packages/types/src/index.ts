@@ -41,7 +41,6 @@ export * from "./components";
 // Additional component types that are commonly used
 export type {
   MentorshipCardProps,
-  PortfolioTemplateProps,
   PrimaryCardProps,
   PrimaryCardWithCTAProps,
   RadioButtonOptionsProps,

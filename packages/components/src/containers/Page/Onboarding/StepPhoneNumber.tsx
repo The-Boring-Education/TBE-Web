@@ -37,7 +37,10 @@ const StepPhoneNumber = ({
           labelClass="sr-only"
           type="tel"
           value={phoneNumber}
-          onChange={onChangeNumber}
+          onChange={(val) => {
+            const cleanNumber = val.replace(/\D/g, "");
+            onChangeNumber(cleanNumber);
+          }}
         />
       </FlexContainer>
     </FlexContainer>

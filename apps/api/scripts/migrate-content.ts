@@ -25,12 +25,8 @@
  * `--to prod` only with `--from dev`; prod writes wait 5s (Ctrl+C to cancel).
  */
 import chalk from "chalk";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
-import path from "path";
-import { fileURLToPath } from "url";
 import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
 import {
   ENTITY_MAP,
@@ -38,71 +34,56 @@ import {
   migrateCollectionByContentId,
   type MigrateEntityResult,
 } from "../src/lib/migration/content-migrate-entity";
-
-const API_ROOT = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
+import {
+  type ScriptEnv,
+  SCRIPT_ENV_CHOICES,
+  cliArgv,
+  loadScriptEnv,
+  requireParsedValue,
+} from "./lib/script-env";
 
 const ENTITY_CHOICES = [...Object.keys(ENTITY_MAP), "all"] as const;
 
-type EnvOption = "local" | "dev" | "prod";
 type EntityOption = (typeof ENTITY_CHOICES)[number];
 
 interface MigrateArgs {
-  from: EnvOption;
-  to: EnvOption;
+  from: ScriptEnv;
+  to: ScriptEnv;
   entity: EntityOption;
   "dry-run": boolean;
 }
 
-/** Must match backfill-content-ids.ts so both CLIs read the same DB URIs per env. */
-const ENV_FILE_MAP: Record<EnvOption, string> = {
-  local: ".env.local",
-  dev: ".env.development",
-  prod: ".env.production",
-};
-
-function loadUri(env: EnvOption): string {
-  const envFile = ENV_FILE_MAP[env];
-  const envPath = path.resolve(API_ROOT, envFile);
-  const result = dotenv.config({ path: envPath, override: true });
-
-  if (result.error) {
-    console.error(chalk.red(`Failed to load env file: ${envPath}`));
-    console.error(chalk.red(result.error.message));
+function loadUri(env: ScriptEnv): string {
+  const loaded = loadScriptEnv(env);
+  if (!loaded.ok) {
+    console.error(chalk.red(loaded.error));
     process.exit(1);
   }
 
-  const uri = result.parsed?.MONGODB_URI;
-  if (!uri) {
-    console.error(chalk.red(`MONGODB_URI not found in ${envPath}`));
+  const uri = requireParsedValue(loaded, "MONGODB_URI");
+  if (!uri.ok) {
+    console.error(chalk.red(uri.error));
     process.exit(1);
   }
 
-  return uri;
+  return uri.value;
 }
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/** pnpm/tsx sometimes pass a bare `--` in argv; yargs then misses flags. */
-function cliArgv(): string[] {
-  return hideBin(process.argv).filter((a) => a !== "--");
-}
-
 async function main() {
   const argv = (await yargs(cliArgv())
     .option("from", {
       type: "string",
-      choices: ["local", "dev", "prod"] as const,
+      choices: SCRIPT_ENV_CHOICES,
       demandOption: true,
       describe: "Source environment",
     })
     .option("to", {
       type: "string",
-      choices: ["local", "dev", "prod"] as const,
+      choices: SCRIPT_ENV_CHOICES,
       demandOption: true,
       describe: "Target environment",
     })

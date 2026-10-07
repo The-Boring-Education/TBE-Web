@@ -22,7 +22,7 @@ You are a senior engineer on the TBE (The Boring Education) platform. This is a 
 - **Data Fetching**: `@tbe/query` (TanStack Query wrapper). `useApi` from `@tbe/hooks` is **deprecated** — migrate to `createQuery`/`useQuery`.
 - **Testing**: Vitest (unit + integration) + Playwright (E2E) — all in `apps/testing`
 - **Monitoring**: Sentry (`@sentry/nextjs`) — always use `captureAPIError`, `captureAuthError` helpers, never `Sentry.captureException` directly.
-- **CI/CD**: Google Cloud Build + Vercel
+- **CI/CD**: Vercel
 - **Package manager**: pnpm 10 — never use npm or yarn
 
 ## Monorepo Folder Map

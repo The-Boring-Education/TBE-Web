@@ -81,6 +81,13 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       href: products.interviewPrep!.slug,
     },
     {
+      id: "learn-resources",
+      name: products.resources!.label,
+      description: products.resources!.description,
+      href: products.resources!.slug,
+      target: "_blank",
+    },
+    {
       id: "learn-youfocus",
       name: products.youfocus!.label,
       description: products.youfocus!.description,
@@ -91,12 +98,6 @@ const TOP_NAVIGATION: TopNavbarContainerProps = {
       name: products.webinar!.label,
       description: products.webinar!.description,
       href: products.webinar!.slug,
-    },
-    {
-      id: "learn-portfolio",
-      name: products.portfolio!.label,
-      description: products.portfolio!.description,
-      href: products.portfolio!.slug,
     },
     {
       id: "learn-projects",
@@ -198,16 +199,6 @@ const PRODUCTS: PrimaryCardWithCTAProps[] = [
     href: toPlatformUrl(routes.youfocus),
     active: true,
     ctaText: "Explore YouFocus",
-  },
-  {
-    id: "portfolio",
-    image: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-hero.svg`,
-    imageAltText: products.portfolio!.label,
-    title: products.portfolio!.label,
-    content: products.portfolio!.description,
-    href: products.portfolio!.slug,
-    active: true,
-    ctaText: "Explore Portfolios",
   },
   {
     id: "projects",
@@ -1103,30 +1094,6 @@ const OS_GETTING_STARTED_STEPS = [
   },
 ];
 
-const PORTFOLIO_FEATURES: PrimaryCardProps[] = [
-  {
-    id: v4(),
-    title: "Customizable Templates",
-    content: "Create your portfolio with customizable templates.",
-    image: `${STATIC_FILE_PATH.svg}/mentorship.svg`,
-    imageAltText: "Customizable Templates",
-  },
-  {
-    id: v4(),
-    title: "Showcase Your Skills",
-    content: "Showcase your skills and projects with our portfolio templates.",
-    image: `${STATIC_FILE_PATH.svg}/peer-to-peer-learning.svg`,
-    imageAltText: "Showcase Your Skills",
-  },
-  {
-    id: v4(),
-    title: "Showcase Your Projects",
-    content: "Showcase your projects with our portfolio templates.",
-    image: `${STATIC_FILE_PATH.svg}/workshop.svg`,
-    imageAltText: "Showcase Your Projects",
-  },
-];
-
 /* ─────────────────────────────────────────────
    RESUME YATRA LANDING PAGE CONSTANTS
    ───────────────────────────────────────────── */
@@ -1278,7 +1245,6 @@ export {
   MY_PREV_EXPERIENCE,
   OPEN_SOURCE_INFO,
   OS_GETTING_STARTED_STEPS,
-  PORTFOLIO_FEATURES,
   PRODUCTS,
   RESUME_YATRA_FAQS,
   RESUME_YATRA_FEATURE_SPOTLIGHTS,

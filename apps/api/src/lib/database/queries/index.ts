@@ -12,8 +12,12 @@ export * from "./email";
 export * from "./feedback";
 export * from "./interview-prep";
 export * from "./leaderboard";
+export * from "./leaderboardBackfill";
+export * from "./learningAward";
 export * from "./notification";
 export * from "./payment";
+export * from "./periodClose";
+export * from "./pointLedger";
 export * from "./prepyatra";
 export * from "./project";
 export * from "./quiz";
@@ -41,11 +45,9 @@ export {
   updateUserQuestionPerformance,
 } from "./enhancedQuiz";
 
-// Export gamification functions (keep getLeaderboardFromDB as the main one)
+// Export gamification functions
 export {
   addGamificationDocInDB,
-  getActionsWithinDateRange,
-  getLeaderboardFromDB,
   getUserPointsFromDB,
   handleGamificationPoints,
   logUserActivityForStreak,

@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
+  awardPoints,
   getDsaYatraProgressFromDB,
-  handleGamificationPoints,
   mergeDsaYatraProgressInDB,
   patchDsaYatraQuestionCompletionInDB,
 } from "@/lib/database";
@@ -27,17 +27,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (method) {
       case "GET":
-        return withUserAuth(async (req, res) => handleGetProgress(req, res, authenticatedUserId), {
-          ownerRequired: true,
-        })(req, res);
+        return withUserAuth(
+          async (req, res) => handleGetProgress(req, res, authenticatedUserId),
+          {
+            ownerRequired: true,
+          },
+        )(req, res);
       case "PATCH":
-        return withUserAuth(async (req, res) => handlePatchQuestion(req, res, authenticatedUserId), {
-          ownerRequired: true,
-        })(req, res);
+        return withUserAuth(
+          async (req, res) =>
+            handlePatchQuestion(req, res, authenticatedUserId),
+          {
+            ownerRequired: true,
+          },
+        )(req, res);
       case "PUT":
-        return withUserAuth(async (req, res) => handleMergeProgress(req, res, authenticatedUserId), {
-          ownerRequired: true,
-        })(req, res);
+        return withUserAuth(
+          async (req, res) =>
+            handleMergeProgress(req, res, authenticatedUserId),
+          {
+            ownerRequired: true,
+          },
+        )(req, res);
       default:
         return res.status(apiStatusCodes.BAD_REQUEST).json(
           sendAPIResponse({
@@ -173,14 +184,21 @@ const handlePatchQuestion = async (
     }
 
     const progressChanged = hadBefore !== isCompleted;
+    let gamification;
     if (progressChanged) {
-      await handleGamificationPoints(isCompleted, userId, "COMPLETE_QUESTION");
+      gamification = await awardPoints({
+        isCompleted,
+        userId,
+        actionType: "COMPLETE_QUESTION",
+        itemId: qid,
+      });
     }
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         data,
+        gamification,
         message: "Question progress updated",
       }),
     );

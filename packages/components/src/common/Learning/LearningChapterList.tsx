@@ -10,16 +10,20 @@ const LearningChapterList = ({
   href,
   onChapterSelect,
   includeIndex = true,
+  className = "",
 }: LearningChapterListProps) => {
   return (
     <LearningSidebarList
       items={chapters ?? []}
+      className={className}
       getKey={(item) => item?._id?.toString() ?? ""}
       renderItem={(item, index) => {
         const chapterId = item?._id?.toString();
         if (!chapterId) return null;
 
-        const title = includeIndex ? `${index + 1} - ${item.name}` : item.name;
+        const title = includeIndex ? `${index + 1}. ${item.name}` : item.name;
+        const chapterHref =
+          typeof href === "function" ? href(item, index) : href;
 
         return (
           <div className="flex items-center w-full">
@@ -28,7 +32,7 @@ const LearningChapterList = ({
               content={item.content}
               currentChapterId={currentChapterId}
               handleChapterClick={onChapterSelect}
-              href={href}
+              href={chapterHref}
               isCompleted={item.isCompleted}
               name={title}
               isLocked={isLocked}

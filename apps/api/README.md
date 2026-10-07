@@ -1,6 +1,6 @@
 # 🌐 TBE API - Centralized Backend Service
 
-A comprehensive Next.js API application serving as the centralized backend for all TBE platform applications, deployed on Google Cloud Run.
+A comprehensive Next.js API application serving as the centralized backend for all TBE platform applications.
 
 ## 📋 Overview
 
@@ -12,7 +12,6 @@ The TBE API provides a unified backend service handling authentication, data man
 - **Database Management**: MongoDB operations and data modeling
 - **External Integrations**: OpenAI, YouTube, payment gateways
 - **RESTful APIs**: Comprehensive endpoint coverage
-- **Cloud Deployment**: Optimized for Google Cloud Run
 - **Monitoring**: Sentry integration for error tracking
 
 ## 🛠️ Tech Stack
@@ -22,9 +21,8 @@ The TBE API provides a unified backend service handling authentication, data man
 - **Database**: MongoDB with Mongoose ODM
 - **Authentication**: NextAuth.js
 - **External APIs**: OpenAI, YouTube Data API, Cashfree
-- **Deployment**: Google Cloud Run
+- **Deployment**: Vercel
 - **Monitoring**: Sentry
-- **Container**: Docker
 
 ## 🚀 Development
 
@@ -33,7 +31,6 @@ The TBE API provides a unified backend service handling authentication, data man
 - Node.js >= 20.x
 - pnpm >= 9.12.0
 - MongoDB instance (local or cloud)
-- Docker (for containerization)
 
 ### Setup
 
@@ -112,9 +109,6 @@ apps/api/
 │   │   └── utils/         # Utility functions
 │   ├── middleware/        # API middleware
 │   └── types/             # TypeScript type definitions
-├── Dockerfile             # Docker configuration
-├── deploy.sh             # Deployment script
-├── cloudbuild.yaml       # Google Cloud Build config
 └── next.config.js        # Next.js configuration
 ```
 
@@ -127,18 +121,9 @@ pnpm dev                   # Start development server (port 3004)
 # Building
 pnpm build                 # Build for production
 pnpm start                 # Start production server
-pnpm start:cloud-run      # Start for Cloud Run deployment
 
 # Code Quality
 pnpm lint                  # Run ESLint
-
-# Docker
-pnpm docker:build         # Build Docker image
-pnpm docker:run           # Run Docker container
-pnpm docker:test          # Test Docker build
-
-# Deployment
-pnpm deploy               # Deploy to Google Cloud Run
 ```
 
 ## 🔌 API Endpoints
@@ -370,48 +355,11 @@ export const createPaymentOrder = async (orderData: OrderData) => {
 
 ## 🚀 Deployment
 
-### Google Cloud Run Deployment
-
-```bash
-# Deploy using the deployment script
-./deploy.sh
-
-# Or deploy manually
-gcloud run deploy tbe-api \
-  --image gcr.io/PROJECT_ID/tbe-api \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated
-```
-
-### Docker Configuration
-
-```dockerfile
-# Dockerfile
-FROM node:20-alpine AS base
-WORKDIR /app
-
-# Install dependencies
-COPY package*.json ./
-RUN npm ci --only=production
-
-# Copy source code
-COPY . .
-
-# Build application
-RUN npm run build
-
-# Expose port
-EXPOSE 3000
-
-# Start application
-CMD ["npm", "run", "start:cloud-run"]
-```
+The API deploys on Vercel with the rest of the monorepo.
 
 ### Environment Variables (Production)
 
 ```bash
-# Set in Google Cloud Run
 MONGODB_URI=mongodb+srv://...
 NEXTAUTH_SECRET=production-secret
 OPENAI_API_KEY=sk-...
@@ -519,9 +467,8 @@ describe("/api/v1/user/profile", () => {
 
 **Deployment Issues:**
 
-- Check Docker build process
-- Verify Cloud Run configuration
-- Monitor deployment logs
+- Check the Vercel build logs for the API project
+- Confirm production environment variables are set for that project
 
 ## 📖 Contributing
 

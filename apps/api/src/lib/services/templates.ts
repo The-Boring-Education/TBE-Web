@@ -7,7 +7,7 @@ import type {
   ProjectEnrollmentEmailData,
 } from "@/lib/interfaces";
 
-const getBaseTemplate = (content: string) => `
+export const getBaseTemplate = (content: string) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -27,6 +27,7 @@ const GamificationToast = ({
   points,
   level,
   levelName,
+  rankLine,
   onClose,
   duration = 4000,
   theme = "light",
@@ -93,6 +94,17 @@ const GamificationToast = ({
                 </motion.p>
               )}
 
+              {rankLine && (
+                <motion.p
+                  animate={{ opacity: 1 }}
+                  className="text-amber-300 text-xs font-semibold mt-0.5"
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 0.35 }}
+                >
+                  {rankLine}
+                </motion.p>
+              )}
+
               {level && levelName && (
                 <motion.p
                   animate={{ opacity: 1 }}
@@ -155,6 +167,17 @@ const GamificationToast = ({
                   transition={{ delay: 0.3, scale: { duration: 0.5 } }}
                 >
                   +{points} points earned!
+                </motion.p>
+              )}
+
+              {rankLine && (
+                <motion.p
+                  animate={{ opacity: 1 }}
+                  className="text-white text-xs font-semibold"
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 0.35 }}
+                >
+                  {rankLine}
                 </motion.p>
               )}
 

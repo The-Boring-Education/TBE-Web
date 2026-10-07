@@ -13,7 +13,9 @@ import {
 import { extractEmbedParts } from "@/lib/html-embed";
 import { getSiteBaseUrl } from "@/lib/site";
 
-type Props = { params: { slug: string } };
+type Props = {
+  params: { slug: string };
+};
 
 export const dynamic = "force-static";
 export const revalidate = false;
@@ -27,11 +29,14 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = props.params;
   const meta = await readResourceMeta(slug);
+
   if (!meta) {
     return { title: "Resource" };
   }
+
   const base = getSiteBaseUrl();
   const url = `${base}/resources/${slug}`;
+
   return {
     title: meta.title,
     description: meta.description,
@@ -55,15 +60,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function ResourcePage(props: Props) {
   const { slug } = props.params;
+
   const [meta, rawHtml, quiz, game] = await Promise.all([
     readResourceMeta(slug),
     readResourceHtml(slug),
     readResourceQuiz(slug),
     readResourceGame(slug),
   ]);
+
   if (!meta || !rawHtml) notFound();
 
   const { styleTags, bodyHtml } = extractEmbedParts(rawHtml);
+
   const base = getSiteBaseUrl();
   const url = `${base}/resources/${slug}`;
 
@@ -92,16 +100,23 @@ export default async function ResourcePage(props: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ResourceView
-        meta={meta}
-        pageUrl={url}
-        styleTags={styleTags}
-        bodyHtml={bodyHtml}
-        quiz={quiz ?? undefined}
-        game={game ?? undefined}
-      />
-      {/* Per-resource feedback widget (client component) */}
-      <ResourceFeedbackButton slug={slug} title={meta.title} />
+
+      {/* Printable resource wrapper */}
+      <div className="resource-print-container">
+        <ResourceView
+          meta={meta}
+          pageUrl={url}
+          styleTags={styleTags}
+          bodyHtml={bodyHtml}
+          quiz={quiz ?? undefined}
+          game={game ?? undefined}
+        />
+      </div>
+
+      {/* Hide floating feedback widget in PDF */}
+      <div className="print:hidden">
+        <ResourceFeedbackButton slug={slug} title={meta.title} />
+      </div>
     </div>
   );
 }

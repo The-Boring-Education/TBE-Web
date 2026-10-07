@@ -6,7 +6,7 @@ import { Layout } from "@tbe/components/quizes";
 import { ProtectedRoute } from "@tbe/components/quizes";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { useGamification } from "@tbe/hooks";
-import { gamificationApi, quizApi } from "@tbe/services";
+import { quizApi } from "@tbe/services";
 import type { QuizQuestion } from "@tbe/types";
 import { cleanOptionText } from "@tbe/utils";
 import { useRouter } from "next/router";
@@ -56,7 +56,6 @@ function QuizContent() {
   ): Promise<string | null> => {
     try {
       // First try to get user by email
-      const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
       const response = await fetch(
         `/api/proxy/user?email=${encodeURIComponent(email)}`,
       );
@@ -106,7 +105,6 @@ function QuizContent() {
           return;
         }
         // Fallback: fetch by email to get _id
-        const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
         const resp = await fetch(
           `/api/proxy/user?email=${encodeURIComponent(user!.email!)}`,
         );
@@ -270,13 +268,7 @@ function QuizContent() {
         response.success &&
         "data" in response
       ) {
-        // Trigger gamification action for completing quiz (don't await to speed up)
-        gamificationApi
-          .updateuserGamificationPoints({
-            userId,
-            actionType: "COMPLETE_QUIZ",
-          })
-          .catch(() => {}); // Ignore errors
+        // Quiz points are awarded by the submit endpoint itself.
 
         // Redirect immediately using window.location for instant navigation
         const answersParam = JSON.stringify(

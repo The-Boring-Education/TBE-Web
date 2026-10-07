@@ -209,8 +209,17 @@ const getPlaylistPageProps = async (context: any) => {
 };
 
 const getCoursePageProps = async (context: any) => {
-  const { req, query } = context;
+  const { req, query, resolvedUrl } = context;
   const { courseSlug } = query;
+
+  // Chapter resolution is only authoritative for the learn route; the course
+  // overview route keeps its existing behaviour.
+  const isLearnRoute =
+    typeof resolvedUrl === "string" &&
+    resolvedUrl.split("?")[0]?.endsWith("/learn") === true;
+  const requestedChapterId = Array.isArray(query?.chapterId)
+    ? query.chapterId[0]
+    : query?.chapterId;
 
   let slug = routes.home;
 
@@ -269,6 +278,34 @@ const getCoursePageProps = async (context: any) => {
       if (firstChapter) {
         currentChapterId = firstChapter._id.toString();
         meta = firstChapter.content;
+      }
+
+      if (isLearnRoute && requestedChapterId) {
+        const requestedChapter = course.chapters?.find(
+          (chapter) => chapter._id.toString() === requestedChapterId,
+        );
+
+        if (requestedChapter) {
+          currentChapterId = requestedChapter._id.toString();
+          meta = requestedChapter.content;
+        } else {
+          // Unrecognised chapter id: redirect to the canonical first chapter so
+          // the mismatched heading/body is never rendered. The destination
+          // always carries a valid chapter id, so it cannot redirect again.
+          const safeCourseSlug = encodeURIComponent(String(courseSlug));
+          const destination = currentChapterId
+            ? `/shiksha/${safeCourseSlug}/learn?chapterId=${encodeURIComponent(
+                currentChapterId,
+              )}`
+            : `/shiksha/${safeCourseSlug}`;
+
+          return {
+            redirect: {
+              destination,
+              permanent: false,
+            },
+          };
+        }
       }
 
       return {

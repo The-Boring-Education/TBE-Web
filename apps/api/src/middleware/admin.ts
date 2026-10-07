@@ -5,6 +5,7 @@ import { extractBearerToken } from "@/lib/auth/token";
 import { apiStatusCodes } from "@/lib/constants";
 import { isAdminEmail, warmAdminEmailCache } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
+import { matchesAdminSecret } from "@/middleware/adminSecret";
 
 export interface AdminAuthenticatedUser {
   id: string;
@@ -105,11 +106,37 @@ export const ensureAdminAccess = async (
   return false;
 };
 
+/**
+ * Admin JWT (RBAC) or machine `x-admin-secret`. Use on ops-facing admin
+ * routes that the admin panel hits with a user JWT and scripts hit with
+ * `ADMIN_SECRET`. Secret is checked first so a seed script does not need
+ * a short-lived access token.
+ */
+export const ensureAdminAccessOrSecret = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+): Promise<boolean> => {
+  if (matchesAdminSecret(req)) {
+    return true;
+  }
+  return ensureAdminAccess(req, res);
+};
+
 export const withVerifiedAdminAuth = (
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void,
 ): ((req: NextApiRequest, res: NextApiResponse) => Promise<void>) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const authorized = await ensureAdminAccess(req, res);
+    if (!authorized) return;
+    return handler(req, res);
+  };
+};
+
+export const withVerifiedAdminAuthOrSecret = (
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void,
+): ((req: NextApiRequest, res: NextApiResponse) => Promise<void>) => {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const authorized = await ensureAdminAccessOrSecret(req, res);
     if (!authorized) return;
     return handler(req, res);
   };

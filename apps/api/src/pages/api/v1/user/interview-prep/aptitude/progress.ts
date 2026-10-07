@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
-  handleGamificationPoints,
+  awardPoints,
   markAptitudeQuestionCompletedByUser,
 } from "@/lib/database";
 import type { MarkAptitudeQuestionCompletedRequestProps } from "@/lib/interfaces";
@@ -63,16 +63,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           );
         }
 
-        await handleGamificationPoints(
+        const gamification = await awardPoints({
           isCompleted,
           userId,
-          "COMPLETE_APTITUDE_QUESTION",
-        );
+          actionType: "COMPLETE_APTITUDE_QUESTION",
+          itemId: `${topicSlug}/${questionId}`,
+        });
 
         return res.status(apiStatusCodes.OKAY).json(
           sendAPIResponse({
             status: true,
             data,
+            gamification,
             message: "Aptitude question progress updated",
           }),
         );

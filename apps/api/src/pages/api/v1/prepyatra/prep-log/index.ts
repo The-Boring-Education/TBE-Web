@@ -3,9 +3,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import {
   addPrepLogToDB,
+  awardPoints,
   deletePrepLogInDB,
   getPrepLogsByUserFromDB,
-  handleGamificationPoints,
   updatePrepLogInDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
@@ -64,22 +64,19 @@ const handleAddLog = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    try {
-      await handleGamificationPoints(true, userId, "PREPLOG_CREATED");
-    } catch (gamificationError) {
-      logger.error("Gamification trigger failed", {
-        error:
-          gamificationError instanceof Error
-            ? gamificationError.message
-            : String(gamificationError),
-      });
-    }
+    const gamification = await awardPoints({
+      userId,
+      actionType: "PREPLOG_CREATED",
+      itemId: String(data?._id),
+      app: "PREPYATRA",
+    });
 
     return res.status(apiStatusCodes.RESOURCE_CREATED).json(
       sendAPIResponse({
         status: true,
         message: "Prep log created",
         data,
+        gamification,
       }),
     );
   } catch (error) {

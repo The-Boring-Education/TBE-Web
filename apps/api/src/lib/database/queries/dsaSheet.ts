@@ -6,6 +6,7 @@
  * free so it can be unit tested without a database.
  */
 import { applyDSAFreemiumGating, getDSAFreemiumBucket } from "@tbe/constants";
+import type { PipelineStage } from "mongoose";
 
 import type { DSADomainType } from "@/lib/interfaces";
 
@@ -156,7 +157,7 @@ export const buildDsaMatchStage = (
  */
 export const buildDsaSortFieldsStage = (
   targetCompanies: string[],
-): Record<string, any> => ({
+): PipelineStage.AddFields => ({
   $addFields: {
     _topicOrder: {
       $let: {
@@ -252,7 +253,7 @@ export const buildUserSheetLookupStages = (
 ];
 
 /** Standard sort stage used across freemium and paid paths. */
-export const DSA_SORT_STAGE = {
+export const DSA_SORT_STAGE: PipelineStage.Sort = {
   $sort: {
     _priorityScore: -1,
     _topicOrder: 1,

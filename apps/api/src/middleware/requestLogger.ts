@@ -117,6 +117,9 @@ const withApiHandler = (
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const start = Date.now();
     const requestId = extractRequestId(req);
+    if (!req.headers["x-request-id"]) {
+      req.headers["x-request-id"] = requestId;
+    }
     const { method = "UNKNOWN", url = "/" } = req;
 
     logger.info(`→ ${method} ${url}`, {

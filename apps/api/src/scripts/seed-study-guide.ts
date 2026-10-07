@@ -1,17 +1,15 @@
-import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-import path from "path";
-import { fileURLToPath } from "url";
 import { v5 as uuidv5 } from "uuid";
+
+import {
+  mustLoadScriptEnv,
+  mustParsedValue,
+} from "../../scripts/lib/script-env";
 
 /** Namespace UUID for deterministic `contentId` per `topicId` when none exists yet. */
 const STUDY_GUIDE_CONTENT_ID_NAMESPACE = "a3b8c9d2-4e1f-4a2b-9c3d-8e7f6a5b4c3d";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load env from .env.local in api
-dotenv.config({ path: path.join(__dirname, "../../.env.local") });
+const mongodbUri = mustParsedValue(mustLoadScriptEnv("local"), "MONGODB_URI");
 
 const STUDY_GUIDE_DATA = [
   {
@@ -2430,13 +2428,7 @@ const GRAPH_QUESTIONS = [
 ];
 
 async function seed() {
-  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
-  if (!uri) {
-    console.error("MONGODB_URI is not defined");
-    process.exit(1);
-  }
-
-  const client = new MongoClient(uri);
+  const client = new MongoClient(mongodbUri);
 
   try {
     await client.connect();

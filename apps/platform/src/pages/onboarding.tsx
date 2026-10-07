@@ -14,7 +14,12 @@ import {
 import { routes } from '@tbe/constants';
 import { useApi, useUser } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
-import { getPreFetchProps, getRedirectUrl } from '@tbe/utils';
+import {
+  getPreFetchProps,
+  getRedirectUrl,
+  isPossibleMobileNumber,
+  splitContactNumber,
+} from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 
@@ -102,10 +107,8 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
       case 2:
         return purpose.length > 0;
       case 3: {
-        const [code, number] = contactNo.split(' ');
-        return (
-          code.startsWith('+') && number?.replace(/[^0-9]/g, '').length >= 10
-        );
+        const [code, number] = splitContactNumber(contactNo);
+        return isPossibleMobileNumber(code, number);
       }
       default:
         return false;
@@ -140,13 +143,16 @@ const OnboardingPage = ({ seoMeta }: PageProps) => {
           />
         );
       case 3: {
-        const [code = '+91', number = ''] = contactNo.split(' ');
+        const [code, number] = splitContactNumber(contactNo);
         return (
           <StepPhoneNumber
             countryCode={code}
             phoneNumber={number}
             onChangeCode={(val) => updateForm('contactNo', `${val} ${number}`)}
-            onChangeNumber={(val) => updateForm('contactNo', `${code} ${val}`)}
+            onChangeNumber={(val) => {
+              const cleanNumber = val.replace(/\D/g, '');
+              updateForm('contactNo', `${code} ${cleanNumber}`);
+            }}
           />
         );
       }

@@ -1,41 +1,7 @@
 import Cors from "cors";
 
+import { isAllowedTbeUrl } from "./allowed-origins";
 import initMiddleware from "./initMiddleware";
-
-/**
- * Checks if the origin is allowed based on known TBE domain patterns.
- */
-function isAllowedOrigin(origin: string): boolean {
-  try {
-    const { hostname } = new URL(origin);
-
-    // Allow localhost for development
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      return true;
-    }
-
-    // Allow production TBE domains
-    if (
-      hostname === "theboringeducation.com" ||
-      hostname.endsWith(".theboringeducation.com")
-    ) {
-      return true;
-    }
-
-    // Allow TBE Vercel preview deployments only. These follow the team's
-    // `tbe-<project>-...-tbe.vercel.app` naming (the trailing `-tbe` is the team
-    // slug). Requiring BOTH the `tbe-` prefix and the `-tbe.vercel.app` suffix
-    // scopes this to the TBE namespace, instead of the previous suffix-only match
-    // that also allowed any attacker-created `evil-tbe.vercel.app` project.
-    if (hostname.startsWith("tbe-") && hostname.endsWith("-tbe.vercel.app")) {
-      return true;
-    }
-
-    return false;
-  } catch {
-    return false;
-  }
-}
 
 export const cors = initMiddleware(
   Cors({
@@ -45,7 +11,7 @@ export const cors = initMiddleware(
         callback(null, true);
         return;
       }
-      if (isAllowedOrigin(origin)) {
+      if (isAllowedTbeUrl(origin)) {
         callback(null, origin);
       } else {
         callback(null, false);

@@ -42,6 +42,10 @@ const DATABASE_MODELS = {
   SUBSCRIPTION_PLAN: "SubscriptionPlan",
   USER_ACTIVITY_LOG: "UserActivityLog",
   ADMIN_USER: "AdminUser",
+  POINT_EVENT: "PointEvent",
+  LEARNING_CREDIT: "LearningCredit",
+  PERIOD_SCORE: "PeriodScore",
+  PERIOD_CLOSE: "PeriodClose",
 };
 
 export const FEEDBACK_TYPES = [
