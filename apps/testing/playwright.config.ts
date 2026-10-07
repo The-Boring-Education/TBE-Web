@@ -17,7 +17,7 @@ import { defineConfig, devices } from "@playwright/test";
  *   PLAYWRIGHT_E2E_APP=platform pnpm test:e2e -- --project=platform
  *
  * Env overrides for baseURL (app already running):
- *   PLATFORM_URL, TBE_PREP_YATRA_URL, QUIZES_URL, etc.
+ *   PLATFORM_URL, TBE_PREP_YATRA_URL, etc.
  */
 
 const APPS = {
@@ -30,11 +30,6 @@ const APPS = {
     port: 3001,
     filter: "@tbe/prep-yatra",
     testDir: "prep-yatra",
-  },
-  quizes: {
-    port: 3002,
-    filter: "@tbe/quizes",
-    testDir: "quizes",
   },
   techyatra: {
     port: 3003,
@@ -121,8 +116,7 @@ function getProjectsFromArgv(): (keyof typeof APPS)[] {
 
 function resolveWebAppKeys(): (keyof typeof APPS)[] {
   const fromEnv = process.env.PLAYWRIGHT_E2E_APP as
-    | keyof typeof APPS
-    | undefined;
+    keyof typeof APPS | undefined;
   if (fromEnv && fromEnv in APPS && APPS_WITH_E2E.has(fromEnv))
     return [fromEnv];
 

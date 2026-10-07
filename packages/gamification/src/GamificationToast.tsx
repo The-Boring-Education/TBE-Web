@@ -1,14 +1,21 @@
 import { motion } from "framer-motion";
 import { Crown, Star, Trophy, X } from "lucide-react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { TOAST_STYLES } from "./constants";
 import type { GamificationToastProps } from "./types";
 
-const ICONS = {
-  points: <Star className="text-yellow-400" size={20} />,
-  levelup: <Crown className="text-amber-400" size={20} />,
-  achievement: <Trophy className="text-purple-400" size={20} />,
+const renderIcon = (toastType: GamificationToastProps["type"]) => {
+  switch (toastType) {
+    case "points":
+      return <Star className="text-yellow-400" size={20} />;
+    case "levelup":
+      return <Crown className="text-amber-400" size={20} />;
+    case "achievement":
+      return <Trophy className="text-purple-400" size={20} />;
+    default:
+      return null;
+  }
 };
 
 /**
@@ -70,7 +77,7 @@ const GamificationToast = ({
               className="text-2xl flex-shrink-0"
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              {ICONS[type]}
+              {renderIcon(type)}
             </motion.div>
 
             <div className="flex-1 min-w-0">
@@ -146,7 +153,7 @@ const GamificationToast = ({
               className="text-2xl flex-shrink-0"
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              {ICONS[type]}
+              {renderIcon(type)}
             </motion.div>
 
             <div className="flex-1 min-w-0">

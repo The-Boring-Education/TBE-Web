@@ -81,7 +81,6 @@ jobs:
         app:
           - platform
           - prep-yatra
-          - quizes
           - onboarding
           - api
           - techyatra

@@ -46,17 +46,23 @@ export class APIClient {
     const cleanEndpoint = endpoint.startsWith("/")
       ? endpoint.slice(1)
       : endpoint;
-    const baseUrl = this.baseURL || DEFAULT_API_URL;
+    const isBrowser = typeof window !== "undefined";
+    const baseUrl = isBrowser ? "/api/proxy" : this.baseURL || DEFAULT_API_URL;
     const fullUrl = `${baseUrl}/${cleanEndpoint}`;
 
     try {
-      const url = new URL(fullUrl);
+      const url =
+        isBrowser && baseUrl.startsWith("/")
+          ? new URL(fullUrl, window.location.origin)
+          : new URL(fullUrl);
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
           url.searchParams.append(key, value);
         });
       }
-      return url.toString();
+      return isBrowser && baseUrl.startsWith("/")
+        ? `${url.pathname}${url.search}`
+        : url.toString();
     } catch {
       // Fallback for invalid URLs (e.g., during SSG/build time)
       let queryString = "";

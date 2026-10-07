@@ -155,9 +155,15 @@ export function GamificationProvider({
 export function useGamificationContext() {
   const context = useContext(GamificationContext);
   if (context === undefined) {
-    throw new Error(
-      "useGamificationContext must be used within a GamificationProvider",
-    );
+    return {
+      points: 0,
+      loading: false,
+      error: null,
+      currentLevel: USER_LEVELS[0],
+      pointsToNextLevel: 500,
+      refreshPoints: async () => {},
+      fetchUserPoints: async () => {},
+    };
   }
   return context;
 }

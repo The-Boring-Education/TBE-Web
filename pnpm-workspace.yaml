@@ -4,7 +4,6 @@ packages:
   - apps/onboarding
   - apps/platform
   - apps/prep-yatra
-  - apps/quizes
   - apps/resources
   - apps/techyatra
   - apps/dsayatra
