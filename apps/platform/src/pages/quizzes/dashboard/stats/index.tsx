@@ -37,7 +37,7 @@ function StatsContent() {
       if (!user?.id) return null;
       try {
         const response = await analyticsApi.getPerformanceMetrics(user.id);
-        if (response.success && response.data) {
+        if ('status' in response && response.status === true && response.data) {
           return response.data;
         }
       } catch {}

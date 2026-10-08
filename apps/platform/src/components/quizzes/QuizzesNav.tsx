@@ -92,6 +92,7 @@ export const QuizzesNav: React.FC<QuizzesNavProps> = ({ activeTab }) => {
                 <Link
                   key={item.id}
                   href={item.href}
+                  aria-label={item.label}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all no-underline ${
                     item.isActive
                       ? 'bg-primary text-white shadow-xs'

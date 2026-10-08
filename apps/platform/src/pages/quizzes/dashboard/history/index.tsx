@@ -19,6 +19,7 @@ import {
   RefreshCw,
   Search,
   Target,
+  TrendingUp,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -235,7 +236,12 @@ function HistoryContent() {
     const matchesCategory =
       selectedCategory === '' || attempt.categoryName === selectedCategory;
 
-    return matchesSearch && matchesCategory;
+    const matchesTimeRange =
+      selectedTimeRange === 'all' ||
+      new Date(attempt.completedAt).getTime() >=
+        Date.now() - Number(selectedTimeRange) * 24 * 60 * 60 * 1000;
+
+    return matchesSearch && matchesCategory && matchesTimeRange;
   });
 
   const totalAttempts = attempts.length;
