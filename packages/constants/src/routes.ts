@@ -59,13 +59,14 @@ const routes = {
     visualizer: (slug: string) => `/visualizers/${slug}`,
     baseUrl: "https://dsayatra.theboringeducation.com",
   },
-  // Quizes
+  // Quizzes (Platform)
+  quizzes: "/quizzes",
   quizes: {
-    home: "/",
+    home: "/quizzes",
     login: "/login",
-    dashboard: "/dashboard",
+    dashboard: "/quizzes/dashboard",
     pricing: "/pricing",
-    baseUrl: "https://quiz.theboringeducation.com",
+    baseUrl: "https://theboringeducation.com/quizzes",
   },
   // TechYatra
   techyatra: {

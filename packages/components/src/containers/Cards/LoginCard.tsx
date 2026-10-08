@@ -1,7 +1,7 @@
 import { useAuth } from "@tbe/auth";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import LoginWithGoogleButton from "../../common/Buttons/LoginWithGoogleButton";
 import Image from "../../common/Images/Image";
@@ -9,19 +9,23 @@ import Logo from "../../common/Images/Logo";
 import Text from "../../common/Typography/Text";
 import Section from "../../layout/Section";
 import FlexContainer from "../Page/common/FlexContainer";
+import { getSafeRedirectPath } from "./LoginCardNew";
 
 const Login = () => {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const redirectPath = router.query.redirect
-    ? String(router.query.redirect)
-    : "/";
+  const redirectPath = useMemo(() => {
+    const rawRedirect = Array.isArray(router.query.redirect)
+      ? router.query.redirect[0]
+      : router.query.redirect;
+    return getSafeRedirectPath(rawRedirect, "/");
+  }, [router.query.redirect]);
 
   useEffect(() => {
     if (isAuthenticated) {
       router.replace(redirectPath);
     }
-  }, [status, router, redirectPath]);
+  }, [isAuthenticated, router, redirectPath]);
 
   return (
     <Section>

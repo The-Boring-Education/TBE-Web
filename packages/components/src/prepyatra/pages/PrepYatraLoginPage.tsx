@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import LoadingSpinner from "../../common/LoadingSpinner";
 import LoginCardNew from "../../containers/Cards/LoginCardNew";
+import { getSafeRedirectPath } from "../../containers/Cards/LoginCardNew";
 import InstallButton from "../features/InstallButton";
 
 /**
@@ -15,7 +16,10 @@ export default function PrepYatraLoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      const callbackUrl = (router.query.callbackUrl as string) || "/dashboard";
+      const rawCallback = Array.isArray(router.query.callbackUrl)
+        ? router.query.callbackUrl[0]
+        : router.query.callbackUrl;
+      const callbackUrl = getSafeRedirectPath(rawCallback, "/dashboard");
       router.replace(callbackUrl);
     }
   }, [isAuthenticated, isLoading, router]);

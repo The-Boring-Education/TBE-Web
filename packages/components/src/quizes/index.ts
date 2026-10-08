@@ -27,4 +27,5 @@ export { useToast } from "./ui/use-toast";
 // Auth exports moved to @tbe/auth package
 export { useGamificationContext } from "./context/GamificationContext";
 export { GamificationWrapper } from "./GamificationWrapper";
+export { PointsDisplay } from "./PointsDisplay";
 export { default as QueryProvider } from "./QueryProvider";
