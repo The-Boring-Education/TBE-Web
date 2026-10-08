@@ -39,7 +39,9 @@ function QuizesClient() {
     if (isAuthenticated) {
       router.push('/quizzes/dashboard');
     } else {
-      router.push('/login?returnTo=/quizzes/dashboard');
+      router.push(
+        '/login?redirect=/quizzes/dashboard&returnTo=/quizzes/dashboard',
+      );
     }
   };
 

@@ -215,7 +215,7 @@ function HistoryContent() {
     queryKey: ['quiz-attempts', user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
-      const response = await quizApi.getUserSessions(user.id);
+      const response = await quizApi.getUserAttempts(user.id, 50);
       return response.data || [];
     },
     enabled: !!user?.id,

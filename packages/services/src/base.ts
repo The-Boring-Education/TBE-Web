@@ -21,9 +21,16 @@ const DEFAULT_API_URL = "http://localhost:3000/api/v1";
 
 export class APIClient {
   private baseURL: string;
+  private isCustomBaseURL: boolean;
 
-  constructor(baseURL: string = config.API_BASE_URL || DEFAULT_API_URL) {
-    this.baseURL = baseURL || DEFAULT_API_URL;
+  constructor(baseURL?: string) {
+    if (baseURL) {
+      this.baseURL = baseURL;
+      this.isCustomBaseURL = true;
+    } else {
+      this.baseURL = config.API_BASE_URL || DEFAULT_API_URL;
+      this.isCustomBaseURL = false;
+    }
   }
 
   private getAuthHeaders(): Record<string, string> {
@@ -47,12 +54,15 @@ export class APIClient {
       ? endpoint.slice(1)
       : endpoint;
     const isBrowser = typeof window !== "undefined";
-    const baseUrl = isBrowser ? "/api/proxy" : this.baseURL || DEFAULT_API_URL;
+    const shouldUseProxy = isBrowser && !this.isCustomBaseURL;
+    const baseUrl = shouldUseProxy
+      ? "/api/proxy"
+      : this.baseURL || DEFAULT_API_URL;
     const fullUrl = `${baseUrl}/${cleanEndpoint}`;
 
     try {
       const url =
-        isBrowser && baseUrl.startsWith("/")
+        shouldUseProxy && baseUrl.startsWith("/")
           ? new URL(fullUrl, window.location.origin)
           : new URL(fullUrl);
       if (params) {
@@ -60,7 +70,7 @@ export class APIClient {
           url.searchParams.append(key, value);
         });
       }
-      return isBrowser && baseUrl.startsWith("/")
+      return shouldUseProxy && baseUrl.startsWith("/")
         ? `${url.pathname}${url.search}`
         : url.toString();
     } catch {

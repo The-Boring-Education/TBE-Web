@@ -14,7 +14,7 @@
 // ================================
 
 export interface QuizAttempt {
-  categoryIcon: string;
+  categoryIcon?: string;
   _id: string;
   quizId: string;
   categoryName: string;

@@ -18,9 +18,14 @@ vi.mock("../../../../api/src/lib/database", () => ({
     mockCheckPaymentStatusFromDB(...args),
 }));
 
-vi.mock("../../../../api/src/lib/utils", () => ({
-  sendAPIResponse: (payload: any) => payload,
-}));
+vi.mock("../../../../api/src/lib/utils", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/utils")>();
+  return {
+    ...actual,
+    sendAPIResponse: (payload: any) => payload,
+  };
+});
 
 vi.mock("../../../../api/src/lib/utils/logger", () => ({
   logger: {

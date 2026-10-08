@@ -151,33 +151,64 @@ function QuizContent() {
     loadQuiz();
   }, [quizId, router]);
 
+  const selectedAnswersRef = React.useRef<{ [key: number]: number }>({});
+  const questionTimesRef = React.useRef<{ [key: number]: number }>({});
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    selectedAnswersRef.current = selectedAnswers;
+  }, [selectedAnswers]);
+
+  useEffect(() => {
+    questionTimesRef.current = questionTimes;
+  }, [questionTimes]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const selectAnswer = (answerIndex: number) => {
     if (selectedAnswer !== undefined || isSubmitting) return;
 
     const timeSpentOnQuestion = Math.round(
       (Date.now() - questionStartTime) / 1000,
     );
-    setQuestionTimes((prev) => ({
-      ...prev,
+    const updatedTimes = {
+      ...questionTimesRef.current,
       [currentQuestionIndex]: timeSpentOnQuestion,
-    }));
-
-    setSelectedAnswers((prev) => ({
-      ...prev,
+    };
+    const updatedAnswers = {
+      ...selectedAnswersRef.current,
       [currentQuestionIndex]: answerIndex,
-    }));
+    };
 
-    setTimeout(() => {
+    setQuestionTimes(updatedTimes);
+    setSelectedAnswers(updatedAnswers);
+    questionTimesRef.current = updatedTimes;
+    selectedAnswersRef.current = updatedAnswers;
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
       if (quiz && currentQuestionIndex < quiz.questions.length - 1) {
         setCurrentQuestionIndex((prev) => prev + 1);
         setQuestionStartTime(Date.now());
       } else {
-        completeQuiz();
+        completeQuiz(updatedAnswers, updatedTimes);
       }
     }, 800);
   };
 
-  const completeQuiz = async () => {
+  const completeQuiz = async (
+    answersSnapshot?: { [key: number]: number },
+    timesSnapshot?: { [key: number]: number },
+  ) => {
     if (
       isSubmitting ||
       gameState === 'submitting' ||
@@ -198,7 +229,11 @@ function QuizContent() {
 
         if (sessionData?.user?.id) {
           if (isMongoObjectId(sessionData.user.id)) {
-            await submitQuizWithUserId(sessionData.user.id);
+            await submitQuizWithUserId(
+              sessionData.user.id,
+              answersSnapshot,
+              timesSnapshot,
+            );
             return;
           } else {
             const mongoUserId = await resolveGoogleIdToMongoId(
@@ -207,7 +242,11 @@ function QuizContent() {
               sessionData,
             );
             if (mongoUserId) {
-              await submitQuizWithUserId(mongoUserId);
+              await submitQuizWithUserId(
+                mongoUserId,
+                answersSnapshot,
+                timesSnapshot,
+              );
               return;
             }
           }
@@ -219,17 +258,24 @@ function QuizContent() {
       return;
     }
 
-    await submitQuizWithUserId(effectiveUserId);
+    await submitQuizWithUserId(effectiveUserId, answersSnapshot, timesSnapshot);
   };
 
-  const submitQuizWithUserId = async (userId: string) => {
+  const submitQuizWithUserId = async (
+    userId: string,
+    answersSnapshot?: { [key: number]: number },
+    timesSnapshot?: { [key: number]: number },
+  ) => {
+    const currentAnswers = answersSnapshot ?? selectedAnswersRef.current;
+    const currentTimes = timesSnapshot ?? questionTimesRef.current;
+
     try {
       const totalTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000);
 
       const answers = quiz!.questions.map((question, index) => {
-        const selectedAnswer = selectedAnswers[index] ?? -1;
+        const selectedAnswer = currentAnswers[index] ?? -1;
         const isCorrect = selectedAnswer === question.correctAnswer;
-        const timeSpent = questionTimes[index] || 0;
+        const timeSpent = currentTimes[index] || 0;
 
         return {
           questionIndex: index,
@@ -247,6 +293,9 @@ function QuizContent() {
 
       const response = await quizApi.submitQuiz(quizId, submission);
 
+      const answersParam = JSON.stringify(answers.map((a) => a.selectedAnswer));
+      const timeTakenParam = totalTimeSpent.toString();
+
       if (
         response &&
         typeof response === 'object' &&
@@ -254,11 +303,6 @@ function QuizContent() {
         response.success &&
         'data' in response
       ) {
-        const answersParam = JSON.stringify(
-          answers.map((a) => a.selectedAnswer),
-        );
-        const timeTakenParam = totalTimeSpent.toString();
-
         router.push(
           `/quizzes/results/${quizId}?answers=${encodeURIComponent(
             answersParam,
@@ -266,10 +310,6 @@ function QuizContent() {
         );
       } else {
         // Fallback redirection to results even if submit error
-        const answersParam = JSON.stringify(
-          answers.map((a) => a.selectedAnswer),
-        );
-        const timeTakenParam = totalTimeSpent.toString();
         router.push(
           `/quizzes/results/${quizId}?answers=${encodeURIComponent(
             answersParam,
@@ -280,7 +320,7 @@ function QuizContent() {
       console.error('Submission error:', error);
       const totalTimeSpent = Math.floor((Date.now() - quizStartTime) / 1000);
       const answersParam = JSON.stringify(
-        quiz!.questions.map((_, index) => selectedAnswers[index] ?? -1),
+        quiz!.questions.map((_, index) => currentAnswers[index] ?? -1),
       );
       router.push(
         `/quizzes/results/${quizId}?answers=${encodeURIComponent(

@@ -9,7 +9,7 @@ import {
 } from '@tbe/components/quizes';
 import { useQuery } from '@tbe/query';
 import { analyticsApi, quizApi } from '@tbe/services';
-import type { PerformanceMetrics } from '@tbe/types';
+import type { PerformanceMetrics, QuizAttempt } from '@tbe/types';
 import {
   Activity,
   BarChart3,
@@ -24,6 +24,16 @@ import React from 'react';
 
 import { QuizzesNav } from '@/components/quizzes/QuizzesNav';
 
+interface NormalizedMetrics {
+  totalQuizzes: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  accuracy: number;
+  averageScore: number;
+  totalPoints: number;
+  totalTimeSpent: number;
+}
+
 function StatsContent() {
   const { user } = useAuth();
 
@@ -31,65 +41,87 @@ function StatsContent() {
     data: metricsData,
     isLoading,
     refetch,
-  } = useQuery<PerformanceMetrics | null>({
+  } = useQuery<NormalizedMetrics | null>({
     queryKey: ['quizzes-performance-metrics', user?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<NormalizedMetrics | null> => {
       if (!user?.id) return null;
+
+      // 1. Fetch completed attempts to compute aggregates
+      let attempts: QuizAttempt[] = [];
+      try {
+        const attemptsResp = await quizApi.getUserAttempts(user.id, 100);
+        attempts = (attemptsResp.data || []) as QuizAttempt[];
+      } catch (err) {
+        console.error('Failed to fetch user attempts for stats:', err);
+      }
+
+      const totalAttempts = attempts.length;
+      const totalPoints = attempts.reduce(
+        (sum, a) => sum + (a.pointsEarned || 0),
+        0,
+      );
+      const totalQuestions = attempts.reduce(
+        (sum, a) => sum + (a.totalQuestions || 0),
+        0,
+      );
+      const correctAnswers = attempts.reduce(
+        (sum, a) => sum + (a.correctAnswers || 0),
+        0,
+      );
+      const attemptsTotalTime = attempts.reduce(
+        (sum, a) => sum + (a.timeTaken || 0),
+        0,
+      );
+      const attemptsAvgScore =
+        totalAttempts > 0
+          ? Math.round(
+              attempts.reduce((sum, a) => sum + (a.score || 0), 0) /
+                totalAttempts,
+            )
+          : 0;
+
+      // 2. Fetch primary performance metrics if available
+      let perfData: PerformanceMetrics | null = null;
       try {
         const response = await analyticsApi.getPerformanceMetrics(user.id);
         if ('status' in response && response.status === true && response.data) {
-          return response.data;
+          perfData = response.data;
+        } else if (
+          'success' in response &&
+          response.success === true &&
+          response.data
+        ) {
+          perfData = response.data;
         }
       } catch {}
 
-      // Fallback: fetch sessions and compute metrics
-      try {
-        const sessionsResp = await quizApi.getUserSessions(user.id);
-        const attempts = sessionsResp.data || [];
-
-        if (attempts.length === 0) {
-          return null;
-        }
-
-        const totalAttempts = attempts.length;
-        const totalScore = attempts.reduce(
-          (sum: number, a: any) => sum + (a.score || 0),
-          0,
-        );
-        const totalTime = attempts.reduce(
-          (sum: number, a: any) => sum + (a.timeTaken || 0),
-          0,
-        );
-        const totalPoints = attempts.reduce(
-          (sum: number, a: any) => sum + (a.pointsEarned || 0),
-          0,
-        );
-        const averageScore = Math.round(totalScore / totalAttempts);
-
-        return {
-          totalQuizzes: totalAttempts,
-          totalQuestions: attempts.reduce(
-            (sum: number, a: any) => sum + (a.totalQuestions || 0),
-            0,
-          ),
-          correctAnswers: attempts.reduce(
-            (sum: number, a: any) => sum + (a.correctAnswers || 0),
-            0,
-          ),
-          accuracy: averageScore,
-          averageScore,
-          totalPoints,
-          totalTimeSpent: totalTime,
-          recentTrend: 5,
-        } as unknown as PerformanceMetrics;
-      } catch {
+      if (totalAttempts === 0 && !perfData) {
         return null;
       }
+
+      const totalQuizzes =
+        perfData?.totalQuizzes ?? perfData?.totalAttempts ?? totalAttempts;
+      const averageScore = perfData?.averageScore ?? attemptsAvgScore;
+      const accuracy =
+        totalQuestions > 0
+          ? Math.round((correctAnswers / totalQuestions) * 100)
+          : averageScore;
+      const totalTimeSpent = perfData?.totalTimeSpent ?? attemptsTotalTime;
+
+      return {
+        totalQuizzes,
+        totalQuestions,
+        correctAnswers,
+        accuracy,
+        averageScore,
+        totalPoints,
+        totalTimeSpent,
+      };
     },
     enabled: !!user?.id,
   });
 
-  const m = metricsData as any;
+  const m = metricsData;
 
   return (
     <div className='min-h-screen bg-gray-50 flex flex-col'>

@@ -79,17 +79,28 @@ const selectChapter = async (
   isMobile = false,
 ) => {
   if (isMobile) {
-    await page.getByRole("button", { name: /View Chapters/i }).click();
+    const trigger = page.getByRole("button", { name: /View Chapters/i });
+    const drawer = page.getByRole("dialog", { name: "Chapters" });
+    if (!(await drawer.isVisible().catch(() => false))) {
+      await trigger.click();
+      await expect(drawer).toBeVisible();
+    }
+    const link = drawer.locator(
+      `a[href="${LEARN_URL}?chapterId=${chapterId}"]`,
+    );
+    await Promise.all([
+      page.waitForURL(`**${LEARN_URL}?chapterId=${chapterId}`),
+      link.click(),
+    ]);
+  } else {
+    const link = page.locator(
+      `aside a[href="${LEARN_URL}?chapterId=${chapterId}"]`,
+    );
+    await Promise.all([
+      page.waitForURL(`**${LEARN_URL}?chapterId=${chapterId}`),
+      link.click(),
+    ]);
   }
-
-  // The mobile drawer renders before the desktop sidebar in the DOM.
-  const links = page.locator(`a[href="${LEARN_URL}?chapterId=${chapterId}"]`);
-  const link = isMobile ? links.first() : links.last();
-
-  await Promise.all([
-    page.waitForURL(`**${LEARN_URL}?chapterId=${chapterId}`),
-    link.click(),
-  ]);
 };
 
 /** The heading and the body must always describe the same chapter. */

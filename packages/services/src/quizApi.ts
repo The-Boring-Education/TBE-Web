@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from "@tbe/config/quizes";
+import type { QuizAttempt } from "@tbe/types";
 import { sendRequest } from "@tbe/utils";
 
 export interface QuizQuestion {
@@ -194,6 +195,42 @@ export const quizApi = {
         error instanceof Error
           ? error.message
           : "Failed to fetch user sessions",
+      );
+    }
+  },
+
+  // Get user quiz attempts history
+  getUserAttempts: async (
+    userId: string,
+    limit?: number,
+    quizId?: string,
+  ): Promise<{
+    success: boolean;
+    data?: QuizAttempt[];
+    message?: string;
+    status?: boolean;
+  }> => {
+    try {
+      let url = `${API_ENDPOINTS.QUIZ_ATTEMPTS}?userId=${encodeURIComponent(userId)}`;
+      if (limit) url += `&limit=${limit}`;
+      if (quizId) url += `&quizId=${encodeURIComponent(quizId)}`;
+
+      const result = await sendRequest({
+        url,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch user attempts");
+      return result as {
+        success: boolean;
+        data?: QuizAttempt[];
+        message?: string;
+        status?: boolean;
+      };
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch user attempts",
       );
     }
   },

@@ -1,12 +1,19 @@
 import { ProtectedRoute, useAuth } from '@tbe/auth';
-import { ContentFeedbackWidget } from '@tbe/components';
+import { ContentFeedbackWidget, LoadingSpinner } from '@tbe/components';
 import { MarkdownRenderer } from '@tbe/components/quizes';
 import { ANALYTICS_EVENTS } from '@tbe/constants';
 import { useQuery } from '@tbe/query';
 import { quizApi } from '@tbe/services';
 import type { Question } from '@tbe/types';
 import { cleanOptionText, trackEvent } from '@tbe/utils';
-import { ArrowLeft, Clock, RotateCcw, Target, Trophy } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowLeft,
+  Clock,
+  RotateCcw,
+  Target,
+  Trophy,
+} from 'lucide-react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 
@@ -68,6 +75,47 @@ function ResultsContent() {
       });
     } catch {}
   }, [id, timeTaken, answers]);
+
+  if (!router.isReady || isLoading || !id) {
+    return (
+      <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
+        <LoadingSpinner label='Loading quiz results...' />
+      </div>
+    );
+  }
+
+  if (error || !quizData?.data || questions.length === 0) {
+    return (
+      <div className='min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4'>
+        <div className='bg-white rounded-2xl shadow-xs border border-gray-200 p-8 max-w-md w-full text-center'>
+          <div className='w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4'>
+            <AlertCircle className='w-6 h-6' />
+          </div>
+          <h2 className='text-2xl font-bold text-gray-900 mb-2'>
+            Failed to load quiz results
+          </h2>
+          <p className='text-gray-600 mb-6 text-sm'>
+            We couldn't retrieve the questions for this quiz assessment. Please
+            try again.
+          </p>
+          <div className='flex justify-center gap-3'>
+            <button
+              onClick={() => router.push('/quizzes/dashboard')}
+              className='inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer'
+            >
+              Back to Dashboard
+            </button>
+            <button
+              onClick={() => router.reload()}
+              className='inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 cursor-pointer'
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const score = answers.reduce((acc: number, answer, index) => {
     return acc + (answer === questions[index]?.correctAnswer ? 1 : 0);
@@ -194,11 +242,16 @@ function ResultsContent() {
                     }`}
                   >
                     <div className='flex items-start justify-between gap-4 mb-4'>
-                      <div className='font-semibold text-base text-gray-900 flex-1'>
-                        <span className='inline-block mr-2 font-bold text-gray-500'>
+                      <div className='flex items-start gap-2 flex-1 text-gray-900'>
+                        <span className='font-bold text-gray-500 shrink-0 text-base mt-0.5'>
                           #{index + 1}
                         </span>
-                        {question.question}
+                        <div className='flex-1 min-w-0'>
+                          <MarkdownRenderer
+                            content={question.question}
+                            className='font-semibold text-base text-gray-900 leading-relaxed'
+                          />
+                        </div>
                       </div>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 ${
@@ -229,14 +282,17 @@ function ResultsContent() {
                         return (
                           <div
                             key={optIdx}
-                            className={`p-3 rounded-lg border text-sm flex items-center gap-3 ${optClass}`}
+                            className={`p-3 rounded-lg border text-sm flex items-start sm:items-center gap-3 ${optClass}`}
                           >
-                            <span className='w-6 h-6 rounded-md border flex items-center justify-center text-xs font-bold shrink-0 bg-white'>
+                            <span className='w-6 h-6 rounded-md border flex items-center justify-center text-xs font-bold shrink-0 bg-white mt-0.5 sm:mt-0'>
                               {String.fromCharCode(65 + optIdx)}
                             </span>
-                            <span className='flex-1'>
-                              {cleanOptionText(option)}
-                            </span>
+                            <div className='flex-1 min-w-0'>
+                              <MarkdownRenderer
+                                content={cleanOptionText(option)}
+                                className='text-sm leading-relaxed'
+                              />
+                            </div>
                             {isCorrectChoice && (
                               <span className='text-xs text-green-600 font-bold shrink-0'>
                                 Correct Answer
