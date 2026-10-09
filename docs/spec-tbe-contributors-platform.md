@@ -168,7 +168,8 @@ export interface IContributorTask extends Document {
     | "documentation"
     | "content"
     | "community"
-    | "event";
+    | "event"
+    | "pr_review"; // Reviewing PRs, testing out PRs, adding review comments
   difficulty: TaskDifficulty;
   xpPoints: number; // Points awarded upon completion (e.g., 10, 25, 50)
   githubIssueUrl?: string; // Direct link if issue on GitHub
@@ -201,6 +202,7 @@ const ContributorTaskSchema = new Schema<IContributorTask>(
         "content",
         "community",
         "event",
+        "pr_review",
       ],
       required: true,
     },
@@ -229,17 +231,17 @@ const ContributorTaskSchema = new Schema<IContributorTask>(
 
 ### 2.4 `ContributorSubmission` Schema
 
-Records work proof submitted by contributors for review.
+Records work proof submitted by contributors for review (e.g. merged PRs, reviewing & testing peer PRs, blog posts, community work).
 
 ```typescript
 export interface IContributorSubmission extends Document {
   contributorId: Types.ObjectId; // Reference to ContributorProfile
   userId: Types.ObjectId; // Reference to User
   taskId?: Types.ObjectId; // Optional reference to ContributorTask (null if independent)
-  customTitle?: string; // Populated if independent task
+  customTitle?: string; // Populated if independent task (e.g., "PR Review & Testing for PR #123")
   track: ContributorTrack;
-  proofUrl: string; // GitHub PR URL, Blog URL, Social Media Link, Drive URL
-  notes: string; // Contributor's notes on what was accomplished
+  proofUrl: string; // GitHub PR URL, GitHub PR review link, Blog URL, Social Media Link, Drive URL
+  notes: string; // Contributor's notes on what was accomplished (e.g., implementation details, review comments added, or local testing steps)
 
   // Review Status
   status: SubmissionStatus; // "pending" | "approved" | "changes_requested" | "rejected"
@@ -461,7 +463,7 @@ All routes follow the existing TBE API structure under `apps/api/src/pages/api/v
 
 #### 4. `POST /api/v1/contributor/submissions`
 - **Auth**: User Session required.
-- **Request Body**:
+- **Request Body** (Used for PRs, reviewing & testing peer PRs, content, or community tasks):
 ```json
 {
   "taskId": "660d2...",
@@ -584,3 +586,4 @@ apps/contributor/src/components/
 - [ ] Implement automated 4-month lifecycle calculation and graduation status.
 - [ ] Implement email / Discord webhooks for submission status changes.
 - [ ] End-to-end testing with Playwright in `apps/testing/`.
+$$
