@@ -10,6 +10,7 @@ export { useAuth } from "./hooks/useAuth";
 export {
   clearTokens,
   decodeToken,
+  expireLegacyHostCookies,
   getAccessToken,
   getCookieDomainAttributes,
   getRefreshToken,

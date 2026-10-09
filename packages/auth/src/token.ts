@@ -20,20 +20,45 @@ export const getCookieDomainAttributes = (): string => {
   return "";
 };
 
+/**
+ * Expires legacy host-only auth cookies on the current TBE production host.
+ *
+ * When the shared-domain cookie was introduced, browsers may hold both a legacy
+ * host-only cookie (set before this change) and the new domain-scoped cookie
+ * under the same name.  Parsers that take the first `Cookie` header match can
+ * therefore read the stale token.  This function removes the host-only copy so
+ * the domain-scoped token wins.
+ *
+ * Only runs on production TBE hosts; a no-op on localhost / preview.
+ */
+export const expireLegacyHostCookies = (): void => {
+  if (typeof document === "undefined") return;
+  const domainAttrs = getCookieDomainAttributes();
+  if (!domainAttrs) return;
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+};
+
 export const setTokens = (accessToken: string, refreshToken: string): void => {
   if (typeof document === "undefined") return;
 
   const domainAttrs = getCookieDomainAttributes();
-
+  // Expire any pre-SSO host-only cookies so the new domain-scoped ones take precedence.
+  if (domainAttrs) {
+    document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+    document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+  }
   document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${accessToken}; path=/; max-age=${AUTH_CONFIG.ACCESS_TOKEN_MAX_AGE}; SameSite=Lax${domainAttrs}`;
   document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${refreshToken}; path=/; max-age=${AUTH_CONFIG.REFRESH_TOKEN_MAX_AGE}; SameSite=Lax${domainAttrs}`;
 };
 
 export const getAccessToken = (): string | null => {
+  expireLegacyHostCookies();
   return getCookie(AUTH_CONFIG.ACCESS_TOKEN_KEY);
 };
 
 export const getRefreshToken = (): string | null => {
+  expireLegacyHostCookies();
   return getCookie(AUTH_CONFIG.REFRESH_TOKEN_KEY);
 };
 

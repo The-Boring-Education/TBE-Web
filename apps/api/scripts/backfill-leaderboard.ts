@@ -12,11 +12,11 @@ import yargs from "yargs";
 
 import { backfillCurrentPeriodScores } from "../src/lib/database/queries/leaderboardBackfill";
 import {
-  type ScriptEnv,
-  SCRIPT_ENV_CHOICES,
   cliArgv,
   loadScriptEnv,
   requireParsedValue,
+  SCRIPT_ENV_CHOICES,
+  type ScriptEnv,
 } from "./lib/script-env";
 
 interface Args {
@@ -77,7 +77,9 @@ async function main() {
 }
 
 main().catch(async (error) => {
-  console.error(chalk.red(error instanceof Error ? error.message : String(error)));
+  console.error(
+    chalk.red(error instanceof Error ? error.message : String(error)),
+  );
   await mongoose.disconnect();
   process.exit(1);
 });

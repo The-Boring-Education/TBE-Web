@@ -7,6 +7,7 @@ import { AUTH_CONFIG } from "../../../../../packages/auth/src/config";
 import {
   clearTokens,
   decodeToken,
+  expireLegacyHostCookies,
   getAccessToken,
   getCookieDomainAttributes,
   getRefreshToken,
@@ -466,6 +467,68 @@ describe("Client-side Token Utilities (packages/auth/src/token.ts)", () => {
       const result = getRefreshTokenFromCookies("");
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("expireLegacyHostCookies", () => {
+    const originalLocation = window.location;
+
+    afterEach(() => {
+      Object.defineProperty(window, "location", {
+        value: originalLocation,
+        writable: true,
+      });
+    });
+
+    it("is a no-op on localhost (non-TBE host)", () => {
+      Object.defineProperty(window, "location", {
+        value: new URL("http://localhost:3000"),
+        writable: true,
+      });
+      document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=host-only-token; path=/`;
+
+      expireLegacyHostCookies();
+
+      // Cookie should still be present — function is a no-op off TBE production
+      expect(document.cookie).toContain(AUTH_CONFIG.ACCESS_TOKEN_KEY);
+    });
+
+    it("removes host-only access and refresh cookies on a TBE production host", () => {
+      Object.defineProperty(window, "location", {
+        value: new URL("https://theboringeducation.com"),
+        writable: true,
+      });
+      // Plant host-only cookies (no domain attribute)
+      document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=stale-access; path=/`;
+      document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=stale-refresh; path=/`;
+
+      expireLegacyHostCookies();
+
+      // Host-only cookies should have been expired
+      expect(document.cookie).not.toContain(
+        `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=stale-access`,
+      );
+      expect(document.cookie).not.toContain(
+        `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=stale-refresh`,
+      );
+    });
+
+    it("removes host-only cookies on a TBE subdomain", () => {
+      Object.defineProperty(window, "location", {
+        value: new URL("https://dsayatra.theboringeducation.com"),
+        writable: true,
+      });
+      document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=old-access; path=/`;
+      document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=old-refresh; path=/`;
+
+      expireLegacyHostCookies();
+
+      expect(document.cookie).not.toContain(
+        `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=old-access`,
+      );
+      expect(document.cookie).not.toContain(
+        `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=old-refresh`,
+      );
     });
   });
 

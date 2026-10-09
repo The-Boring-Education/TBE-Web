@@ -20,8 +20,12 @@ vi.mock("../../../../api/src/lib/database", () => ({
 
 vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (payload: any) => payload,
-  isUserPurchasedFromPaymentCheck: (res: any) => res?.data?.purchased === true,
-  getPaymentStatusUserMessage: (res: any) => {
+  isUserPurchasedFromPaymentCheck: (res: { data?: { purchased?: boolean } }) =>
+    res?.data?.purchased === true,
+  getPaymentStatusUserMessage: (res: {
+    data?: { purchased?: boolean };
+    error?: string;
+  }) => {
     if (res?.error) return res.error;
     return res?.data?.purchased ? "Payment completed" : "Payment not completed";
   },
