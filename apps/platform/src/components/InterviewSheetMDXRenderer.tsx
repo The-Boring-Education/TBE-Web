@@ -55,7 +55,7 @@ const TabbedCodeBlock = ({
 
   return (
     <div
-      className={` min-w-0 border rounded-xl overflow-hidden my-3 shadow-2xs ${
+      className={`border rounded-xl overflow-hidden my-3 shadow-2xs ${
         isDark
           ? 'bg-[#0f0f11] border-gray-800'
           : 'bg-[#F8F9FD] border-border/80'
@@ -174,7 +174,7 @@ const PlainTextBlock = ({ content, theme = 'light' }: PlainTextBlockProps) => {
 
   return (
     <div
-      className={`min-w-0 relative group border rounded-xl my-3 overflow-hidden shadow-2xs ${
+      className={`relative group border rounded-xl my-3 overflow-hidden shadow-2xs ${
         isDark
           ? 'bg-[#0f0f11] border-gray-800'
           : 'bg-[#F8F9FD] border-border/80'
@@ -534,7 +534,7 @@ export const InterviewSheetMDXRenderer = ({
 
   return (
     <div className='w-full flex flex-col justify-between'>
-      <div className={`min-w-0 space-y-3 sm:space-y-3.5 ${textColorClass}`}>
+      <div className={`space-y-3 sm:space-y-3.5 ${textColorClass}`}>
         {segments.map((seg, idx) => {
           if (seg.type === 'html') {
             const html = renderHTMLSegment(seg.content);
@@ -542,7 +542,7 @@ export const InterviewSheetMDXRenderer = ({
               <div
                 key={idx}
                 dangerouslySetInnerHTML={{ __html: html }}
-                className={`min-w-0 ${containerClass}`}
+                className={containerClass}
               />
             );
           } else if (seg.type === 'text-block') {

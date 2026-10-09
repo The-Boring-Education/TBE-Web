@@ -585,7 +585,7 @@ const CourseLearnPage = ({
                       </div>
                     )}
 
-                    <div className='w-full min-w-0 max-w-full'>
+                    <div className='w-full'>
                       <InterviewSheetMDXRenderer
                         mdxSource={displayContent}
                         theme='light'

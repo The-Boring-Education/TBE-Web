@@ -262,16 +262,27 @@ const getAllEnrolledCoursesFromDB = async (
     const enrolledCourse = await UserCourse.find({ userId })
       .populate({
         path: "course",
-        select: modelSelectParams.coursePreview,
+        select: `${modelSelectParams.coursePreview} chapters._id`,
       })
       .exec();
 
-    return {
-      data: enrolledCourse.map((userCourse) => {
-        const totalChapters = userCourse.chapters.length;
+    const enrolledCoursesData: BaseShikshaCourseResponseProps[] = enrolledCourse
+      .map((userCourse) => {
+        const course = userCourse.course as any;
+        if (!course) return null;
 
-        const completedChapters = userCourse.chapters.filter(
-          (chapter) => chapter.isCompleted,
+        const currentChapterIds = new Set(
+          (course.chapters || []).map((chapter: any) =>
+            chapter._id ? chapter._id.toString() : chapter.toString(),
+          ),
+        );
+
+        const totalChapters = currentChapterIds.size;
+
+        const completedChapters = (userCourse.chapters || []).filter(
+          (chapter: any) =>
+            chapter.isCompleted &&
+            currentChapterIds.has(chapter.chapterId?.toString()),
         ).length;
 
         const percentage =
@@ -279,8 +290,11 @@ const getAllEnrolledCoursesFromDB = async (
             ? Math.round((completedChapters / totalChapters) * 100)
             : 0;
 
+        const courseObj = course.toObject ? course.toObject() : course;
+
         return {
-          ...userCourse.course.toObject(),
+          ...courseObj,
+          title: courseObj.name,
           isEnrolled: true,
           progress: {
             completed: completedChapters,
@@ -288,7 +302,11 @@ const getAllEnrolledCoursesFromDB = async (
             percentage,
           },
         };
-      }) as unknown as BaseShikshaCourseResponseProps,
+      })
+      .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+    return {
+      data: enrolledCoursesData,
     };
   } catch (error) {
     logger.error("DB: getAllEnrolledCoursesFromDB failed", {
