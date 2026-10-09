@@ -246,12 +246,18 @@ export interface ExtendedCourseChapterModel extends CourseChapterModel {
 }
 
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
+  title?: string;
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
   isPremium?: boolean;
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  progress?: {
+    completed: number;
+    total: number;
+    percentage: number;
+  };
 }
 
 // ================================
