@@ -22,11 +22,14 @@ vi.mock("../../../../api/src/lib/database", () => ({
   checkPaymentStatusFromDB: (...args: any[]) => mockCheckPaymentStatus(...args),
 }));
 
-vi.mock("../../../../api/src/lib/utils", () => ({
-  sendAPIResponse: (data: any) => data,
-  isUserPurchasedFromPaymentCheck: (res: { data?: { purchased?: boolean } }) =>
-    res?.data?.purchased === true,
-}));
+vi.mock("../../../../api/src/lib/utils", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/utils")>();
+  return {
+    ...actual,
+    sendAPIResponse: (data: any) => data,
+  };
+});
 
 vi.mock("../../../../api/src/middleware/api", () => ({
   adminMiddleware: vi.fn().mockResolvedValue(true),

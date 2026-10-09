@@ -25,16 +25,13 @@ vi.mock("@/lib/database/queries/dsayatra", () => ({
 vi.mock("@/lib/database/queries/gamification", () => ({
   updateUserPointsInDB: vi.fn(),
 }));
-vi.mock("@/lib/utils", () => ({
-  generateYouTubeSearchLink: vi.fn(),
-  isPaymentStatusQueryFailure: (result: {
-    data?: { purchased?: boolean };
-    error?: string;
-  }) => Boolean(result?.error) && result?.data == null,
-  isUserPurchasedFromPaymentCheck: (result: {
-    data?: { purchased?: boolean };
-  }) => result?.data?.purchased === true,
-}));
+vi.mock("@/lib/utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/utils")>();
+  return {
+    ...actual,
+    generateYouTubeSearchLink: vi.fn(),
+  };
+});
 vi.mock("@/lib/utils/logger", () => ({
   logger: { error: vi.fn() },
 }));

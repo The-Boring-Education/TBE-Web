@@ -119,6 +119,60 @@ const VARIANT_COPY: Record<
   },
 };
 
+/**
+ * Validates and sanitizes a redirect target to prevent open redirect and client-side XSS.
+ * Accepts safe relative paths starting with a single '/' (blocking '//', '\', 'javascript:', etc.)
+ * or trusted domain URLs (converting them to safe relative paths).
+ */
+export const getSafeRedirectPath = (
+  rawPath: unknown,
+  fallback = "/",
+): string => {
+  if (typeof rawPath !== "string") {
+    return fallback;
+  }
+  const trimmed = rawPath.trim();
+  if (!trimmed) {
+    return fallback;
+  }
+
+  // Ensure relative path starting with a single '/' and no protocol-relative slashes or backslashes
+  if (
+    trimmed.startsWith("/") &&
+    !trimmed.startsWith("//") &&
+    !trimmed.includes("\\")
+  ) {
+    return trimmed;
+  }
+
+  // Allow trusted absolute URLs by converting to a safe relative path
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      const hostname = parsed.hostname.toLowerCase();
+      if (
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "theboringeducation.com" ||
+        hostname.endsWith(".theboringeducation.com")
+      ) {
+        const relative = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+        if (
+          relative.startsWith("/") &&
+          !relative.startsWith("//") &&
+          !relative.includes("\\")
+        ) {
+          return relative;
+        }
+      }
+    }
+  } catch {
+    // Malformed or invalid URL
+  }
+
+  return fallback;
+};
+
 const LoginCardNew = ({
   variant = "default",
   customRedirectPath,
@@ -156,10 +210,20 @@ const LoginCardNew = ({
   }, [theme, variant]);
 
   const redirectPath = useMemo(() => {
-    if (customRedirectPath) return customRedirectPath;
-    if (router.query.redirect) return String(router.query.redirect);
-    if (router.query.callbackUrl) return String(router.query.callbackUrl);
-    return variantConfig.redirectPath ?? "/";
+    const fallback = variantConfig.redirectPath ?? "/";
+    const rawTarget =
+      customRedirectPath ??
+      (Array.isArray(router.query.redirect)
+        ? router.query.redirect[0]
+        : router.query.redirect) ??
+      (Array.isArray(router.query.returnTo)
+        ? router.query.returnTo[0]
+        : router.query.returnTo) ??
+      (Array.isArray(router.query.callbackUrl)
+        ? router.query.callbackUrl[0]
+        : router.query.callbackUrl);
+
+    return getSafeRedirectPath(rawTarget, fallback);
   }, [customRedirectPath, router.query, variantConfig.redirectPath]);
 
   useEffect(() => {

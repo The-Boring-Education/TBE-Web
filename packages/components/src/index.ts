@@ -152,7 +152,10 @@ export type { FreemiumLockBannerProps } from "./containers/Cards/FreemiumLockBan
 export { default as FreemiumLockBanner } from "./containers/Cards/FreemiumLockBanner";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as LoginCard } from "./containers/Cards/LoginCard";
-export { default as LoginCardNew } from "./containers/Cards/LoginCardNew";
+export {
+  getSafeRedirectPath,
+  default as LoginCardNew,
+} from "./containers/Cards/LoginCardNew";
 export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";
 export { default as NotificationContainer } from "./containers/Cards/NotificationContainer";
 export { default as PaymentCard } from "./containers/Cards/PaymentCard";

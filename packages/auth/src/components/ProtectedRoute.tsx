@@ -23,7 +23,8 @@ export const ProtectedRoute = ({
   useEffect(() => {
     if (!isLoading && requireAuth && !isAuthenticated) {
       const returnUrl = window.location.pathname + window.location.search;
-      window.location.href = `${redirectTo}?returnTo=${encodeURIComponent(returnUrl)}`;
+      const encoded = encodeURIComponent(returnUrl);
+      window.location.href = `${redirectTo}?redirect=${encoded}&returnTo=${encoded}`;
     }
   }, [isLoading, isAuthenticated, requireAuth, redirectTo]);
 

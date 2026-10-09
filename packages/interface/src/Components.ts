@@ -104,6 +104,12 @@ export interface ButtonProps extends DelegatedInteractiveAnalyticsProps {
   animationClasses?: string;
   icon?: React.ReactNode;
   isFullWidth?: boolean;
+  /**
+   * Disables the button. Takes precedence over `active`, so a button that is
+   * `active` but `disabled` is still non-interactive and rendered greyed out.
+   * `isLoading` independently blocks interaction without changing the variant
+   * styling.
+   */
   disabled?: boolean;
   animationType?: "DEFAULT" | "BOUNCE" | "GLOW";
   size?: "SMALL" | "MEDIUM" | "LARGE";
@@ -509,9 +515,12 @@ export interface LearningChapterListProps {
   chapters: ExtendedCourseChapterModel[];
   currentChapterId: string;
   isLocked?: boolean;
-  href: string;
+  /** Shared destination for every chapter, or a per-chapter destination resolver. */
+  href:
+    string | ((chapter: ExtendedCourseChapterModel, index: number) => string);
   onChapterSelect: (content: string, chapterId: string) => void;
   includeIndex?: boolean;
+  className?: string;
 }
 
 export interface CertificateBannerProps {
