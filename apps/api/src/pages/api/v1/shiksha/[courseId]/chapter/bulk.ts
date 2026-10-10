@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import { addChapterToCourseInDB } from "@/lib/database";
+import {
+  addChapterToCourseInDB,
+  DUPLICATE_CHAPTER_KEY_ERROR,
+  INVALID_CHAPTER_KEY_ERROR,
+} from "@/lib/database";
 import type { AddChapterToCourseRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
@@ -35,13 +39,25 @@ const handleAddBulkChapters = async (
       const { error } = await addChapterToCourseInDB(courseId, chapterData);
 
       if (error) {
-        return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
-          sendAPIResponse({
-            status: false,
-            message: "Failed while adding chapter to course",
-            error,
-          }),
-        );
+        const isRejectedKey =
+          error === INVALID_CHAPTER_KEY_ERROR ||
+          error === DUPLICATE_CHAPTER_KEY_ERROR;
+
+        return res
+          .status(
+            isRejectedKey
+              ? apiStatusCodes.BAD_REQUEST
+              : apiStatusCodes.INTERNAL_SERVER_ERROR,
+          )
+          .json(
+            sendAPIResponse({
+              status: false,
+              message: isRejectedKey
+                ? error
+                : "Failed while adding chapter to course",
+              error,
+            }),
+          );
       }
     }
 
