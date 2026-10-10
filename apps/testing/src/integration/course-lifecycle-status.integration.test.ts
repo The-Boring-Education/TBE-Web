@@ -10,58 +10,67 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 /*  Hoisted Mocks (must be hoisted above vi.mock)                      */
 /* ------------------------------------------------------------------ */
 
-const { mockFind, mockFindOne, mockFindById, mockFindByIdAndUpdate, models } =
-  vi.hoisted(() => {
-    const mockFindInner = vi.fn();
-    const mockFindOneInner = vi.fn();
-    const mockFindByIdInner = vi.fn();
-    const mockFindByIdAndUpdateInner = vi.fn();
+const {
+  mockFind,
+  mockSelect,
+  mockFindOne,
+  mockFindById,
+  mockFindByIdAndUpdate,
+  models,
+} = vi.hoisted(() => {
+  const mockFindInner = vi.fn();
+  const mockSelectInner = vi.fn();
+  const mockFindOneInner = vi.fn();
+  const mockFindByIdInner = vi.fn();
+  const mockFindByIdAndUpdateInner = vi.fn();
 
-    (mockFindInner as any)._result = [];
-    (mockFindOneInner as any)._result = null;
-    (mockFindByIdInner as any)._result = null;
-    (mockFindByIdAndUpdateInner as any)._result = null;
+  (mockFindInner as any)._result = [];
+  (mockFindOneInner as any)._result = null;
+  (mockFindByIdInner as any)._result = null;
+  (mockFindByIdAndUpdateInner as any)._result = null;
 
-    const MockCourse = {
-      find: (...args: any[]) => {
-        mockFindInner(...args);
-        return {
-          select: () => ({
+  const MockCourse = {
+    find: (...args: any[]) => {
+      mockFindInner(...args);
+      return {
+        select: (...selectArgs: any[]) => {
+          mockSelectInner(...selectArgs);
+          return {
             exec: async () => (mockFindInner as any)._result,
-          }),
-        };
-      },
-      findOne: (...args: any[]) => {
-        mockFindOneInner(...args);
-        const result = Promise.resolve(
-          (mockFindOneInner as any)._result,
-        ) as any;
-        result.lean = () => result;
-        return result;
-      },
-      findById: (...args: any[]) => {
-        mockFindByIdInner(...args);
-        return (mockFindByIdInner as any)._result;
-      },
-      findByIdAndUpdate: (...args: any[]) => {
-        mockFindByIdAndUpdateInner(...args);
-        return (mockFindByIdAndUpdateInner as any)._result;
-      },
-    };
+          };
+        },
+      };
+    },
+    findOne: (...args: any[]) => {
+      mockFindOneInner(...args);
+      const result = Promise.resolve((mockFindOneInner as any)._result) as any;
+      result.lean = () => result;
+      return result;
+    },
+    findById: (...args: any[]) => {
+      mockFindByIdInner(...args);
+      return (mockFindByIdInner as any)._result;
+    },
+    findByIdAndUpdate: (...args: any[]) => {
+      mockFindByIdAndUpdateInner(...args);
+      return (mockFindByIdAndUpdateInner as any)._result;
+    },
+  };
 
-    const MockUserCourse = {
-      findOne: vi.fn().mockResolvedValue(null),
-      create: vi.fn(async (doc: any) => doc),
-    };
+  const MockUserCourse = {
+    findOne: vi.fn().mockResolvedValue(null),
+    create: vi.fn(async (doc: any) => doc),
+  };
 
-    return {
-      mockFind: mockFindInner,
-      mockFindOne: mockFindOneInner,
-      mockFindById: mockFindByIdInner,
-      mockFindByIdAndUpdate: mockFindByIdAndUpdateInner,
-      models: { Course: MockCourse, UserCourse: MockUserCourse },
-    };
-  });
+  return {
+    mockFind: mockFindInner,
+    mockSelect: mockSelectInner,
+    mockFindOne: mockFindOneInner,
+    mockFindById: mockFindByIdInner,
+    mockFindByIdAndUpdate: mockFindByIdAndUpdateInner,
+    models: { Course: MockCourse, UserCourse: MockUserCourse },
+  };
+});
 
 vi.mock("@/lib/database/models", () => ({
   Course: models.Course,
@@ -143,6 +152,23 @@ describe("Course Lifecycle Status Integration", () => {
       await getAllCourseFromDB({ includeAllStatuses: true });
 
       expect(mockFind).toHaveBeenCalledWith({});
+    });
+
+    it("public read does not project chapters or the updated time", async () => {
+      await getAllCourseFromDB();
+
+      const selectParams = mockSelect.mock.calls[0][0] as string;
+      expect(selectParams).not.toContain("chapters");
+      expect(selectParams).not.toContain("updatedAt");
+    });
+
+    it("admin read projects the chapter ids and the updated time", async () => {
+      await getAllCourseFromDB({ includeAllStatuses: true });
+
+      const selectParams = mockSelect.mock.calls[0][0] as string;
+      expect(selectParams).toContain("chapters._id");
+      expect(selectParams).toContain("updatedAt");
+      expect(selectParams).toContain("status");
     });
   });
 

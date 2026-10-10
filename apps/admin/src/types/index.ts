@@ -550,3 +550,18 @@ export interface AdminUserUpdateData {
   notes?: string;
   isActive?: boolean;
 }
+
+// Shiksha Course Lifecycle Types
+export type CourseLifecycleStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export interface ShikshaCourse {
+  _id: string;
+  name: string;
+  slug: string;
+  // Courses created before the lifecycle field have no stored status.
+  status?: CourseLifecycleStatus;
+  roadmap?: string;
+  // Admin reads only project the chapter ids, which is enough to count them.
+  chapters?: { _id: string }[];
+  updatedAt?: string;
+}

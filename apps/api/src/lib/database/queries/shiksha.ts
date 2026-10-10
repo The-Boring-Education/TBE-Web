@@ -133,7 +133,11 @@ const getAllCourseFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const course = await Course.find(buildCourseStatusFilter(options))
-      .select(modelSelectParams.coursePreview)
+      .select(
+        options?.includeAllStatuses
+          ? modelSelectParams.adminCoursePreview
+          : modelSelectParams.coursePreview,
+      )
       .exec();
 
     if (!course) {
