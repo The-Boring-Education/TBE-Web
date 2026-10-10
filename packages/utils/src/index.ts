@@ -11,6 +11,7 @@ export * from "./challenges";
 export * from "./chapter-key";
 // Mongoose schema helper (server / API only — pulls in `mongoose`).
 export * from "./content-id";
+export * from "./courseBundle";
 export * from "./onboarding";
 export * from "./prepLogs";
 // export * from "./socialMedia"
