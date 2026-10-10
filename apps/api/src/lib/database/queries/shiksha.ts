@@ -1,10 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { modelSelectParams } from "@/lib/constants";
+import { COURSE_STATUS, modelSelectParams } from "@/lib/constants";
 import type {
   AddChapterToCourseRequestProps,
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
+  CourseModel,
+  CourseStatusType,
   DatabaseQueryResponseType,
   EnrollCourseInDBRequestProps,
   UpdateChapterInCourseRequestProps,
@@ -15,6 +17,27 @@ import { logger } from "@/lib/utils/logger";
 
 import { Course, UserCourse } from "../models";
 import { updateUserPointsInDB } from "./gamification";
+
+type CourseReadOptions = {
+  // Admin-authenticated reads pass `true` so courses in every lifecycle
+  // status are returned. Public reads always stay restricted to PUBLISHED.
+  includeAllStatuses?: boolean;
+};
+
+// Fields a course must carry before it can be published. `chapters` is
+// validated separately so the rejection message can name the reason.
+const REQUIRED_FIELDS_FOR_PUBLISH: Array<keyof CourseModel> = [
+  "name",
+  "slug",
+  "description",
+  "coverImageURL",
+  "liveOn",
+  "roadmap",
+  "difficultyLevel",
+];
+
+const buildCourseStatusFilter = (options?: CourseReadOptions) =>
+  options?.includeAllStatuses ? {} : { status: "PUBLISHED" };
 
 const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps,
@@ -37,6 +60,22 @@ const updateACourseInDB = async ({
   updatedData,
 }: UpdateCourseRequestPayloadProps): Promise<DatabaseQueryResponseType> => {
   try {
+    const existingCourse = await Course.findById(courseId);
+
+    if (!existingCourse) return { error: "Course does not exists" };
+
+    const nextSlug = (updatedData as { slug?: string })?.slug;
+
+    if (
+      existingCourse.status === "PUBLISHED" &&
+      nextSlug &&
+      nextSlug !== existingCourse.slug
+    ) {
+      return {
+        error: "Slug cannot be changed once the course is published",
+      };
+    }
+
     const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
       updatedData,
@@ -74,9 +113,11 @@ const deleteACourseFromDBById = async (
   }
 };
 
-const getAllCourseFromDB = async (): Promise<DatabaseQueryResponseType> => {
+const getAllCourseFromDB = async (
+  options?: CourseReadOptions,
+): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.find()
+    const course = await Course.find(buildCourseStatusFilter(options))
       .select(modelSelectParams.coursePreview)
       .exec();
 
@@ -319,9 +360,13 @@ const getAllEnrolledCoursesFromDB = async (
 
 const getCourseBySlugFromDB = async (
   slug: string,
+  options?: CourseReadOptions,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findOne({ slug });
+    const course = await Course.findOne({
+      slug,
+      ...buildCourseStatusFilter(options),
+    });
 
     if (!course) {
       return { error: "Course not found" };
@@ -343,9 +388,13 @@ const getCourseBySlugFromDB = async (
 const getCourseBySlugWithUserFromDB = async (
   slug: string,
   userId?: string,
+  options?: CourseReadOptions,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findOne({ slug });
+    const course = await Course.findOne({
+      slug,
+      ...buildCourseStatusFilter(options),
+    });
 
     if (!course) {
       return { error: "Course not found" };
@@ -529,6 +578,57 @@ const updateCertificateToUserShikshaCourseDoc = async (
   }
 };
 
+const updateCourseStatusInDB = async (
+  courseId: string,
+  status: CourseStatusType,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (!COURSE_STATUS.includes(status)) {
+      return {
+        error: `Invalid course status. Allowed values: ${COURSE_STATUS.join(", ")}`,
+      };
+    }
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return { error: "Course not found" };
+    }
+
+    if (status === "PUBLISHED") {
+      if (!course.chapters?.length) {
+        return { error: "Cannot publish a course with no chapters" };
+      }
+
+      const missingField = REQUIRED_FIELDS_FOR_PUBLISH.find((field) => {
+        const value = course[field];
+        return (
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "")
+        );
+      });
+
+      if (missingField) {
+        return {
+          error: `Cannot publish a course without ${String(missingField)}`,
+        };
+      }
+    }
+
+    course.status = status;
+    await course.save();
+
+    return { data: course };
+  } catch (error) {
+    logger.error("DB: updateCourseStatusInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while updating course status", details: error };
+  }
+};
+
 export {
   addACourseToDB,
   addChapterToCourseInDB,
@@ -545,5 +645,6 @@ export {
   updateACourseInDB,
   updateCertificateToUserShikshaCourseDoc,
   updateCourseChapterInDB,
+  updateCourseStatusInDB,
   updateUserCourseChapterInDB,
 };

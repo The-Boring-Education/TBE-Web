@@ -14,6 +14,7 @@ import type {
   BaseShikshaCourseResponseProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { verifyJwtAdmin } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -39,8 +40,11 @@ const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const coursePayload = req.body as AddCourseRequestPayloadProps;
 
+    // Slug uniqueness must consider courses in every lifecycle status,
+    // otherwise a DRAFT course's slug could be reused.
     const { error: courseAlreadyExist } = await getCourseBySlugFromDB(
       coursePayload.slug,
+      { includeAllStatuses: true },
     );
 
     if (!courseAlreadyExist) {
@@ -88,11 +92,17 @@ const handleAllGetCourse = async (
   slug?: string,
 ) => {
   try {
+    // Admin-authenticated reads see courses in every lifecycle status;
+    // everyone else only sees PUBLISHED courses.
+    const isAdmin = Boolean(await verifyJwtAdmin(req));
+    const readOptions = { includeAllStatuses: isAdmin };
+
     // If slug is provided, fetch specific course by slug with user data
     if (slug) {
       const { data: course, error } = await getCourseBySlugWithUserFromDB(
         slug,
         userId,
+        readOptions,
       );
 
       if (error || !course) {
@@ -118,7 +128,7 @@ const handleAllGetCourse = async (
 
     // Fetch all courses
     const { data: allCourses, error: allCoursesError } =
-      await getAllCourseFromDB();
+      await getAllCourseFromDB(readOptions);
 
     if (allCoursesError || !allCourses) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
