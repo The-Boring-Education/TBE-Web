@@ -1,166 +1,81 @@
-# Technical & Architecture Specification
+# Spec — TBE Contributors Program
 
-# TBE Contributors Platform & Gamification Engine
+| Field      | Value                                                                      |
+| :--------- | :------------------------------------------------------------------------- |
+| Status     | Draft — pending PRD alignment                                              |
+| Companion  | `docs/prd-tbe-contributors-platform.md`                                    |
+| Apps       | `apps/contributor`, `apps/admin`, `apps/api`                               |
+| Depends on | existing `DevRel*` models under `apps/api/src/lib/database/models/DevRel/` |
 
-| Metadata             | Specification                                                                              |
-| :------------------- | :----------------------------------------------------------------------------------------- |
-| **Document Version** | 1.0.0                                                                                      |
-| **Status**           | In Review / Implementation Ready                                                           |
-| **Target Monorepo**  | `TBE-Web`                                                                                  |
-| **Primary Apps**     | `apps/contributor` (Next.js), `apps/admin` (Vite / React), `apps/api` (Next.js API Engine) |
-| **Shared Packages**  | `@tbe/types`, `@tbe/components`, `@tbe/utils`, `@tbe/hooks`, `@tbe/auth`                   |
-| **Database**         | MongoDB with Mongoose ODM                                                                  |
+This spec is a technical companion to the PRD. The PRD defines the
+problem, the user stories, the vocabulary, and the module-level
+decisions. This file encodes only the schema shapes, the endpoint
+contracts, and the migration path.
 
----
-
-## 1. System Architecture Overview
-
-The TBE Contributors Platform spans three existing applications and shared monorepo packages to deliver a cohesive experience for contributors and administrators:
-
-```mermaid
-graph TD
-    subgraph "Client Applications"
-        CA["apps/contributor (Next.js / Tailwind)"]
-        AA["apps/admin (Vite + Tailwind Admin)"]
-    end
-
-    subgraph "Core API Layer"
-        API["apps/api (Next.js API Routes /v1/contributor & /v1/admin)"]
-    end
-
-    subgraph "Database Layer (MongoDB)"
-        CP["ContributorProfile Collection"]
-        CT["ContributorTask Collection"]
-        CS["ContributorSubmission Collection"]
-        CXP["ContributorXpLedger Collection"]
-    end
-
-    CA -->|Auth & Contributor Endpoints| API
-    AA -->|Admin Review & Task Management| API
-    API -->|Mongoose Queries| CP
-    API -->|Mongoose Queries| CT
-    API -->|Mongoose Queries| CS
-    API -->|Mongoose Queries| CXP
-```
-
-### Component Roles
-
-1. **`apps/contributor`**: The primary user-facing web app where learners register, choose their track, explore available tasks, submit proof-of-work, view their XP and Level, and access the "Message Founder" action.
-2. **`apps/admin`**: The administrative console used by maintainers and the founder to approve/reject submissions, distribute XP, publish tasks, and monitor cohort progression.
-3. **`apps/api`**: The central backend engine housing Mongoose models, validation middlewares, gamification business logic, and transactional XP ledger updates.
-4. **`packages/*`**: Monorepo libraries (`@tbe/types`, `@tbe/components`, `@tbe/utils`) ensuring unified type definitions and UI component consistency.
+If this spec and the PRD disagree, the PRD wins.
 
 ---
 
-## 2. Data Models & Database Schema
+## 1. Vocabulary (binding)
 
-All database schemas reside in `apps/api/src/lib/database/models/Contributor/` and connect to the primary MongoDB cluster.
+See the PRD for full definitions. Short form:
 
-### 2.1 Enums & Types
+- **Contribution Point** — the point unit (`CP` in UI only).
+- **Tier** — Contributor (0–49 CP) / Lead (50–99 CP) / Captain (100+ CP).
+- **Contribution** — a submitted proof-of-work record.
+- **Track** — `code | community`.
+- **Cohort** — per-lead rolling, 4 calendar months.
 
-```typescript
-export type ContributorTrack = "code" | "community" | "hybrid";
-export type ContributorLevel = "contributor" | "lead" | "captain";
-export type TaskDifficulty = "beginner" | "intermediate" | "advanced";
-export type SubmissionStatus =
-  "pending" | "approved" | "changes_requested" | "rejected";
-export type XpEventType =
-  "task_completion" | "bonus_award" | "manual_adjustment" | "tier_promotion";
-```
+Do not use _XP_ or _Level_ for anything in this program; those are
+reserved for the learner-side gamification system (CONTEXT.md).
 
 ---
 
-### 2.2 `ContributorProfile` Schema
+## 2. Schema changes
 
-Represents the contributor's account within a specific 4-month cohort.
+Two existing collections are **extended**, one new collection is
+**added**, and one in-document map is **retired**.
 
-```typescript
-import { Schema, model, Document, Types } from "mongoose";
+### 2.1 `DevRelLead` — extended
 
-export interface IContributorProfile extends Document {
-  userId: Types.ObjectId; // Reference to core User collection
-  email: string;
-  name: string;
-  avatarUrl?: string;
-  githubUsername?: string;
-  linkedinUrl?: string;
-  discordHandle?: string;
-  telegramHandle?: string;
+```ts
+// apps/api/src/lib/database/models/DevRel/DevRelLead.ts
+interface DevRelLeadModel {
+  // … all existing fields unchanged …
 
-  // Track & Cohort Details
-  primaryTrack: ContributorTrack;
-  cohortId: string; // e.g. "cohort-2026-c1"
-  cohortStartDate: Date;
-  cohortEndDate: Date; // Exactly 4 months from start date
-  isActive: boolean;
+  // NEW — program lifecycle
+  cohortStartedAt?: Date; // set when status transitions to "onboarded"
+  cohortEndsAt?: Date; // cohortStartedAt + 4 calendar months (Cohort Clock)
 
-  // Gamification Metrics
-  totalXp: number; // Running total maintained via ledger
-  currentLevel: ContributorLevel; // "contributor" (<50 XP) | "lead" (50-99 XP) | "captain" (>=100 XP)
-  contributionsCount: number; // Count of approved submissions
-
-  createdAt: Date;
-  updatedAt: Date;
+  // NEW — program accounting (derived; see §4 for the invariant)
+  totalContributionPoints: number; // default 0, min 0
+  currentTier: "contributor" | "lead" | "captain"; // default "contributor"
+  approvedContributionsCount: number; // default 0
 }
-
-const ContributorProfileSchema = new Schema<IContributorProfile>(
-  {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      index: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      lowercase: true,
-      trim: true,
-      index: true,
-    },
-    name: { type: String, required: true, trim: true },
-    avatarUrl: { type: String },
-    githubUsername: { type: String, trim: true },
-    linkedinUrl: { type: String, trim: true },
-    discordHandle: { type: String, trim: true },
-    telegramHandle: { type: String, trim: true },
-
-    primaryTrack: {
-      type: String,
-      enum: ["code", "community", "hybrid"],
-      default: "code",
-    },
-    cohortId: { type: String, required: true, index: true },
-    cohortStartDate: { type: Date, required: true },
-    cohortEndDate: { type: Date, required: true },
-    isActive: { type: Boolean, default: true },
-
-    totalXp: { type: Number, default: 0, min: 0, index: true },
-    currentLevel: {
-      type: String,
-      enum: ["contributor", "lead", "captain"],
-      default: "contributor",
-      index: true,
-    },
-    contributionsCount: { type: Number, default: 0, min: 0 },
-  },
-  { timestamps: true },
-);
-
-ContributorProfileSchema.index({ cohortId: 1, totalXp: -1 });
 ```
 
----
+Indexes to add:
 
-### 2.3 `ContributorTask` Schema
+- `{ status: 1, totalContributionPoints: -1 }` — admin "top active leads" view.
+- `{ cohortEndsAt: 1 }` — graduation sweeps.
 
-Catalog of available contributions showcasing points and guidelines.
+The existing `performanceMetrics` sub-document stays as-is but is not
+part of this program's happy path; it was wired for a different flow
+and may be deprecated later.
 
-```typescript
-export interface IContributorTask extends Document {
-  title: string;
-  description: string;
-  track: ContributorTrack;
+### 2.2 `DevRelTask` — extended, map retired
+
+```ts
+// apps/api/src/lib/database/models/DevRel/DevRelTask.ts
+interface DevRelTaskModel {
+  // … existing fields: title, description, type, priority,
+  // assignedTo[], assignedToAll, dueDate, requirements[], resources[],
+  // submissionRequired, submissionType, submissionInstructions,
+  // tags[], isActive, createdBy …
+
+  // NEW
+  track: "code" | "community";
+  difficulty: "beginner" | "intermediate" | "advanced";
   category:
     | "frontend"
     | "backend"
@@ -169,421 +84,374 @@ export interface IContributorTask extends Document {
     | "content"
     | "community"
     | "event"
-    | "pr_review"; // Reviewing PRs, testing out PRs, adding review comments
-  difficulty: TaskDifficulty;
-  xpPoints: number; // Points awarded upon completion (e.g., 10, 25, 50)
-  githubIssueUrl?: string; // Direct link if issue on GitHub
-  guidelinesUrl?: string; // Guidelines for content/community tasks
-  maxSubmissions?: number; // If capped (e.g. 1 assignee or multi-claim)
-  currentSubmissionsCount: number;
-  isOpen: boolean;
-  createdBy: Types.ObjectId; // Admin user who published the task
-  createdAt: Date;
-  updatedAt: Date;
-}
+    | "pr_review";
+  pointsReward: number; // required, min 1
+  maxClaims?: number | null; // null = unlimited; soft limit in v1
+  claimCount: number; // denormalised count; eventually consistent
+  isOpen: boolean; // derived (isActive && (maxClaims == null || claimCount < maxClaims))
 
-const ContributorTaskSchema = new Schema<IContributorTask>(
-  {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true },
-    track: {
-      type: String,
-      enum: ["code", "community", "hybrid"],
-      required: true,
-      index: true,
-    },
-    category: {
-      type: String,
-      enum: [
-        "frontend",
-        "backend",
-        "fullstack",
-        "documentation",
-        "content",
-        "community",
-        "event",
-        "pr_review",
-      ],
-      required: true,
-    },
-    difficulty: {
-      type: String,
-      enum: ["beginner", "intermediate", "advanced"],
-      required: true,
-    },
-    xpPoints: { type: Number, required: true, min: 1 },
-    githubIssueUrl: { type: String, trim: true },
-    guidelinesUrl: { type: String, trim: true },
-    maxSubmissions: { type: Number, default: null },
-    currentSubmissionsCount: { type: Number, default: 0 },
-    isOpen: { type: Boolean, default: true, index: true },
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "AdminUser",
-      required: true,
-    },
-  },
-  { timestamps: true },
-);
+  // RETIRED (do not read, do not write)
+  // completionTracking: Map<leadId, {...}>  — see Contribution collection
+}
 ```
 
----
+**Migration**: a one-shot script reads every `completionTracking` entry
+and writes it as a `Contribution` document (status mapped:
+`completed` → `approved`, `in_progress` → `pending`, else dropped).
+The Map stays in the schema definition behind a `legacy_` prefix for
+one release so an old deploy can still read historical data, then is
+removed in the following release.
 
-### 2.4 `ContributorSubmission` Schema
+### 2.3 `Contribution` — new
 
-Records work proof submitted by contributors for review (e.g. merged PRs, reviewing & testing peer PRs, blog posts, community work).
+```ts
+// apps/api/src/lib/database/models/DevRel/Contribution.ts
+interface ContributionModel {
+  leadId: ObjectId; // ref DevRelLead
+  userId: ObjectId; // ref User (for queries that don't want to join DevRelLead)
+  taskId?: ObjectId; // ref DevRelTask; null for custom contributions
+  customTitle?: string; // required iff taskId is null
+  track: "code" | "community";
 
-```typescript
-export interface IContributorSubmission extends Document {
-  contributorId: Types.ObjectId; // Reference to ContributorProfile
-  userId: Types.ObjectId; // Reference to User
-  taskId?: Types.ObjectId; // Optional reference to ContributorTask (null if independent)
-  customTitle?: string; // Populated if independent task (e.g., "PR Review & Testing for PR #123")
-  track: ContributorTrack;
-  proofUrl: string; // GitHub PR URL, GitHub PR review link, Blog URL, Social Media Link, Drive URL
-  notes: string; // Contributor's notes on what was accomplished (e.g., implementation details, review comments added, or local testing steps)
+  proofUrl: string; // validated by Proof URL Classifier
+  proofKind:
+    | "github_pr"
+    | "github_issue"
+    | "blog"
+    | "tweet"
+    | "linkedin"
+    | "youtube"
+    | "drive"
+    | "other";
+  notes: string; // required
 
-  // Review Status
-  status: SubmissionStatus; // "pending" | "approved" | "changes_requested" | "rejected"
-  xpAwarded: number; // Points granted upon approval
-  reviewedBy?: Types.ObjectId; // Admin user
+  status: "pending" | "approved" | "changes_requested" | "rejected";
+  pointsAwarded: number; // 0 unless status === "approved"
+
+  reviewedBy?: ObjectId; // ref AdminUser
   reviewedAt?: Date;
-  reviewerFeedback?: string; // Feedback visible to contributor
+  reviewerFeedback?: string;
+
+  // Edit history for `changes_requested → pending` resubmits
+  revisions: Array<{
+    proofUrl: string;
+    notes: string;
+    submittedAt: Date;
+  }>;
 
   createdAt: Date;
   updatedAt: Date;
 }
-
-const ContributorSubmissionSchema = new Schema<IContributorSubmission>(
-  {
-    contributorId: {
-      type: Schema.Types.ObjectId,
-      ref: "ContributorProfile",
-      required: true,
-      index: true,
-    },
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      index: true,
-    },
-    taskId: {
-      type: Schema.Types.ObjectId,
-      ref: "ContributorTask",
-      default: null,
-      index: true,
-    },
-    customTitle: { type: String, trim: true },
-    track: {
-      type: String,
-      enum: ["code", "community", "hybrid"],
-      required: true,
-    },
-    proofUrl: { type: String, required: true, trim: true },
-    notes: { type: String, required: true },
-
-    status: {
-      type: String,
-      enum: ["pending", "approved", "changes_requested", "rejected"],
-      default: "pending",
-      index: true,
-    },
-    xpAwarded: { type: Number, default: 0 },
-    reviewedBy: { type: Schema.Types.ObjectId, ref: "AdminUser" },
-    reviewedAt: { type: Date },
-    reviewerFeedback: { type: String, trim: true },
-  },
-  { timestamps: true },
-);
 ```
 
----
+Indexes:
 
-### 2.5 `ContributorXpLedger` Schema
+- `{ leadId: 1, createdAt: -1 }` — "my contributions" list.
+- `{ status: 1, createdAt: -1 }` — admin review queue.
+- `{ proofUrl: 1, leadId: 1 }` **unique** — one proof URL per lead,
+  prevents double-submit of the same PR by the same person.
 
-Immutable record of all XP movements, ensuring mathematical auditability.
+The `revisions[]` array is append-only in the application layer; a
+`changes_requested → pending` transition appends the previous
+`{proofUrl, notes}` to `revisions[]` and overwrites the top-level
+fields with the new values. Status flips to `pending` and
+`reviewerFeedback` is cleared on resubmit (new review is a new
+decision).
 
-```typescript
-export interface IContributorXpLedger extends Document {
-  contributorId: Types.ObjectId;
-  userId: Types.ObjectId;
-  submissionId?: Types.ObjectId;
-  eventType: XpEventType;
-  xpDelta: number; // Number of XP points gained (positive) or adjusted
-  balanceAfter: number; // Contributor total XP after this transaction
-  reason: string;
-  adminId?: Types.ObjectId;
+### 2.4 `ContributionLedger` — new (deep module data layer)
+
+```ts
+// apps/api/src/lib/database/models/DevRel/ContributionLedger.ts
+interface ContributionLedgerModel {
+  leadId: ObjectId; // ref DevRelLead
+  userId: ObjectId; // denormalised ref User
+  submissionId?: ObjectId; // ref Contribution; null for manual_adjustment
+  kind: "contribution_approved" | "manual_adjustment" | "retraction";
+  delta: number; // signed int (negative only for retraction)
+  balanceAfter: number; // sum of deltas up to and including this row
+  reason: string; // required for manual_adjustment & retraction
+  actorId: ObjectId; // ref AdminUser
+  createdAt: Date; // the ONLY timestamp — no updatedAt
+}
+```
+
+Indexes:
+
+- `{ leadId: 1, createdAt: -1 }` — history reads.
+- `{ submissionId: 1, kind: 1 }` **unique sparse** — idempotency for
+  `contribution_approved`; a retraction has `kind: "retraction"` so it
+  doesn't collide. `manual_adjustment` has no `submissionId` so is
+  excluded from this unique index via `sparse`.
+
+Collection is append-only. Enforcement:
+
+- Mongoose middleware blocks `pre('updateOne' | 'findOneAndUpdate' |
+'deleteOne' | 'deleteMany')` and throws.
+- A regression test asserts the query helper file (§4) contains no
+  update/delete calls on this collection.
+
+### 2.5 `FounderMessage` — new
+
+```ts
+// apps/api/src/lib/database/models/DevRel/FounderMessage.ts
+interface FounderMessageModel {
+  leadId: ObjectId;
+  userId: ObjectId;
+  tierAtSendTime: "contributor" | "lead" | "captain";
+  category: "mentorship" | "proposal" | "task_blocker" | "general";
+  subject: string;
+  body: string; // max 2000 chars
+  priority: "normal" | "high";
+
+  resolvedAt?: Date;
+  resolvedBy?: ObjectId;
+  resolutionNotes?: string;
+
   createdAt: Date;
+  updatedAt: Date;
 }
+```
 
-const ContributorXpLedgerSchema = new Schema<IContributorXpLedger>(
-  {
-    contributorId: {
-      type: Schema.Types.ObjectId,
-      ref: "ContributorProfile",
-      required: true,
-      index: true,
-    },
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      index: true,
-    },
-    submissionId: {
-      type: Schema.Types.ObjectId,
-      ref: "ContributorSubmission",
-      index: true,
-    },
-    eventType: {
-      type: String,
-      enum: [
-        "task_completion",
-        "bonus_award",
-        "manual_adjustment",
-        "tier_promotion",
-      ],
-      required: true,
-    },
-    xpDelta: { type: Number, required: true },
-    balanceAfter: { type: Number, required: true },
-    reason: { type: String, required: true },
-    adminId: { type: Schema.Types.ObjectId, ref: "AdminUser" },
-  },
-  { timestamps: { createdAt: true, updatedAt: false } },
-);
+Index: `{ resolvedAt: 1, priority: -1, createdAt: 1 }` — admin inbox
+"open, high-pri, oldest first" view.
+
+---
+
+## 3. Module layout
+
+The PRD's deep modules land at these paths:
+
+| Module                   | Path                                                      | Shape         |
+| :----------------------- | :-------------------------------------------------------- | :------------ |
+| Contribution Ledger      | `apps/api/src/lib/database/queries/contributionLedger.ts` | query helper  |
+| Tier Resolver            | `apps/api/src/lib/contributor/tier.ts`                    | pure function |
+| Submission State Machine | `apps/api/src/lib/contributor/submissionState.ts`         | pure function |
+| Cohort Clock             | `apps/api/src/lib/contributor/cohortClock.ts`             | pure function |
+| Proof URL Classifier     | `apps/api/src/lib/contributor/proofUrl.ts`                | pure function |
+| Escalation Router        | `apps/api/src/lib/contributor/escalation.ts`              | pure function |
+
+Each pure-function module is a single file exporting one function and
+its types; no classes, no singletons. Imported from API handlers and
+from tests directly.
+
+---
+
+## 4. Review transaction (the one place correctness matters)
+
+Pseudocode for the approve path (`POST /v1/admin/contributor/contributions/:id/review`
+with `action: "approve"`). All steps run inside a Mongoose session /
+transaction:
+
+```
+assert reviewer is an active AdminUser                                       // 401 otherwise
+load contribution by id                                                      // 404 otherwise
+assert canTransition(contribution.status, "approved")                        // 409 otherwise
+load lead by contribution.leadId
+pointsToAward = body.pointsOverride ?? contribution.task?.pointsReward ?? 0  // 400 if 0 and no task
+assert pointsToAward > 0
+
+// Idempotency: did we already record this exact approval?
+existingEntry = ledger.findOne({ submissionId: id, kind: "contribution_approved" })
+if existingEntry: return the existing state (no re-write, no double-pay)
+
+newBalance = lead.totalContributionPoints + pointsToAward
+newTier    = tier(newBalance)
+
+ledger.insertOne({
+  leadId, userId, submissionId: id,
+  kind: "contribution_approved",
+  delta: pointsToAward,
+  balanceAfter: newBalance,
+  reason: `Approved contribution ${id}`,
+  actorId: reviewer.id,
+})
+
+contribution.update({
+  status: "approved",
+  pointsAwarded: pointsToAward,
+  reviewedBy: reviewer.id,
+  reviewedAt: now,
+  reviewerFeedback: body.feedback,
+})
+
+lead.update({
+  totalContributionPoints: newBalance,
+  currentTier: newTier,
+  $inc: { approvedContributionsCount: 1 },
+})
+
+if newTier != oldTier: emit tier-promotion event (notification is UI's job)
+commit transaction
+```
+
+The `request_changes` and `reject` branches skip the ledger and only
+update the Contribution.
+
+**Invariant** (asserted in tests and by a periodic DB check):
+`SUM(ledger.delta WHERE leadId = X) == DevRelLead.totalContributionPoints`
+for every lead.
+
+---
+
+## 5. API contracts (summary; full OpenAPI not generated here)
+
+All routes under `apps/api/src/pages/api/v1/`. Request/response bodies
+wrap in the existing `sendAPIResponse({ status, data | message })`
+helper used across the codebase.
+
+### Lead-facing (`/v1/contributor/*` and `/v1/devrel/*`)
+
+| Method | Path                                | Purpose                                                      |
+| :----- | :---------------------------------- | :----------------------------------------------------------- |
+| GET    | `/v1/devrel/dashboard`              | **extended**: adds `points`, `tier`, `cohort`, `recent[]`    |
+| GET    | `/v1/devrel/tasks`                  | **extended**: filters `track`, `difficulty`, `pointsMin/Max` |
+| POST   | `/v1/contributor/contributions`     | submit a Contribution                                        |
+| GET    | `/v1/contributor/contributions`     | list mine (filter by status)                                 |
+| PATCH  | `/v1/contributor/contributions/:id` | resubmit a `changes_requested` Contribution                  |
+| POST   | `/v1/contributor/founder-message`   | escalation                                                   |
+
+### Admin-facing (`/v1/admin/contributor/*`)
+
+| Method | Path                                              | Purpose                            |
+| :----- | :------------------------------------------------ | :--------------------------------- |
+| GET    | `/v1/admin/contributor/queue`                     | pending-first review queue         |
+| POST   | `/v1/admin/contributor/contributions/:id/review`  | approve / request_changes / reject |
+| POST   | `/v1/admin/contributor/contributions/:id/retract` | retract an approved contribution   |
+| POST   | `/v1/admin/contributor/tasks`                     | publish a task                     |
+| PATCH  | `/v1/admin/contributor/tasks/:id`                 | edit / retire a task               |
+| POST   | `/v1/admin/contributor/leads/:id/adjust`          | manual ledger adjustment (rare)    |
+| GET    | `/v1/admin/contributor/leads/:id/ledger`          | per-lead ledger history            |
+
+**Review body**:
+
+```json
+{ "action": "approve" | "request_changes" | "reject",
+  "pointsOverride": 25,                 // optional, approve only
+  "feedback": "Shipped and merged." }
+```
+
+**Retract body**:
+
+```json
+{ "reason": "PR reverted on 2026-10-20" }
 ```
 
 ---
 
-## 3. Level Progression & Gamification Logic
+## 6. UI shape
 
-### 3.1 Level Derivation Function
+### `apps/contributor` (Next.js, port 3008)
 
-The contributor's tier is calculated deterministically from `totalXp`:
+- `/` — public landing (program overview, apply CTA → existing
+  `/v1/devrel/apply`).
+- `/status` — unauthenticated application status by email (uses
+  existing `/v1/devrel/applications/status/[email]`).
+- `/dashboard` — authenticated lead's home. Sections:
+  1. Header: name, avatar, Tier badge, points, progress-to-next-Tier,
+     cohort days remaining.
+  2. "Pick a task" card → links to `/tasks`.
+  3. "My contributions" list with status badges, newest first.
+  4. "Message Sachin" button (opens the Escalation Router drawer).
+- `/tasks` — open-tasks catalog with Track / Difficulty / Points filters.
+- `/tasks/:id` — task detail + "Submit Contribution" drawer.
 
-$$ \text{Level}(XP) = \begin{cases}
-\text{TBE Contributor} & 0 \le XP < 50 \\
-\text{TBE Lead} & 50 \le XP < 100 \\
-\text{TBE Captain} & XP \ge 100
-\end{cases}$$
+### `apps/admin` (Vite + React, existing)
 
-```typescript
-export function computeContributorLevel(xp: number): ContributorLevel {
-  if (xp >= 100) return "captain";
-  if (xp >= 50) return "lead";
-  return "contributor";
-}
-```
+New section "Contributors":
 
-### 3.2 Atomic Approval & XP Awarding Flow
-When an administrator approves a submission:
-1. Verify reviewer authorization (`AdminUser`).
-2. Read submission: ensure status is `pending` or `changes_requested`.
-3. Open a Mongoose session / transaction:
-   - Calculate new total XP: `newTotalXp = profile.totalXp + xpToAward`.
-   - Compute new level: `newLevel = computeContributorLevel(newTotalXp)`.
-   - Insert `ContributorXpLedger` record (`xpDelta: xpToAward`, `balanceAfter: newTotalXp`).
-   - Update `ContributorProfile`: `totalXp = newTotalXp`, `currentLevel = newLevel`, `$inc: { contributionsCount: 1 }`.
-   - Update `ContributorSubmission`: `status = "approved"`, `xpAwarded = xpToAward`, `reviewedBy = adminId`, `reviewedAt = new Date()`, `reviewerFeedback = feedback`.
-   - If task linked: `$inc: { currentSubmissionsCount: 1 }`.
-4. Trigger notification / webhook (e.g. notify contributor in Discord/email).
+- `/contributors/queue` — review queue. Row shows: lead name, lead
+  current points + tier, task title (or "custom"), proof URL (link
+  preview + the URL kind as a chip), notes, revision count. Row
+  actions: approve (modal with points override), request changes,
+  reject. Clicking a row expands to show the full `revisions[]`.
+- `/contributors/tasks` — list + "New task" button → form (title,
+  description, track, difficulty, category, points, link, max claims).
+- `/contributors/leads/:id` — single lead view: ledger history,
+  contributions, founder messages, manual-adjust button.
+- `/contributors/inbox` — FounderMessage inbox, open-first.
 
----
-
-## 4. API Endpoints & Route Contracts
-
-All routes follow the existing TBE API structure under `apps/api/src/pages/api/v1/`:
-
-### 4.1 Contributor Endpoints (`/api/v1/contributor/*`)
-
-#### 1. `GET /api/v1/contributor/profile`
-- **Auth**: User Session required.
-- **Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "profile": {
-      "id": "660c1...",
-      "name": "Jane Doe",
-      "email": "jane@example.com",
-      "primaryTrack": "code",
-      "cohortId": "cohort-2026-c1",
-      "cohortEndDate": "2026-08-08T00:00:00.000Z",
-      "daysRemaining": 112,
-      "totalXp": 45,
-      "currentLevel": "contributor",
-      "nextLevel": "lead",
-      "xpToNextLevel": 5,
-      "progressPercent": 90
-    }
-  }
-}
-```
-
-#### 2. `POST /api/v1/contributor/onboard`
-- **Auth**: User Session required.
-- **Request Body**:
-```json
-{
-  "primaryTrack": "code",
-  "githubUsername": "janedoe",
-  "linkedinUrl": "https://linkedin.com/in/janedoe",
-  "discordHandle": "jane#1234",
-  "firstContributionGoal": "Fix issue #42 in platform app"
-}
-```
-- **Action**: Creates `ContributorProfile` initialized with a 4-month end date (`start + 120 days`) and `totalXp: 0`.
-
-#### 3. `GET /api/v1/contributor/tasks`
-- **Query Params**: `track` (code|community|all), `difficulty`, `category`, `page`, `limit`.
-- **Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "tasks": [
-      {
-        "id": "660d2...",
-        "title": "Add dark mode toggle to contributor nav",
-        "description": "Implement theme switcher using Tailwind classes in apps/contributor",
-        "track": "code",
-        "category": "frontend",
-        "difficulty": "beginner",
-        "xpPoints": 15,
-        "githubIssueUrl": "https://github.com/The-Boring-Education/TBE-Web/issues/108"
-      }
-    ],
-    "totalCount": 24
-  }
-}
-```
-
-#### 4. `POST /api/v1/contributor/submissions`
-- **Auth**: User Session required.
-- **Request Body** (Used for PRs, reviewing & testing peer PRs, content, or community tasks):
-```json
-{
-  "taskId": "660d2...",
-  "track": "code",
-  "customTitle": null,
-  "proofUrl": "https://github.com/The-Boring-Education/TBE-Web/pull/245",
-  "notes": "Added ThemeProvider, tested locally across chrome and firefox."
-}
-```
-- **Response**: `201 Created` with submission object in `pending` status.
-
-#### 5. `GET /api/v1/contributor/dashboard`
-- **Auth**: User Session required.
-- **Returns**: Aggregated dashboard payload: Profile overview, XP total, current Tier, list of submissions (status, XP, feedback), and cohort deadline counter.
-
-#### 6. `POST /api/v1/contributor/message-founder`
-- **Auth**: User Session required.
-- **Request Body**:
-```json
-{
-  "category": "mentorship" | "proposal" | "task_blocker" | "general",
-  "subject": "Proposal for college campus study jam",
-  "message": "Hey Sachin, we want to host a TBE React workshop in Delhi next Saturday..."
-}
-```
-- **Action**: Dispatches notification directly to founder inbox/Telegram bot and logs audit event.
+No new design system work; reuses the admin's existing shadcn-ish
+component kit.
 
 ---
 
-### 4.2 Admin Endpoints (`/api/v1/admin/contributor/*`)
+## 7. Phased work plan (not issues yet; one issue per bullet when ready)
 
-#### 1. `GET /api/v1/admin/contributor/submissions`
-- **Auth**: Admin Guard required.
-- **Query Params**: `status=pending`, `track`, `page`, `limit`.
-- **Returns**: List of submissions pending maintainer review with populated contributor info.
+### Phase 1 — Data model & review loop (API + minimal admin)
 
-#### 2. `POST /api/v1/admin/contributor/submissions/:id/review`
-- **Auth**: Admin Guard required.
-- **Request Body**:
-```json
-{
-  "action": "approve" | "changes_requested" | "reject",
-  "xpAwarded": 25,
-  "feedback": "Great work on the responsive navbar! PR is merged."
-}
-```
-- **Action**: Executes atomic session transaction updating submission, adding ledger entry, updating user XP, and recomputing level.
+1. Add `cohortStartedAt`, `cohortEndsAt`, `totalContributionPoints`,
+   `currentTier`, `approvedContributionsCount` fields and indexes to
+   `DevRelLead`; backfill zeros/defaults.
+2. Add `track`, `difficulty`, `category`, `pointsReward`, `maxClaims`,
+   `claimCount` fields and `isOpen` virtual to `DevRelTask`; mark
+   `completionTracking` legacy; migration script.
+3. Create `Contribution` model with unique `(proofUrl, leadId)` index.
+4. Create `ContributionLedger` model with append-only middleware.
+5. Create `FounderMessage` model.
+6. Implement pure modules: `tier`, `submissionState`, `cohortClock`,
+   `proofUrl`, `escalation`. Unit tests per PRD §Testing Decisions.
+7. Implement the review transaction (`POST /v1/admin/contributor/contributions/:id/review`)
+   with the full §4 flow and the idempotency guard.
+8. Implement `POST /v1/contributor/contributions` and
+   `GET /v1/contributor/contributions`.
+9. Minimal admin page `/contributors/queue` to drive the review loop
+   end-to-end.
+10. Invariant test: approve N random contributions, assert
+    `SUM(ledger.delta) == DevRelLead.totalContributionPoints` for
+    every lead.
 
-#### 3. `POST /api/v1/admin/contributor/tasks`
-- **Auth**: Admin Guard required.
-- **Request Body**: `title`, `description`, `track`, `category`, `difficulty`, `xpPoints`, `githubIssueUrl`.
+### Phase 2 — Lead portal
 
----
+11. Build `/dashboard` with header, "my contributions", cohort days
+    remaining, Tier progress bar.
+12. Build `/tasks` catalog with filters.
+13. Build the submit drawer (reuses the Proof URL Classifier for
+    client-side validation hints).
+14. Build the resubmit flow for `changes_requested`.
+15. Build the "Message Sachin" drawer (Escalation Router).
 
-## 5. Frontend UI/UX Structure (`apps/contributor`)
+### Phase 3 — Admin polish
 
-The frontend application uses Next.js Pages router with Tailwind CSS and `@tbe/components`.
+16. Task publisher / editor pages.
+17. FounderMessage inbox + SLA badge.
+18. Per-lead ledger history page.
+19. Retract flow (confirm modal; writes negative ledger entry).
+20. Manual adjustment flow.
 
-### 5.1 Route Map
-- `/` - Public Landing Page & Program Overview (tracks, perks, roles, FAQ).
-- `/onboard` - Step-by-step onboarding wizard for joining the active cohort.
-- `/dashboard` - Contributor Command Center (XP bar, Tier badge, Submissions table, "Message Founder" button).
-- `/tasks` - Explore available tasks catalog with filtering and "Pick Task" CTA.
-- `/submit` - Submission modal / drawer to deliver proof-of-work.
+### Phase 4 — Lifecycle & cleanup
 
-### 5.2 Key UI Components
+21. Nightly job: for leads with `cohortEndsAt < now` and no graduation
+    marker, mark `onboardingProgress.completedAt` and send a graduation
+    email (reuses the existing mail path).
+22. Drop the legacy `completionTracking` Map after one release.
+23. Document the Contribution Ledger invariant in an ADR under
+    `docs/adr/`.
 
-```
-apps/contributor/src/components/
-├── dashboard/
-│   ├── ContributorHeader.tsx       # Name, Avatar, Level badge, 4-Month countdown
-│   ├── XpProgressTracker.tsx       # 0 -> 50 (Lead) -> 100 (Captain) milestone bar
-│   ├── SubmissionsTable.tsx        # Filterable list of all submitted contributions
-│   ├── QuickActionCard.tsx         # "Pick New Task", "Submit Contribution"
-│   └── MessageFounderButton.tsx    # Prominent button opening MessageFounderModal
-├── tasks/
-│   ├── TaskFilterBar.tsx           # Track, Difficulty, Points filters
-│   ├── TaskCard.tsx                # Title, Points badge, Difficulty badge, CTA
-│   └── TaskDetailModal.tsx         # Detailed instructions + "Submit Work" button
-├── modals/
-│   ├── SubmitContributionModal.tsx # Proof URL, task select, notes textarea
-│   └── MessageFounderModal.tsx     # Direct note to Sachin Shukla with channel options
-└── shared/
-    ├── LevelBadge.tsx              # "Contributor" (Gray/Blue), "Lead" (Purple), "Captain" (Gold)
-    └── TrackBadge.tsx              # "Code Track" (Cyan), "Community Track" (Amber)
-```
+### Explicitly out of this plan
 
-### 5.3 UI State Progression: XP & Tier Badges
-- **Contributor Tier (0–49 XP)**: Slate/Blue theme badge, tooltip: *"Contribute tasks to reach Lead (50 XP)"*.
-- **Lead Tier (50–99 XP)**: Indigo/Purple badge, tooltip: *"Lead initiatives to unlock Captain (100 XP)"*.
-- **Captain Tier (100+ XP)**: Premium Gold/Amber badge with Hat/Crown icon, confetti celebration on first trigger, unlocking Founder 1:1 booking link.
+- Webhook-based auto-approval of merged PRs.
+- Public leaderboards.
+- Co-authorship.
+- Discord / Telegram bots.
+- Certificate generation.
 
 ---
 
-## 6. Implementation Milestones & Work Breakdown
+## 8. Risks and open questions
 
-### Phase 1: Database Schemas & Core API (`apps/api`)
-- [ ] Create `ContributorProfile`, `ContributorTask`, `ContributorSubmission`, `ContributorXpLedger` Mongoose models in `apps/api/src/lib/database/models/Contributor/`.
-- [ ] Implement query helpers in `apps/api/src/lib/database/queries/contributor.ts`.
-- [ ] Build `/api/v1/contributor/*` endpoints (profile, onboard, tasks, submissions, message-founder).
-- [ ] Build `/api/v1/admin/contributor/*` endpoints (review submission, mint XP, manage tasks).
-- [ ] Add unit tests in `apps/testing` verifying atomic XP calculation and Captain milestone trigger.
-
-### Phase 2: Contributor Portal Pages (`apps/contributor`)
-- [ ] Build `/onboard` wizard with track selection (Code vs. Community).
-- [ ] Build `/tasks` catalog page with filter bar and task cards displaying points.
-- [ ] Build `/dashboard` displaying:
-  - Total XP and Level progression bar (Contributor → Lead → Captain).
-  - 4-Month Cohort countdown timer.
-  - Submissions list with status badges (`Pending`, `Approved`, `Changes Requested`, `Rejected`).
-  - "Message Founder" persistent floating/header button & modal.
-- [ ] Build `SubmitContributionModal` allowing proof URL inputs.
-
-### Phase 3: Admin Review Console (`apps/admin`)
-- [ ] Add "Contributors" navigation section in `apps/admin`.
-- [ ] Build Submissions Review Queue (`/admin/contributors/submissions`) with inline proof review, XP input, and approval/rejection feedback forms.
-- [ ] Build Task Publisher interface (`/admin/contributors/tasks/new`).
-
-### Phase 4: Cohort Management & Final Polish
-- [ ] Implement automated 4-month lifecycle calculation and graduation status.
-- [ ] Implement email / Discord webhooks for submission status changes.
-- [ ] End-to-end testing with Playwright in `apps/testing/`.
-$$
+1. **Program-scope question (blocking Phase 1)**: this spec assumes the
+   TBE "Contributor Program" is the same program as the existing
+   `DevRel*` + `oncampus` infra. If it is a separate open-source
+   initiative (unrelated to college ambassadors), the model-reuse plan
+   is wrong and we add parallel collections instead. Resolve by reading
+   the Notion doc with Sachin before Phase 1.
+2. **Tier thresholds (50, 100)**: lifted from the original PRD draft.
+   Validate against last cohort's distribution.
+3. **Who is an `AdminUser` for review**: today, only Sachin. A single
+   SPOF for review throughput. Not blocking v1, but should be addressed
+   before cohort size exceeds ~30 active leads.
+4. **PR-revert detection is manual**: v2 webhook work solves this.
+   Document in the lead-facing FAQ that reverted PRs may be retracted.
+5. **Ledger invariant drift**: belt-and-braces — the periodic DB check
+   is cheap and should run nightly from day one; a drift alert goes to
+   Sachin before a lead notices.
