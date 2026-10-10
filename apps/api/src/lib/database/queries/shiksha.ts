@@ -262,15 +262,51 @@ const getAllEnrolledCoursesFromDB = async (
     const enrolledCourse = await UserCourse.find({ userId })
       .populate({
         path: "course",
-        select: modelSelectParams.coursePreview,
+        select: `${modelSelectParams.coursePreview} chapters._id`,
       })
       .exec();
 
+    const enrolledCoursesData: BaseShikshaCourseResponseProps[] = enrolledCourse
+      .map((userCourse) => {
+        const course = userCourse.course as any;
+        if (!course) return null;
+
+        const currentChapterIds = new Set(
+          (course.chapters || []).map((chapter: any) =>
+            chapter._id ? chapter._id.toString() : chapter.toString(),
+          ),
+        );
+
+        const totalChapters = currentChapterIds.size;
+
+        const completedChapters = (userCourse.chapters || []).filter(
+          (chapter: any) =>
+            chapter.isCompleted &&
+            currentChapterIds.has(chapter.chapterId?.toString()),
+        ).length;
+
+        const percentage =
+          totalChapters > 0
+            ? Math.round((completedChapters / totalChapters) * 100)
+            : 0;
+
+        const courseObj = course.toObject ? course.toObject() : course;
+
+        return {
+          ...courseObj,
+          title: courseObj.name,
+          isEnrolled: true,
+          progress: {
+            completed: completedChapters,
+            total: totalChapters,
+            percentage,
+          },
+        };
+      })
+      .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
     return {
-      data: enrolledCourse.map((course) => ({
-        ...course.course.toObject(),
-        isEnrolled: true,
-      })) as unknown as BaseShikshaCourseResponseProps,
+      data: enrolledCoursesData,
     };
   } catch (error) {
     logger.error("DB: getAllEnrolledCoursesFromDB failed", {

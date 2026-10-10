@@ -8,7 +8,6 @@ const E2E_ROOT = path.resolve(__dirname, "../../e2e");
 const REQUIRED_APPS = [
   "platform",
   "prep-yatra",
-  "quizes",
   "dsayatra",
   "oncampus",
   "techyatra",

@@ -1,4 +1,5 @@
 import type { LearningSidebarListProps } from "@tbe/interface";
+import { cn } from "@tbe/utils";
 
 const LearningSidebarList = <T,>({
   items,
@@ -7,7 +8,7 @@ const LearningSidebarList = <T,>({
   className = "",
 }: LearningSidebarListProps<T>) => {
   return (
-    <div className={`flex flex-col gap-px ${className}`}>
+    <div className={cn("flex flex-col gap-px", className)}>
       {items.map((item, index) => (
         <div key={getKey ? getKey(item, index) : index}>
           {renderItem(item, index)}
