@@ -5,6 +5,7 @@ import type {
   ApplicationStatusType,
   CertificateType,
   CompanyType,
+  CourseStatusType,
   DifficultyType,
   DSADifficultyType,
   DSADomainType,
@@ -177,6 +178,7 @@ export interface CourseModel extends Document {
   price: number;
   coverImageURL: string;
   liveOn: Date;
+  status: CourseStatusType;
   chapters: CourseChapterModel[];
   roadmap: RoadmapsType;
   difficultyLevel: DifficultyType;

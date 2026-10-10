@@ -59,6 +59,8 @@ export type PlatformUsageType =
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
+export type CourseStatusType = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
 export type CompanyType =
   | "Startup"
   | "MidSize"
