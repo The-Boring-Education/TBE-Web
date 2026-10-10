@@ -58,37 +58,43 @@ const useTrackEnrollment = ({
       // `sendRequest` resolves with the error payload instead of throwing, so
       // the response envelope is the only reliable success signal. An enrolment
       // that already exists is the state we want, so it counts as success too.
-      const isEnrolledNow =
-        Boolean(response?.status) ||
-        /already enrolled/i.test(response?.message ?? "");
+      const isNewEnrollment = response?.status === true;
+      const isAlreadyEnrolled = /already enrolled/i.test(
+        response?.message ?? "",
+      );
 
-      if (!isEnrolledNow) return false;
+      if (!isNewEnrollment && !isAlreadyEnrolled) return false;
 
-      const actionName = isCourse ? "COURSE_ENROLL" : "INTERVIEW_SHEET_ENROLL";
-      const categoryName = isCourse ? "Course" : "InterviewSheet";
-      const labelName = isCourse
-        ? "Course Enrolled"
-        : "Interview Sheet Enrolled";
+      // Only award gamification points and track analytics for new enrollments
+      if (isNewEnrollment) {
+        const actionName = isCourse
+          ? "COURSE_ENROLL"
+          : "INTERVIEW_SHEET_ENROLL";
+        const categoryName = isCourse ? "Course" : "InterviewSheet";
+        const labelName = isCourse
+          ? "Course Enrolled"
+          : "Interview Sheet Enrolled";
 
-      trackEvent({
-        action: actionName,
-        category: categoryName,
-        label: labelName,
-        value: { userId: user?.id, id },
-      });
-
-      await triggerGamifiedAction({
-        gamificationAction: isCourse ? "ENROLL_COURSE" : "ENROLL_SHEET",
-        analytics: {
+        trackEvent({
           action: actionName,
           category: categoryName,
           label: labelName,
-        },
-        customMessage: isCourse
-          ? "Course enrolled! Happy learning!"
-          : "Interview sheet enrolled! Time to practice!",
-        metadata: { id, name },
-      });
+          value: { userId: user?.id, id },
+        });
+
+        await triggerGamifiedAction({
+          gamificationAction: isCourse ? "ENROLL_COURSE" : "ENROLL_SHEET",
+          analytics: {
+            action: actionName,
+            category: categoryName,
+            label: labelName,
+          },
+          customMessage: isCourse
+            ? "Course enrolled! Happy learning!"
+            : "Interview sheet enrolled! Time to practice!",
+          metadata: { id, name },
+        });
+      }
 
       return true;
     } finally {

@@ -30,7 +30,7 @@ import {
   getCoursePageProps,
   sendRequest,
 } from '@tbe/utils';
-import { List, X } from 'lucide-react';
+import { List } from 'lucide-react';
 import { useRouter } from 'next/router';
 import {
   Fragment,
@@ -197,8 +197,18 @@ const CourseLearnPage = ({
           }).date,
         } as AddCertificateRequestPayloadProps,
       })
-        .then(({ status, data, message }) => {
-          if (!status || !data?._id) return false;
+        .then((response) => {
+          const { status, data, message } = response || {};
+          if (status !== true || !data?._id) {
+            captureException(
+              new Error(message || 'Failed to generate certificate'),
+              {
+                tags: { section: 'shiksha', flow: 'certificate_generation' },
+                extra: { courseId: course._id, userId: user?.id, status },
+              },
+            );
+            return false;
+          }
 
           setCertificateId(data._id);
           certificateWasReturned = true;
@@ -344,7 +354,7 @@ const CourseLearnPage = ({
 
         // `sendRequest` resolves with the error payload instead of throwing,
         // so the response envelope is the only reliable success signal.
-        if (!response?.status) {
+        if (response?.status !== true) {
           throw new Error(
             `Chapter completion save rejected for chapter ${chapterId}`,
           );
