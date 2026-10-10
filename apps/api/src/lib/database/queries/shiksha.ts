@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { COURSE_STATUS, modelSelectParams } from "@/lib/constants";
+import {
+  COURSE_STATUS,
+  COURSE_STATUS_PUBLISHED,
+  modelSelectParams,
+} from "@/lib/constants";
 import type {
   AddChapterToCourseRequestProps,
   AddCourseRequestPayloadProps,
@@ -36,8 +40,19 @@ const REQUIRED_FIELDS_FOR_PUBLISH: Array<keyof CourseModel> = [
   "difficultyLevel",
 ];
 
+// Courses created before the lifecycle field have no stored `status` (schema
+// defaults only apply to new documents), so they are treated as published
+// until `backfill:course-status` has run. Drop the `$exists` arm once every
+// environment is backfilled.
 const buildCourseStatusFilter = (options?: CourseReadOptions) =>
-  options?.includeAllStatuses ? {} : { status: "PUBLISHED" };
+  options?.includeAllStatuses
+    ? {}
+    : {
+        $or: [
+          { status: COURSE_STATUS_PUBLISHED },
+          { status: { $exists: false } },
+        ],
+      };
 
 const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps,
@@ -141,9 +156,13 @@ const getAllCourseFromDB = async (
 const getACourseFromDBById = async (
   courseId: string,
   userId?: string,
+  options?: CourseReadOptions,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findById(courseId);
+    const course = await Course.findOne({
+      _id: courseId,
+      ...buildCourseStatusFilter(options),
+    });
 
     if (!course) {
       return { error: "Course not found" };
@@ -251,7 +270,10 @@ const enrollInACourse = async ({
   courseId,
 }: EnrollCourseInDBRequestProps): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findById(courseId).lean();
+    const course = await Course.findOne({
+      _id: courseId,
+      ...buildCourseStatusFilter(),
+    }).lean();
     if (!course) {
       return { error: "Course not found" };
     }
@@ -496,20 +518,39 @@ const updateUserCourseChapterInDB = async ({
   }
 };
 
-const getACourseForUserFromDB = async (userId: string, courseId: string) => {
+const getACourseForUserFromDB = async (
+  userId: string,
+  courseId: string,
+  options?: CourseReadOptions,
+) => {
   try {
-    // Find the UserCourse document, including the populated course data
-    const userCourse = await UserCourse.findOne({ userId, courseId })
-      .populate({
-        path: "course",
-      })
-      .exec();
+    // A falsy userId must not reach UserCourse.findOne — Mongoose strips
+    // undefined from the filter, which would match any user's enrolment.
+    const userCourse = userId
+      ? await UserCourse.findOne({ userId, courseId })
+          .populate({
+            path: "course",
+          })
+          .exec()
+      : null;
 
     // If the user is not enrolled in the course, fetch the course data without user-specific data
     if (!userCourse) {
-      const { data: course } = await getACourseFromDBById(courseId);
+      const { data: course, error } = await getACourseFromDBById(
+        courseId,
+        undefined,
+        options,
+      );
+
+      if (error || !course) {
+        return { error: error ?? "Course not found" };
+      }
+
       return { data: { ...course.toObject(), isEnrolled: false } };
     }
+
+    // Already-enrolled learners keep access regardless of lifecycle status, so
+    // unpublishing a course never strips it from people part-way through it.
 
     // Map the chapters to include the `isCompleted` status from the embedded chapters in UserCourse
     const mappedChapters = userCourse.course.chapters.map((chapter) => {
