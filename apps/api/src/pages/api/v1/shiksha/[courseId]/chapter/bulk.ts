@@ -4,6 +4,7 @@ import { apiStatusCodes } from "@/lib/constants";
 import { addChapterToCourseInDB } from "@/lib/database";
 import type { AddChapterToCourseRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { ensureAdminAccessWithCapture } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,6 +29,13 @@ const handleAddBulkChapters = async (
   res: NextApiResponse,
   courseId: string,
 ) => {
+  const isAdmin = await ensureAdminAccessWithCapture(
+    req,
+    res,
+    "shiksha_chapter_bulk_create",
+  );
+  if (!isAdmin) return;
+
   const { chaptersData } = req.body;
 
   try {

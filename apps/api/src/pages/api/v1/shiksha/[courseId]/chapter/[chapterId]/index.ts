@@ -8,6 +8,7 @@ import {
 } from "@/lib/database";
 import type { UpdateChapterInCourseRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { ensureAdminAccessWithCapture } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -39,6 +40,13 @@ const handleUpdateChapter = async (
   courseId: string,
   chapterId: string,
 ) => {
+  const isAdmin = await ensureAdminAccessWithCapture(
+    req,
+    res,
+    "shiksha_chapter_update",
+  );
+  if (!isAdmin) return;
+
   const updatedData = req.body as UpdateChapterInCourseRequestProps;
 
   try {
@@ -88,6 +96,13 @@ const handleDeleteChapter = async (
   courseId: string,
   chapterId: string,
 ) => {
+  const isAdmin = await ensureAdminAccessWithCapture(
+    req,
+    res,
+    "shiksha_chapter_delete",
+  );
+  if (!isAdmin) return;
+
   try {
     const { error: courseNotFoundError } = await getACourseFromDBById(courseId);
 

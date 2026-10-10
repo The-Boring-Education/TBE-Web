@@ -5,6 +5,7 @@ import { extractBearerToken } from "@/lib/auth/token";
 import { apiStatusCodes } from "@/lib/constants";
 import { isAdminEmail, warmAdminEmailCache } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
+import { captureAuthError } from "@/lib/utils/sentry";
 import { matchesAdminSecret } from "@/middleware/adminSecret";
 
 export interface AdminAuthenticatedUser {
@@ -104,6 +105,28 @@ export const ensureAdminAccess = async (
     }),
   );
   return false;
+};
+
+/**
+ * Same guard as `ensureAdminAccess`, but also reports the denial to Sentry
+ * through the auth capture helper. Use on write routes where an anonymous or
+ * non-admin caller attempting a mutation is worth observing.
+ */
+export const ensureAdminAccessWithCapture = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  operation: string,
+): Promise<boolean> => {
+  const authorized = await ensureAdminAccess(req, res);
+
+  if (!authorized) {
+    captureAuthError(
+      new Error(`Admin access denied for ${operation}`),
+      operation,
+    );
+  }
+
+  return authorized;
 };
 
 /**
