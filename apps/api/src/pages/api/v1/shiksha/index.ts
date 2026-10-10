@@ -14,7 +14,6 @@ import type {
   BaseShikshaCourseResponseProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -38,9 +37,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const isAdmin = await adminMiddleware(req, res);
-    if (!isAdmin) return;
-
     const coursePayload = req.body as AddCourseRequestPayloadProps;
 
     const { error: courseAlreadyExist } = await getCourseBySlugFromDB(
@@ -193,4 +189,4 @@ const handleAllGetCourse = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });

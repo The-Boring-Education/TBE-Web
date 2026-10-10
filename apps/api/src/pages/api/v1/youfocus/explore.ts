@@ -6,7 +6,6 @@ import {
   getPlaylistByTagFromDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -75,9 +74,6 @@ const handleDeletePlaylistBySkill = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   const { q } = req.query;
 
   if (!q || typeof q !== "string") {
@@ -120,4 +116,4 @@ const handleDeletePlaylistBySkill = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["DELETE"] } });

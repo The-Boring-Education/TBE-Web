@@ -62,4 +62,4 @@ const handleAddBulkChapters = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });

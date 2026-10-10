@@ -12,7 +12,6 @@ import type {
   UpdateNotificationRequestPayloadProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -41,9 +40,6 @@ const handleAddANotification = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   try {
     const notificationPayload = req.body as AddNotificationRequestPayloadProps;
 
@@ -115,9 +111,6 @@ const handleUpdateANotification = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   try {
     const updatedNotificationPayload =
       req.body as UpdateNotificationRequestPayloadProps;
@@ -155,9 +148,6 @@ const handleDeleteANotification = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   try {
     const { notificationId } = req.body;
 
@@ -192,4 +182,6 @@ const handleDeleteANotification = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["POST", "PATCH", "DELETE"] },
+});

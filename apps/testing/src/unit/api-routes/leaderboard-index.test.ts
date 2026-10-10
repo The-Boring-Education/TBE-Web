@@ -6,7 +6,6 @@ const mockGetLeaderboardBoard = vi.fn();
 const mockGetPeriodChampions = vi.fn();
 const mockClosePeriod = vi.fn();
 const mockVerifyAuthenticatedUser = vi.fn();
-const mockEnsureAdmin = vi.fn();
 const mockAuthUserId = vi.fn<() => string | null>();
 const mockUserFindByIdAndUpdate = vi.fn();
 const mockUserUpdateOne = vi.fn();
@@ -59,17 +58,14 @@ vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (payload: unknown) => payload,
 }));
 
-vi.mock("../../../../api/src/middleware/requestLogger", () => ({
-  withApiHandler: (fn: unknown) => fn,
-}));
+vi.mock("../../../../api/src/middleware/requestLogger", async () => {
+  const { withApiHandlerMock } =
+    await import("../../test-utils/api-handler-mock");
+  return { withApiHandler: withApiHandlerMock };
+});
 
 vi.mock("../../../../api/src/middleware/admin", () => ({
   verifyAuthenticatedUser: () => mockVerifyAuthenticatedUser(),
-  ensureAdminAccessOrSecret: async (_req: unknown, res: NextApiResponse) => {
-    const ok = mockEnsureAdmin();
-    if (!ok) res.status(401).json({ message: "Unauthorized" });
-    return ok;
-  },
 }));
 
 vi.mock("../../../../api/src/middleware/userAuth", () => ({
@@ -86,6 +82,7 @@ import boardHandler from "../../../../api/src/pages/api/v1/leaderboard/index";
 import publicHandler from "../../../../api/src/pages/api/v1/leaderboard/public";
 import unsubscribeHandler from "../../../../api/src/pages/api/v1/leaderboard/unsubscribe";
 import preferencesHandler from "../../../../api/src/pages/api/v1/user/leaderboard-preferences";
+import { adminGuardMock } from "../../test-utils/api-handler-mock";
 
 const call = async (
   handler: (req: NextApiRequest, res: NextApiResponse) => unknown,
@@ -185,8 +182,16 @@ describe("GET /leaderboard/public", () => {
 });
 
 describe("POST /leaderboard/close-period", () => {
+  const denyAdmin = () =>
+    adminGuardMock.mockImplementation(async (_req, res) => {
+      res.status(401).json({ message: "Unauthorized" });
+      return false;
+    });
+  const allowAdmin = () => adminGuardMock.mockResolvedValue(true);
+
   beforeEach(() => {
     vi.clearAllMocks();
+    allowAdmin();
     mockClosePeriod.mockImplementation(async ({ type, periodKey }) => ({
       type,
       periodKey,
@@ -195,14 +200,13 @@ describe("POST /leaderboard/close-period", () => {
   });
 
   it("requires admin access", async () => {
-    mockEnsureAdmin.mockReturnValue(false);
+    denyAdmin();
     const res = await call(closeHandler, { method: "POST", body: {} });
     expect(res._getStatusCode()).toBe(401);
     expect(mockClosePeriod).not.toHaveBeenCalled();
   });
 
   it("closes the previous Period of every type when no type is given", async () => {
-    mockEnsureAdmin.mockReturnValue(true);
     const res = await call(closeHandler, { method: "POST", body: {} });
 
     expect(res._getStatusCode()).toBe(200);
@@ -214,7 +218,6 @@ describe("POST /leaderboard/close-period", () => {
   });
 
   it("closes one explicit Period", async () => {
-    mockEnsureAdmin.mockReturnValue(true);
     await call(closeHandler, {
       method: "POST",
       body: { type: "WEEKLY", periodKey: "2026-W38" },
@@ -227,7 +230,6 @@ describe("POST /leaderboard/close-period", () => {
   });
 
   it("validates input and maps Period Close errors to 400", async () => {
-    mockEnsureAdmin.mockReturnValue(true);
     expect(
       (
         await call(closeHandler, { method: "POST", body: { type: "X" } })

@@ -48,40 +48,36 @@ vi.mock("../../../../api/src/lib/services", () => ({
   },
 }));
 
-vi.mock("../../../../api/src/middleware/requestLogger", () => ({
-  withApiHandler: (
-    fn: (req: NextApiRequest, res: NextApiResponse) => Promise<void>,
-  ) => fn,
-}));
+vi.mock("../../../../api/src/middleware/requestLogger", async () => {
+  const { withApiHandlerMock, adminGuardMock } =
+    await import("../../test-utils/api-handler-mock");
 
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: async (req: NextApiRequest, res: NextApiResponse) => {
-    const adminHeader = req.headers["x-admin-secret"];
-    const expectedSecret = process.env.ADMIN_SECRET;
-    if (!expectedSecret) {
-      res.statusCode = 500;
-      res._getData = () =>
-        JSON.stringify({
+  adminGuardMock.mockImplementation(
+    async (req: NextApiRequest, res: NextApiResponse) => {
+      const adminHeader = req.headers["x-admin-secret"];
+      const expectedSecret = process.env.ADMIN_SECRET;
+      if (!expectedSecret) {
+        res.statusCode = 500;
+        (res as any).json({
           status: false,
           message: "Server configuration error",
         });
-      (res as any).json({
-        status: false,
-        message: "Server configuration error",
-      });
-      return false;
-    }
-    if (!adminHeader || adminHeader !== expectedSecret) {
-      res.statusCode = 401;
-      (res as any).json({
-        status: false,
-        message: "Unauthorized. Admin access required.",
-      });
-      return false;
-    }
-    return true;
-  },
-}));
+        return false;
+      }
+      if (!adminHeader || adminHeader !== expectedSecret) {
+        res.statusCode = 401;
+        (res as any).json({
+          status: false,
+          message: "Unauthorized. Admin access required.",
+        });
+        return false;
+      }
+      return true;
+    },
+  );
+
+  return { withApiHandler: withApiHandlerMock };
+});
 
 import handler from "../../../../api/src/pages/api/v1/prepyatra/prep-log/index";
 

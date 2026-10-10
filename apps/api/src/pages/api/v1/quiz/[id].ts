@@ -7,7 +7,6 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { ensureAdminAccess } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,16 +23,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       case "GET":
         return handleGetQuiz(id, req, res);
 
-      case "PUT": {
-        const isAdmin = await ensureAdminAccess(req, res);
-        if (!isAdmin) return;
+      case "PUT":
         return handleUpdateQuiz(id, req, res);
-      }
-      case "POST": {
-        const isAdmin = await ensureAdminAccess(req, res);
-        if (!isAdmin) return;
+
+      case "POST":
         return handleAppendQuestions(id, req, res);
-      }
 
       default:
         return res
@@ -160,4 +154,6 @@ async function handleAppendQuestions(
   return res.status(200).json(sendAPIResponse({ status: true, data }));
 }
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["PUT", "POST"] },
+});

@@ -14,7 +14,6 @@ import {
   parseDsaSheetGetQuery,
 } from "@/lib/validation";
 import { matchesAdminSecret } from "@/middleware/adminSecret";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -37,9 +36,6 @@ const handleCreateQuestion = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   const parsed = parseDsaSheetCreateBody(req.body);
   if (!parsed.ok) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -119,12 +115,12 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     ? true
     : userId
       ? isUserPurchasedFromPaymentCheck(
-        await checkPaymentStatusFromDB(
-          userId,
-          "lifetime",
-          filters.productType,
-        ),
-      )
+          await checkPaymentStatusFromDB(
+            userId,
+            "lifetime",
+            filters.productType,
+          ),
+        )
       : false;
 
   const { data, error } = await getAllDSAQuestionsFromDB({
@@ -151,4 +147,4 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
     .json(sendAPIResponse({ status: true, data }));
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });
