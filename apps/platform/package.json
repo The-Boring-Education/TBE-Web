@@ -36,6 +36,7 @@
     "framer-motion": "^12.4.2",
     "html-to-image": "^1.11.11",
     "lottie-react": "^2.4.1",
+    "lucide-react": "^0.462.0",
     "mammoth": "^1.11.0",
     "markdown-it": "^14.1.0",
     "mongoose": "^7.4.1",
@@ -47,6 +48,7 @@
     "react-dom": "^18.3.1",
     "react-icons": "^4.8.0",
     "recharts": "^2.15.1",
+    "sonner": "^1.5.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

@@ -21,9 +21,16 @@ const DEFAULT_API_URL = "http://localhost:3000/api/v1";
 
 export class APIClient {
   private baseURL: string;
+  private isCustomBaseURL: boolean;
 
-  constructor(baseURL: string = config.API_BASE_URL || DEFAULT_API_URL) {
-    this.baseURL = baseURL || DEFAULT_API_URL;
+  constructor(baseURL?: string) {
+    if (baseURL) {
+      this.baseURL = baseURL;
+      this.isCustomBaseURL = true;
+    } else {
+      this.baseURL = config.API_BASE_URL || DEFAULT_API_URL;
+      this.isCustomBaseURL = false;
+    }
   }
 
   private getAuthHeaders(): Record<string, string> {
@@ -46,17 +53,26 @@ export class APIClient {
     const cleanEndpoint = endpoint.startsWith("/")
       ? endpoint.slice(1)
       : endpoint;
-    const baseUrl = this.baseURL || DEFAULT_API_URL;
+    const isBrowser = typeof window !== "undefined";
+    const shouldUseProxy = isBrowser && !this.isCustomBaseURL;
+    const baseUrl = shouldUseProxy
+      ? "/api/proxy"
+      : this.baseURL || DEFAULT_API_URL;
     const fullUrl = `${baseUrl}/${cleanEndpoint}`;
 
     try {
-      const url = new URL(fullUrl);
+      const url =
+        shouldUseProxy && baseUrl.startsWith("/")
+          ? new URL(fullUrl, window.location.origin)
+          : new URL(fullUrl);
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
           url.searchParams.append(key, value);
         });
       }
-      return url.toString();
+      return shouldUseProxy && baseUrl.startsWith("/")
+        ? `${url.pathname}${url.search}`
+        : url.toString();
     } catch {
       // Fallback for invalid URLs (e.g., during SSG/build time)
       let queryString = "";

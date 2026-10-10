@@ -52,6 +52,12 @@ export { default as CertificateBanner } from "./common/Certificate/CertificateBa
 export { default as CertificateContent } from "./common/Certificate/CertificateContent";
 export { default as CertificateModal } from "./common/CertificateModal";
 export { default as ComingSoon } from "./common/ComingSoon";
+export type {
+  TrackEnrollmentType,
+  UseTrackEnrollmentParams,
+  UseTrackEnrollmentResult,
+} from "./common/Enrollment/useTrackEnrollment";
+export { default as useTrackEnrollment } from "./common/Enrollment/useTrackEnrollment";
 export { default as CheckboxButton } from "./common/Form/CheckboxButton";
 export { default as InputFieldContainer } from "./common/Form/InputFieldContainer";
 export { default as RadioButton } from "./common/Form/RadioButton";
@@ -152,7 +158,10 @@ export type { FreemiumLockBannerProps } from "./containers/Cards/FreemiumLockBan
 export { default as FreemiumLockBanner } from "./containers/Cards/FreemiumLockBanner";
 export { default as GitHubIssuesContainer } from "./containers/Cards/GitHubIssuesContainer";
 export { default as LoginCard } from "./containers/Cards/LoginCard";
-export { default as LoginCardNew } from "./containers/Cards/LoginCardNew";
+export {
+  getSafeRedirectPath,
+  default as LoginCardNew,
+} from "./containers/Cards/LoginCardNew";
 export { default as MentorshipCard } from "./containers/Cards/MentorshipCard";
 export { default as NotificationContainer } from "./containers/Cards/NotificationContainer";
 export { default as PaymentCard } from "./containers/Cards/PaymentCard";

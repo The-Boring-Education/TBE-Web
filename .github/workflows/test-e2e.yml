@@ -19,7 +19,6 @@ jobs:
         app:
           - platform
           - prep-yatra
-          - quizes
           - techyatra
           - dsayatra
           - resume-yatra

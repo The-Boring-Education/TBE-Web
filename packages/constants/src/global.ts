@@ -132,7 +132,7 @@ const LINKS = {
   viewSessionDetails:
     "https://www.canva.com/design/DAGVf1D9DGw/LbEBK9ux5s2xQN_l6WKyvA/view?utm_content=DAGVf1D9DGw&utm_campaign=designshare&utm_medium=link&utm_source=editor",
   createIssue: "https://github.com/The-Boring-Education/TBE-Web/issues/new",
-  quizApp: "https://quiz.theboringeducation.com",
+  quizApp: "https://theboringeducation.com/quizzes",
 };
 
 // Google analytics

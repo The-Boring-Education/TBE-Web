@@ -25,9 +25,13 @@ vi.mock("@/lib/database/queries/dsayatra", () => ({
 vi.mock("@/lib/database/queries/gamification", () => ({
   updateUserPointsInDB: vi.fn(),
 }));
-vi.mock("@/lib/utils", () => ({
-  generateYouTubeSearchLink: vi.fn(),
-}));
+vi.mock("@/lib/utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/utils")>();
+  return {
+    ...actual,
+    generateYouTubeSearchLink: vi.fn(),
+  };
+});
 vi.mock("@/lib/utils/logger", () => ({
   logger: { error: vi.fn() },
 }));

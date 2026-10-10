@@ -2,14 +2,19 @@ import {
   ActionBanner,
   Button,
   CertificateBanner,
-  ChapterLink,
   ContentFeedbackWidget,
   FeedbackPopup,
+  LearningChapterList,
   LinerProgressBar,
   LoadingSpinner,
   SEO,
+  Sheet,
+  SheetContent,
   SheetHeroContainer,
+  SheetTitle,
+  SheetTrigger,
   Text,
+  useTrackEnrollment,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useGamificationFeedback, useGamifiedAction } from '@tbe/gamification';
@@ -19,8 +24,13 @@ import type {
   CoursePageProps,
 } from '@tbe/interface';
 import { useMutation } from '@tbe/query';
-import { formatDate, getCoursePageProps, sendRequest } from '@tbe/utils';
-import { List, X } from 'lucide-react';
+import {
+  captureException,
+  formatDate,
+  getCoursePageProps,
+  sendRequest,
+} from '@tbe/utils';
+import { List } from 'lucide-react';
 import { useRouter } from 'next/router';
 import {
   Fragment,
@@ -50,9 +60,17 @@ const CourseLearnPage = ({
   const [chapters, setChapters] = useState(initialCourse?.chapters || []);
   const firstChapterId = chapters?.[0]?._id?.toString() || '';
 
-  // Use query param chapterId if present, else prop or first chapter
-  const activeParamChapterId =
-    (router.query.chapterId as string) || currentChapterId || firstChapterId;
+  // Resolve the chapter from the URL, falling back to the canonical first
+  // chapter so an unknown id never selects (or reports feedback against) a
+  // chapter that does not exist.
+  const resolveChapterId = (candidate?: string) =>
+    candidate && chapters.some((c) => c._id.toString() === candidate)
+      ? candidate
+      : firstChapterId;
+
+  const activeParamChapterId = resolveChapterId(
+    (router.query.chapterId as string) || currentChapterId,
+  );
 
   const [currentChapterIdState, setCurrentChapterIdState] =
     useState(activeParamChapterId);
@@ -66,7 +84,9 @@ const CourseLearnPage = ({
       ?.isCompleted,
   );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [pendingChapterIds, setPendingChapterIds] = useState<string[]>([]);
+  const [failedChapterIds, setFailedChapterIds] = useState<string[]>([]);
+  const [enrollmentError, setEnrollmentError] = useState(false);
   const [isGeneratingCertificate, setIsGeneratingCertificate] = useState(false);
   const [isCourseCompleted, setIsCourseCompleted] = useState(
     initialCourse?.isCompleted ?? false,
@@ -78,6 +98,8 @@ const CourseLearnPage = ({
   const [showChapterFeedback, setShowChapterFeedback] = useState(false);
   const [showCourseFeedback, setShowCourseFeedback] = useState(false);
   const contentSectionRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLElement>(null);
+  const focusContentOnDrawerCloseRef = useRef(false);
   const courseCompletionFeedbackShown = useRef(
     initialCourse?.isCompleted ?? false,
   );
@@ -93,6 +115,8 @@ const CourseLearnPage = ({
     (router.query.courseSlug as string) || slug || course?.slug || '';
   const cleanSlug = rawSlug.replace(/^\/?(shiksha\/)?/, '');
   const courseOverviewHref = `/shiksha/${cleanSlug}`;
+  const getChapterHref = (chapterId: string) =>
+    `/shiksha/${cleanSlug}/learn?chapterId=${chapterId}`;
   const totalChapters = chapters.length;
   const completedChapters = chapters.filter((c) => c.isCompleted).length;
   const isDataLoading = !course || chapters.length === 0;
@@ -101,18 +125,29 @@ const CourseLearnPage = ({
     (c) => c._id.toString() === currentChapterIdState,
   );
 
+  // Pending and failed state belong to the chapter being saved, so an in-flight
+  // save on one chapter never disables the control on another.
+  const isCurrentChapterPending = pendingChapterIds.includes(
+    currentChapterIdState,
+  );
+  const hasCurrentChapterFailed = failedChapterIds.includes(
+    currentChapterIdState,
+  );
+
   // Sync router query changes
   useEffect(() => {
-    if (router.query.chapterId) {
-      const qId = router.query.chapterId as string;
-      const found = chapters.find((c) => c._id.toString() === qId);
-      if (found) {
-        setCurrentChapterIdState(qId);
-        setChapterContent(found.content);
-        setIsChapterCompleted(found.isCompleted);
-      }
+    const qId = (router.query.chapterId as string) || '';
+    const resolvedId = chapters.some((c) => c._id.toString() === qId)
+      ? qId
+      : firstChapterId;
+    const found = chapters.find((c) => c._id.toString() === resolvedId);
+
+    if (found) {
+      setCurrentChapterIdState(resolvedId);
+      setChapterContent(found.content);
+      setIsChapterCompleted(found.isCompleted);
     }
-  }, [router.query.chapterId, chapters]);
+  }, [router.query.chapterId, chapters, firstChapterId]);
 
   // Check if all chapters are completed
   const checkCourseCompletion = useCallback(() => {
@@ -162,15 +197,31 @@ const CourseLearnPage = ({
           }).date,
         } as AddCertificateRequestPayloadProps,
       })
-        .then(({ status, data, message }) => {
-          if (!status || !data?._id) return false;
+        .then((response) => {
+          const { status, data, message } = response || {};
+          if (status !== true || !data?._id) {
+            captureException(
+              new Error(message || 'Failed to generate certificate'),
+              {
+                tags: { section: 'shiksha', flow: 'certificate_generation' },
+                extra: { courseId: course._id, userId: user?.id, status },
+              },
+            );
+            return false;
+          }
 
           setCertificateId(data._id);
           certificateWasReturned = true;
           return message !== 'Certificate already exists';
         })
         .catch((error) => {
-          console.error('Error generating certificate:', error);
+          captureException(
+            error instanceof Error ? error : new Error(String(error)),
+            {
+              tags: { section: 'shiksha', flow: 'certificate_generation' },
+              extra: { courseId: course._id, userId: user?.id },
+            },
+          );
           return false;
         })
         .finally(() => {
@@ -272,27 +323,43 @@ const CourseLearnPage = ({
     setShowChapterFeedback(false);
   };
 
-  const toggleCompletion = async () => {
-    if (!isEnrolled) {
-      return;
-    }
+  const toggleCompletion = useCallback(
+    async (chapterId: string) => {
+      if (!isEnrolled || !chapterId) return;
 
-    setIsLoading(true);
-    try {
-      const newCompletionStatus = !isChapterCompleted;
+      // Capture the chapter identity and the target state at click time so a
+      // response can never be applied to whichever chapter is selected later.
+      const targetChapter = chapters.find(
+        (c) => c._id.toString() === chapterId,
+      );
+      if (!targetChapter) return;
+      const newCompletionStatus = !targetChapter.isCompleted;
 
-      const response = await makeRequest({
-        method: 'PATCH',
-        url: routes.api.markCourseChapterAsCompleted,
-        body: {
-          userId: user?.id,
-          courseId: course._id,
-          chapterId: currentChapterIdState,
-          isCompleted: newCompletionStatus,
-        },
-      });
+      setPendingChapterIds((prev) =>
+        prev.includes(chapterId) ? prev : [...prev, chapterId],
+      );
+      setFailedChapterIds((prev) => prev.filter((id) => id !== chapterId));
 
-      if (response?.status) {
+      try {
+        const response = await makeRequest({
+          method: 'PATCH',
+          url: routes.api.markCourseChapterAsCompleted,
+          body: {
+            userId: user?.id,
+            courseId: course._id,
+            chapterId,
+            isCompleted: newCompletionStatus,
+          },
+        });
+
+        // `sendRequest` resolves with the error payload instead of throwing,
+        // so the response envelope is the only reliable success signal.
+        if (response?.status !== true) {
+          throw new Error(
+            `Chapter completion save rejected for chapter ${chapterId}`,
+          );
+        }
+
         if (newCompletionStatus) {
           celebrate(response?.gamification, {
             message: 'Chapter completed! Keep learning!',
@@ -304,26 +371,67 @@ const CourseLearnPage = ({
             value: {
               userId: user?.id,
               courseId: course._id,
-              chapterId: currentChapterIdState,
+              chapterId,
             },
           });
         }
 
         setChapters((prevChapters) =>
           prevChapters.map((ch) =>
-            ch._id.toString() === currentChapterIdState
+            ch._id.toString() === chapterId
               ? { ...ch, isCompleted: newCompletionStatus }
               : ch,
           ),
         );
-        setIsChapterCompleted(newCompletionStatus);
+      } catch (error) {
+        // Never surface raw server text to the learner — log it instead.
+        captureException(
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            tags: { section: 'shiksha', flow: 'chapter_completion' },
+            extra: {
+              courseId: course._id,
+              chapterId,
+              userId: user?.id,
+              isCompleted: newCompletionStatus,
+            },
+          },
+        );
+        setFailedChapterIds((prev) =>
+          prev.includes(chapterId) ? prev : [...prev, chapterId],
+        );
+      } finally {
+        setPendingChapterIds((prev) => prev.filter((id) => id !== chapterId));
       }
-    } catch (error) {
-      console.error('Error toggling chapter completion:', error);
-    } finally {
-      setIsLoading(false);
+    },
+    [
+      celebrate,
+      chapters,
+      course._id,
+      isEnrolled,
+      makeRequest,
+      trackEvent,
+      user?.id,
+    ],
+  );
+
+  const { enroll, isEnrolling } = useTrackEnrollment({
+    id: course?._id ?? '',
+    name: course?.name ?? '',
+    trackType: 'course',
+  });
+
+  const handleInContentEnroll = useCallback(async () => {
+    setEnrollmentError(false);
+
+    const didEnroll = await enroll();
+    if (!didEnroll) {
+      setEnrollmentError(true);
+      return;
     }
-  };
+
+    setIsEnrolled(true);
+  }, [enroll]);
 
   // Strip leading # heading from markdown if present to prevent double duplicate title
   const displayContent = useMemo(() => {
@@ -369,83 +477,68 @@ const CourseLearnPage = ({
             className='w-full max-w-[1536px] mx-auto px-3.5 sm:px-6 lg:px-8 xl:px-12 py-3 sm:py-6 font-primary'
             ref={contentSectionRef}
           >
-            {/* Mobile Floating Chapters Toggle Button (Left Side) */}
-            {!isMobileSidebarOpen && (
-              <button
-                onClick={() => setIsMobileSidebarOpen(true)}
-                aria-label='View Chapters'
-                className='fixed left-0 top-1/2 -translate-y-1/2 z-30 lg:hidden bg-primary text-white font-medium py-2 pl-2 pr-2.5 rounded-r-full shadow-lg flex items-center gap-1.5 text-xs hover:bg-primary/90 active:scale-95 transition-all cursor-pointer'
-              >
-                <List className='w-3.5 h-3.5 text-white' />
-                <span className='text-[11px] font-semibold tracking-wide'>
-                  Chapters ({chapters.length})
-                </span>
-              </button>
-            )}
-
-            {/* Mobile Drawer Backdrop */}
-            {isMobileSidebarOpen && (
-              <div
-                className='fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-xs transition-opacity duration-200'
-                onClick={() => setIsMobileSidebarOpen(false)}
-              />
-            )}
-
-            {/* Mobile Drawer Panel (Solid White Background) */}
-            <div
-              className={`fixed inset-y-0 left-0 z-50 w-[85%] max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden transform transition-transform duration-300 ease-in-out ${
-                isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-              }`}
+            {/* Mobile Chapters Drawer (dialog-based, keyboard accessible) */}
+            <Sheet
+              open={isMobileSidebarOpen}
+              onOpenChange={setIsMobileSidebarOpen}
             >
-              <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
-                <div className='flex items-center gap-2'>
-                  <h2 className='font-semibold text-base text-gray-900'>
-                    Chapters
-                  </h2>
-                  <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-50 text-primary border border-red-200/60'>
-                    {chapters.length} chapters
-                  </span>
-                </div>
+              <SheetTrigger asChild>
                 <button
-                  onClick={() => setIsMobileSidebarOpen(false)}
-                  className='p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer'
+                  aria-label={`View Chapters (${chapters.length})`}
+                  className='fixed left-0 top-1/2 -translate-y-1/2 z-30 lg:hidden bg-primary text-white font-medium py-2 pl-2 pr-2.5 rounded-r-full shadow-lg flex items-center gap-1.5 text-xs hover:bg-primary/90 active:scale-95 transition-all cursor-pointer'
                 >
-                  <X className='w-5 h-5' />
+                  <List className='w-3.5 h-3.5 text-white' />
+                  <span className='text-[11px] font-semibold tracking-wide'>
+                    Chapters ({chapters.length})
+                  </span>
                 </button>
-              </div>
+              </SheetTrigger>
 
-              {!isLocked && (
-                <div className='pb-2 bg-white'>
-                  <LinerProgressBar
-                    completedChapters={completedChapters}
-                    totalChapters={totalChapters}
-                  />
+              <SheetContent
+                side='left'
+                aria-label='Chapters'
+                className='w-[85%] max-w-[340px] sm:max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden'
+                onCloseAutoFocus={(event) => {
+                  if (!focusContentOnDrawerCloseRef.current) return;
+                  focusContentOnDrawerCloseRef.current = false;
+                  event.preventDefault();
+                  mainContentRef.current?.focus();
+                }}
+              >
+                <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
+                  <div className='flex items-center gap-2'>
+                    <SheetTitle className='font-semibold text-base text-gray-900'>
+                      Chapters
+                    </SheetTitle>
+                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-50 text-primary border border-red-200/60'>
+                      {chapters.length} chapters
+                    </span>
+                  </div>
                 </div>
-              )}
 
-              <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-white'>
-                {chapters?.map(({ _id, name, content, isCompleted }, index) => {
-                  const chapterId = _id?.toString();
-
-                  return (
-                    <ChapterLink
-                      key={chapterId}
-                      chapterId={chapterId}
-                      content={content}
-                      currentChapterId={currentChapterIdState}
-                      handleChapterClick={() => {
-                        handleChapterClick(content, chapterId);
-                        setIsMobileSidebarOpen(false);
-                      }}
-                      href={`/shiksha/${cleanSlug}/learn?chapterId=${chapterId}`}
-                      isCompleted={isCompleted}
-                      name={`${index + 1}. ${name}`}
-                      isLocked={isLocked}
+                {!isLocked && (
+                  <div className='pb-2 bg-white'>
+                    <LinerProgressBar
+                      completedChapters={completedChapters}
+                      totalChapters={totalChapters}
                     />
-                  );
-                })}
-              </div>
-            </div>
+                  </div>
+                )}
+
+                <LearningChapterList
+                  chapters={chapters}
+                  currentChapterId={currentChapterIdState}
+                  isLocked={isLocked}
+                  href={({ _id }) => getChapterHref(_id?.toString() ?? '')}
+                  onChapterSelect={(content, chapterId) => {
+                    handleChapterClick(content, chapterId);
+                    focusContentOnDrawerCloseRef.current = true;
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className='gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-white'
+                />
+              </SheetContent>
+            </Sheet>
 
             <div className='flex flex-col lg:flex-row gap-4 lg:gap-6 items-start'>
               {/* Desktop Left Sidebar (Chapters Navigation) */}
@@ -468,29 +561,14 @@ const CourseLearnPage = ({
                 </div>
 
                 {/* Chapter List */}
-                <div className='flex flex-col gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth'>
-                  {chapters?.map(
-                    ({ _id, name, content, isCompleted }, index) => {
-                      const chapterId = _id?.toString();
-
-                      return (
-                        <ChapterLink
-                          key={chapterId}
-                          chapterId={chapterId}
-                          content={content}
-                          currentChapterId={currentChapterIdState}
-                          handleChapterClick={() =>
-                            handleChapterClick(content, chapterId)
-                          }
-                          href={`/shiksha/${cleanSlug}/learn?chapterId=${chapterId}`}
-                          isCompleted={isCompleted}
-                          name={`${index + 1}. ${name}`}
-                          isLocked={isLocked}
-                        />
-                      );
-                    },
-                  )}
-                </div>
+                <LearningChapterList
+                  chapters={chapters}
+                  currentChapterId={currentChapterIdState}
+                  isLocked={isLocked}
+                  href={({ _id }) => getChapterHref(_id?.toString() ?? '')}
+                  onChapterSelect={handleChapterClick}
+                  className='gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth'
+                />
 
                 {/* Bottom Banners */}
                 {!isLocked && (
@@ -543,7 +621,12 @@ const CourseLearnPage = ({
               </aside>
 
               {/* Main Content Viewer */}
-              <main className='flex-1 w-full bg-transparent lg:bg-card border-none lg:border lg:border-border/70 rounded-none lg:rounded-2xl p-0 sm:p-4 lg:p-10 shadow-none lg:shadow-xs min-h-[500px]'>
+              <main
+                id='chapter-content'
+                ref={mainContentRef}
+                tabIndex={-1}
+                className='flex-1 w-full bg-transparent lg:bg-card border-none lg:border lg:border-border/70 rounded-none lg:rounded-2xl p-0 sm:p-4 lg:p-10 shadow-none lg:shadow-xs min-h-[500px] focus:outline-none'
+              >
                 {isLocked ? (
                   <div className='w-full space-y-5'>
                     <div>
@@ -568,11 +651,22 @@ const CourseLearnPage = ({
                         and track your chapter completions.
                       </p>
                       <Button
-                        text='Enroll in Course'
+                        text={isEnrolling ? 'Enrolling...' : 'Enroll in Course'}
                         variant='PRIMARY'
                         className='w-fit px-6 py-2.5 rounded-lg font-semibold shadow-xs mt-2'
-                        onClick={() => setIsEnrolled(true)}
+                        isLoading={isEnrolling}
+                        onClick={handleInContentEnroll}
                       />
+                      {enrollmentError && (
+                        <div
+                          role='alert'
+                          aria-live='assertive'
+                          className='rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs sm:text-sm text-destructive'
+                        >
+                          We couldn&apos;t enroll you in this course. Please
+                          check your connection and try again.
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -601,10 +695,10 @@ const CourseLearnPage = ({
                     <div className='mt-5 pt-4 border-t border-border/80 w-full flex flex-wrap items-center gap-3'>
                       <Button
                         className='w-auto self-start py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm text-white bg-primary hover:bg-primary/90 shadow-xs cursor-pointer'
-                        isLoading={isLoading}
-                        disabled={!isEnrolled}
+                        isLoading={isCurrentChapterPending}
+                        active={isEnrolled}
                         text={
-                          isLoading
+                          isCurrentChapterPending
                             ? 'Marking...'
                             : !isEnrolled
                               ? 'Enroll to Mark Complete'
@@ -617,13 +711,35 @@ const CourseLearnPage = ({
                             ? 'SUCCESS'
                             : !isEnrolled
                               ? 'SECONDARY'
-                              : isLoading
+                              : isCurrentChapterPending
                                 ? 'SECONDARY'
                                 : 'PRIMARY'
                         }
-                        onClick={toggleCompletion}
+                        onClick={() => toggleCompletion(currentChapterIdState)}
                       />
                     </div>
+
+                    {hasCurrentChapterFailed && (
+                      <div
+                        role='alert'
+                        aria-live='assertive'
+                        className='w-full rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 flex flex-wrap items-center gap-3'
+                      >
+                        <p className='text-xs sm:text-sm text-destructive flex-1 min-w-[220px]'>
+                          We couldn&apos;t save your progress for this chapter.
+                          Your last saved progress is unchanged.
+                        </p>
+                        <Button
+                          className='w-auto py-2 px-4 rounded-lg font-semibold text-xs sm:text-sm'
+                          variant='OUTLINE'
+                          text='Retry'
+                          isLoading={isCurrentChapterPending}
+                          onClick={() =>
+                            toggleCompletion(currentChapterIdState)
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </main>

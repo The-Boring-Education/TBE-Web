@@ -6,6 +6,7 @@ import { logger } from "@/lib/utils/logger";
 import { Quiz, QuizAttempt } from "../models";
 import type { QuizModel } from "../models/Quiz/Quiz";
 import type { QuizAttemptModel } from "../models/Quiz/QuizAttempt";
+import { toObjectId } from "./common";
 
 // Add a quiz to database
 const addAQuizToDB = async (
@@ -186,7 +187,13 @@ const getUserQuizHistoryFromDB = async ({
   quizId?: string;
 }): Promise<DatabaseQueryResponseType> => {
   try {
-    let query = QuizAttempt.find({ userId });
+    const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(userId);
+    const userObjectId = isValidObjectId ? toObjectId(userId) : null;
+    const userFilter = userObjectId
+      ? { $or: [{ userId }, { userId: userObjectId }] }
+      : { userId };
+
+    let query = QuizAttempt.find(userFilter);
 
     if (quizId) {
       query = query.where("quizId").equals(quizId);
