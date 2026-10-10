@@ -150,7 +150,9 @@ const importCourseBundleToDB = async ({
   dryRun = false,
 }: ImportCourseBundleOptions): Promise<DatabaseQueryResponseType> => {
   try {
-    const slug = bundle.course.slug;
+    // Coerced to a primitive string so a non-string slug can never reach
+    // Mongo as a query operator.
+    const slug = String(bundle.course.slug);
     const course = await Course.findOne({ slug });
 
     const bundleKeys = bundle.chapters.map((chapter) => chapter.chapterKey);
@@ -280,7 +282,9 @@ const exportCourseBundleFromDB = async (
   slug: string,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findOne({ slug });
+    // Coerced to a primitive string so a non-string slug can never reach
+    // Mongo as a query operator.
+    const course = await Course.findOne({ slug: String(slug) });
 
     if (!course) return { error: "Course not found" };
 
