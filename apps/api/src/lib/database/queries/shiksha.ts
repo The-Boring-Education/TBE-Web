@@ -1,3 +1,4 @@
+import { isValidChapterKey, normalizeChapterKey } from "@tbe/utils";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -53,6 +54,13 @@ const buildCourseStatusFilter = (options?: CourseReadOptions) =>
           { status: { $exists: false } },
         ],
       };
+
+/** Returned when a chapter key is missing or is not kebab-case. */
+const INVALID_CHAPTER_KEY_ERROR =
+  "Chapter key must be kebab-case (lowercase letters, digits and single hyphens)";
+
+/** Returned when a chapter key is already used by another chapter in the course. */
+const DUPLICATE_CHAPTER_KEY_ERROR = "Chapter key already exists in this course";
 
 const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps,
@@ -197,14 +205,24 @@ const addChapterToCourseInDB = async (
   chapter: AddChapterToCourseRequestProps,
 ) => {
   try {
+    const key = normalizeChapterKey(chapter?.key);
+
+    if (!isValidChapterKey(key)) {
+      return { error: INVALID_CHAPTER_KEY_ERROR };
+    }
+
+    // Filtering on the key makes the duplicate check atomic with the push.
     const updatedCourse = await Course.findOneAndUpdate(
-      { _id: courseId },
-      { $push: { chapters: chapter } },
+      { _id: courseId, "chapters.key": { $ne: key } },
+      { $push: { chapters: { ...chapter, key } } },
       { new: true },
     );
 
     if (!updatedCourse) {
-      return { error: "Course not found" };
+      const courseExists = await Course.exists({ _id: courseId });
+      return {
+        error: courseExists ? DUPLICATE_CHAPTER_KEY_ERROR : "Course not found",
+      };
     }
 
     return { data: updatedCourse };
@@ -223,15 +241,16 @@ const updateCourseChapterInDB = async (
   { name, content, isOptional }: UpdateChapterInCourseRequestProps,
 ) => {
   try {
+    // `key` is deliberately not updatable: it is the stable identity of a
+    // chapter and must survive re-titling, re-authoring and re-imports.
+    const updates: Record<string, unknown> = {};
+    if (name !== undefined) updates["chapters.$.name"] = name;
+    if (content !== undefined) updates["chapters.$.content"] = content;
+    if (isOptional !== undefined) updates["chapters.$.isOptional"] = isOptional;
+
     const course = await Course.findOneAndUpdate(
       { _id: courseId, "chapters._id": chapterId },
-      {
-        $set: {
-          "chapters.$.chapterName": name,
-          "chapters.$.content": content,
-          "chapters.$.isOptional": isOptional,
-        },
-      },
+      Object.keys(updates).length ? { $set: updates } : {},
       { new: true },
     );
 
@@ -675,6 +694,7 @@ export {
   addChapterToCourseInDB,
   deleteACourseFromDBById,
   deleteCourseChapterByIdFromDB,
+  DUPLICATE_CHAPTER_KEY_ERROR,
   enrollInACourse,
   getACourseForUserFromDB,
   getACourseFromDBById,
@@ -683,6 +703,7 @@ export {
   getCourseBySlugFromDB,
   getCourseBySlugWithUserFromDB,
   getEnrolledCourseFromDB,
+  INVALID_CHAPTER_KEY_ERROR,
   updateACourseInDB,
   updateCertificateToUserShikshaCourseDoc,
   updateCourseChapterInDB,

@@ -200,6 +200,7 @@ export interface UserSheetQuestionModel {
 
 export interface CourseChapterModel {
   _id: typeof Schema.Types.ObjectId;
+  key: string;
   name: string;
   content: string;
   isOptional?: boolean;
