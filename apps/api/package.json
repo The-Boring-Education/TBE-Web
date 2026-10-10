@@ -12,6 +12,7 @@
     "backfill": "tsx scripts/backfill-content-ids.ts",
     "backfill:leaderboard": "tsx scripts/backfill-leaderboard.ts",
     "backfill:course-status": "tsx scripts/backfill-course-status.ts",
+    "backfill:chapter-keys": "tsx scripts/backfill-chapter-keys.ts",
     "migrate": "tsx scripts/migrate-content.ts",
     "seed:subscription-plans": "tsx scripts/seed-subscription-plans.ts",
     "seed:subscription-plans:dev": "tsx scripts/seed-subscription-plans.ts --env dev",
