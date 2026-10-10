@@ -46,6 +46,12 @@ const importBundle = async (bundle: CourseBundle, dryRun = false) => {
   return data as CourseBundleImportReport;
 };
 
+/** `updatedAt` is schema-managed, so it only moves when a write happened. */
+const courseUpdatedAt = async () => {
+  const course = await Course.findOne({ slug: SLUG }).lean();
+  return (course as unknown as { updatedAt?: Date } | null)?.updatedAt;
+};
+
 const chapterIdsByKey = async () => {
   const course = await Course.findOne({ slug: SLUG });
   return new Map(
@@ -93,8 +99,7 @@ describe("Course Bundle Import / Export (integration)", () => {
   it("writes nothing and reports no changes when re-importing an unchanged bundle", async () => {
     await importBundle(bundleFixture());
 
-    const before = await Course.findOne({ slug: SLUG });
-    const updatedAtBefore = before?.updatedAt;
+    const updatedAtBefore = await courseUpdatedAt();
 
     const report = await importBundle(bundleFixture());
 
@@ -103,8 +108,7 @@ describe("Course Bundle Import / Export (integration)", () => {
     expect(report.chaptersUpdated).toEqual([]);
     expect(report.chaptersReordered).toEqual([]);
 
-    const after = await Course.findOne({ slug: SLUG });
-    expect(after?.updatedAt).toEqual(updatedAtBefore);
+    expect(await courseUpdatedAt()).toEqual(updatedAtBefore);
   });
 
   it("preserves a chapter's storage id when its title and content change", async () => {
