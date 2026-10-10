@@ -109,6 +109,10 @@ export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 const modelSelectParams = {
   coursePreview:
     "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage status",
+  // Admin course lists additionally need the last-updated time and enough of
+  // the chapters array to count it, without shipping the chapter bodies.
+  adminCoursePreview:
+    "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage status updatedAt chapters._id",
   projectPreview: "_id name slug coverImageURL description isActive",
 };
 

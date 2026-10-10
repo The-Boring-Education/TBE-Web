@@ -6,6 +6,7 @@ import {
   BookOpenCheck,
   Briefcase,
   FileText,
+  GraduationCap,
   Heart,
   Home,
   ListChecks,
@@ -41,6 +42,11 @@ const Sidebar = () => {
       icon: <Heart size={20} />,
     },
     { name: "Courses", path: "/courses", icon: <BookOpen size={20} /> },
+    {
+      name: "Shiksha Courses",
+      path: "/shiksha-courses",
+      icon: <GraduationCap size={20} />,
+    },
     { name: "Projects", path: "/projects", icon: <Briefcase size={20} /> },
     { name: "Quizzes", path: "/quizzes", icon: <ListChecks size={20} /> },
     {

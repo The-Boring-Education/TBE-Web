@@ -25,6 +25,7 @@ import MentorshipPage from "./pages/MentorshipPage";
 import PrepLogsPage from "./pages/PrepLogsPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import QuizzesPage from "./pages/QuizzesPage";
+import ShikshaCoursesPage from "./pages/ShikshaCoursesPage";
 import SimpleQuizAnalyticsPage from "./pages/SimpleQuizAnalyticsPage";
 import UserInterestsPage from "./pages/UserInterestsPage";
 import UsersPage from "./pages/UsersPage";
@@ -74,6 +75,15 @@ const App = () => {
                 element={
                   <MainLayout>
                     <CoursesPage />
+                  </MainLayout>
+                }
+              />
+
+              <Route
+                path="/shiksha-courses"
+                element={
+                  <MainLayout>
+                    <ShikshaCoursesPage />
                   </MainLayout>
                 }
               />
