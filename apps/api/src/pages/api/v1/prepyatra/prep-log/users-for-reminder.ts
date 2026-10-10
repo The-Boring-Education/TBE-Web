@@ -3,13 +3,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { apiStatusCodes } from "@/lib/constants";
 import { User } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   switch (req.method) {
     case "GET":
       return handleGetUsersForReminder(req, res);
@@ -114,4 +110,4 @@ const handleGetUsersForReminder = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: {} });

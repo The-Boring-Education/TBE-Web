@@ -4,8 +4,8 @@ import {
   getNavbarVariantConfig,
   LINKS,
   routes,
-  toPlatformUrl,
   TOP_NAVIGATION,
+  toPlatformUrl,
 } from "@tbe/constants";
 import { RankChip } from "@tbe/gamification";
 import { useScrollDirection } from "@tbe/hooks";

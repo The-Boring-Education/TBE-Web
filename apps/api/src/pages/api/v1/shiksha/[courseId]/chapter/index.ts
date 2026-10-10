@@ -4,7 +4,6 @@ import { apiStatusCodes } from "@/lib/constants";
 import { addChapterToCourseInDB } from "@/lib/database";
 import type { AddChapterToCourseRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { ensureAdminAccessWithCapture } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -29,13 +28,6 @@ const handleAddChapter = async (
   res: NextApiResponse,
   courseId: string,
 ) => {
-  const isAdmin = await ensureAdminAccessWithCapture(
-    req,
-    res,
-    "shiksha_chapter_create",
-  );
-  if (!isAdmin) return;
-
   const chapterData = req.body as AddChapterToCourseRequestProps;
 
   try {
@@ -67,4 +59,4 @@ const handleAddChapter = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });

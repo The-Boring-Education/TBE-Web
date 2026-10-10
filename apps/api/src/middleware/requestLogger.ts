@@ -4,19 +4,35 @@ import { apiStatusCodes } from "@/lib/constants";
 import { cors } from "@/lib/utils/cors";
 import { sendAPIResponse } from "@/lib/utils/functions";
 import { logger } from "@/lib/utils/logger";
-import { captureAPIError } from "@/lib/utils/sentry";
+import { captureAPIError, captureAuthError } from "@/lib/utils/sentry";
 import { connectDB } from "@/middleware/api";
+
+interface AdminGuardOptions {
+  /** Methods that require admin auth. Omit to guard every method. */
+  methods?: readonly string[];
+  /** Also accept the machine `x-admin-secret` header (ops scripts/cron). */
+  allowSecret?: boolean;
+}
 
 interface ApiHandlerOptions {
   cors?: boolean;
   db?: boolean;
   maxBodyLogSize?: number;
+  admin?: AdminGuardOptions;
 }
 
 const DEFAULT_OPTIONS: ApiHandlerOptions = {
   cors: true,
   db: true,
   maxBodyLogSize: 2048,
+};
+
+const requiresAdmin = (
+  method: string | undefined,
+  guard: AdminGuardOptions,
+): boolean => {
+  if (!guard.methods) return true;
+  return guard.methods.includes((method ?? "").toUpperCase());
 };
 
 const SENSITIVE_KEYS = new Set([
@@ -102,11 +118,13 @@ function extractErrorDetails(error: unknown): {
 
 /**
  * Comprehensive API handler wrapper.
- * Composes: CORS + DB connection + structured logging + error boundary + Sentry.
+ * Composes: CORS + DB connection + admin guard + structured logging + error
+ * boundary + Sentry.
  *
  * Usage:
  *   export default withApiHandler(handler)
  *   export default withApiHandler(handler, { db: false })
+ *   export default withApiHandler(handler, { admin: { methods: ["POST"] } })
  */
 const withApiHandler = (
   handler: NextApiHandler,
@@ -162,6 +180,23 @@ const withApiHandler = (
         await connectDB();
       }
 
+      if (opts.admin && requiresAdmin(method, opts.admin)) {
+        // Imported lazily so unguarded routes never pull in the RBAC/model graph.
+        const adminGuards = await import("@/middleware/admin");
+
+        const authorized = opts.admin.allowSecret
+          ? await adminGuards.ensureAdminAccessOrSecret(req, res)
+          : await adminGuards.ensureAdminAccess(req, res);
+
+        if (!authorized) {
+          captureAuthError(
+            new Error(`Admin access denied for ${method} ${url}`),
+            "admin_guard",
+          );
+          return;
+        }
+      }
+
       await handler(req, res);
     } catch (error) {
       const duration = Date.now() - start;
@@ -202,3 +237,4 @@ const withApiHandler = (
 };
 
 export { withApiHandler };
+export type { AdminGuardOptions, ApiHandlerOptions };

@@ -9,7 +9,6 @@ import {
 import type { AddInterviewSheetRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,12 +19,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET":
       return handleGetSheetById(req, res, userId, sheetId);
     case "PATCH":
-      const isAdminPatch = await adminMiddleware(req, res);
-      if (!isAdminPatch) return;
       return handleUpdateSheet(req, res, sheetId);
     case "DELETE":
-      const isAdminDelete = await adminMiddleware(req, res);
-      if (!isAdminDelete) return;
       return handleDeleteSheet(req, res, sheetId);
     default:
       return res.status(apiStatusCodes.BAD_REQUEST).json(
@@ -113,7 +108,9 @@ const handleUpdateSheet = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["PATCH", "DELETE"] },
+});
 
 const handleDeleteSheet = async (
   req: NextApiRequest,

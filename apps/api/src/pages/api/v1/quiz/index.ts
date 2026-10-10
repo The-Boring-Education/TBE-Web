@@ -8,7 +8,6 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { ensureAdminAccess } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -63,9 +62,6 @@ async function handleGetCategories(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
-  const isAdmin = await ensureAdminAccess(req, res);
-  if (!isAdmin) return;
-
   const {
     quizId,
     categoryName,
@@ -237,4 +233,4 @@ async function handleCreateQuiz(req: NextApiRequest, res: NextApiResponse) {
   return res.status(201).json(sendAPIResponse({ status: true, data }));
 }
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });

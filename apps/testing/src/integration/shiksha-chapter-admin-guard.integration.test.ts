@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Integration test: Shiksha chapter write routes must require an admin.
+ * The guard is declared on `withApiHandler`, so the real wrapper runs here —
+ * only CORS and the DB connection are stubbed out.
  * Unauthenticated callers get 401, authenticated non-admins get 403 and
  * no database write happens in either case.
  */
@@ -12,13 +14,32 @@ vi.mock("@/lib/utils", () => ({
   sendAPIResponse: (obj: Record<string, unknown>) => obj,
 }));
 
+vi.mock("@/lib/utils/functions", () => ({
+  sendAPIResponse: (obj: Record<string, unknown>) => obj,
+}));
+
+vi.mock("@/lib/utils/cors", () => ({
+  cors: vi.fn(),
+}));
+
+vi.mock("@/middleware/api", () => ({
+  connectDB: vi.fn(),
+}));
+
 vi.mock("@/lib/utils/logger", () => ({
-  logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() },
+  logger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    request: vi.fn(),
+  },
 }));
 
 const mockCaptureAuthError = vi.fn();
 vi.mock("@/lib/utils/sentry", () => ({
   captureAuthError: (...args: unknown[]) => mockCaptureAuthError(...args),
+  captureAPIError: vi.fn(),
 }));
 
 const mockVerifyToken = vi.fn();
@@ -47,12 +68,6 @@ vi.mock("@/lib/database", () => ({
     mockDeleteCourseChapterByIdFromDB(...args),
   getACourseFromDBById: (...args: unknown[]) =>
     mockGetACourseFromDBById(...args),
-}));
-
-vi.mock("@/middleware/requestLogger", () => ({
-  withApiHandler: (
-    handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>,
-  ) => handler,
 }));
 
 import chapterByIdHandler from "@api/pages/api/v1/shiksha/[courseId]/chapter/[chapterId]/index";
