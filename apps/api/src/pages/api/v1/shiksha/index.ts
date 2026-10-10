@@ -14,7 +14,7 @@ import type {
   BaseShikshaCourseResponseProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { verifyJwtAdmin } from "@/middleware/admin";
+import { isAdminRequest } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -94,8 +94,7 @@ const handleAllGetCourse = async (
   try {
     // Admin-authenticated reads see courses in every lifecycle status;
     // everyone else only sees PUBLISHED courses.
-    const isAdmin = Boolean(await verifyJwtAdmin(req));
-    const readOptions = { includeAllStatuses: isAdmin };
+    const readOptions = { includeAllStatuses: await isAdminRequest(req) };
 
     // If slug is provided, fetch specific course by slug with user data
     if (slug) {

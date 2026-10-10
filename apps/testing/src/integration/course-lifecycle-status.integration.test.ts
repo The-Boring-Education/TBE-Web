@@ -33,7 +33,11 @@ const { mockFind, mockFindOne, mockFindById, mockFindByIdAndUpdate, models } =
       },
       findOne: (...args: any[]) => {
         mockFindOneInner(...args);
-        return (mockFindOneInner as any)._result;
+        const result = Promise.resolve(
+          (mockFindOneInner as any)._result,
+        ) as any;
+        result.lean = () => result;
+        return result;
       },
       findById: (...args: any[]) => {
         mockFindByIdInner(...args);
@@ -47,6 +51,7 @@ const { mockFind, mockFindOne, mockFindById, mockFindByIdAndUpdate, models } =
 
     const MockUserCourse = {
       findOne: vi.fn().mockResolvedValue(null),
+      create: vi.fn(async (doc: any) => doc),
     };
 
     return {
@@ -72,6 +77,8 @@ vi.mock("@/lib/utils/logger", () => ({
 }));
 
 import {
+  enrollInACourse,
+  getACourseFromDBById,
   getAllCourseFromDB,
   getCourseBySlugFromDB,
   getCourseBySlugWithUserFromDB,
@@ -82,6 +89,10 @@ import {
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
+
+const PUBLIC_STATUS_FILTER = {
+  $or: [{ status: "PUBLISHED" }, { status: { $exists: false } }],
+};
 
 const buildCourseDoc = (overrides: Record<string, any> = {}) => {
   const doc: any = {
@@ -125,13 +136,79 @@ describe("Course Lifecycle Status Integration", () => {
     it("public read filters to PUBLISHED courses only", async () => {
       await getAllCourseFromDB();
 
-      expect(mockFind).toHaveBeenCalledWith({ status: "PUBLISHED" });
+      expect(mockFind).toHaveBeenCalledWith(PUBLIC_STATUS_FILTER);
     });
 
     it("admin read returns courses in every status", async () => {
       await getAllCourseFromDB({ includeAllStatuses: true });
 
       expect(mockFind).toHaveBeenCalledWith({});
+    });
+  });
+
+  describe("course by id read path", () => {
+    it("public read filters to PUBLISHED courses only", async () => {
+      (mockFindOne as any)._result = buildCourseDoc();
+
+      await getACourseFromDBById("course_1");
+
+      expect(mockFindOne).toHaveBeenCalledWith({
+        _id: "course_1",
+        ...PUBLIC_STATUS_FILTER,
+      });
+    });
+
+    it("admin read returns courses in every status", async () => {
+      (mockFindOne as any)._result = buildCourseDoc({ status: "DRAFT" });
+
+      const { data } = await getACourseFromDBById("course_1", undefined, {
+        includeAllStatuses: true,
+      });
+
+      expect(mockFindOne).toHaveBeenCalledWith({ _id: "course_1" });
+      expect(data.status).toBe("DRAFT");
+    });
+
+    it.each(["DRAFT", "ARCHIVED"])(
+      "public read returns nothing for a %s course",
+      async () => {
+        (mockFindOne as any)._result = null;
+
+        const { data, error } = await getACourseFromDBById("course_1");
+
+        expect(data).toBeUndefined();
+        expect(error).toBe("Course not found");
+      },
+    );
+  });
+
+  describe("enrolment", () => {
+    it("rejects enrolling into a course that is not published", async () => {
+      (mockFindOne as any)._result = null;
+
+      const { data, error } = await enrollInACourse({
+        userId: "user_1",
+        courseId: "course_1",
+      });
+
+      expect(mockFindOne).toHaveBeenCalledWith({
+        _id: "course_1",
+        ...PUBLIC_STATUS_FILTER,
+      });
+      expect(data).toBeUndefined();
+      expect(error).toBe("Course not found");
+    });
+
+    it("allows enrolling into a published course", async () => {
+      (mockFindOne as any)._result = buildCourseDoc();
+
+      const { data, error } = await enrollInACourse({
+        userId: "user_1",
+        courseId: "course_1",
+      });
+
+      expect(error).toBeUndefined();
+      expect(data.userId).toBe("user_1");
     });
   });
 
@@ -143,7 +220,7 @@ describe("Course Lifecycle Status Integration", () => {
 
       expect(mockFindOne).toHaveBeenCalledWith({
         slug: "course-one",
-        status: "PUBLISHED",
+        ...PUBLIC_STATUS_FILTER,
       });
       expect(data.slug).toBe("course-one");
     });
@@ -181,7 +258,7 @@ describe("Course Lifecycle Status Integration", () => {
 
       expect(mockFindOne).toHaveBeenCalledWith({
         slug: "course-one",
-        status: "PUBLISHED",
+        ...PUBLIC_STATUS_FILTER,
       });
     });
 

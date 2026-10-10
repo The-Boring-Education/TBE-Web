@@ -7,7 +7,7 @@ const mockGetAllCourseFromDB = vi.fn();
 const mockGetAllEnrolledCoursesFromDB = vi.fn();
 const mockGetCourseBySlugFromDB = vi.fn();
 const mockGetCourseBySlugWithUserFromDB = vi.fn();
-const mockVerifyJwtAdmin = vi.fn();
+const mockIsAdminRequest = vi.fn();
 
 vi.mock("../../../../api/src/lib/constants", () => ({
   apiStatusCodes: {
@@ -42,7 +42,7 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
 vi.mock("../../../../api/src/middleware/api", () => ({}));
 
 vi.mock("../../../../api/src/middleware/admin", () => ({
-  verifyJwtAdmin: (...args: unknown[]) => mockVerifyJwtAdmin(...args),
+  isAdminRequest: (...args: unknown[]) => mockIsAdminRequest(...args),
 }));
 
 import handler from "../../../../api/src/pages/api/v1/shiksha/index";
@@ -50,7 +50,7 @@ import handler from "../../../../api/src/pages/api/v1/shiksha/index";
 describe("Shiksha Index API Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockVerifyJwtAdmin.mockResolvedValue(null);
+    mockIsAdminRequest.mockResolvedValue(false);
   });
 
   it("rejects unsupported methods", async () => {
@@ -295,10 +295,7 @@ describe("Shiksha Index API Route", () => {
   });
 
   it("GET - admin-authenticated read requests courses in every status", async () => {
-    mockVerifyJwtAdmin.mockResolvedValue({
-      id: "admin-1",
-      email: "admin@tbe.dev",
-    });
+    mockIsAdminRequest.mockResolvedValue(true);
     mockGetAllCourseFromDB.mockResolvedValue({ data: [], error: null });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -314,10 +311,7 @@ describe("Shiksha Index API Route", () => {
   });
 
   it("GET with slug - admin-authenticated read is not status filtered", async () => {
-    mockVerifyJwtAdmin.mockResolvedValue({
-      id: "admin-1",
-      email: "admin@tbe.dev",
-    });
+    mockIsAdminRequest.mockResolvedValue(true);
     mockGetCourseBySlugWithUserFromDB.mockResolvedValue({
       data: { _id: "c1", slug: "draft-slug", status: "DRAFT" },
       error: null,
