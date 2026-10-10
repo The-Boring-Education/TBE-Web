@@ -18,7 +18,7 @@ export type CourseBundleSchemaVersion = "shiksha-course@1";
 
 /** Roadmaps a course bundle can belong to. */
 export type CourseBundleRoadmap =
-  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA";
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
 
 /** Difficulty of a course bundle. */
 export type CourseBundleDifficulty = DifficultyType;

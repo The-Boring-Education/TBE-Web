@@ -209,7 +209,8 @@ export type SkillsType =
   | "TailwindCSS"
   | "NextJS";
 
-export type RoadmapsType = "Frontend" | "Backend" | "Fullstack" | "Tech";
+export type RoadmapsType =
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
 export type QuestionFrequencyType =
   "Most Asked" | "Asked Frequently" | "Asked Sometimes";
 
