@@ -31,6 +31,9 @@ export * from "./database";
 
 // Additional database types that are commonly used
 
+// Course Bundle contract (import/export of Shiksha courses)
+export * from "./courseBundle";
+
 // API types and request/response interfaces
 export * from "./api";
 export * from "./dsa-study-guide";
