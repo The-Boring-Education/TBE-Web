@@ -23,6 +23,7 @@ vi.mock("@/middleware/api", () => ({
 vi.mock("@/middleware/admin", () => ({
   ensureAdminAccess: vi.fn().mockResolvedValue(true),
   ensureAdminAccessOrSecret: vi.fn().mockResolvedValue(true),
+  isAdminRequest: vi.fn().mockResolvedValue(false),
 }));
 
 // Mock CORS and utils

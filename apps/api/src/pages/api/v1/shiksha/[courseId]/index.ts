@@ -9,6 +9,7 @@ import {
 } from "@/lib/database";
 import type { AddCourseRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
+import { isAdminRequest } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -73,7 +74,9 @@ const handleUpdateCourse = async (
 ) => {
   const updatedData = req.body as Partial<AddCourseRequestPayloadProps>;
 
-  const { error } = await getACourseFromDBById(courseId);
+  const { error } = await getACourseFromDBById(courseId, undefined, {
+    includeAllStatuses: true,
+  });
 
   if (error) {
     return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -125,7 +128,11 @@ const handleGetCourseById = async (
   courseId: string,
 ) => {
   try {
-    const { data, error } = await getACourseForUserFromDB(userId, courseId);
+    // Admins can read courses in any lifecycle status; everyone else is
+    // restricted to PUBLISHED.
+    const { data, error } = await getACourseForUserFromDB(userId, courseId, {
+      includeAllStatuses: await isAdminRequest(req),
+    });
 
     if (error) {
       return res.status(apiStatusCodes.NOT_FOUND).json(
