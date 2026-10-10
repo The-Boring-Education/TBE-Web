@@ -26,6 +26,9 @@ export const COURSE_BUNDLE_ROADMAPS: CourseBundleRoadmap[] = [
   "Fullstack",
   "Tech",
   "DSA",
+  "AI",
+  "Data",
+  "GTM",
 ];
 
 export const COURSE_BUNDLE_DIFFICULTIES: CourseBundleDifficulty[] = [
