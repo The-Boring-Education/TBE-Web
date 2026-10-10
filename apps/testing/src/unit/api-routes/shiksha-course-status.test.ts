@@ -2,8 +2,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import {
+  adminGuardMock,
+  withApiHandlerMock,
+} from "../../test-utils/api-handler-mock";
+
 const mockUpdateCourseStatusInDB = vi.fn();
-const mockEnsureAdminAccess = vi.fn();
 
 vi.mock("../../../../api/src/lib/constants", () => ({
   apiStatusCodes: {
@@ -30,21 +34,8 @@ vi.mock("../../../../api/src/lib/utils/sentry", () => ({
 }));
 
 vi.mock("../../../../api/src/middleware/requestLogger", () => ({
-  withApiHandler: (
-    handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>,
-  ) => handler,
-}));
-
-vi.mock("../../../../api/src/middleware/admin", () => ({
-  withVerifiedAdminAuth:
-    (
-      handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>,
-    ) =>
-    async (req: NextApiRequest, res: NextApiResponse) => {
-      const authorized = await mockEnsureAdminAccess(req, res);
-      if (!authorized) return;
-      return handler(req, res);
-    },
+  withApiHandler: (...args: Parameters<typeof withApiHandlerMock>) =>
+    withApiHandlerMock(...args),
 }));
 
 import handler from "../../../../api/src/pages/api/v1/shiksha/[courseId]/status";
@@ -52,11 +43,11 @@ import handler from "../../../../api/src/pages/api/v1/shiksha/[courseId]/status"
 describe("Shiksha Course Status API Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockEnsureAdminAccess.mockResolvedValue(true);
+    adminGuardMock.mockResolvedValue(true);
   });
 
   it("is admin guarded", async () => {
-    mockEnsureAdminAccess.mockImplementation(
+    adminGuardMock.mockImplementation(
       async (_req: NextApiRequest, res: NextApiResponse) => {
         res.status(401).json({ status: false });
         return false;
