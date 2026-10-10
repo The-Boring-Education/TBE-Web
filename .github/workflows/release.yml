@@ -53,6 +53,15 @@ jobs:
       - name: 📦 Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      # The push event SHA can be stale if production moved on while the job was queued.
+      - name: 🔄 Sync with Remote production
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git fetch origin production --tags
+          git checkout -B production origin/production
+          echo "Synced to $(git rev-parse --short HEAD)"
+
       - name: 🔍 Check if Last Commit is Version Bump
         id: check_version_bump
         run: |
@@ -224,30 +233,39 @@ jobs:
       - name: 💾 Commit Version Bump
         if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
           NEW_VERSION="${{ steps.bump_version.outputs.new_version }}"
           git add package.json
           git commit -m "chore(release): bump version to $NEW_VERSION" || exit 0
 
           echo "Committed version bump to $NEW_VERSION"
 
-      - name: 🏷️ Create Git Tag
+      - name: 📤 Push Version Bump
+        if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
+        run: |
+          for attempt in 1 2 3; do
+            if git push origin production; then
+              echo "Pushed version bump to production"
+              exit 0
+            fi
+
+            echo "Push rejected (attempt $attempt), rebasing onto origin/production..."
+            git fetch origin production
+            git rebase origin/production
+          done
+
+          echo "::error::Failed to push version bump after 3 attempts"
+          exit 1
+
+      # Tag only after the branch push lands so the tag never points at a rebased-away commit.
+      - name: 🏷️ Create and Push Git Tag
         if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
         run: |
           NEW_VERSION="${{ steps.bump_version.outputs.new_version }}"
           TAG_NAME="v$NEW_VERSION"
 
           git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
-          echo "Created tag: $TAG_NAME"
-
-      - name: 📤 Push Changes and Tag
-        if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
-        run: |
-          git push origin production
-          git push origin --tags
-          echo "Pushed version bump and tag to repository"
+          git push origin "refs/tags/$TAG_NAME"
+          echo "Created and pushed tag: $TAG_NAME"
 
       - name: 🚀 Create GitHub Release
         if: steps.check_version_bump.outputs.skip == 'false' && steps.check_tag.outputs.exists == 'false'
