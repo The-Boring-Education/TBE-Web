@@ -13,6 +13,7 @@ export {
   expireLegacyHostCookies,
   getAccessToken,
   getCookieDomainAttributes,
+  getLatestCookieValue,
   getRefreshToken,
   getRefreshTokenFromCookies,
   getTokenFromCookies,

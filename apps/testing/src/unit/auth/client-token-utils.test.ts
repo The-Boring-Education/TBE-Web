@@ -434,6 +434,19 @@ describe("Client-side Token Utilities (packages/auth/src/token.ts)", () => {
 
       expect(result).toBe(token);
     });
+
+    it("should prefer the last match when both legacy host-only and shared cookies are present", () => {
+      // Per RFC 6265 §5.4 the browser lists cookies with the same path by
+      // creation time, oldest first — the newer domain-scoped SSO cookie
+      // therefore follows the legacy host-only one in the Cookie header.
+      const legacyHostOnly = "legacy.host.only";
+      const sharedDomain = "shared.domain.scoped";
+      const cookieHeader = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${legacyHostOnly}; ${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${sharedDomain}`;
+
+      const result = getTokenFromCookies(cookieHeader);
+
+      expect(result).toBe(sharedDomain);
+    });
   });
 
   describe("getRefreshTokenFromCookies (server-side)", () => {
@@ -467,6 +480,16 @@ describe("Client-side Token Utilities (packages/auth/src/token.ts)", () => {
       const result = getRefreshTokenFromCookies("");
 
       expect(result).toBeNull();
+    });
+
+    it("should prefer the last match when both legacy host-only and shared refresh cookies are present", () => {
+      const legacyHostOnly = "legacy.refresh.host.only";
+      const sharedDomain = "shared.refresh.domain";
+      const cookieHeader = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${legacyHostOnly}; ${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${sharedDomain}`;
+
+      const result = getRefreshTokenFromCookies(cookieHeader);
+
+      expect(result).toBe(sharedDomain);
     });
   });
 

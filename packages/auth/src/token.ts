@@ -107,26 +107,40 @@ export const isTokenExpired = (token: string): boolean => {
 
 // ── Server-side cookie extraction (for middleware / getServerSideProps) ──
 
-export const getTokenFromCookies = (cookieHeader: string): string | null => {
-  const match = cookieHeader.match(
-    new RegExp(`(?:^|; )${AUTH_CONFIG.ACCESS_TOKEN_KEY}=([^;]+)`),
-  );
-  return match?.[1] ?? null;
+/**
+ * Reads the latest value for a cookie name from a raw Cookie header.
+ *
+ * A browser may send two cookies with the same name — a legacy host-only one
+ * (pre-SSO) and the new `.theboringeducation.com` domain-scoped one. Per RFC
+ * 6265 §5.4, cookies with the same path are listed by creation time, oldest
+ * first, so the newer shared cookie appears last. Preferring the last match
+ * avoids the stale host-only token winning the parse during the rollout.
+ */
+export const getLatestCookieValue = (
+  cookieHeader: string,
+  name: string,
+): string | null => {
+  const regex = new RegExp(`(?:^|; )${name}=([^;]+)`, "g");
+  let latest: string | null = null;
+  let match: RegExpExecArray | null = regex.exec(cookieHeader);
+  while (match !== null) {
+    if (match[1]) latest = match[1];
+    match = regex.exec(cookieHeader);
+  }
+  return latest;
 };
+
+export const getTokenFromCookies = (cookieHeader: string): string | null =>
+  getLatestCookieValue(cookieHeader, AUTH_CONFIG.ACCESS_TOKEN_KEY);
 
 export const getRefreshTokenFromCookies = (
   cookieHeader: string,
-): string | null => {
-  const match = cookieHeader.match(
-    new RegExp(`(?:^|; )${AUTH_CONFIG.REFRESH_TOKEN_KEY}=([^;]+)`),
-  );
-  return match?.[1] ?? null;
-};
+): string | null =>
+  getLatestCookieValue(cookieHeader, AUTH_CONFIG.REFRESH_TOKEN_KEY);
 
 // ── Internal ──
 
 const getCookie = (name: string): string | null => {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]+)`));
-  return match?.[1] ?? null;
+  return getLatestCookieValue(document.cookie, name);
 };

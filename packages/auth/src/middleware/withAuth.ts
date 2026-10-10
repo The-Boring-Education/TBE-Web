@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { AUTH_CONFIG } from "../config";
+import { getLatestCookieValue } from "../token";
 
 export interface AuthenticatedUser {
   id: string;
@@ -43,7 +44,14 @@ export const withAuth = (
   ) => Promise<void> | void,
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
+    // Prefer the raw Cookie header's last match: during the SSO rollout a
+    // legacy host-only cookie can precede the new domain-scoped one, and
+    // Next.js's `req.cookies` parser keeps only the first occurrence (the stale
+    // host-only value). Fall back to `req.cookies` and `Authorization` header
+    // if the raw header is unavailable (e.g. test harnesses).
+    const rawCookieHeader = req.headers.cookie || "";
     const token =
+      getLatestCookieValue(rawCookieHeader, AUTH_CONFIG.ACCESS_TOKEN_KEY) ||
       req.cookies?.[AUTH_CONFIG.ACCESS_TOKEN_KEY] ||
       req.headers.authorization?.replace("Bearer ", "");
 
@@ -99,44 +107,57 @@ export const withAdminAuth = (adminEmails: string[]) => {
 /**
  * For use in Next.js Edge middleware — reads auth state from request cookies.
  * Uses atob() which is available in Edge Runtime.
+ *
+ * During the SSO rollout a browser may send two `tbe_access_token` cookies — a
+ * legacy host-only one and the new domain-scoped one. We walk candidates from
+ * last to first (per RFC 6265 §5.4 the newer, domain-scoped cookie is listed
+ * last) and accept the first that decodes to a non-expired payload.
  */
 export const getAuthFromRequest = (
   request: Request,
 ): { isAuthenticated: boolean; user: AuthenticatedUser | null } => {
   const cookieHeader = request.headers.get("cookie") || "";
-  const tokenMatch = cookieHeader.match(
-    new RegExp(`(?:^|; )${AUTH_CONFIG.ACCESS_TOKEN_KEY}=([^;]+)`),
+  const regex = new RegExp(
+    `(?:^|; )${AUTH_CONFIG.ACCESS_TOKEN_KEY}=([^;]+)`,
+    "g",
   );
-
-  if (!tokenMatch?.[1]) {
-    return { isAuthenticated: false, user: null };
+  const tokenCandidates: string[] = [];
+  let match: RegExpExecArray | null = regex.exec(cookieHeader);
+  while (match !== null) {
+    if (match[1]) tokenCandidates.push(match[1]);
+    match = regex.exec(cookieHeader);
   }
 
-  try {
-    const parts = tokenMatch[1].split(".");
-    if (parts.length !== 3 || !parts[1]) {
-      return { isAuthenticated: false, user: null };
+  for (let i = tokenCandidates.length - 1; i >= 0; i -= 1) {
+    const token = tokenCandidates[i];
+    if (!token) continue;
+
+    try {
+      const parts = token.split(".");
+      if (parts.length !== 3 || !parts[1]) continue;
+
+      const payload = JSON.parse(
+        atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")),
+      );
+
+      if (typeof payload.exp === "number" && payload.exp * 1000 < Date.now()) {
+        continue;
+      }
+
+      return {
+        isAuthenticated: true,
+        user: {
+          id: payload.sub,
+          email: payload.email,
+          name: payload.name,
+          image: payload.image,
+          isOnboarded: payload.isOnboarded,
+        },
+      };
+    } catch {
+      continue;
     }
-
-    const payload = JSON.parse(
-      atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")),
-    );
-
-    if (typeof payload.exp === "number" && payload.exp * 1000 < Date.now()) {
-      return { isAuthenticated: false, user: null };
-    }
-
-    return {
-      isAuthenticated: true,
-      user: {
-        id: payload.sub,
-        email: payload.email,
-        name: payload.name,
-        image: payload.image,
-        isOnboarded: payload.isOnboarded,
-      },
-    };
-  } catch {
-    return { isAuthenticated: false, user: null };
   }
+
+  return { isAuthenticated: false, user: null };
 };
