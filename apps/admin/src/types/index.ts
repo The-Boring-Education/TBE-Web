@@ -257,6 +257,20 @@ export interface QuizSessionProgress {
 }
 
 // Interview Prep Types
+export type RoadmapType =
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
+
+export const ROADMAP_OPTIONS: RoadmapType[] = [
+  "Frontend",
+  "Backend",
+  "Fullstack",
+  "Tech",
+  "DSA",
+  "AI",
+  "Data",
+  "GTM",
+];
+
 export interface InterviewSheet {
   _id: string;
   name: string;
@@ -265,7 +279,7 @@ export interface InterviewSheet {
   meta: string;
   coverImageURL: string;
   liveOn: Date;
-  roadmap: "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA";
+  roadmap: RoadmapType;
   isPremium: boolean;
   price: number;
   discountPercentage?: number;
