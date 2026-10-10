@@ -5,7 +5,6 @@ import { updateCourseStatusInDB } from "@/lib/database";
 import type { CourseStatusType } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { captureAPIError } from "@/lib/utils/sentry";
-import { withVerifiedAdminAuth } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -86,4 +85,4 @@ const handleUpdateCourseStatus = async (
   }
 };
 
-export default withApiHandler(withVerifiedAdminAuth(handler));
+export default withApiHandler(handler, { admin: { methods: ["PATCH"] } });
