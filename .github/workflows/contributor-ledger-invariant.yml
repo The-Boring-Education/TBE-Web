@@ -1,0 +1,35 @@
+name: Contribution Ledger Invariant
+
+# Nightly audit of the Contribution Ledger invariant
+# (docs/contributors/02-contribution-ledger.md §4):
+#   SUM(ledger.delta) == DevRelLead.totalContributionPoints, for every lead.
+# Read-only. The endpoint answers 409 on drift, which fails this job so the
+# bug is caught before a lead disputes a point count.
+on:
+  schedule:
+    - cron: "40 18 * * *" # just after midnight IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ledger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Audit contribution ledger
+        env:
+          API_URL: ${{ vars.LEADERBOARD_API_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${API_URL}" ] || [ -z "${ADMIN_SECRET}" ]; then
+            echo "::error::Set the LEADERBOARD_API_URL variable and ADMIN_SECRET secret"
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error \
+            --retry 3 --retry-all-errors --retry-delay 20 \
+            -X POST "${API_URL%/}/api/v1/admin/contributor/ledger-audit" \
+            -H "Content-Type: application/json" \
+            -H "x-admin-secret: ${ADMIN_SECRET}" | jq .
