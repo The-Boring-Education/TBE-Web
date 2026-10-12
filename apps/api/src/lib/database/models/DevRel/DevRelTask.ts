@@ -18,8 +18,23 @@ export interface DevRelTaskModel extends Document {
   dueDate?: Date;
   estimatedHours?: number;
 
+  // Contribution program metadata
+  track: TaskTrackType;
+  difficulty: TaskDifficultyType;
+  category: TaskCategoryType;
+  pointsReward: number;
+  /** `null`/`undefined` means unlimited claims. */
+  maxClaims?: number | null;
+  /** Denormalised claim count; eventually consistent with the ledger. */
+  claimCount: number;
+
   // Status Tracking
   status: TaskStatusType;
+  /**
+   * @deprecated Legacy per-lead progress map. Superseded by the `Contribution`
+   * collection — do not read, do not write. Kept for one release so historical
+   * data stays readable; removed in the following release.
+   */
   completionTracking: Map<
     string,
     {
@@ -55,6 +70,7 @@ export interface DevRelTaskModel extends Document {
   updatedAt: Date;
 
   // Instance methods
+  /** @deprecated Reads the legacy `completionTracking` map. */
   getLeadStatus(leadId: string): {
     status: TaskStatusType;
     startedAt?: Date;
@@ -65,6 +81,7 @@ export interface DevRelTaskModel extends Document {
     reviewNotes?: string;
     reviewedBy?: Schema.Types.ObjectId;
   };
+  /** @deprecated Writes to the legacy `completionTracking` map. */
   updateLeadProgress(
     leadId: string,
     status: string,
@@ -76,11 +93,45 @@ export interface DevRelTaskModel extends Document {
       reviewedBy?: string;
     },
   ): Promise<DevRelTaskModel>;
+
+  // Virtual fields
+  isOverdue: boolean;
+  isOpen: boolean;
 }
 
 // Types
 type TaskStatusType = "pending" | "in_progress" | "completed" | "overdue";
 type TaskType = "onboarding" | "weekly" | "special" | "training";
+type TaskTrackType = "code" | "community";
+type TaskDifficultyType = "beginner" | "intermediate" | "advanced";
+type TaskCategoryType =
+  | "frontend"
+  | "backend"
+  | "fullstack"
+  | "documentation"
+  | "content"
+  | "community"
+  | "event"
+  | "pr_review";
+
+export const TASK_TRACKS = ["code", "community"] as const;
+
+export const TASK_DIFFICULTIES = [
+  "beginner",
+  "intermediate",
+  "advanced",
+] as const;
+
+export const TASK_CATEGORIES = [
+  "frontend",
+  "backend",
+  "fullstack",
+  "documentation",
+  "content",
+  "community",
+  "event",
+  "pr_review",
+] as const;
 
 const TASK_STATUS = {
   PENDING: "pending",
@@ -169,12 +220,46 @@ const DevRelTaskSchema = new Schema<DevRelTaskModel>(
       min: 0,
     },
 
+    // Contribution program metadata
+    track: {
+      type: String,
+      enum: TASK_TRACKS,
+      default: "code",
+    },
+    difficulty: {
+      type: String,
+      enum: TASK_DIFFICULTIES,
+      default: "beginner",
+    },
+    category: {
+      type: String,
+      enum: TASK_CATEGORIES,
+      default: "community",
+    },
+    pointsReward: {
+      type: Number,
+      required: [true, "Points reward is required"],
+      min: [1, "Points reward must be at least 1"],
+      default: 1,
+    },
+    maxClaims: {
+      type: Number,
+      min: [1, "Max claims must be at least 1"],
+      default: null,
+    },
+    claimCount: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+
     // Status Tracking
     status: {
       type: String,
       enum: Object.values(TASK_STATUS),
       default: TASK_STATUS.PENDING,
     },
+    /** @deprecated Legacy per-lead progress map — superseded by `Contribution`. */
     completionTracking: {
       type: Map,
       of: {
@@ -245,6 +330,8 @@ DevRelTaskSchema.index({ createdBy: 1 });
 DevRelTaskSchema.index({ assignedTo: 1 });
 DevRelTaskSchema.index({ dueDate: 1 });
 DevRelTaskSchema.index({ isActive: 1 });
+DevRelTaskSchema.index({ track: 1, category: 1, isActive: 1 });
+DevRelTaskSchema.index({ difficulty: 1, isActive: 1 });
 
 // Virtual fields
 DevRelTaskSchema.virtual("isOverdue").get(function () {
@@ -255,7 +342,15 @@ DevRelTaskSchema.virtual("isOverdue").get(function () {
   );
 });
 
+DevRelTaskSchema.virtual("isOpen").get(function () {
+  return (
+    this.isActive &&
+    (this.maxClaims == null || this.claimCount < this.maxClaims)
+  );
+});
+
 // Instance methods
+/** @deprecated Writes to the legacy `completionTracking` map. */
 DevRelTaskSchema.methods.assignToLead = function (leadId: string) {
   if (!this.assignedTo.includes(leadId)) {
     this.assignedTo.push(leadId);
@@ -266,6 +361,7 @@ DevRelTaskSchema.methods.assignToLead = function (leadId: string) {
   return this.save();
 };
 
+/** @deprecated Writes to the legacy `completionTracking` map. */
 DevRelTaskSchema.methods.updateLeadProgress = function (
   leadId: string,
   status: string,
@@ -291,6 +387,7 @@ DevRelTaskSchema.methods.updateLeadProgress = function (
   return this.save();
 };
 
+/** @deprecated Reads the legacy `completionTracking` map. */
 DevRelTaskSchema.methods.getLeadStatus = function (leadId: string) {
   return this.completionTracking.get(leadId) || { status: TASK_STATUS.PENDING };
 };

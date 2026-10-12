@@ -5,3 +5,15 @@ export type {
   MigrateEntityResult,
 } from "./content-migrate-entity";
 export { migrateCollectionByContentId } from "./content-migrate-entity";
+export type {
+  LegacyContributionStatus,
+  LegacyTrackingEntry,
+  MigrateContributionsOptions,
+  MigrateContributionsResult,
+} from "./devrel-contributions";
+export {
+  legacyProofKind,
+  legacyProofUrl,
+  mapLegacyStatus,
+  migrateCompletionTrackingToContributions,
+} from "./devrel-contributions";
