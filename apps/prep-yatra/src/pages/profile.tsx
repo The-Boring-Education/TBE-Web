@@ -1,5 +1,6 @@
 import { ProtectedRoute } from "@tbe/auth";
 import { UnifiedProfilePage } from "@tbe/components";
+import { DEFAULT_OG_IMAGE } from "@tbe/constants";
 import type { PageProps } from "@tbe/interface";
 import type { GetSEOMetaResponseType } from "@tbe/types";
 
@@ -24,7 +25,7 @@ export const getServerSideProps = async () => ({
       url: "/profile",
       type: "website",
       robots: "index,follow",
-      image: "https://prepyatra.theboringeducation.com/images/og-image.png",
+      image: DEFAULT_OG_IMAGE.url,
       keywords:
         "PrepYatra, profile, onboarding, interview preparation, career goals",
       author: "The Boring Education",

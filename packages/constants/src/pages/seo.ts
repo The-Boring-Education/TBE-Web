@@ -1,13 +1,13 @@
 import type { GetSEOMetaResponseType } from "@tbe/types";
 
 import { INTERVIEW_PREP_SHEETS, products, TBP_PROJECTS } from "..";
-import { type AppIdentifier, getAppConfig } from "../apps";
+import { type AppIdentifier, DEFAULT_OG_IMAGE, getAppConfig } from "../apps";
 import { routes } from "../routes";
 
 export const seoCommonMeta = {
   type: "website",
   robots: "follow, index",
-  image: "https://theboringeducation.com/images/large-og.png",
+  image: DEFAULT_OG_IMAGE.url,
   author: "The Boring Education Team",
   publisher: "The Boring Education",
   linkedIn: "https://www.linkedin.com/company/theboringeducation",

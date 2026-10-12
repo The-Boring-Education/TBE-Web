@@ -2,6 +2,5 @@
   "title": "Your resource title",
   "description": "One or two sentences for Google and social previews.",
   "keywords": ["keyword-one", "keyword-two"],
-  "tags": ["topic"],
-  "ogImage": "https://theboringeducation.com/images/large-og.png"
+  "tags": ["topic"]
 }

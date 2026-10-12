@@ -11,7 +11,7 @@ import {
   readResourceQuiz,
 } from "@/lib/content";
 import { extractEmbedParts } from "@/lib/html-embed";
-import { getSiteBaseUrl } from "@/lib/site";
+import { getOgImage, getSiteBaseUrl } from "@/lib/site";
 
 type Props = { params: { slug: string } };
 
@@ -32,6 +32,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
   const base = getSiteBaseUrl();
   const url = `${base}/resources/${slug}`;
+  const ogImage = getOgImage(meta.ogImage);
   return {
     title: meta.title,
     description: meta.description,
@@ -41,14 +42,15 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       title: meta.title,
       description: meta.description,
       url,
+      siteName: "TBE Resources",
       type: "article",
-      images: meta.ogImage ? [{ url: meta.ogImage }] : undefined,
+      images: [ogImage],
     },
     twitter: {
-      card: meta.ogImage ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title: meta.title,
       description: meta.description,
-      images: meta.ogImage ? [meta.ogImage] : undefined,
+      images: [ogImage],
     },
   };
 }
