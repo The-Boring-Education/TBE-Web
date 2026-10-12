@@ -11,6 +11,7 @@ import AdminsPage from "./pages/AdminsPage";
 import AgentsPage from "./pages/AgentsPage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import ChallengesPage from "./pages/ChallengesPage";
+import ContributorsPage from "./pages/ContributorsPage";
 import CouponsPage from "./pages/CouponsPage";
 import CoursesPage from "./pages/CoursesPage";
 import Dashboard from "./pages/Dashboard";
@@ -271,6 +272,14 @@ const App = () => {
                 element={
                   <MainLayout>
                     <UserInterestsPage />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/contributors"
+                element={
+                  <MainLayout>
+                    <ContributorsPage />
                   </MainLayout>
                 }
               />

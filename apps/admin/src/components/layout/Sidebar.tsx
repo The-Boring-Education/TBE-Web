@@ -1,6 +1,7 @@
 import { useAuth } from "@tbe/auth";
 import {
   Activity,
+  Award,
   BarChart3,
   BookOpen,
   BookOpenCheck,
@@ -62,6 +63,7 @@ const Sidebar = () => {
     { name: "Challenges", path: "/challenges", icon: <Target size={20} /> },
     { name: "Mentorship", path: "/mentorship", icon: <Trophy size={20} /> },
     { name: "Coupons", path: "/coupon", icon: <Ticket size={20} /> },
+    { name: "Contributors", path: "/contributors", icon: <Award size={20} /> },
     { name: "Admins", path: "/admins", icon: <Shield size={20} /> },
     {
       name: "Email Management",

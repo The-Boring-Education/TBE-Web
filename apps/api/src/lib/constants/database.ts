@@ -46,6 +46,8 @@ const DATABASE_MODELS = {
   LEARNING_CREDIT: "LearningCredit",
   PERIOD_SCORE: "PeriodScore",
   PERIOD_CLOSE: "PeriodClose",
+  CONTRIBUTOR: "Contributor",
+  CONTRIBUTION: "Contribution",
 };
 
 export const FEEDBACK_TYPES = [
