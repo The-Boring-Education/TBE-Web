@@ -10,6 +10,5 @@
     "langchain",
     "vector database"
   ],
-  "tags": ["roadmap", "genai"],
-  "ogImage": "https://theboringeducation.com/images/genai-roadmap-og.png"
+  "tags": ["roadmap", "genai"]
 }

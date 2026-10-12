@@ -14,7 +14,7 @@ content/<slug>/
 - **`meta.json`** (required keys):
   - `title` — page title and default OG title
   - `description` — meta description and OG description
-- **Optional**: `keywords` (string array), `tags` (string array), `ogImage` (absolute URL)
+- **Optional**: `keywords` (string array), `tags` (string array), `ogImage` (absolute HTTPS URL to an existing 1200×630 PNG/JPG — SVGs are not rendered by social platforms). Leave it out to use the shared TBE preview image; a URL that 404s results in a blank preview card on WhatsApp/LinkedIn/X.
 
 ## Workflow
 
