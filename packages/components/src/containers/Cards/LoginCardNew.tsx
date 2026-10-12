@@ -117,6 +117,18 @@ const VARIANT_COPY: Record<
       "No spam, ever",
     ],
   },
+  contributor: {
+    appName: "TBE Contributors",
+    headingLine2: "Contributor Portal",
+    cardH2Line1: "Sign in to",
+    cardH2Line2: "contribute",
+    cardDesc: "Submit your contributions, track reviews, and earn rewards.",
+    infoBullets: [
+      "Sign in with your Google account",
+      "No password needed",
+      "Earn certificates & perks",
+    ],
+  },
 };
 
 /**
@@ -205,7 +217,8 @@ const LoginCardNew = ({
       variant === "prepyatra" ||
       variant === "resume-yatra" ||
       variant === "quizes" ||
-      variant === "platform"
+      variant === "platform" ||
+      variant === "contributor"
     );
   }, [theme, variant]);
 
@@ -543,4 +556,5 @@ const LoginCardNew = ({
   );
 };
 
+export { LoginCardNew };
 export default LoginCardNew;

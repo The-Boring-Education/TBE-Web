@@ -62,3 +62,7 @@ export { default as Job } from "./Unskilled/Jobs";
 // YouFocus models
 export { default as Playlist } from "./YouFocus/Playlist";
 export { default as UserPlaylist } from "./YouFocus/UserPlaylist";
+
+// Contributor models
+export { default as Contribution } from "./Contribution";
+export { default as Contributor } from "./Contributor";

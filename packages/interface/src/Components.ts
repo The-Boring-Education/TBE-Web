@@ -938,7 +938,8 @@ export interface LoginCardNewProps {
     | "quizes"
     | "resume-yatra"
     | "oncampus"
-    | "dsayatra";
+    | "dsayatra"
+    | "contributor";
   customRedirectPath?: string;
   theme?: "light" | "dark";
 }

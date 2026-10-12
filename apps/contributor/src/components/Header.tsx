@@ -1,3 +1,4 @@
+import { useAuth } from "@tbe/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -7,6 +8,7 @@ import { LINKS } from "@/config/links";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const navLinks = [
     { name: "Overview", href: "#hero" },
@@ -53,13 +55,28 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Action Button */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Action Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#EA4544] hover:border-[#EA4544] transition-all"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#EA4544] hover:border-[#EA4544] transition-all"
+              >
+                Login
+              </Link>
+            )}
             <Link
               href={LINKS.joinDevRelAdvocate}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA4544] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#d93837] active:scale-95 transition-all duration-150"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA4544] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#d93837] active:scale-95 transition-all duration-150"
             >
               <span>Apply Now</span>
               <svg
@@ -80,11 +97,26 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700"
+              >
+                Login
+              </Link>
+            )}
             <Link
               href={LINKS.joinDevRelAdvocate}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-[#EA4544] px-3.5 py-2 text-xs font-semibold text-white"
+              className="inline-flex items-center justify-center rounded-lg bg-[#EA4544] px-3.5 py-1.5 text-xs font-semibold text-white"
             >
               Apply Now
             </Link>

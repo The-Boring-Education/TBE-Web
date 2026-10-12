@@ -652,6 +652,32 @@ export const getLoginCardVariantConfig = (): Record<
     termsHref: toPlatformUrl(routes.termsAndConditions),
     privacyHref: toPlatformUrl("/privacy"),
   },
+  contributor: {
+    title: "Welcome Contributors!",
+    subtitle: "Sign in to submit work, track reviews, and earn certificates",
+    rightSectionTitle: "Why Contribute to TBE?",
+    features: [
+      {
+        icon: Sparkles,
+        title: "Submit Contributions",
+        description: "Submit content, code, design, and curriculum tasks",
+      },
+      {
+        icon: TrendingUp,
+        title: "Track Reviews & Points",
+        description: "Monitor status, feedback, and your contribution score",
+      },
+      {
+        icon: Award,
+        title: "Earn Certificates & Perks",
+        description:
+          "Gain verified credentials, exclusive perks, and recognition",
+      },
+    ],
+    redirectPath: "/dashboard",
+    termsHref: toPlatformUrl(routes.termsAndConditions),
+    privacyHref: toPlatformUrl("/privacy"),
+  },
 });
 
 export {
