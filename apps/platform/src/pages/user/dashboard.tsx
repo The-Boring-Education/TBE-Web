@@ -2,7 +2,6 @@ import {
   Banner,
   CardContainerB,
   FlexContainer,
-  Leaderboard,
   LinkButton,
   LoadingSpinner,
   NotificationContainer,
@@ -12,6 +11,7 @@ import {
   Text,
 } from '@tbe/components';
 import { LINKS, routes, STATIC_FILE_PATH } from '@tbe/constants';
+import { LeaderboardCard } from '@tbe/gamification';
 import { useAPIResponseMapper, useUser } from '@tbe/hooks';
 import type { PageProps, PrimaryCardWithCTAProps } from '@tbe/interface';
 import { CACHE_TIMES, useQuery } from '@tbe/query';
@@ -98,7 +98,7 @@ const UserDashboard = ({ seoMeta }: PageProps) => {
           subtext='Continue Learning From Where You Left'
         />
         {noCourseFoundUI}
-        <Leaderboard />
+        <LeaderboardCard fullPageHref={routes.leaderboard} />
         <NotificationContainer />
         <QuizSection
           buttonLink={LINKS.quizApp}

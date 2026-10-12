@@ -2,9 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import {
+  awardPoints,
+  awardSheetCompletion,
   getAllEnrolledSheetsFromDB,
-  handleGamificationPoints,
   markQuestionCompletedByUser,
+  mergeGamificationSummaries,
 } from "@/lib/database";
 import type {
   GetAllQuestionsRequestProps,
@@ -72,12 +74,27 @@ const handleMarkQuestionCompleted = async (
       );
     }
 
-    await handleGamificationPoints(isCompleted, userId, "COMPLETE_QUESTION");
+    const gamification = await awardPoints({
+      isCompleted,
+      userId,
+      actionType: "COMPLETE_QUESTION",
+      itemId: String(questionId),
+    });
+    const sheetGamification = await awardSheetCompletion({
+      userId,
+      sheetId,
+      userSheet: data,
+      isCompleted,
+    });
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         data,
+        gamification: mergeGamificationSummaries(
+          gamification,
+          sheetGamification,
+        ),
         message: "Question status updated successfully",
       }),
     );

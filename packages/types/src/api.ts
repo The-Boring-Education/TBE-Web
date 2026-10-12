@@ -66,6 +66,8 @@ export interface APIResponseType extends ClientAPIResponse {
   message?: string;
   error?: any;
   details?: any;
+  /** Points/rank outcome of a server-awarded action, for the celebration toast. */
+  gamification?: unknown;
 }
 
 export interface ApiHookResultProps {
@@ -81,6 +83,14 @@ export type DatabaseQueryResponseType = {
   error?: any;
   details?: any;
 };
+
+export interface DsaTopicSummaryRow {
+  topic: string;
+  count: number;
+  solved: number;
+  accessibleCount: number;
+  accessibleSolved: number;
+}
 
 // ================================
 // PROJECT API TYPES
@@ -236,12 +246,18 @@ export interface ExtendedCourseChapterModel extends CourseChapterModel {
 }
 
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
+  title?: string;
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
   isPremium?: boolean;
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  progress?: {
+    completed: number;
+    total: number;
+    percentage: number;
+  };
 }
 
 // ================================

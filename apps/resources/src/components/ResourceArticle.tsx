@@ -9,6 +9,7 @@ type Props = {
   pageUrl: string;
   styleTags: string | null;
   bodyHtml: string;
+
   /** Omit on zen/reader URLs to avoid duplicate Article schema. */
   includeJsonLd?: boolean;
   articleClassName?: string;
@@ -37,14 +38,21 @@ export const ResourceArticle = ({
       name: "The Boring Education",
     },
   };
+
+  // Clean embedded print CSS coming from the roadmap HTML
   const sanitizedStyleTags = styleTags
-    ? (styleTags.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi) || []).join("\n")
+    ? (styleTags.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi) || [])
+        .join("\n")
+        .replace(/page-break-before\s*:\s*always/gi, "page-break-before: auto")
+        .replace(/break-before\s*:\s*page/gi, "break-before: auto")
     : null;
+
   const sanitizedBodyHtml = sanitizeHTML(bodyHtml);
 
   const handleArticleClick = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement | null;
     const printBtn = target?.closest(".print-btn, [data-action='print']");
+
     if (printBtn) {
       e.preventDefault();
       window.print();
@@ -59,13 +67,15 @@ export const ResourceArticle = ({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
+
       <article className={articleClassName} onClick={handleArticleClick}>
-        {styleTags ? (
+        {sanitizedStyleTags ? (
           <div
             className="resource-embed-styles"
-            dangerouslySetInnerHTML={{ __html: sanitizedStyleTags || "" }}
+            dangerouslySetInnerHTML={{ __html: sanitizedStyleTags }}
           />
         ) : null}
+
         <div
           className="resource-embed-body"
           dangerouslySetInnerHTML={{ __html: sanitizedBodyHtml }}

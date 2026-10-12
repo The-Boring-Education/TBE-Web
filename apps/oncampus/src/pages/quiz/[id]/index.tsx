@@ -3,7 +3,7 @@ import { LoadingSpinner, Text } from "@tbe/components";
 import { CodeRenderer } from "@tbe/components/quizes";
 import { routes } from "@tbe/constants";
 import { queryKeys, useQueryClient } from "@tbe/query";
-import { gamificationApi, quizApi } from "@tbe/services";
+import { quizApi } from "@tbe/services";
 import type { QuizQuestion, QuizQuestionsData } from "@tbe/types";
 import { cleanOptionText, cn, sendRequest } from "@tbe/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -166,17 +166,10 @@ export default function QuizPage() {
             totalTimeSpent,
           });
 
-          gamificationApi
-            .updateuserGamificationPoints({
-              userId: mongoUserId,
-              actionType: "COMPLETE_QUIZ",
-            } as any)
-            .then(() => {
-              void queryClient.invalidateQueries({
-                queryKey: queryKeys.gamification.points(mongoUserId),
-              });
-            })
-            .catch(() => {});
+          // Quiz points are awarded by the submit endpoint itself.
+          void queryClient.invalidateQueries({
+            queryKey: queryKeys.gamification.all,
+          });
         }
       } catch {
         // ignore submit errors

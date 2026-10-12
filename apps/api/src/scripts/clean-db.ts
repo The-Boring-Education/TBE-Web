@@ -1,16 +1,14 @@
-import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import {
+  mustLoadScriptEnv,
+  mustParsedValue,
+} from "../../scripts/lib/script-env";
 
-dotenv.config({ path: path.join(__dirname, "../../.env.local") });
+const mongodbUri = mustParsedValue(mustLoadScriptEnv("local"), "MONGODB_URI");
 
 async function clean() {
-  const uri = process.env.MONGODB_URI;
-  const client = new MongoClient(uri!);
+  const client = new MongoClient(mongodbUri);
   await client.connect();
   const db = client.db();
   await db
@@ -25,4 +23,4 @@ async function clean() {
   await client.close();
 }
 
-clean();
+void clean();

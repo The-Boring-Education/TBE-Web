@@ -8,10 +8,13 @@ import {
   WeAlreadyTaughtAt,
 } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes, STATIC_FILE_PATH } from '@tbe/constants';
+import { PublicLeaderboardStrip } from '@tbe/gamification';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
+
+import { TopContributorsSection } from '../components/TopContributorsSection';
 
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();
@@ -27,6 +30,8 @@ const Home = ({ seoMeta }: PageProps) => {
 
         <AppShowcaseSections theme='light' />
 
+        <PublicLeaderboardStrip ctaHref={routes.learn} />
+
         <Banner
           buttonLink={routes.devRels}
           buttonText='Apply Now'
@@ -37,6 +42,8 @@ const Home = ({ seoMeta }: PageProps) => {
         />
 
         <CollegeEventsSection />
+
+        <TopContributorsSection />
 
         <Testimonials />
 

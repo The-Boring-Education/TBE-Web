@@ -1,4 +1,4 @@
-import { getCashfreeMode } from "@tbe/constants";
+import { cashfreeModeFromPaymentLink, getCashfreeMode } from "@tbe/constants";
 import { useCallback, useEffect, useState } from "react";
 
 declare global {
@@ -61,6 +61,9 @@ const useCashfreePayment = () => {
    * (`redirectTarget: "_self"`). Defaults to `window.location.href`. Use your app’s
    * `/payment/status?order_id=...&next=...` here — if this is the checkout page, a full
    * redirect reloads the app and `onSuccess` may never run.
+   * @param paymentLink - Hosted checkout URL from create-order. Its host picks the
+   * SDK mode (`api.cashfree.com` → production, `sandbox.cashfree.com` → sandbox)
+   * so the browser opens the same environment that created the session.
    */
   const launchPayment = async (
     paymentSessionId: string,
@@ -68,6 +71,7 @@ const useCashfreePayment = () => {
     onFailure?: (data: any) => void,
     onClose?: () => void,
     returnUrlAfterPayment?: string,
+    paymentLink?: string,
   ) => {
     const PaymentSDK = window.Cashfree || window.CFPaymentSDK;
     if (!PaymentSDK) {
@@ -76,10 +80,9 @@ const useCashfreePayment = () => {
       );
     }
 
-    let mode = "sandbox";
-    if (getCashfreeMode() === "production") {
-      mode = "production";
-    }
+    const mode =
+      cashfreeModeFromPaymentLink(paymentLink) ??
+      (getCashfreeMode() === "production" ? "production" : "sandbox");
 
     const cashfree = new PaymentSDK({
       mode,

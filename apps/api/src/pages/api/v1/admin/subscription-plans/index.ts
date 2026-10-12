@@ -13,7 +13,7 @@ import {
 import type { APIResponseType } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { withVerifiedAdminAuth } from "@/middleware/admin";
+import { withVerifiedAdminAuthOrSecret } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /** Payload for POST — all catalog fields optional except core SKU + price. */
@@ -222,4 +222,4 @@ const handleDelete = async (
   );
 };
 
-export default withApiHandler(withVerifiedAdminAuth(handler));
+export default withApiHandler(withVerifiedAdminAuthOrSecret(handler));

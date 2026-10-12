@@ -79,6 +79,7 @@ export const GamificationProvider = ({
         points={toastData?.points}
         level={toastData?.level}
         levelName={toastData?.levelName}
+        rankLine={toastData?.rankLine}
         theme={theme}
         onClose={handleToastClose}
       />

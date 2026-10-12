@@ -31,8 +31,6 @@ export {
   MENTORSHIP_SERVICES_CARDS,
   PAGE_REFRESH_TIMEOUT,
   POINTS_RULES,
-  PORTFOLIO_CARDS,
-  PORTFOLIO_TEMPLATES,
   products,
   projectGroupWhatsapp,
   SCREEN_BREAKPOINTS,
@@ -42,6 +40,7 @@ export {
   USER_USAGE_OPTIONS,
   YOUFOCUS_SKILL_PLAYLISTS,
 } from "./global";
+export * from "./leaderboard";
 export * from "./onboarding";
 export * from "./pages";
 export * from "./pages/seo";

@@ -19,7 +19,6 @@ const routes = {
   roadmaps: "/roadmaps",
   workshops: "/workshops",
   webinar: "/webinar",
-  portfolio: "/portfolio",
   // Projects
   projects: "/projects",
   projectsExplore: "/projects/explore",
@@ -56,15 +55,18 @@ const routes = {
     patternQuiz: "/pattern-quiz",
     /** Public shareable progress page */
     journey: (username: string) => `/journey/${encodeURIComponent(username)}`,
+    visualizers: "/visualizers",
+    visualizer: (slug: string) => `/visualizers/${slug}`,
     baseUrl: "https://dsayatra.theboringeducation.com",
   },
-  // Quizes
+  // Quizzes (Platform)
+  quizzes: "/quizzes",
   quizes: {
-    home: "/",
+    home: "/quizzes",
     login: "/login",
-    dashboard: "/dashboard",
+    dashboard: "/quizzes/dashboard",
     pricing: "/pricing",
-    baseUrl: "https://quiz.theboringeducation.com",
+    baseUrl: "https://theboringeducation.com/quizzes",
   },
   // TechYatra
   techyatra: {
@@ -89,6 +91,7 @@ const routes = {
   refund: "/refund",
   termsAndConditions: "/terms-and-conditions",
   contribute: "/contribute",
+  leaderboard: "/leaderboard",
   user: {
     profile: "/user/profile",
     dashboard: "/dashboard",
@@ -101,7 +104,6 @@ const routes = {
   internals: {
     landing: {
       products: "products",
-      portfolio: "portfolio",
       webinar: "webinar",
       upload: "upload",
       explore: "explore",
@@ -231,6 +233,13 @@ const routes = {
     unskilledEvaluationHealth: "/api/v1/evaluate/health",
     markSheetQuestionAsStarred: "/user/interview-prep/starred",
     leaderboard: "/leaderboard",
+    leaderboardMe: "/leaderboard/me",
+    leaderboardPublic: "/leaderboard/public",
+    leaderboardChampions: "/leaderboard/champions",
+    leaderboardPreferences: "/user/leaderboard-preferences",
+    adminLeaderboard: "/admin/leaderboard",
+    adminLeaderboardExclusion: "/admin/leaderboard/exclusion",
+    closeLeaderboardPeriod: "/leaderboard/close-period",
   },
 };
 

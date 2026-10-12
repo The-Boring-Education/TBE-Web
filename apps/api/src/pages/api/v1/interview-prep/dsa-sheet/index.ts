@@ -8,7 +8,7 @@ import {
   getDSASheetMetadataFromDB,
   getDSATopicSummariesFromDB,
 } from "@/lib/database";
-import { sendAPIResponse } from "@/lib/utils";
+import { isUserPurchasedFromPaymentCheck, sendAPIResponse } from "@/lib/utils";
 import {
   parseDsaSheetCreateBody,
   parseDsaSheetGetQuery,
@@ -118,13 +118,13 @@ const handleGetQuestion = async (req: NextApiRequest, res: NextApiResponse) => {
   const isPaidUser = isAdminListRequest
     ? true
     : userId
-      ? (
-          await checkPaymentStatusFromDB(
-            userId,
-            "lifetime",
-            filters.productType,
-          )
-        ).data?.purchased === true
+      ? isUserPurchasedFromPaymentCheck(
+        await checkPaymentStatusFromDB(
+          userId,
+          "lifetime",
+          filters.productType,
+        ),
+      )
       : false;
 
   const { data, error } = await getAllDSAQuestionsFromDB({

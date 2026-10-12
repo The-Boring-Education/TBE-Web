@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Guide for Developers 2026 – The Boring Education</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #FF5757;
+            --red-light: #fff0f0;
+            --red-mid: #ffe0e0;
+            --dark: #111111;
+            --mid: #444444;
+            --soft: #888888;
+            --border: #e5e5e5;
+            --bg: #f9f8f6;
+            --white: #ffffff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .resource-viewer {
+            font-family: var(--sans);
+            background: #0a0a0b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 32px 16px;
+        }
+
+        .print-bar {
+            width: 794px;
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .print-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover {
+            background: #e04040;
+        }
+
+        .print-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page {
+            width: 794px;
+            max-width: 100%;
+            background: var(--white);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+            overflow: visible;
+            margin-bottom: 0;
+        }
+
+        .page+.page {
+            margin-top: 2px;
+        }
+
+        /* ── COVER ── */
+        .cover {
+            background: var(--white);
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cover-header {
+            padding: 28px 48px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+
+        .cover-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--red-mid);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cover-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px 40px;
+            position: relative;
+        }
+
+        .cover-hook {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-hook::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .cover-title {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            color: var(--red);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--mid);
+            font-weight: 400;
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cover-quote-block {
+            background: var(--dark);
+            color: white;
+            padding: 28px 36px;
+            border-radius: 16px;
+            max-width: 580px;
+            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .cover-quote-block::before {
+            content: '"';
+            font-size: 80px;
+            color: var(--red);
+            font-family: Georgia, serif;
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            line-height: 1;
+        }
+
+        .cover-quote-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding-top: 24px;
+        }
+
+        .cover-quote-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: var(--mono);
+        }
+
+        .cover-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--red);
+            font-family: var(--mono);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe0e0 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cover-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-footer-text {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        .page-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+        }
+
+        /* ── INNER PAGES ── */
+        .inner-page {
+            min-height: 1122px;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+
+        .page-header {
+            padding: 24px 48px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .page-header img {
+            height: 22px;
+            opacity: 0.7;
+        }
+
+        .page-header-logo {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--soft);
+        }
+
+        .page-header-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .page-body {
+            flex: 1;
+            padding: 28px 48px;
+            overflow: visible;
+        }
+
+        .page-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '//';
+            opacity: 0.5;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* ── ROADMAP / STEPS ── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 10px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1px 0 14px 18px;
+        }
+
+        .step-phase {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .step-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--mid);
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+
+        .step-desc strong {
+            color: var(--dark);
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            background: var(--bg);
+            color: var(--mid);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag.red {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: var(--red-mid);
+        }
+
+        /* ── LINK CHIPS ── */
+        .yt-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .yt-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            color: #cc0000;
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .yt-link:hover {
+            background: #ffe0e0;
+        }
+
+        .yt-link::before {
+            content: '▶';
+            font-size: 8px;
+        }
+
+        .yt-link.plain::before {
+            content: '✔';
+            font-size: 8px;
+        }
+
+        /* ── TIP BLOCK ── */
+        .tip-block {
+            background: var(--red-light);
+            border: 1px solid var(--red-mid);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .tip-text strong {
+            color: var(--red);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        /* ── SKILLS ROW ── */
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .skill-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .skill-col-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .skill-item::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        /* ── RESOURCE CARDS ── */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .resource-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red);
+        }
+
+        .resource-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .resource-card-desc {
+            font-size: 11px;
+            color: var(--mid);
+            line-height: 1.5;
+            margin-bottom: 7px;
+        }
+
+        .resource-card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .check-box {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── SOCIALS ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .social-name {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .social-handle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 22px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 87, 87, 0.3) 0%, transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .cta-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .cta-link {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        /* ── COMPACT TWO-COL ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── STACK TABLE ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11.5px;
+            margin-bottom: 14px;
+        }
+
+        .stack-table th {
+            background: var(--bg);
+            color: var(--soft);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+        }
+
+        .stack-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table td:first-child {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .resource-viewer {
+                padding: 0;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .print-bar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px 16px;
+                margin-bottom: 0;
+                background: #1a1a1a;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page {
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: visible;
+                margin: 0;
+            }
+
+            .page + .page {
+                margin-top: 4px;
+            }
+
+            .cover {
+                height: auto;
+            }
+
+            .cover-header {
+                padding: 20px 16px 0;
+            }
+
+            .cover-hero {
+                padding: 24px 16px 24px;
+                justify-content: flex-start;
+            }
+
+            .cover-title {
+                font-size: 34px;
+            }
+
+            .cover-subtitle {
+                font-size: 13px;
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .cover-quote-block {
+                padding: 20px 18px;
+                max-width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .cover-quote-text {
+                font-size: 14px;
+            }
+
+            .cover-stats {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .stat-num {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .cover-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .cover-decoration {
+                display: none;
+            }
+
+            .inner-page {
+                height: auto;
+            }
+
+            .page-header {
+                padding: 14px 16px 12px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .page-header-title {
+                font-size: 10px;
+            }
+
+            .page-body {
+                padding: 16px 16px;
+                overflow: visible;
+            }
+
+            .page-footer {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 14px;
+            }
+
+            .step-content {
+                padding: 1px 0 12px 10px;
+            }
+
+            .step-heading {
+                font-size: 13px;
+            }
+
+            .step-desc {
+                font-size: 11px;
+            }
+
+            .skills-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-table {
+                font-size: 10px;
+            }
+
+            .stack-table th,
+            .stack-table td {
+                padding: 6px 8px;
+            }
+
+            .cta-block {
+                padding: 18px 16px;
+            }
+
+            .socials-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .social-card {
+                padding: 10px 6px;
+            }
+
+            .social-handle {
+                font-size: 10px;
+                word-break: break-word;
+            }
+
+            .page-num {
+                display: none;
+            }
+
+            .tip-block {
+                padding: 10px 12px;
+            }
+
+            .tip-text {
+                font-size: 11px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .resource-viewer {
+                margin: 0;
+                padding: 0;
+                background: white;
+                display: block;
+                width: 210mm;
+            }
+
+            .print-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                max-width: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+                overflow: visible;
+            }
+
+            .page+.page {
+                margin-top: 0;
+            }
+
+            .cover {
+                min-height: 297mm;
+            }
+
+            .inner-page {
+                min-height: 297mm;
+            }
+
+            .step,
+            .resource-card,
+            .tip-block,
+            .cta-block,
+            .social-card,
+            .stack-table tr,
+            .check-item,
+            .cover-quote-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="resource-viewer">
+
+        <!-- PRINT BAR -->
+        <div class="print-bar">
+            <button class="print-btn" data-action="print">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path
+                        d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+
+        <!-- ══════════════════════ PAGE 1 — COVER ══════════════════════ -->
+        <div class="page cover">
+            <div class="cover-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="cover-badge">2026 Edition</span>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-decoration"></div>
+
+                <div class="cover-hook">Untested code is just a rumor</div>
+
+                <h1 class="cover-title">
+                    Testing Guide<br>for<span> Developers</span><br>2026
+                </h1>
+
+                <p class="cover-subtitle">
+                    A phase-by-phase playbook for building real testing discipline — unit tests, integration tests, E2E coverage, mocking, TDD, and CI, in the order that actually makes your codebase trustworthy.
+                </p>
+
+                <div class="cover-quote-block">
+                    <div class="cover-quote-text">
+                        "Code that works on your machine is a claim. A test suite that runs on every commit is evidence. Most developers write tests after something breaks — the ones who ship confidently write them before it does."
+                    </div>
+                    <div class="cover-quote-sub">— The Boring Education Team</div>
+                </div>
+
+                <div class="cover-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">30</div>
+                        <div class="stat-label">Playbook milestones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Testing phases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">90</div>
+                        <div class="stat-label">Days to a real safety net</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">0</div>
+                        <div class="stat-label">Cost — every step is free</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-footer">
+                <span class="cover-footer-text">theboringeducation.com &nbsp;·&nbsp; Free Tech Education for Everyone</span>
+                <span class="page-num">01</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 2 — TESTING FOUNDATIONS (1–5) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">02</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 01 · Testing Foundations</div>
+                <h2 class="section-title">Understand the Pyramid Before You Write a Single Test</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 1 · Know what you're actually building</div>
+                            <div class="step-heading">Learn the Testing Pyramid</div>
+                            <div class="step-desc">Most tests should be <strong>unit tests</strong> (fast, cheap, isolated), fewer should be <strong>integration tests</strong> (real interactions between pieces), and fewer still should be <strong>E2E tests</strong> (slow, full-system, expensive). Skipping this mental model is why teams end up with a slow, flaky suite that everyone learns to ignore.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start here</span>
+                                <span class="tag">Mental model, not a tool</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Unit &gt; integration &gt; E2E in volume</a>
+                                <a class="yt-link plain">Why an inverted pyramid gets slow and flaky</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 2 · Pick tools that match your stack</div>
+                            <div class="step-heading">Choose a Test Runner & Assertion Library</div>
+                            <div class="step-desc">Pick one runner per stack and commit to it — <strong>Jest or Vitest</strong> for JS/TS, <strong>pytest</strong> for Python, <strong>JUnit</strong> for Java, <strong>Go's built-in testing package</strong> for Go. Chasing the "best" framework matters far less than actually writing tests consistently in whichever one your team already knows.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Consistency &gt; the "best" tool</span>
+                                <span class="tag">One runner per repo</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Match the runner to your language</a>
+                                <a class="yt-link plain">Don't mix runners in one repo</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 3 · The shape every good test follows</div>
+                            <div class="step-heading">Learn the Arrange-Act-Assert Pattern</div>
+                            <div class="step-desc">Structure every test in three clear parts: <strong>arrange</strong> the inputs and setup, <strong>act</strong> by calling the thing you're testing, and <strong>assert</strong> on the result. This one habit alone makes tests dramatically easier to read, debug, and review months later.</div>
+                            <div class="step-tags">
+                                <span class="tag red">One pattern, every test</span>
+                                <span class="tag">Readable &gt; clever</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Arrange, act, assert — every time</a>
+                                <a class="yt-link plain">One assertion focus per test</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">4</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 4 · Name it so failures explain themselves</div>
+                            <div class="step-heading">Write Descriptive Test Names</div>
+                            <div class="step-desc">Name tests after behavior, not implementation: <strong>"returns 404 when the user does not exist"</strong> beats "test user 3." A failing test's name should tell a teammate what broke without them having to open the file and read the assertion.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Behavior, not implementation</span>
+                                <span class="tag">Readable failure output</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Describe the behavior, not the function name</a>
+                                <a class="yt-link plain">A good name doubles as documentation</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">5</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 5 · Set the ground rules early</div>
+                            <div class="step-heading">Set Up Your Test Environment & Config</div>
+                            <div class="step-desc">Configure a dedicated test environment with its own environment variables and, where relevant, a separate test database — tests that touch production data or shared state will eventually corrupt something. Wire up your test command in <strong>package.json</strong> or your build tool now, before writing the first real test.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Do this before posting your first test</span>
+                                <span class="tag">Isolated test env</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Separate config, separate database</a>
+                                <a class="yt-link plain">Wire up a single `npm test` / `pytest` command</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="tip-block">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-text"><strong>Don't skip to fancy tools before this phase is solid.</strong> A mocking library or a CI pipeline layered on top of no shared conventions just automates confusion faster. Spend a real afternoon here — everything else in this guide performs better once the basics are locked in.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">02 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 3 — UNIT TESTING (6–10) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">03</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 02 · Unit Testing</div>
+                <h2 class="section-title">Test the Smallest Piece That Can Be Wrong</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">6</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 6 · Test one thing, in isolation</div>
+                            <div class="step-heading">Write Your First Pure Function Tests</div>
+                            <div class="step-desc">Start with functions that have <strong>no side effects</strong> — same input, same output every time. These are the fastest, cheapest tests to write and the easiest to trust completely, which makes them the right place to build the habit before touching anything stateful.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start with pure functions</span>
+                                <span class="tag">Fast, deterministic</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Same input, same output, every time</a>
+                                <a class="yt-link plain">No side effects, no surprises</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">7</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 7 · Don't just test the happy path</div>
+                            <div class="step-heading">Cover Edge Cases & Boundary Conditions</div>
+                            <div class="step-desc">For every function, test <strong>empty inputs, null/undefined, zero, negative numbers, and the largest realistic value</strong> — not just the obvious middle case. Most real bugs live at the edges, so a test suite that only checks the happy path gives false confidence.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Where real bugs actually live</span>
+                                <span class="tag">Empty, null, zero, max</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Test the edges, not just the middle</a>
+                                <a class="yt-link plain">One test per boundary condition</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">8</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 8 · Errors deserve tests too</div>
+                            <div class="step-heading">Test Error Handling & Thrown Exceptions</div>
+                            <div class="step-desc">Explicitly assert that invalid input <strong>throws or rejects with the right error type and message</strong> — an untested error path is a silent bug waiting for production. Use your framework's dedicated matcher for exceptions rather than wrapping everything in a generic try/catch.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Untested error paths hide bugs</span>
+                                <span class="tag">Assert the exact error</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Assert the error type and message</a>
+                                <a class="yt-link plain">Use your framework's throw matcher</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">9</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 9 · Keep tests independent</div>
+                            <div class="step-heading">Use Setup & Teardown Correctly</div>
+                            <div class="step-desc">Use <strong>beforeEach/afterEach</strong> (or your framework's fixtures) to reset state between tests, so no test depends on the order it runs in or leftover state from another. A test suite where tests can run in any order, or in parallel, is a suite people can actually trust.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Order-independence matters</span>
+                                <span class="tag">Reset state every test</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Tests should pass in any order</a>
+                                <a class="yt-link plain">Reset shared state in beforeEach</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">10</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 10 · Cover the same logic, many inputs</div>
+                            <div class="step-heading">Use Parameterized & Table-Driven Tests</div>
+                            <div class="step-desc">When the same logic needs checking against many inputs, use <strong>test.each (Jest/Vitest), @pytest.mark.parametrize, or table-driven tests (Go)</strong> instead of copy-pasting near-identical test blocks. It keeps the suite shorter and makes adding a new case a one-line change.</div>
+                            <div class="step-tags">
+                                <span class="tag red">One block, many cases</span>
+                                <span class="tag">Adding a case = one line</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">test.each / parametrize / table-driven</a>
+                                <a class="yt-link plain">Stop copy-pasting near-identical tests</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">🧪</div>
+                    <div class="tip-text"><strong>Unit tests are the foundation everything else stands on.</strong> Before moving to integration and mocking, make sure your core business logic — the functions that actually decide correctness — is covered well enough that a refactor doesn't feel like a leap of faith.</div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="section-label">Unit Test Smells — Fix These First</div>
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Warning Sign</th>
+                                <th>Why It Matters</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tests only pass in a fixed order</td>
+                                <td>Hidden shared state that will break under parallel test runs</td>
+                                <td>High</td>
+                            </tr>
+                            <tr>
+                                <td>No assertions on error paths</td>
+                                <td>Exceptions and invalid input silently ship untested</td>
+                                <td>High</td>
+                            </tr>
+                            <tr>
+                                <td>One giant test per function</td>
+                                <td>A single failure can't tell you which behavior actually broke</td>
+                                <td>Medium</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">03 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 4 — INTEGRATION TESTING & MOCKING (11–15) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">04</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 03 · Integration Testing & Mocking</div>
+                <h2 class="section-title">Testing How the Pieces Actually Talk to Each Other</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">11</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 11 · One layer up from units</div>
+                            <div class="step-heading">Understand What Integration Tests Actually Cover</div>
+                            <div class="step-desc">Integration tests verify that <strong>two or more real pieces work together correctly</strong> — a service talking to a real test database, an API route calling a real internal module. They catch the bugs unit tests can't: wiring, serialization, and contract mismatches between components.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Catches wiring bugs units miss</span>
+                                <span class="tag">Real components, real interactions</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Two or more real pieces, working together</a>
+                                <a class="yt-link plain">Where contract mismatches actually surface</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">12</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 12 · Know when to fake it</div>
+                            <div class="step-heading">Learn When to Mock vs. When to Use the Real Thing</div>
+                            <div class="step-desc">Mock <strong>external, slow, or unreliable dependencies</strong> — third-party APIs, payment gateways, email providers — but prefer a real (even if lightweight) database or in-memory instance for your own data layer. Over-mocking your own code means you're only testing your assumptions about it.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Mock the outside world</span>
+                                <span class="tag">Keep your own layer real where possible</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Mock third parties, not your own logic</a>
+                                <a class="yt-link plain">Over-mocking tests your assumptions, not your code</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">13</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 13 · Stubs, mocks, spies — know the difference</div>
+                            <div class="step-heading">Use Test Doubles Correctly</div>
+                            <div class="step-desc">A <strong>stub</strong> returns canned data, a <strong>mock</strong> asserts it was called correctly, and a <strong>spy</strong> wraps a real function to observe calls without changing behavior. Reaching for the wrong one is the most common source of tests that pass for the wrong reason.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Stub, mock, spy are not the same</span>
+                                <span class="tag">Wrong tool = false confidence</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Stub returns data, mock asserts behavior</a>
+                                <a class="yt-link plain">Spy on real functions without replacing them</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">14</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 14 · Verify the shape of the response</div>
+                            <div class="step-heading">Test API Routes & Contracts</div>
+                            <div class="step-desc">For every endpoint, test the <strong>status code, response shape, and error responses</strong> using a tool like Supertest, pytest + httpx, or your framework's test client. Snapshot the contract so a breaking change to a response shape fails a test instead of a consumer in production.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Status, shape, and error cases</span>
+                                <span class="tag">Catch breaking changes before consumers do</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Test status codes and response shape</a>
+                                <a class="yt-link plain">Snapshot the contract, not just one field</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">15</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 15 · Realistic data, disposable state</div>
+                            <div class="step-heading">Use Test Databases, Fixtures & Seed Data</div>
+                            <div class="step-desc">Spin up an isolated test database (or an in-memory / containerized instance) per run, and seed it with <strong>small, realistic fixture data</strong> rather than hand-typing values inside each test. Tear it down after every run so tests never depend on leftover data from a previous one.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Isolated per run</span>
+                                <span class="tag">Seed, don't hardcode inline</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Spin up, seed, tear down</a>
+                                <a class="yt-link plain">Shared fixtures over repeated inline data</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">✍️</div>
+                    <div class="tip-text"><strong>Integration tests are where real confidence gets built.</strong> Unit tests prove each piece works alone — integration tests prove they actually work together, which is usually where production incidents come from in the first place.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">04 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 5 — E2E TESTING (16–20) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">05</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 04 · End-to-End Testing</div>
+                <h2 class="section-title">Testing the Product the Way a User Actually Sees It</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">16</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 16 · Pick a modern E2E tool</div>
+                            <div class="step-heading">Set Up Playwright or Cypress</div>
+                            <div class="step-desc">Choose <strong>Playwright</strong> for cross-browser coverage and speed, or <strong>Cypress</strong> for its developer experience and time-travel debugging — both are solid, modern defaults in 2026. Install it early so E2E tests grow alongside the app instead of being bolted on right before a launch.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Start here</span>
+                                <span class="tag">Playwright or Cypress, not both</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Playwright vs. Cypress in 2026</a>
+                                <a class="yt-link plain">Install before launch, not after</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">17</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 17 · Test the money paths first</div>
+                            <div class="step-heading">Cover Critical User Journeys</div>
+                            <div class="step-desc">Write E2E tests for the flows that would actually hurt the business if they broke — <strong>signup, login, checkout, core feature completion</strong> — not every possible click path. E2E tests are expensive to run and maintain, so spend that budget only where it protects real revenue or trust.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Signup, login, checkout first</span>
+                                <span class="tag">Not every click path</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Cover what would actually hurt the business</a>
+                                <a class="yt-link plain">E2E is expensive — spend it wisely</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">18</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 18 · Select elements the way a user would</div>
+                            <div class="step-heading">Use Resilient Selectors</div>
+                            <div class="step-desc">Query elements by <strong>role, label, or a dedicated data-testid</strong> attribute — never by CSS class names or DOM structure, which break the moment a designer changes a stylesheet. Resilient selectors are the single biggest factor in whether an E2E suite stays maintainable past month two.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Never select by CSS class</span>
+                                <span class="tag">Role, label, or data-testid</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">data-testid over fragile CSS selectors</a>
+                                <a class="yt-link plain">Query the way a real user would find it</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">19</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 19 · Flaky tests are worse than no tests</div>
+                            <div class="step-heading">Handle Async Waits & Flakiness Properly</div>
+                            <div class="step-desc">Use built-in <strong>auto-waiting and explicit assertions</strong> ("wait until this element is visible") instead of hardcoded sleep() calls, which are the number one cause of flaky E2E suites. A flaky test that people learn to re-run and ignore is actively worse than not having the test at all.</div>
+                            <div class="step-tags">
+                                <span class="tag red">No hardcoded sleeps</span>
+                                <span class="tag">Auto-wait, then assert</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Ban sleep() from your E2E suite</a>
+                                <a class="yt-link plain">A flaky test is worse than no test</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">20</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 20 · Make failures debuggable</div>
+                            <div class="step-heading">Capture Screenshots, Video & Traces on Failure</div>
+                            <div class="step-desc">Configure your E2E runner to automatically <strong>capture a screenshot, video, and trace</strong> the moment a test fails — debugging a CI-only failure without evidence is one of the most frustrating parts of E2E work. Most modern tools support this out of the box with a single config flag.</div>
+                            <div class="step-tags">
+                                <span class="tag red">One config flag, huge payoff</span>
+                                <span class="tag">Never debug CI failures blind</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Turn on trace/video capture in CI</a>
+                                <a class="yt-link plain">Stop debugging CI failures blind</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Common Mistakes at This Stage</div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 E2E-testing everything</div>
+                        <div class="resource-card-desc">Trying to cover every UI path with E2E tests instead of unit/integration tests creates a slow, brittle, expensive suite nobody wants to maintain.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Selecting by CSS class</div>
+                        <div class="resource-card-desc">Tests tied to styling classes break on every design tweak, even when the actual functionality never changed.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Hardcoded sleep() calls</div>
+                        <div class="resource-card-desc">Fixed waits are either too short (flaky) or too long (slow suite) — auto-waiting assertions solve both at once.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🚩 Ignoring flaky tests</div>
+                        <div class="resource-card-desc">A test everyone re-runs until it passes trains the team to stop trusting the suite entirely — fix or delete it, don't tolerate it.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">05 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 6 — COVERAGE & TDD (21–25) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">06</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 05 · Test Coverage & TDD</div>
+                <h2 class="section-title">Measuring What Matters, Writing Tests First</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">21</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 21 · A number, not a goal</div>
+                            <div class="step-heading">Set Up Coverage Reporting</div>
+                            <div class="step-desc">Turn on a coverage tool — <strong>Istanbul/c8 for JS, coverage.py for Python, JaCoCo for Java</strong> — and generate a report on every test run so line, branch, and function coverage are visible at a glance. You can't improve what you can't see, and coverage is the cheapest visibility you'll get.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Visible on every run</span>
+                                <span class="tag">Line, branch, function</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Turn on a coverage report today</a>
+                                <a class="yt-link plain">Line vs. branch vs. function coverage</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">22</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 22 · Don't chase the wrong metric</div>
+                            <div class="step-heading">Avoid Chasing 100% Coverage</div>
+                            <div class="step-desc">High coverage on trivial getters and generated code is a vanity number — a codebase can sit at 95% coverage and still ship a critical bug if the tests never actually assert meaningful behavior. Aim for <strong>strong coverage on business-critical logic</strong>, not a leaderboard score.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Coverage % is a vanity metric alone</span>
+                                <span class="tag">Focus on critical logic</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">100% coverage still ships bugs</a>
+                                <a class="yt-link plain">Prioritize business-critical paths</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">23</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 23 · The core TDD loop</div>
+                            <div class="step-heading">Practice Red-Green-Refactor</div>
+                            <div class="step-desc">Write a <strong>failing test first (red)</strong>, write the minimum code to make it pass <strong>(green)</strong>, then <strong>refactor</strong> with the safety net already in place. This loop forces you to define "done" before writing code, instead of guessing at correctness after the fact.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Test first, always</span>
+                                <span class="tag">Red → Green → Refactor</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Write the failing test before the fix</a>
+                                <a class="yt-link plain">Refactor only once it's green</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">24</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 24 · The bug that got past you, once</div>
+                            <div class="step-heading">Write Regression Tests for Every Bug Fix</div>
+                            <div class="step-desc">Before fixing any reported bug, write a test that <strong>reproduces it and fails</strong> — then fix the code until it passes. This guarantees the exact same bug can never silently ship again, and builds your suite's most valuable coverage from real production incidents instead of guesswork.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Reproduce before you fix</span>
+                                <span class="tag">Never regress the same bug twice</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Write the failing repro test first</a>
+                                <a class="yt-link plain">Every fixed bug becomes a permanent test</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">25</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 25 · Know when TDD isn't the right fit</div>
+                            <div class="step-heading">Recognize When to Skip Strict TDD</div>
+                            <div class="step-desc">Strict red-green-refactor shines on well-understood business logic, but can slow you down during early-stage exploratory work or UI spikes where the design itself is still changing. Write tests as soon as the shape stabilizes — TDD is a tool for certain contexts, not a religion for every line of code.</div>
+                            <div class="step-tags">
+                                <span class="tag red">A tool, not a religion</span>
+                                <span class="tag">Test once the shape stabilizes</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">TDD fits stable logic, not every spike</a>
+                                <a class="yt-link plain">Test as soon as the design settles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="tip-block">
+                    <div class="tip-icon">📩</div>
+                    <div class="tip-text"><strong>Coverage tells you what's untested — it never tells you what's correct.</strong> Pair a coverage report with disciplined regression tests and TDD on your core logic, and the number becomes a useful signal instead of a target to game.</div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">06 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 7 — CI TESTING & LONG-TERM PRACTICE (26–30) ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">07</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Phase 06 · CI Testing & Long-Term Practice</div>
+                <h2 class="section-title">From "Tests Exist" to "Tests Protect Every Merge"</h2>
+
+                <div class="roadmap">
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">26</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 26 · Automate the check, not just the run</div>
+                            <div class="step-heading">Run Your Suite on Every Pull Request</div>
+                            <div class="step-desc">Wire your test suite into <strong>GitHub Actions, GitLab CI, or CircleCI</strong> so it runs automatically on every pull request, not just when someone remembers to run it locally. A test suite nobody's forced to run is a test suite that quietly stops being trustworthy.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Automatic, not optional</span>
+                                <span class="tag">Every PR, every time</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Wire tests into your CI pipeline</a>
+                                <a class="yt-link plain">Never rely on "remember to run it"</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">27</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 27 · Make the rule impossible to skip</div>
+                            <div class="step-heading">Set Up Branch Protection Rules</div>
+                            <div class="step-desc">Require the CI test suite to pass as a <strong>status check before merge</strong> is allowed on your main branch, so a red suite physically blocks broken code from landing. Without this, a passing suite is only ever a suggestion — with it, it's an actual gate.</div>
+                            <div class="step-tags">
+                                <span class="tag red">A gate, not a suggestion</span>
+                                <span class="tag">Required status check</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Require passing tests before merge</a>
+                                <a class="yt-link plain">Block broken code from reaching main</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">28</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 28 · Faster feedback, same coverage</div>
+                            <div class="step-heading">Parallelize & Speed Up the Pipeline</div>
+                            <div class="step-desc">Split test runs across <strong>parallel CI jobs by file or suite</strong>, cache dependencies between runs, and separate fast unit tests from slower E2E jobs so a quick PR isn't stuck waiting on the slowest test in the repo. A CI pipeline people wait ten minutes for is a pipeline people start skipping locally.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Slow CI trains bad habits</span>
+                                <span class="tag">Split by speed, cache dependencies</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Split unit tests from slow E2E jobs</a>
+                                <a class="yt-link plain">Cache dependencies between CI runs</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">29</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 29 · Verify your gate can actually gate</div>
+                            <div class="step-heading">Add Mutation Testing for Critical Modules</div>
+                            <div class="step-desc">Run a mutation testing tool (<strong>Stryker for JS, mutmut for Python</strong>) against your most critical modules — it deliberately introduces small bugs and checks whether your tests actually catch them. High line coverage that fails to catch mutations means the tests aren't really asserting anything meaningful.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Tests coverage's blind spot</span>
+                                <span class="tag">Critical modules first</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Do your tests catch injected bugs?</a>
+                                <a class="yt-link plain">Run it on critical modules, not the whole repo</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-left">
+                            <div class="step-dot">30</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-phase">Step 30 · Where this leads</div>
+                            <div class="step-heading">Build a Team Testing Culture</div>
+                            <div class="step-desc">A mature testing practice compounds into different outcomes depending on your goal: <strong>fewer production incidents, faster confident refactors, easier onboarding, or simply the ability to ship without dread.</strong> Write down your team's testing conventions once the basics are solid, and revisit them as the codebase grows.</div>
+                            <div class="step-tags">
+                                <span class="tag red">Multiple valid outcomes</span>
+                                <span class="tag">Document conventions, revisit often</span>
+                            </div>
+                            <div class="yt-links">
+                                <a class="yt-link plain">Fewer incidents vs. faster refactors vs. easier onboarding</a>
+                                <a class="yt-link plain">Revisit your conventions every few months</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Test Suite Strength — Beginner → Advanced</div>
+                <div style="font-size:15px; font-weight:800; color:var(--dark); margin-bottom:10px; letter-spacing:-0.01em;">
+                    Where You Are vs. Where You're Headed</div>
+
+                <div class="skills-row">
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟥 Foundational</div>
+                        <div class="skill-item">Test runner and config in place</div>
+                        <div class="skill-item">Pure functions unit tested</div>
+                        <div class="skill-item">Arrange-act-assert followed</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟧 Active</div>
+                        <div class="skill-item">Integration tests on core services</div>
+                        <div class="skill-item">Critical journeys covered by E2E</div>
+                        <div class="skill-item">Coverage reporting on every run</div>
+                    </div>
+                    <div class="skill-col">
+                        <div class="skill-col-title">🟩 Established</div>
+                        <div class="skill-item">CI gate blocks broken merges</div>
+                        <div class="skill-item">Mutation testing on critical modules</div>
+                        <div class="skill-item">Team-wide testing conventions documented</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Weekly Practice Rhythm</div>
+                <div style="font-size:14px; font-weight:700; color:var(--dark); margin-bottom:10px;">Once Past the Foundations Phase
+                </div>
+                <div class="checklist">
+                    <div class="check-item">
+                        <div class="check-box"></div> Write a regression test for any bug fixed this week
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Review the coverage report and target one under-tested critical file
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Check CI run time and flag any test that's gone flaky
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Pair-review at least one teammate's test file, not just the feature code
+                    </div>
+                    <div class="check-item">
+                        <div class="check-box"></div> Delete or fix one stale, skipped, or ignored test instead of leaving it
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">theboringeducation.com</span>
+                <span class="page-num">07 / 08</span>
+            </div>
+        </div>
+
+        <!-- ══════════════════════ PAGE 8 — RESOURCES + CTA + SOCIALS ══════════════════════ -->
+        <div class="page inner-page">
+            <div class="page-header">
+                <img class="page-header-logo" src="https://ik.imagekit.io/tbe/webapp/logo.svg" alt="TBE">
+                <span class="page-header-title">Testing Guide for Developers · 2026</span>
+                <span class="page-num">08</span>
+            </div>
+
+            <div class="page-body">
+                <div class="section-label">Master Resource List</div>
+                <h2 class="section-title">Best Free Tools & Frameworks for Testing Growth</h2>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧰 Unit &amp; Integration — Jest / Vitest</div>
+                        <div class="resource-card-desc">The default JS/TS test runners in 2026 — fast, built-in mocking, snapshot testing, and near-zero config to get started.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧰 Unit &amp; Integration — pytest</div>
+                        <div class="resource-card-desc">Python's standard for readable tests, fixtures, and parametrization — the go-to choice across most Python codebases.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🎭 E2E — Playwright</div>
+                        <div class="resource-card-desc">Cross-browser, auto-waiting, with built-in trace and video capture — a strong modern default for full end-to-end coverage.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🎭 E2E — Cypress</div>
+                        <div class="resource-card-desc">A polished developer experience with time-travel debugging, ideal for teams that want fast iteration on E2E specs.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">📊 Coverage — Istanbul / c8 / coverage.py</div>
+                        <div class="resource-card-desc">Line, branch, and function coverage reporting that plugs directly into most CI dashboards and pull request checks.</div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-card-name">🧬 Mutation Testing — Stryker / mutmut</div>
+                        <div class="resource-card-desc">Deliberately injects small bugs to check whether your tests actually catch them — the real check on coverage quality.</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Tools by TBE — Use These</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span class="tag red">Tech Yatra — Learning roadmaps</span>
+                    <span class="tag red">DSA Yatra — Daily practice</span>
+                    <span class="tag red">Prep Yatra — Interview tracker</span>
+                    <span class="tag">Resume Yatra — ATS-ready resume</span>
+                    <span class="tag">Shiksha — Free courses</span>
+                    <span class="tag">Community — Peer study groups</span>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Test a Little Every Day, Everything Compounds 🔗</div>
+                    <div class="cta-sub">A codebase with zero tests looks fine until the day it doesn't. A rough suite that grows a little with every PR beats it within a month. Consistency beats intensity — one test at a time compounds into real confidence.</div>
+                    <a href="https://www.theboringeducation.com" class="cta-link" target="_blank">→ theboringeducation.com</a>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-label">Find Us Everywhere</div>
+                <div class="socials-grid">
+                    <a class="social-card" href="https://instagram.com/theboringeducation" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                        <span class="social-name">Instagram</span>
+                        <div class="social-handle">@theboringeducation</div>
+                    </a>
+                    <a class="social-card" href="https://linkedin.com/company/the-boring-education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        <span class="social-name">LinkedIn</span>
+                        <div class="social-handle">The Boring Education</div>
+                    </a>
+                    <a class="social-card" href="https://github.com/The-Boring-Education" target="_blank">
+                        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="GitHub">
+                        <span class="social-name">GitHub</span>
+                        <div class="social-handle">The-Boring-Education</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-footer">
+                <span class="cover-footer-text">© 2026 The Boring Education · Free Tech Education for Everyone</span>
+                <span class="page-num">08 / 08</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -74,6 +74,7 @@ const handleAddACertificate = async (
       await updateUserPointsInDB(
         certificatePayload.userId,
         "COMPLETE_COURSE_CERTIFICATE",
+        { itemId: String(certificatePayload.programId) },
       );
     }
 

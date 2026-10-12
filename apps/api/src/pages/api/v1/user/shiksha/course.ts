@@ -1,10 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
-import {
-  handleGamificationPoints,
-  updateUserCourseChapterInDB,
-} from "@/lib/database";
+import { awardPoints, updateUserCourseChapterInDB } from "@/lib/database";
 import type { UpdateUserChapterInCourseRequestProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
 import { withUserAuth } from "@/middleware/admin";
@@ -63,16 +60,18 @@ const handleUpdateChapterStatus = async (
       );
     }
 
-    await handleGamificationPoints(
+    const gamification = await awardPoints({
       isCompleted,
       userId,
-      "COMPLETE_COURSE_CHAPTER",
-    );
+      actionType: "COMPLETE_COURSE_CHAPTER",
+      itemId: String(chapterId),
+    });
 
     return res.status(apiStatusCodes.OKAY).json(
       sendAPIResponse({
         status: true,
         data,
+        gamification,
         message: "Chapter status updated successfully",
       }),
     );

@@ -20,7 +20,8 @@
     "./array": "./src/array.ts",
     "./challenges": "./src/challenges.ts",
     "./quiz": "./src/quiz.ts",
-    "./prepLogs": "./src/prepLogs.ts"
+    "./prepLogs": "./src/prepLogs.ts",
+    "./leaderboard": "./src/leaderboard.ts"
   },
   "scripts": {
     "lint": "eslint ."

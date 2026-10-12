@@ -26,10 +26,12 @@ export default async function handler(
   try {
     // Extract the path from the catch-all route
     const { path } = req.query;
-    const apiPath = Array.isArray(path) ? path.join('/') : path || '';
-
-    // Construct the full URL
-    const url = `${apiUrl}/${apiPath}`;
+    const rawApiPath = Array.isArray(path) ? path.join('/') : path || '';
+    // Strip leading api/v1 or v1 if present to avoid double prefixing
+    const cleanApiPath = rawApiPath.replace(/^(api\/)?v1\/?/, '');
+    // Ensure base API cleanly resolves to /api/v1
+    const baseApi = apiUrl.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
+    const url = `${baseApi}/api/v1/${cleanApiPath}`;
 
     // Do not forward catch-all `path` as query params — it pollutes upstream URLs
     // (e.g. `?path[]=payment&path[]=create-order`) and can confuse API logging.

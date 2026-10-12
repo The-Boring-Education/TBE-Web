@@ -6,11 +6,12 @@ import {
   Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
-import { useGamifiedAction } from "@tbe/gamification";
-import { useAnalytics, useApi, useUser } from "@tbe/hooks";
+import { useUser } from "@tbe/hooks";
 import type { SheetHeroContainerProps } from "@tbe/interface";
 import { ArrowLeft, CheckCircle2, Rocket } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import useTrackEnrollment from "../../../common/Enrollment/useTrackEnrollment";
 
 const SheetHeroContainer = ({
   id,
@@ -27,85 +28,33 @@ const SheetHeroContainer = ({
   onCustomEnroll,
 }: SheetHeroContainerProps) => {
   const { user, isAuth } = useUser();
-  const { trackEvent } = useAnalytics();
-  const gamifiedAction = useGamifiedAction();
   const [isEnrolled, setIsEnrolled] = useState(initialIsEnrolled);
 
   useEffect(() => {
     setIsEnrolled(initialIsEnrolled);
   }, [initialIsEnrolled]);
 
-  const { makeRequest, loading } = useApi(
-    trackType === "course"
-      ? "shiksha/enrollCourse"
-      : "interview-prep/enrollSheet",
-  );
+  const { enroll, isEnrolling: loading } = useTrackEnrollment({
+    id,
+    name,
+    trackType,
+  });
 
-  const enrollSheet = () => {
+  const enrollSheet = async () => {
     if (onCustomEnroll) {
       onCustomEnroll();
       return;
     }
 
-    const apiUrl =
-      trackType === "course" ? routes.api.enrollCourse : routes.api.enrollSheet;
-    const bodyPayload =
-      trackType === "course"
-        ? { userId: user?.id, courseId: id }
-        : { userId: user?.id, sheetId: id };
+    const didEnroll = await enroll();
+    if (!didEnroll) return;
 
-    makeRequest({
-      method: "POST",
-      url: apiUrl,
-      body: bodyPayload,
-    })
-      .then(async () => {
-        setIsEnrolled(true);
+    setIsEnrolled(true);
+    onEnrollSuccess?.();
 
-        const actionName =
-          trackType === "course" ? "COURSE_ENROLL" : "INTERVIEW_SHEET_ENROLL";
-        const categoryName =
-          trackType === "course" ? "Course" : "InterviewSheet";
-        const labelName =
-          trackType === "course"
-            ? "Course Enrolled"
-            : "Interview Sheet Enrolled";
-
-        trackEvent({
-          action: actionName,
-          category: categoryName,
-          label: labelName,
-          value: {
-            userId: user?.id,
-            id,
-          },
-        });
-
-        await gamifiedAction.triggerGamifiedAction({
-          gamificationAction:
-            trackType === "course" ? "ENROLL_COURSE" : "ENROLL_SHEET",
-          analytics: {
-            action: actionName,
-            category: categoryName,
-            label: labelName,
-          },
-          customMessage:
-            trackType === "course"
-              ? "Course enrolled! Happy learning!"
-              : "Interview sheet enrolled! Time to practice!",
-          metadata: {
-            id,
-            name,
-          },
-        });
-
-        onEnrollSuccess?.();
-
-        if (!onEnrollSuccess && redirectTo && typeof window !== "undefined") {
-          window.location.href = redirectTo;
-        }
-      })
-      .catch((error) => error);
+    if (!onEnrollSuccess && redirectTo && typeof window !== "undefined") {
+      window.location.href = redirectTo;
+    }
   };
 
   const enrollButtonLabel =

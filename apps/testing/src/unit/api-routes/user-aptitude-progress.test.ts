@@ -3,7 +3,7 @@ import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockMarkAptitudeQuestionCompletedByUser = vi.fn();
-const mockHandleGamificationPoints = vi.fn();
+const mockAwardPoints = vi.fn();
 
 vi.mock("../../../../api/src/lib/constants", () => ({
   apiStatusCodes: {
@@ -17,8 +17,7 @@ vi.mock("../../../../api/src/lib/constants", () => ({
 vi.mock("../../../../api/src/lib/database", () => ({
   markAptitudeQuestionCompletedByUser: (...args: unknown[]) =>
     mockMarkAptitudeQuestionCompletedByUser(...args),
-  handleGamificationPoints: (...args: unknown[]) =>
-    mockHandleGamificationPoints(...args),
+  awardPoints: (...args: unknown[]) => mockAwardPoints(...args),
 }));
 
 vi.mock("../../../../api/src/lib/utils", () => ({
@@ -94,14 +93,14 @@ describe("PATCH /user/interview-prep/aptitude/progress", () => {
       "507f1f77bcf86cd799439012",
       true,
     );
-    expect(mockHandleGamificationPoints).not.toHaveBeenCalled();
+    expect(mockAwardPoints).not.toHaveBeenCalled();
   });
 
   it("updates progress and runs gamification on success", async () => {
     mockMarkAptitudeQuestionCompletedByUser.mockResolvedValue({
       data: { _id: "doc1" },
     });
-    mockHandleGamificationPoints.mockResolvedValue({ data: {} });
+    mockAwardPoints.mockResolvedValue({ data: {} });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PATCH",
@@ -118,10 +117,11 @@ describe("PATCH /user/interview-prep/aptitude/progress", () => {
     expect(res._getStatusCode()).toBe(200);
     const body = JSON.parse(res._getData() as string);
     expect(body.status).toBe(true);
-    expect(mockHandleGamificationPoints).toHaveBeenCalledWith(
-      true,
-      "507f1f77bcf86cd799439011",
-      "COMPLETE_APTITUDE_QUESTION",
-    );
+    expect(mockAwardPoints).toHaveBeenCalledWith({
+      isCompleted: true,
+      userId: "507f1f77bcf86cd799439011",
+      actionType: "COMPLETE_APTITUDE_QUESTION",
+      itemId: "algebra/507f1f77bcf86cd799439012",
+    });
   });
 });

@@ -20,38 +20,29 @@
  */
 import chalk from "chalk";
 import crypto from "crypto";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
-import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { pathToFileURL } from "url";
 import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
-/** `apps/api/` — scripts run as ESM (`"type": "module"`), so use import.meta.url not __dirname */
-const API_ROOT = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
+import {
+  type GuardResult,
+  type ScriptEnv,
+  assertProdConfirmed,
+  cliArgv,
+  loadScriptEnv,
+  requireParsedValue,
+  resolveScriptEnv,
+} from "./lib/script-env";
 
-export type EnvOption = "local" | "development" | "production";
+export type EnvOption = ScriptEnv;
 
 /** Minimum entropy we require before trusting ADMIN_SECRET as a real guard. */
 export const MIN_ADMIN_SECRET_LENGTH = 16;
 
-const ENV_FILE_MAP: Record<EnvOption, string> = {
-  local: ".env.local",
-  development: ".env.development",
-  production: ".env.production",
-};
-
-/** Normalize `--env` aliases (dev/prod) to a canonical environment. */
-export const resolveEnvOption = (value: string): EnvOption | null => {
-  const normalized = value.trim().toLowerCase();
-  if (normalized === "local") return "local";
-  if (normalized === "dev" || normalized === "development")
-    return "development";
-  if (normalized === "prod" || normalized === "production") return "production";
-  return null;
+export {
+  assertProdConfirmed,
+  resolveScriptEnv as resolveEnvOption,
+  type GuardResult,
 };
 
 export const normalizeEmail = (email: string): string =>
@@ -74,11 +65,6 @@ export const secretsMatch = (a: string, b: string): boolean => {
   }
   return crypto.timingSafeEqual(bufA, bufB);
 };
-
-export interface GuardResult {
-  ok: boolean;
-  error?: string;
-}
 
 /**
  * Fail-closed guard. Requires ADMIN_SECRET to be present and non-trivial, and
@@ -115,21 +101,6 @@ export const verifyAdminSecretGuard = (params: {
     };
   }
 
-  return { ok: true };
-};
-
-/** Production mutations require an explicit `--yes`. */
-export const assertProdConfirmed = (
-  env: EnvOption,
-  yes: boolean,
-): GuardResult => {
-  if (env === "production" && !yes) {
-    return {
-      ok: false,
-      error:
-        "Refusing to mutate production admins without explicit confirmation. Re-run with --yes.",
-    };
-  }
   return { ok: true };
 };
 
@@ -185,18 +156,14 @@ const buildAdminUserModel = (conn: mongoose.Connection) => {
   return conn.model<AdminUserDoc>("AdminUser", schema);
 };
 
-const loadEnv = (env: EnvOption): void => {
-  const envPath = path.resolve(API_ROOT, ENV_FILE_MAP[env]);
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-    console.error(chalk.red(`Failed to load env file: ${envPath}`));
-    console.error(chalk.red(result.error.message));
+const loadEnv = (env: EnvOption) => {
+  const loaded = loadScriptEnv(env);
+  if (!loaded.ok) {
+    console.error(chalk.red(loaded.error));
     process.exit(1);
   }
+  return loaded;
 };
-
-/** pnpm/tsx sometimes pass a bare `--` in argv; strip it so yargs parses cleanly. */
-const cliArgv = (): string[] => hideBin(process.argv).filter((a) => a !== "--");
 
 type Action = "add" | "list" | "deactivate";
 
@@ -235,7 +202,7 @@ const parseArgs = async (): Promise<CliArgs> => {
     .parse();
 
   const action = argv._[0] as Action;
-  const env = resolveEnvOption(String(argv.env));
+  const env = resolveScriptEnv(String(argv.env));
   if (!env) {
     console.error(
       chalk.red(`Invalid --env '${argv.env}'. Use one of: local | dev | prod.`),
@@ -351,10 +318,10 @@ const main = async (): Promise<void> => {
   );
   console.log(chalk.yellow("=".repeat(60)));
 
-  loadEnv(args.env);
+  const loaded = loadEnv(args.env);
 
   const secretGuard = verifyAdminSecretGuard({
-    adminSecret: process.env.ADMIN_SECRET,
+    adminSecret: loaded.parsed.ADMIN_SECRET,
     confirmSecret: process.env.ADMIN_SECRET_CONFIRM,
   });
   if (!secretGuard.ok) {
@@ -371,11 +338,12 @@ const main = async (): Promise<void> => {
     }
   }
 
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error(chalk.red("MONGODB_URI not found for this environment."));
+  const uriResult = requireParsedValue(loaded, "MONGODB_URI");
+  if (!uriResult.ok) {
+    console.error(chalk.red(uriResult.error));
     process.exit(1);
   }
+  const uri = uriResult.value;
 
   const conn = await mongoose.createConnection(uri).asPromise();
   console.log(chalk.green("Connected to MongoDB\n"));

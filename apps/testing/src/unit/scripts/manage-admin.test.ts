@@ -77,28 +77,28 @@ describe("manage-admin: secretsMatch (constant-time)", () => {
 
 describe("manage-admin: assertProdConfirmed", () => {
   it("requires --yes for production", () => {
-    const result = assertProdConfirmed("production", false);
+    const result = assertProdConfirmed("prod", false);
     expect(result.ok).toBe(false);
     expect(result.error).toMatch(/--yes/);
   });
 
   it("allows production when --yes is set", () => {
-    expect(assertProdConfirmed("production", true).ok).toBe(true);
+    expect(assertProdConfirmed("prod", true).ok).toBe(true);
   });
 
   it("does not require --yes for non-production", () => {
     expect(assertProdConfirmed("local", false).ok).toBe(true);
-    expect(assertProdConfirmed("development", false).ok).toBe(true);
+    expect(assertProdConfirmed("dev", false).ok).toBe(true);
   });
 });
 
 describe("manage-admin: resolveEnvOption", () => {
-  it("normalizes aliases", () => {
+  it("normalizes aliases to local | dev | prod", () => {
     expect(resolveEnvOption("local")).toBe("local");
-    expect(resolveEnvOption("dev")).toBe("development");
-    expect(resolveEnvOption("development")).toBe("development");
-    expect(resolveEnvOption("prod")).toBe("production");
-    expect(resolveEnvOption("PROD")).toBe("production");
+    expect(resolveEnvOption("dev")).toBe("dev");
+    expect(resolveEnvOption("development")).toBe("dev");
+    expect(resolveEnvOption("prod")).toBe("prod");
+    expect(resolveEnvOption("PROD")).toBe("prod");
   });
 
   it("returns null for unknown values", () => {

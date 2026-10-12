@@ -25,9 +25,13 @@ const GamificationSchema = new Schema<GamificationModel>(
     },
     points: { type: Number, default: 0 },
     actions: [ActionSchema],
+    lastBaseCountedAt: { type: Date, default: null },
   },
   { timestamps: true },
 );
+
+// Not unique: legacy data may contain duplicate docs per learner.
+GamificationSchema.index({ userId: 1 });
 
 const Gamification: Model<GamificationModel> =
   models[DATABASE_MODELS.GAMIFICATION] ||

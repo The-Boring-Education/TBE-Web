@@ -25,6 +25,8 @@ export interface APIResponseType {
   error?: any;
   message?: string;
   data?: any;
+  /** Points/rank outcome of the action, for the client celebration toast. */
+  gamification?: any;
 }
 
 export type UserRoleType =

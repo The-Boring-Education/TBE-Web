@@ -19,6 +19,7 @@ import InterviewPrepPage from "./pages/InterviewPrepPage";
 import InterviewSheetCreatePage from "./pages/InterviewSheetCreatePage";
 import InterviewSheetDetailPage from "./pages/InterviewSheetDetailPage";
 import InterviewSheetsListPage from "./pages/InterviewSheetsListPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 import LoginPage from "./pages/LoginPage";
 import MentorshipPage from "./pages/MentorshipPage";
 import PrepLogsPage from "./pages/PrepLogsPage";
@@ -198,6 +199,15 @@ const App = () => {
                 element={
                   <MainLayout>
                     <PrepLogsPage />
+                  </MainLayout>
+                }
+              />
+
+              <Route
+                path="/leaderboard"
+                element={
+                  <MainLayout>
+                    <LeaderboardPage />
                   </MainLayout>
                 }
               />

@@ -18,9 +18,14 @@ vi.mock("../../../../api/src/lib/database", () => ({
     mockCheckPaymentStatusFromDB(...args),
 }));
 
-vi.mock("../../../../api/src/lib/utils", () => ({
-  sendAPIResponse: (payload: any) => payload,
-}));
+vi.mock("../../../../api/src/lib/utils", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../../../api/src/lib/utils")>();
+  return {
+    ...actual,
+    sendAPIResponse: (payload: any) => payload,
+  };
+});
 
 vi.mock("../../../../api/src/lib/utils/logger", () => ({
   logger: {
@@ -126,7 +131,6 @@ describe("Payment Check Status API Route", () => {
   it("should return purchased=false when payment not completed", async () => {
     mockCheckPaymentStatusFromDB.mockResolvedValue({
       data: { purchased: false },
-      error: "Payment not completed",
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -145,7 +149,6 @@ describe("Payment Check Status API Route", () => {
   it("should return purchased=false when no payment record exists", async () => {
     mockCheckPaymentStatusFromDB.mockResolvedValue({
       data: { purchased: false },
-      error: "No payment record found",
     });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({

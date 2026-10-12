@@ -81,6 +81,57 @@ describe("Auth login (OAuth start) API route", () => {
     expect(data.message).toContain("Unsupported provider");
   });
 
+  it("redirects to Google OAuth for dsayatra Vercel preview redirect_uri", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {
+        redirect_uri:
+          "https://dsayatra-git-development-tbe.vercel.app/auth/callback?returnTo=%2Fpricing",
+      },
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(302);
+    expect(mockSignOAuthState).toHaveBeenCalledWith(
+      "https://dsayatra-git-development-tbe.vercel.app/auth/callback?returnTo=%2Fpricing",
+      "google",
+    );
+  });
+
+  it("redirects to Google OAuth for the platform feat/leaderboard preview redirect_uri", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {
+        redirect_uri:
+          "https://platform-git-feat-leaderboard-tbe.vercel.app/auth/callback?returnTo=%2F",
+      },
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(302);
+    expect(mockSignOAuthState).toHaveBeenCalledWith(
+      "https://platform-git-feat-leaderboard-tbe.vercel.app/auth/callback?returnTo=%2F",
+      "google",
+    );
+  });
+
+  it("rejects attacker-created Vercel hosts that only share the -tbe suffix", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {
+        redirect_uri: "https://evil-tbe.vercel.app/auth/callback",
+      },
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(400);
+    const data = JSON.parse(res._getData());
+    expect(data.message).toBe("Invalid redirect_uri origin");
+  });
+
   it("redirects to Google OAuth for allowed localhost redirect_uri", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",

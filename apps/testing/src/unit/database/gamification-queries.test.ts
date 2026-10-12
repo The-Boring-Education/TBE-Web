@@ -52,6 +52,11 @@ vi.mock("../../../../api/src/lib/database/models", () => ({
   Gamification: MockGamificationConstructor,
 }));
 
+const mockRecordPointEvent = vi.fn();
+vi.mock("../../../../api/src/lib/database/queries/pointLedger", () => ({
+  recordPointEvent: (...args: unknown[]) => mockRecordPointEvent(...args),
+}));
+
 vi.mock("@/lib/utils/logger", () => ({
   logger: {
     error: vi.fn(),
@@ -107,47 +112,65 @@ describe("gamification DB queries — client payloads omit actions", () => {
   });
 
   describe("updateUserPointsInDB", () => {
-    it("uses select -actions on findOneAndUpdate and returns data without actions", async () => {
-      const updated = { _id: "g1", userId: validUserId, points: 100 };
-      mockFindOneAndUpdate.mockResolvedValue(updated);
+    it("awards through the Point Ledger and returns its result, never actions", async () => {
+      const ledgerResult = { pointsEarned: 50, lifetimePoints: 100 };
+      mockRecordPointEvent.mockResolvedValue(ledgerResult);
 
       const result = await updateUserPointsInDB(validUserId, "ENROLL_COURSE");
 
-      expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
-        { userId: { $eq: expect.anything() } },
-        expect.objectContaining({
-          $push: expect.objectContaining({
-            actions: expect.objectContaining({
-              actionType: "ENROLL_COURSE",
-            }),
-          }),
-          $inc: { points: expect.any(Number) },
-        }),
-        { new: true, select: "-actions" },
-      );
-      expect(result.data).toEqual(updated);
+      expect(mockRecordPointEvent).toHaveBeenCalledWith({
+        userId: validUserId,
+        actionType: "ENROLL_COURSE",
+        itemId: undefined,
+        app: undefined,
+      });
+      expect(result.data).toEqual(ledgerResult);
       expect(result.data).not.toHaveProperty("actions");
+      expect(mockFindOneAndUpdate).not.toHaveBeenCalled();
+    });
+
+    it("passes the Learning Item through", async () => {
+      mockRecordPointEvent.mockResolvedValue({});
+      await updateUserPointsInDB(validUserId, "COMPLETE_COURSE_CERTIFICATE", {
+        itemId: "course-1",
+      });
+      expect(mockRecordPointEvent).toHaveBeenCalledWith(
+        expect.objectContaining({ itemId: "course-1" }),
+      );
     });
   });
 
-  describe("handleGamificationPoints (deduct path)", () => {
-    it("returns payload without actions when deducting points", async () => {
-      const afterDeduct = { _id: "g1", userId: validUserId, points: 0 };
-      mockFindOneAndUpdate.mockResolvedValue(afterDeduct);
+  describe("handleGamificationPoints (reversal path)", () => {
+    it("records a reversal Point Event and returns a payload without actions", async () => {
+      const ledgerResult = { pointsEarned: -10, lifetimePoints: 0 };
+      mockRecordPointEvent.mockResolvedValue(ledgerResult);
 
       const result = await handleGamificationPoints(
         false,
         validUserId,
-        "ENROLL_COURSE",
+        "COMPLETE_QUESTION",
+        { itemId: "q1" },
       );
 
-      expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
-        { userId: { $eq: expect.anything() } },
-        expect.any(Array),
-        { new: true, select: "-actions" },
-      );
-      expect(result.data).toEqual(afterDeduct);
+      expect(mockRecordPointEvent).toHaveBeenCalledWith({
+        userId: validUserId,
+        actionType: "COMPLETE_QUESTION",
+        itemId: "q1",
+        app: undefined,
+        isReversal: true,
+      });
+      expect(result.data).toEqual(ledgerResult);
       expect(result.data).not.toHaveProperty("actions");
+    });
+
+    it("reports a failure without throwing", async () => {
+      mockRecordPointEvent.mockRejectedValue(new Error("db down"));
+      const result = await handleGamificationPoints(
+        false,
+        validUserId,
+        "COMPLETE_QUESTION",
+      );
+      expect(result.error).toBeDefined();
     });
   });
 });

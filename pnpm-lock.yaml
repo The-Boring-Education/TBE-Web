@@ -270,6 +270,9 @@ importers:
       "@tbe/constants":
         specifier: workspace:*
         version: link:../../packages/constants
+      "@tbe/types":
+        specifier: workspace:*
+        version: link:../../packages/types
       "@tbe/utils":
         specifier: workspace:*
         version: link:../../packages/utils
@@ -364,6 +367,52 @@ importers:
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
+
+  apps/contributor:
+    dependencies:
+      "@tbe/typescript-config":
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      next:
+        specifier: 14.2.35
+        version: 14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      "@tbe/eslint-config":
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      "@types/node":
+        specifier: ^18.19.124
+        version: 18.19.130
+      "@types/react":
+        specifier: 18.3.24
+        version: 18.3.24
+      "@types/react-dom":
+        specifier: 18.3.7
+        version: 18.3.7(@types/react@18.3.24)
+      autoprefixer:
+        specifier: ^10.4.18
+        version: 10.5.2(postcss@8.5.16)
+      eslint:
+        specifier: ^9.34.0
+        version: 9.39.4(jiti@1.21.7)
+      next-sitemap:
+        specifier: ^4.2.3
+        version: 4.2.3(next@14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      postcss:
+        specifier: ^8.4.35
+        version: 8.5.16
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.19(tsx@4.22.4)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
 
   apps/dsayatra:
     dependencies:
@@ -829,6 +878,9 @@ importers:
       lottie-react:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lucide-react:
+        specifier: ^0.462.0
+        version: 0.462.0(react@18.3.1)
       mammoth:
         specifier: ^1.11.0
         version: 1.12.0
@@ -862,6 +914,9 @@ importers:
       recharts:
         specifier: ^2.15.1
         version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      sonner:
+        specifier: ^1.5.0
+        version: 1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       uuid:
         specifier: ^9.0.0
         version: 9.0.1

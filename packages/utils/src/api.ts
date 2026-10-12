@@ -15,6 +15,8 @@ export interface APIResponseType {
   error?: any;
   message?: string;
   data?: any;
+  /** Points/rank outcome of a server-awarded action, for the celebration toast. */
+  gamification?: unknown;
 }
 
 // Create axios instance with default configuration to handle CORS

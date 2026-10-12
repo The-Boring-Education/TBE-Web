@@ -21,6 +21,36 @@ export const TEST_USER: MockUser = {
  * Also mocks common endpoints that fire on every authenticated page load.
  */
 async function mockAuthSession(page: Page, user: MockUser = TEST_USER) {
+  const header = Buffer.from(
+    JSON.stringify({ alg: "none", typ: "JWT" }),
+  ).toString("base64url");
+  const payload = Buffer.from(
+    JSON.stringify({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      image: user.image,
+      isOnboarded: user.isOnboarded,
+      exp: Math.floor(Date.now() / 1000) + 86_400,
+    }),
+  ).toString("base64url");
+  const accessToken = [header, payload, "e2e"].join(".");
+
+  await page.context().addCookies([
+    {
+      name: "tbe_access_token",
+      value: accessToken,
+      url: "http://localhost:3000",
+    },
+  ]);
+  await page.addInitScript(
+    ([key, token]) => {
+      document.cookie =
+        key + "=" + token + "; path=/; max-age=86400; SameSite=Lax";
+    },
+    ["tbe_access_token", accessToken],
+  );
+
   await page.route("**/api/auth/session", (route) =>
     route.fulfill({
       status: 200,

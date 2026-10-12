@@ -11,7 +11,15 @@ import LoadingSpinner from "../LoadingSpinner";
  * @param className - Additional CSS classes
  * @param text - Button text content
  * @param active - Whether button is active/enabled
+ * @param disabled - Whether the button is disabled
  * @param isLoading - Show loading spinner
+ *
+ * Interactivity precedence (`disabled` > `active` > `isLoading`):
+ *   - `disabled={true}` or `active={false}` render the inactive (greyed out)
+ *     style and set the native `disabled` attribute. `disabled` wins over
+ *     `active`, so `<Button active disabled />` is still non-interactive.
+ *   - `isLoading={true}` keeps the variant styling but also sets the native
+ *     `disabled` attribute so a request cannot be fired twice.
  * @param onClick - Click handler
  * @param animationClasses - Additional animation classes
  * @param icon - Optional icon element
@@ -91,6 +99,7 @@ const Button = ({
   text,
   children,
   active = true,
+  disabled = false,
   isLoading = false,
   onClick,
   animationClasses = "",
@@ -119,8 +128,10 @@ const Button = ({
     LARGE: "px-3 py-3 text-base",
   };
 
+  const isDisabled = disabled || !active;
+
   let baseClasses = `button rounded-1 ${sizeClasses[size]}`;
-  baseClasses = getButtonClasses(baseClasses, variant, active);
+  baseClasses = getButtonClasses(baseClasses, variant, !isDisabled);
 
   // Show loading spinner when isLoading is true
   const loadingContainer = isLoading && (
@@ -153,6 +164,8 @@ const Button = ({
 
   // Optimized click handler with immediate feedback
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDisabled || isLoading) return;
+
     if (onClick) {
       // Add immediate visual feedback
       const target = e.currentTarget;
@@ -174,7 +187,8 @@ const Button = ({
     >
       <motion.button
         className={`${baseClasses} ${className} shadow-md flex items-center justify-center gap-0.5`}
-        disabled={!active || isLoading}
+        disabled={isDisabled || isLoading}
+        aria-disabled={isDisabled || isLoading}
         onClick={handleClick}
         type={type}
         {...delegated}

@@ -337,23 +337,6 @@
   }
 }
 
-@media print {
-  header,
-  footer {
-    display: none !important;
-  }
-
-  .resource-contribute-banner {
-    display: none !important;
-  }
-
-  .resource-embed {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: none !important;
-  }
-}
-
 /* Fix for Navbar interactivity and visibility */
 header {
   z-index: 100 !important;
@@ -364,4 +347,204 @@ header {
 main {
   position: relative;
   z-index: 10;
+}
+
+/* =========================
+   PRINT LAYOUT FIX (#1253)
+   ========================= */
+
+@media print {
+  /* -------- Standard A4 page -------- */
+  @page {
+    size: A4 portrait;
+    margin: 16mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .resource-print-container {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mx-auto.w-full.px-4.pb-8.pt-4 {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  main,
+  main > div {
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* -------- Hide interactive UI -------- */
+  header,
+  footer,
+  nav,
+  .resource-contribute-banner,
+  .print\:hidden,
+  .share-button,
+  .deep-read-button,
+  .print-button {
+    display: none !important;
+  }
+
+  /* Hide floating widgets/buttons in print */
+  .fixed.bottom-4.right-4,
+  .fixed.bottom-6.right-6,
+  [data-floating-widget],
+  [data-feedback-widget] {
+    display: none !important;
+  }
+
+  /* Hide TSQD floating widget in PDF */
+  .tsqd-parent-container,
+  .tsqd-transitions-container,
+  .tsqd-open-btn-container {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Remove the first empty inner page after the cover */
+  .page.inner-page:first-of-type {
+    display: none !important;
+  }
+
+  /* -------- Resource layout -------- */
+  .resource-embed {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  .resource-embed-body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
+
+  /* -------- Prevent bad page breaks -------- */
+  section,
+  article,
+  pre,
+  table,
+  figure,
+  blockquote,
+  img,
+  svg,
+  .rounded-xl,
+  .rounded-2xl,
+  .rounded-3xl,
+  .card,
+  .resource-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* -------- Prevent orphan headings -------- */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-after: avoid;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* -------- Code blocks -------- */
+  pre,
+  code {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* -------- Tables -------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tbody,
+  tr,
+  td,
+  th {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* -------- Images -------- */
+  img,
+  svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* -------- Preserve colors in PDF -------- */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Prevent an empty page before the first resource section */
+.resource-embed-body > :first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  break-before: avoid !important;
+  page-break-before: avoid !important;
+}
+
+/* ==========================================
+   TBE Resource PDF Fix - Remove Blank Page 2
+   ========================================== */
+
+@media print {
+  /* Cover always starts on page 1 */
+  .page-cover {
+    break-before: auto !important;
+    page-break-before: auto !important;
+    break-after: page !important;
+    page-break-after: always !important;
+  }
+
+  /* Default: every inner page starts on a new sheet */
+  .page-inner-page {
+    break-before: page;
+    page-break-before: auto;
+  }
+
+  /* EXCEPT the first page after the cover */
+  .page-cover + .page-inner-page {
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
 }

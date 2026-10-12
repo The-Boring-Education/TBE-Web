@@ -63,6 +63,23 @@ module.exports = {
         greyDark: '#848484',
         accent: '#ECF1F4',
         lightBG: '#F8F8F8',
+        border: 'hsl(var(--border, 214.3 31.8% 91.4%))',
+        input: 'hsl(var(--input, 214.3 31.8% 91.4%))',
+        ring: 'hsl(var(--ring, 222.2 84% 4.9%))',
+        background: 'hsl(var(--background, 0 0% 100%))',
+        foreground: 'hsl(var(--foreground, 222.2 84% 4.9%))',
+        card: {
+          DEFAULT: 'hsl(var(--card, 0 0% 100%))',
+          foreground: 'hsl(var(--card-foreground, 222.2 84% 4.9%))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted, 210 40% 96.1%))',
+          foreground: 'hsl(var(--muted-foreground, 215.4 16.3% 46.9%))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover, 0 0% 100%))',
+          foreground: 'hsl(var(--popover-foreground, 222.2 84% 4.9%))',
+        },
       },
       spacing: {
         1: '8px',

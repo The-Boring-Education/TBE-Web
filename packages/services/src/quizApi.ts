@@ -1,4 +1,5 @@
-import { API_ENDPOINTS, config } from "@tbe/config/quizes";
+import { API_ENDPOINTS } from "@tbe/config/quizes";
+import type { QuizAttempt } from "@tbe/types";
 import { sendRequest } from "@tbe/utils";
 
 export interface QuizQuestion {
@@ -43,7 +44,6 @@ export const quizApi = {
     try {
       const result = await sendRequest({
         url: `/quiz`,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to fetch categories");
@@ -60,7 +60,6 @@ export const quizApi = {
     try {
       const result = await sendRequest({
         url: `/quiz/${quizId}?shuffle=${shuffle}`,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to fetch quiz questions");
@@ -86,7 +85,6 @@ export const quizApi = {
         method: "POST",
         url: `/quiz/session/start`,
         body: payload,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to start quiz session");
@@ -112,7 +110,6 @@ export const quizApi = {
         method: "POST",
         url: `/quiz/session/${sessionId}/answer`,
         body: payload,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to submit answer");
@@ -130,7 +127,6 @@ export const quizApi = {
       const result = await sendRequest({
         method: "POST",
         url: `/quiz/session/${sessionId}/complete`,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to complete quiz session");
@@ -152,7 +148,6 @@ export const quizApi = {
 
       const result = await sendRequest({
         url,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to fetch analytics");
@@ -172,7 +167,6 @@ export const quizApi = {
 
       const result = await sendRequest({
         url,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to fetch leaderboard");
@@ -192,7 +186,6 @@ export const quizApi = {
 
       const result = await sendRequest({
         url,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to fetch user sessions");
@@ -202,6 +195,42 @@ export const quizApi = {
         error instanceof Error
           ? error.message
           : "Failed to fetch user sessions",
+      );
+    }
+  },
+
+  // Get user quiz attempts history
+  getUserAttempts: async (
+    userId: string,
+    limit?: number,
+    quizId?: string,
+  ): Promise<{
+    success: boolean;
+    data?: QuizAttempt[];
+    message?: string;
+    status?: boolean;
+  }> => {
+    try {
+      let url = `${API_ENDPOINTS.QUIZ_ATTEMPTS}?userId=${encodeURIComponent(userId)}`;
+      if (limit) url += `&limit=${limit}`;
+      if (quizId) url += `&quizId=${encodeURIComponent(quizId)}`;
+
+      const result = await sendRequest({
+        url,
+      });
+      if (!result.success)
+        throw new Error(result.message || "Failed to fetch user attempts");
+      return result as {
+        success: boolean;
+        data?: QuizAttempt[];
+        message?: string;
+        status?: boolean;
+      };
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch user attempts",
       );
     }
   },
@@ -225,7 +254,6 @@ export const quizApi = {
         method: "POST",
         url: `/quiz/${quizId}/submit`,
         body: payload,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to submit quiz");
@@ -250,7 +278,6 @@ export const quizApi = {
         method: "POST",
         url: `${API_ENDPOINTS.QUIZ_QUESTIONS(id)}/attempt`,
         body: data,
-        baseURL: config.API_BASE_URL,
       });
       if (!result.success)
         throw new Error(result.message || "Failed to submit attempt");

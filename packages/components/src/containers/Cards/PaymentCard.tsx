@@ -33,6 +33,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
   const createPaymentOrder = async (): Promise<{
     paymentSessionId: string;
     orderId: string;
+    paymentLink?: string;
   }> => {
     const response = await fetch(
       `${routes.api.base}${routes.api.createOrder}`,
@@ -61,6 +62,10 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
     return {
       paymentSessionId: data.data.paymentSessionId as string,
       orderId: data.data.orderId as string,
+      paymentLink:
+        typeof data.data.paymentLink === "string"
+          ? data.data.paymentLink
+          : undefined,
     };
   };
 
@@ -74,7 +79,8 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
     setError(null);
 
     try {
-      const { paymentSessionId, orderId } = await createPaymentOrder();
+      const { paymentSessionId, orderId, paymentLink } =
+        await createPaymentOrder();
       const returnUrl = `${window.location.origin}${routes.paymentStatus}?order_id=${encodeURIComponent(orderId)}&next=${encodeURIComponent(routes.user.dashboard)}`;
       await launchPayment(
         paymentSessionId,
@@ -89,6 +95,7 @@ const PaymentCard = ({ course, onClose, productType }: PaymentCardProps) => {
           setIsProcessing(false);
         },
         returnUrl,
+        paymentLink,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

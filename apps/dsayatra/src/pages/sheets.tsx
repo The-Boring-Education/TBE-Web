@@ -12,11 +12,7 @@ import {
   routes,
   TOPIC_LABELS,
 } from "@tbe/constants";
-import {
-  calculateUserPointsForAction,
-  useGamification,
-  useGamificationContext,
-} from "@tbe/gamification";
+import { useGamification, useGamificationFeedback } from "@tbe/gamification";
 import {
   useAnalytics,
   useDsaCompletedQuestions,
@@ -108,7 +104,7 @@ const SheetsPageClient = () => {
     isProgressLoading,
   } = useDsaCompletedQuestions({ userId: user?.id });
   const { refetch: refetchGamification } = useGamification();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
   const { topicsCompletionMap } = useDsaTopics(
     questionsForCompletion,
     completedIds,
@@ -132,17 +128,11 @@ const SheetsPageClient = () => {
     async (questionId: string | number) => {
       const idStr = String(questionId);
       const willComplete = !completedIds.includes(questionId);
-      await toggleComplete(questionId);
+      const gamification = await toggleComplete(questionId);
 
       if (willComplete) {
-        const pointsEarned = calculateUserPointsForAction("COMPLETE_QUESTION");
-        const intensity =
-          pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
-        triggerCelebration({ type: "points", intensity });
-        showToast({
-          type: "points",
+        celebrate(gamification, {
           message: "DSA question solved! Great work!",
-          points: pointsEarned,
         });
         trackEvent({
           action: "DSA_QUESTION_COMPLETED",
@@ -153,14 +143,7 @@ const SheetsPageClient = () => {
 
       await refetchGamification();
     },
-    [
-      completedIds,
-      toggleComplete,
-      refetchGamification,
-      triggerCelebration,
-      showToast,
-      trackEvent,
-    ],
+    [completedIds, toggleComplete, refetchGamification, celebrate, trackEvent],
   );
 
   const questions = topicQuestions;

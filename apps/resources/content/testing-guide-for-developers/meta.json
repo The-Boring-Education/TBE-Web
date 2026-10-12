@@ -1,0 +1,21 @@
+{
+  "title": "Testing Guide for Developers 2026",
+  "description": "A phase-by-phase playbook for building real testing discipline — unit tests, integration tests, E2E coverage, mocking, TDD, and CI, in the order that actually makes your codebase trustworthy.",
+  "keywords": [
+    "testing",
+    "unit testing",
+    "integration testing",
+    "e2e testing",
+    "tdd",
+    "test driven development",
+    "jest",
+    "vitest",
+    "playwright",
+    "cypress",
+    "software testing",
+    "ci cd",
+    "test coverage"
+  ],
+  "tags": ["guide", "testing", "bestpractices"],
+  "ogImage": "https://theboringeducation.com/images/testing-guide-for-developers-og.png"
+}

@@ -12,11 +12,7 @@ import {
   Text,
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
-import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-  useGamifiedAction,
-} from '@tbe/gamification';
+import { useGamificationFeedback, useGamifiedAction } from '@tbe/gamification';
 import { useAnalytics, useUser } from '@tbe/hooks';
 import type { ProjectPageProps } from '@tbe/interface';
 import { queryKeys, useMutation, useQueryClient } from '@tbe/query';
@@ -72,7 +68,7 @@ const ProjectPage = ({
   const { trackEvent } = useAnalytics();
   const gamifiedAction = useGamifiedAction();
   const queryClient = useQueryClient();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
 
   useEffect(() => {
     const currentChapter = sections
@@ -191,19 +187,8 @@ const ProjectPage = ({
       // Only proceed if the API call was successful
       if (response?.status) {
         if (newCompletionStatus) {
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.gamification.points(user?.id ?? ''),
-          });
-          const pointsEarned = calculateUserPointsForAction(
-            'COMPLETE_PROJECT_CHAPTER',
-          );
-          const intensity =
-            pointsEarned >= 50 ? 'high' : pointsEarned >= 20 ? 'medium' : 'low';
-          triggerCelebration({ type: 'points', intensity });
-          showToast({
-            type: 'points',
+          celebrate(response?.gamification, {
             message: 'Project chapter completed! Keep building!',
-            points: pointsEarned,
           });
           trackEvent({
             action: 'PROJECT_CHAPTER_COMPLETE',

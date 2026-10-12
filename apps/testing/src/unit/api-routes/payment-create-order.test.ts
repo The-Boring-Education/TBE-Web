@@ -72,6 +72,8 @@ vi.mock("../../../../api/src/lib/utils/rateLimit", () => ({
   rateLimit: () => true,
 }));
 
+import { logger } from "../../../../api/src/lib/utils/logger";
+import { captureAPIError } from "../../../../api/src/lib/utils/sentry";
 import handler from "../../../../api/src/pages/api/v1/payment/create-order";
 
 const validBody = {
@@ -245,5 +247,74 @@ describe("Payment Create Order API Route", () => {
     expect(res._getStatusCode()).toBe(400);
     const data = JSON.parse(res._getData() as string);
     expect(data.message).toContain("order_amount must be greater than minimum");
+    expect(logger.warn).toHaveBeenCalledWith(
+      "Payment create-order gateway failure",
+      expect.objectContaining({
+        productType: "DSA_YATRA",
+        productId: "lifetime",
+        orderId: "order_test_1",
+        finalAmount: 999,
+        httpStatus: 400,
+        gatewayMessage: "order_amount must be greater than minimum",
+      }),
+    );
+  });
+
+  it("logs success after Cashfree accepts the order", async () => {
+    mockVerifyToken.mockReturnValue({
+      type: "access",
+      sub: "user_abc",
+    });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      headers: { authorization: "Bearer token", "x-request-id": "req_test" },
+      body: validBody,
+    });
+
+    await handler(req, res);
+
+    expect(logger.info).toHaveBeenCalledWith(
+      "Payment create-order resolved amount",
+      expect.objectContaining({
+        requestId: "req_test",
+        orderId: "order_test_1",
+        finalAmount: 999,
+        productType: "DSA_YATRA",
+      }),
+    );
+    expect(logger.info).toHaveBeenCalledWith(
+      "Payment create-order succeeded",
+      expect.objectContaining({
+        requestId: "req_test",
+        orderId: "order_test_1",
+      }),
+    );
+  });
+
+  it("captures a Sentry error when payment persist fails", async () => {
+    mockVerifyToken.mockReturnValue({
+      type: "access",
+      sub: "user_abc",
+    });
+    mockAddPaymentToDB.mockResolvedValue({ error: "Failed to save payment to DB" });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      headers: { authorization: "Bearer token" },
+      body: validBody,
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(500);
+    expect(logger.error).toHaveBeenCalledWith(
+      "Payment create-order failed to persist",
+      expect.objectContaining({
+        orderId: "order_test_1",
+        error: "Failed to save payment to DB",
+      }),
+    );
+    expect(captureAPIError).toHaveBeenCalled();
   });
 });

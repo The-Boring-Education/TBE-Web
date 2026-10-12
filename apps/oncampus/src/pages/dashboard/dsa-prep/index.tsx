@@ -6,10 +6,7 @@ import {
   Text,
 } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
-import {
-  calculateUserPointsForAction,
-  useGamificationContext,
-} from "@tbe/gamification";
+import { useGamificationFeedback } from "@tbe/gamification";
 import {
   useAnalytics,
   useDsaCompletedQuestions,
@@ -27,7 +24,7 @@ import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 const DSAPrepPage = () => {
   const router = useRouter();
   const { loading: userLoading, isAuth, user } = useUser();
-  const { triggerCelebration, showToast } = useGamificationContext();
+  const { celebrate } = useGamificationFeedback();
   const { trackEvent } = useAnalytics();
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
@@ -79,18 +76,10 @@ const DSAPrepPage = () => {
     async (questionId: string | number) => {
       const idStr = String(questionId);
       const willComplete = !completedIds.some((cid) => String(cid) === idStr);
-      await toggleComplete(questionId);
+      const gamification = await toggleComplete(questionId);
 
       if (willComplete) {
-        const pointsEarned = calculateUserPointsForAction("COMPLETE_QUESTION");
-        const intensity =
-          pointsEarned >= 50 ? "high" : pointsEarned >= 20 ? "medium" : "low";
-        triggerCelebration({ type: "points", intensity });
-        showToast({
-          type: "points",
-          message: "Question solved! Great work!",
-          points: pointsEarned,
-        });
+        celebrate(gamification, { message: "Question solved! Great work!" });
         trackEvent({
           action: "QUESTION_COMPLETE",
           category: "Learning",
@@ -102,14 +91,7 @@ const DSAPrepPage = () => {
         });
       }
     },
-    [
-      completedIds,
-      toggleComplete,
-      triggerCelebration,
-      showToast,
-      trackEvent,
-      user?.id,
-    ],
+    [completedIds, toggleComplete, celebrate, trackEvent, user?.id],
   );
 
   // Freemium state mirrors DSA Yatra sheets: rely on API `isLocked` flags.

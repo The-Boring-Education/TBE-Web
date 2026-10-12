@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { apiStatusCodes } from "@/lib/constants";
 import { checkPaymentStatusFromDB } from "@/lib/database";
-import { sendAPIResponse } from "@/lib/utils";
+import { getPaymentStatusUserMessage, sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -55,9 +55,7 @@ const checkPaymentStatus = async (
     sendAPIResponse({
       status: data?.purchased || false,
       data,
-      message:
-        error ||
-        (data?.purchased ? "Payment completed" : "Payment not completed"),
+      message: getPaymentStatusUserMessage({ data, error }),
     }),
   );
 };

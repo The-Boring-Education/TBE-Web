@@ -154,6 +154,15 @@ export async function mockCoursePageSSR(
     pageProps: Record<string, unknown>;
     __N_SSP: boolean;
   },
+  /**
+   * Optional payload used only for the `/learn` route. Lets a spec reach the
+   * learning page (which is only linked from an enrolled overview) while the
+   * learning page itself still renders the unenrolled state.
+   */
+  learnPageData?: {
+    pageProps: Record<string, unknown>;
+    __N_SSP: boolean;
+  },
 ) {
   await page.route(
     (url) => {
@@ -168,8 +177,92 @@ export async function mockCoursePageSSR(
       route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(courseData),
+        body: JSON.stringify(
+          learnPageData &&
+            new URL(route.request().url()).pathname.endsWith("/learn.json")
+            ? learnPageData
+            : courseData,
+        ),
       }),
+  );
+}
+
+/**
+ * Mock the `_next/data` endpoint for the learn route the way the server
+ * resolves it: a valid `chapterId` renders that chapter, an unrecognised one
+ * redirects to the canonical first-chapter URL, and a missing one falls back
+ * to the first chapter.
+ */
+export async function mockCourseLearnSSR(
+  page: Page,
+  courseData: {
+    pageProps: Record<string, unknown>;
+    __N_SSP: boolean;
+  } = enrolledCourse,
+) {
+  const chapters = (
+    courseData.pageProps.course as {
+      chapters: { _id: string; content: string }[];
+    }
+  ).chapters;
+  const firstChapter = chapters[0];
+
+  await page.route(
+    (url) => {
+      const path = url.pathname;
+      return (
+        path.includes("/_next/data/") &&
+        path.includes("/shiksha/") &&
+        path.endsWith(".json")
+      );
+    },
+    (route) => {
+      const url = new URL(route.request().url());
+      const isLearnRoute = url.pathname.endsWith("/learn.json");
+      const requestedChapterId = url.searchParams.get("chapterId");
+
+      const respond = (body: unknown) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(body),
+        });
+
+      if (isLearnRoute && requestedChapterId) {
+        const chapter = chapters.find((ch) => ch._id === requestedChapterId);
+
+        if (!chapter) {
+          // Mirrors how Next.js signals a `getServerSideProps` redirect on the
+          // data route during client-side navigation.
+          return route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            headers: {
+              "x-nextjs-redirect": `/shiksha/${COURSE_SLUG}/learn?chapterId=${firstChapter._id}`,
+            },
+            body: JSON.stringify({ pageProps: {}, __N_SSP: true }),
+          });
+        }
+
+        return respond({
+          ...courseData,
+          pageProps: {
+            ...courseData.pageProps,
+            meta: chapter.content,
+            currentChapterId: chapter._id,
+          },
+        });
+      }
+
+      return respond({
+        ...courseData,
+        pageProps: {
+          ...courseData.pageProps,
+          meta: firstChapter.content,
+          currentChapterId: firstChapter._id,
+        },
+      });
+    },
   );
 }
 

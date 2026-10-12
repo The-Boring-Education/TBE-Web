@@ -192,6 +192,10 @@ const CheckoutPage = () => {
       }
 
       const { paymentSessionId, orderId } = res.data;
+      const paymentLink =
+        typeof res.data.paymentLink === 'string'
+          ? res.data.paymentLink
+          : undefined;
 
       const defaultNext =
         productType &&
@@ -215,6 +219,7 @@ const CheckoutPage = () => {
           setIsPaying(false);
         },
         paymentStatusAbsoluteUrl,
+        paymentLink,
       );
     } catch (e) {
       setPayError(e instanceof Error ? e.message : 'Something went wrong');

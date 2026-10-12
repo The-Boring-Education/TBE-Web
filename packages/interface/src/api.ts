@@ -51,6 +51,8 @@ export interface APIResponseType extends ClientAPIResponse {
   message?: string;
   error?: any;
   details?: any;
+  /** Points/rank outcome of a server-awarded action, for the celebration toast. */
+  gamification?: unknown;
 }
 
 export type DatabaseQueryResponseType = {
@@ -272,12 +274,18 @@ export interface ExtendedInterviewSheetQuestionModel extends InterviewSheetQuest
 }
 
 export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
+  title?: string;
   isEnrolled?: boolean;
   chapters?: ExtendedCourseChapterModel[];
   isPremium?: boolean;
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  progress?: {
+    completed: number;
+    total: number;
+    percentage: number;
+  };
 }
 
 export interface BaseInterviewSheetResponseProps extends Partial<InterviewSheetModel> {

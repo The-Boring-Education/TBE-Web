@@ -112,48 +112,6 @@ const PAGINATION_LIMITS = {
   DEFAULT: 50,
 };
 
-const PORTFOLIO_CARDS = [
-  {
-    id: 1,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-resume.svg`,
-    title: "Resume is not Enough.",
-    description: "Showcase your skills with a personalized portfolio website.",
-  },
-  {
-    id: 2,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-standout.svg`,
-    title: "Stand Out.",
-    description: "Highlight your unique capabilities effectively and clearly.",
-  },
-  {
-    id: 3,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-brand.svg`,
-    title: "Control Your Brand.",
-    description: "Manage your personal brand and online presence efficiently.",
-  },
-  {
-    id: 4,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-professional.svg`,
-    title: "Professionalism.",
-    description:
-      "Show potential employers you are serious about your career growth.",
-  },
-  {
-    id: 5,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-networking.svg`,
-    title: "Networking.",
-    description:
-      "Easily share your work and connect with others in your field.",
-  },
-  {
-    id: 6,
-    imageUrl: `${STATIC_FILE_PATH.svg}/the-boring-portfolio-card-seo.svg`,
-    title: "SEO Benefits.",
-    description:
-      "Improve your visibility on search engines and attract opportunities.",
-  },
-];
-
 const USER_ROLE_OPTIONS: { label: string; value: UserRoleType }[] = [
   { label: "Tech Student", value: "TECH_STUDENT" },
   { label: "Non-Tech Student", value: "NON_TECH_STUDENT" },
@@ -230,7 +188,6 @@ export {
   localStorageKeys,
   PAGE_REFRESH_TIMEOUT,
   PAGINATION_LIMITS,
-  PORTFOLIO_CARDS,
   projectGroupWhatsapp,
   SCREEN_BREAKPOINTS,
   STATIC_FILE_PATH,
