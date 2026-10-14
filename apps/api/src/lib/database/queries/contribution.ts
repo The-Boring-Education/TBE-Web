@@ -27,6 +27,7 @@ export interface CreateContributionInput {
 
 export interface GetUserContributionsFilter {
   status?: ContributionStatusType;
+  category?: ContributionCategoryType;
   typeGroup?: ContributionTypeGroup;
   page?: number;
   limit?: number;
@@ -34,6 +35,7 @@ export interface GetUserContributionsFilter {
 
 export interface GetAdminContributionsFilter {
   status?: ContributionStatusType | "all";
+  category?: ContributionCategoryType;
   search?: string;
   page?: number;
   limit?: number;
@@ -113,7 +115,13 @@ export const createContributionInDB = async ({
  */
 export const getContributionsByUserIdFromDB = async (
   userId: string,
-  { status, typeGroup, page = 1, limit = 20 }: GetUserContributionsFilter = {},
+  {
+    status,
+    category,
+    typeGroup,
+    page = 1,
+    limit = 20,
+  }: GetUserContributionsFilter = {},
 ): Promise<DatabaseQueryResponseType> => {
   try {
     if (!mongoose.isValidObjectId(userId)) {
@@ -126,6 +134,10 @@ export const getContributionsByUserIdFromDB = async (
 
     if (status) {
       filter.status = status;
+    }
+
+    if (category) {
+      filter.category = category;
     }
 
     if (typeGroup) {
@@ -168,6 +180,7 @@ export const getContributionsByUserIdFromDB = async (
  */
 export const getContributionsForAdminFromDB = async ({
   status,
+  category,
   search,
   page = 1,
   limit = 20,
@@ -179,8 +192,16 @@ export const getContributionsForAdminFromDB = async ({
       filter.status = status;
     }
 
+    if (category) {
+      filter.category = category;
+    }
+
     if (search && search.trim()) {
-      const searchRegex = new RegExp(search.trim(), "i");
+      const cleanSearch = search
+        .trim()
+        .slice(0, 100)
+        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const searchRegex = new RegExp(cleanSearch, "i");
       filter.$or = [
         { title: searchRegex },
         { contributorName: searchRegex },
@@ -235,35 +256,53 @@ export const reviewContributionInDB = async ({
       return { error: "Invalid contribution ID provided" };
     }
 
-    const contribution = await Contribution.findById(
-      toObjectId(contributionId),
-    );
+    const objectId = toObjectId(contributionId);
+    const existing = await Contribution.findById(objectId);
 
-    if (!contribution) {
+    if (!existing) {
       return { error: "Contribution submission not found" };
     }
 
-    if (contribution.status !== "pending") {
+    if (existing.status !== "pending") {
       return {
-        error: `Contribution has already been reviewed (current status: ${contribution.status})`,
+        error: `Contribution has already been reviewed (current status: ${existing.status})`,
       };
     }
 
-    if (action === "approve") {
-      const finalXp =
-        typeof awardedXp === "number" && awardedXp >= 0
+    const finalXp =
+      action === "approve"
+        ? typeof awardedXp === "number" && awardedXp >= 0
           ? awardedXp
-          : contribution.standardXp;
+          : existing.standardXp
+        : 0;
 
-      contribution.status = "approved";
-      contribution.awardedXp = finalXp;
-      contribution.adminFeedback = feedback?.trim();
-      contribution.reviewedBy = adminEmail.trim();
-      contribution.reviewedAt = new Date();
+    const contribution = await Contribution.findOneAndUpdate(
+      { _id: objectId, status: "pending" },
+      {
+        $set: {
+          status: action === "approve" ? "approved" : "rejected",
+          awardedXp: finalXp,
+          adminFeedback:
+            feedback?.trim() ||
+            (action === "approve"
+              ? undefined
+              : "Submission does not meet contribution guidelines."),
+          reviewedBy: adminEmail.trim(),
+          reviewedAt: new Date(),
+        },
+      },
+      { new: true },
+    );
 
-      await contribution.save();
+    if (!contribution) {
+      return {
+        error:
+          "Contribution was already reviewed concurrently by another administrator",
+      };
+    }
 
-      // Atomically credit XP, increase approvedCount, decrement pendingCount
+    // Atomically adjust contributor statistics
+    if (action === "approve") {
       await updateContributorStatsInDB({
         contributorId: contribution.contributorId,
         xpDelta: finalXp,
@@ -271,16 +310,6 @@ export const reviewContributionInDB = async ({
         pendingDelta: -1,
       });
     } else {
-      contribution.status = "rejected";
-      contribution.awardedXp = 0;
-      contribution.adminFeedback =
-        feedback?.trim() || "Submission does not meet contribution guidelines.";
-      contribution.reviewedBy = adminEmail.trim();
-      contribution.reviewedAt = new Date();
-
-      await contribution.save();
-
-      // Decrement pendingCount only
       await updateContributorStatsInDB({
         contributorId: contribution.contributorId,
         pendingDelta: -1,

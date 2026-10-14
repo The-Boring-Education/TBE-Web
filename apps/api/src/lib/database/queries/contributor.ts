@@ -52,7 +52,7 @@ export const getContributorByUserIdFromDB = async (
 };
 
 /**
- * Retrieves or lazily initializes a contributor profile for an authenticated user.
+ * Retrieves or lazily initializes a contributor profile for an authenticated user atomically.
  */
 export const getOrCreateContributorInDB = async ({
   userId,
@@ -66,25 +66,23 @@ export const getOrCreateContributorInDB = async ({
     }
 
     const userObjectId = toObjectId(userId);
-    let contributor = await Contributor.findOne({
-      userId: userObjectId,
-    });
-
-    if (!contributor) {
-      contributor = new Contributor({
-        userId: userObjectId,
-        email: email.trim().toLowerCase(),
-        name: name.trim(),
-        avatar: avatar?.trim(),
-        role: "Contributor",
-        totalXp: 0,
-        approvedCount: 0,
-        pendingCount: 0,
-        isCaptain: false,
-      });
-
-      await contributor.save();
-    }
+    const contributor = await Contributor.findOneAndUpdate(
+      { userId: userObjectId },
+      {
+        $setOnInsert: {
+          userId: userObjectId,
+          email: email.trim().toLowerCase(),
+          name: name.trim(),
+          avatar: avatar?.trim(),
+          role: "Contributor",
+          totalXp: 0,
+          approvedCount: 0,
+          pendingCount: 0,
+          isCaptain: false,
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    ).lean();
 
     return { data: contributor };
   } catch (error) {
@@ -149,3 +147,31 @@ export const updateContributorStatsInDB = async ({
     return { error: "Failed to update contributor statistics", details: error };
   }
 };
+
+/**
+ * Retrieves top contributors ranked by total XP for community leaderboard.
+ */
+export const getContributorLeaderboardFromDB = async (
+  limit = 10,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const safeLimit = Math.max(1, Math.min(limit, 100));
+    const topContributors = await Contributor.find({})
+      .sort({ totalXp: -1, createdAt: 1 })
+      .limit(safeLimit)
+      .select("name avatar githubUsername role totalXp approvedCount isCaptain")
+      .lean();
+
+    return { data: topContributors };
+  } catch (error) {
+    logger.error("DB: getContributorLeaderboardFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return {
+      error: "Failed to fetch contributor leaderboard",
+      details: error,
+    };
+  }
+};
+
