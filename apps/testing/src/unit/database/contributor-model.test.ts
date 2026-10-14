@@ -58,7 +58,7 @@ describe("Contributor Model Schema Constraints & Invariants", () => {
         expect(CONTRIBUTOR_ROLES).not.toContain(role);
         const doc = new Contributor({
           ...createBaseContributorData(),
-          role: role as any,
+          role,
         });
         const err = doc.validateSync();
         expect(err?.errors["role"]).toBeDefined();
@@ -101,13 +101,27 @@ describe("Contributor Model Schema Constraints & Invariants", () => {
         githubUsername: "janesmith",
       });
       expect(doc.githubUsername).toBe("janesmith");
-      expect(doc.get("githubHandle")).toBe("janesmith");
+      expect(doc.githubHandle).toBe("janesmith");
+      expect(doc.validateSync()).toBeUndefined();
+    });
+
+    it("trims and serializes the stored GitHub username", () => {
+      const doc = new Contributor({
+        ...createBaseContributorData(),
+        githubUsername: "  janesmith  ",
+      });
+
+      expect(doc.githubHandle).toBe("janesmith");
+      expect(doc.toObject().githubUsername).toBe("janesmith");
+      expect(doc.toJSON().githubUsername).toBe("janesmith");
+      expect(doc.validateSync()).toBeUndefined();
     });
 
     it("allows omitting githubUsername", () => {
       const doc = new Contributor(createBaseContributorData());
       expect(doc.githubUsername).toBeUndefined();
-      expect(doc.get("githubHandle")).toBeUndefined();
+      expect(doc.githubHandle).toBeUndefined();
+      expect(doc.validateSync()).toBeUndefined();
     });
   });
 

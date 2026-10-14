@@ -29,7 +29,12 @@ describe("Contribution Model Schema Constraints & Invariants", () => {
     it.each(CONTRIBUTION_CATEGORIES)(
       "accepts valid category: %s",
       (category) => {
-        expect(CONTRIBUTION_CATEGORIES).toContain(category);
+        const doc = new Contribution({
+          ...createBaseContributionData(),
+          category,
+          typeGroup: CATEGORY_TO_TYPE_GROUP[category],
+        });
+        expect(doc.validateSync()).toBeUndefined();
       },
     );
 
@@ -39,7 +44,7 @@ describe("Contribution Model Schema Constraints & Invariants", () => {
         expect(CONTRIBUTION_CATEGORIES).not.toContain(category);
         const doc = new Contribution({
           ...createBaseContributionData(),
-          category: category as any,
+          category,
         });
         const err = doc.validateSync();
         expect(err?.errors["category"]).toBeDefined();
@@ -49,14 +54,26 @@ describe("Contribution Model Schema Constraints & Invariants", () => {
     it.each(CONTRIBUTION_TYPE_GROUPS)(
       "accepts valid typeGroup: %s",
       (typeGroup) => {
-        expect(CONTRIBUTION_TYPE_GROUPS).toContain(typeGroup);
+        const category = CONTRIBUTION_CATEGORIES.find(
+          (candidate) => CATEGORY_TO_TYPE_GROUP[candidate] === typeGroup,
+        );
+        const doc = new Contribution({
+          ...createBaseContributionData(),
+          category,
+          typeGroup,
+        });
+        expect(doc.validateSync()).toBeUndefined();
       },
     );
 
     it.each(["invalid", "video", "DESIGN", ""])(
       "rejects invalid typeGroup: %s",
       (typeGroup) => {
-        expect(CONTRIBUTION_TYPE_GROUPS).not.toContain(typeGroup);
+        const doc = new Contribution({
+          ...createBaseContributionData(),
+          typeGroup,
+        });
+        expect(doc.validateSync()?.errors["typeGroup"]).toBeDefined();
       },
     );
 
@@ -70,39 +87,123 @@ describe("Contribution Model Schema Constraints & Invariants", () => {
     });
 
     it("derives typeGroup automatically when omitted", async () => {
-      const data = createBaseContributionData();
-      delete (data as any).typeGroup;
+      const { typeGroup, ...data } = createBaseContributionData();
 
       const doc = new Contribution(data);
-      expect(doc.typeGroup).toBe("blogs");
+      expect(doc.typeGroup).toBe(typeGroup);
 
       await doc.validate();
       expect(doc.typeGroup).toBe("blogs");
+    });
+
+    it("does not derive a typeGroup without a document when evaluating upsert defaults", () => {
+      expect(
+        Contribution.schema.path("typeGroup").getDefault(null),
+      ).toBeUndefined();
     });
 
     it("corrects and re-derives mismatched typeGroup via pre-validate hook", async () => {
-      // Supplying mismatched pair: BLOG with typeGroup "code"
       const doc = new Contribution({
         ...createBaseContributionData(),
         category: "BLOG",
-        typeGroup: "code" as any,
+        typeGroup: "code",
       });
 
       await doc.validate();
-      // Should be auto-corrected to "blogs" based on CATEGORY_TO_TYPE_GROUP
       expect(doc.typeGroup).toBe("blogs");
     });
 
+    it("rejects mismatched category and typeGroup during synchronous validation", () => {
+      const doc = new Contribution({
+        ...createBaseContributionData(),
+        typeGroup: "code",
+      });
+
+      expect(doc.validateSync()?.errors["typeGroup"]).toBeDefined();
+    });
+
+    it.each(["category", "typeGroup"])(
+      "rejects mismatched update pairs when validating %s",
+      async (field) => {
+        const query = Contribution.updateOne(
+          { _id: new mongoose.Types.ObjectId() },
+          { $set: { category: "BLOG", typeGroup: "code" } },
+          { runValidators: true },
+        );
+
+        const validation = new Promise<void>((resolve, reject) => {
+          Contribution.schema
+            .path(field)
+            .doValidate(
+              query.get(field),
+              (error) => (error ? reject(error) : resolve()),
+              query,
+            );
+        });
+
+        await expect(validation).rejects.toThrow(
+          "typeGroup does not match category mapping",
+        );
+      },
+    );
+
+    it.each(CONTRIBUTION_CATEGORIES)(
+      "accepts matching update pair for %s",
+      async (category) => {
+        const query = Contribution.updateOne(
+          { _id: new mongoose.Types.ObjectId() },
+          { $set: { category, typeGroup: CATEGORY_TO_TYPE_GROUP[category] } },
+          { runValidators: true },
+        );
+
+        for (const field of ["category", "typeGroup"]) {
+          await new Promise<void>((resolve, reject) => {
+            Contribution.schema
+              .path(field)
+              .doValidate(
+                query.get(field),
+                (error) => (error ? reject(error) : resolve()),
+                query,
+              );
+          });
+        }
+      },
+    );
+
+    it.each([{ category: "POST" }, { typeGroup: "content" }])(
+      "rejects updates to only one paired field: %o",
+      async (update) => {
+        const field = "category" in update ? "category" : "typeGroup";
+        const query = Contribution.updateOne(
+          { _id: new mongoose.Types.ObjectId() },
+          { $set: update },
+          { runValidators: true },
+        );
+
+        const validation = new Promise<void>((resolve, reject) => {
+          Contribution.schema
+            .path(field)
+            .doValidate(
+              query.get(field),
+              (error) => (error ? reject(error) : resolve()),
+              query,
+            );
+        });
+
+        await expect(validation).rejects.toThrow(
+          "typeGroup does not match category mapping",
+        );
+      },
+    );
+
     it("validates all category to typeGroup pairs correctly", async () => {
-      for (const [category, expectedTypeGroup] of Object.entries(
-        CATEGORY_TO_TYPE_GROUP,
-      )) {
+      for (const category of CONTRIBUTION_CATEGORIES) {
         const doc = new Contribution({
           ...createBaseContributionData(),
-          category: category as any,
+          category,
         });
         await doc.validate();
-        expect(doc.typeGroup).toBe(expectedTypeGroup);
+        expect(doc.typeGroup).toBe(CATEGORY_TO_TYPE_GROUP[category]);
       }
     });
   });
@@ -129,7 +230,7 @@ describe("Contribution Model Schema Constraints & Invariants", () => {
         expect(CONTRIBUTION_STATUS).not.toContain(status);
         const doc = new Contribution({
           ...createBaseContributionData(),
-          status: status as any,
+          status,
         });
         const err = doc.validateSync();
         expect(err?.errors["status"]).toBeDefined();
@@ -139,9 +240,10 @@ describe("Contribution Model Schema Constraints & Invariants", () => {
 
   describe("XP validation", () => {
     it("requires standardXp", () => {
-      const data = createBaseContributionData();
-      delete (data as any).standardXp;
-      const doc = new Contribution(data);
+      const doc = new Contribution({
+        ...createBaseContributionData(),
+        standardXp: undefined,
+      });
       const err = doc.validateSync();
       expect(err?.errors["standardXp"]).toBeDefined();
     });

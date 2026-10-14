@@ -1,14 +1,29 @@
-import { type Model, model, models, Schema } from "mongoose";
+import { type Model, model, models, type Query, Schema } from "mongoose";
 
 import {
   CATEGORY_TO_TYPE_GROUP,
   CONTRIBUTION_CATEGORIES,
   CONTRIBUTION_STATUS,
   CONTRIBUTION_TYPE_GROUPS,
-  type ContributionTypeGroup,
   DATABASE_MODELS,
 } from "@/lib/constants";
 import type { ContributionDocumentModel } from "@/lib/interfaces";
+
+const categoryTypeGroupValidator = {
+  validator(
+    this: ContributionDocumentModel | Query<unknown, ContributionDocumentModel>,
+  ) {
+    const category: unknown = this.get("category");
+    const validCategory = CONTRIBUTION_CATEGORIES.find(
+      (candidate) => candidate === category,
+    );
+    return (
+      validCategory !== undefined &&
+      this.get("typeGroup") === CATEGORY_TO_TYPE_GROUP[validCategory]
+    );
+  },
+  message: "typeGroup does not match category mapping",
+};
 
 const ContributionSchema = new Schema<ContributionDocumentModel>(
   {
@@ -41,35 +56,17 @@ const ContributionSchema = new Schema<ContributionDocumentModel>(
       enum: CONTRIBUTION_CATEGORIES,
       required: true,
       index: true,
+      validate: categoryTypeGroupValidator,
     },
     typeGroup: {
       type: String,
       enum: CONTRIBUTION_TYPE_GROUPS,
       required: true,
       index: true,
-      default(this: any): ContributionTypeGroup {
-        return this?.category
-          ? CATEGORY_TO_TYPE_GROUP[
-              this.category as keyof typeof CATEGORY_TO_TYPE_GROUP
-            ]
-          : (undefined as unknown as ContributionTypeGroup);
+      default(this: ContributionDocumentModel) {
+        return CATEGORY_TO_TYPE_GROUP[this?.category];
       },
-      validate: {
-        validator(this: any, val: ContributionTypeGroup) {
-          const cat = this?.category;
-          if (
-            cat &&
-            CATEGORY_TO_TYPE_GROUP[cat as keyof typeof CATEGORY_TO_TYPE_GROUP]
-          ) {
-            return (
-              val ===
-              CATEGORY_TO_TYPE_GROUP[cat as keyof typeof CATEGORY_TO_TYPE_GROUP]
-            );
-          }
-          return true;
-        },
-        message: "typeGroup does not match category mapping",
-      },
+      validate: categoryTypeGroupValidator,
     },
     proofUrl: {
       type: String,
