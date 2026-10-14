@@ -41,15 +41,18 @@ const ContributorSchema = new Schema<ContributorDocumentModel>(
     totalXp: {
       type: Number,
       default: 0,
+      min: 0,
       index: true,
     },
     approvedCount: {
       type: Number,
       default: 0,
+      min: 0,
     },
     pendingCount: {
       type: Number,
       default: 0,
+      min: 0,
     },
     isCaptain: {
       type: Boolean,
@@ -63,6 +66,29 @@ const ContributorSchema = new Schema<ContributorDocumentModel>(
     timestamps: true,
   },
 );
+
+// Invariant: Captain role, flag, and unlock timestamp are kept synchronized
+ContributorSchema.pre("validate", function (next) {
+  if (this.isCaptain) {
+    if (this.role !== "TBE Captain") {
+      this.role = "TBE Captain";
+    }
+    if (!this.captainUnlockedAt) {
+      this.captainUnlockedAt = new Date();
+    }
+  } else if (this.role === "TBE Captain") {
+    this.isCaptain = true;
+    if (!this.captainUnlockedAt) {
+      this.captainUnlockedAt = new Date();
+    }
+  }
+  next();
+});
+
+// Provide virtual githubHandle pointing to githubUsername to satisfy the stated contract
+ContributorSchema.virtual("githubHandle").get(function () {
+  return this.githubUsername;
+});
 
 // Compound index for querying top contributors
 ContributorSchema.index({ totalXp: -1, createdAt: -1 });

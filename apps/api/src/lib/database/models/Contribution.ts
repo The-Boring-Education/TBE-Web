@@ -5,6 +5,7 @@ import {
   CONTRIBUTION_CATEGORIES,
   CONTRIBUTION_STATUS,
   CONTRIBUTION_TYPE_GROUPS,
+  type ContributionTypeGroup,
   DATABASE_MODELS,
 } from "@/lib/constants";
 import type { ContributionDocumentModel } from "@/lib/interfaces";
@@ -46,6 +47,29 @@ const ContributionSchema = new Schema<ContributionDocumentModel>(
       enum: CONTRIBUTION_TYPE_GROUPS,
       required: true,
       index: true,
+      default(this: any): ContributionTypeGroup {
+        return this?.category
+          ? CATEGORY_TO_TYPE_GROUP[
+              this.category as keyof typeof CATEGORY_TO_TYPE_GROUP
+            ]
+          : (undefined as unknown as ContributionTypeGroup);
+      },
+      validate: {
+        validator(this: any, val: ContributionTypeGroup) {
+          const cat = this?.category;
+          if (
+            cat &&
+            CATEGORY_TO_TYPE_GROUP[cat as keyof typeof CATEGORY_TO_TYPE_GROUP]
+          ) {
+            return (
+              val ===
+              CATEGORY_TO_TYPE_GROUP[cat as keyof typeof CATEGORY_TO_TYPE_GROUP]
+            );
+          }
+          return true;
+        },
+        message: "typeGroup does not match category mapping",
+      },
     },
     proofUrl: {
       type: String,
@@ -64,10 +88,12 @@ const ContributionSchema = new Schema<ContributionDocumentModel>(
     standardXp: {
       type: Number,
       required: true,
+      min: 0,
     },
     awardedXp: {
       type: Number,
       default: 0,
+      min: 0,
     },
     status: {
       type: String,
