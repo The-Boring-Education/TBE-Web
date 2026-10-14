@@ -29,6 +29,10 @@ const ContributorSchema = new Schema<ContributorDocumentModel>(
       type: String,
       trim: true,
     },
+    githubUsername: {
+      type: String,
+      trim: true,
+    },
     role: {
       type: String,
       enum: CONTRIBUTOR_ROLES,

@@ -1,6 +1,7 @@
 import { type Model, model, models, Schema } from "mongoose";
 
 import {
+  CATEGORY_TO_TYPE_GROUP,
   CONTRIBUTION_CATEGORIES,
   CONTRIBUTION_STATUS,
   CONTRIBUTION_TYPE_GROUPS,
@@ -90,6 +91,13 @@ const ContributionSchema = new Schema<ContributionDocumentModel>(
     timestamps: true,
   },
 );
+
+ContributionSchema.pre("validate", function (next) {
+  if (this.category && CATEGORY_TO_TYPE_GROUP[this.category]) {
+    this.typeGroup = CATEGORY_TO_TYPE_GROUP[this.category];
+  }
+  next();
+});
 
 // Compound indexes for user dashboard filtering and admin moderation queue
 ContributionSchema.index({ contributorId: 1, status: 1, createdAt: -1 });

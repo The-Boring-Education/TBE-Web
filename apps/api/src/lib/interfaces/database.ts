@@ -1506,6 +1506,7 @@ export interface ContributorDocumentModel extends Document {
   email: string;
   name: string;
   avatar?: string;
+  githubUsername?: string;
   role: ContributorRoleType;
   totalXp: number;
   approvedCount: number;
