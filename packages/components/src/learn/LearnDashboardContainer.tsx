@@ -713,7 +713,7 @@ export const LearnDashboardContainer: React.FC<
   const [showQuiz, setShowQuiz] = useState<boolean>(false);
   const [isSavingQuiz, setIsSavingQuiz] = useState<boolean>(false);
   const [isCookingQuiz, setIsCookingQuiz] = useState<boolean>(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
 
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [enrolledSheets, setEnrolledSheets] = useState<any[]>([]);
@@ -839,6 +839,8 @@ export const LearnDashboardContainer: React.FC<
       >
         {/* Left Column: Fixed Navigation Sidebar */}
         <aside
+          onMouseEnter={() => setIsSidebarCollapsed(false)}
+          onMouseLeave={() => setIsSidebarCollapsed(true)}
           className={`${
             isSidebarCollapsed
               ? "w-[56px] sm:w-[64px] px-1 sm:px-1.5"
@@ -894,8 +896,10 @@ export const LearnDashboardContainer: React.FC<
                     />
                   </div>
                   <span
-                    className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                      isSidebarCollapsed ? "hidden" : "block"
+                    className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                      isSidebarCollapsed
+                        ? "max-w-0 opacity-0"
+                        : "max-w-full opacity-100"
                     }`}
                   >
                     Dashboard
@@ -956,8 +960,10 @@ export const LearnDashboardContainer: React.FC<
                       />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       My Learning
@@ -1005,8 +1011,10 @@ export const LearnDashboardContainer: React.FC<
                       />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       Catalog
@@ -1041,8 +1049,10 @@ export const LearnDashboardContainer: React.FC<
                       <FiPlayCircle className="w-[17px] h-[17px] text-slate-500" />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       Shiksha
@@ -1075,8 +1085,10 @@ export const LearnDashboardContainer: React.FC<
                       />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       Ecosystem
@@ -1130,8 +1142,10 @@ export const LearnDashboardContainer: React.FC<
                       <FiCode className="w-[17px] h-[17px] text-slate-500" />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       DSA Practice
@@ -1151,8 +1165,10 @@ export const LearnDashboardContainer: React.FC<
                       <FiTarget className="w-[17px] h-[17px] text-slate-500" />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       Interview Prep
@@ -1174,8 +1190,10 @@ export const LearnDashboardContainer: React.FC<
                       <FiBarChart2 className="w-[17px] h-[17px] text-slate-500" />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       Aptitude Practice
@@ -1214,8 +1232,10 @@ export const LearnDashboardContainer: React.FC<
                       <FiFileText className="w-[17px] h-[17px] text-slate-500" />
                     </div>
                     <span
-                      className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                        isSidebarCollapsed ? "hidden" : "block"
+                      className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                        isSidebarCollapsed
+                          ? "max-w-0 opacity-0"
+                          : "max-w-full opacity-100"
                       }`}
                     >
                       Resources
@@ -1239,8 +1259,10 @@ export const LearnDashboardContainer: React.FC<
                 <FiSettings className="w-[17px] h-[17px] text-slate-500" />
               </div>
               <span
-                className={`whitespace-nowrap flex-1 text-left truncate transition-opacity duration-200 ${
-                  isSidebarCollapsed ? "hidden" : "block"
+                className={`whitespace-nowrap flex-1 min-w-0 text-left truncate overflow-hidden transition-[max-width,opacity] duration-200 ${
+                  isSidebarCollapsed
+                    ? "max-w-0 opacity-0"
+                    : "max-w-full opacity-100"
                 }`}
               >
                 Settings
