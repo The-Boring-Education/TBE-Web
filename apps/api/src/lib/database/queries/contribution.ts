@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { type ClientSession } from "mongoose";
 
 import {
   BASELINE_CATEGORY_XP,
   CATEGORY_TO_TYPE_GROUP,
+  CONTRIBUTION_CATEGORIES,
   type ContributionCategoryType,
   type ContributionStatusType,
   type ContributionTypeGroup,
@@ -13,6 +14,43 @@ import { logger } from "@/lib/utils/logger";
 import { Contribution } from "../models";
 import { toObjectId } from "./common";
 import { updateContributorStatsInDB } from "./contributor";
+
+let transactionsSupported = true;
+
+/** Standalone servers (local dev/test) reject transactions; fall back to plain writes there. */
+const isTransactionUnsupported = (error: unknown) => {
+  const { code, message } = (error ?? {}) as {
+    code?: unknown;
+    message?: unknown;
+  };
+  return (
+    code === 20 ||
+    code === 263 ||
+    (typeof message === "string" &&
+      /Transaction numbers are only allowed|replica set/i.test(message))
+  );
+};
+
+const runAtomically = async <T>(
+  work: (session?: ClientSession) => Promise<T>,
+): Promise<T> => {
+  if (!transactionsSupported) return work();
+  const session = await mongoose.startSession();
+  try {
+    let result!: T;
+    await session.withTransaction(async () => {
+      result = await work(session);
+    });
+    return result;
+  } catch (error) {
+    if (!isTransactionUnsupported(error)) throw error;
+    transactionsSupported = false;
+    logger.warn("Contribution: transactions unsupported, using plain writes");
+    return work();
+  } finally {
+    await session.endSession();
+  }
+};
 
 export interface CreateContributionInput {
   contributorId: string;
@@ -50,8 +88,8 @@ export interface ReviewContributionInput {
 }
 
 /**
- * Creates a new contribution submission in pending status and increments
- * the contributor's pending count.
+ * Creates a new contribution submission in pending status and atomically increments
+ * the contributor's pending count within a transaction.
  */
 export const createContributionInDB = async ({
   contributorId,
@@ -74,37 +112,49 @@ export const createContributionInDB = async ({
     const standardXp = BASELINE_CATEGORY_XP[category] ?? 5;
     const typeGroup = CATEGORY_TO_TYPE_GROUP[category] ?? "content";
 
-    const contribution = new Contribution({
-      contributorId: toObjectId(contributorId),
-      userId: toObjectId(userId),
-      contributorName: contributorName.trim(),
-      contributorEmail: contributorEmail.trim().toLowerCase(),
-      category,
-      typeGroup,
-      proofUrl: proofUrl.trim(),
-      title: title.trim(),
-      description: description?.trim(),
-      standardXp,
-      awardedXp: 0,
-      status: "pending",
+    const savedContribution = await runAtomically(async (session) => {
+      const contribution = new Contribution({
+        contributorId: toObjectId(contributorId),
+        userId: toObjectId(userId),
+        contributorName: contributorName.trim(),
+        contributorEmail: contributorEmail.trim().toLowerCase(),
+        category,
+        typeGroup,
+        proofUrl: proofUrl.trim(),
+        title: title.trim(),
+        description: description?.trim(),
+        standardXp,
+        awardedXp: 0,
+        status: "pending",
+      });
+
+      await contribution.save({ session });
+
+      // Increment pending submissions count
+      const statsRes = await updateContributorStatsInDB({
+        contributorId,
+        pendingDelta: 1,
+        session,
+      });
+
+      if (statsRes.error) {
+        throw new Error(statsRes.error);
+      }
+
+      return contribution;
     });
 
-    await contribution.save();
-
-    // Increment pending submissions count
-    await updateContributorStatsInDB({
-      contributorId,
-      pendingDelta: 1,
-    });
-
-    return { data: contribution };
+    return { data: savedContribution };
   } catch (error) {
     logger.error("DB: createContributionInDB failed", {
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
     return {
-      error: "Failed to create contribution submission",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to create contribution submission",
       details: error,
     };
   }
@@ -136,7 +186,10 @@ export const getContributionsByUserIdFromDB = async (
       filter.status = status;
     }
 
-    if (category) {
+    if (
+      category &&
+      (CONTRIBUTION_CATEGORIES as readonly string[]).includes(category)
+    ) {
       filter.category = category;
     }
 
@@ -192,7 +245,10 @@ export const getContributionsForAdminFromDB = async ({
       filter.status = status;
     }
 
-    if (category) {
+    if (
+      category &&
+      (CONTRIBUTION_CATEGORIES as readonly string[]).includes(category)
+    ) {
       filter.category = category;
     }
 
@@ -276,54 +332,65 @@ export const reviewContributionInDB = async ({
           : existing.standardXp
         : 0;
 
-    const contribution = await Contribution.findOneAndUpdate(
-      { _id: objectId, status: "pending" },
-      {
-        $set: {
-          status: action === "approve" ? "approved" : "rejected",
-          awardedXp: finalXp,
-          adminFeedback:
-            feedback?.trim() ||
-            (action === "approve"
-              ? undefined
-              : "Submission does not meet contribution guidelines."),
-          reviewedBy: adminEmail.trim(),
-          reviewedAt: new Date(),
+    const reviewed = await runAtomically(async (session) => {
+      const contribution = await Contribution.findOneAndUpdate(
+        { _id: objectId, status: "pending" },
+        {
+          $set: {
+            status: action === "approve" ? "approved" : "rejected",
+            awardedXp: finalXp,
+            adminFeedback:
+              feedback?.trim() ||
+              (action === "approve"
+                ? undefined
+                : "Submission does not meet contribution guidelines."),
+            reviewedBy: adminEmail.trim(),
+            reviewedAt: new Date(),
+          },
         },
-      },
-      { new: true },
-    );
+        { new: true, session },
+      );
 
-    if (!contribution) {
-      return {
-        error:
+      if (!contribution) {
+        throw new Error(
           "Contribution was already reviewed concurrently by another administrator",
-      };
-    }
+        );
+      }
 
-    // Atomically adjust contributor statistics
-    if (action === "approve") {
-      await updateContributorStatsInDB({
-        contributorId: contribution.contributorId,
-        xpDelta: finalXp,
-        approvedDelta: 1,
-        pendingDelta: -1,
-      });
-    } else {
-      await updateContributorStatsInDB({
-        contributorId: contribution.contributorId,
-        pendingDelta: -1,
-      });
-    }
+      // Atomically adjust contributor statistics
+      const statsRes =
+        action === "approve"
+          ? await updateContributorStatsInDB({
+              contributorId: contribution.contributorId,
+              xpDelta: finalXp,
+              approvedDelta: 1,
+              pendingDelta: -1,
+              session,
+            })
+          : await updateContributorStatsInDB({
+              contributorId: contribution.contributorId,
+              pendingDelta: -1,
+              session,
+            });
 
-    return { data: contribution };
+      if (statsRes.error) {
+        throw new Error(statsRes.error);
+      }
+
+      return contribution;
+    });
+
+    return { data: reviewed };
   } catch (error) {
     logger.error("DB: reviewContributionInDB failed", {
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
     return {
-      error: "Failed to review contribution submission",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to review contribution submission",
       details: error,
     };
   }
