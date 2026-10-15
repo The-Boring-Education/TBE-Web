@@ -214,6 +214,26 @@ export const getContributorLeaderboardFromDB = async (
 };
 
 /**
+ * Computes contributor leaderboard rank based on higher total XP.
+ */
+export const getContributorRankFromDB = async (
+  totalXp: number,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const higherCount = await Contributor.countDocuments({
+      totalXp: { $gt: totalXp },
+    });
+    return { data: higherCount + 1 };
+  } catch (error) {
+    logger.error("DB: getContributorRankFromDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed to determine contributor rank", details: error };
+  }
+};
+
+/**
  * Alias for getContributorLeaderboardFromDB matching the PR description contract.
  */
 export const getContributorLeaderboard = getContributorLeaderboardFromDB;
