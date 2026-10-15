@@ -4,16 +4,26 @@ vi.mock("@tbe/constants", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tbe/constants")>();
   return {
     ...actual,
-    envConfig: {
-      ...actual.envConfig,
-      UNSKILLED_API_URL: "https://unskilled.test.com",
-    },
+    JOB_EXPERIENCE_LEVEL: [
+      { label: "Fresher (0 yrs)", value: "Fresher (0 yrs)", min: 0, max: 1 },
+      {
+        label: "Mid-Level (2-4 yrs)",
+        value: "Mid-Level (2-4 yrs)",
+        min: 2,
+        max: 4,
+      },
+    ],
   };
 });
 
 global.fetch = vi.fn();
 
+// Stub the env var used by the service
+process.env.NEXT_PUBLIC_API_URL = "https://api.test.com/api/v1";
+
 import { resumeEvaluationService } from "@tbe/services";
+
+const BASE = "https://api.test.com/api/v1";
 
 describe("resumeEvaluationService", () => {
   beforeEach(() => {
@@ -26,10 +36,41 @@ describe("resumeEvaluationService", () => {
   });
 
   describe("evaluateResume", () => {
-    it("returns evaluation on success", async () => {
+    const payload = {
+      resumeSkills: ["react", "typescript"],
+      domains: ["Frontend"],
+      experienceLevel: "Mid-Level (2-4 yrs)",
+    };
+
+    it("calls the correct URL with mapped request body", async () => {
+      const mockResponse = { status: true, message: "ok", data: {} };
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => mockResponse,
+      });
+
+      await resumeEvaluationService.evaluateResume(payload);
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        `${BASE}/unskilled/evaluation`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            skills: ["react", "typescript"],
+            domains: ["Frontend"],
+            experience: { min: 2, max: 4 },
+          }),
+        },
+      );
+    });
+
+    it("returns the parsed response on success", async () => {
       const mockResponse = {
-        score: 85,
-        feedback: ["Good experience"],
+        status: true,
+        message: "ok",
+        data: { resumeScore: 80 },
       };
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
@@ -37,23 +78,26 @@ describe("resumeEvaluationService", () => {
         json: async () => mockResponse,
       });
 
-      const result = await resumeEvaluationService.evaluateResume({
-        resume: "resume text",
-        jobDescription: "job desc",
+      const result = await resumeEvaluationService.evaluateResume(payload);
+      expect(result).toEqual(mockResponse);
+    });
+
+    it("falls back to { min:0, max:100 } for unknown experience level", async () => {
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => ({}),
       });
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        "https://unskilled.test.com/resume/evaluate",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            resume: "resume text",
-            jobDescription: "job desc",
-          }),
-        },
+      await resumeEvaluationService.evaluateResume({
+        ...payload,
+        experienceLevel: "Unknown Level",
+      });
+
+      const body = JSON.parse(
+        (global.fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body,
       );
-      expect(result).toEqual(mockResponse);
+      expect(body.experience).toEqual({ min: 0, max: 100 });
     });
 
     it("throws on non-JSON content-type with truncated message", async () => {
@@ -66,30 +110,24 @@ describe("resumeEvaluationService", () => {
       });
 
       await expect(
-        resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
-        }),
+        resumeEvaluationService.evaluateResume(payload),
       ).rejects.toThrow(`Server returned 500: ${longText.substring(0, 200)}`);
     });
 
-    it("throws on HTTP error with detail", async () => {
+    it("throws on HTTP error using message field", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: false,
         status: 400,
         headers: new Headers({ "content-type": "application/json" }),
-        json: async () => ({ detail: "Invalid resume format" }),
+        json: async () => ({ message: "Invalid resume format" }),
       });
 
       await expect(
-        resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
-        }),
+        resumeEvaluationService.evaluateResume(payload),
       ).rejects.toThrow("Invalid resume format");
     });
 
-    it("throws on HTTP error without detail", async () => {
+    it("throws default message on HTTP error without message field", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: false,
         status: 500,
@@ -98,10 +136,7 @@ describe("resumeEvaluationService", () => {
       });
 
       await expect(
-        resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
-        }),
+        resumeEvaluationService.evaluateResume(payload),
       ).rejects.toThrow("Failed to evaluate resume");
     });
 
@@ -111,21 +146,14 @@ describe("resumeEvaluationService", () => {
       );
 
       await expect(
-        resumeEvaluationService.evaluateResume({
-          resume: "resume",
-          jobDescription: "job",
-        }),
+        resumeEvaluationService.evaluateResume(payload),
       ).rejects.toThrow("Network error");
     });
   });
 
   describe("checkHealth", () => {
-    it("returns health on success", async () => {
-      const mockHealth = {
-        status: true,
-        message: "OK",
-        jobsAvailable: 5,
-      };
+    it("calls the correct health URL and returns response", async () => {
+      const mockHealth = { status: true, message: "OK", jobsAvailable: 5 };
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
         json: async () => mockHealth,
@@ -134,7 +162,7 @@ describe("resumeEvaluationService", () => {
       const result = await resumeEvaluationService.checkHealth();
 
       expect(global.fetch).toHaveBeenCalledWith(
-        "https://unskilled.test.com/evaluate/health",
+        `${BASE}/unskilled/evaluation/health`,
       );
       expect(result).toEqual(mockHealth);
     });
