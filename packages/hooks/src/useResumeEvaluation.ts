@@ -3,8 +3,7 @@
  * Handles complete resume evaluation flow with new backend integration
  */
 
-import { resumeEvaluationService } from "@tbe/services";
-import type { ResumeEvaluationData } from "@tbe/types";
+import type { ResumeEvaluationData, ResumeEvaluationResponse } from "@tbe/types";
 import { useState } from "react";
 
 import useResumeParser from "./usePDFFile";
@@ -57,22 +56,27 @@ const useResumeEvaluation = () => {
     try {
       setIsEvaluating(true);
 
-      // Call new backend API
-      const response = await resumeEvaluationService.evaluateResume({
-        resumeSkills: extractedSkills,
-        domains: selectedDomains,
-        experienceLevel: selectedExperience,
+      const rawResponse = await fetch("/api/resume/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          resumeSkills: extractedSkills,
+          domains: selectedDomains,
+          experienceLevel: selectedExperience,
+        }),
       });
+
+      const response: ResumeEvaluationResponse = await rawResponse.json();
 
       if (response.status && response.data) {
         setEvaluationData(response.data);
         setError("");
       } else {
-        setError(response.message || "Evaluation failed");
+        setError(response.message || "Evaluation failed. Please try again.");
       }
     } catch (err: any) {
       console.error("Resume evaluation error:", err);
-      setError(err.message || "Evaluation failed. Please try again.");
+      setError("Evaluation failed. Please try again.");
     } finally {
       setIsEvaluating(false);
     }
