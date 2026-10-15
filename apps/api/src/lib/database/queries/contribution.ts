@@ -73,7 +73,7 @@ export interface GetUserContributionsFilter {
 
 export interface GetAdminContributionsFilter {
   status?: ContributionStatusType | "all";
-  category?: ContributionCategoryType;
+  category?: ContributionCategoryType | "all";
   search?: string;
   page?: number;
   limit?: number;
@@ -247,6 +247,7 @@ export const getContributionsForAdminFromDB = async ({
 
     if (
       category &&
+      category !== "all" &&
       (CONTRIBUTION_CATEGORIES as readonly string[]).includes(category)
     ) {
       filter.category = category;

@@ -116,26 +116,64 @@ export const updateContributorStatsInDB = async ({
 
     const updated = await Contributor.findByIdAndUpdate(
       objectId,
-      {
-        $inc: {
-          totalXp: xpDelta,
-          approvedCount: approvedDelta,
-          pendingCount: pendingDelta,
+      [
+        {
+          $set: {
+            totalXp: { $add: [{ $ifNull: ["$totalXp", 0] }, xpDelta] },
+            approvedCount: {
+              $add: [{ $ifNull: ["$approvedCount", 0] }, approvedDelta],
+            },
+            pendingCount: {
+              $add: [{ $ifNull: ["$pendingCount", 0] }, pendingDelta],
+            },
+          },
         },
-      },
-      { new: true, runValidators: true, session },
+        {
+          $set: {
+            isCaptain: {
+              $cond: {
+                if: {
+                  $or: [
+                    { $eq: ["$isCaptain", true] },
+                    { $gte: ["$totalXp", CAPTAIN_XP_THRESHOLD] },
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            role: {
+              $cond: {
+                if: {
+                  $or: [
+                    { $eq: ["$role", "TBE Captain"] },
+                    { $gte: ["$totalXp", CAPTAIN_XP_THRESHOLD] },
+                  ],
+                },
+                then: "TBE Captain",
+                else: { $ifNull: ["$role", "Contributor"] },
+              },
+            },
+            captainUnlockedAt: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $gte: ["$totalXp", CAPTAIN_XP_THRESHOLD] },
+                    { $eq: [{ $ifNull: ["$captainUnlockedAt", null] }, null] },
+                  ],
+                },
+                then: "$$NOW",
+                else: "$captainUnlockedAt",
+              },
+            },
+          },
+        },
+      ],
+      { new: true, session },
     );
 
     if (!updated) {
       return { error: "Contributor not found for statistics update" };
-    }
-
-    // Auto-promote to TBE Captain if threshold reached
-    if (updated.totalXp >= CAPTAIN_XP_THRESHOLD && !updated.isCaptain) {
-      updated.isCaptain = true;
-      updated.role = "TBE Captain";
-      updated.captainUnlockedAt = new Date();
-      await updated.save({ session });
     }
 
     return { data: updated };
@@ -175,3 +213,7 @@ export const getContributorLeaderboardFromDB = async (
   }
 };
 
+/**
+ * Alias for getContributorLeaderboardFromDB matching the PR description contract.
+ */
+export const getContributorLeaderboard = getContributorLeaderboardFromDB;
