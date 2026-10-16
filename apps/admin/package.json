@@ -43,6 +43,7 @@
     "@tbe/auth": "workspace:*",
     "@tbe/constants": "workspace:*",
     "@tbe/hooks": "workspace:*",
+    "@tbe/types": "workspace:*",
     "@tanstack/react-query": "^5.56.2",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.1",
