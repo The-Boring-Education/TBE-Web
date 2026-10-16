@@ -19,6 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "GET":
       return handleGetCourseById(req, res, userId, courseId);
+    case "PUT":
     case "PATCH":
       return handleUpdateCourse(req, res, courseId);
     case "DELETE":

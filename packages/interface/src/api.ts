@@ -284,6 +284,7 @@ export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   progress?: {
     completed: number;
     total: number;

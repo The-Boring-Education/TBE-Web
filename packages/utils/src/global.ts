@@ -247,6 +247,15 @@ const getCoursePageProps = async (context: any) => {
 
       const course: BaseShikshaCourseResponseProps = data;
 
+      // If course is in DRAFT or ARCHIVED status, redirect to catalog
+      if (course?.status && course.status !== "PUBLISHED") {
+        return {
+          redirect: {
+            destination: routes.shikshaExplore || routes.home,
+          },
+        };
+      }
+
       const { name, description, liveOn } = course;
 
       const isCourseLive = isProgramActive(liveOn as Date);
