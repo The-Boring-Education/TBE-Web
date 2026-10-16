@@ -1,8 +1,10 @@
 import { isValidChapterKey, normalizeChapterKey } from "@tbe/utils";
+import { Types } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
 import {
   COURSE_STATUS,
+  COURSE_STATUS_DEFAULT,
   COURSE_STATUS_PUBLISHED,
   modelSelectParams,
 } from "@/lib/constants";
@@ -66,7 +68,14 @@ const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = new Course({ ...courseDetails, contentId: uuidv4() });
+    if (courseDetails.status === COURSE_STATUS_PUBLISHED) {
+      return { error: "Cannot publish a course with no chapters" };
+    }
+    const course = new Course({
+      ...courseDetails,
+      status: courseDetails.status || COURSE_STATUS_DEFAULT,
+      contentId: uuidv4(),
+    });
     await course.save();
     return { data: course };
   } catch (error) {
@@ -96,6 +105,16 @@ const updateACourseInDB = async ({
     ) {
       return {
         error: "Slug cannot be changed once the course is published",
+      };
+    }
+
+    const nextStatus = (updatedData as { status?: CourseStatusType })?.status;
+    if (
+      nextStatus === COURSE_STATUS_PUBLISHED &&
+      (!existingCourse.chapters || existingCourse.chapters.length === 0)
+    ) {
+      return {
+        error: "Cannot publish a course with no chapters",
       };
     }
 
@@ -248,8 +267,13 @@ const updateCourseChapterInDB = async (
     if (content !== undefined) updates["chapters.$.content"] = content;
     if (isOptional !== undefined) updates["chapters.$.isOptional"] = isOptional;
 
+    const isObjectId = Types.ObjectId.isValid(chapterId);
+    const filter = isObjectId
+      ? { _id: courseId, "chapters._id": chapterId }
+      : { _id: courseId, "chapters.key": chapterId };
+
     const course = await Course.findOneAndUpdate(
-      { _id: courseId, "chapters._id": chapterId },
+      filter,
       Object.keys(updates).length ? { $set: updates } : {},
       { new: true },
     );
@@ -269,9 +293,14 @@ const deleteCourseChapterByIdFromDB = async (
   chapterId: string,
 ) => {
   try {
+    const isObjectId = Types.ObjectId.isValid(chapterId);
+    const pullCondition = isObjectId
+      ? { $or: [{ _id: chapterId }, { key: chapterId }] }
+      : { key: chapterId };
+
     const course = await Course.findOneAndUpdate(
       { _id: courseId },
-      { $pull: { chapters: { _id: chapterId } } },
+      { $pull: { chapters: pullCondition } },
       { new: true },
     );
     return { data: course };
