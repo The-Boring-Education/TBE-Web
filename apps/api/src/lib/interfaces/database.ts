@@ -1,3 +1,4 @@
+import type { Credit } from "@tbe/types";
 import type { Document, Schema, Types } from "mongoose";
 
 import type {
@@ -183,6 +184,7 @@ export interface CourseModel extends Document {
   roadmap: RoadmapsType;
   difficultyLevel: DifficultyType;
   features: string[];
+  credits?: Credit[];
 }
 
 export interface CourseChapterModel {
@@ -191,6 +193,7 @@ export interface CourseChapterModel {
   name: string;
   content: string;
   isOptional?: boolean;
+  credits?: Credit[];
   toObject: () => UserCourseModel;
 }
 
@@ -893,6 +896,7 @@ export interface AddCourseRequestPayloadProps {
   isPremium?: boolean;
   price?: number;
   features?: string[];
+  credits?: Credit[];
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
@@ -935,6 +939,7 @@ export interface UpdateCourseRequestPayloadProps {
     price?: number;
     isPremium?: boolean;
     features?: string[];
+    credits?: Credit[];
   };
   courseId: string;
 }
@@ -944,12 +949,14 @@ export interface AddChapterToCourseRequestProps {
   name: string;
   content: string;
   isOptional?: boolean;
+  credits?: Credit[];
 }
 
 export interface UpdateChapterInCourseRequestProps {
   name?: string;
   content?: string;
   isOptional?: boolean;
+  credits?: Credit[];
 }
 
 export interface EnrollCourseInDBRequestProps {

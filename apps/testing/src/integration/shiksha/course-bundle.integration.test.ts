@@ -310,4 +310,50 @@ describe("Course Bundle Import / Export (integration)", () => {
     expect(data).toBeUndefined();
     expect(error).toBe("Course not found");
   });
+
+  it("imports and exports credits for both course and chapters", async () => {
+    const courseCredits = [
+      {
+        githubHandle: "lead-author",
+        displayName: "Lead Author",
+        role: "AUTHOR" as const,
+      },
+      {
+        githubHandle: "reviewer1",
+        displayName: "Reviewer One",
+        role: "REVIEWER" as const,
+      },
+    ];
+    const chapterCredits = [
+      {
+        githubHandle: "chapter-author",
+        displayName: "Chapter Author",
+        role: "AUTHOR" as const,
+      },
+    ];
+
+    await importBundle(
+      bundleFixture({ credits: courseCredits }, [
+        {
+          chapterKey: "intro",
+          title: "Intro",
+          content: "## Intro",
+          credits: chapterCredits,
+        },
+        { chapterKey: "jsx", title: "JSX", content: "## JSX" },
+      ]),
+    );
+
+    const course = await Course.findOne({ slug: SLUG }).lean();
+    expect(course?.credits).toEqual(courseCredits);
+    expect(course?.chapters[0].credits).toEqual(chapterCredits);
+    expect(course?.chapters[1].credits).toEqual([]);
+
+    const { data: exported, error } = await exportCourseBundleFromDB(SLUG);
+    expect(error).toBeUndefined();
+
+    const exportedBundle = exported as CourseBundle;
+    expect(exportedBundle.course.credits).toEqual(courseCredits);
+    expect(exportedBundle.chapters[0].credits).toEqual(chapterCredits);
+  });
 });

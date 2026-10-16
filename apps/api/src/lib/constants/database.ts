@@ -106,6 +106,15 @@ export const INTEREST_EVENT_TYPES = [
 
 export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
+export const CREDIT_ROLES = [
+  "AUTHOR",
+  "CO_AUTHOR",
+  "REVIEWER",
+  "EDITOR",
+] as const;
+
+export type CreditRoleType = (typeof CREDIT_ROLES)[number];
+
 const modelSelectParams = {
   coursePreview:
     "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage status",

@@ -72,6 +72,14 @@ export const PAYMENT_STATUS = [
 ] as const;
 export type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 
+export const CREDIT_ROLES = [
+  "AUTHOR",
+  "CO_AUTHOR",
+  "REVIEWER",
+  "EDITOR",
+] as const;
+export type CreditRoleType = (typeof CREDIT_ROLES)[number];
+
 export const APPLICATION_STATUS = [
   "Screening",
   "Interviewing",

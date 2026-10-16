@@ -15,6 +15,7 @@ import type {
   CourseBundle,
   CourseBundleChapter,
   CourseBundleImportReport,
+  Credit,
 } from "@tbe/types";
 
 import { COURSE_STATUS_DEFAULT } from "@/lib/constants";
@@ -40,6 +41,7 @@ type StoredChapter = Record<string, unknown> & {
   name: string;
   content: string;
   isOptional?: boolean;
+  credits?: Credit[];
 };
 
 const normalizeOptional = (value: unknown): boolean => value === true;
@@ -55,6 +57,24 @@ const normalizeFeatures = (value: unknown): string[] =>
 const normalizePrice = (value: unknown): number | null =>
   typeof value === "number" && Number.isFinite(value) ? value : null;
 
+const normalizeCredits = (value: unknown): Credit[] =>
+  Array.isArray(value)
+    ? value
+        .filter(
+          (c): c is Record<string, unknown> =>
+            typeof c === "object" && c !== null && !Array.isArray(c),
+        )
+        .map((c) => ({
+          githubHandle: normalizeText(c.githubHandle),
+          displayName: normalizeText(c.displayName),
+          role: c.role as Credit["role"],
+        }))
+        .filter((c) => c.githubHandle && c.displayName && c.role)
+    : [];
+
+const serializeCredits = (credits: Credit[] | undefined): string =>
+  JSON.stringify(normalizeCredits(credits));
+
 /** Course fields the Bundle owns. Lifecycle status is deliberately absent. */
 const courseFieldsFromBundle = (bundle: CourseBundle) => ({
   name: bundle.course.title,
@@ -67,6 +87,7 @@ const courseFieldsFromBundle = (bundle: CourseBundle) => ({
   isPremium: normalizeOptional(bundle.course.isPremium),
   price: normalizePrice(bundle.course.price),
   features: normalizeFeatures(bundle.course.features),
+  credits: normalizeCredits(bundle.course.credits),
 });
 
 const courseMetadataChanged = (
@@ -85,7 +106,8 @@ const courseMetadataChanged = (
     normalizeOptional(course.isPremium) !== next.isPremium ||
     normalizePrice(course.price) !== next.price ||
     normalizeFeatures(course.features).join("\u0000") !==
-      next.features.join("\u0000")
+      next.features.join("\u0000") ||
+    serializeCredits(course.credits) !== serializeCredits(next.credits)
   );
 };
 
@@ -96,7 +118,8 @@ const chapterChanged = (
   normalizeText(stored.name) !== normalizeText(bundleChapter.title) ||
   normalizeText(stored.content) !== normalizeText(bundleChapter.content) ||
   normalizeOptional(stored.isOptional) !==
-    normalizeOptional(bundleChapter.isOptional);
+    normalizeOptional(bundleChapter.isOptional) ||
+  serializeCredits(stored.credits) !== serializeCredits(bundleChapter.credits);
 
 /** Plain object for a brand new chapter — Mongoose assigns its `_id`. */
 const newStoredChapter = (chapter: CourseBundleChapter): StoredChapter => ({
@@ -104,6 +127,7 @@ const newStoredChapter = (chapter: CourseBundleChapter): StoredChapter => ({
   name: chapter.title,
   content: chapter.content,
   isOptional: normalizeOptional(chapter.isOptional),
+  credits: normalizeCredits(chapter.credits),
 });
 
 /** The stored chapter as a plain object, `_id` and timestamps included. */
@@ -126,6 +150,10 @@ const mergedStoredChapter = (
   name: chapter.title,
   content: chapter.content,
   isOptional: normalizeOptional(chapter.isOptional),
+  credits:
+    chapter.credits !== undefined
+      ? normalizeCredits(chapter.credits)
+      : (stored.credits ?? []),
 });
 
 /**
@@ -291,6 +319,7 @@ const exportCourseBundleFromDB = async (
     const price = normalizePrice(course.price);
     const meta = normalizeText(course.meta);
     const features = normalizeFeatures(course.features);
+    const courseCredits = normalizeCredits(course.credits);
 
     const bundle: CourseBundle = {
       schemaVersion: "shiksha-course@1",
@@ -306,13 +335,18 @@ const exportCourseBundleFromDB = async (
         isPremium: normalizeOptional(course.isPremium),
         ...(price === null ? {} : { price }),
         ...(features.length ? { features } : {}),
+        ...(courseCredits.length ? { credits: courseCredits } : {}),
       },
-      chapters: (course.chapters ?? []).map((chapter) => ({
-        chapterKey: chapter.key,
-        title: normalizeText(chapter.name),
-        content: normalizeText(chapter.content),
-        isOptional: normalizeOptional(chapter.isOptional),
-      })),
+      chapters: (course.chapters ?? []).map((chapter) => {
+        const chapterCredits = normalizeCredits(chapter.credits);
+        return {
+          chapterKey: chapter.key,
+          title: normalizeText(chapter.name),
+          content: normalizeText(chapter.content),
+          isOptional: normalizeOptional(chapter.isOptional),
+          ...(chapterCredits.length ? { credits: chapterCredits } : {}),
+        };
+      }),
     };
 
     return { data: bundle };

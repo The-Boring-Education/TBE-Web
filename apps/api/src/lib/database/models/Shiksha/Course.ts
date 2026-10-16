@@ -8,11 +8,33 @@ import { type Model, model, models, Schema } from "mongoose";
 import {
   COURSE_STATUS,
   COURSE_STATUS_DEFAULT,
+  CREDIT_ROLES,
   DATABASE_MODELS,
   DIFFICULTY_LEVEL,
   ROADMAPS,
 } from "@/lib/constants";
 import type { CourseChapterModel, CourseModel } from "@/lib/interfaces";
+
+const creditSchema = new Schema(
+  {
+    githubHandle: {
+      type: String,
+      required: [true, "GitHub handle is required"],
+      trim: true,
+    },
+    displayName: {
+      type: String,
+      required: [true, "Display name is required"],
+      trim: true,
+    },
+    role: {
+      type: String,
+      enum: CREDIT_ROLES,
+      required: [true, "Role is required"],
+    },
+  },
+  { _id: false },
+);
 
 const chapterSchema = new Schema<CourseChapterModel>(
   {
@@ -41,6 +63,7 @@ const chapterSchema = new Schema<CourseChapterModel>(
     isOptional: {
       type: Boolean,
     },
+    credits: [creditSchema],
   },
   { timestamps: true, _id: true },
 );
@@ -99,6 +122,7 @@ const CourseSchema = new Schema<CourseModel>(
         type: String,
       },
     ],
+    credits: [creditSchema],
   },
   {
     timestamps: true,

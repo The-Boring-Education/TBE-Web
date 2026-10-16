@@ -238,7 +238,7 @@ const addChapterToCourseInDB = async (
 const updateCourseChapterInDB = async (
   courseId: string,
   chapterId: string,
-  { name, content, isOptional }: UpdateChapterInCourseRequestProps,
+  { name, content, isOptional, credits }: UpdateChapterInCourseRequestProps,
 ) => {
   try {
     // `key` is deliberately not updatable: it is the stable identity of a
@@ -247,6 +247,7 @@ const updateCourseChapterInDB = async (
     if (name !== undefined) updates["chapters.$.name"] = name;
     if (content !== undefined) updates["chapters.$.content"] = content;
     if (isOptional !== undefined) updates["chapters.$.isOptional"] = isOptional;
+    if (credits !== undefined) updates["chapters.$.credits"] = credits;
 
     const course = await Course.findOneAndUpdate(
       { _id: courseId, "chapters._id": chapterId },
