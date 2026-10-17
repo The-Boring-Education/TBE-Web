@@ -38,12 +38,12 @@ const ShikshaCard = ({
 
   return (
     <Link href={isDisabled ? "#" : href} className="group block h-full">
-      <div className="relative h-full rounded-xl border border-border bg-card hover:bg-accent/40 hover:border-foreground/20 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 shadow-xs hover:shadow-md flex flex-col">
+      <div className="relative h-full rounded-xl border border-border/80 dark:border-white/10 bg-card hover:bg-muted/40 dark:hover:bg-white/[0.04] hover:border-primary/40 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 shadow-xs dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col">
         {/* Cover image from DB */}
         {hasImage ? (
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200/70 shrink-0">
+          <div className="relative w-full aspect-[16/9] overflow-hidden bg-muted/60 shrink-0">
             {!imageLoaded && (
-              <div className="absolute inset-0 bg-gray-200/80 animate-pulse z-0" />
+              <div className="absolute inset-0 bg-muted/80 animate-pulse z-0" />
             )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -57,7 +57,7 @@ const ShikshaCard = ({
                 imageLoaded ? "opacity-100" : "opacity-0"
               }`}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
 
             {/* Badges */}
             {difficultyLevel && (
@@ -85,7 +85,7 @@ const ShikshaCard = ({
             )}
           </div>
         ) : (
-          <div className="relative w-full aspect-[16/9] bg-gradient-to-br from-primary/10 via-accent to-background flex items-center justify-center border-b border-border shrink-0">
+          <div className="relative w-full aspect-[16/9] bg-gradient-to-br from-primary/10 via-muted to-background flex items-center justify-center border-b border-border/60 shrink-0">
             <BookOpen className="w-8 h-8 text-primary/40" />
             {isLocked && (
               <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20">
@@ -126,10 +126,10 @@ const ShikshaCard = ({
 
           {/* Additional Info Badges */}
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-accent text-muted-foreground">
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-muted/80 text-muted-foreground border border-border/40">
               Self-Paced
             </span>
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-accent text-muted-foreground">
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-muted/80 text-muted-foreground border border-border/40">
               Projects Included
             </span>
           </div>

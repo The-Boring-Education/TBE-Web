@@ -18,7 +18,7 @@ import {
 } from '@tbe/components';
 import { routes } from '@tbe/constants';
 import { useGamificationFeedback, useGamifiedAction } from '@tbe/gamification';
-import { useAnalytics, useUser } from '@tbe/hooks';
+import { useAnalytics, useTheme, useUser } from '@tbe/hooks';
 import type {
   AddCertificateRequestPayloadProps,
   CoursePageProps,
@@ -109,6 +109,7 @@ const CourseLearnPage = ({
   const certificateRequest = useRef<Promise<boolean> | null>(null);
 
   const { user } = useUser();
+  const { theme, resolvedTheme } = useTheme();
   const isLocked = !isEnrolled;
 
   const rawSlug =
@@ -497,7 +498,7 @@ const CourseLearnPage = ({
               <SheetContent
                 side='left'
                 aria-label='Chapters'
-                className='w-[85%] max-w-[340px] sm:max-w-[340px] bg-white text-gray-900 border-r border-gray-200 p-4 shadow-2xl flex flex-col gap-3 lg:hidden'
+                className='w-[85%] max-w-[340px] sm:max-w-[340px] bg-card text-foreground border-r border-border p-4 shadow-2xl flex flex-col gap-3 lg:hidden'
                 onCloseAutoFocus={(event) => {
                   if (!focusContentOnDrawerCloseRef.current) return;
                   focusContentOnDrawerCloseRef.current = false;
@@ -505,19 +506,19 @@ const CourseLearnPage = ({
                   mainContentRef.current?.focus();
                 }}
               >
-                <div className='flex items-center justify-between pb-3 border-b border-gray-100 bg-white'>
+                <div className='flex items-center justify-between pb-3 border-b border-border/60 bg-card'>
                   <div className='flex items-center gap-2'>
-                    <SheetTitle className='font-semibold text-base text-gray-900'>
+                    <SheetTitle className='font-semibold text-base text-foreground'>
                       Chapters
                     </SheetTitle>
-                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-50 text-primary border border-red-200/60'>
+                    <span className='text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20'>
                       {chapters.length} chapters
                     </span>
                   </div>
                 </div>
 
                 {!isLocked && (
-                  <div className='pb-2 bg-white'>
+                  <div className='pb-2 bg-card'>
                     <LinerProgressBar
                       completedChapters={completedChapters}
                       totalChapters={totalChapters}
@@ -535,7 +536,7 @@ const CourseLearnPage = ({
                     focusContentOnDrawerCloseRef.current = true;
                     setIsMobileSidebarOpen(false);
                   }}
-                  className='gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-white'
+                  className='gap-1.5 flex-1 overflow-y-auto pt-1 pr-1 custom-scrollbar scroll-smooth bg-card'
                 />
               </SheetContent>
             </Sheet>
@@ -630,13 +631,15 @@ const CourseLearnPage = ({
                 {isLocked ? (
                   <div className='w-full space-y-5'>
                     <div>
-                      <h2 className='font-headings font-bold text-2xl text-foreground mb-3'>
-                        Course Overview
-                      </h2>
-                      <div className='prose prose-slate max-w-none text-muted-foreground'>
+                      <div className='mb-3'>
+                        <h2 className='font-headings font-bold text-2xl text-foreground'>
+                          Course Overview
+                        </h2>
+                      </div>
+                      <div className='prose prose-slate max-w-none text-muted-foreground dark:prose-invert'>
                         <InterviewSheetMDXRenderer
                           mdxSource={course.meta || ''}
-                          theme='light'
+                          theme={resolvedTheme}
                         />
                       </div>
                     </div>
@@ -672,23 +675,29 @@ const CourseLearnPage = ({
                 ) : (
                   <div className='w-full space-y-4 font-primary'>
                     {currentChapter && (
-                      <div className='pb-3.5 border-b border-border/80 mb-4'>
-                        <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-0.5 rounded-md'>
-                          CHAPTER{' '}
-                          {chapters.findIndex(
-                            (c) => c._id.toString() === currentChapterIdState,
-                          ) + 1}
-                        </span>
-                        <h1 className='text-xl sm:text-2xl font-semibold tracking-tight text-foreground mt-2'>
-                          {currentChapter.name || currentChapter.title}
-                        </h1>
+                      <div className='pb-3.5 border-b border-border/80 mb-4 flex items-center justify-between gap-4'>
+                        <div>
+                          <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-0.5 rounded-md'>
+                            CHAPTER{' '}
+                            {chapters.findIndex(
+                              (c) => c._id.toString() === currentChapterIdState,
+                            ) + 1}
+                          </span>
+                          <h1 className='text-xl sm:text-2xl font-semibold tracking-tight text-foreground mt-2'>
+                            {currentChapter.name ||
+                              (currentChapter as any)?.title}
+                          </h1>
+                        </div>
+                        <div className='flex items-center gap-2 shrink-0'>
+                          <ThemeToggleButton />
+                        </div>
                       </div>
                     )}
 
                     <div className='w-full'>
                       <InterviewSheetMDXRenderer
                         mdxSource={displayContent}
-                        theme='light'
+                        theme={resolvedTheme}
                       />
                     </div>
 

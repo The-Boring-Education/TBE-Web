@@ -1128,6 +1128,7 @@ export interface MainNavbarProps {
   dashboardRoute?: string;
   profileRoute?: string;
   theme?: "light" | "dark";
+  showThemeToggle?: boolean;
   totalChapters?: number;
   completedChapters?: number;
   sidebarTitle?: string;

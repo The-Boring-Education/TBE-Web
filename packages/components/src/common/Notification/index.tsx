@@ -12,7 +12,7 @@ import NextLink from "next/link";
 import { Fragment } from "react";
 
 const PANEL_CLASSES =
-  "fixed z-30 top-16 right-2 w-72 sm:w-80 shadow-xl rounded-xl bg-white border border-gray-100 overflow-hidden md:absolute md:top-auto md:mt-2 md:w-80 md:right-0 md:left-auto md:mx-0";
+  "fixed z-30 top-16 right-2 w-72 sm:w-80 shadow-xl rounded-xl bg-white dark:bg-[#121215] border border-gray-100 dark:border-white/10 text-gray-900 dark:text-white overflow-hidden md:absolute md:top-auto md:mt-2 md:w-80 md:right-0 md:left-auto md:mx-0";
 
 const BellButton = ({
   hasUnread,
@@ -45,9 +45,13 @@ const PanelHeader = ({
   title: string;
   subtitle: string;
 }) => (
-  <div className="px-3 py-2 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
-    <p className="text-xs font-semibold text-gray-900">{title}</p>
-    <p className="text-[11px] text-gray-500 mt-0.5">{subtitle}</p>
+  <div className="px-3 py-2 border-b border-gray-100 dark:border-white/10 bg-gradient-to-r from-primary/5 to-transparent">
+    <p className="text-xs font-semibold text-gray-900 dark:text-white">
+      {title}
+    </p>
+    <p className="text-[11px] text-gray-500 dark:text-zinc-400 mt-0.5">
+      {subtitle}
+    </p>
   </div>
 );
 

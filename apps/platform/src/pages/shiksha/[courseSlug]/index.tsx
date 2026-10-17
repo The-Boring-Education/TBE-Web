@@ -82,14 +82,14 @@ const CourseLandingPage = ({
               {/* Left Column (2 Cols): Overview */}
               <div className='lg:col-span-2 space-y-6'>
                 <div className='bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4'>
-                  <div className='flex items-center gap-2 text-primary font-semibold text-xs uppercase tracking-wider'>
+                  <div className='flex items-center gap-2 text-primary font-semibold text-xs uppercase tracking-wider pb-1'>
                     <BookOpen className='w-4 h-4' />
                     <span>About This Course</span>
                   </div>
                   <h2 className='font-headings font-bold text-2xl sm:text-3xl text-foreground'>
                     Master {course.name}
                   </h2>
-                  <div className='prose prose-slate max-w-none text-muted-foreground text-sm sm:text-base leading-relaxed'>
+                  <div className='prose prose-slate max-w-none text-muted-foreground text-sm sm:text-base leading-relaxed dark:prose-invert'>
                     {course.meta ? (
                       <MDXRenderer mdxSource={course.meta} />
                     ) : (
@@ -163,7 +163,7 @@ const CourseLandingPage = ({
                             <Circle className='w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground/35 stroke-[1.25]' />
                           )}
                           <span className='leading-snug break-words flex-1 font-medium'>
-                            {ch.name || ch.title}
+                            {ch.name || (ch as any)?.title}
                           </span>
                         </Link>
                       );

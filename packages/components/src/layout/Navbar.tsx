@@ -4,11 +4,11 @@ import {
   getNavbarVariantConfig,
   LINKS,
   routes,
-  toPlatformUrl,
   TOP_NAVIGATION,
+  toPlatformUrl,
 } from "@tbe/constants";
 import { RankChip } from "@tbe/gamification";
-import { useScrollDirection } from "@tbe/hooks";
+import { useScrollDirection, useTheme } from "@tbe/hooks";
 import type {
   MainNavbarProps,
   NavbarNavigationConfig,
@@ -37,6 +37,7 @@ import {
   UserAvatar,
   UserPointButton,
 } from "..";
+import ThemeToggleButton from "../common/Buttons/ThemeToggleButton";
 import NotificationPopover from "../common/Notification/index";
 
 function resolveSection(
@@ -60,7 +61,8 @@ const Navbar = ({
   customBranding,
   customActions = [],
   dashboardRoute,
-  theme,
+  theme: explicitTheme,
+  showThemeToggle = true,
   totalChapters = 0,
   completedChapters = 0,
   sidebarTitle = "Progress",
@@ -75,7 +77,10 @@ const Navbar = ({
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [learningSidebarOpen, setLearningSidebarOpen] = useState(false);
   const { isVisible } = useScrollDirection(100);
+  const { resolvedTheme } = useTheme();
   const navRef = useRef<HTMLElement>(null);
+
+  const isDark = explicitTheme === "dark" || resolvedTheme === "dark";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -129,10 +134,7 @@ const Navbar = ({
     if (variant === "transparent") {
       return "glass-dark backdrop-blur-md";
     }
-    if (theme === "dark") {
-      return "bg-black";
-    }
-    return "bg-white";
+    return "bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-md";
   };
 
   const finalDashboardRoute = dashboardRoute || variantConfig.dashboardRoute;
@@ -150,11 +152,12 @@ const Navbar = ({
         />
       </NextLink>
     ) : (
-      variantConfig.branding
+      <Logo isDark={isDark} />
     ));
 
   const borderClass =
-    theme === "dark" ? "border-0" : variantConfig.borderClass || "border";
+    variantConfig.borderClass ||
+    "border-b border-border/80 dark:border-white/10";
   const shouldUseCustomActions = customActions && customActions.length > 0;
   const isLearningVariant = variant === "learning";
 
@@ -174,7 +177,7 @@ const Navbar = ({
     <motion.header
       ref={navRef}
       animate={{ y: isVisible ? 0 : -100 }}
-      className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-md shadow-white/5 dark:shadow-[0_1px_15px_rgba(255,255,255,0.1)]`}
+      className={`fixed top-0 left-0 right-0 z-40 ${getBackgroundClass()} shadow-xs dark:shadow-[0_1px_15px_rgba(0,0,0,0.5)]`}
       initial={{ y: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
@@ -201,18 +204,14 @@ const Navbar = ({
           {finalBranding}
           {isLearningVariant && (
             <button
-              className={`flex items-center justify-center rounded-md p-[6px] ${
-                theme === "dark"
-                  ? "text-white hover:bg-gray-800"
-                  : "text-black hover:bg-gray-100"
-              }`}
+              className="flex items-center justify-center rounded-md p-[6px] text-foreground dark:text-white hover:bg-muted/80 dark:hover:bg-white/10 transition-colors"
               type="button"
               aria-label="Open learning menu"
               onClick={() => setLearningSidebarOpen(true)}
             >
               <Bars3Icon
                 aria-hidden="true"
-                className={`h-[16px] w-[16px] ${theme === "dark" ? "text-white" : "text-black"}`}
+                className="h-[16px] w-[16px] text-foreground dark:text-white"
               />
             </button>
           )}
@@ -220,23 +219,24 @@ const Navbar = ({
         {shouldUseCustomActions ? (
           <>
             <div className="flex lg:hidden gap-[8px] items-center">
+              {showThemeToggle && <ThemeToggleButton />}
               {requiresAuth && (
                 <UserAvatar
                   dashboardRoute={finalDashboardRoute}
                   profileRoute={profileRoute}
-                  theme={theme}
+                  theme={isDark ? "dark" : "light"}
                   variant={variant}
                 />
               )}
               <button
-                className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
+                className="-m-[10px] flex items-center justify-center rounded-md p-[10px] text-foreground dark:text-white hover:bg-muted/80 dark:hover:bg-white/10 transition-colors"
                 type="button"
                 aria-label="Open menu"
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <Bars3Icon
                   aria-hidden="true"
-                  className={`h-[24px] w-[24px] ${theme === "dark" ? "text-white" : "text-black"}`}
+                  className="h-[24px] w-[24px] text-foreground dark:text-white"
                 />
               </button>
             </div>
@@ -245,10 +245,11 @@ const Navbar = ({
               {customActions.map((action: React.ReactNode, index: number) => (
                 <div key={index}>{action}</div>
               ))}
+              {showThemeToggle && <ThemeToggleButton />}
               {showGamification && (
                 <RankChip
                   href={toPlatformUrl(routes.leaderboard)}
-                  theme={theme === "dark" ? "dark" : "light"}
+                  theme={isDark ? "dark" : "light"}
                 />
               )}
               {requiresAuth && showNotifications && <NotificationPopover />}
@@ -260,7 +261,7 @@ const Navbar = ({
                 <UserAvatar
                   dashboardRoute={finalDashboardRoute}
                   profileRoute={profileRoute}
-                  theme={theme}
+                  theme={isDark ? "dark" : "light"}
                   variant={variant}
                 />
               )}
@@ -269,25 +270,26 @@ const Navbar = ({
         ) : (
           <>
             <div className="flex lg:hidden gap-[8px] items-center">
+              {showThemeToggle && <ThemeToggleButton />}
               {requiresAuth && showNotifications && <NotificationPopover />}
               {showGamification && <UserPointButton />}
               {requiresAuth && (
                 <UserAvatar
                   dashboardRoute={finalDashboardRoute}
                   profileRoute={profileRoute}
-                  theme={theme}
+                  theme={isDark ? "dark" : "light"}
                   variant={variant}
                 />
               )}
               <button
-                className={`-m-[10px] flex items-center justify-center rounded-md p-[10px] ${theme === "dark" ? "text-white" : "text-black"}`}
+                className="-m-[10px] flex items-center justify-center rounded-md p-[10px] text-foreground dark:text-white hover:bg-muted/80 dark:hover:bg-white/10 transition-colors"
                 type="button"
                 aria-label="Open menu"
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <Bars3Icon
                   aria-hidden="true"
-                  className={`h-[24px] w-[24px] ${theme === "dark" ? "text-white" : "text-black"}`}
+                  className="h-[24px] w-[24px] text-foreground dark:text-white"
                 />
               </button>
             </div>
@@ -296,7 +298,7 @@ const Navbar = ({
                 {issuesNav.visible && issuesNav.links[0]?.href && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
-                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
+                      className="text-base font-medium text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
                       href={issuesNav.links[0].href}
                       target={issuesNav.links[0]?.target}
                     >
@@ -310,7 +312,7 @@ const Navbar = ({
                     isOpen={openPopover === "products"}
                     label="Learn"
                     onToggle={() => handleSetOpen("products")}
-                    theme={theme}
+                    theme={isDark ? "dark" : "light"}
                   >
                     <NavbarDropdownContainer links={learnNav.links} />
                   </PopoverContainer>
@@ -318,7 +320,7 @@ const Navbar = ({
                 {variantConfig.pricingNavLink && !hidePricingLink && (
                   <FlexContainer direction="col" itemCenter={false}>
                     <Link
-                      className={`text-base ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
+                      className="text-base font-medium text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
                       href={variantConfig.pricingNavLink.href}
                     >
                       {variantConfig.pricingNavLink.label ?? "Pricing"}
@@ -330,7 +332,7 @@ const Navbar = ({
                     isOpen={openPopover === "tools"}
                     label="Tools"
                     onToggle={() => handleSetOpen("tools")}
-                    theme={theme}
+                    theme={isDark ? "dark" : "light"}
                   >
                     <NavbarDropdownContainer links={toolsNav.links} />
                   </PopoverContainer>
@@ -341,16 +343,17 @@ const Navbar = ({
                     label="Links"
                     panelClasses="-left-6"
                     onToggle={() => handleSetOpen("links")}
-                    theme={theme}
+                    theme={isDark ? "dark" : "light"}
                   >
                     <NavbarDropdownContainer links={linksNav.links} />
                   </PopoverContainer>
                 )}
 
+                {showThemeToggle && <ThemeToggleButton />}
                 {showGamification && (
                   <RankChip
                     href={toPlatformUrl(routes.leaderboard)}
-                    theme={theme === "dark" ? "dark" : "light"}
+                    theme={isDark ? "dark" : "light"}
                   />
                 )}
                 {requiresAuth && showNotifications && <NotificationPopover />}
@@ -362,7 +365,7 @@ const Navbar = ({
                   <UserAvatar
                     dashboardRoute={finalDashboardRoute}
                     profileRoute={profileRoute}
-                    theme={theme}
+                    theme={isDark ? "dark" : "light"}
                     variant={variant}
                   />
                 )}
@@ -378,19 +381,20 @@ const Navbar = ({
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
       >
-        <div className="fixed inset-0 z-50" />
-        <Dialog.Panel
-          className={`fixed inset-y-0 right-0 z-50 w-full overflow-y-auto ${theme === "dark" ? "bg-[#0A0A0A]" : "bg-white"} p-2 sm:max-w-sm sm:ring-1 ${theme === "dark" ? "sm:ring-gray-100/10" : "sm:ring-gray-900/10"}`}
-        >
-          <div className="flex items-center justify-between">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs" />
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-[#09090b] text-foreground dark:text-white p-4 sm:max-w-sm border-l border-border dark:border-white/10">
+          <div className="flex items-center justify-between pb-3 border-b border-border/60 dark:border-white/10">
             {finalBranding}
-            <button
-              className={`-m-2.5 rounded-md p-2.5 ${theme === "dark" ? "text-white" : "text-black"}`}
-              type="button"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              {showThemeToggle && <ThemeToggleButton />}
+              <button
+                className="-m-2 rounded-md p-2 text-foreground dark:text-white hover:bg-muted/80 dark:hover:bg-white/10 transition-colors"
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <XMarkIcon aria-hidden="true" className="h-6 w-6" />
+              </button>
+            </div>
           </div>
           <AnimatePresence>
             <motion.div
@@ -453,7 +457,7 @@ const Navbar = ({
                         itemCenter={false}
                       >
                         <Link
-                          className={`text-base font-medium ${theme === "dark" ? "text-white" : "text-black"} hover:text-${accentColorClass}`}
+                          className="text-base font-medium text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
                           href={variantConfig.pricingNavLink.href}
                           onClick={handleCloseMobileMenu}
                         >
@@ -482,38 +486,32 @@ const Navbar = ({
                       justifyCenter={false}
                     >
                       <Text
-                        className={`pre-title ${theme === "dark" ? "text-gray-400" : "text-greyDark"}`}
+                        className="pre-title text-muted-foreground dark:text-zinc-400"
                         level="span"
                       >
                         Connect with us
                       </Text>
                       <FlexContainer
-                        className="gap-1"
+                        className="gap-2 pt-1"
                         itemCenter={false}
                         justifyCenter={false}
                       >
                         <Link href={LINKS.instagram} target="_blank">
                           <FaInstagram
-                            className={
-                              theme === "dark" ? "text-white" : "text-black"
-                            }
-                            size="2em"
+                            className="text-foreground dark:text-white hover:text-primary transition-colors"
+                            size="1.5em"
                           />
                         </Link>
                         <Link href={LINKS.youtube} target="_blank">
                           <FaYoutube
-                            className={
-                              theme === "dark" ? "text-white" : "text-black"
-                            }
-                            size="2em"
+                            className="text-foreground dark:text-white hover:text-primary transition-colors"
+                            size="1.5em"
                           />
                         </Link>
                         <Link href={LINKS.officialLinkedIn} target="_blank">
                           <FaLinkedin
-                            className={
-                              theme === "dark" ? "text-white" : "text-black"
-                            }
-                            size="2em"
+                            className="text-foreground dark:text-white hover:text-primary transition-colors"
+                            size="1.5em"
                           />
                         </Link>
                       </FlexContainer>
@@ -559,8 +557,8 @@ const Navbar = ({
                   >
                     <Dialog.Panel
                       className={`pointer-events-auto w-80 max-w-sm ${
-                        theme === "dark"
-                          ? "bg-[#111111] text-white"
+                        isDark
+                          ? "bg-[#111115] text-white"
                           : "bg-white text-gray-900"
                       }`}
                     >
@@ -568,7 +566,7 @@ const Navbar = ({
                         title={sidebarTitle}
                         totalItems={totalChapters}
                         completedItems={completedChapters}
-                        theme={theme}
+                        theme={isDark ? "dark" : "light"}
                         onClose={() => setLearningSidebarOpen(false)}
                       >
                         {sidebarContent}

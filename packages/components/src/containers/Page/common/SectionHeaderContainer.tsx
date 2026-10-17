@@ -21,7 +21,7 @@ const SectionHeaderContainer = ({
       justifyCenter={textCenter}
     >
       <Text
-        className={`heading-${headingLevel} ${isDark ? "text-white" : ""}`}
+        className={`heading-${headingLevel} ${isDark ? "text-white" : "text-slate-900 dark:text-white"}`}
         level={`h${headingLevel}`}
         textCenter={textCenter}
       >
@@ -36,7 +36,7 @@ const SectionHeaderContainer = ({
       </Text>
       {subtext && (
         <Text
-          className={`pre-text ${isDark ? "text-gray-400" : "text-greyDark"}`}
+          className={`pre-text ${isDark ? "text-gray-400" : "text-greyDark dark:text-zinc-400"}`}
           level="span"
           textCenter={textCenter}
         >

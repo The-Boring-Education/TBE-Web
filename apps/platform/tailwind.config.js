@@ -2,6 +2,7 @@ const { fontFamily } = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/components/**/*.{js,ts,jsx,tsx}',
@@ -63,22 +64,22 @@ module.exports = {
         greyDark: '#848484',
         accent: '#ECF1F4',
         lightBG: '#F8F8F8',
-        border: 'hsl(var(--border, 214.3 31.8% 91.4%))',
-        input: 'hsl(var(--input, 214.3 31.8% 91.4%))',
-        ring: 'hsl(var(--ring, 222.2 84% 4.9%))',
-        background: 'hsl(var(--background, 0 0% 100%))',
-        foreground: 'hsl(var(--foreground, 222.2 84% 4.9%))',
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         card: {
-          DEFAULT: 'hsl(var(--card, 0 0% 100%))',
-          foreground: 'hsl(var(--card-foreground, 222.2 84% 4.9%))',
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted, 210 40% 96.1%))',
-          foreground: 'hsl(var(--muted-foreground, 215.4 16.3% 46.9%))',
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover, 0 0% 100%))',
-          foreground: 'hsl(var(--popover-foreground, 222.2 84% 4.9%))',
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
         },
       },
       spacing: {

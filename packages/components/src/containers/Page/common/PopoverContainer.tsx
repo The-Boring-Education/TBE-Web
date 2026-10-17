@@ -76,7 +76,7 @@ const PopoverContainer = ({
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <PopoverButton
           ref={popoverButtonRef}
-          className={`inline-flex items-center text-base ${theme === "dark" ? "text-white hover:text-white/80" : "text-black hover:text-primary"} outline-none`}
+          className="inline-flex items-center text-base text-foreground dark:text-white hover:text-primary dark:hover:text-primary outline-none transition-colors cursor-pointer"
           onClick={onToggle}
         >
           <span>{label}</span>
@@ -97,7 +97,7 @@ const PopoverContainer = ({
             static
             className={`absolute z-10 mt-2 flex w-screen max-w-max -translate-x-1/2 ${panelClasses}`}
           >
-            <div className="overflow-hidden rounded-2 bg-white dark:bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5 dark:ring-gray-100/10">
+            <div className="overflow-hidden rounded-xl bg-card dark:bg-[#121215] text-card-foreground dark:text-white text-sm leading-6 shadow-xl border border-border dark:border-white/10">
               {children}
             </div>
           </PopoverPanel>
