@@ -25,19 +25,19 @@ const PublicLeaderboardStrip = ({
       <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600">
         Live leaderboard
       </p>
-      <h2 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">
+      <h2 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
         {board.totalLearners.toLocaleString("en-IN")} learners levelled up this
         week
       </h2>
-      <ol className="mx-auto mt-6 max-w-md divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white text-left shadow-sm">
+      <ol className="mx-auto mt-6 max-w-md divide-y divide-gray-100 dark:divide-white/10 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#121216] text-left shadow-sm dark:shadow-md">
         {board.entries.map((entry) => (
           <li className="flex items-center gap-3 px-4 py-3" key={entry.rank}>
             <RankBadge rank={entry.rank} />
             <LearnerAvatar name={entry.displayName} src={entry.image} />
-            <span className="flex-1 truncate text-sm font-medium text-gray-800">
+            <span className="flex-1 truncate text-sm font-medium text-gray-800 dark:text-zinc-200">
               {entry.displayName}
             </span>
-            <span className="text-sm font-bold tabular-nums text-gray-900">
+            <span className="text-sm font-bold tabular-nums text-gray-900 dark:text-white">
               {entry.score} pts
             </span>
           </li>

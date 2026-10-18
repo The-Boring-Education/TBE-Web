@@ -102,7 +102,7 @@ export const RankBadge = ({ rank }: { rank: number }) =>
       {rank}
     </span>
   ) : (
-    <span className="w-6 text-center text-xs font-semibold text-gray-500 flex-shrink-0">
+    <span className="w-6 text-center text-xs font-semibold text-gray-500 dark:text-zinc-400 flex-shrink-0">
       #{rank}
     </span>
   );
@@ -115,7 +115,7 @@ export const PeriodTabs = ({
   onChange: (type: LeaderboardType) => void;
 }) => (
   <div
-    className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1"
+    className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 dark:bg-white/[0.06] p-1"
     role="tablist"
   >
     {LEADERBOARD_TABS.map((tab) => (
@@ -123,8 +123,8 @@ export const PeriodTabs = ({
         aria-selected={value === tab}
         className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
           value === tab
-            ? "bg-white text-indigo-700 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+            ? "bg-white dark:bg-[#1e1e24] text-indigo-700 dark:text-primary shadow-sm"
+            : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
         }`}
         key={tab}
         onClick={() => onChange(tab)}
