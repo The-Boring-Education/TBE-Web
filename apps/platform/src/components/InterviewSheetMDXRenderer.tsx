@@ -1,4 +1,5 @@
 import { sanitizeHTML } from '@tbe/components';
+import { useTheme } from '@tbe/hooks';
 import { Check, Copy } from 'lucide-react';
 import MarkdownIt from 'markdown-it';
 import { useMemo, useState } from 'react';
@@ -215,11 +216,14 @@ interface InterviewSheetMDXRendererProps {
 
 export const InterviewSheetMDXRenderer = ({
   mdxSource,
-  theme = 'light',
+  theme,
 }: InterviewSheetMDXRendererProps) => {
+  const { resolvedTheme } = useTheme();
+  const effectiveTheme =
+    theme ?? (resolvedTheme === 'dark' ? 'dark' : 'light');
   const textColorClass =
-    theme === 'dark' ? 'text-contentDark' : 'text-contentLight';
-  const isDark = theme === 'dark';
+    effectiveTheme === 'dark' ? 'text-contentDark' : 'text-contentLight';
+  const isDark = effectiveTheme === 'dark';
 
   const md = useMemo(() => {
     const instance = new MarkdownIt({
@@ -547,7 +551,11 @@ export const InterviewSheetMDXRenderer = ({
             );
           } else if (seg.type === 'text-block') {
             return (
-              <PlainTextBlock key={idx} content={seg.content} theme={theme} />
+              <PlainTextBlock
+                key={idx}
+                content={seg.content}
+                theme={effectiveTheme}
+              />
             );
           } else {
             return (
@@ -555,7 +563,7 @@ export const InterviewSheetMDXRenderer = ({
                 key={idx}
                 defaultLanguage={seg.defaultLanguage}
                 languages={seg.languages}
-                theme={theme}
+                theme={effectiveTheme}
               />
             );
           }

@@ -108,22 +108,22 @@ export const TopContributorsSection: React.FC<{ className?: string }> = ({
       <div className='space-y-6'>
         {/* Centered Heading */}
         <div className='flex flex-col items-center text-center space-y-2'>
-          <div className='inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50/80 px-3 py-0.5 text-[11px] font-medium text-zinc-600 shadow-2xs'>
+          <div className='inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-50/80 dark:bg-white/[0.05] px-3 py-0.5 text-[11px] font-medium text-zinc-600 dark:text-zinc-400 shadow-2xs'>
             <span className='h-1.5 w-1.5 rounded-full bg-[#FF5757]' />
             <span>Open Source Community</span>
           </div>
 
-          <h3 className='text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight'>
+          <h3 className='text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight'>
             People Behind <span className='text-[#FF5757]'>The Code</span>
           </h3>
 
-          <p className='max-w-xl text-xs sm:text-sm text-zinc-600'>
+          <p className='max-w-xl text-xs sm:text-sm text-zinc-600 dark:text-zinc-400'>
             Meet the active contributors, builders, and developers shaping{' '}
             <a
               href={GITHUB_REPO_URL}
               target='_blank'
               rel='noopener noreferrer'
-              className='font-semibold text-zinc-800 hover:text-[#FF5757] underline decoration-zinc-300 underline-offset-2 transition-colors'
+              className='font-semibold text-zinc-800 dark:text-zinc-200 hover:text-[#FF5757] underline decoration-zinc-300 dark:decoration-zinc-600 underline-offset-2 transition-colors'
             >
               TBE-Web
             </a>{' '}
@@ -137,11 +137,11 @@ export const TopContributorsSection: React.FC<{ className?: string }> = ({
             {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={i}
-                className='flex flex-col items-center justify-center rounded-xl border border-zinc-100 bg-white p-4 text-center animate-pulse'
+                className='flex flex-col items-center justify-center rounded-xl border border-zinc-100 dark:border-white/10 bg-white dark:bg-[#121216] p-4 text-center animate-pulse'
               >
-                <div className='h-14 w-14 rounded-full bg-zinc-200 mb-3' />
-                <div className='h-3.5 w-20 rounded bg-zinc-200 mb-2' />
-                <div className='h-3 w-12 rounded bg-zinc-100' />
+                <div className='h-14 w-14 rounded-full bg-zinc-200 dark:bg-zinc-800 mb-3' />
+                <div className='h-3.5 w-20 rounded bg-zinc-200 dark:bg-zinc-800 mb-2' />
+                <div className='h-3 w-12 rounded bg-zinc-100 dark:bg-zinc-850' />
               </div>
             ))}
           </div>
@@ -160,11 +160,11 @@ export const TopContributorsSection: React.FC<{ className?: string }> = ({
                   href={contributor.html_url}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='group flex flex-col items-center justify-center rounded-xl border border-zinc-200/70 bg-white p-3.5 sm:p-4 text-center transition-all duration-200 hover:border-zinc-300 hover:shadow-xs'
+                  className='group flex flex-col items-center justify-center rounded-xl border border-zinc-200/70 dark:border-white/10 bg-white dark:bg-[#121216] p-3.5 sm:p-4 text-center transition-all duration-200 hover:border-zinc-300 dark:hover:border-white/20 hover:shadow-xs'
                 >
                   {/* Centered Photo */}
                   <div className='mb-2.5 flex items-center justify-center'>
-                    <div className='h-12 w-12 sm:h-14 sm:w-14 overflow-hidden rounded-full ring-1 ring-zinc-200 group-hover:ring-[#FF5757]/60 transition-all duration-200 bg-zinc-50'>
+                    <div className='h-12 w-12 sm:h-14 sm:w-14 overflow-hidden rounded-full ring-1 ring-zinc-200 dark:ring-white/10 group-hover:ring-[#FF5757]/60 transition-all duration-200 bg-zinc-50 dark:bg-white/[0.04]'>
                       {!hasImgError && contributor.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -175,7 +175,7 @@ export const TopContributorsSection: React.FC<{ className?: string }> = ({
                           onError={() => handleImageError(contributor.login)}
                         />
                       ) : (
-                        <div className='flex h-full w-full items-center justify-center font-bold text-zinc-600 text-sm'>
+                        <div className='flex h-full w-full items-center justify-center font-bold text-zinc-600 dark:text-zinc-300 text-sm'>
                           {initialLetter}
                         </div>
                       )}
@@ -183,12 +183,12 @@ export const TopContributorsSection: React.FC<{ className?: string }> = ({
                   </div>
 
                   {/* Contributor Name - Full, uncropped with clean wrapping */}
-                  <p className='w-full text-xs font-semibold text-zinc-900 transition-colors duration-150 group-hover:text-[#FF5757] break-all leading-tight'>
+                  <p className='w-full text-xs font-semibold text-zinc-900 dark:text-zinc-100 transition-colors duration-150 group-hover:text-[#FF5757] break-all leading-tight'>
                     @{contributor.login}
                   </p>
 
                   {/* Contribution Count */}
-                  <span className='mt-1 text-[10px] sm:text-[11px] font-medium text-zinc-400 group-hover:text-zinc-600 transition-colors duration-150'>
+                  <span className='mt-1 text-[10px] sm:text-[11px] font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors duration-150'>
                     {contributor.contributions}{' '}
                     {contributor.contributions === 1 ? 'commit' : 'commits'}
                   </span>
@@ -205,13 +205,13 @@ export const TopContributorsSection: React.FC<{ className?: string }> = ({
               type='button'
               id='view-more-contributors-btn'
               onClick={() => setIsExpanded((prev) => !prev)}
-              className='inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-600 transition-all duration-150 hover:bg-zinc-50 hover:text-zinc-900 active:scale-98'
+              className='inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-white/[0.05] px-3.5 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-all duration-150 hover:bg-zinc-50 dark:hover:bg-white/[0.1] hover:text-zinc-900 dark:hover:text-white active:scale-98'
             >
               <span>{isExpanded ? 'Show less' : 'View more'}</span>
               {isExpanded ? (
-                <ChevronUp className='h-3.5 w-3.5 text-zinc-500' />
+                <ChevronUp className='h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400' />
               ) : (
-                <ChevronDown className='h-3.5 w-3.5 text-zinc-500' />
+                <ChevronDown className='h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400' />
               )}
             </button>
           </div>

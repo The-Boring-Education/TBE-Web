@@ -264,7 +264,7 @@ const WebinarPage = ({
 
   return (
     <Fragment>
-      <SEO seoMeta={seoMeta} />
+      <SEO seoMeta={seoMeta as any} />
       <Section className='md:px-8 md:py-2 px-2 py-2'>
         <FlexContainer className='relative'>
           <BackgroundImage bannerImageUrl={bannerImageUrl} />

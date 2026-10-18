@@ -63,13 +63,13 @@ export const QuizzesNav: React.FC<QuizzesNavProps> = ({ activeTab }) => {
   ];
 
   return (
-    <div className='w-full bg-white border-b border-gray-200 sticky top-16 z-40 shadow-xs'>
+    <div className='w-full bg-white dark:bg-[#0e0e12] border-b border-gray-200 dark:border-white/10 sticky top-16 z-40 shadow-xs transition-colors'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex items-center justify-between py-3'>
           {/* Logo / Title */}
           <Link
             href='/quizzes'
-            className='flex items-center gap-2.5 text-gray-900 hover:text-primary transition-colors group no-underline'
+            className='flex items-center gap-2.5 text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary transition-colors group no-underline'
           >
             <div className='w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors'>
               <Brain className='w-4 h-4' />
@@ -78,7 +78,7 @@ export const QuizzesNav: React.FC<QuizzesNavProps> = ({ activeTab }) => {
               <span className='font-bold text-base leading-tight block'>
                 Tech Quizzes
               </span>
-              <span className='text-[10px] text-gray-500 block -mt-0.5'>
+              <span className='text-[10px] text-gray-500 dark:text-zinc-400 block -mt-0.5'>
                 Practice &amp; Learn
               </span>
             </div>
@@ -96,7 +96,7 @@ export const QuizzesNav: React.FC<QuizzesNavProps> = ({ activeTab }) => {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all no-underline ${
                     item.isActive
                       ? 'bg-primary text-white shadow-xs'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-gray-600 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10'
                   }`}
                 >
                   <Icon className='w-4 h-4' />

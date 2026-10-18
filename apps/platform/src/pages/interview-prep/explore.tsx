@@ -13,16 +13,16 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 
 const SheetCardSkeleton = () => (
   <div className='rounded-xl border border-border bg-card overflow-hidden flex flex-col h-full shadow-xs animate-pulse'>
-    <div className='w-full aspect-[16/9] bg-gray-200/70 shrink-0' />
+    <div className='w-full aspect-[16/9] bg-gray-200/70 dark:bg-white/[0.06] shrink-0' />
     <div className='p-4 flex flex-col flex-1 gap-2.5'>
-      <div className='h-4 bg-gray-200/90 rounded-md w-3/4' />
+      <div className='h-4 bg-gray-200/90 dark:bg-white/[0.08] rounded-md w-3/4' />
       <div className='space-y-2 my-1 flex-1'>
-        <div className='h-3 bg-gray-100/90 rounded-md w-full' />
-        <div className='h-3 bg-gray-100/90 rounded-md w-4/5' />
+        <div className='h-3 bg-gray-100/90 dark:bg-white/[0.04] rounded-md w-full' />
+        <div className='h-3 bg-gray-100/90 dark:bg-white/[0.04] rounded-md w-4/5' />
       </div>
       <div className='pt-3 border-t border-border/40 flex items-center justify-between mt-auto'>
-        <div className='h-3 bg-gray-200/60 rounded-md w-20' />
-        <div className='h-3 bg-gray-200/80 rounded-md w-16' />
+        <div className='h-3 bg-gray-200/60 dark:bg-white/[0.05] rounded-md w-20' />
+        <div className='h-3 bg-gray-200/80 dark:bg-white/[0.07] rounded-md w-16' />
       </div>
     </div>
   </div>

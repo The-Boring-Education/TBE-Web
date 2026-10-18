@@ -22,13 +22,13 @@ const Home = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <main className='relative min-h-screen w-full bg-[#FAFAFC] overflow-hidden'>
+      <main className='relative min-h-screen w-full bg-[#FAFAFC] dark:bg-background overflow-hidden'>
         <PlatformLandingHero
           ctaText='Start Learning Now →'
           ctaHref={routes.learn}
         />
 
-        <AppShowcaseSections theme='light' />
+        <AppShowcaseSections />
 
         <PublicLeaderboardStrip ctaHref={routes.learn} />
 

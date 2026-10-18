@@ -20,7 +20,9 @@ const LeaderboardPage = ({ seoMeta }: PageProps) => {
   return (
     <Fragment>
       <SEO seoMeta={seoMeta} />
-      <LeaderboardPageContent />
+      <div className='min-h-screen bg-background text-foreground transition-colors'>
+        <LeaderboardPageContent />
+      </div>
     </Fragment>
   );
 };

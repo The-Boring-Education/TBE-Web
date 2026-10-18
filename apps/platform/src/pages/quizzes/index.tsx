@@ -46,7 +46,7 @@ function QuizesClient() {
   };
 
   return (
-    <div className='min-h-screen bg-white text-black'>
+    <div className='min-h-screen bg-white dark:bg-background text-black dark:text-foreground transition-colors'>
       {/* Show loading state while auth is loading */}
       {isLoading && (
         <div className='min-h-[60vh] flex items-center justify-center'>
@@ -73,11 +73,11 @@ function QuizesClient() {
                   <Sparkles className='w-4 h-4' />
                   Interactive Technical Assessments
                 </div>
-                <h1 className='text-5xl md:text-7xl font-extrabold text-black mb-4 leading-tight tracking-tight'>
+                <h1 className='text-5xl md:text-7xl font-extrabold text-black dark:text-white mb-4 leading-tight tracking-tight'>
                   Master Tech Interviews with{' '}
                   <span className='text-primary block sm:inline'>Quizzes</span>
                 </h1>
-                <p className='text-xl md:text-2xl text-gray-600 font-medium max-w-3xl'>
+                <p className='text-xl md:text-2xl text-gray-600 dark:text-zinc-300 font-medium max-w-3xl'>
                   Test your skills, learn from detailed explanations, and track
                   your progress across frontend, backend, DSA, and modern
                   frameworks.
@@ -87,7 +87,7 @@ function QuizesClient() {
               {/* Value Proposition */}
               <div className='grid lg:grid-cols-2 gap-12 items-center mb-16'>
                 <div>
-                  <p className='text-lg text-gray-700 mb-8 leading-relaxed'>
+                  <p className='text-lg text-gray-700 dark:text-zinc-300 mb-8 leading-relaxed'>
                     Practice with carefully curated, industry-aligned questions
                     covering JavaScript, React, algorithms, and core computer
                     science concepts. Get instant feedback and climb the
@@ -103,7 +103,7 @@ function QuizesClient() {
                     </button>
                     <button
                       onClick={() => router.push('/quizzes/dashboard')}
-                      className='inline-flex items-center justify-center px-6 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-gray-900 hover:text-gray-900 transition-all text-lg cursor-pointer'
+                      className='inline-flex items-center justify-center px-6 py-4 border-2 border-gray-300 dark:border-white/10 text-gray-700 dark:text-zinc-200 font-semibold rounded-xl hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition-all text-lg cursor-pointer'
                     >
                       Browse Topics
                     </button>
@@ -111,7 +111,7 @@ function QuizesClient() {
                 </div>
 
                 <div className='relative'>
-                  <div className='bg-gray-50 rounded-2xl p-8 border-2 border-gray-100 shadow-sm'>
+                  <div className='bg-gray-50 dark:bg-[#121216] rounded-2xl p-8 border-2 border-gray-100 dark:border-white/10 shadow-sm'>
                     <div className='space-y-5'>
                       <div className='flex items-center justify-between'>
                         <div className='flex items-center gap-3'>
@@ -119,20 +119,20 @@ function QuizesClient() {
                             JS
                           </div>
                           <div>
-                            <span className='font-bold text-gray-900 block'>
+                            <span className='font-bold text-gray-900 dark:text-white block'>
                               JavaScript Fundamentals
                             </span>
-                            <span className='text-xs text-gray-500'>
+                            <span className='text-xs text-gray-500 dark:text-zinc-400'>
                               Closures, Event Loop, Promises
                             </span>
                           </div>
                         </div>
                         <CheckCircle className='w-6 h-6 text-green-500' />
                       </div>
-                      <div className='w-full bg-gray-200 rounded-full h-2.5 overflow-hidden'>
+                      <div className='w-full bg-gray-200 dark:bg-white/10 rounded-full h-2.5 overflow-hidden'>
                         <div className='bg-primary h-2.5 rounded-full w-3/4' />
                       </div>
-                      <div className='flex justify-between text-xs text-gray-600 font-medium'>
+                      <div className='flex justify-between text-xs text-gray-600 dark:text-zinc-400 font-medium'>
                         <span>15 questions completed</span>
                         <span className='text-primary font-semibold'>
                           Score: 92%
@@ -146,38 +146,38 @@ function QuizesClient() {
           </div>
 
           {/* Features Section */}
-          <div className='bg-gray-50 py-20 border-y border-gray-100'>
+          <div className='bg-gray-50 dark:bg-[#0c0c0e] py-20 border-y border-gray-100 dark:border-white/10'>
             <div className='container mx-auto px-4'>
               <div className='max-w-6xl mx-auto'>
                 <div className='text-center mb-16'>
-                  <h3 className='text-3xl md:text-4xl font-bold mb-4 text-gray-900'>
+                  <h3 className='text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white'>
                     Everything You Need to Ace Tech Interviews
                   </h3>
-                  <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
+                  <p className='text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto'>
                     Built to help you bridge knowledge gaps through active
                     recall and hands-on practice.
                   </p>
                 </div>
 
                 <div className='grid md:grid-cols-3 gap-8'>
-                  <div className='bg-white rounded-2xl p-8 border border-gray-200 shadow-xs text-center'>
-                    <div className='w-14 h-14 bg-red-50 text-primary rounded-xl flex items-center justify-center mx-auto mb-6'>
+                  <div className='bg-white dark:bg-[#121216] rounded-2xl p-8 border border-gray-200 dark:border-white/10 shadow-xs text-center'>
+                    <div className='w-14 h-14 bg-red-50 dark:bg-primary/10 text-primary rounded-xl flex items-center justify-center mx-auto mb-6'>
                       <Target className='w-7 h-7' />
                     </div>
-                    <h4 className='text-xl font-bold mb-3 text-gray-900'>
+                    <h4 className='text-xl font-bold mb-3 text-gray-900 dark:text-white'>
                       Curated Questions
                     </h4>
-                    <p className='text-gray-600 leading-relaxed text-sm'>
+                    <p className='text-gray-600 dark:text-zinc-400 leading-relaxed text-sm'>
                       Hand-picked questions reflecting real interview screening
                       rounds at top product companies.
                     </p>
                   </div>
 
-                  <div className='bg-white rounded-2xl p-8 border border-gray-200 shadow-xs text-center'>
-                    <div className='w-14 h-14 bg-red-50 text-primary rounded-xl flex items-center justify-center mx-auto mb-6'>
+                  <div className='bg-white dark:bg-[#121216] rounded-2xl p-8 border border-gray-200 dark:border-white/10 shadow-xs text-center'>
+                    <div className='w-14 h-14 bg-red-50 dark:bg-primary/10 text-primary rounded-xl flex items-center justify-center mx-auto mb-6'>
                       <Clock className='w-7 h-7' />
                     </div>
-                    <h4 className='text-xl font-bold mb-3 text-gray-900'>
+                    <h4 className='text-xl font-bold mb-3 text-gray-900 dark:text-white'>
                       Timed Simulation
                     </h4>
                     <p className='text-gray-600 leading-relaxed text-sm'>
@@ -186,14 +186,14 @@ function QuizesClient() {
                     </p>
                   </div>
 
-                  <div className='bg-white rounded-2xl p-8 border border-gray-200 shadow-xs text-center'>
-                    <div className='w-14 h-14 bg-red-50 text-primary rounded-xl flex items-center justify-center mx-auto mb-6'>
+                  <div className='bg-white dark:bg-[#121216] rounded-2xl p-8 border border-gray-200 dark:border-white/10 shadow-xs text-center'>
+                    <div className='w-14 h-14 bg-red-50 dark:bg-primary/10 text-primary rounded-xl flex items-center justify-center mx-auto mb-6'>
                       <Brain className='w-7 h-7' />
                     </div>
-                    <h4 className='text-xl font-bold mb-3 text-gray-900'>
+                    <h4 className='text-xl font-bold mb-3 text-gray-900 dark:text-white'>
                       In-Depth Explanations
                     </h4>
-                    <p className='text-gray-600 leading-relaxed text-sm'>
+                    <p className='text-gray-600 dark:text-zinc-400 leading-relaxed text-sm'>
                       Understand why answers are right or wrong with code
                       snippets and conceptual breakdowns.
                     </p>
@@ -204,52 +204,52 @@ function QuizesClient() {
           </div>
 
           {/* Stats Section */}
-          <div className='bg-white py-20'>
+          <div className='bg-white dark:bg-background py-20'>
             <div className='container mx-auto px-4'>
               <div className='max-w-4xl mx-auto'>
                 <div className='text-center mb-16'>
-                  <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
+                  <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black dark:text-white'>
                     Proven Learning Impact
                   </h3>
-                  <p className='text-lg text-gray-600'>
+                  <p className='text-lg text-gray-600 dark:text-zinc-400'>
                     Join thousands of developers sharpening their engineering
                     intuition.
                   </p>
                 </div>
 
                 <div className='grid md:grid-cols-3 gap-8 text-center'>
-                  <div className='border border-gray-200 rounded-2xl p-8 bg-white shadow-xs'>
-                    <div className='w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4'>
+                  <div className='border border-gray-200 dark:border-white/10 rounded-2xl p-8 bg-white dark:bg-[#121216] shadow-xs'>
+                    <div className='w-12 h-12 bg-red-50 dark:bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4'>
                       <Code className='w-6 h-6 text-primary' />
                     </div>
-                    <div className='text-4xl font-extrabold mb-2 text-gray-900'>
+                    <div className='text-4xl font-extrabold mb-2 text-gray-900 dark:text-white'>
                       100+
                     </div>
-                    <div className='text-gray-600 font-medium'>
+                    <div className='text-gray-600 dark:text-zinc-400 font-medium'>
                       Practice Questions
                     </div>
                   </div>
 
-                  <div className='border border-gray-200 rounded-2xl p-8 bg-white shadow-xs'>
-                    <div className='w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4'>
+                  <div className='border border-gray-200 dark:border-white/10 rounded-2xl p-8 bg-white dark:bg-[#121216] shadow-xs'>
+                    <div className='w-12 h-12 bg-red-50 dark:bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4'>
                       <Users className='w-6 h-6 text-primary' />
                     </div>
-                    <div className='text-4xl font-extrabold mb-2 text-gray-900'>
+                    <div className='text-4xl font-extrabold mb-2 text-gray-900 dark:text-white'>
                       10,000+
                     </div>
-                    <div className='text-gray-600 font-medium'>
+                    <div className='text-gray-600 dark:text-zinc-400 font-medium'>
                       Active Learners
                     </div>
                   </div>
 
-                  <div className='border border-gray-200 rounded-2xl p-8 bg-white shadow-xs'>
-                    <div className='w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4'>
+                  <div className='border border-gray-200 dark:border-white/10 rounded-2xl p-8 bg-white dark:bg-[#121216] shadow-xs'>
+                    <div className='w-12 h-12 bg-red-50 dark:bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4'>
                       <Trophy className='w-6 h-6 text-primary' />
                     </div>
-                    <div className='text-4xl font-extrabold mb-2 text-gray-900'>
+                    <div className='text-4xl font-extrabold mb-2 text-gray-900 dark:text-white'>
                       85%
                     </div>
-                    <div className='text-gray-600 font-medium'>
+                    <div className='text-gray-600 dark:text-zinc-400 font-medium'>
                       Completion Rate
                     </div>
                   </div>
@@ -259,14 +259,14 @@ function QuizesClient() {
           </div>
 
           {/* Categories Preview */}
-          <div className='bg-gray-50 py-20 border-t border-gray-100'>
+          <div className='bg-gray-50 dark:bg-[#0c0c0e] py-20 border-t border-gray-100 dark:border-white/10'>
             <div className='container mx-auto px-4'>
               <div className='max-w-6xl mx-auto'>
                 <div className='text-center mb-16'>
-                  <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black'>
+                  <h3 className='text-3xl md:text-4xl font-bold mb-4 text-black dark:text-white'>
                     Choose Your Focus Area
                   </h3>
-                  <p className='text-lg text-gray-600'>
+                  <p className='text-lg text-gray-600 dark:text-zinc-400'>
                     Practice questions tailored to specific languages,
                     libraries, and core subjects.
                   </p>
@@ -302,16 +302,16 @@ function QuizesClient() {
                     <div
                       key={index}
                       onClick={() => router.push('/quizzes/dashboard')}
-                      className='bg-white border border-gray-200 rounded-xl p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group'
+                      className='bg-white dark:bg-[#121216] border border-gray-200 dark:border-white/10 rounded-xl p-6 text-center hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group'
                     >
                       <category.icon className='w-8 h-8 mx-auto mb-4 text-primary group-hover:scale-110 transition-transform' />
-                      <h4 className='font-bold text-lg mb-1 text-black'>
+                      <h4 className='font-bold text-lg mb-1 text-black dark:text-white'>
                         {category.name}
                       </h4>
                       <p className='text-primary text-xs font-semibold mb-2'>
                         {category.questions}
                       </p>
-                      <p className='text-gray-500 text-xs'>
+                      <p className='text-gray-500 dark:text-zinc-400 text-xs'>
                         {category.description}
                       </p>
                     </div>
@@ -322,13 +322,13 @@ function QuizesClient() {
           </div>
 
           {/* CTA Section */}
-          <div className='bg-white py-20'>
+          <div className='bg-white dark:bg-background py-20'>
             <div className='container mx-auto px-4'>
               <div className='max-w-4xl mx-auto text-center'>
-                <h3 className='text-3xl md:text-5xl font-bold mb-6 text-black'>
+                <h3 className='text-3xl md:text-5xl font-bold mb-6 text-black dark:text-white'>
                   Ready to Test Your Tech Skills?
                 </h3>
-                <p className='text-lg text-gray-600 mb-8 max-w-2xl mx-auto'>
+                <p className='text-lg text-gray-600 dark:text-zinc-400 mb-8 max-w-2xl mx-auto'>
                   Jump right in to start practicing. No pressure, just quick
                   daily practice that compounds over time.
                 </p>

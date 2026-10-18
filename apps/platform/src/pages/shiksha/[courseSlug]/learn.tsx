@@ -675,22 +675,17 @@ const CourseLearnPage = ({
                 ) : (
                   <div className='w-full space-y-4 font-primary'>
                     {currentChapter && (
-                      <div className='pb-3.5 border-b border-border/80 mb-4 flex items-center justify-between gap-4'>
-                        <div>
-                          <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-0.5 rounded-md'>
-                            CHAPTER{' '}
-                            {chapters.findIndex(
-                              (c) => c._id.toString() === currentChapterIdState,
-                            ) + 1}
-                          </span>
-                          <h1 className='text-xl sm:text-2xl font-semibold tracking-tight text-foreground mt-2'>
-                            {currentChapter.name ||
-                              (currentChapter as any)?.title}
-                          </h1>
-                        </div>
-                        <div className='flex items-center gap-2 shrink-0'>
-                          <ThemeToggleButton />
-                        </div>
+                      <div className='pb-3.5 border-b border-border/80 mb-4'>
+                        <span className='text-[11px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2.5 py-0.5 rounded-md'>
+                          CHAPTER{' '}
+                          {chapters.findIndex(
+                            (c) => c._id.toString() === currentChapterIdState,
+                          ) + 1}
+                        </span>
+                        <h1 className='text-xl sm:text-2xl font-semibold tracking-tight text-foreground mt-2'>
+                          {currentChapter.name ||
+                            (currentChapter as any)?.title}
+                        </h1>
                       </div>
                     )}
 
