@@ -1,4 +1,10 @@
-import { type AppIdentifier, favicons, getAppConfig } from "@tbe/constants";
+import {
+  APP_CONFIGS,
+  type AppIdentifier,
+  DEFAULT_OG_IMAGE,
+  favicons,
+  getAppConfig,
+} from "@tbe/constants";
 import type { GetSEOMetaResponseType } from "@tbe/types";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -80,16 +86,36 @@ interface EnhancedSEOProps {
 }
 
 /**
+ * Resolve the social preview image to an absolute HTTPS raster URL.
+ * Social crawlers ignore relative URLs and do not render SVGs, so those
+ * (and empty values) fall back to the shared default OG image.
+ */
+function resolveOgImage(image: string | undefined, baseDomain: string) {
+  const trimmed = image?.trim();
+  if (!trimmed || /\.svg(\?|#|$)/i.test(trimmed)) {
+    return DEFAULT_OG_IMAGE.url;
+  }
+
+  if (/^https:\/\//i.test(trimmed)) return trimmed;
+  if (/^http:\/\//i.test(trimmed)) return trimmed.replace(/^http:/i, "https:");
+  if (trimmed.startsWith("//")) return `https:${trimmed}`;
+
+  return `${baseDomain}${trimmed.startsWith("/") ? "" : "/"}${trimmed}`;
+}
+
+/**
  * Generate Organization JSON-LD schema
  */
 function getOrganizationSchema() {
+  const platformDomain = APP_CONFIGS.platform.domain;
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "The Boring Education",
     alternateName: "TBE",
-    url: "https://theboringeducation.com",
-    logo: "https://theboringeducation.com/images/large-og.png",
+    url: platformDomain,
+    logo: DEFAULT_OG_IMAGE.url,
     sameAs: [
       "https://www.linkedin.com/company/theboringeducation",
       "https://www.instagram.com/theboringeducation",
@@ -99,7 +125,7 @@ function getOrganizationSchema() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",
-      url: "https://theboringeducation.com/contact",
+      url: `${platformDomain}/contact`,
     },
   };
 }
@@ -195,7 +221,7 @@ function getArticleSchema(article: ArticleSchema, domain: string) {
       name: "The Boring Education",
       logo: {
         "@type": "ImageObject",
-        url: "https://theboringeducation.com/images/large-og.png",
+        url: DEFAULT_OG_IMAGE.url,
       },
     },
     ...(article.datePublished && { datePublished: article.datePublished }),
@@ -264,6 +290,10 @@ const SEO = ({
   // Build OG URL (can include query params for tracking)
   const ogUrl = `${baseDomain}${asPath === "/" ? "" : asPath}`;
 
+  const ogImage = resolveOgImage(seoMeta.image, baseDomain);
+  const isDefaultOgImage = ogImage === DEFAULT_OG_IMAGE.url;
+  const ogImageAlt = isDefaultOgImage ? DEFAULT_OG_IMAGE.alt : seoMeta.title;
+
   // Build JSON-LD schemas
   const jsonLdSchemas: object[] = [];
 
@@ -273,7 +303,7 @@ const SEO = ({
   }
 
   // Add WebSite schema for homepage
-  if (router.asPath === "/" || router.asPath === "") {
+  if (asPath === "/" || asPath === "") {
     jsonLdSchemas.push(getWebSiteSchema(baseDomain, seoMeta.siteName));
   }
 
@@ -297,28 +327,83 @@ const SEO = ({
   return (
     <Head>
       {/* Primary Meta Tags */}
-      <title>{seoMeta.title}</title>
-      <meta content={seoMeta.description} name="description" />
-      <meta content={seoMeta.keywords} name="keywords" />
-      <meta content={seoMeta.robots} name="robots" />
+      <title key="title">{seoMeta.title}</title>
+      <meta
+        key="description"
+        content={seoMeta.description}
+        name="description"
+      />
+      <meta key="keywords" content={seoMeta.keywords} name="keywords" />
+      <meta key="robots" content={seoMeta.robots} name="robots" />
 
       {/* Canonical URL */}
-      <link href={canonicalUrl} rel="canonical" />
+      <link key="canonical" href={canonicalUrl} rel="canonical" />
 
       {/* Open Graph / Facebook */}
-      <meta content={seoMeta.type} property="og:type" />
-      <meta content={ogUrl} property="og:url" />
-      <meta content={seoMeta.title} property="og:title" />
-      <meta content={seoMeta.description} property="og:description" />
-      <meta content={seoMeta.image} property="og:image" />
-      <meta content={seoMeta.siteName} property="og:site_name" />
-      <meta content={seoMeta.author} property="og:author" />
+      <meta
+        key="og:type"
+        content={seoMeta.type || "website"}
+        property="og:type"
+      />
+      <meta key="og:url" content={ogUrl} property="og:url" />
+      <meta key="og:title" content={seoMeta.title} property="og:title" />
+      <meta
+        key="og:description"
+        content={seoMeta.description}
+        property="og:description"
+      />
+      <meta key="og:image" content={ogImage} property="og:image" />
+      <meta
+        key="og:image:secure_url"
+        content={ogImage}
+        property="og:image:secure_url"
+      />
+      {isDefaultOgImage && (
+        <>
+          <meta
+            key="og:image:type"
+            content={DEFAULT_OG_IMAGE.type}
+            property="og:image:type"
+          />
+          <meta
+            key="og:image:width"
+            content={String(DEFAULT_OG_IMAGE.width)}
+            property="og:image:width"
+          />
+          <meta
+            key="og:image:height"
+            content={String(DEFAULT_OG_IMAGE.height)}
+            property="og:image:height"
+          />
+        </>
+      )}
+      <meta key="og:image:alt" content={ogImageAlt} property="og:image:alt" />
+      <meta
+        key="og:site_name"
+        content={seoMeta.siteName}
+        property="og:site_name"
+      />
+      <meta key="og:locale" content="en_US" property="og:locale" />
+      <meta key="og:author" content={seoMeta.author} property="og:author" />
 
       {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={seoMeta.title} />
-      <meta name="twitter:description" content={seoMeta.description} />
-      <meta name="twitter:image" content={seoMeta.image} />
+      <meta
+        key="twitter:card"
+        name="twitter:card"
+        content="summary_large_image"
+      />
+      <meta key="twitter:title" name="twitter:title" content={seoMeta.title} />
+      <meta
+        key="twitter:description"
+        name="twitter:description"
+        content={seoMeta.description}
+      />
+      <meta key="twitter:image" name="twitter:image" content={ogImage} />
+      <meta
+        key="twitter:image:alt"
+        name="twitter:image:alt"
+        content={ogImageAlt}
+      />
 
       {/* Additional Meta Tags */}
       <meta content={seoMeta.author} name="author" />

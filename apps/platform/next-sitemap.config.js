@@ -9,7 +9,7 @@
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://theboringeducation.com',
+  siteUrl: process.env.SITE_URL || 'https://www.theboringeducation.com',
   generateRobotsTxt: true,
   generateIndexSitemap: true,
 

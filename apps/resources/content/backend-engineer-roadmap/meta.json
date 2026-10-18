@@ -10,6 +10,5 @@
     "sql",
     "apis"
   ],
-  "tags": ["roadmap", "backend"],
-  "ogImage": "https://theboringeducation.com/images/backend-roadmap-og.png"
+  "tags": ["roadmap", "backend"]
 }
