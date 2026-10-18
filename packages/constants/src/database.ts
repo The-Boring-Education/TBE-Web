@@ -329,7 +329,8 @@ export const JOB_DOMAINS = JOB_DOMAIN_NORMALIZER.map(({ value }) => ({
 }));
 
 const modelSelectParams = {
-  coursePreview: "_id name slug coverImageURL description liveOn isPremium",
+  coursePreview:
+    "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage status difficultyLevel chapters._id chapters.name chapters.key chapters.isOptional",
   projectPreview: "_id name slug coverImageURL description isActive",
 };
 
