@@ -1,5 +1,7 @@
 import type { DSATopicSlug } from "@tbe/constants";
 
+import type { ContributionCategoryType } from "@/lib/constants";
+
 import type { ProjectDocumentModel } from "./database";
 
 export interface APIResponse<T = any> {
@@ -281,3 +283,16 @@ export type ProjectPickedPageProps = Pick<
   isEnrolled?: boolean;
   _id: string;
 };
+
+export interface CreateContributionPayload {
+  category: ContributionCategoryType;
+  title: string;
+  proofUrl: string;
+  description?: string;
+}
+
+export interface ReviewContributionPayload {
+  action: "approve" | "reject";
+  awardedXp?: number;
+  feedback?: string;
+}

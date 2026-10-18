@@ -1,3 +1,4 @@
+import { useAuth } from "@tbe/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -6,6 +7,7 @@ import { LANDING } from "@/config/landing";
 import { LINKS } from "@/config/links";
 
 export default function Header() {
+  const { isAuthenticated, user, signIn, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -55,39 +57,74 @@ export default function Header() {
 
           {/* Action Button */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              href={LINKS.joinDevRelAdvocate}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA4544] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#d93837] active:scale-95 transition-all duration-150"
-            >
-              <span>Apply Now</span>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
+            {isAuthenticated ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 pr-2 border-r border-gray-200">
+                  {user?.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name || "User avatar"}
+                      className="w-8 h-8 rounded-full border border-gray-200 object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-red-50 text-[#EA4544] border border-red-100 flex items-center justify-center text-xs font-bold">
+                      {(user?.name || user?.email || "C")[0]?.toUpperCase() || "C"}
+                    </div>
+                  )}
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-bold text-gray-900 leading-tight truncate max-w-[120px]">
+                      {user?.name || "Contributor"}
+                    </span>
+                    <span className="text-[10px] text-gray-500 truncate max-w-[120px]">
+                      {user?.email || ""}
+                    </span>
+                  </div>
+                </div>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA4544] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#d93837] active:scale-95 transition-all duration-150"
+                >
+                  <span>Dashboard</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => signOut()}
+                  className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 active:scale-95 transition-all"
+                  title={user?.email ? `Signed in as ${user.email}` : "Sign Out"}
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => signIn("google", "/dashboard")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA4544] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#d93837] active:scale-95 transition-all duration-150"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </Link>
+                <span>Sign In</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
-            <Link
-              href={LINKS.joinDevRelAdvocate}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-[#EA4544] px-3.5 py-2 text-xs font-semibold text-white"
-            >
-              Apply Now
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center justify-center rounded-lg bg-[#EA4544] px-3.5 py-2 text-xs font-semibold text-white"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href={LINKS.joinDevRelAdvocate}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg bg-[#EA4544] px-3.5 py-2 text-xs font-semibold text-white"
+              >
+                Apply Now
+              </Link>
+            )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-gray-700 hover:text-black rounded-lg"
@@ -122,6 +159,29 @@ export default function Header() {
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-100 flex flex-col gap-3 text-sm font-medium">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                {user?.image ? (
+                  <img
+                    src={user.image}
+                    alt={user.name || "User avatar"}
+                    className="w-9 h-9 rounded-full border border-gray-200 object-cover"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-red-50 text-[#EA4544] border border-red-100 flex items-center justify-center text-xs font-bold">
+                    {(user?.name || user?.email || "C")[0]?.toUpperCase() || "C"}
+                  </div>
+                )}
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-bold text-gray-900 leading-tight">
+                    {user?.name || "Contributor"}
+                  </span>
+                  <span className="text-[10px] text-gray-500">
+                    {user?.email || ""}
+                  </span>
+                </div>
+              </div>
+            ) : null}
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -132,6 +192,29 @@ export default function Header() {
                 {link.name}
               </a>
             ))}
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  signOut();
+                }}
+                className="mt-2 text-left py-1.5 text-xs font-semibold text-red-600 hover:underline"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  signIn("google", "/dashboard");
+                }}
+                className="mt-2 text-left py-1.5 text-xs font-semibold text-[#EA4544] hover:underline"
+              >
+                Sign In with Google
+              </button>
+            )}
           </div>
         )}
       </div>
