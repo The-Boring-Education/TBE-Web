@@ -16,7 +16,9 @@ const RadioButton = ({
   return (
     <label
       className={`radio ${
-        isSelected ? "bg-primary text-white" : "bg-accent hover:bg-greyLight"
+        isSelected
+          ? "bg-primary text-white border-primary"
+          : "bg-accent dark:bg-white/[0.06] text-contentLight dark:text-zinc-200 border-border dark:border-white/10 hover:bg-greyLight dark:hover:bg-white/[0.1]"
       }`}
       htmlFor={`radio-${value}`}
     >

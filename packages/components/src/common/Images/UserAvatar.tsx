@@ -2,6 +2,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { useAuth } from "@tbe/auth";
 import { Image, Link } from "@tbe/components";
 import { routes, toPlatformUrl } from "@tbe/constants";
+import { useTheme } from "@tbe/hooks";
 import { Fragment, useEffect, useState } from "react";
 import {
   LuChevronDown,
@@ -25,6 +26,7 @@ const UserAvatar = ({
   variant,
 }: UserAvatarProps = {}) => {
   const { user, isAuthenticated, isLoading, signOut } = useAuth();
+  const { resolvedTheme } = useTheme();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -36,7 +38,10 @@ const UserAvatar = ({
   if (!isAuthenticated || !user) return null;
 
   const isDark =
-    theme === "dark" || variant === "dsayatra" || variant === "oncampus";
+    theme === "dark" ||
+    resolvedTheme === "dark" ||
+    variant === "dsayatra" ||
+    variant === "oncampus";
 
   const isPlatform =
     variant === "platform" ||

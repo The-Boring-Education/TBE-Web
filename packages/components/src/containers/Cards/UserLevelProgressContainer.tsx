@@ -1,4 +1,5 @@
 import { FlexContainer, ProgressRing, Text } from "@tbe/components";
+import { useTheme } from "@tbe/hooks";
 import type { LevelProgressCardProps } from "@tbe/interface";
 import React from "react";
 
@@ -9,9 +10,10 @@ const UserLevelProgressContainer = ({
   nextLevelName,
   pointsLeftToNextLevel,
   percentageProgress,
-  theme = "light",
+  theme,
 }: LevelProgressCardProps) => {
-  const isDark = theme === "dark";
+  const { resolvedTheme } = useTheme();
+  const isDark = theme === "dark" || resolvedTheme === "dark";
 
   return (
     <div

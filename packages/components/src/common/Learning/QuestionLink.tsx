@@ -1,5 +1,5 @@
 import { ANALYTICS_EVENTS } from "@tbe/constants";
-import { useAnalytics } from "@tbe/hooks";
+import { useAnalytics, useTheme } from "@tbe/hooks";
 import type { QuestionLinkProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
 import { CheckCircle2, Circle, Lock, Star } from "lucide-react";
@@ -16,12 +16,13 @@ const QuestionLink = ({
   frequency,
   isLocked = false,
   handleQuestionClick,
-  theme = "light",
+  theme,
   isStarred,
 }: QuestionLinkProps) => {
   const { trackEvent } = useAnalytics();
+  const { resolvedTheme } = useTheme();
   const isCurrent = currentQuestionId === questionId;
-  const isDark = theme === "dark";
+  const isDark = theme === "dark" || resolvedTheme === "dark";
 
   const activeClasses = isDark
     ? isCurrent

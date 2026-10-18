@@ -210,19 +210,19 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       <motion.div
         whileHover={{ y: -4, scale: 1.03, rotate: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className={`bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-[0_8px_25px_-8px_rgba(0,0,0,0.06)] hover:shadow-xl hover:shadow-red-500/10 border border-slate-100/90 transition-all duration-300 w-full lg:w-[235px] xl:w-[250px] transform ${rotateClass}`}
+        className={`bg-white/95 dark:bg-[#121216]/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-[0_8px_25px_-8px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_25px_-8px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-red-500/10 border border-slate-100/90 dark:border-white/10 transition-all duration-300 w-full lg:w-[235px] xl:w-[250px] transform ${rotateClass}`}
       >
         <div className="flex items-center gap-3">
           <div
-            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl ${iconBg} flex items-center justify-center shrink-0 border border-slate-100 group-hover:scale-110 group-hover:bg-red-50/50 transition-all duration-200`}
+            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl ${iconBg} dark:bg-white/[0.05] flex items-center justify-center shrink-0 border border-slate-100 dark:border-white/10 group-hover:scale-110 group-hover:bg-red-50/50 dark:group-hover:bg-red-500/20 transition-all duration-200`}
           >
             {icon}
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight group-hover:text-[#FF4D4D] transition-colors duration-200 truncate">
+            <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight group-hover:text-[#FF4D4D] transition-colors duration-200 truncate">
               {title}
             </h4>
-            <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 leading-tight line-clamp-2 font-normal">
+            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-tight line-clamp-2 font-normal">
               {subtitle}
             </p>
           </div>
@@ -273,7 +273,8 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             rx="460"
             ry="270"
             fill="none"
-            stroke="#E2E8F0"
+            stroke="currentColor"
+            className="text-slate-200 dark:text-white/10"
             strokeWidth="1.5"
             strokeDasharray="6 6"
           />
@@ -283,7 +284,8 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             rx="320"
             ry="190"
             fill="none"
-            stroke="#CBD5E1"
+            stroke="currentColor"
+            className="text-slate-300 dark:text-white/10"
             strokeWidth="1"
             strokeDasharray="4 4"
           />
@@ -597,7 +599,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] sm:leading-[1.12]"
+              className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] sm:leading-[1.12]"
             >
               Everything You Need <br className="hidden sm:inline" />
               to Learn. <span className="text-[#FF4D4D]">Practice.</span>{" "}
@@ -610,7 +612,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-slate-600 font-medium text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 max-w-md sm:max-w-lg leading-relaxed"
+              className="text-slate-600 dark:text-slate-300 font-medium text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 max-w-md sm:max-w-lg leading-relaxed"
             >
               From core subjects to real world questions,{" "}
               <br className="hidden sm:inline" />

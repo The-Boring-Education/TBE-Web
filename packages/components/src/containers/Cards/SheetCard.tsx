@@ -38,12 +38,12 @@ const SheetCard = ({
 
   return (
     <Link href={isDisabled ? "#" : href} className="group block h-full">
-      <div className="relative h-full rounded-xl border border-border bg-card hover:bg-accent/40 hover:border-foreground/20 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 shadow-xs hover:shadow-md flex flex-col">
+      <div className="relative h-full rounded-xl border border-border dark:border-white/10 bg-card hover:bg-accent/40 dark:hover:bg-white/[0.04] hover:border-foreground/20 dark:hover:border-primary/40 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 shadow-xs hover:shadow-md flex flex-col">
         {/* Cover image from DB */}
         {hasImage ? (
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200/70 shrink-0">
+          <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200/70 dark:bg-white/[0.06] shrink-0">
             {!imageLoaded && (
-              <div className="absolute inset-0 bg-gray-200/80 animate-pulse z-0" />
+              <div className="absolute inset-0 bg-gray-200/80 dark:bg-white/[0.08] animate-pulse z-0" />
             )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -78,7 +78,7 @@ const SheetCard = ({
             )}
           </div>
         ) : (
-          <div className="relative w-full aspect-[16/9] bg-gradient-to-br from-primary/10 via-accent to-background flex items-center justify-center border-b border-border shrink-0">
+          <div className="relative w-full aspect-[16/9] bg-gradient-to-br from-primary/10 via-accent dark:via-white/[0.05] to-background flex items-center justify-center border-b border-border dark:border-white/10 shrink-0">
             <BookOpen className="w-8 h-8 text-primary/40" />
             {isLocked && (
               <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20">
@@ -118,7 +118,7 @@ const SheetCard = ({
           )}
 
           {/* Footer */}
-          <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/40">
+          <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/40 dark:border-white/10">
             <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
               <FileText className="w-3.5 h-3.5 text-muted-foreground" />
               {totalQuestions ?? 0} Questions

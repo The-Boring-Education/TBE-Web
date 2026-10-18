@@ -1,6 +1,6 @@
 import { useAuth } from "@tbe/auth";
 import { ANALYTICS_EVENTS, getLoginCardVariantConfig } from "@tbe/constants";
-import { useAnalytics } from "@tbe/hooks";
+import { useAnalytics, useTheme } from "@tbe/hooks";
 import type { LoginCardNewProps } from "@tbe/interface";
 import { trackEvent as sendEvent } from "@tbe/utils";
 import { motion } from "framer-motion";
@@ -181,6 +181,7 @@ const LoginCardNew = ({
   const router = useRouter();
   const { trackEvent } = useAnalytics();
   const { signIn, isAuthenticated, isLoading } = useAuth();
+  const { resolvedTheme } = useTheme();
 
   const variantConfig = useMemo(() => {
     const configs = getLoginCardVariantConfig();
@@ -201,13 +202,15 @@ const LoginCardNew = ({
   const isLight = useMemo(() => {
     if (theme === "light") return true;
     if (theme === "dark") return false;
+    if (resolvedTheme === "dark") return false;
+    if (resolvedTheme === "light") return true;
     return (
       variant === "prepyatra" ||
       variant === "resume-yatra" ||
       variant === "quizes" ||
       variant === "platform"
     );
-  }, [theme, variant]);
+  }, [theme, resolvedTheme, variant]);
 
   const redirectPath = useMemo(() => {
     const fallback = variantConfig.redirectPath ?? "/";
