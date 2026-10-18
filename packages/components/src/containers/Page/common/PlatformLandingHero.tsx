@@ -36,7 +36,7 @@ const ReactCardIcon = () => (
 
 const CodeBracketIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#9333EA]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#9333EA] dark:text-purple-400"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -51,7 +51,7 @@ const CodeBracketIcon = () => (
 
 const GraduationCapIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#16A34A]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#16A34A] dark:text-emerald-400"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -66,7 +66,7 @@ const GraduationCapIcon = () => (
 
 const PlayVideoIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#EA580C]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#EA580C] dark:text-orange-400"
     viewBox="0 0 24 24"
     fill="currentColor"
   >
@@ -76,16 +76,19 @@ const PlayVideoIcon = () => (
       width="20"
       height="16"
       rx="4"
-      className="fill-[#FFEDD5] stroke-[#EA580C]"
+      className="fill-[#FFEDD5] dark:fill-orange-500/20 stroke-[#EA580C] dark:stroke-orange-400"
       strokeWidth="2"
     />
-    <polygon points="10,8 16,12 10,16" fill="#EA580C" />
+    <polygon
+      points="10,8 16,12 10,16"
+      className="fill-[#EA580C] dark:fill-orange-400"
+    />
   </svg>
 );
 
 const RoadmapIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#2563EB]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#2563EB] dark:text-blue-400"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -101,7 +104,7 @@ const RoadmapIcon = () => (
 
 const GlobeIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#4F46E5]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#4F46E5] dark:text-indigo-400"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -117,7 +120,7 @@ const GlobeIcon = () => (
 
 const FolderIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#D97706]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#D97706] dark:text-amber-400"
     viewBox="0 0 24 24"
     fill="currentColor"
   >
@@ -127,7 +130,7 @@ const FolderIcon = () => (
 
 const SheetIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-5 sm:h-5 text-[#16A34A]"
+    className="w-4 h-4 sm:w-5 sm:h-5 text-[#16A34A] dark:text-emerald-400"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -153,20 +156,20 @@ const DevIconTile: React.FC<DevIconTileProps> = ({
   className = "",
 }) => (
   <div
-    className={`w-6 h-6 sm:w-12 sm:h-12 lg:w-16 lg:h-16 flex items-center justify-center p-0.5 hover:scale-110 transition-transform duration-300 ${className}`}
+    className={`w-8 h-8 sm:w-11 sm:h-11 lg:w-13 lg:h-13 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-[#121216]/80 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-center justify-center p-1.5 sm:p-2.5 hover:scale-110 hover:border-red-500/40 dark:hover:border-red-500/50 transition-all duration-300 ${className}`}
   >
     <img
       src={src}
       alt={alt}
-      className="w-full h-full object-contain filter drop-shadow-sm"
+      className="w-full h-full object-contain filter drop-shadow-sm select-none pointer-events-none"
     />
   </div>
 );
 
 const CodeTagBadge = () => (
-  <div className="w-6 h-6 sm:w-12 sm:h-12 lg:w-16 lg:h-16 flex items-center justify-center p-0.5">
+  <div className="w-8 h-8 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl sm:rounded-2xl bg-red-500/10 dark:bg-red-500/20 backdrop-blur-md border border-red-500/20 dark:border-red-500/40 shadow-sm flex items-center justify-center p-2 hover:scale-110 transition-transform duration-300">
     <svg
-      className="w-4 h-4 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-[#EF4444] filter drop-shadow-sm"
+      className="w-4 h-4 sm:w-6 sm:h-6 text-[#EF4444] filter drop-shadow-sm"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -210,11 +213,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       <motion.div
         whileHover={{ y: -4, scale: 1.03, rotate: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className={`bg-white/95 dark:bg-[#121216]/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-[0_8px_25px_-8px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_25px_-8px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-red-500/10 border border-slate-100/90 dark:border-white/10 transition-all duration-300 w-full lg:w-[235px] xl:w-[250px] transform ${rotateClass}`}
+        className={`bg-white/95 dark:bg-[#121216]/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-[0_8px_25px_-8px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_25px_-8px_rgba(0,0,0,0.7)] hover:shadow-xl hover:shadow-red-500/15 dark:hover:shadow-red-500/20 border border-slate-100/90 dark:border-white/10 hover:border-red-500/30 dark:hover:border-red-500/40 transition-all duration-300 w-full lg:w-[235px] xl:w-[250px] transform ${rotateClass}`}
       >
         <div className="flex items-center gap-3">
           <div
-            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl ${iconBg} dark:bg-white/[0.05] flex items-center justify-center shrink-0 border border-slate-100 dark:border-white/10 group-hover:scale-110 group-hover:bg-red-50/50 dark:group-hover:bg-red-500/20 transition-all duration-200`}
+            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl ${iconBg} dark:bg-white/[0.06] flex items-center justify-center shrink-0 border border-slate-100 dark:border-white/10 group-hover:scale-110 group-hover:bg-red-50/50 dark:group-hover:bg-red-500/20 transition-all duration-200`}
           >
             {icon}
           </div>
@@ -222,7 +225,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
             <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight group-hover:text-[#FF4D4D] transition-colors duration-200 truncate">
               {title}
             </h4>
-            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-tight line-clamp-2 font-normal">
+            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5 leading-tight line-clamp-2 font-normal">
               {subtitle}
             </p>
           </div>
@@ -251,14 +254,20 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
     });
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#FAFAFC] py-6 sm:py-12 md:py-16 lg:py-24">
+    <section className="relative w-full overflow-hidden bg-[#FAFAFC] dark:bg-background py-6 sm:py-12 md:py-16 lg:py-24 transition-colors duration-300">
       {/* --- Responsive Ambient Background Lights & Orbit Rings --- */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
         {/* Soft Red Glow Center */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[600px] lg:w-[850px] h-[350px] sm:h-[450px] lg:h-[580px] bg-red-500/10 rounded-full blur-[100px] sm:blur-[140px] lg:blur-[160px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[600px] lg:w-[850px] h-[350px] sm:h-[450px] lg:h-[580px] bg-red-500/10 dark:bg-red-500/20 rounded-full blur-[100px] sm:blur-[140px] lg:blur-[160px]" />
+
+        {/* Top Radial Glow for Dark Mode */}
+        <div className="hidden dark:block absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[450px] bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(255,77,77,0.18),transparent_70%)] pointer-events-none" />
+
+        {/* Subtle Tech Grid Texture in Dark Mode */}
+        <div className="hidden dark:block absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none" />
 
         {/* Concentric Responsive Dashed Orbit SVG lines (Hidden on Mobile) */}
         <svg
@@ -274,7 +283,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             ry="270"
             fill="none"
             stroke="currentColor"
-            className="text-slate-200 dark:text-white/10"
+            className="text-slate-200 dark:text-white/[0.08]"
             strokeWidth="1.5"
             strokeDasharray="6 6"
           />
@@ -285,12 +294,18 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             ry="190"
             fill="none"
             stroke="currentColor"
-            className="text-slate-300 dark:text-white/10"
+            className="text-slate-300 dark:text-white/[0.08]"
             strokeWidth="1"
             strokeDasharray="4 4"
           />
           {/* Accent Dots on Orbit */}
-          <circle cx="500" cy="50" r="4" fill="#FF5757" />
+          <circle
+            cx="500"
+            cy="50"
+            r="4"
+            fill="#FF5757"
+            className="animate-pulse"
+          />
           <circle cx="820" cy="200" r="4" fill="#F97316" />
           <circle cx="180" cy="450" r="3.5" fill="#3B82F6" />
           <circle cx="860" cy="510" r="4" fill="#8B5CF6" />
@@ -602,9 +617,15 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] sm:leading-[1.12]"
             >
               Everything You Need <br className="hidden sm:inline" />
-              to Learn. <span className="text-[#FF4D4D]">Practice.</span>{" "}
+              to Learn.{" "}
+              <span className="text-[#FF4D4D] drop-shadow-[0_2px_12px_rgba(255,77,77,0.3)]">
+                Practice.
+              </span>{" "}
               <br className="hidden sm:inline" />
-              <span className="text-[#FF4D4D]">Master.</span> All in One Place.
+              <span className="text-[#FF4D4D] drop-shadow-[0_2px_12px_rgba(255,77,77,0.3)]">
+                Master.
+              </span>{" "}
+              All in One Place.
             </motion.h1>
 
             {/* Subtitle */}
@@ -612,7 +633,7 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-slate-600 dark:text-slate-300 font-medium text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 max-w-md sm:max-w-lg leading-relaxed"
+              className="text-slate-600 dark:text-zinc-300 font-medium text-sm sm:text-base lg:text-lg mt-3 sm:mt-4 max-w-md sm:max-w-lg leading-relaxed"
             >
               From core subjects to real world questions,{" "}
               <br className="hidden sm:inline" />
@@ -630,9 +651,12 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             >
               <Link
                 href={defaultCtaHref}
-                className="inline-flex items-center justify-center gap-1.5 bg-[#FF4D4D] hover:bg-[#EE3B3B] text-white font-bold text-xs sm:text-base px-5 sm:px-8 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl shadow-md sm:shadow-lg shadow-red-500/25 hover:shadow-red-500/35 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="group relative inline-flex items-center justify-center gap-1.5 bg-[#FF4D4D] hover:bg-[#EE3B3B] text-white font-bold text-xs sm:text-base px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 overflow-hidden"
               >
-                {ctaText}
+                <span className="relative z-10 flex items-center gap-1.5">
+                  {ctaText}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </Link>
             </motion.div>
           </div>
@@ -644,32 +668,34 @@ export const PlatformLandingHero: React.FC<PlatformLandingHeroProps> = ({
             transition={{ duration: 0.7, delay: 0.4 }}
             className="hidden sm:block relative z-30 w-full max-w-[340px] sm:max-w-[580px] md:max-w-[760px] lg:max-w-[930px] mt-1 sm:mt-2 mb-6 px-2 sm:px-4"
           >
-            <Terminal
-              windowTitle="the-boring-education.sh"
-              typingSpeed={45}
-              delayBetweenCommands={1000}
-              commands={[
-                "tbe learn --track fullstack-developer",
-                "tbe practice --dsa-sheet top-150-interview",
-                "tbe master --interview-prep",
-              ]}
-              outputs={{
-                0: [
-                  "✔ Preflight checks passed.",
-                  "✔ Initialized 50+ Bite-sized Courses.",
-                  "✔ Loaded 20+ Real-world Projects.",
-                ],
-                1: [
-                  "✔ Synced 850+ Curated DSA Questions.",
-                  "✔ Progress linked with DSAYatra.",
-                ],
-                2: [
-                  "✔ Core Subjects (CS, OS, CN, DBMS) Loaded.",
-                  "✔ Curated sheets for top tech companies ready.",
-                  "🚀 Ready to crack your dream Tech Job!",
-                ],
-              }}
-            />
+            <div className="relative rounded-xl p-[1px] bg-gradient-to-b from-slate-200/80 via-transparent to-transparent dark:from-white/15 dark:via-white/5 dark:to-transparent shadow-2xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+              <Terminal
+                windowTitle="the-boring-education.sh"
+                typingSpeed={45}
+                delayBetweenCommands={1000}
+                commands={[
+                  "tbe learn --track fullstack-developer",
+                  "tbe practice --dsa-sheet top-150-interview",
+                  "tbe master --interview-prep",
+                ]}
+                outputs={{
+                  0: [
+                    "✔ Preflight checks passed.",
+                    "✔ Initialized 50+ Bite-sized Courses.",
+                    "✔ Loaded 20+ Real-world Projects.",
+                  ],
+                  1: [
+                    "✔ Synced 850+ Curated DSA Questions.",
+                    "✔ Progress linked with DSAYatra.",
+                  ],
+                  2: [
+                    "✔ Core Subjects (CS, OS, CN, DBMS) Loaded.",
+                    "✔ Curated sheets for top tech companies ready.",
+                    "🚀 Ready to crack your dream Tech Job!",
+                  ],
+                }}
+              />
+            </div>
           </motion.div>
 
           {/* --- Tablet Responsive Cards Grid (Hidden on Mobile < 640px) --- */}
