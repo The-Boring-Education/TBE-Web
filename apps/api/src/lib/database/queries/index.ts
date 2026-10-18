@@ -5,6 +5,9 @@ export * from "./certificate";
 export * from "./common";
 export * from "./content-feedback";
 export * from "./content-sync";
+// Namespaced: the ledger helper owns generic names (record/balanceOf/...)
+export * as contributionLedger from "./contributionLedger";
+export * from "./contributionLedgerAudit";
 export * from "./core-subjects";
 export * from "./coupon";
 export * from "./dsayatra";
