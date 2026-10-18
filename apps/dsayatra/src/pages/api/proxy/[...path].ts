@@ -28,6 +28,11 @@ export default async function handler(
       headers: {
         ...req.headers,
         host: undefined,
+        // Hop-by-hop / body headers must not be reused: axios re-serializes
+        // the parsed body, so a stale content-length can stall the upstream
+        // request (e.g. the POST /auth/token exchange during sign in).
+        connection: undefined,
+        "content-length": undefined,
         authorization: req.headers.authorization,
         "x-admin-secret": req.headers["x-admin-secret"],
       },
