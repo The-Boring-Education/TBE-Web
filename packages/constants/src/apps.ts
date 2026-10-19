@@ -26,15 +26,29 @@ export interface AppConfig {
   defaultImage?: string;
 }
 
+/**
+ * Social preview (Open Graph / Twitter) image shared by all apps.
+ * Served from `apps/platform/public/images/og-image.png`. Must be an absolute
+ * HTTPS URL to a raster image on the final (non-redirecting) host, otherwise
+ * crawlers like WhatsApp, LinkedIn and Facebook will drop the preview image.
+ */
+export const DEFAULT_OG_IMAGE = {
+  url: "https://www.theboringeducation.com/images/og-image.png",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+  alt: "The Boring Education - Tech Education for Everyone",
+};
+
 export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
   platform: {
     identifier: "platform",
     name: "The Boring Education",
-    domain: "https://theboringeducation.com",
+    domain: "https://www.theboringeducation.com",
     defaultTitle: "The Boring Education | Tech Education for Everyone",
     defaultDescription:
       "The Boring Education offers tech education for everyone with online courses, interview prep, open source projects, and webinars.",
-    defaultImage: "https://theboringeducation.com/images/large-og.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
   "prep-yatra": {
     identifier: "prep-yatra",
@@ -44,8 +58,7 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
       "PrepYatra - Complete Interview Preparation Platform | The Boring Education",
     defaultDescription:
       "Master your interviews with PrepYatra. Get personalized questions, mock interviews, and expert guidance to land your dream job.",
-    defaultImage:
-      "https://prepyatra.theboringeducation.com/images/og-image.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
   quizes: {
     identifier: "quizes",
@@ -54,7 +67,7 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
     defaultTitle: "TBE Quizes | Test Your Knowledge",
     defaultDescription:
       "Test your knowledge with interactive quizzes on various tech topics.",
-    defaultImage: "https://quiz.theboringeducation.com/images/og-image.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
   onboarding: {
     identifier: "onboarding",
@@ -63,7 +76,7 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
     defaultTitle: "Onboarding | The Boring Education",
     defaultDescription:
       "Complete your onboarding process and start your learning journey with The Boring Education.",
-    defaultImage: "https://theboringeducation.com/images/large-og.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
   techyatra: {
     identifier: "techyatra",
@@ -71,8 +84,7 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
     domain: "https://techyatra.theboringeducation.com",
     defaultTitle: "TechYatra | Tech Learning Journey",
     defaultDescription: "Embark on your tech learning journey with TechYatra.",
-    defaultImage:
-      "https://techyatra.theboringeducation.com/images/og-image.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
   dsayatra: {
     identifier: "dsayatra",
@@ -80,7 +92,7 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
     domain: "https://dsayatra.theboringeducation.com",
     defaultTitle: "DSAYatra | Data Structures & Algorithms Practice",
     defaultDescription: "Master Data Structures and Algorithms with DSAYatra.",
-    defaultImage: "https://dsayatra.theboringeducation.com/images/og-image.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
   "resume-yatra": {
     identifier: "resume-yatra",
@@ -89,8 +101,7 @@ export const APP_CONFIGS: Record<AppIdentifier, AppConfig> = {
     defaultTitle: "ResumeYatra | Build Your Professional Resume",
     defaultDescription:
       "Create a professional resume that stands out with ResumeYatra.",
-    defaultImage:
-      "https://resumeyatra.theboringeducation.com/images/og-image.png",
+    defaultImage: DEFAULT_OG_IMAGE.url,
   },
 };
 

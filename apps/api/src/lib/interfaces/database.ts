@@ -1,6 +1,13 @@
 import type { Document, Schema, Types } from "mongoose";
 
 import type {
+  ContributionCategoryType,
+  ContributionStatusType,
+  ContributionTypeGroup,
+  ContributorRoleType,
+} from "@/lib/constants";
+
+import type {
   APIMethodTypes,
   ApplicationStatusType,
   CertificateType,
@@ -1489,6 +1496,45 @@ export interface StudyGuideModel extends Document {
   hasGuide: boolean;
   sortOrder: number;
   sections: StudyGuideContentSection[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Contributor Model
+export interface ContributorDocumentModel extends Document {
+  userId: Types.ObjectId;
+  email: string;
+  name: string;
+  avatar?: string;
+  githubUsername?: string;
+  githubHandle?: string;
+  role: ContributorRoleType;
+  totalXp: number;
+  approvedCount: number;
+  pendingCount: number;
+  isCaptain: boolean;
+  captainUnlockedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Contribution Model
+export interface ContributionDocumentModel extends Document {
+  contributorId: Types.ObjectId;
+  userId: Types.ObjectId;
+  contributorName: string;
+  contributorEmail: string;
+  category: ContributionCategoryType;
+  typeGroup: ContributionTypeGroup;
+  proofUrl: string;
+  title: string;
+  description?: string;
+  standardXp: number;
+  awardedXp: number;
+  status: ContributionStatusType;
+  adminFeedback?: string;
+  reviewedBy?: string;
+  reviewedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -2,6 +2,5 @@
   "title": "40 React Interview Questions",
   "description": "A curated set of 40 essential React interview questions covering fundamentals, hooks, lifecycle, state management, and performance optimization.",
   "keywords": ["react", "javascript", "frontend", "hooks", "web development"],
-  "tags": ["react", "interview", "frontend"],
-  "ogImage": "https://theboringeducation.com/images/react-interview-og.png"
+  "tags": ["react", "interview", "frontend"]
 }
