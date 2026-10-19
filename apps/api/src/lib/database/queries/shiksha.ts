@@ -1,10 +1,19 @@
+import { isValidChapterKey, normalizeChapterKey } from "@tbe/utils";
+import { Types } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-import { modelSelectParams } from "@/lib/constants";
+import {
+  COURSE_STATUS,
+  COURSE_STATUS_DEFAULT,
+  COURSE_STATUS_PUBLISHED,
+  modelSelectParams,
+} from "@/lib/constants";
 import type {
   AddChapterToCourseRequestProps,
   AddCourseRequestPayloadProps,
   BaseShikshaCourseResponseProps,
+  CourseModel,
+  CourseStatusType,
   DatabaseQueryResponseType,
   EnrollCourseInDBRequestProps,
   UpdateChapterInCourseRequestProps,
@@ -16,11 +25,57 @@ import { logger } from "@/lib/utils/logger";
 import { Course, UserCourse } from "../models";
 import { updateUserPointsInDB } from "./gamification";
 
+type CourseReadOptions = {
+  // Admin-authenticated reads pass `true` so courses in every lifecycle
+  // status are returned. Public reads always stay restricted to PUBLISHED.
+  includeAllStatuses?: boolean;
+};
+
+// Fields a course must carry before it can be published. `chapters` is
+// validated separately so the rejection message can name the reason.
+const REQUIRED_FIELDS_FOR_PUBLISH: Array<keyof CourseModel> = [
+  "name",
+  "slug",
+  "description",
+  "coverImageURL",
+  "liveOn",
+  "roadmap",
+  "difficultyLevel",
+];
+
+// Courses created before the lifecycle field have no stored `status` (schema
+// defaults only apply to new documents), so they are treated as published
+// until `backfill:course-status` has run. Drop the `$exists` arm once every
+// environment is backfilled.
+const buildCourseStatusFilter = (options?: CourseReadOptions) =>
+  options?.includeAllStatuses
+    ? {}
+    : {
+        $or: [
+          { status: COURSE_STATUS_PUBLISHED },
+          { status: { $exists: false } },
+        ],
+      };
+
+/** Returned when a chapter key is missing or is not kebab-case. */
+const INVALID_CHAPTER_KEY_ERROR =
+  "Chapter key must be kebab-case (lowercase letters, digits and single hyphens)";
+
+/** Returned when a chapter key is already used by another chapter in the course. */
+const DUPLICATE_CHAPTER_KEY_ERROR = "Chapter key already exists in this course";
+
 const addACourseToDB = async (
   courseDetails: AddCourseRequestPayloadProps,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = new Course({ ...courseDetails, contentId: uuidv4() });
+    if (courseDetails.status === COURSE_STATUS_PUBLISHED) {
+      return { error: "Cannot publish a course with no chapters" };
+    }
+    const course = new Course({
+      ...courseDetails,
+      status: courseDetails.status || COURSE_STATUS_DEFAULT,
+      contentId: uuidv4(),
+    });
     await course.save();
     return { data: course };
   } catch (error) {
@@ -37,6 +92,32 @@ const updateACourseInDB = async ({
   updatedData,
 }: UpdateCourseRequestPayloadProps): Promise<DatabaseQueryResponseType> => {
   try {
+    const existingCourse = await Course.findById(courseId);
+
+    if (!existingCourse) return { error: "Course does not exists" };
+
+    const nextSlug = (updatedData as { slug?: string })?.slug;
+
+    if (
+      existingCourse.status === "PUBLISHED" &&
+      nextSlug &&
+      nextSlug !== existingCourse.slug
+    ) {
+      return {
+        error: "Slug cannot be changed once the course is published",
+      };
+    }
+
+    const nextStatus = (updatedData as { status?: CourseStatusType })?.status;
+    if (
+      nextStatus === COURSE_STATUS_PUBLISHED &&
+      (!existingCourse.chapters || existingCourse.chapters.length === 0)
+    ) {
+      return {
+        error: "Cannot publish a course with no chapters",
+      };
+    }
+
     const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
       updatedData,
@@ -74,9 +155,11 @@ const deleteACourseFromDBById = async (
   }
 };
 
-const getAllCourseFromDB = async (): Promise<DatabaseQueryResponseType> => {
+const getAllCourseFromDB = async (
+  options?: CourseReadOptions,
+): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.find()
+    const course = await Course.find(buildCourseStatusFilter(options))
       .select(modelSelectParams.coursePreview)
       .exec();
 
@@ -100,9 +183,13 @@ const getAllCourseFromDB = async (): Promise<DatabaseQueryResponseType> => {
 const getACourseFromDBById = async (
   courseId: string,
   userId?: string,
+  options?: CourseReadOptions,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findById(courseId);
+    const course = await Course.findOne({
+      _id: courseId,
+      ...buildCourseStatusFilter(options),
+    });
 
     if (!course) {
       return { error: "Course not found" };
@@ -137,14 +224,24 @@ const addChapterToCourseInDB = async (
   chapter: AddChapterToCourseRequestProps,
 ) => {
   try {
+    const key = normalizeChapterKey(chapter?.key);
+
+    if (!isValidChapterKey(key)) {
+      return { error: INVALID_CHAPTER_KEY_ERROR };
+    }
+
+    // Filtering on the key makes the duplicate check atomic with the push.
     const updatedCourse = await Course.findOneAndUpdate(
-      { _id: courseId },
-      { $push: { chapters: chapter } },
+      { _id: courseId, "chapters.key": { $ne: key } },
+      { $push: { chapters: { ...chapter, key } } },
       { new: true },
     );
 
     if (!updatedCourse) {
-      return { error: "Course not found" };
+      const courseExists = await Course.exists({ _id: courseId });
+      return {
+        error: courseExists ? DUPLICATE_CHAPTER_KEY_ERROR : "Course not found",
+      };
     }
 
     return { data: updatedCourse };
@@ -163,15 +260,21 @@ const updateCourseChapterInDB = async (
   { name, content, isOptional }: UpdateChapterInCourseRequestProps,
 ) => {
   try {
+    // `key` is deliberately not updatable: it is the stable identity of a
+    // chapter and must survive re-titling, re-authoring and re-imports.
+    const updates: Record<string, unknown> = {};
+    if (name !== undefined) updates["chapters.$.name"] = name;
+    if (content !== undefined) updates["chapters.$.content"] = content;
+    if (isOptional !== undefined) updates["chapters.$.isOptional"] = isOptional;
+
+    const isObjectId = Types.ObjectId.isValid(chapterId);
+    const filter = isObjectId
+      ? { _id: courseId, "chapters._id": chapterId }
+      : { _id: courseId, "chapters.key": chapterId };
+
     const course = await Course.findOneAndUpdate(
-      { _id: courseId, "chapters._id": chapterId },
-      {
-        $set: {
-          "chapters.$.chapterName": name,
-          "chapters.$.content": content,
-          "chapters.$.isOptional": isOptional,
-        },
-      },
+      filter,
+      Object.keys(updates).length ? { $set: updates } : {},
       { new: true },
     );
 
@@ -190,9 +293,14 @@ const deleteCourseChapterByIdFromDB = async (
   chapterId: string,
 ) => {
   try {
+    const isObjectId = Types.ObjectId.isValid(chapterId);
+    const pullCondition = isObjectId
+      ? { $or: [{ _id: chapterId }, { key: chapterId }] }
+      : { key: chapterId };
+
     const course = await Course.findOneAndUpdate(
       { _id: courseId },
-      { $pull: { chapters: { _id: chapterId } } },
+      { $pull: { chapters: pullCondition } },
       { new: true },
     );
     return { data: course };
@@ -210,7 +318,10 @@ const enrollInACourse = async ({
   courseId,
 }: EnrollCourseInDBRequestProps): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findById(courseId).lean();
+    const course = await Course.findOne({
+      _id: courseId,
+      ...buildCourseStatusFilter(),
+    }).lean();
     if (!course) {
       return { error: "Course not found" };
     }
@@ -319,9 +430,13 @@ const getAllEnrolledCoursesFromDB = async (
 
 const getCourseBySlugFromDB = async (
   slug: string,
+  options?: CourseReadOptions,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findOne({ slug });
+    const course = await Course.findOne({
+      slug,
+      ...buildCourseStatusFilter(options),
+    });
 
     if (!course) {
       return { error: "Course not found" };
@@ -343,9 +458,13 @@ const getCourseBySlugFromDB = async (
 const getCourseBySlugWithUserFromDB = async (
   slug: string,
   userId?: string,
+  options?: CourseReadOptions,
 ): Promise<DatabaseQueryResponseType> => {
   try {
-    const course = await Course.findOne({ slug });
+    const course = await Course.findOne({
+      slug,
+      ...buildCourseStatusFilter(options),
+    });
 
     if (!course) {
       return { error: "Course not found" };
@@ -447,20 +566,39 @@ const updateUserCourseChapterInDB = async ({
   }
 };
 
-const getACourseForUserFromDB = async (userId: string, courseId: string) => {
+const getACourseForUserFromDB = async (
+  userId: string,
+  courseId: string,
+  options?: CourseReadOptions,
+) => {
   try {
-    // Find the UserCourse document, including the populated course data
-    const userCourse = await UserCourse.findOne({ userId, courseId })
-      .populate({
-        path: "course",
-      })
-      .exec();
+    // A falsy userId must not reach UserCourse.findOne — Mongoose strips
+    // undefined from the filter, which would match any user's enrolment.
+    const userCourse = userId
+      ? await UserCourse.findOne({ userId, courseId })
+          .populate({
+            path: "course",
+          })
+          .exec()
+      : null;
 
     // If the user is not enrolled in the course, fetch the course data without user-specific data
     if (!userCourse) {
-      const { data: course } = await getACourseFromDBById(courseId);
+      const { data: course, error } = await getACourseFromDBById(
+        courseId,
+        undefined,
+        options,
+      );
+
+      if (error || !course) {
+        return { error: error ?? "Course not found" };
+      }
+
       return { data: { ...course.toObject(), isEnrolled: false } };
     }
+
+    // Already-enrolled learners keep access regardless of lifecycle status, so
+    // unpublishing a course never strips it from people part-way through it.
 
     // Map the chapters to include the `isCompleted` status from the embedded chapters in UserCourse
     const mappedChapters = userCourse.course.chapters.map((chapter) => {
@@ -529,11 +667,63 @@ const updateCertificateToUserShikshaCourseDoc = async (
   }
 };
 
+const updateCourseStatusInDB = async (
+  courseId: string,
+  status: CourseStatusType,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    if (!COURSE_STATUS.includes(status)) {
+      return {
+        error: `Invalid course status. Allowed values: ${COURSE_STATUS.join(", ")}`,
+      };
+    }
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return { error: "Course not found" };
+    }
+
+    if (status === "PUBLISHED") {
+      if (!course.chapters?.length) {
+        return { error: "Cannot publish a course with no chapters" };
+      }
+
+      const missingField = REQUIRED_FIELDS_FOR_PUBLISH.find((field) => {
+        const value = course[field];
+        return (
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "")
+        );
+      });
+
+      if (missingField) {
+        return {
+          error: `Cannot publish a course without ${String(missingField)}`,
+        };
+      }
+    }
+
+    course.status = status;
+    await course.save();
+
+    return { data: course };
+  } catch (error) {
+    logger.error("DB: updateCourseStatusInDB failed", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return { error: "Failed while updating course status", details: error };
+  }
+};
+
 export {
   addACourseToDB,
   addChapterToCourseInDB,
   deleteACourseFromDBById,
   deleteCourseChapterByIdFromDB,
+  DUPLICATE_CHAPTER_KEY_ERROR,
   enrollInACourse,
   getACourseForUserFromDB,
   getACourseFromDBById,
@@ -542,8 +732,10 @@ export {
   getCourseBySlugFromDB,
   getCourseBySlugWithUserFromDB,
   getEnrolledCourseFromDB,
+  INVALID_CHAPTER_KEY_ERROR,
   updateACourseInDB,
   updateCertificateToUserShikshaCourseDoc,
   updateCourseChapterInDB,
+  updateCourseStatusInDB,
   updateUserCourseChapterInDB,
 };

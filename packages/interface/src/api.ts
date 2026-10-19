@@ -175,8 +175,10 @@ export interface UpdateCourseRequestPayloadProps {
 }
 
 export interface AddChapterToCourseRequestProps {
+  key: string;
   name: string;
   content: string;
+  isOptional?: boolean;
 }
 
 export interface UpdateChapterInCourseRequestProps {
@@ -207,7 +209,8 @@ export type SkillsType =
   | "TailwindCSS"
   | "NextJS";
 
-export type RoadmapsType = "Frontend" | "Backend" | "Fullstack" | "Tech";
+export type RoadmapsType =
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
 export type QuestionFrequencyType =
   "Most Asked" | "Asked Frequently" | "Asked Sometimes";
 
@@ -281,6 +284,7 @@ export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   progress?: {
     completed: number;
     total: number;

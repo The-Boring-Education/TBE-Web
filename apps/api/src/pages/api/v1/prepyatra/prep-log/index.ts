@@ -10,7 +10,6 @@ import {
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -179,9 +178,6 @@ const handleAddMentorFeedback = async (
   res: NextApiResponse,
 ) => {
   try {
-    const isAdmin = await adminMiddleware(req, res);
-    if (!isAdmin) return;
-
     const {
       prepLogId,
       mentorFeedback,
@@ -298,4 +294,4 @@ const handleDeleteLog = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["PATCH"] } });

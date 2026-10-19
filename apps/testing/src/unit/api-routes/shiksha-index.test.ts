@@ -7,6 +7,7 @@ const mockGetAllCourseFromDB = vi.fn();
 const mockGetAllEnrolledCoursesFromDB = vi.fn();
 const mockGetCourseBySlugFromDB = vi.fn();
 const mockGetCourseBySlugWithUserFromDB = vi.fn();
+const mockIsAdminRequest = vi.fn();
 
 vi.mock("../../../../api/src/lib/constants", () => ({
   apiStatusCodes: {
@@ -38,8 +39,10 @@ vi.mock("../../../../api/src/middleware/requestLogger", () => ({
   ) => handler,
 }));
 
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: vi.fn().mockResolvedValue(true),
+vi.mock("../../../../api/src/middleware/api", () => ({}));
+
+vi.mock("../../../../api/src/middleware/admin", () => ({
+  isAdminRequest: (...args: unknown[]) => mockIsAdminRequest(...args),
 }));
 
 import handler from "../../../../api/src/pages/api/v1/shiksha/index";
@@ -47,6 +50,7 @@ import handler from "../../../../api/src/pages/api/v1/shiksha/index";
 describe("Shiksha Index API Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockIsAdminRequest.mockResolvedValue(false);
   });
 
   it("rejects unsupported methods", async () => {
@@ -274,5 +278,72 @@ describe("Shiksha Index API Route", () => {
     expect(res._getStatusCode()).toBe(500);
     const data = JSON.parse(res._getData());
     expect(data.message).toBe("Failed while fetching enrolled courses");
+  });
+  it("GET - public read requests only PUBLISHED courses", async () => {
+    mockGetAllCourseFromDB.mockResolvedValue({ data: [], error: null });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {},
+    });
+
+    await handler(req, res);
+
+    expect(mockGetAllCourseFromDB).toHaveBeenCalledWith({
+      includeAllStatuses: false,
+    });
+  });
+
+  it("GET - admin-authenticated read requests courses in every status", async () => {
+    mockIsAdminRequest.mockResolvedValue(true);
+    mockGetAllCourseFromDB.mockResolvedValue({ data: [], error: null });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: {},
+    });
+
+    await handler(req, res);
+
+    expect(mockGetAllCourseFromDB).toHaveBeenCalledWith({
+      includeAllStatuses: true,
+    });
+  });
+
+  it("GET with slug - admin-authenticated read is not status filtered", async () => {
+    mockIsAdminRequest.mockResolvedValue(true);
+    mockGetCourseBySlugWithUserFromDB.mockResolvedValue({
+      data: { _id: "c1", slug: "draft-slug", status: "DRAFT" },
+      error: null,
+    });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: { slug: "draft-slug" },
+    });
+
+    await handler(req, res);
+
+    expect(mockGetCourseBySlugWithUserFromDB).toHaveBeenCalledWith(
+      "draft-slug",
+      undefined,
+      { includeAllStatuses: true },
+    );
+  });
+
+  it("POST - slug uniqueness check covers courses in every status", async () => {
+    mockGetCourseBySlugFromDB.mockResolvedValue({ error: "Course not found" });
+    mockAddACourseToDB.mockResolvedValue({ data: { _id: "c1" }, error: null });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { slug: "new-slug", title: "New Course" },
+    });
+
+    await handler(req, res);
+
+    expect(mockGetCourseBySlugFromDB).toHaveBeenCalledWith("new-slug", {
+      includeAllStatuses: true,
+    });
   });
 });

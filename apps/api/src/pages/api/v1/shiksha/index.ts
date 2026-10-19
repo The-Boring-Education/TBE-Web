@@ -14,7 +14,7 @@ import type {
   BaseShikshaCourseResponseProps,
 } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
+import { isAdminRequest } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -38,13 +38,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleAddACourse = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const isAdmin = await adminMiddleware(req, res);
-    if (!isAdmin) return;
-
     const coursePayload = req.body as AddCourseRequestPayloadProps;
 
+    // Slug uniqueness must consider courses in every lifecycle status,
+    // otherwise a DRAFT course's slug could be reused.
     const { error: courseAlreadyExist } = await getCourseBySlugFromDB(
       coursePayload.slug,
+      { includeAllStatuses: true },
     );
 
     if (!courseAlreadyExist) {
@@ -92,11 +92,16 @@ const handleAllGetCourse = async (
   slug?: string,
 ) => {
   try {
+    // Admin-authenticated reads see courses in every lifecycle status;
+    // everyone else only sees PUBLISHED courses.
+    const readOptions = { includeAllStatuses: await isAdminRequest(req) };
+
     // If slug is provided, fetch specific course by slug with user data
     if (slug) {
       const { data: course, error } = await getCourseBySlugWithUserFromDB(
         slug,
         userId,
+        readOptions,
       );
 
       if (error || !course) {
@@ -122,7 +127,7 @@ const handleAllGetCourse = async (
 
     // Fetch all courses
     const { data: allCourses, error: allCoursesError } =
-      await getAllCourseFromDB();
+      await getAllCourseFromDB(readOptions);
 
     if (allCoursesError || !allCourses) {
       return res.status(apiStatusCodes.INTERNAL_SERVER_ERROR).json(
@@ -193,4 +198,4 @@ const handleAllGetCourse = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });

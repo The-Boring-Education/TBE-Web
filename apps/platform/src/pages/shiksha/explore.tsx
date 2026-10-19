@@ -84,9 +84,15 @@ const Home = ({ seoMeta }: PageProps) => {
     difficultyLevel?: string;
   })[] = useMemo(() => {
     if (!response?.data) return [];
-    const mapped = mapCourseResponseToCard(response.data) || [];
+    // Ensure draft and archived courses are strictly excluded from the student-facing catalog
+    const publishedCourses = (response.data as any[]).filter(
+      (c) =>
+        c.status === 'PUBLISHED' ||
+        (!c.status && c.status !== 'DRAFT' && c.status !== 'ARCHIVED'),
+    );
+    const mapped = mapCourseResponseToCard(publishedCourses) || [];
     return mapped.map((card, i) => {
-      const raw = response.data[i];
+      const raw = publishedCourses[i];
       const isPurchased = purchaseStatuses[raw?._id] || false;
       return {
         ...card,

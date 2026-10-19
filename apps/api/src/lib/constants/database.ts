@@ -161,7 +161,7 @@ export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 const modelSelectParams = {
   coursePreview:
-    "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage",
+    "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage status difficultyLevel chapters._id chapters.name chapters.key chapters.isOptional",
   projectPreview: "_id name slug coverImageURL description isActive",
 };
 

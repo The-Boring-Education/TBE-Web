@@ -7,6 +7,7 @@ import type {
   AptitudeTopicDefinition,
   CertificateType,
   CompanyType,
+  CourseStatusType,
   DifficultyType,
   DSADomainType,
   DSATopicType,
@@ -59,6 +60,9 @@ const ROADMAPS: RoadmapsType[] = [
   "Fullstack",
   "Tech",
   "DSA",
+  "AI",
+  "Data",
+  "GTM",
 ];
 const INTERVIEW_QUESTION_FREQUENCY: QuestionFrequencyType[] = [
   "Most Asked",
@@ -71,6 +75,12 @@ const DIFFICULTY_LEVEL: DifficultyType[] = [
   "Intermediate",
   "Advanced",
 ];
+
+const COURSE_STATUS: CourseStatusType[] = ["DRAFT", "PUBLISHED", "ARCHIVED"];
+
+const COURSE_STATUS_DEFAULT: CourseStatusType = "DRAFT";
+
+const COURSE_STATUS_PUBLISHED: CourseStatusType = "PUBLISHED";
 
 const CERTIFICATE_TYPE: CertificateType[] = ["WEBINAR", "SHIKSHA"];
 
@@ -3106,6 +3116,9 @@ export {
   APTITUDE_TOPICS,
   CERTIFICATE_TYPE,
   COMPANY_TYPES,
+  COURSE_STATUS,
+  COURSE_STATUS_DEFAULT,
+  COURSE_STATUS_PUBLISHED,
   DIFFICULTY_LEVEL,
   DSA_DOMAIN,
   DSA_TOPICS,

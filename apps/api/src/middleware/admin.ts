@@ -47,6 +47,16 @@ export const verifyJwtAdmin = async (
 };
 
 /**
+ * Non-fatal admin check: machine `x-admin-secret` or an admin JWT. Use where
+ * admin identity only unlocks extra behaviour (e.g. reading unpublished
+ * content) rather than gating the whole route. Never responds.
+ */
+export const isAdminRequest = async (req: NextApiRequest): Promise<boolean> => {
+  if (matchesAdminSecret(req)) return true;
+  return Boolean(await verifyJwtAdmin(req));
+};
+
+/**
  * Ensures the request is from an authenticated admin user (JWT + RBAC).
  * Non-admin JWT returns 403; invalid/missing JWT returns 401.
  */
