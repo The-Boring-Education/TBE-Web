@@ -9,6 +9,7 @@ export * from "./contribution";
 export * from "./contributor";
 export * from "./core-subjects";
 export * from "./coupon";
+export * from "./courseBundle";
 export * from "./dsayatra";
 export * from "./email";
 export * from "./feedback";

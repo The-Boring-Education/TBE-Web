@@ -32,13 +32,13 @@ import { fileURLToPath, pathToFileURL } from "url";
 import yargs from "yargs";
 
 import {
-  type ScriptEnv,
   API_ROOT,
-  SCRIPT_ENV_CHOICES,
   assertProdConfirmed,
   cliArgv,
   loadScriptEnv,
   requireParsedValue,
+  SCRIPT_ENV_CHOICES,
+  type ScriptEnv,
 } from "./lib/script-env";
 
 const __filename = fileURLToPath(import.meta.url);

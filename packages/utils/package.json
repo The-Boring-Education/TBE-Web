@@ -16,6 +16,7 @@
     "./cors": "./src/cors.ts",
     "./mdx": "./src/mdx/index.ts",
     "./content-id": "./src/content-id.ts",
+    "./courseBundle": "./src/courseBundle.ts",
     "./onboarding": "./src/onboarding.ts",
     "./array": "./src/array.ts",
     "./challenges": "./src/challenges.ts",

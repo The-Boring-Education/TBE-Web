@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 import { envConfig } from "@/lib/constants";
 import { logger } from "@/lib/utils/logger";
-import { ensureAdminAccess } from "@/middleware/admin";
 
 let indexesSynced = false;
 
@@ -51,12 +49,4 @@ const connectDB = async () => {
   }
 };
 
-// Deprecated compatibility wrapper. Admin auth now requires JWT + RBAC.
-const adminMiddleware = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-): Promise<boolean> => {
-  return ensureAdminAccess(req, res);
-};
-
-export { adminMiddleware, connectDB };
+export { connectDB };

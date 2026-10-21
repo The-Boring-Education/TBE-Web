@@ -17,7 +17,6 @@ vi.mock("@/middleware/api", async () => {
   return {
     ...actual,
     connectDB: vi.fn(),
-    adminMiddleware: vi.fn().mockResolvedValue(true),
   };
 });
 
@@ -154,7 +153,7 @@ describe("Admin Coupon Index – GET /admin/coupon", () => {
     });
     await indexHandler(req, res);
 
-    // adminMiddleware returns false → handler returns immediately
+    // ensureAdminAccess returns false → handler returns immediately
     // The middleware itself writes the 401 response in real usage
     expect(mockGetAllCoupons).not.toHaveBeenCalled();
   });

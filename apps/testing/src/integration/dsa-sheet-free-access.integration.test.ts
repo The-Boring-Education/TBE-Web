@@ -21,10 +21,6 @@ vi.mock("../../../api/src/lib/utils", () => ({
   sendAPIResponse: (data: unknown) => data,
 }));
 
-vi.mock("../../../api/src/middleware/api", () => ({
-  adminMiddleware: vi.fn().mockResolvedValue(true),
-}));
-
 vi.mock("../../../api/src/lib/constants", async (importOriginal) => {
   const actual =
     await importOriginal<typeof import("../../../api/src/lib/constants")>();

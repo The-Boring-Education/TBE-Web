@@ -12,6 +12,7 @@ import type {
   ApplicationStatusType,
   CertificateType,
   CompanyType,
+  CourseStatusType,
   DifficultyType,
   DSADifficultyType,
   DSADomainType,
@@ -184,6 +185,7 @@ export interface CourseModel extends Document {
   price: number;
   coverImageURL: string;
   liveOn: Date;
+  status: CourseStatusType;
   chapters: CourseChapterModel[];
   roadmap: RoadmapsType;
   difficultyLevel: DifficultyType;
@@ -192,6 +194,7 @@ export interface CourseModel extends Document {
 
 export interface CourseChapterModel {
   _id: typeof Schema.Types.ObjectId;
+  key: string;
   name: string;
   content: string;
   isOptional?: boolean;
@@ -897,6 +900,7 @@ export interface AddCourseRequestPayloadProps {
   isPremium?: boolean;
   price?: number;
   features?: string[];
+  status?: CourseStatusType;
 }
 
 export interface AddInterviewSheetRequestPayloadProps {
@@ -939,13 +943,17 @@ export interface UpdateCourseRequestPayloadProps {
     price?: number;
     isPremium?: boolean;
     features?: string[];
+    status?: CourseStatusType;
+    slug?: string;
   };
   courseId: string;
 }
 
 export interface AddChapterToCourseRequestProps {
+  key: string;
   name: string;
   content: string;
+  isOptional?: boolean;
 }
 
 export interface UpdateChapterInCourseRequestProps {
@@ -1046,6 +1054,7 @@ export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  status?: CourseStatusType;
   progress?: {
     completed: number;
     total: number;

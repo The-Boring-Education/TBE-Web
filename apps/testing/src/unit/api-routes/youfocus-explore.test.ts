@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetPlaylistByTagFromDB = vi.fn();
 const mockDeletePlaylistByTagFromDB = vi.fn();
-const mockAdminMiddleware = vi.fn();
 
 vi.mock("../../../../api/src/lib/constants", () => ({
   apiStatusCodes: {
@@ -26,22 +25,19 @@ vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (payload: unknown) => payload,
 }));
 
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: (...args: unknown[]) => mockAdminMiddleware(...args),
-}));
-
-vi.mock("../../../../api/src/middleware/requestLogger", () => ({
-  withApiHandler: (
-    handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>,
-  ) => handler,
-}));
+vi.mock("../../../../api/src/middleware/requestLogger", async () => {
+  const { withApiHandlerMock } =
+    await import("../../test-utils/api-handler-mock");
+  return { withApiHandler: withApiHandlerMock };
+});
 
 import handler from "../../../../api/src/pages/api/v1/youfocus/explore";
+import { adminGuardMock } from "../../test-utils/api-handler-mock";
 
 describe("YouFocus Explore API — /api/v1/youfocus/explore", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAdminMiddleware.mockResolvedValue(true);
+    adminGuardMock.mockResolvedValue(true);
   });
 
   describe("GET — fetch playlists by skill", () => {
@@ -103,14 +99,14 @@ describe("YouFocus Explore API — /api/v1/youfocus/explore", () => {
 
       await handler(req, res);
 
-      expect(mockAdminMiddleware).not.toHaveBeenCalled();
+      expect(adminGuardMock).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(200);
     });
   });
 
   describe("DELETE — admin-only delete playlists by skill", () => {
     it("returns 401 when admin auth fails", async () => {
-      mockAdminMiddleware.mockImplementation(
+      adminGuardMock.mockImplementation(
         async (_req: NextApiRequest, res: NextApiResponse) => {
           res.statusCode = 401;
           (res as any).json({
@@ -140,7 +136,7 @@ describe("YouFocus Explore API — /api/v1/youfocus/explore", () => {
 
       await handler(req, res);
 
-      expect(mockAdminMiddleware).toHaveBeenCalled();
+      expect(adminGuardMock).toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(400);
     });
 
