@@ -98,6 +98,8 @@ const nextConfig = {
       'i.ytimg.com',
       'via.placeholder.com',
       'avatars.githubusercontent.com',
+      'cdn.simpleicons.org',
+      'cdn.jsdelivr.net',
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60,
