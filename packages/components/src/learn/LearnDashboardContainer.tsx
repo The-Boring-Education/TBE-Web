@@ -713,7 +713,14 @@ export const LearnDashboardContainer: React.FC<
   const [showQuiz, setShowQuiz] = useState<boolean>(false);
   const [isSavingQuiz, setIsSavingQuiz] = useState<boolean>(false);
   const [isCookingQuiz, setIsCookingQuiz] = useState<boolean>(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isManuallyCollapsed, setIsManuallyCollapsed] = useState<boolean>(true);
+  const isSidebarCollapsed = !isHovered && isManuallyCollapsed;
+
+  const handleNavItemClick = () => {
+    setIsHovered(false);
+    setIsManuallyCollapsed(true);
+  };
 
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [enrolledSheets, setEnrolledSheets] = useState<any[]>([]);
@@ -839,13 +846,18 @@ export const LearnDashboardContainer: React.FC<
       >
         {/* Left Column: Fixed Navigation Sidebar */}
         <aside
-          onMouseEnter={() => setIsSidebarCollapsed(false)}
-          onMouseLeave={() => setIsSidebarCollapsed(true)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           className={`${
             isSidebarCollapsed
               ? "w-[56px] sm:w-[64px] px-1 sm:px-1.5"
               : "w-[220px] sm:w-[240px] px-2 sm:px-2.5"
-          } border-r border-[#E8ECF2] bg-white min-h-screen sticky top-0 flex flex-col justify-between py-3 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 overflow-hidden`}
+          } border-r border-[#E8ECF2] bg-white min-h-screen sticky top-0 flex flex-col justify-between py-3 shrink-0 select-none z-30 overflow-hidden`}
+          style={{
+            transition:
+              "width 220ms cubic-bezier(0.4,0,0.2,1), padding 220ms cubic-bezier(0.4,0,0.2,1)",
+            willChange: "width",
+          }}
         >
           <div className="space-y-2">
             {/* Top Collapse Toggle Button */}
@@ -855,7 +867,10 @@ export const LearnDashboardContainer: React.FC<
               } pb-0.5`}
             >
               <button
-                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                onClick={() => {
+                  setIsHovered(false);
+                  setIsManuallyCollapsed(!isSidebarCollapsed);
+                }}
                 className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
                 title={
                   isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
@@ -869,7 +884,7 @@ export const LearnDashboardContainer: React.FC<
               </button>
             </div>
 
-            <nav className="space-y-1.5">
+            <nav className="space-y-1.5" onClick={handleNavItemClick}>
               {/* Dashboard Tab */}
               <div>
                 <button
@@ -1250,6 +1265,7 @@ export const LearnDashboardContainer: React.FC<
           <div className="pt-2 border-t border-[#E8ECF2] mt-auto">
             <Link
               href="/user/profile"
+              onClick={handleNavItemClick}
               title="Settings"
               className={`w-full bg-slate-50/70 hover:bg-slate-100 text-slate-600 hover:text-slate-900 rounded-lg ${
                 isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2.5"
