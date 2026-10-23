@@ -1,7 +1,7 @@
 import { useAuth } from "@tbe/auth";
 import { routes } from "@tbe/constants";
 import { LeaderboardSettings } from "@tbe/gamification";
-import { useUser } from "@tbe/hooks";
+import { useTheme, useUser } from "@tbe/hooks";
 import type { UserProfile } from "@tbe/interface";
 import {
   CACHE_TIMES,
@@ -53,11 +53,16 @@ export const UnifiedProfilePage: React.FC<UnifiedProfilePageProps> = ({
   const queryClient = useQueryClient();
   const { signOut } = useAuth();
   const { user, isAuth, loading: loadingUser, updateSession } = useUser();
+  const { resolvedTheme } = useTheme();
 
   const isDark =
     theme !== undefined
       ? theme === "dark"
-      : navbarVariant === "dsayatra" || navbarVariant === "oncampus";
+      : resolvedTheme === "dark"
+        ? true
+        : resolvedTheme === "light"
+          ? false
+          : navbarVariant === "dsayatra" || navbarVariant === "oncampus";
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [activeModalTab, setActiveModalTab] = useState<

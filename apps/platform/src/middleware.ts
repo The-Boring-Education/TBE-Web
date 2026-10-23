@@ -135,9 +135,7 @@ const middleware = async (req: NextRequest) => {
       }),
       { status: 500 },
     );
-    const origin = req.headers.get('origin');
-    const isAPI = req.nextUrl.pathname.startsWith('/api/');
-    return isAPI ? addCorsHeaders(res, origin) : res;
+    return res;
   }
 };
 

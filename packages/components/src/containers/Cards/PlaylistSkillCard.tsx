@@ -14,7 +14,7 @@ const SkillCard = ({
   const router = useRouter();
 
   return (
-    <FlexContainer className="rounded-md hover:scale-105 transition-transform duration-300 md:w-fit w-full relative border border-black p-[6px]">
+    <FlexContainer className="rounded-xl hover:scale-105 transition-transform duration-300 md:w-fit w-full relative border border-slate-200/80 dark:border-white/10 bg-white dark:bg-[#121216] shadow-sm p-[6px]">
       <div
         className="cursor-pointer relative md:w-fit w-full"
         onClick={() => router.push(`${routes.youfocusPlaylistPageById(_id)}`)}
@@ -26,7 +26,7 @@ const SkillCard = ({
         />
 
         {referrerBy > 0 && (
-          <div className="absolute bottom-2 left-2 bg-white text-primary shadow-md px-1 md:px-3 py-1 rounded-full flex items-center justify-center">
+          <div className="absolute bottom-2 left-2 bg-white dark:bg-[#18181b] border border-slate-100 dark:border-white/10 text-primary shadow-md px-1 md:px-3 py-1 rounded-full flex items-center justify-center">
             <Text className="text-xs font-semibold text-center" level="p">
               {referrerBy} Learners Suggested
             </Text>

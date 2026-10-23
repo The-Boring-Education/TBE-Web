@@ -32,7 +32,7 @@ const CollegeEventsSection = () => (
           href={LINKS.viewSessionDetails}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-xs font-bold sm:text-sm text-zinc-800 transition-colors duration-200 hover:bg-zinc-50"
+          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 dark:border-white/10 bg-white dark:bg-white/[0.05] px-5 py-2.5 text-xs font-bold sm:text-sm text-zinc-800 dark:text-zinc-200 transition-colors duration-200 hover:bg-zinc-50 dark:hover:bg-white/[0.1]"
         >
           View Session Details
         </a>

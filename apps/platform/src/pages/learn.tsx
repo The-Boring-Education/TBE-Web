@@ -18,7 +18,7 @@ const LearnPage = ({ seoMeta }: PageProps) => {
 
   if (loadingUser) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-[#FAFAFC]'>
+      <div className='min-h-screen flex items-center justify-center bg-[#FAFAFC] dark:bg-background'>
         <LoadingSpinner />
       </div>
     );
@@ -32,11 +32,12 @@ const LearnPage = ({ seoMeta }: PageProps) => {
     <Fragment>
       <SEO
         seoMeta={
-          seoMeta || {
+          seoMeta ||
+          ({
             title: 'Learn & Personalization Dashboard | The Boring Education',
             description:
               'Your personalized learning dashboard, course recommendations, and progress tracking.',
-          }
+          } as any)
         }
       />
       <LearnDashboardContainer user={user} />

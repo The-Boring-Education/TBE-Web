@@ -1,3 +1,4 @@
+import { useTheme } from '@tbe/hooks';
 import { Bookmark } from 'lucide-react';
 
 import { InterviewSheetMDXRenderer } from './InterviewSheetMDXRenderer';
@@ -25,9 +26,12 @@ const InterviewQuestionContent = ({
   actions,
   isStarred,
   onToggleStar,
-  theme = 'light',
+  theme,
 }: InterviewQuestionContentProps) => {
-  const isDark = theme === 'dark';
+  const { resolvedTheme } = useTheme();
+  const effectiveTheme =
+    theme ?? (resolvedTheme === 'dark' ? 'dark' : 'light');
+  const isDark = effectiveTheme === 'dark';
   const proseClass = `prose max-w-none prose-headings:scroll-mt-6 prose-strong:font-semibold prose-code:font-mono prose-code:text-xs prose-code:sm:text-[13px] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none ${
     isDark
       ? 'prose-invert prose-code:bg-muted/40 prose-code:text-red-400 prose-code:border prose-code:border-gray-800'
@@ -114,7 +118,10 @@ const InterviewQuestionContent = ({
               <span>PROBLEM STATEMENT</span>
             </h2>
             <div className={proseClass}>
-              <InterviewSheetMDXRenderer mdxSource={question} theme={theme} />
+              <InterviewSheetMDXRenderer
+                mdxSource={question}
+                theme={effectiveTheme}
+              />
             </div>
           </div>
         )}
@@ -122,7 +129,10 @@ const InterviewQuestionContent = ({
         {answer && (
           <div className='space-y-2'>
             <div className={proseClass}>
-              <InterviewSheetMDXRenderer mdxSource={answer} theme={theme} />
+              <InterviewSheetMDXRenderer
+                mdxSource={answer}
+                theme={effectiveTheme}
+              />
             </div>
           </div>
         )}

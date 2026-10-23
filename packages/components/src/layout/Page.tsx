@@ -44,12 +44,14 @@ const PageLayout = ({ children }: PageLayoutProps) => {
 
   if (isExcludedRoute) {
     return (
-      <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>
+      <main className="bg-lightBG dark:bg-background flex min-h-screen flex-col text-foreground">
+        {children}
+      </main>
     );
   }
 
   return (
-    <main className="bg-lightBG flex flex-col min-h-screen">
+    <main className="bg-lightBG dark:bg-background flex flex-col min-h-screen text-foreground">
       <Navbar />
       <motion.div
         animate={{ opacity: 1, scale: 1 }}

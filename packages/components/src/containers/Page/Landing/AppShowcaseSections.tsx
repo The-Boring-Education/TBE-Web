@@ -34,8 +34,8 @@ const WidgetCard = ({
 }) => (
   <div className={`relative w-full ${className}`}>
     {/* Gradient border overlay */}
-    <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-zinc-200/80 via-zinc-200/30 to-transparent pointer-events-none" />
-    <div className="relative rounded-2xl border border-zinc-200/80 bg-white/95 p-4 sm:p-5 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-zinc-200/80 via-zinc-200/30 to-transparent dark:from-white/10 dark:via-white/5 pointer-events-none" />
+    <div className="relative rounded-2xl border border-zinc-200/80 dark:border-white/10 bg-white/95 dark:bg-[#121216]/95 p-4 sm:p-5 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
       {children}
     </div>
   </div>
@@ -50,7 +50,7 @@ const RowItem = ({
   className?: string;
 }) => (
   <div
-    className={`flex items-center justify-between gap-2 rounded-xl border border-zinc-100/80 bg-zinc-50/60 px-2.5 py-2 sm:px-3 sm:py-2.5 ring-1 ring-zinc-100/60 transition-colors hover:bg-white/80 ${className}`}
+    className={`flex items-center justify-between gap-2 rounded-xl border border-zinc-100/80 dark:border-white/10 bg-zinc-50/60 dark:bg-white/[0.04] px-2.5 py-2 sm:px-3 sm:py-2.5 ring-1 ring-zinc-100/60 dark:ring-white/5 transition-colors hover:bg-white/80 dark:hover:bg-white/[0.08] ${className}`}
   >
     {children}
   </div>
@@ -271,9 +271,9 @@ export function AppShowcaseSections({
               ].map(({ label, icon: Icon }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-white/70 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm backdrop-blur-sm transition-all hover:border-zinc-300 hover:bg-white"
+                  className="flex items-center gap-2.5 rounded-xl border border-zinc-200/80 dark:border-white/10 bg-white/70 dark:bg-[#121216]/95 px-3 py-2 text-xs font-semibold text-zinc-800 dark:text-white shadow-sm dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-sm transition-all hover:border-zinc-300 dark:hover:border-red-500/40 hover:bg-white dark:hover:bg-[#18181f]"
                 >
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.12)] text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)]">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.12)] dark:bg-[rgba(255,87,87,0.18)] text-[#FF5757] ring-1 ring-[rgba(255,87,87,0.20)] dark:ring-[rgba(255,87,87,0.35)]">
                     <Icon className="h-3.5 w-3.5" />
                   </div>
                   <span className="leading-tight">{label}</span>
@@ -303,13 +303,13 @@ export function AppShowcaseSections({
           >
             <WidgetCard>
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <BookOpen className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate">
                       Free Mini Courses
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -355,7 +355,7 @@ export function AppShowcaseSections({
                       <mod.icon
                         className={`h-3.5 w-3.5 shrink-0 ${mod.color}`}
                       />
-                      <span className="text-xs font-semibold text-zinc-800 truncate">
+                      <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">
                         {mod.name}
                       </span>
                     </div>
@@ -387,13 +387,13 @@ export function AppShowcaseSections({
             className="w-full order-2 lg:order-1"
           >
             <WidgetCard>
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <MessageSquare className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate">
                       Interview Question Bank
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -433,7 +433,7 @@ export function AppShowcaseSections({
                     <div className="flex items-center gap-2 min-w-0">
                       <MessageSquare className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
                       <div className="min-w-0">
-                        <h5 className="text-xs font-semibold text-zinc-800 truncate">
+                        <h5 className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">
                           {q.question}
                         </h5>
                         <p className="text-[10px] text-zinc-400 font-medium">
@@ -478,7 +478,7 @@ export function AppShowcaseSections({
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-snug">
                     {bullet}
                   </span>
                 </li>
@@ -535,7 +535,7 @@ export function AppShowcaseSections({
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-snug">
                     {bullet}
                   </span>
                 </li>
@@ -564,13 +564,13 @@ export function AppShowcaseSections({
           >
             <WidgetCard>
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <Layers className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate">
                       DSA Roadmap & Streak
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -592,7 +592,7 @@ export function AppShowcaseSections({
                     className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all ${
                       dsaActiveTopic === topic
                         ? "bg-[#FF5757] text-white"
-                        : "bg-zinc-100/80 text-zinc-600 hover:text-zinc-900 ring-1 ring-zinc-200/60"
+                        : "bg-zinc-100/80 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white ring-1 ring-zinc-200/60 dark:ring-white/10"
                     }`}
                   >
                     {topic}
@@ -608,7 +608,7 @@ export function AppShowcaseSections({
                       <prob.icon
                         className={`h-3.5 w-3.5 shrink-0 ${prob.color}`}
                       />
-                      <span className="text-xs font-semibold text-zinc-800 truncate">
+                      <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">
                         {prob.name}
                       </span>
                     </div>
@@ -617,7 +617,7 @@ export function AppShowcaseSections({
                         className={`rounded-md px-1.5 py-0.5 text-[9px] font-extrabold ring-1 ${
                           prob.diff === "Easy"
                             ? "bg-[rgba(255,87,87,0.10)] text-[#FF5757] ring-[rgba(255,87,87,0.20)]"
-                            : "bg-zinc-100 text-zinc-500 ring-zinc-200/60"
+                            : "bg-zinc-100 dark:bg-white/[0.08] text-zinc-500 dark:text-zinc-400 ring-zinc-200/60 dark:ring-white/10"
                         }`}
                       >
                         {prob.diff}
@@ -651,13 +651,13 @@ export function AppShowcaseSections({
             className="w-full order-2 lg:order-1"
           >
             <WidgetCard>
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <GraduationCap className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate">
                       Campus Placement Readiness
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -696,17 +696,17 @@ export function AppShowcaseSections({
                 ].map((mod) => (
                   <div
                     key={mod.title}
-                    className="rounded-xl border border-zinc-100/80 bg-zinc-50/60 p-2.5 ring-1 ring-zinc-100/60 space-y-1.5"
+                    className="rounded-xl border border-zinc-100/80 dark:border-white/10 bg-zinc-50/60 dark:bg-white/[0.04] p-2.5 ring-1 ring-zinc-100/60 dark:ring-white/5 space-y-1.5"
                   >
                     <div className="flex items-start justify-between gap-1">
-                      <span className="text-[11px] font-bold text-zinc-800 leading-tight">
+                      <span className="text-[11px] font-bold text-zinc-800 dark:text-zinc-200 leading-tight">
                         {mod.title}
                       </span>
                       <span className="text-[10px] font-extrabold text-[#FF5757] shrink-0">
                         {mod.progress}
                       </span>
                     </div>
-                    <div className="h-1 w-full rounded-full bg-zinc-200/80">
+                    <div className="h-1 w-full rounded-full bg-zinc-200/80 dark:bg-white/10">
                       <div
                         className="h-1 rounded-full bg-[#FF5757]/80"
                         style={{ width: mod.progress }}
@@ -749,7 +749,7 @@ export function AppShowcaseSections({
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-snug">
                     {bullet}
                   </span>
                 </li>
@@ -806,7 +806,7 @@ export function AppShowcaseSections({
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-snug">
                     {bullet}
                   </span>
                 </li>
@@ -834,13 +834,13 @@ export function AppShowcaseSections({
             className="w-full"
           >
             <WidgetCard>
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <FileCheck className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white">
                       Live ATS Score Inspector
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -859,11 +859,11 @@ export function AppShowcaseSections({
               </div>
 
               <div className="mb-2.5 flex items-center gap-2">
-                <div className="h-px flex-1 bg-zinc-100" />
+                <div className="h-px flex-1 bg-zinc-100 dark:bg-white/10" />
                 <span className="text-[10px] text-zinc-400 font-medium">
                   Score Breakdown
                 </span>
-                <div className="h-px flex-1 bg-zinc-100" />
+                <div className="h-px flex-1 bg-zinc-100 dark:bg-white/10" />
               </div>
 
               <div className="space-y-1.5">
@@ -876,7 +876,7 @@ export function AppShowcaseSections({
                   <RowItem key={item.label}>
                     <div className="flex items-center gap-2 min-w-0">
                       <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
-                      <span className="text-xs font-semibold text-zinc-800 truncate">
+                      <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">
                         {item.label}
                       </span>
                     </div>
@@ -908,13 +908,13 @@ export function AppShowcaseSections({
             className="w-full order-2 lg:order-1"
           >
             <WidgetCard>
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <UserCheck className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate">
                       Job Search & Recruiter Pipeline
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -952,7 +952,7 @@ export function AppShowcaseSections({
                 ].map((job) => (
                   <RowItem key={job.company}>
                     <div className="min-w-0">
-                      <h5 className="text-xs font-semibold text-zinc-800 truncate">
+                      <h5 className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">
                         {job.company}
                       </h5>
                       <p className="text-[10px] font-medium text-zinc-400 truncate">
@@ -996,7 +996,7 @@ export function AppShowcaseSections({
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-snug">
                     {bullet}
                   </span>
                 </li>
@@ -1053,7 +1053,7 @@ export function AppShowcaseSections({
               ].map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 leading-snug">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-snug">
                     {bullet}
                   </span>
                 </li>
@@ -1081,13 +1081,13 @@ export function AppShowcaseSections({
             className="w-full"
           >
             <WidgetCard>
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,87,87,0.15)] ring-1 ring-[rgba(255,87,87,0.30)]">
                     <FolderGit2 className="h-3.5 w-3.5 text-[#FF5757]" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-zinc-900">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white">
                       Developer Vault
                     </h4>
                     <p className="text-[10px] text-zinc-500 font-medium">
@@ -1131,7 +1131,7 @@ export function AppShowcaseSections({
                     <div className="flex items-center gap-2 min-w-0">
                       <FileText className="h-3.5 w-3.5 shrink-0 text-[#FF5757]/70" />
                       <div className="min-w-0">
-                        <h5 className="text-xs font-semibold text-zinc-800 truncate">
+                        <h5 className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate">
                           {res.title}
                         </h5>
                         <p className="text-[10px] text-zinc-400 font-medium">

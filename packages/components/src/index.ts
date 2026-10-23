@@ -43,6 +43,7 @@ export { default as LoginWithGoogleButton } from "./common/Buttons/LoginWithGoog
 export { default as LogoutButton } from "./common/Buttons/LogoutButton";
 export { default as ScrollToTopBottomButton } from "./common/Buttons/ScrollToTopBottomButton";
 export { default as StarButton } from "./common/Buttons/StarButton";
+export { default as ThemeToggleButton } from "./common/Buttons/ThemeToggleButton";
 export { default as ToggleButton } from "./common/Buttons/ToggleButton";
 export { default as UserPointButton } from "./common/Buttons/UserPointButton";
 export { default as Carousel } from "./common/Carousel";

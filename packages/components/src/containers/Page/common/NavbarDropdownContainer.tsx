@@ -9,18 +9,18 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
         return (
           <FlexContainer
             key={name}
-            className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm"
+            className="relative rounded-lg p-2 hover:bg-muted/80 dark:hover:bg-white/5 max-w-sm transition-colors"
             direction="col"
             itemCenter={false}
           >
             <FlexContainer direction="col" itemCenter={false}>
-              <div className="text-base font-semibold text-black dark:text-gray-900">
+              <div className="text-base font-semibold text-foreground dark:text-white">
                 {name}{" "}
                 {isDevelopment && (
                   <span className="text-secondary">(In Dev)</span>
                 )}
               </div>
-              <p className="text-gray-600 dark:text-gray-700 break-words">
+              <p className="text-muted-foreground dark:text-zinc-400 break-words text-xs sm:text-sm">
                 {description}
               </p>
             </FlexContainer>
@@ -31,13 +31,13 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
       return (
         <FlexContainer
           key={name}
-          className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-50 max-w-sm"
+          className="relative rounded-lg p-2 hover:bg-muted/80 dark:hover:bg-white/5 max-w-sm transition-colors"
           direction="col"
           itemCenter={false}
         >
           <FlexContainer direction="col" itemCenter={false}>
             <Link
-              className="text-base font-semibold text-black dark:text-gray-900 hover:text-primary dark:hover:text-primary"
+              className="text-base font-semibold text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
               href={href}
               target={target}
             >
@@ -47,7 +47,7 @@ const NavbarDropdownContainer = ({ links }: NavbarDropdownContainerProps) => (
               )}
               <span className="absolute inset-0" />
             </Link>
-            <p className="text-gray-600 dark:text-gray-700 break-words">
+            <p className="text-muted-foreground dark:text-zinc-400 break-words text-xs sm:text-sm">
               {description}
             </p>
           </FlexContainer>

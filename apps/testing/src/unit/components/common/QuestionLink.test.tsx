@@ -9,6 +9,12 @@ const mockSendEvent = vi.fn();
 
 vi.mock("@tbe/hooks", () => ({
   useAnalytics: () => ({ trackEvent: mockLegacyTrackEvent }),
+  useTheme: () => ({
+    theme: "light",
+    resolvedTheme: "light",
+    setTheme: vi.fn(),
+    mounted: true,
+  }),
 }));
 
 vi.mock("@tbe/utils", async (importOriginal) => {

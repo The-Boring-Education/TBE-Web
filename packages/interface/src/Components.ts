@@ -1273,3 +1273,10 @@ export interface PatternQuizBannerProps {
   className?: string;
   compact?: boolean;
 }
+
+export interface ThemeToggleButtonProps {
+  className?: string;
+  theme?: "light" | "dark" | "system";
+  onToggle?: () => void;
+  showLabel?: boolean;
+}

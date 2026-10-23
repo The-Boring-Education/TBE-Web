@@ -25,12 +25,21 @@ const MobileNavbarLinksContainer = ({
         // Skip rendering Link if href is empty or undefined
         if (!href || (typeof href === "string" && href.trim() === "")) {
           return (
-            <div key={index} className="text-base font-semibold text-black">
-              <Text className="strong-text" level="span">
+            <div
+              key={index}
+              className="text-base font-semibold text-foreground dark:text-white"
+            >
+              <Text
+                className="strong-text text-foreground dark:text-white"
+                level="span"
+              >
                 {name}
               </Text>
               <br />
-              <Text className="pre-title text-greyDark" level="span">
+              <Text
+                className="pre-title text-muted-foreground dark:text-zinc-400"
+                level="span"
+              >
                 {description}
               </Text>
             </div>
@@ -40,16 +49,22 @@ const MobileNavbarLinksContainer = ({
         return (
           <Link
             key={index}
-            className="text-base font-semibold text-black"
+            className="text-base font-semibold text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
             href={href}
             target={target}
             onClick={onLinkClick}
           >
-            <Text className="strong-text" level="span">
+            <Text
+              className="strong-text text-foreground dark:text-white"
+              level="span"
+            >
               {name}
             </Text>
             <br />
-            <Text className="pre-title text-greyDark" level="span">
+            <Text
+              className="pre-title text-muted-foreground dark:text-zinc-400"
+              level="span"
+            >
               {description}
             </Text>
           </Link>

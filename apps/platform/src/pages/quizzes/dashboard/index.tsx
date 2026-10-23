@@ -38,7 +38,7 @@ function DashboardContent() {
 
   if (loading) {
     return (
-      <div className='min-h-screen bg-gray-50 flex flex-col'>
+      <div className='min-h-screen bg-gray-50 dark:bg-background flex flex-col'>
         <QuizzesNav activeTab='dashboard' />
         <div className='flex-1 flex items-center justify-center p-8'>
           <LoadingSpinner label='Loading available quizzes...' />
@@ -49,11 +49,11 @@ function DashboardContent() {
 
   if (error) {
     return (
-      <div className='min-h-screen bg-gray-50 flex flex-col'>
+      <div className='min-h-screen bg-gray-50 dark:bg-background flex flex-col'>
         <QuizzesNav activeTab='dashboard' />
         <div className='flex-1 flex items-center justify-center p-8'>
-          <div className='text-center bg-white p-8 rounded-2xl border border-gray-200 shadow-xs max-w-md'>
-            <p className='text-red-600 mb-4 font-medium'>{error}</p>
+          <div className='text-center bg-white dark:bg-[#121216] p-8 rounded-2xl border border-gray-200 dark:border-white/10 shadow-xs max-w-md'>
+            <p className='text-red-600 dark:text-red-400 mb-4 font-medium'>{error}</p>
             <Button onClick={refetch} variant='OUTLINE'>
               Try Again
             </Button>
@@ -67,7 +67,7 @@ function DashboardContent() {
     user?.name?.trim().split(/\s+/).filter(Boolean)[0] || 'there';
 
   return (
-    <div className='min-h-screen bg-gray-50 flex flex-col'>
+    <div className='min-h-screen bg-gray-50 dark:bg-background flex flex-col transition-colors'>
       <QuizzesNav activeTab='dashboard' />
 
       <main className='flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12'>
@@ -79,10 +79,10 @@ function DashboardContent() {
                 <Sparkles className='w-3.5 h-3.5' />
                 Practice &amp; Assessment
               </div>
-              <h1 className='text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight'>
+              <h1 className='text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight'>
                 Welcome back, {firstName}! 👋
               </h1>
-              <p className='text-base sm:text-lg text-gray-600 mt-1'>
+              <p className='text-base sm:text-lg text-gray-600 dark:text-zinc-400 mt-1'>
                 Choose a topic below to test your technical depth and earn
                 points.
               </p>
@@ -92,15 +92,15 @@ function DashboardContent() {
 
         {/* Quiz Categories */}
         <div className='max-w-6xl mx-auto'>
-          <Card className='shadow-xs border border-gray-200 bg-white rounded-2xl'>
-            <CardHeader className='border-b border-gray-100 p-6 sm:p-8'>
-              <CardTitle className='flex items-center space-x-3 text-2xl text-gray-900 font-bold'>
+          <Card className='shadow-xs border border-gray-200 dark:border-white/10 bg-white dark:bg-[#121216] rounded-2xl'>
+            <CardHeader className='border-b border-gray-100 dark:border-white/10 p-6 sm:p-8'>
+              <CardTitle className='flex items-center space-x-3 text-2xl text-gray-900 dark:text-white font-bold'>
                 <div className='w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary'>
                   <BookOpen className='h-5 w-5' />
                 </div>
                 <span>Available Quizzes</span>
               </CardTitle>
-              <CardDescription className='text-base text-gray-500 mt-1'>
+              <CardDescription className='text-base text-gray-500 dark:text-zinc-400 mt-1'>
                 Pick a category to begin your timed assessment
               </CardDescription>
             </CardHeader>
@@ -108,8 +108,8 @@ function DashboardContent() {
             <CardContent className='p-6 sm:p-8'>
               {categories.length === 0 ? (
                 <div className='text-center py-16'>
-                  <BookOpen className='h-16 w-16 text-gray-300 mx-auto mb-4' />
-                  <p className='text-gray-500 text-lg mb-6'>
+                  <BookOpen className='h-16 w-16 text-gray-300 dark:text-zinc-600 mx-auto mb-4' />
+                  <p className='text-gray-500 dark:text-zinc-400 text-lg mb-6'>
                     No quizzes currently available. Check back soon!
                   </p>
                   <Button onClick={refetch} variant='OUTLINE' size='LARGE'>
@@ -121,18 +121,18 @@ function DashboardContent() {
                   {categories.map((category) => (
                     <Card
                       key={category._id}
-                      className='cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1 border border-gray-200 hover:border-primary/40 bg-white rounded-xl overflow-hidden flex flex-col justify-between'
+                      className='cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1 border border-gray-200 dark:border-white/10 hover:border-primary/40 dark:hover:border-primary/40 bg-white dark:bg-[#16161b] rounded-xl overflow-hidden flex flex-col justify-between'
                       onClick={() => startQuiz(category._id)}
                     >
                       <CardContent className='p-6 flex flex-col flex-1 justify-between'>
                         <div>
-                          <div className='text-4xl mb-4 p-2 w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center'>
+                          <div className='text-4xl mb-4 p-2 w-14 h-14 rounded-xl bg-gray-50 dark:bg-white/[0.04] flex items-center justify-center'>
                             {category.categoryIcon || '💡'}
                           </div>
-                          <h3 className='font-bold text-lg mb-2 text-gray-900'>
+                          <h3 className='font-bold text-lg mb-2 text-gray-900 dark:text-white'>
                             {category.categoryName}
                           </h3>
-                          <p className='text-gray-600 text-sm mb-6 line-clamp-3'>
+                          <p className='text-gray-600 dark:text-zinc-300 text-sm mb-6 line-clamp-3'>
                             {category.categoryDescription}
                           </p>
                         </div>

@@ -56,6 +56,8 @@ export { default as useScrollDirection } from "./useScrollDirection";
 export { default as useScrollPosition } from "./useScrollPosition";
 export { default as useSkillPlaylist } from "./useSkillPlaylist";
 export { useStudyGuideTopic } from "./useStudyGuide";
+export type { ResolvedTheme, Theme } from "./useTheme";
+export { useTheme } from "./useTheme";
 export type { TrackingEventParams } from "./useTracking";
 export { default as useTracking } from "./useTracking";
 export { default as useUnskilledGraphData } from "./useUnskilledGraphData";

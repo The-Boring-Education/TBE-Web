@@ -5,6 +5,7 @@ import {
   SectionHeaderContainer,
   Text,
 } from "@tbe/components";
+import { useTheme } from "@tbe/hooks";
 import type { LandingPageHeroProps } from "@tbe/interface";
 import { motion } from "framer-motion";
 
@@ -31,11 +32,12 @@ const LandingPageHero = ({
   secondaryButton,
   backgroundImageUrl,
   heroText,
-  theme = "light",
+  theme,
   eyebrow,
 }: LandingPageHeroProps) => {
+  const { resolvedTheme } = useTheme();
   const { heading, focusText } = sectionHeaderProps;
-  const isDark = theme === "dark";
+  const isDark = theme === "dark" || resolvedTheme === "dark";
 
   return (
     <Section

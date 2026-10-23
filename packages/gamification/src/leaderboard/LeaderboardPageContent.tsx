@@ -20,14 +20,14 @@ import {
 const ChampionsPodium = ({ type }: { type: LeaderboardType }) => {
   const { champions, loading } = useLeaderboardChampions(type);
   return (
-    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-      <h3 className="text-sm font-bold text-amber-900">
+    <div className="rounded-xl border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-950/20 p-4 transition-colors">
+      <h3 className="text-sm font-bold text-amber-900 dark:text-amber-300">
         🏆 {PREVIOUS_PERIOD_LABELS[type]} Champions
       </h3>
       {loading ? (
-        <div className="mt-3 h-16 rounded bg-amber-100 animate-pulse" />
+        <div className="mt-3 h-16 rounded bg-amber-100 dark:bg-amber-900/30 animate-pulse" />
       ) : !champions?.champions.length ? (
-        <p className="mt-2 text-sm text-amber-800">
+        <p className="mt-2 text-sm text-amber-800 dark:text-amber-400">
           Crowned when the Period closes. Could be you.
         </p>
       ) : (
@@ -36,10 +36,10 @@ const ChampionsPodium = ({ type }: { type: LeaderboardType }) => {
             <li className="flex items-center gap-2" key={c.userId}>
               <span aria-hidden>{["🥇", "🥈", "🥉"][c.rank - 1]}</span>
               <LearnerAvatar name={c.displayName} size={24} src={c.image} />
-              <span className="flex-1 truncate text-sm font-medium text-amber-950">
+              <span className="flex-1 truncate text-sm font-medium text-amber-950 dark:text-amber-200">
                 {c.displayName}
               </span>
-              <span className="text-xs font-semibold text-amber-800 tabular-nums">
+              <span className="text-xs font-semibold text-amber-800 dark:text-amber-400 tabular-nums">
                 {c.score} pts
               </span>
             </li>
@@ -65,14 +65,14 @@ const LeaderboardPageContent = () => {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 grid gap-6 lg:grid-cols-[1fr_300px]">
-      <section className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-        <header className="p-4 space-y-3 border-b border-gray-100">
+      <section className="bg-white dark:bg-[#121216] border border-gray-200 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden transition-colors">
+        <header className="p-4 space-y-3 border-b border-gray-100 dark:border-white/10">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h1 className="flex items-center gap-2 text-xl font-bold text-gray-900">
+            <h1 className="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
               <Trophy className="text-amber-500" size={22} />
               TBE Leaderboard
             </h1>
-            <div className="flex items-center gap-3 text-xs font-medium text-gray-500">
+            <div className="flex items-center gap-3 text-xs font-medium text-gray-500 dark:text-zinc-400">
               {board && (
                 <span className="flex items-center gap-1">
                   <Users size={14} />
@@ -93,15 +93,15 @@ const LeaderboardPageContent = () => {
         {loading ? (
           <ul aria-busy className="p-4 space-y-3">
             {Array.from({ length: 8 }).map((_, i) => (
-              <li className="h-8 rounded bg-gray-100 animate-pulse" key={i} />
+              <li className="h-8 rounded bg-gray-100 dark:bg-white/[0.04] animate-pulse" key={i} />
             ))}
           </ul>
         ) : entries.length === 0 ? (
-          <p className="p-10 text-center text-sm text-gray-500">
+          <p className="p-10 text-center text-sm text-gray-500 dark:text-zinc-400">
             Nobody has learned yet {PERIOD_LABELS[type].toLowerCase()}. Be the first.
           </p>
         ) : (
-          <ol className="divide-y divide-gray-100">
+          <ol className="divide-y divide-gray-100 dark:divide-white/10">
             {entries.map((entry) => (
               <LeaderboardRow
                 entry={entry}
@@ -127,7 +127,7 @@ const LeaderboardPageContent = () => {
         {LEADERBOARD_TABS.map((t) => (
           <ChampionsPodium key={t} type={t} />
         ))}
-        <p className="text-xs text-gray-500 leading-relaxed">
+        <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
           Points come from learning: chapters, questions, quizzes, projects and
           prep logs. Each item counts once, and the leaderboard counts one
           learning action every 3 minutes. Periods reset at midnight IST; weeks

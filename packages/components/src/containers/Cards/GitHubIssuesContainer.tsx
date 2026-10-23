@@ -55,7 +55,7 @@ const GitHubIssuesContainer = ({
             return (
               <div
                 key={repo.repo}
-                className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 flex-1 md:min-w-[300px] lg:min-w-[350px]"
+                className="bg-white dark:bg-[#121216] rounded-xl shadow-lg dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-white/10 p-6 hover:shadow-xl transition-all duration-300 flex-1 md:min-w-[300px] lg:min-w-[350px]"
               >
                 <FlexContainer
                   className="gap-4 flex-col md:flex-row h-full"
@@ -67,7 +67,7 @@ const GitHubIssuesContainer = ({
                         {config?.icon || "📂"}
                       </Text>
                       <Text
-                        className="text-xl font-semibold text-gray-900"
+                        className="text-xl font-semibold text-gray-900 dark:text-white"
                         level="h3"
                       >
                         {config?.displayName || repo.name}
@@ -75,7 +75,7 @@ const GitHubIssuesContainer = ({
                     </FlexContainer>
 
                     <Text
-                      className="text-gray-600 mb-3 flex-1"
+                      className="text-gray-600 dark:text-zinc-400 mb-3 flex-1"
                       level="p"
                       textCenter
                     >
@@ -83,13 +83,13 @@ const GitHubIssuesContainer = ({
                     </Text>
 
                     <FlexContainer className="gap-2 flex-wrap mt-auto">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium">
                         {repo.language}
                       </span>
                       {repo.topics?.slice(0, 3).map((topic) => (
                         <span
                           key={topic}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
+                          className="px-2 py-1 bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-zinc-300 rounded-full text-xs"
                         >
                           {topic}
                         </span>

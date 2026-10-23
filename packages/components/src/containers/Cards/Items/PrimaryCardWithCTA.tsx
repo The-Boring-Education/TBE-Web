@@ -1,4 +1,5 @@
 import { GradientContainer, Image, LinkButton, Text } from "@tbe/components";
+import { useTheme } from "@tbe/hooks";
 import type { PrimaryCardWithCTAProps } from "@tbe/interface";
 
 const PrimaryCardWithCTA = ({
@@ -14,10 +15,11 @@ const PrimaryCardWithCTA = ({
   launchingOn,
   isPremium,
   isPurchased,
-  theme = "light",
+  theme,
 }: PrimaryCardWithCTAProps) => {
+  const { resolvedTheme } = useTheme();
   const border = `border-borderColor${borderColour}`;
-  const isDark = theme === "dark";
+  const isDark = theme === "dark" || resolvedTheme === "dark";
 
   const containerClassName = isDark
     ? `md:w-[45%] lg:w-[30%] max-w-md flex-1 cursor-pointer rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:shadow-lg hover:border-red-500/30 border-gray-800`

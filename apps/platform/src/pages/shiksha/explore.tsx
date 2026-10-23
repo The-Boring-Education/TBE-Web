@@ -13,16 +13,16 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 
 const ShikshaCardSkeleton = () => (
   <div className='rounded-xl border border-border bg-card overflow-hidden flex flex-col h-full shadow-xs animate-pulse'>
-    <div className='w-full aspect-[16/9] bg-gray-200/70 shrink-0' />
+    <div className='w-full aspect-[16/9] bg-muted/70 shrink-0' />
     <div className='p-4 flex flex-col flex-1 gap-2.5'>
-      <div className='h-4 bg-gray-200/90 rounded-md w-3/4' />
+      <div className='h-4 bg-muted/90 rounded-md w-3/4' />
       <div className='space-y-2 my-1 flex-1'>
-        <div className='h-3 bg-gray-100/90 rounded-md w-full' />
-        <div className='h-3 bg-gray-100/90 rounded-md w-4/5' />
+        <div className='h-3 bg-muted/60 rounded-md w-full' />
+        <div className='h-3 bg-muted/60 rounded-md w-4/5' />
       </div>
       <div className='pt-3 border-t border-border/40 flex items-center justify-between mt-auto'>
-        <div className='h-3 bg-gray-200/60 rounded-md w-20' />
-        <div className='h-3 bg-gray-200/80 rounded-md w-16' />
+        <div className='h-3 bg-muted/50 rounded-md w-20' />
+        <div className='h-3 bg-muted/70 rounded-md w-16' />
       </div>
     </div>
   </div>
@@ -131,7 +131,7 @@ const Home = ({ seoMeta }: PageProps) => {
 
       <div className='bg-background min-h-screen font-body'>
         {/* Header Hero Section */}
-        <div className='px-4 sm:px-10 lg:px-20 pt-12 sm:pt-16 pb-8 text-center'>
+        <div className='px-4 sm:px-10 lg:px-20 pt-12 sm:pt-16 pb-8 text-center relative'>
           <div className='inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-primary/20 shadow-xs'>
             <BookOpen className='w-3.5 h-3.5 text-primary' />
             <span>Course Learning</span>

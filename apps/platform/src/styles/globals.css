@@ -54,48 +54,48 @@
 
   /* 2. Fonts */
   .heading-1 {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight text-slate-900 leading-[1.1];
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight text-slate-900 dark:text-slate-100 leading-[1.1];
   }
 
   .heading-2 {
-    @apply text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15];
+    @apply text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 leading-[1.15];
   }
 
   .heading-3 {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight text-slate-900 leading-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight text-slate-900 dark:text-slate-100 leading-tight;
   }
 
   .heading-4,
   .md-1 {
-    @apply text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900;
+    @apply text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100;
   }
 
   .heading-5 {
-    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900;
+    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100;
   }
 
   .subtitle {
-    @apply text-base sm:text-lg md:text-xl font-medium text-slate-600 leading-relaxed;
+    @apply text-base sm:text-lg md:text-xl font-medium text-slate-600 dark:text-slate-400 leading-relaxed;
   }
 
   .paragraph {
-    @apply text-sm sm:text-base md:text-lg font-normal text-slate-600 leading-relaxed;
+    @apply text-sm sm:text-base md:text-lg font-normal text-slate-600 dark:text-slate-400 leading-relaxed;
   }
 
   .strong-text {
-    @apply text-strong-text font-semibold text-contentLight;
+    @apply text-strong-text font-semibold text-contentLight dark:text-contentDark;
   }
 
   .pre-title {
-    @apply text-pre-title font-normal text-contentLight;
+    @apply text-pre-title font-normal text-contentLight dark:text-contentDark;
   }
 
   .button-text {
-    @apply text-button-text font-bold text-contentLight;
+    @apply text-button-text font-bold text-contentLight dark:text-contentDark;
   }
 
   .label {
-    @apply text-label font-semibold text-greyDark;
+    @apply text-label font-semibold text-greyDark dark:text-grey;
   }
 
   /* Link */
@@ -195,17 +195,43 @@ button:active {
 /* Theme variables for component UI */
 :root {
   --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 0 84% 60%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 0 84% 60%;
   --radius: 0.5rem;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 5.5%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 5.5%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 84% 60%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 240 5% 12%;
+  --muted-foreground: 240 5% 65%;
+  --border: 240 4% 16%;
+  --input: 240 4% 16%;
+  --ring: 0 84% 60%;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 /* Glassmorphism utilities */
@@ -217,8 +243,8 @@ button:active {
 }
 
 .glass-dark {
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(9, 9, 11, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(55, 65, 81, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }

@@ -47,8 +47,8 @@ export function Navbar() {
       onClick={() => router.push(item.href)}
       className={`flex items-center gap-2 rounded-md ${
         isActive(item.href)
-          ? "bg-primary text-white "
-          : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          ? "bg-primary text-white"
+          : "text-gray-600 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10"
       }`}
     >
       <item.icon className="h-4 w-4" />
@@ -62,7 +62,6 @@ export function Navbar() {
       onSignOut={handleSignOut}
       variant="quizes"
       customActions={user ? customActions : undefined}
-      theme="light"
       profileRoute="/profile"
     />
   );

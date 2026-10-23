@@ -6,7 +6,7 @@ import {
 } from "@headlessui/react";
 import { UserLevelProgressContainer } from "@tbe/components";
 import { useGamification, useGamificationContext } from "@tbe/gamification";
-import { useUser } from "@tbe/hooks";
+import { useTheme, useUser } from "@tbe/hooks";
 import { Fragment, useEffect, useState } from "react";
 
 interface UserPointButtonProps {
@@ -16,9 +16,17 @@ interface UserPointButtonProps {
 const UserPointButton = ({ theme: propTheme }: UserPointButtonProps) => {
   const [isClient, setIsClient] = useState(false);
   const { isAuth, loading } = useUser();
+  const { resolvedTheme } = useTheme();
   const gamificationContext = useGamificationContext();
-  const theme = propTheme ?? gamificationContext?.theme ?? "light";
-  const isDark = theme === "dark";
+  const theme =
+    propTheme ??
+    (resolvedTheme === "dark"
+      ? "dark"
+      : (gamificationContext?.theme ?? "light"));
+  const isDark =
+    propTheme === "dark" ||
+    resolvedTheme === "dark" ||
+    gamificationContext?.theme === "dark";
 
   const {
     points,
