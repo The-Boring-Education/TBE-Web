@@ -438,7 +438,7 @@ const SheetPage = ({
                         isCompleted={isCompleted}
                         question={`${question}\n\n${answer}`}
                         questionId={questionId}
-                        title={title}
+                        title={question || title}
                         isLocked={isLocked}
                         isStarred={isStarred}
                       />
@@ -497,7 +497,7 @@ const SheetPage = ({
                           isCompleted={isCompleted}
                           question={`${question}\n\n${answer}`}
                           questionId={questionId}
-                          title={title}
+                          title={question || title}
                           isLocked={isLocked}
                           isStarred={isStarred}
                         />
@@ -554,7 +554,9 @@ const SheetPage = ({
                   </div>
                 ) : (
                   <InterviewQuestionContent
-                    questionTitle={currentQuestion?.title || ''}
+                    questionTitle={
+                      currentQuestion?.question || currentQuestion?.title || ''
+                    }
                     question={currentQuestion?.question || ''}
                     answer={
                       currentQuestion?.content?.markdownContent ||
