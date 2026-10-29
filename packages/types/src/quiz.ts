@@ -60,6 +60,8 @@ export interface QuizCategoryAPI {
   categoryName: string;
   categoryDescription: string;
   categoryIcon: string;
+  questions?: QuizQuestion[];
+  questionCount?: number;
 }
 
 // Generic API Response wrapper

@@ -410,7 +410,7 @@ function QuizContent() {
             </div>
           </CardHeader>
 
-          <CardContent className='bg-white p-6 sm:p-8 space-y-4'>
+          <CardContent className='bg-white p-4 sm:p-6 space-y-2.5'>
             {/* Options */}
             {currentQuestion.options.map((option, index) => {
               const isSelected = selectedAnswer === index;
@@ -418,15 +418,15 @@ function QuizContent() {
                 <div
                   key={index}
                   onClick={() => selectAnswer(index)}
-                  className={`p-5 rounded-xl border-2 cursor-pointer transition-all duration-150 ${
+                  className={`px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-xl border cursor-pointer transition-all duration-150 ${
                     isSelected
-                      ? 'border-primary bg-primary/5 text-gray-900 shadow-xs'
+                      ? 'border-primary bg-primary/5 text-gray-900 shadow-2xs ring-1 ring-primary/20'
                       : 'border-gray-200 hover:border-primary/40 hover:bg-gray-50 text-gray-800'
                   }`}
                 >
-                  <div className='flex items-center space-x-4'>
+                  <div className='flex items-center space-x-3'>
                     <div
-                      className={`w-8 h-8 rounded-lg border-2 flex items-center justify-center text-sm font-bold shrink-0 transition-colors ${
+                      className={`w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-md border flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
                         isSelected
                           ? 'border-primary bg-primary text-white'
                           : 'border-gray-300 text-gray-600 bg-white'
@@ -435,7 +435,7 @@ function QuizContent() {
                       {String.fromCharCode(65 + index)}
                     </div>
 
-                    <div className='flex-1 text-base min-w-0 overflow-hidden font-normal'>
+                    <div className='flex-1 text-sm min-w-0 overflow-hidden font-normal'>
                       <CodeRenderer content={cleanOptionText(option)} />
                     </div>
                   </div>
