@@ -39,7 +39,14 @@
 
   html {
     @apply scroll-smooth;
-    background: #040505;
+  }
+  html.dark {
+    background: #0e0e11;
+    color-scheme: dark;
+  }
+  html:not(.dark) {
+    background: #f1f5f9;
+    color-scheme: light;
   }
 }
 
@@ -49,9 +56,16 @@
   }
 
   body {
-    @apply text-contentLight scroll-smooth font-primary overflow-x-hidden;
-    background: #040505;
+    @apply scroll-smooth font-primary overflow-x-hidden;
     min-height: 100vh;
+  }
+  html.dark body {
+    background: #0e0e11;
+    color: #fdfdfd;
+  }
+  html:not(.dark) body {
+    background: #f1f5f9;
+    color: #0f172a;
   }
 }
 

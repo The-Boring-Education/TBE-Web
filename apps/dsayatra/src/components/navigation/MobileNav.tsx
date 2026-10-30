@@ -13,7 +13,7 @@ export function MobileNav() {
       aria-label="Mobile navigation"
     >
       {/* Frosted glass backdrop */}
-      <div className="absolute inset-0 bg-[#080808]/95 backdrop-blur-2xl border-t border-[#1e1e1e]" />
+      <div className="absolute inset-0 bg-white/90 dark:bg-[#080808]/95 backdrop-blur-2xl border-t border-slate-200/90 dark:border-[#1e1e1e] shadow-lg" />
 
       <div className="relative flex items-center justify-around h-[60px] px-1 safe-area-inset-bottom">
         {DSA_DASHBOARD_NAV_ITEMS.map((item) => {
@@ -28,7 +28,7 @@ export function MobileNav() {
               href={item.href}
               className={cn(
                 "flex flex-col items-center justify-center gap-0.5 flex-1 h-full py-2 transition-all active:scale-95 duration-200",
-                isActive ? "text-[#ff5757]" : "text-[#555]",
+                isActive ? "text-[#ff5757]" : "text-slate-400 dark:text-[#555]",
               )}
             >
               <div
@@ -41,14 +41,16 @@ export function MobileNav() {
                     "w-[18px] h-[18px] transition-all duration-200",
                     isActive
                       ? "text-[#ff5757] drop-shadow-[0_0_10px_rgba(255,87,87,0.65)]"
-                      : "text-[#555]",
+                      : "text-slate-400 dark:text-[#555]",
                   )}
                 />
               </div>
               <span
                 className={cn(
                   "text-[9px] font-semibold tracking-wide leading-none",
-                  isActive ? "text-[#ff5757]" : "text-[#444]",
+                  isActive
+                    ? "text-[#ff5757]"
+                    : "text-slate-400 dark:text-[#555]",
                 )}
               >
                 {item.name}

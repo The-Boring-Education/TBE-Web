@@ -1,17 +1,11 @@
 import {
-  DsaPrepWorkspace,
   DsaUpsellModal,
   FreemiumLockBanner,
-  LearningEnvironmentLayout,
   LoadingSpinner,
   SEO,
+  SheetLearningSpace,
 } from "@tbe/components";
-import {
-  ANALYTICS_EVENTS,
-  DSA_STUDY_GUIDE_CONFIGS,
-  routes,
-  TOPIC_LABELS,
-} from "@tbe/constants";
+import { routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamificationFeedback } from "@tbe/gamification";
 import {
   useAnalytics,
@@ -26,17 +20,26 @@ import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { getPreFetchProps } from "@tbe/utils";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FiArrowRight,
+  FiCheckCircle,
+  FiCode,
+  FiCompass,
+  FiSearch,
+} from "react-icons/fi";
 
 const SheetsPageClient = () => {
   const router = useRouter();
   const { loading: userLoading, isAuth, user } = useUser();
   const { trackEvent } = useAnalytics();
 
-  const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
-    null,
-  );
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [, setSelectedQuestion] = useState<DsaQuestion | null>(null);
   const [showPayment, setShowPayment] = useState(false);
+  const [topicSearchQuery, setTopicSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState<
+    "all" | "in-progress" | "completed"
+  >("all");
 
   const {
     data: topicRows,
@@ -44,19 +47,6 @@ const SheetsPageClient = () => {
     isError: topicSummariesError,
     error: topicSummariesErrorValue,
   } = useDsaTopicSummaries("DSA_YATRA");
-  const userTargetCompanies = useMemo(() => {
-    const pyTargets = (user as any)?.prepYatra?.targetCompanies || [];
-    const dsaTarget = (user as any)?.dsaYatra?.target;
-
-    let dsaMapped: string[] = [];
-    if (dsaTarget === "Product-based") {
-      dsaMapped = ["MNC", "FAANG"];
-    } else if (dsaTarget === "Startups") {
-      dsaMapped = ["Startup"];
-    }
-
-    return Array.from(new Set([...pyTargets, ...dsaMapped]));
-  }, [user]);
 
   const topicsWithCounts = useMemo(
     () =>
@@ -96,13 +86,8 @@ const SheetsPageClient = () => {
     [topicQuestionsCache],
   );
 
-  const {
-    completedIds,
-    toggleComplete,
-    localNotes,
-    saveNote: onSaveNote,
-    isProgressLoading,
-  } = useDsaCompletedQuestions({ userId: user?.id });
+  const { completedIds, toggleComplete, isProgressLoading } =
+    useDsaCompletedQuestions({ userId: user?.id });
   const { refetch: refetchGamification } = useGamification();
   const { celebrate } = useGamificationFeedback();
   const { topicsCompletionMap } = useDsaTopics(
@@ -111,17 +96,7 @@ const SheetsPageClient = () => {
     topicsWithCounts,
   );
 
-  // Derive freemium state directly from the API response — no client-side bucket logic
   const hasLockedQuestions = topicQuestions.some((q) => q.isLocked);
-  const lockedQuestionIds = useMemo(() => {
-    if (!hasLockedQuestions) return undefined;
-    const ids = new Set<string>();
-    for (const q of topicQuestions) {
-      if (q.isLocked) ids.add(String(q.id || q.name));
-    }
-    return ids;
-  }, [hasLockedQuestions, topicQuestions]);
-
   const unlockedCount = topicQuestions.filter((q) => !q.isLocked).length;
 
   const handleToggleComplete = useCallback(
@@ -158,11 +133,7 @@ const SheetsPageClient = () => {
         "Failed to load questions for the selected topic"
       : null;
 
-  const {
-    handleTopicClick,
-    handleQuestionClick: handleUrlSyncQuestionClick,
-    handleBackToTopics,
-  } = useDsaPrepUrlSync({
+  const { handleTopicClick, handleBackToTopics } = useDsaPrepUrlSync({
     router,
     selectedTopic,
     setSelectedTopic,
@@ -177,27 +148,57 @@ const SheetsPageClient = () => {
     }
   }, [userLoading, isAuth, router]);
 
-  const handleQuestionClick = (question: DsaQuestion) => {
-    if (question.isLocked) {
-      setShowPayment(true);
-      return;
-    }
+  const handleViewPlans = () => router.push(routes.dsayatra.pricing);
+  const handleDismissUpsell = () => {
     setShowPayment(false);
-    try {
-      trackEvent({
-        action: ANALYTICS_EVENTS.DSA_QUESTION_VIEW,
-        question_id: String(question._id ?? question.id),
-        topic: selectedTopic ?? undefined,
-      });
-    } catch {
-      /* ignore analytics errors */
-    }
-    handleUrlSyncQuestionClick(question);
+    setSelectedQuestion(null);
   };
 
-  if (sheetsLoading || userLoading || isProgressLoading) {
+  // Map DSA questions to the unified SheetQuestion interface
+  const mappedQuestions = useMemo(() => {
+    return (questions || []).map((q) => {
+      const qId = String(q.id || q._id || q.name);
+      return {
+        _id: qId,
+        id: q.id,
+        name: q.name,
+        title: q.name,
+        question: q.name,
+        answer: q.answer || "",
+        difficultyLevel: q.difficultyLevel,
+        resources: q.resources,
+        isLocked: q.isLocked,
+        isCompleted: completedIds.some((cid) => String(cid) === qId),
+        examples: q.examples,
+        constraints: q.constraints,
+      };
+    });
+  }, [questions, completedIds]);
+
+  const totalQuestions = useMemo(
+    () => topicsWithCounts.reduce((acc, t) => acc + (t.count || 0), 0),
+    [topicsWithCounts],
+  );
+  const totalSolved = useMemo(() => completedIds.length, [completedIds]);
+  const overallProgress =
+    totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
+
+  const filteredTopics = useMemo(() => {
+    return topicsWithCounts.filter((t) => {
+      const label = (t.label || t.topic || "").toLowerCase();
+      const q = topicSearchQuery.toLowerCase().trim();
+      const matchSearch = !q || label.includes(q);
+
+      const isCompleted = topicsCompletionMap[t.topic] === true;
+      if (filterMode === "completed") return matchSearch && isCompleted;
+      if (filterMode === "in-progress") return matchSearch && !isCompleted;
+      return matchSearch;
+    });
+  }, [topicsWithCounts, topicSearchQuery, filterMode, topicsCompletionMap]);
+
+  if (userLoading || isProgressLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
+      <div className="flex items-center justify-center min-h-[400px]">
         <LoadingSpinner />
       </div>
     );
@@ -205,17 +206,17 @@ const SheetsPageClient = () => {
 
   if (sheetsErrorMessage) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0A] px-6 text-center">
-        <p className="mb-3 text-lg font-semibold text-[#ff6b6b]">
-          Unable to load DSA sheet
+      <div className="flex flex-col items-center justify-center py-16 px-6 text-center space-y-3">
+        <p className="text-base font-bold text-[#FF4D4D]">
+          Unable to load DSA sheets
         </p>
-        <p className="mb-6 max-w-xl text-sm text-[#a0a0a0]">
+        <p className="max-w-md text-xs text-slate-500 dark:text-slate-400">
           {sheetsErrorMessage}
         </p>
         <button
           type="button"
           onClick={() => router.reload()}
-          className="rounded-md border border-[#ff5757]/40 px-4 py-2 text-sm font-semibold text-[#ff5757] transition-colors hover:bg-[#ff5757]/10"
+          className="rounded-xl border border-[#FF4D4D]/40 px-4 py-1.5 text-xs font-bold text-[#FF4D4D] transition-colors hover:bg-[#FF4D4D]/10 cursor-pointer"
         >
           Try again
         </button>
@@ -223,44 +224,196 @@ const SheetsPageClient = () => {
     );
   }
 
-  const handleViewPlans = () => router.push(routes.dsayatra.pricing);
-  const handleDismissUpsell = () => {
-    setShowPayment(false);
-    setSelectedQuestion(null);
-  };
-
   return (
-    <LearningEnvironmentLayout backHref="/dashboard" layoutMode="workspace">
-      {hasLockedQuestions && (
+    <div className="space-y-3 w-full">
+      {hasLockedQuestions && selectedTopic && (
         <FreemiumLockBanner
           unlockedCount={unlockedCount}
           onUpgradeClick={handleViewPlans}
         />
       )}
-      <DsaPrepWorkspace
-        questions={questions}
-        topicsWithCounts={topicsWithCounts}
-        selectedTopic={selectedTopic}
-        selectedQuestion={showPayment ? null : selectedQuestion}
-        onTopicClick={handleTopicClick}
-        onQuestionClick={handleQuestionClick}
-        onBackToTopics={handleBackToTopics}
-        completionMap={topicsCompletionMap}
-        completedQuestionIds={completedIds}
-        onToggleComplete={handleToggleComplete}
-        localNotes={localNotes}
-        onSaveNote={onSaveNote}
-        studyGuideConfigs={DSA_STUDY_GUIDE_CONFIGS}
-        userTargetCompanies={userTargetCompanies}
-        freemiumLockedQuestionIds={lockedQuestionIds}
-        onFreemiumLockedClick={() => setShowPayment(true)}
-      />
+
+      {selectedTopic ? (
+        /* Reused SheetLearningSpace with platform curved styling */
+        <SheetLearningSpace
+          initialSheet={{
+            name: TOPIC_LABELS[selectedTopic] || selectedTopic,
+            description: `Curated problems, optimal solutions, visualizers and patterns for ${
+              TOPIC_LABELS[selectedTopic] || selectedTopic
+            }.`,
+            questions: mappedQuestions,
+          }}
+          user={user}
+          onBack={handleBackToTopics}
+          onNavigateToDashboard={() => router.push("/dashboard")}
+          dashboardLabel="DSA Yatra"
+          parentLabel="Problem Sheets"
+          onToggleComplete={handleToggleComplete}
+          onFreemiumLockedClick={() => setShowPayment(true)}
+        />
+      ) : (
+        /* Topic Problem Sheets Catalog in Platform Curved Rectangle Style */
+        <div className="space-y-3">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 flex-wrap px-0.5">
+            <button
+              type="button"
+              onClick={() => router.push("/dashboard")}
+              className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              DSA Yatra
+            </button>
+            <span className="text-slate-300 dark:text-slate-600">›</span>
+            <span className="font-bold text-[#FF4D4D]">DSA Problem Sheets</span>
+          </nav>
+
+          {/* Header Card */}
+          <div className="relative overflow-hidden rounded-2xl border border-[#FED7D7]/80 dark:border-red-950/80 p-3.5 sm:p-5 bg-[#FFF5F4] dark:bg-[#1A1113] flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-2xs">
+            <div className="space-y-1 z-10 max-w-xl">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border border-red-200/80 dark:border-red-900/60">
+                  Curated DSA Sheets
+                </span>
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                  {topicsWithCounts.length} Topic Sheets
+                </span>
+              </div>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-[#101828] dark:text-white tracking-tight leading-snug">
+                Master Data Structures & Algorithms
+              </h1>
+              <p className="text-xs text-[#64748B] dark:text-slate-400 font-medium leading-relaxed">
+                Solve high-yield interview problems grouped by core data
+                structures & algorithmic patterns with structured hints and
+                explanations.
+              </p>
+            </div>
+
+            {/* Overall Solved Progress */}
+            <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-3 z-10 shrink-0">
+              <div className="space-y-1.5 w-full sm:w-48 lg:w-56">
+                <div className="flex items-center justify-between text-xs font-black text-[#101828] dark:text-white">
+                  <span>{overallProgress}% Solved</span>
+                  <span className="text-[#64748B] dark:text-slate-400 font-semibold text-[11px]">
+                    {totalSolved}/{totalQuestions} Problems
+                  </span>
+                </div>
+                <div className="w-full bg-slate-200/80 dark:bg-[#282830] rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-[#FF4D4D] h-full rounded-full transition-all duration-300"
+                    style={{ width: `${overallProgress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Pills & Search */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white dark:bg-[#16161A] p-2 sm:p-2.5 rounded-2xl border border-slate-200/90 dark:border-[#26262C] shadow-2xs">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none flex-nowrap">
+              {[
+                { id: "all", label: "All Sheets" },
+                { id: "in-progress", label: "In Progress" },
+                { id: "completed", label: "Completed" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setFilterMode(tab.id as any)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                    filterMode === tab.id
+                      ? "bg-[#FF4D4D] text-white shadow-xs"
+                      : "bg-slate-50 dark:bg-[#222228] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2A2A32] hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative w-full sm:w-64 shrink-0">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 w-3.5 h-3.5 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search topic sheet..."
+                value={topicSearchQuery}
+                onChange={(e) => setTopicSearchQuery(e.target.value)}
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF4D4D] transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Sheets Grid */}
+          {sheetsLoading ? (
+            <div className="py-16 text-center text-xs font-bold text-slate-400">
+              Loading DSA Sheets...
+            </div>
+          ) : filteredTopics.length === 0 ? (
+            <div className="py-16 bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#26262C] rounded-2xl text-center p-6 space-y-2 shadow-2xs">
+              <FiCompass className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto" />
+              <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                No topic sheets found
+              </h3>
+              <p className="text-xs text-slate-400">
+                Try adjusting your search query or filter.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {filteredTopics.map((topic) => {
+                const isComplete = topicsCompletionMap[topic.topic] === true;
+
+                return (
+                  <div
+                    key={topic.topic}
+                    onClick={() => handleTopicClick(topic.topic)}
+                    className="bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-2xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all group cursor-pointer"
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900/60 flex items-center justify-center text-[#FF4D4D]">
+                          <FiCode className="w-4 h-4" />
+                        </div>
+                        {isComplete ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200/80 dark:border-emerald-900/60">
+                            <FiCheckCircle className="w-2.5 h-2.5" /> Solved
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#222228] px-2 py-0.5 rounded-full">
+                            {topic.count} Problems
+                          </span>
+                        )}
+                      </div>
+
+                      <div>
+                        <h3 className="text-sm font-extrabold text-[#101828] dark:text-white group-hover:text-[#FF4D4D] transition-colors leading-snug">
+                          {topic.label}
+                        </h3>
+                        <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
+                          Core interview questions & pattern recognition
+                          problems for {topic.label}.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 mt-3 border-t border-slate-100 dark:border-[#24242A] flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-[#FF4D4D] group-hover:underline flex items-center gap-1">
+                        Solve Sheet <FiArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       <DsaUpsellModal
         open={showPayment}
         onViewPlans={handleViewPlans}
         onDismiss={handleDismissUpsell}
       />
-    </LearningEnvironmentLayout>
+    </div>
   );
 };
 

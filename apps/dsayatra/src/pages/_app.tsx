@@ -13,6 +13,7 @@ import { Providers } from "@/components/providers/Providers";
 
 const DSA_APP_SHELL_PATHS = new Set([
   "/dashboard",
+  "/sheets",
   "/revisions",
   "/topics",
   "/pattern-quiz",
