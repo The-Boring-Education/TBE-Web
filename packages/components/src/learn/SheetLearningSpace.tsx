@@ -8,9 +8,7 @@ import {
   FiChevronRight,
   FiChevronsLeft,
   FiChevronsRight,
-  FiExternalLink,
   FiList,
-  FiLock,
   FiSearch,
 } from "react-icons/fi";
 
@@ -20,44 +18,21 @@ import { PersonalizationLoader } from "./PersonalizationLoader";
 
 export interface SheetQuestion {
   _id: string;
-  id?: string | number;
-  name?: string;
   title?: string;
-  question?: string;
-  answer?: string;
+  question: string;
+  answer: string;
   isCompleted?: boolean;
   isStarred?: boolean;
   frequency?: number;
-  difficultyLevel?: string;
-  resources?: {
-    youtubeURL?: string;
-    leetcodeURL?: string;
-    blogURL?: string;
-  };
-  isLocked?: boolean;
-  examples?: {
-    inputText: string;
-    outputText: string;
-    explanation?: string;
-    image?: string;
-  }[];
-  constraints?: string[];
 }
 
 export interface SheetLearningSpaceProps {
-  sheetSlug?: string;
+  sheetSlug: string;
   initialSheet?: any;
   user?: any;
   onBack: () => void;
   onNavigateToDashboard?: () => void;
   onQuestionChange?: (questionTitle: string) => void;
-  dashboardLabel?: string;
-  parentLabel?: string;
-  onToggleComplete?: (
-    questionId: string | number,
-    nextStatus: boolean,
-  ) => Promise<any> | void;
-  onFreemiumLockedClick?: (questionId: string | number) => void;
 }
 
 // Devicon CDN resolver based on slug or name
@@ -93,21 +68,6 @@ const getTechIconUrl = (sheetSlug?: string, sheetName?: string): string => {
   ) {
     return "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg";
   }
-  if (
-    text.includes("dsa") ||
-    text.includes("array") ||
-    text.includes("tree") ||
-    text.includes("graph") ||
-    text.includes("string") ||
-    text.includes("pointer") ||
-    text.includes("dynamic") ||
-    text.includes("dp") ||
-    text.includes("stack") ||
-    text.includes("queue") ||
-    text.includes("heap")
-  ) {
-    return "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg";
-  }
   return "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg";
 };
 
@@ -141,12 +101,8 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
   onBack,
   onNavigateToDashboard,
   onQuestionChange,
-  dashboardLabel = "Learn",
-  parentLabel = "Interview Sheets",
-  onToggleComplete,
-  onFreemiumLockedClick,
 }) => {
-  const cachedSheet = sheetSlug ? sheetDataCache.get(sheetSlug) : null;
+  const cachedSheet = sheetDataCache.get(sheetSlug);
   const [sheet, setSheet] = useState<any>(cachedSheet || initialSheet || null);
   const [questions, setQuestions] = useState<SheetQuestion[]>(
     cachedSheet?.questions || initialSheet?.questions || [],
@@ -154,16 +110,10 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
   const [currentQuestionId, setCurrentQuestionId] = useState<string>(
     cachedSheet?.questions?.[0]?._id?.toString?.() ||
       initialSheet?.questions?.[0]?._id?.toString?.() ||
-      initialSheet?.questions?.[0]?.id?.toString?.() ||
-      initialSheet?.questions?.[0]?.name?.toString?.() ||
       "",
   );
   const [isLoading, setIsLoading] = useState<boolean>(
-    Boolean(
-      sheetSlug &&
-      !cachedSheet?.questions?.length &&
-      !initialSheet?.questions?.length,
-    ),
+    !cachedSheet?.questions?.length && !initialSheet?.questions?.length,
   );
   const [isUpdatingQuestion, setIsUpdatingQuestion] = useState<boolean>(false);
   const [isNavCollapsed, setIsNavCollapsed] = useState<boolean>(false);
@@ -196,11 +146,10 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
 
   const { celebrate } = useGamificationFeedback();
 
-  // Fetch sheet details with user progress (only when sheetSlug is provided)
+  // Fetch sheet details with user progress
   useEffect(() => {
     let isMounted = true;
     const fetchSheet = async () => {
-      if (!sheetSlug) return;
       const inMemory = sheetDataCache.get(sheetSlug);
       if (
         !inMemory?.questions?.length &&
@@ -231,11 +180,8 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
           if (qList.length > 0 && !currentQuestionId) {
             const first = qList[0];
             if (first) {
-              const firstId = String(first._id || first.id || first.name);
-              setCurrentQuestionId(firstId);
-              onQuestionChange?.(
-                first.title || first.name || first.question || "",
-              );
+              setCurrentQuestionId(first._id.toString());
+              onQuestionChange?.(first.title || first.question);
             }
           }
         }
@@ -253,52 +199,19 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     };
   }, [sheetSlug, user?.id, user?._id]);
 
-  // Synchronize when initialSheet prop changes (e.g. topic switch in DSA Yatra)
-  useEffect(() => {
-    if (initialSheet) {
-      setSheet(initialSheet);
-      if (initialSheet.questions?.length) {
-        setQuestions(initialSheet.questions);
-        const first = initialSheet.questions[0];
-        const firstId = String(first?._id || first?.id || first?.name || "");
-        if (firstId) {
-          setCurrentQuestionId((prev) => {
-            const exists = initialSheet.questions.some(
-              (q: any) => String(q._id || q.id || q.name) === prev,
-            );
-            return exists ? prev : firstId;
-          });
-          onQuestionChange?.(
-            first?.title || first?.name || first?.question || "",
-          );
-        }
-      }
-    }
-  }, [initialSheet, onQuestionChange]);
-
   // Set default initial question if available
   useEffect(() => {
     if (questions.length > 0 && !currentQuestionId) {
       const firstQuestion = questions[0];
       if (firstQuestion) {
-        const firstId = String(
-          firstQuestion._id || firstQuestion.id || firstQuestion.name,
-        );
-        setCurrentQuestionId(firstId);
-        onQuestionChange?.(
-          firstQuestion.title ||
-            firstQuestion.name ||
-            firstQuestion.question ||
-            "",
-        );
+        setCurrentQuestionId(firstQuestion._id.toString());
+        onQuestionChange?.(firstQuestion.title || firstQuestion.question);
       }
     }
   }, [questions, currentQuestionId, onQuestionChange]);
 
   const activeQuestionIndex = useMemo(() => {
-    return questions.findIndex(
-      (q) => String(q._id || q.id || q.name) === currentQuestionId,
-    );
+    return questions.findIndex((q) => q._id.toString() === currentQuestionId);
   }, [questions, currentQuestionId]);
 
   const activeQuestion = useMemo(() => {
@@ -314,66 +227,56 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const handleSelectQuestion = (q: SheetQuestion) => {
-    const id = String(q._id || q.id || q.name);
+    const id = q._id.toString();
     setCurrentQuestionId(id);
-    onQuestionChange?.(q.title || q.name || q.question || "");
+    onQuestionChange?.(q.title || q.question);
     if (typeof window !== "undefined" && window.innerWidth < 1024) {
       setIsNavCollapsed(true);
     }
   };
 
   const handleToggleCompletion = useCallback(async () => {
-    if (!activeQuestion) return;
-    const qId = String(
-      activeQuestion._id || activeQuestion.id || activeQuestion.name,
-    );
+    if (!activeQuestion || !user || !sheet?._id) return;
+    const qId = activeQuestion._id.toString();
     const newStatus = !activeQuestion.isCompleted;
 
     setIsUpdatingQuestion(true);
     // Optimistic UI update
     setQuestions((prev) =>
       prev.map((q) =>
-        String(q._id || q.id || q.name) === qId
-          ? { ...q, isCompleted: newStatus }
-          : q,
+        q._id.toString() === qId ? { ...q, isCompleted: newStatus } : q,
       ),
     );
 
     try {
-      if (onToggleComplete) {
-        await onToggleComplete(qId, newStatus);
-      } else if (user && sheet?._id) {
-        const response = await sendRequest({
-          method: "PATCH",
-          url: routes.api.markSheetQuestionAsCompleted,
-          body: {
-            userId: user?.id || user?._id,
-            sheetId: sheet._id,
-            questionId: qId,
-            isCompleted: newStatus,
-          },
-        });
+      const response = await sendRequest({
+        method: "PATCH",
+        url: routes.api.markSheetQuestionAsCompleted,
+        body: {
+          userId: user?.id || user?._id,
+          sheetId: sheet._id,
+          questionId: qId,
+          isCompleted: newStatus,
+        },
+      });
 
-        if (newStatus && response?.gamification) {
-          celebrate(response.gamification, {
-            message: "Question solved! Great job!",
-          });
-        }
+      if (newStatus && response?.gamification) {
+        celebrate(response.gamification, {
+          message: "Question solved! Great job!",
+        });
       }
     } catch (err) {
       console.error("Failed to mark question completion", err);
       // Revert on error
       setQuestions((prev) =>
         prev.map((q) =>
-          String(q._id || q.id || q.name) === qId
-            ? { ...q, isCompleted: !newStatus }
-            : q,
+          q._id.toString() === qId ? { ...q, isCompleted: !newStatus } : q,
         ),
       );
     } finally {
       setIsUpdatingQuestion(false);
     }
-  }, [activeQuestion, onToggleComplete, user, sheet?._id, celebrate]);
+  }, [activeQuestion, user, sheet?._id, celebrate]);
 
   const handleNextQuestion = () => {
     if (
@@ -382,9 +285,8 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     ) {
       const next = questions[activeQuestionIndex + 1];
       if (next) {
-        const nextId = String(next._id || next.id || next.name);
-        setCurrentQuestionId(nextId);
-        onQuestionChange?.(next.title || next.name || next.question || "");
+        setCurrentQuestionId(next._id.toString());
+        onQuestionChange?.(next.title || next.question);
       }
     }
   };
@@ -393,29 +295,22 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     if (activeQuestionIndex > 0) {
       const prev = questions[activeQuestionIndex - 1];
       if (prev) {
-        const prevId = String(prev._id || prev.id || prev.name);
-        setCurrentQuestionId(prevId);
-        onQuestionChange?.(prev.title || prev.name || prev.question || "");
+        setCurrentQuestionId(prev._id.toString());
+        onQuestionChange?.(prev.title || prev.question);
       }
     }
   };
 
   const toggleSaveCurrentQuestion = () => {
     if (!activeQuestion) return;
-    const qKey = String(
-      activeQuestion._id || activeQuestion.id || activeQuestion.name,
-    );
     setSavedQuestionIds((prev) => ({
       ...prev,
-      [qKey]: !prev[qKey],
+      [activeQuestion._id]: !prev[activeQuestion._id],
     }));
   };
 
   const isCurrentQuestionSaved = Boolean(
-    activeQuestion &&
-    savedQuestionIds[
-      String(activeQuestion._id || activeQuestion.id || activeQuestion.name)
-    ],
+    activeQuestion && savedQuestionIds[activeQuestion._id],
   );
 
   // Filter questions by search text
@@ -423,9 +318,7 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     if (!filterQuery.trim()) return questions;
     const query = filterQuery.toLowerCase();
     return questions.filter((q) => {
-      const titleMatch = (q.title || q.name || "")
-        .toLowerCase()
-        .includes(query);
+      const titleMatch = (q.title || "").toLowerCase().includes(query);
       const questionMatch = (q.question || "").toLowerCase().includes(query);
       return titleMatch || questionMatch;
     });
@@ -433,28 +326,9 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
 
   const cleanAnswer = useMemo(() => {
     if (!activeQuestion) return "";
-    let raw =
+    const raw =
       (activeQuestion as any)?.content?.markdownContent ||
       activeQuestion?.answer;
-
-    if (
-      activeQuestion.examples &&
-      activeQuestion.examples.length > 0 &&
-      !raw?.includes("Example 1")
-    ) {
-      let formattedExamples = "\n\n### Examples\n";
-      activeQuestion.examples.forEach((ex, i) => {
-        formattedExamples += `\n**Example ${i + 1}:**\n\`\`\`\nInput: ${ex.inputText}\nOutput: ${ex.outputText}\n${ex.explanation ? `Explanation: ${ex.explanation}\n` : ""}\`\`\`\n`;
-      });
-      if (activeQuestion.constraints && activeQuestion.constraints.length > 0) {
-        formattedExamples += "\n### Constraints\n";
-        activeQuestion.constraints.forEach((c) => {
-          formattedExamples += `- \`${c}\`\n`;
-        });
-      }
-      raw = (raw || "") + formattedExamples;
-    }
-
     if (!raw || raw.trim() === "" || raw === "undefined") {
       return "No answer or explanation available yet for this question.";
     }
@@ -488,7 +362,7 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
           onClick={onNavigateToDashboard || onBack}
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
         >
-          {dashboardLabel}
+          Learn
         </button>
         <span className="text-slate-300 dark:text-slate-600">›</span>
         <button
@@ -496,7 +370,7 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
           onClick={onBack}
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
         >
-          {parentLabel}
+          Interview Sheets
         </button>
         <span className="text-slate-300 dark:text-slate-600">›</span>
         <span className="font-bold text-[#FF4D4D] truncate max-w-[240px] sm:max-w-xs">
@@ -509,7 +383,7 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
         {/* Left Column: Title & Description */}
         <div className="space-y-1 z-10 max-w-xl">
           <h1 className="text-lg sm:text-xl font-black text-[#101828] dark:text-white tracking-tight leading-snug">
-            {sheet?.name || "Interview Questions"}
+            {sheet?.name || "Java Interview Questions"}
           </h1>
           <p className="text-xs text-[#64748B] dark:text-slate-400 font-medium mt-0.5 line-clamp-2 leading-relaxed">
             {sheet?.description ||
@@ -594,14 +468,13 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
             {/* Scrollable Questions List */}
             <div className="space-y-0.5 overflow-y-auto max-h-52 sm:max-h-64 lg:max-h-[calc(100vh-10rem)] px-0.5 scrollbar-none sm:[&::-webkit-scrollbar]:w-1 sm:[&::-webkit-scrollbar-thumb]:bg-slate-200 dark:sm:[&::-webkit-scrollbar-thumb]:bg-[#2C2C34] sm:[&::-webkit-scrollbar-thumb]:rounded-full">
               {filteredQuestions.map((q, index) => {
-                const qKey = String(q._id || q.id || q.name);
-                const isCurrent = qKey === currentQuestionId;
-                const displayTitle = q.title || q.name || q.question;
+                const isCurrent = q._id.toString() === currentQuestionId;
+                const displayTitle = q.title || q.question;
                 const isCompleted = q.isCompleted;
 
                 return (
                   <button
-                    key={qKey}
+                    key={q._id}
                     type="button"
                     onClick={() => handleSelectQuestion(q)}
                     title={displayTitle}
@@ -619,10 +492,6 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
                       ) : isCompleted ? (
                         <div className="w-5 h-5 rounded-full bg-[#10B981] text-white flex items-center justify-center text-[10px] font-bold leading-none shrink-0 p-0">
                           <FiCheck className="w-2.5 h-2.5 stroke-[2.5]" />
-                        </div>
-                      ) : q.isLocked ? (
-                        <div className="w-5 h-5 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-[10px] font-bold leading-none shrink-0 p-0">
-                          <FiLock className="w-2.5 h-2.5" />
                         </div>
                       ) : (
                         <div className="w-5 h-5 rounded-full bg-[#EEF2F6] dark:bg-[#222228] text-[#334155] dark:text-slate-300 flex items-center justify-center text-[10px] font-bold leading-none shrink-0 p-0">
@@ -661,7 +530,7 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
           className={`flex-1 min-w-0 bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#26262C] rounded-2xl p-5 sm:p-7 md:p-8 shadow-2xs space-y-6 ${isNavCollapsed ? "w-full" : ""}`}
         >
           {/* Header Row: Breadcrumb & Save Button */}
-          <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-[#26262C] flex-wrap">
+          <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-[#26262C]">
             <div className="flex items-center gap-2 text-xs font-semibold flex-wrap">
               {isNavCollapsed && (
                 <button
@@ -682,98 +551,32 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
                 ›
               </span>
               <span className="text-[#64748B] dark:text-slate-400 font-medium truncate max-w-sm">
-                {sheet?.name || "Interview Questions"}
+                {sheet?.name || "Java Interview Questions"}
               </span>
-
-              {activeQuestion?.difficultyLevel && (
-                <span
-                  className={`ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
-                    activeQuestion.difficultyLevel.toLowerCase() === "easy"
-                      ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200/80 dark:border-emerald-800/60"
-                      : activeQuestion.difficultyLevel.toLowerCase() ===
-                          "medium"
-                        ? "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200/80 dark:border-amber-800/60"
-                        : "bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border-red-200/80 dark:border-red-800/60"
-                  }`}
-                >
-                  {activeQuestion.difficultyLevel}
-                </span>
-              )}
             </div>
 
-            <div className="flex items-center gap-2">
-              {activeQuestion?.resources?.leetcodeURL && (
-                <a
-                  href={activeQuestion.resources.leetcodeURL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl border border-slate-200/90 dark:border-[#2C2C34] text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-slate-50 dark:hover:bg-[#1E1E24] transition-colors"
-                >
-                  <FiExternalLink className="w-3 h-3" />
-                  <span>LeetCode</span>
-                </a>
-              )}
-              {activeQuestion?.resources?.youtubeURL && (
-                <a
-                  href={activeQuestion.resources.youtubeURL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl border border-slate-200/90 dark:border-[#2C2C34] text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-slate-50 dark:hover:bg-[#1E1E24] transition-colors"
-                >
-                  <FiExternalLink className="w-3 h-3" />
-                  <span>Video</span>
-                </a>
-              )}
-              <button
-                type="button"
-                onClick={toggleSaveCurrentQuestion}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer shadow-2xs ${
-                  isCurrentQuestionSaved
-                    ? "bg-rose-50 dark:bg-red-950/40 border-rose-200 dark:border-red-900 text-[#FF4D4D]"
-                    : "bg-white dark:bg-[#1E1E24] border-slate-200/90 dark:border-[#2C2C34] text-[#101828] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#26262E]"
+            <button
+              type="button"
+              onClick={toggleSaveCurrentQuestion}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer shadow-2xs ${
+                isCurrentQuestionSaved
+                  ? "bg-rose-50 dark:bg-red-950/40 border-rose-200 dark:border-red-900 text-[#FF4D4D]"
+                  : "bg-white dark:bg-[#1E1E24] border-slate-200/90 dark:border-[#2C2C34] text-[#101828] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#26262E]"
+              }`}
+            >
+              <FiBookmark
+                className={`w-3.5 h-3.5 ${
+                  isCurrentQuestionSaved ? "fill-[#FF4D4D]" : ""
                 }`}
-              >
-                <FiBookmark
-                  className={`w-3.5 h-3.5 ${
-                    isCurrentQuestionSaved ? "fill-[#FF4D4D]" : ""
-                  }`}
-                />
-                <span>{isCurrentQuestionSaved ? "Saved" : "Save"}</span>
-              </button>
-            </div>
+              />
+              <span>{isCurrentQuestionSaved ? "Saved" : "Save"}</span>
+            </button>
           </div>
-
-          {activeQuestion?.isLocked && (
-            <div className="p-3 sm:p-4 rounded-xl border border-amber-200/80 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="space-y-0.5">
-                <p className="text-xs font-bold text-amber-900 dark:text-amber-300">
-                  Premium Practice Problem
-                </p>
-                <p className="text-[11px] text-amber-700 dark:text-amber-400">
-                  Upgrade to DSA Yatra Lifetime to unlock full solution
-                  explanations, visualizers and patterns.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  onFreemiumLockedClick?.(
-                    activeQuestion._id || (activeQuestion as any).id,
-                  )
-                }
-                className="px-3 py-1.5 rounded-lg bg-[#FF4D4D] text-white text-xs font-bold hover:bg-[#EE3126] transition-all shrink-0 cursor-pointer shadow-xs"
-              >
-                Unlock Problem
-              </button>
-            </div>
-          )}
 
           {/* Question Title Heading */}
           <div>
             <h2 className="text-xl sm:text-2xl md:text-[26px] font-black text-[#101828] dark:text-white tracking-tight leading-snug">
-              {activeQuestion?.title ||
-                activeQuestion?.name ||
-                activeQuestion?.question}
+              {activeQuestion?.title || activeQuestion?.question}
             </h2>
           </div>
 
