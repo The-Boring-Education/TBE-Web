@@ -14,7 +14,14 @@ import {
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
-import { cn, getPreFetchProps } from "@tbe/utils";
+import {
+  cn,
+  decodeDsaTopicFromUrl,
+  encodeDsaQuestionTitleForUrl,
+  encodeDsaTopicForUrl,
+  findDsaQuestionByUrlSlug,
+  getPreFetchProps,
+} from "@tbe/utils";
 import { LayoutGroup, motion } from "framer-motion";
 import {
   ArrowDownUp,
@@ -23,6 +30,7 @@ import {
   ChartNoAxesCombined,
   Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   ChevronUp,
   Filter,
@@ -234,6 +242,30 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
 };
 
+const CANONICAL_TOPIC_COUNTS: Record<string, number> = {
+  ARRAY: 78,
+  STRING: 46,
+  DYNAMIC_PROGRAMMING: 41,
+  GRAPH: 39,
+  GREEDY: 38,
+  SORTING: 35,
+  RECURSION: 31,
+  LINKED_LIST: 26,
+  BINARY_SEARCH: 24,
+  HASHMAP: 21,
+  TREE: 19,
+  STACK: 19,
+  TWO_POINTERS: 18,
+  SLIDING_WINDOW: 18,
+  MONOTONIC_STACK: 17,
+  QUEUE: 16,
+  MATH: 14,
+  HEAP: 13,
+  BACKTRACKING: 13,
+  BFS: 10,
+  TRIE: 9,
+};
+
 function getTopicMeta(topicKey: string): TopicMetadata {
   const normKey = topicKey.toUpperCase().replace(/\s+/g, "_");
   if (TOPIC_CONFIG[normKey]) return TOPIC_CONFIG[normKey];
@@ -309,6 +341,18 @@ function ExpandedTopicCard({
   const { questions, loading } = useDsaQuestionsForTopic(topicKey, {
     productType: "DSA_YATRA",
   });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const qSlug = router.query.question;
+    if (qSlug && typeof qSlug === "string" && questions.length > 0) {
+      const found = findDsaQuestionByUrlSlug(questions, qSlug);
+      if (found) {
+        onSelectQuestion(found);
+      }
+    }
+  }, [router.isReady, router.query.question, questions, onSelectQuestion]);
 
   const [showAll, setShowAll] = useState(false);
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
@@ -687,14 +731,97 @@ function SheetsClient() {
     [completedIds, toggleComplete, refetchGamification, celebrate, trackEvent],
   );
 
+  // Read topic from URL on initial load / navigation
+  useEffect(() => {
+    if (!router.isReady) return;
+    const rawTopic = router.query.topic;
+    if (rawTopic && typeof rawTopic === "string") {
+      const decoded = decodeDsaTopicFromUrl(rawTopic);
+      if (decoded) {
+        setExpandedTopic(decoded);
+      }
+    }
+  }, [router.isReady, router.query.topic]);
+
+  const handleSelectTopic = useCallback(
+    (topicKey: string) => {
+      const nextTopic = expandedTopic === topicKey ? null : topicKey;
+      setExpandedTopic(nextTopic);
+      if (nextTopic) {
+        void router.replace(
+          {
+            pathname: "/sheets",
+            query: {
+              topic: encodeDsaTopicForUrl(nextTopic),
+            },
+          },
+          undefined,
+          { shallow: true },
+        );
+      } else {
+        void router.replace({ pathname: "/sheets" }, undefined, {
+          shallow: true,
+        });
+      }
+    },
+    [expandedTopic, router],
+  );
+
+  const handleSelectQuestion = useCallback(
+    (question: DsaQuestion, topicKey?: string) => {
+      setSelectedQuestion(question);
+      const activeTopic = topicKey || expandedTopic || "ARRAY";
+      void router.replace(
+        {
+          pathname: "/sheets",
+          query: {
+            topic: encodeDsaTopicForUrl(activeTopic),
+            question: encodeDsaQuestionTitleForUrl(question.name),
+          },
+        },
+        undefined,
+        { shallow: true },
+      );
+    },
+    [expandedTopic, router],
+  );
+
+  const handleCloseQuestion = useCallback(() => {
+    setSelectedQuestion(null);
+    if (expandedTopic) {
+      void router.replace(
+        {
+          pathname: "/sheets",
+          query: {
+            topic: encodeDsaTopicForUrl(expandedTopic),
+          },
+        },
+        undefined,
+        { shallow: true },
+      );
+    } else {
+      void router.replace({ pathname: "/sheets" }, undefined, {
+        shallow: true,
+      });
+    }
+  }, [expandedTopic, router]);
+
   const topics = useMemo(() => {
-    return (topicRows ?? []).map((t) => ({
-      topic: t.topic,
-      count: t.count,
-      solved: t.solved,
-      meta: getTopicMeta(t.topic),
-    }));
-  }, [topicRows]);
+    return (topicRows ?? []).map((t) => {
+      const normKey = t.topic.toUpperCase().replace(/\s+/g, "_");
+      const accurateCount =
+        topicOverrides[normKey]?.total ??
+        CANONICAL_TOPIC_COUNTS[normKey] ??
+        t.count;
+
+      return {
+        topic: t.topic,
+        count: accurateCount,
+        solved: topicOverrides[normKey]?.solved ?? t.solved,
+        meta: getTopicMeta(t.topic),
+      };
+    });
+  }, [topicRows, topicOverrides]);
 
   const filteredTopics = useMemo(() => {
     let result = topics;
@@ -714,10 +841,7 @@ function SheetsClient() {
     return result;
   }, [topics, searchQuery, filterMode]);
 
-  const totalQuestions = useMemo(
-    () => topics.reduce((acc, t) => acc + t.count, 0),
-    [topics],
-  );
+  const totalQuestions = 399;
   const totalSolved = completedIds.length;
   const overallPercentage =
     totalQuestions > 0
@@ -750,6 +874,84 @@ function SheetsClient() {
         >
           Try Again
         </button>
+      </div>
+    );
+  }
+
+  // Full Page View for Selected Question (Single clean card)
+  if (selectedQuestion) {
+    const isCompleted = completedIds.includes(
+      selectedQuestion.id ?? selectedQuestion._id ?? selectedQuestion.name,
+    );
+
+    return (
+      <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-3 scrollbar-thin-grey font-sans">
+        {/* Top Breadcrumbs & Back CTA: DSA Yatra > Problem Sheet > Question Name */}
+        <div className="flex items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-[#202026]">
+          <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500 min-w-0">
+            <Link
+              href="/dashboard"
+              className="hover:text-slate-800 dark:hover:text-white transition-colors shrink-0"
+            >
+              DSA Yatra
+            </Link>
+            <span className="text-slate-300 dark:text-slate-600">›</span>
+            <button
+              type="button"
+              onClick={handleCloseQuestion}
+              className="hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer shrink-0"
+            >
+              Problem Sheet
+            </button>
+            <span className="text-slate-300 dark:text-slate-600">›</span>
+            <span className="font-bold text-[#FF4D4D] truncate">
+              {selectedQuestion.name}
+            </span>
+          </nav>
+
+          <button
+            type="button"
+            onClick={handleCloseQuestion}
+            className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-lg border border-slate-200/90 dark:border-[#26262E] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1A1A20] transition-colors shrink-0 cursor-pointer"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+            <span>Back to Sheet</span>
+          </button>
+        </div>
+
+        {/* Single Question Detail Card - Solved button is inside this single container */}
+        <div className="rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] shadow-2xs p-4 sm:p-6 space-y-4">
+          <div className="flex items-center justify-end pb-3 border-b border-slate-100 dark:border-[#1E1E24]">
+            <button
+              type="button"
+              onClick={() =>
+                handleToggleComplete(
+                  selectedQuestion.id ??
+                    selectedQuestion._id ??
+                    selectedQuestion.name,
+                )
+              }
+              className={cn(
+                "px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-2xs",
+                isCompleted
+                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                  : "border border-slate-200 dark:border-[#2C2C36] text-slate-700 dark:text-slate-300 hover:border-emerald-500 hover:text-emerald-500 bg-white dark:bg-[#16161A]",
+              )}
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>{isCompleted ? "Solved" : "Mark Solved"}</span>
+            </button>
+          </div>
+
+          <QuestionDetailPanel question={selectedQuestion} />
+        </div>
+
+        {/* Freemium Upsell Modal */}
+        <DsaUpsellModal
+          open={showPayment}
+          onViewPlans={() => router.push(routes.dsayatra.pricing)}
+          onDismiss={() => setShowPayment(false)}
+        />
       </div>
     );
   }
@@ -950,10 +1152,12 @@ function SheetsClient() {
                     solvedCount={
                       topicOverrides[item.topic]?.solved ?? item.solved
                     }
-                    onCollapse={() => setExpandedTopic(null)}
+                    onCollapse={() => handleSelectTopic(item.topic)}
                     completedIds={completedIds}
                     onToggleComplete={handleToggleComplete}
-                    onSelectQuestion={(q) => setSelectedQuestion(q)}
+                    onSelectQuestion={(q) =>
+                      handleSelectQuestion(q, item.topic)
+                    }
                     onLockedClick={() => setShowPayment(true)}
                     onCountsDiscovered={handleUpdateTopicCounts}
                   />
@@ -975,7 +1179,7 @@ function SheetsClient() {
                   solvedCount={
                     topicOverrides[item.topic]?.solved ?? item.solved
                   }
-                  onSelect={() => setExpandedTopic(item.topic)}
+                  onSelect={() => handleSelectTopic(item.topic)}
                 />
               </motion.div>
             );
@@ -989,33 +1193,7 @@ function SheetsClient() {
         )}
       </LayoutGroup>
 
-      {/* Question Detail Slide-over / Modal */}
-      {selectedQuestion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs">
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-[#131316] border border-slate-200 dark:border-[#24242A] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-[#24242A] bg-slate-50 dark:bg-[#161619]">
-              <div className="flex items-center gap-2 min-w-0 pr-4">
-                <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
-                  {selectedQuestion.name}
-                </span>
-                <DifficultyPill difficulty={selectedQuestion.difficultyLevel} />
-              </div>
 
-              <button
-                type="button"
-                onClick={() => setSelectedQuestion(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors shrink-0"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-3 sm:p-5 scrollbar-thin-grey">
-              <QuestionDetailPanel question={selectedQuestion} />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Freemium Upsell Modal */}
       <DsaUpsellModal
