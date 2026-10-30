@@ -16,39 +16,43 @@ import {
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
 import {
-  AppWindow,
-  ArrowUpDown,
+  ArrowDownUp,
   Bookmark,
   Calculator,
+  ChartNoAxesCombined,
   Check,
   ChevronDown,
   ChevronRight,
   ChevronUp,
-  Database,
   Filter,
+  GitBranch,
+  Grid2X2,
   Hash,
-  LayoutGrid,
+  Layers,
+  Layers2,
+  List,
   ListOrdered,
   Lock,
   MoveHorizontal,
   Network,
-  RotateCcw,
-  Rows,
+  PanelTop,
+  Repeat,
+  Route,
   Search,
   Share2,
   Target,
-  Type,
+  Text,
+  Undo2,
   Workflow,
   X,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useMemo, useState } from "react";
 
-import { DsaHeroIllustration } from "@/components/illustrations/DsaHeroIllustration";
-
 /* -------------------------------------------------------------------------- */
-/* Topic UI Config matching Image 1 & Image 2                                 */
+/* Topic UI Config matching Exact Lucide Icon Spec & 48px Pastel Badges       */
 /* -------------------------------------------------------------------------- */
 interface TopicMetadata {
   name: string;
@@ -62,7 +66,7 @@ interface TopicMetadata {
 const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   ARRAY: {
     name: "Arrays",
-    icon: ListOrdered,
+    icon: List,
     iconBg: "bg-orange-50 dark:bg-orange-950/40",
     iconColor: "text-orange-500",
     borderColor: "border-orange-100 dark:border-orange-900/40",
@@ -70,7 +74,7 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
   STRING: {
     name: "Strings",
-    icon: Type,
+    icon: Text,
     iconBg: "bg-purple-50 dark:bg-purple-950/40",
     iconColor: "text-purple-500",
     borderColor: "border-purple-100 dark:border-purple-900/40",
@@ -94,7 +98,7 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
   RECURSION: {
     name: "Recursion",
-    icon: RotateCcw,
+    icon: Repeat,
     iconBg: "bg-rose-50 dark:bg-rose-950/40",
     iconColor: "text-rose-500",
     borderColor: "border-rose-100 dark:border-rose-900/40",
@@ -102,7 +106,7 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
   SORTING: {
     name: "Sorting",
-    icon: ArrowUpDown,
+    icon: ArrowDownUp,
     iconBg: "bg-amber-50 dark:bg-amber-950/40",
     iconColor: "text-amber-500",
     borderColor: "border-amber-100 dark:border-amber-900/40",
@@ -126,7 +130,7 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
   SLIDING_WINDOW: {
     name: "Sliding Window",
-    icon: AppWindow,
+    icon: PanelTop,
     iconBg: "bg-red-50 dark:bg-red-950/40",
     iconColor: "text-red-500",
     borderColor: "border-red-100 dark:border-red-900/40",
@@ -134,15 +138,23 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
   STACK: {
     name: "Stack",
-    icon: Database,
+    icon: Layers,
     iconBg: "bg-sky-50 dark:bg-sky-950/40",
     iconColor: "text-sky-500",
     borderColor: "border-sky-100 dark:border-sky-900/40",
     description: "LIFO evaluation, parentheses, monotonic stacks",
   },
+  MONOTONIC_STACK: {
+    name: "Monotonic Stack",
+    icon: Layers2,
+    iconBg: "bg-indigo-50 dark:bg-indigo-950/40",
+    iconColor: "text-indigo-500",
+    borderColor: "border-indigo-100 dark:border-indigo-900/40",
+    description: "Ordered stacks for next greater/smaller element",
+  },
   QUEUE: {
     name: "Queue",
-    icon: Rows,
+    icon: ListOrdered,
     iconBg: "bg-yellow-50 dark:bg-yellow-950/40",
     iconColor: "text-yellow-600",
     borderColor: "border-yellow-100 dark:border-yellow-900/40",
@@ -150,19 +162,43 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
   },
   LINKED_LIST: {
     name: "Linked List",
-    icon: Workflow,
+    icon: Network,
     iconBg: "bg-purple-50 dark:bg-purple-950/40",
     iconColor: "text-purple-600",
     borderColor: "border-purple-100 dark:border-purple-900/40",
     description: "Pointer re-linking, reversal, fast/slow cycle detection",
   },
+  HEAP: {
+    name: "Heap",
+    icon: ChartNoAxesCombined,
+    iconBg: "bg-cyan-50 dark:bg-cyan-950/40",
+    iconColor: "text-cyan-600",
+    borderColor: "border-cyan-100 dark:border-cyan-900/40",
+    description: "Min/Max heaps, top-K elements, priority scheduling",
+  },
   TREE: {
     name: "Trees",
-    icon: Network,
+    icon: GitBranch,
     iconBg: "bg-rose-50 dark:bg-rose-950/40",
     iconColor: "text-rose-500",
     borderColor: "border-rose-100 dark:border-rose-900/40",
     description: "Hierarchical traversal, BSTs, lowest common ancestor",
+  },
+  TRIE: {
+    name: "Trie",
+    icon: Workflow,
+    iconBg: "bg-pink-50 dark:bg-pink-950/40",
+    iconColor: "text-pink-600",
+    borderColor: "border-pink-100 dark:border-pink-900/40",
+    description: "Prefix trees for efficient string search and autocomplete",
+  },
+  BFS: {
+    name: "BFS",
+    icon: Route,
+    iconBg: "bg-lime-50 dark:bg-lime-950/40",
+    iconColor: "text-lime-600",
+    borderColor: "border-lime-100 dark:border-lime-900/40",
+    description: "Breadth-first search for shortest path and level order",
   },
   GRAPH: {
     name: "Graphs",
@@ -172,9 +208,25 @@ const TOPIC_CONFIG: Record<string, TopicMetadata> = {
     borderColor: "border-emerald-100 dark:border-emerald-900/40",
     description: "BFS/DFS, Dijkstra, topological sort, union-find",
   },
+  BACKTRACKING: {
+    name: "Backtracking",
+    icon: Undo2,
+    iconBg: "bg-orange-50 dark:bg-orange-950/40",
+    iconColor: "text-orange-600",
+    borderColor: "border-orange-100 dark:border-orange-900/40",
+    description: "Combinatorial exploration with state rollback",
+  },
+  GREEDY: {
+    name: "Greedy",
+    icon: Zap,
+    iconBg: "bg-amber-50 dark:bg-amber-950/40",
+    iconColor: "text-amber-500",
+    borderColor: "border-amber-100 dark:border-amber-900/40",
+    description: "Locally optimal decision making algorithms",
+  },
   DYNAMIC_PROGRAMMING: {
     name: "Dynamic Programming",
-    icon: LayoutGrid,
+    icon: Grid2X2,
     iconBg: "bg-blue-50 dark:bg-blue-950/40",
     iconColor: "text-blue-600",
     borderColor: "border-blue-100 dark:border-blue-900/40",
@@ -188,7 +240,7 @@ function getTopicMeta(topicKey: string): TopicMetadata {
 
   return {
     name: TOPIC_LABELS[topicKey] || topicKey,
-    icon: LayoutGrid,
+    icon: Grid2X2,
     iconBg: "bg-slate-50 dark:bg-[#1A1A20]",
     iconColor: "text-slate-600 dark:text-slate-400",
     borderColor: "border-slate-100 dark:border-[#26262E]",
@@ -197,7 +249,7 @@ function getTopicMeta(topicKey: string): TopicMetadata {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Difficulty Badges matching Image 1                                         */
+/* Difficulty Badges                                                          */
 /* -------------------------------------------------------------------------- */
 function DifficultyPill({ difficulty }: { difficulty?: string }) {
   const norm = (difficulty || "MEDIUM").toUpperCase();
@@ -281,11 +333,12 @@ function ExpandedTopicCard({
     <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs transition-all duration-300">
       {/* Top Header of Expanded Card */}
       <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 dark:border-[#1E1E24]">
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-3.5 min-w-0">
+          {/* 48px Pastel Rounded-Square with sized-down centered icon */}
           <div
-            className={`w-9 h-9 rounded-xl ${topicMeta.iconBg} ${topicMeta.iconColor} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs`}
+            className={`w-12 h-12 rounded-xl ${topicMeta.iconBg} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs`}
           >
-            <IconComponent className="w-5 h-5" />
+            <IconComponent size={20} className={topicMeta.iconColor} />
           </div>
 
           <div className="min-w-0">
@@ -338,7 +391,6 @@ function ExpandedTopicCard({
               >
                 {/* Left: Number + Checkbox + Title */}
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  {/* Number pill */}
                   <button
                     type="button"
                     onClick={(e) => {
@@ -365,7 +417,6 @@ function ExpandedTopicCard({
                     )}
                   </button>
 
-                  {/* Title */}
                   <button
                     type="button"
                     onClick={() => {
@@ -386,11 +437,10 @@ function ExpandedTopicCard({
                   </button>
                 </div>
 
-                {/* Center / Right: Difficulty + Topic Tags + Bookmark + Solve CTA */}
+                {/* Right: Difficulty + Tags + Bookmark + Solve CTA */}
                 <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                   <DifficultyPill difficulty={q.difficultyLevel} />
 
-                  {/* Topic tag pills */}
                   <div className="hidden lg:flex items-center gap-1.5">
                     {topicMeta.name && (
                       <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-[#1E1E24] text-slate-600 dark:text-slate-400">
@@ -415,7 +465,6 @@ function ExpandedTopicCard({
                         ))}
                   </div>
 
-                  {/* Bookmark Button */}
                   <button
                     type="button"
                     onClick={(e) => toggleBookmark(qKey, e)}
@@ -434,7 +483,6 @@ function ExpandedTopicCard({
                     />
                   </button>
 
-                  {/* Solve > Pill Button */}
                   <button
                     type="button"
                     onClick={() => {
@@ -461,7 +509,6 @@ function ExpandedTopicCard({
           })
         )}
 
-        {/* View All Button */}
         {questions.length > 6 && (
           <div className="pt-2 text-center">
             <button
@@ -489,7 +536,7 @@ function ExpandedTopicCard({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Unexpanded Topic Card (Image 2)                                            */
+/* Unexpanded Topic Card (Image 2) with 48px Pastel Badge & sized-down icon    */
 /* -------------------------------------------------------------------------- */
 interface TopicGridCardProps {
   topicKey: string;
@@ -513,11 +560,12 @@ function TopicGridCard({
       onClick={onSelect}
       className="w-full text-left rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-2xs hover:shadow-xs hover:border-slate-300 dark:hover:border-[#33333C] transition-all duration-200 group cursor-pointer"
     >
-      <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+        {/* 48px Pastel Rounded-Square with sized-down 20px icon */}
         <div
-          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${topicMeta.iconBg} ${topicMeta.iconColor} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}
+          className={`w-12 h-12 rounded-xl ${topicMeta.iconBg} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}
         >
-          <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
+          <IconComponent size={20} className={topicMeta.iconColor} />
         </div>
 
         <div className="min-w-0 flex-1">
@@ -663,7 +711,7 @@ function SheetsClient() {
 
   return (
     <div className="w-full h-full overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-5 scrollbar-thin-grey font-sans">
-      {/* 1. Breadcrumbs (Image 1 & 2: DSA Vault > Problem Sheets) */}
+      {/* 1. Breadcrumbs */}
       <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
         <Link
           href="/dashboard"
@@ -675,9 +723,9 @@ function SheetsClient() {
         <span className="font-bold text-[#FF4D4D]">Problem Sheets</span>
       </nav>
 
-      {/* 2. Hero Section with Title and Laptop Illustration (Image 1 & 2) */}
-      <div className="flex items-center justify-between gap-6 pt-1">
-        <div className="space-y-1.5 max-w-2xl">
+      {/* 2. Hero Section with Remote Hero Image (Mobile Responsive) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 pt-1">
+        <div className="space-y-1.5 max-w-xl">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
             DSA <span className="text-[#FF4D4D]">Problem Sheets</span>
           </h1>
@@ -687,16 +735,19 @@ function SheetsClient() {
           </p>
         </div>
 
-        {/* 3D Laptop Hero Illustration (Image 1 & 2) */}
-        <div className="hidden sm:block shrink-0">
-          <DsaHeroIllustration className="w-48 sm:w-56 lg:w-64" />
+        {/* Remote Hero Illustration */}
+        <div className="shrink-0 max-w-[190px] sm:max-w-[230px] md:max-w-[260px] w-full self-center md:self-auto">
+          <img
+            src="https://ik.imagekit.io/riufvimprm/TBE/dsa-hero-illustration.png"
+            alt="DSA Problem Sheets"
+            className="w-full h-auto object-contain select-none drop-shadow-sm"
+          />
         </div>
       </div>
 
-      {/* 3. Overall Preparation Progress Banner (Image 1 & 2) */}
+      {/* 3. Overall Preparation Progress Banner */}
       <div className="p-4 sm:p-5 rounded-2xl border border-red-100/70 dark:border-[#262024] bg-white dark:bg-[#131316] shadow-2xs space-y-3">
         <div className="flex items-center justify-between gap-2">
-          {/* Left: Archery target icon + title */}
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-900/50 flex items-center justify-center text-[#FF4D4D] shrink-0">
               <Target className="w-4 h-4 text-[#FF4D4D]" />
@@ -706,7 +757,6 @@ function SheetsClient() {
             </span>
           </div>
 
-          {/* Right: Solved count + percentage badge */}
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
               {totalSolved} / {totalQuestions} Problems
@@ -717,7 +767,6 @@ function SheetsClient() {
           </div>
         </div>
 
-        {/* Progress bar */}
         <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-[#1E1E24] overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-[#FF4D4D] to-[#FF3B30] rounded-full transition-all duration-700"
@@ -726,9 +775,8 @@ function SheetsClient() {
         </div>
       </div>
 
-      {/* 4. Search and Filter Bar (Image 1 & 2) */}
+      {/* 4. Search and Filter Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 relative z-20">
-        {/* Search Input */}
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
           <input
@@ -749,7 +797,6 @@ function SheetsClient() {
           )}
         </div>
 
-        {/* Filter Dropdown Button */}
         <div className="relative shrink-0">
           <button
             type="button"
@@ -828,7 +875,6 @@ function SheetsClient() {
 
       {/* 5. Topics Section: Expanded Card + 3-Column Grid */}
       <div className="space-y-4">
-        {/* Expanded Topic Card (Image 1) */}
         {expandedTopicItem && (
           <ExpandedTopicCard
             topicKey={expandedTopicItem.topic}
@@ -843,7 +889,6 @@ function SheetsClient() {
           />
         )}
 
-        {/* 3-Column Topics Grid (Image 2) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
           {otherTopics.map((item) => (
             <TopicGridCard
@@ -868,7 +913,6 @@ function SheetsClient() {
       {selectedQuestion && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs">
           <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-[#131316] border border-slate-200 dark:border-[#24242A] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-            {/* Modal Header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-[#24242A] bg-slate-50 dark:bg-[#161619]">
               <div className="flex items-center gap-2.5 min-w-0 pr-4">
                 <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base truncate">
@@ -886,7 +930,6 @@ function SheetsClient() {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 scrollbar-thin-grey">
               <QuestionDetailPanel question={selectedQuestion} />
             </div>

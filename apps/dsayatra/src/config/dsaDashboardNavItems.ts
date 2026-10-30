@@ -1,12 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  Bookmark,
-  BookOpen,
-  Compass,
-  FileText,
-  Home,
-  Trophy,
-} from "lucide-react";
+import { BookOpen, Brain, FileText, Home, Layers } from "lucide-react";
 
 export type DsaDashboardNavItem = {
   name: string;
@@ -15,13 +8,12 @@ export type DsaDashboardNavItem = {
 };
 
 /**
- * Single source of truth for DSA Yatra / DSA Vault app shell navigation.
+ * Single source of truth for DSA Yatra navigation.
  */
 export const DSA_DASHBOARD_NAV_ITEMS: DsaDashboardNavItem[] = [
-  { name: "Home", href: "/dashboard", icon: Home },
-  { name: "Problem Sheets", href: "/sheets", icon: FileText },
-  { name: "Roadmaps", href: "/topics", icon: Compass },
-  { name: "Notes", href: "/revisions", icon: BookOpen },
-  { name: "Contests", href: "/pattern-quiz", icon: Trophy },
-  { name: "Bookmarks", href: "/sheets", icon: Bookmark },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Sheets", href: "/sheets", icon: FileText },
+  { name: "Revisions", href: "/revisions", icon: BookOpen },
+  { name: "Topics", href: "/topics", icon: Layers },
+  { name: "Pattern Quiz", href: "/pattern-quiz", icon: Brain },
 ];
