@@ -2,7 +2,7 @@ import { useAuth } from "@tbe/auth";
 import { isDashboardSidebarLinkActive, LoadingSpinner } from "@tbe/components";
 import { useGamification } from "@tbe/gamification";
 import { usePaymentStatus, useUser } from "@tbe/hooks";
-import { ChevronRight, Flame, Layers, Sparkles } from "lucide-react";
+import { Layers, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
@@ -101,7 +101,12 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
   const displayName = user?.name || "DSA Learner";
   const displayEmail = user?.email || "";
   const avatarInitial = displayName.charAt(0).toUpperCase() || "D";
-  const avatarUrl = (user as any)?.profilePicture || (user as any)?.avatar;
+  const avatarUrl =
+    (user as any)?.image ||
+    (user as any)?.picture ||
+    (user as any)?.profilePicture ||
+    (user as any)?.avatar ||
+    (user as any)?.photoURL;
 
   return (
     <div className="w-full h-screen h-[100dvh] max-h-[100dvh] bg-[#F1F5F9] dark:bg-[#0E0E11] flex relative font-sans overflow-hidden p-0.5 sm:p-1 gap-1 text-slate-900 dark:text-white">
@@ -257,23 +262,14 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
             </div>
           )}
 
-          {/* Stay Consistent Card (Image 2) */}
+          {/* Motivation Banner Image (Replaces Stay Consistent block) */}
           {!isSidebarCollapsed && (
-            <div className="mt-2 p-2 rounded-xl bg-red-50/70 dark:bg-red-950/20 border border-red-100/80 dark:border-red-900/30 flex items-center justify-between gap-1.5 transition-all hover:bg-red-50 dark:hover:bg-red-950/30">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-6 h-6 rounded-lg bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-[#FF4D4D] shrink-0">
-                  <Flame className="w-3.5 h-3.5 fill-[#FF4D4D]" />
-                </div>
-                <div className="min-w-0">
-                  <span className="font-bold text-[11px] text-slate-900 dark:text-white block truncate leading-tight">
-                    Stay Consistent
-                  </span>
-                  <span className="text-[9px] text-slate-500 dark:text-slate-400 block truncate leading-tight">
-                    Solve a little everyday!
-                  </span>
-                </div>
-              </div>
-              <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />
+            <div className="mt-2 rounded-xl overflow-hidden shadow-2xs border border-slate-200/80 dark:border-[#24242A]">
+              <img
+                src="https://ik.imagekit.io/riufvimprm/TBE/dsayatra-motivation-banner.png"
+                alt="DSA Motivation"
+                className="w-full h-auto object-cover select-none"
+              />
             </div>
           )}
         </div>
@@ -329,7 +325,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
 
             {/* Avatar with XP dot */}
             <div className="relative cursor-pointer p-0.5">
-              <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-tr from-[#FF3B30] to-orange-400 text-white font-bold text-[10px] flex items-center justify-center border border-slate-200/80 dark:border-white/10 shadow-2xs">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-gradient-to-tr from-[#FF3B30] to-orange-400 text-white font-bold text-[9px] flex items-center justify-center border border-slate-200/80 dark:border-white/10 shadow-2xs">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -343,7 +339,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
                   <span>{avatarInitial}</span>
                 )}
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-xs">
+              <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <FiZap className="w-1.5 h-1.5 fill-white text-white" />
               </div>
             </div>
@@ -389,7 +385,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
             {/* User Bar */}
             <div className="flex items-center justify-between gap-1 p-0.5 rounded-lg hover:bg-slate-50 dark:hover:bg-[#1C1C22] transition-colors cursor-pointer">
               <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-tr from-[#FF3B30] to-orange-400 text-white font-bold text-[10px] flex items-center justify-center shrink-0 border border-slate-200/80 dark:border-white/10 shadow-2xs">
+                <div className="w-5 h-5 rounded-full overflow-hidden bg-gradient-to-tr from-[#FF3B30] to-orange-400 text-white font-bold text-[9px] flex items-center justify-center shrink-0 border border-slate-200/80 dark:border-white/10 shadow-2xs">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
@@ -407,9 +403,11 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
                   <div className="text-[11px] font-bold text-slate-900 dark:text-white truncate leading-tight">
                     {displayName}
                   </div>
-                  <div className="text-[9px] text-slate-400 dark:text-slate-500 truncate leading-tight">
-                    {isPurchased ? "Pro Member" : "DSA Learner"}
-                  </div>
+                  {displayEmail && (
+                    <div className="text-[9px] text-slate-400 dark:text-slate-500 truncate leading-tight">
+                      {displayEmail}
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -15,7 +15,7 @@ import {
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 import {
   ArrowDownUp,
   Bookmark,
@@ -710,9 +710,6 @@ function SheetsClient() {
     );
   }
 
-  const expandedTopicItem = topics.find((t) => t.topic === expandedTopic);
-  const otherTopics = filteredTopics.filter((t) => t.topic !== expandedTopic);
-
   return (
     <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-2.5 sm:space-y-3 scrollbar-thin-grey font-sans">
       {/* 1. Hero & Progress Section (Left: Breadcrumbs, Title, Subtitle, Progress; Right: Hero Image) */}
@@ -882,72 +879,65 @@ function SheetsClient() {
         </div>
       </div>
 
-      {/* 3. Topics Section: Smooth Animated Expanded Card + 3-Column Grid */}
+      {/* 3. Topics Section: Inline Row Expansion in 3-Column Grid */}
       <LayoutGroup id="dsa-topics-layout">
-        <div className="space-y-2.5">
-          <AnimatePresence initial={false} mode="wait">
-            {expandedTopicItem && (
-              <motion.div
-                key={expandedTopicItem.topic}
-                initial={{ opacity: 0, height: 0, y: -6 }}
-                animate={{ opacity: 1, height: "auto", y: 0 }}
-                exit={{ opacity: 0, height: 0, y: -6 }}
-                transition={{
-                  duration: 0.3,
-                  ease: [0.16, 1, 0.3, 1],
-                  opacity: { duration: 0.2 },
-                }}
-                className="overflow-hidden"
-                layout
-              >
-                <ExpandedTopicCard
-                  topicKey={expandedTopicItem.topic}
-                  topicMeta={expandedTopicItem.meta}
-                  totalCount={expandedTopicItem.count}
-                  solvedCount={expandedTopicItem.solved}
-                  onCollapse={() => setExpandedTopic(null)}
-                  completedIds={completedIds}
-                  onToggleComplete={handleToggleComplete}
-                  onSelectQuestion={(q) => setSelectedQuestion(q)}
-                  onLockedClick={() => setShowPayment(true)}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <motion.div
-            layout
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5"
-          >
-            <AnimatePresence>
-              {otherTopics.map((item) => (
+        <motion.div
+          layout
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5"
+        >
+          {filteredTopics.map((item) => {
+            const isExpanded = expandedTopic === item.topic;
+            if (isExpanded) {
+              return (
                 <motion.div
-                  layout="position"
+                  layout
                   key={item.topic}
-                  initial={{ opacity: 0, scale: 0.98 }}
+                  className="col-span-1 sm:col-span-2 lg:col-span-3 overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.99 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, scale: 0.99 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <TopicGridCard
+                  <ExpandedTopicCard
                     topicKey={item.topic}
                     topicMeta={item.meta}
                     totalCount={item.count}
                     solvedCount={item.solved}
-                    onSelect={() => setExpandedTopic(item.topic)}
+                    onCollapse={() => setExpandedTopic(null)}
+                    completedIds={completedIds}
+                    onToggleComplete={handleToggleComplete}
+                    onSelectQuestion={(q) => setSelectedQuestion(q)}
+                    onLockedClick={() => setShowPayment(true)}
                   />
                 </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+              );
+            }
 
-          {filteredTopics.length === 0 && (
-            <div className="text-center py-10 rounded-lg border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs">
-              No topics matched your search or filter.
-            </div>
-          )}
-        </div>
+            return (
+              <motion.div
+                layout="position"
+                key={item.topic}
+                className="col-span-1"
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <TopicGridCard
+                  topicKey={item.topic}
+                  topicMeta={item.meta}
+                  totalCount={item.count}
+                  solvedCount={item.solved}
+                  onSelect={() => setExpandedTopic(item.topic)}
+                />
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {filteredTopics.length === 0 && (
+          <div className="text-center py-10 rounded-lg border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs">
+            No topics matched your search or filter.
+          </div>
+        )}
       </LayoutGroup>
 
       {/* Question Detail Slide-over / Modal */}
