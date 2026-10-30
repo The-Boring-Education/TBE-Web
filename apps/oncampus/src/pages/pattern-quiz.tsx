@@ -1,15 +1,31 @@
-import { ContentFeedbackWidget, PatternQuizPanel } from "@tbe/components";
+import { ContentFeedbackWidget, PatternQuizPanel, SEO } from "@tbe/components";
+import type { PageProps } from "@tbe/interface";
+import { getPreFetchProps } from "@tbe/utils";
 import Head from "next/head";
+import Link from "next/link";
 import { Fragment } from "react";
 
-export default function PatternQuizPage() {
+export default function PatternQuizPage({ seoMeta }: PageProps) {
   return (
     <Fragment>
       <Head>
-        <title>Pattern Quiz | On Campus</title>
+        <title>Pattern Quiz | OnCampus</title>
       </Head>
-      <div className="flex-1 w-full bg-[#0f0f0f] font-sans px-4 sm:px-6 py-4 pb-16 lg:py-6">
-        <div className="max-w-[700px] w-full mx-auto space-y-5">
+      <SEO seoMeta={seoMeta} />
+      <div className="w-full min-w-0 max-w-full font-sans px-1 sm:px-2 py-1 space-y-2.5 pb-4">
+        {/* Breadcrumb Navigation on Top */}
+        <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+          <Link
+            href="/dashboard"
+            className="hover:text-slate-800 dark:hover:text-white transition-colors"
+          >
+            OnCampus
+          </Link>
+          <span className="text-slate-300 dark:text-slate-600">›</span>
+          <span className="font-bold text-[#FF4D4D]">Pattern Quiz</span>
+        </nav>
+
+        <div className="w-full max-w-[560px] mx-auto pt-0.5 pb-3">
           <PatternQuizPanel questionsPerRound={5} />
         </div>
       </div>
@@ -27,6 +43,5 @@ export default function PatternQuizPage() {
   );
 }
 
-export async function getServerSideProps() {
-  return { props: {} };
-}
+export const getServerSideProps = async () =>
+  getPreFetchProps({ slug: "/pattern-quiz" });

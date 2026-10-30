@@ -1,4 +1,9 @@
-import { FlexContainer, LoadingSpinner, Text } from "@tbe/components";
+import {
+  LoadingSpinner,
+  prefetchSheetData,
+  SEO,
+  SheetLearningSpace,
+} from "@tbe/components";
 import { envConfig, routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import type { PrimaryCardWithCTAProps, SheetPageProps } from "@tbe/interface";
@@ -10,25 +15,16 @@ import {
   mapInterviewSheetResponseToCard,
   sendRequest,
 } from "@tbe/utils";
-import {
-  BookOpen,
-  ChevronRight,
-  Folder,
-  FolderOpen,
-  Lock,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, FolderOpen, Lock, Search, X } from "lucide-react";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-
-import { InterviewSheetWorkspace } from "@/components/InterviewSheetWorkspace";
-import { MobileNav } from "@/components/MobileNav";
-import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 const InterviewPrepDashboardPage = (props: SheetPageProps) => {
   const router = useRouter();
   const { user, loading: userLoading, isAuth } = useUser();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const selectedRoadmap =
     typeof router.query.roadmap === "string"
@@ -43,6 +39,22 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
       }),
     ...CACHE_TIMES.STATIC,
   });
+
+  const { data: mySheetsResponse } = useQuery<any>({
+    queryKey: queryKeys.interviewPrep.lists(),
+    queryFn: () =>
+      sendRequest({
+        url: `${routes.api.base}${routes.api.mySheets}?userId=${user?.id}`,
+      }),
+    ...CACHE_TIMES.STANDARD,
+    enabled: !!user?.id,
+  });
+
+  const enrolledSheets = useMemo(() => {
+    const list =
+      mySheetsResponse?.data || (props as any).initialEnrolledSheets || [];
+    return Array.isArray(list) ? list : [];
+  }, [mySheetsResponse, (props as any).initialEnrolledSheets]);
 
   const sheetsData = useMemo(() => {
     const payload = response?.data;
@@ -104,7 +116,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
   }, [sheetsData, purchaseStatuses]);
 
   const groupedByRoadmap = useMemo(() => {
-    const groups: Record<string, PrimaryCardWithCTAProps[]> = {};
+    const groups: Record<string, any[]> = {};
     sheetsData.forEach((sheet: any) => {
       let roadmap = sheet?.roadmap || "Tech";
       const title = (sheet.name || sheet.title || "").toLowerCase();
@@ -120,11 +132,10 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
         roadmap = "Database";
       }
       if (!groups[roadmap]) groups[roadmap] = [];
-      const card = sheets.find((c) => c.id === sheet._id);
-      if (card) groups[roadmap].push(card);
+      groups[roadmap].push(sheet);
     });
     return groups;
-  }, [sheetsData, sheets]);
+  }, [sheetsData]);
 
   const roadmapKeys = useMemo(() => {
     const keys = Object.keys(groupedByRoadmap).sort((a, b) => {
@@ -139,20 +150,37 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
     return keys;
   }, [groupedByRoadmap]);
 
-  const activeRoadmapLabel = useMemo(() => {
-    if (selectedRoadmap === "all") return "All Sheets";
-    const key = roadmapKeys.find((k) => k.toLowerCase() === selectedRoadmap);
-    return key || "Interview Prep";
-  }, [selectedRoadmap, roadmapKeys]);
+  const filteredSheets = useMemo(() => {
+    return sheetsData.filter((sheet: any) => {
+      let roadmap = sheet?.roadmap || "Tech";
+      const title = (sheet.name || sheet.title || "").toLowerCase();
+      const slug = sheet.slug?.toLowerCase() || "";
+      if (
+        title.includes("database") ||
+        title.includes("dbms") ||
+        title.includes("sql") ||
+        slug.includes("database") ||
+        slug.includes("dbms") ||
+        slug.includes("sql")
+      ) {
+        roadmap = "Database";
+      }
 
-  // Flat list of cards for the selected roadmap (or all)
-  const visibleSheets = useMemo(() => {
-    if (selectedRoadmap === "all") return sheets;
-    const matchedRoadmap = roadmapKeys.find(
-      (k) => k.toLowerCase() === selectedRoadmap,
-    );
-    return matchedRoadmap ? (groupedByRoadmap[matchedRoadmap] ?? []) : [];
-  }, [sheets, selectedRoadmap, roadmapKeys, groupedByRoadmap]);
+      const matchesRoadmap =
+        selectedRoadmap === "all" ||
+        roadmap.toLowerCase() === selectedRoadmap.toLowerCase();
+
+      const matchesSearch =
+        !searchQuery.trim() ||
+        title.includes(searchQuery.toLowerCase()) ||
+        slug.includes(searchQuery.toLowerCase()) ||
+        (sheet.description || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+
+      return matchesRoadmap && matchesSearch;
+    });
+  }, [sheetsData, selectedRoadmap, searchQuery]);
 
   const handleRoadmapClick = (slug: string) => {
     if (slug === "all") {
@@ -162,330 +190,330 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
     }
   };
 
+  const getSheetEnrollmentInfo = (sheetItem: any) => {
+    const slug = sheetItem.slug;
+    const enrolled = enrolledSheets.find(
+      (s: any) =>
+        s.slug === slug ||
+        s._id === sheetItem._id ||
+        s.name?.toLowerCase() ===
+          (sheetItem.name || sheetItem.title)?.toLowerCase() ||
+        s.title?.toLowerCase() ===
+          (sheetItem.name || sheetItem.title)?.toLowerCase(),
+    );
+
+    const isEnrolled = Boolean(enrolled || sheetItem.isEnrolled);
+    const completedQuestions =
+      enrolled?.progress?.completed ??
+      (Array.isArray(sheetItem.questions)
+        ? sheetItem.questions.filter((q: any) => q.isCompleted).length
+        : 0);
+    const totalQuestions =
+      enrolled?.progress?.total ??
+      (Array.isArray(sheetItem.questions)
+        ? sheetItem.questions.length
+        : sheetItem.totalQuestions || 0);
+    const progressPct =
+      totalQuestions > 0
+        ? Math.round((completedQuestions / totalQuestions) * 100)
+        : (enrolled?.progress?.percentage ?? 0);
+    const isInProgress = completedQuestions > 0 || progressPct > 0;
+
+    return {
+      isEnrolled,
+      isInProgress,
+      completedQuestions,
+      totalQuestions,
+      progressPct,
+    };
+  };
+
   const overallLoading = userLoading || sheetsLoading;
 
-  // If a topic is selected, render the workspace
-  if (router.query.topic && props.sheet) {
-    return <InterviewSheetWorkspace {...props} />;
+  // If a topic is selected, render the reusable SheetLearningSpace matching Platform
+  if (router.query.topic) {
+    return (
+      <Fragment>
+        <Head>
+          <title>
+            {props.sheet?.name
+              ? `${props.sheet.name} | OnCampus Sheets`
+              : "Interview Sheet | OnCampus"}
+          </title>
+        </Head>
+        <div className="w-full min-w-0 max-w-full font-sans space-y-2.5 pb-4">
+          <SheetLearningSpace
+            sheetSlug={String(router.query.topic)}
+            initialSheet={props.sheet}
+            user={user}
+            onBack={() => router.push("/interview-sheets")}
+            onNavigateToDashboard={() => router.push("/dashboard")}
+          />
+        </div>
+      </Fragment>
+    );
   }
 
   if (overallLoading) {
     return (
-      <OnCampusLearningLayout
-        backHref={routes.oncampus.dashboard}
-        layoutMode="workspace"
-        isLoading
-      >
-        <div className="flex-1 flex items-center justify-center gap-3">
-          <LoadingSpinner height={6} width={6} />
-          <Text level="p" className="text-white/30 text-sm">
-            Loading sheets…
-          </Text>
-        </div>
-      </OnCampusLearningLayout>
+      <div className="flex-1 flex items-center justify-center min-h-[50vh]">
+        <LoadingSpinner />
+      </div>
     );
   }
 
-  const hasSheets = sheets.length > 0;
-  const totalSheets = sheets.length;
-
   return (
-    <OnCampusLearningLayout
-      backHref={routes.oncampus.dashboard}
-      layoutMode="workspace"
-    >
-      <div className="flex flex-col h-full w-full items-center">
-        {/* ── TOP HEADER ── */}
-        <div
-          className="w-full border-b border-white/[0.05] bg-[#080808] flex shrink-0"
-          style={{ minHeight: 60 }}
-        >
-          {/* Left: sidebar header */}
-          <div className="border-r border-white/[0.05] px-4 py-3 flex items-center justify-between shrink-0 w-full lg:w-[264px]">
-            <div>
-              <p className="text-[13px] font-bold text-white leading-tight">
-                Interview Sheets
-              </p>
-              <p className="text-[9px] font-semibold text-white/30 uppercase tracking-widest mt-0.5">
-                {totalSheets} sheet{totalSheets !== 1 ? "s" : ""} available
-              </p>
+    <Fragment>
+      <Head>
+        <title>Interview Sheets | OnCampus</title>
+        <meta
+          name="description"
+          content="Curated interview prep sheets covering DSA, Frontend, Backend, and Database."
+        />
+      </Head>
+      {props.seoMeta ? <SEO seoMeta={props.seoMeta} /> : null}
+
+      <div className="w-full min-w-0 max-w-full font-sans px-1 sm:px-2 py-1 space-y-3 pb-4">
+        {/* Breadcrumb Navigation on Top */}
+        <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+          <Link
+            href="/dashboard"
+            className="hover:text-slate-800 dark:hover:text-white transition-colors"
+          >
+            OnCampus
+          </Link>
+          <span className="text-slate-300 dark:text-slate-600">›</span>
+          <span className="font-bold text-[#FF4D4D]">Interview Sheets</span>
+        </nav>
+
+        {/* Header Banner matching Platform */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 bg-white dark:bg-[#16161A] p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-[#26262C] shadow-2xs">
+          <div className="space-y-0.5 sm:space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border border-red-200/80 dark:border-red-900/60">
+                Interview Prep Space
+              </span>
+              <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                {sheetsData.length} Sheets Available
+              </span>
             </div>
+            <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              Crack Tech Interviews
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl">
+              Curated topic-wise sheets with top interview questions, code
+              snippets and in-depth answers.
+            </p>
           </div>
 
-          {/* Right: active label */}
-          <div className="hidden lg:flex flex-1 items-center px-6">
-            <div>
-              <p className="text-sm font-bold text-white leading-tight">
-                {selectedRoadmap === "all"
-                  ? "Interview Sheets"
-                  : `${activeRoadmapLabel} Interview Sheets`}
-              </p>
-              <p className="text-[10px] text-white/30 font-medium mt-0.5 uppercase tracking-wider">
-                {selectedRoadmap === "all"
-                  ? "Browse all available sheets"
-                  : `Browsing ${activeRoadmapLabel} sheets`}
-              </p>
-            </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-[#202026] border border-slate-200 dark:border-[#2C2C34] text-xs font-bold text-slate-700 dark:text-slate-200">
+              {enrolledSheets.length} Enrolled
+            </span>
           </div>
         </div>
 
-        {/* Mobile category pills (wrapped, no horizontal scroll) */}
-        <div className="lg:hidden w-full border-b border-white/[0.05] bg-[#080808] shrink-0">
-          <div className="flex flex-wrap items-center gap-1.5 px-3 py-2">
+        {/* Filter Pills & Search matching Platform */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-2.5 bg-white dark:bg-[#16161A] p-2 sm:p-2.5 rounded-2xl border border-slate-200/80 dark:border-[#26262C] shadow-2xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none flex-nowrap">
             <button
+              type="button"
               onClick={() => handleRoadmapClick("all")}
               className={cn(
-                "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all duration-200 active:scale-95",
+                "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
                 selectedRoadmap === "all"
-                  ? "bg-primary/10 border-primary/30 text-primary"
-                  : "bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white",
+                  ? "bg-[#FF4D4D] text-white shadow-xs"
+                  : "bg-slate-50 dark:bg-[#202026] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2A2A32] hover:text-slate-900 dark:hover:text-white",
               )}
             >
-              {selectedRoadmap === "all" ? (
-                <FolderOpen className="w-2.5 h-2.5" />
-              ) : (
-                <Folder className="w-2.5 h-2.5" />
-              )}
-              All
+              <span>All Sheets</span>
+              <span className="text-[10px] opacity-75">
+                ({sheetsData.length})
+              </span>
             </button>
+
             {roadmapKeys.map((roadmap) => {
               const slug = roadmap.toLowerCase();
               const isActive = selectedRoadmap === slug;
+              const count = groupedByRoadmap[roadmap]?.length || 0;
+
               return (
                 <button
                   key={roadmap}
+                  type="button"
                   onClick={() => handleRoadmapClick(slug)}
                   className={cn(
-                    "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all duration-200 active:scale-95",
+                    "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
                     isActive
-                      ? "bg-primary/10 border-primary/30 text-primary"
-                      : "bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white",
+                      ? "bg-[#FF4D4D] text-white shadow-xs"
+                      : "bg-slate-50 dark:bg-[#202026] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2A2A32] hover:text-slate-900 dark:hover:text-white",
                   )}
                 >
-                  {isActive ? (
-                    <FolderOpen className="w-2.5 h-2.5" />
-                  ) : (
-                    <Folder className="w-2.5 h-2.5" />
-                  )}
-                  {roadmap}
+                  <span>{roadmap}</span>
+                  <span className="text-[10px] opacity-75">({count})</span>
                 </button>
               );
             })}
           </div>
-        </div>
 
-        <FlexContainer
-          direction="col"
-          className="lg:flex-row flex-1 min-h-0 w-full"
-          itemCenter={false}
-          justifyCenter={false}
-          wrap={false}
-        >
-          {/* ── DESKTOP LEFT SIDEBAR ── */}
-          <div className="hidden lg:flex w-[264px] flex-shrink-0 border-r border-white/[0.05] flex-col bg-[#080808]">
-            <div className="flex-1 overflow-y-auto px-2 py-3 scrollbar-thin-grey">
-              <div className="space-y-0.5">
-                {/* All option */}
-                <button
-                  onClick={() => handleRoadmapClick("all")}
-                  className={cn(
-                    "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left",
-                    selectedRoadmap === "all"
-                      ? "bg-primary/[0.08] border-primary/25 text-white"
-                      : "border-transparent bg-transparent hover:bg-white/[0.03] hover:border-white/[0.05] text-white/40 hover:text-white/70",
-                  )}
-                >
-                  {selectedRoadmap === "all" ? (
-                    <FolderOpen className="w-4 h-4 shrink-0 text-primary" />
-                  ) : (
-                    <Folder className="w-4 h-4 shrink-0 text-white/25 group-hover:text-white/50 transition-colors" />
-                  )}
-                  <span className="text-[13px] font-semibold leading-none flex-1">
-                    All Sheets
-                  </span>
-                  <span
-                    className={cn(
-                      "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
-                      selectedRoadmap === "all"
-                        ? "bg-primary/15 text-primary"
-                        : "bg-white/[0.04] text-white/25",
-                    )}
-                  >
-                    {totalSheets}
-                  </span>
-                </button>
-
-                {/* Category options */}
-                {roadmapKeys.map((roadmap) => {
-                  const slug = roadmap.toLowerCase();
-                  const isActive = selectedRoadmap === slug;
-                  const count = groupedByRoadmap[roadmap]?.length || 0;
-                  return (
-                    <button
-                      key={roadmap}
-                      onClick={() => handleRoadmapClick(slug)}
-                      className={cn(
-                        "w-full group flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 cursor-pointer text-left",
-                        isActive
-                          ? "bg-primary/[0.08] border-primary/25 text-white"
-                          : "border-transparent bg-transparent hover:bg-white/[0.03] hover:border-white/[0.05] text-white/40 hover:text-white/70",
-                      )}
-                    >
-                      {isActive ? (
-                        <FolderOpen className="w-4 h-4 shrink-0 text-primary" />
-                      ) : (
-                        <Folder className="w-4 h-4 shrink-0 text-white/25 group-hover:text-white/50 transition-colors" />
-                      )}
-                      <span className="text-[13px] font-semibold leading-none flex-1">
-                        {roadmap}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full",
-                          isActive
-                            ? "bg-primary/15 text-primary"
-                            : "bg-white/[0.04] text-white/25",
-                        )}
-                      >
-                        {count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* ── MAIN CONTENT ── */}
-          <div className="flex-1 flex flex-col lg:h-full w-full lg:overflow-y-auto bg-[#050505] p-4 lg:p-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-10 scrollbar-thin-grey">
-            {!hasSheets ? (
-              <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] gap-3">
-                <BookOpen className="w-10 h-10 text-white/10" />
-                <Text level="p" className="text-white/30 text-sm">
-                  No interview sheets available right now.
-                </Text>
-              </div>
-            ) : (
-              <div className="max-w-5xl mx-auto w-full">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                  {visibleSheets.map((card) => {
-                    const rawSheet = sheetsData.find(
-                      (s: any) => s._id === card.id,
-                    );
-                    const isLocked = card.isPremium && !card.isPurchased;
-
-                    const coverImage =
-                      card.image ||
-                      rawSheet?.coverImageURL ||
-                      (rawSheet as any)?.coverImageUrl ||
-                      (rawSheet as any)?.cover_image_url ||
-                      (rawSheet as any)?.thumbnail;
-
-                    return (
-                      <Link
-                        key={card.id}
-                        href={
-                          card.href ||
-                          `/interview-sheets?topic=${rawSheet?.slug}`
-                        }
-                        className="group block"
-                      >
-                        <div
-                          className={cn(
-                            "relative h-full rounded-xl border overflow-hidden transition-all duration-300",
-                            "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]",
-                            "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
-                          )}
-                        >
-                          {/* Cover image */}
-                          {coverImage ? (
-                            <div className="relative w-full aspect-[16/9] overflow-hidden">
-                              <img
-                                src={coverImage}
-                                alt={card.imageAltText || card.title}
-                                referrerPolicy="no-referrer"
-                                className="w-full h-full object-cover opacity-95 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500"
-                                onError={(e) => {
-                                  (
-                                    e.currentTarget as HTMLImageElement
-                                  ).style.display = "none";
-                                }}
-                              />
-                              {/* Subtle gradient at bottom only */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-                              {/* Badge overlaid on image */}
-                              {isLocked && (
-                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12] backdrop-blur-sm">
-                                  <Lock className="w-2.5 h-2.5 text-white/50" />
-                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
-                                    Premium
-                                  </span>
-                                </div>
-                              )}
-                              {card.isPurchased && (
-                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12] backdrop-blur-sm">
-                                  <Sparkles className="w-2.5 h-2.5 text-white/50" />
-                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
-                                    Purchased
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          ) : (
-                            /* Fallback when no cover image */
-                            <div className="relative w-full aspect-[16/9] bg-white/[0.03] flex items-center justify-center">
-                              <BookOpen className="w-8 h-8 text-white/10" />
-                              {isLocked && (
-                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12]">
-                                  <Lock className="w-2.5 h-2.5 text-white/50" />
-                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
-                                    Premium
-                                  </span>
-                                </div>
-                              )}
-                              {card.isPurchased && (
-                                <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 border border-white/[0.12]">
-                                  <Sparkles className="w-2.5 h-2.5 text-white/50" />
-                                  <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
-                                    Purchased
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Card body */}
-                          <div className="p-3.5">
-                            <p className="text-[13px] font-semibold text-white/85 leading-snug group-hover:text-white transition-colors line-clamp-2">
-                              {card.title}
-                            </p>
-
-                            {card.content && (
-                              <p className="text-[11px] text-white/35 leading-relaxed mt-1.5 line-clamp-2 group-hover:text-white/50 transition-colors">
-                                {card.content}
-                              </p>
-                            )}
-
-                            {/* Footer */}
-                            <div className="flex items-center justify-end mt-3 pt-2.5 border-t border-white/[0.04]">
-                              <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-white/40 group-hover:translate-x-0.5 transition-all" />
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
+          <div className="relative w-full sm:w-64 shrink-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 w-3.5 h-3.5 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search sheet title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-7 py-1.5 bg-slate-50 dark:bg-[#202026] border border-slate-200 dark:border-[#2C2C34] rounded-xl text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#1E1E24] focus:border-[#FF4D4D] transition-all"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+              </button>
             )}
           </div>
-        </FlexContainer>
+        </div>
 
-        {/* Mobile bottom nav */}
-        <MobileNav />
+        {/* Sheets Grid matching Platform Learn/Interview Prep */}
+        {filteredSheets.length === 0 ? (
+          <div className="py-16 bg-white dark:bg-[#16161A] border border-slate-200/80 dark:border-[#26262C] rounded-2xl text-center p-6 space-y-2">
+            <FolderOpen className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto" />
+            <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              No sheets found
+            </h3>
+            <p className="text-xs text-slate-400">
+              Try adjusting your search query or roadmap filter.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+            {filteredSheets.map((s: any) => {
+              const info = getSheetEnrollmentInfo(s);
+              const isLocked = s.isPremium && !purchaseStatuses[s._id];
+              const coverImage =
+                s.coverImageURL ||
+                s.coverImageUrl ||
+                s.cover_image_url ||
+                s.image ||
+                s.thumbnail;
+
+              return (
+                <div
+                  key={s._id || s.slug}
+                  onMouseEnter={() => prefetchSheetData(s.slug, user?.id)}
+                  className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all group"
+                >
+                  <div>
+                    {/* Image or Banner */}
+                    {coverImage ? (
+                      <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-[#222228]">
+                        <img
+                          src={coverImage}
+                          alt={s.name || s.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-black/60 text-white backdrop-blur-xs">
+                          {s.roadmap || "SHEET"}
+                        </div>
+                        {info.isInProgress ? (
+                          <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FF4D4D] text-white shadow-xs">
+                            In Progress
+                          </div>
+                        ) : info.isEnrolled ? (
+                          <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-600 text-white shadow-xs">
+                            Enrolled
+                          </div>
+                        ) : isLocked ? (
+                          <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-black/70 backdrop-blur-sm text-white/90">
+                            <Lock className="w-2.5 h-2.5" />
+                            <span>Premium</span>
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-gradient-to-r from-rose-50 to-red-50 dark:from-red-950/40 dark:to-rose-950/20 border-b border-rose-100 dark:border-red-950/60 flex items-center justify-between">
+                        <span className="text-[10px] font-extrabold tracking-wider uppercase text-[#FF4D4D]">
+                          {s.roadmap || "INTERVIEW SHEET"}
+                        </span>
+                        {info.isInProgress ? (
+                          <span className="text-[10px] font-black uppercase text-[#FF4D4D] bg-white dark:bg-[#24242C] px-2 py-0.5 rounded-full shadow-2xs">
+                            In Progress
+                          </span>
+                        ) : info.isEnrolled ? (
+                          <span className="text-[10px] font-black uppercase text-emerald-600 bg-white dark:bg-[#24242C] px-2 py-0.5 rounded-full shadow-2xs">
+                            Enrolled
+                          </span>
+                        ) : isLocked ? (
+                          <span className="flex items-center gap-1 text-[10px] font-bold uppercase text-amber-500 bg-black/40 px-2 py-0.5 rounded-full">
+                            <Lock className="w-2.5 h-2.5" />
+                            <span>Premium</span>
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+
+                    <div className="p-4 space-y-2">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors leading-snug">
+                        {s.name || s.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                        {s.description ||
+                          "Curated list of technical interview questions."}
+                      </p>
+
+                      {/* Progress info if enrolled */}
+                      {info.isInProgress && (
+                        <div className="pt-2 space-y-1">
+                          <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                            <span>{info.progressPct}% Solved</span>
+                            <span className="text-slate-400 font-medium text-[10px]">
+                              {info.completedQuestions}/{info.totalQuestions}{" "}
+                              Solved
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-[#FF4D4D] h-1.5 rounded-full transition-all"
+                              style={{ width: `${info.progressPct}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="p-4 pt-0 mt-auto">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        router.push(`/interview-sheets?topic=${s.slug}`)
+                      }
+                      className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
+                        info.isInProgress
+                          ? "bg-[#FF4D4D] hover:bg-[#EE3126] text-white"
+                          : info.isEnrolled
+                            ? "bg-slate-900 hover:bg-slate-800 dark:bg-[#2A2A32] dark:hover:bg-[#34343E] text-white"
+                            : "bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-950/60 text-[#FF4D4D] border border-red-200 dark:border-red-900/60"
+                      }`}
+                    >
+                      {info.isInProgress
+                        ? "Resume Sheet"
+                        : info.isEnrolled
+                          ? "Start Sheet"
+                          : "Start Learning"}{" "}
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </OnCampusLearningLayout>
+    </Fragment>
   );
 };
 

@@ -40,7 +40,10 @@ export type {
   SheetLearningSpaceProps,
   SheetQuestion,
 } from "./learn/SheetLearningSpace";
-export { SheetLearningSpace } from "./learn/SheetLearningSpace";
+export {
+  prefetchSheetData,
+  SheetLearningSpace,
+} from "./learn/SheetLearningSpace";
 
 // Common Components
 export { default as Accordion } from "./common/Accordion";
