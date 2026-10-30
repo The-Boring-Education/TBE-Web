@@ -12,12 +12,12 @@ export default function PatternQuizPage({ seoMeta }: PageProps) {
         <title>Pattern Quiz | DSA Yatra</title>
       </Head>
       <SEO seoMeta={seoMeta} appId="dsayatra" />
-      <div className="flex-1 w-full h-full overflow-y-auto font-sans p-4 sm:p-6 lg:p-8 space-y-5 scrollbar-thin-grey">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+      <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-2.5 font-sans scrollbar-thin-grey">
+        {/* Breadcrumb Navigation on Top */}
+        <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
           <Link
             href="/dashboard"
-            className="hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             DSA Yatra
           </Link>
@@ -25,7 +25,7 @@ export default function PatternQuizPage({ seoMeta }: PageProps) {
           <span className="font-bold text-[#FF4D4D]">Pattern Quiz</span>
         </nav>
 
-        <div className="max-w-[760px] w-full mx-auto space-y-6 pt-2">
+        <div className="w-full max-w-[560px] mx-auto pt-0.5 pb-3">
           <PatternQuizPanel questionsPerRound={5} />
         </div>
       </div>

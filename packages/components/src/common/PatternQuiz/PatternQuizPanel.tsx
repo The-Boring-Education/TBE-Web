@@ -96,24 +96,24 @@ const PatternQuizPanel = ({
   // 1. Idle State (Start Screen) - Matches Platform Learn Quiz Style
   if (quizState === "idle") {
     return (
-      <div className="w-full flex justify-center py-2 animate-fadeIn">
+      <div className="w-full flex justify-center pt-0 pb-2 animate-fadeIn font-sans">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className={`w-full max-w-[520px] rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#16161A] p-6 sm:p-8 shadow-2xs relative overflow-hidden text-center space-y-6 ${className}`}
+          className={`w-full max-w-[480px] rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#16161A] p-5 sm:p-6 shadow-2xs relative overflow-hidden text-center space-y-4 ${className}`}
         >
           {/* Glowing Top Icon */}
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative flex w-14 h-14 items-center justify-center rounded-2xl border border-red-100 dark:border-red-900/40 bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] shadow-2xs">
-              <Brain className="w-7 h-7 text-[#FF4D4D]" />
+          <div className="flex flex-col items-center gap-3">
+            <div className="relative flex w-12 h-12 items-center justify-center rounded-xl border border-red-100 dark:border-red-900/40 bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] shadow-2xs">
+              <Brain className="w-6 h-6 text-[#FF4D4D]" />
             </div>
 
-            <div className="space-y-1.5">
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            <div className="space-y-1">
+              <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
                 DSA Pattern Quiz
               </h1>
-              <p className="max-w-md text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed mx-auto">
+              <p className="max-w-md text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed mx-auto">
                 Train your algorithmic intuition by matching problems with their
                 optimal DSA patterns.
               </p>
@@ -121,7 +121,7 @@ const PatternQuizPanel = ({
           </div>
 
           {/* Feature Grid */}
-          <div className="grid grid-cols-3 gap-2.5 w-full">
+          <div className="grid grid-cols-3 gap-2 w-full">
             {[
               {
                 label: "Questions",
@@ -133,9 +133,9 @@ const PatternQuizPanel = ({
             ].map((spec, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-[#24242C] bg-slate-50/60 dark:bg-[#1E1E24]"
+                className="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 dark:border-[#24242C] bg-slate-50/60 dark:bg-[#1E1E24]"
               >
-                <spec.icon className="w-4 h-4 text-[#FF4D4D] mb-1" />
+                <spec.icon className="w-3.5 h-3.5 text-[#FF4D4D] mb-1" />
                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
                   {spec.label}
                 </span>
@@ -149,7 +149,7 @@ const PatternQuizPanel = ({
           <button
             type="button"
             onClick={startQuiz}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF3B30] hover:bg-[#EE3126] px-8 py-3 text-xs font-black uppercase tracking-wider text-white shadow-xs transition-all cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF4D4D] hover:bg-[#EE3126] px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-xs transition-all cursor-pointer"
           >
             Start Assessment
             <ArrowRight className="w-3.5 h-3.5" />
@@ -414,7 +414,7 @@ const PatternQuizPanel = ({
     );
   }
 
-  // 3. Playing State - Matches Platform Learn Quiz Style (Compact Centered Card)
+  // 3. Playing State - Compact Centered Square Card
   const progress =
     totalQuestions > 0 ? ((currentIndex + 1) / totalQuestions) * 100 : 0;
   const selectedForCurrent = currentQuestion
@@ -423,19 +423,19 @@ const PatternQuizPanel = ({
   const isLastQuestion = currentIndex === totalQuestions - 1;
 
   return (
-    <div className="w-full h-full min-h-0 flex flex-col justify-center items-center py-2 animate-fadeIn">
-      <div className="w-full max-w-[500px] flex flex-col gap-2">
+    <div className="w-full flex flex-col items-center pt-0 pb-2 animate-fadeIn font-sans">
+      <div className="w-full max-w-[540px] flex flex-col gap-2">
         {/* Top Header Card */}
-        <div className="bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#24242A] rounded-xl sm:rounded-2xl p-2.5 sm:p-3 shadow-2xs shrink-0">
+        <div className="bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#24242A] rounded-xl p-2.5 sm:p-3 shadow-2xs shrink-0">
           <div className="flex items-center justify-between gap-2">
             {/* Left: Icon + Title */}
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border border-red-100 dark:border-red-900/40 flex items-center justify-center shrink-0">
-                <Brain className="w-4 h-4" />
+              <div className="w-6 h-6 rounded-md bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border border-red-100 dark:border-red-900/40 flex items-center justify-center shrink-0">
+                <Brain className="w-3.5 h-3.5" />
               </div>
 
               <div className="min-w-0">
-                <h1 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white tracking-tight truncate leading-tight">
+                <h1 className="text-xs sm:text-[13px] font-black text-slate-900 dark:text-white tracking-tight truncate leading-tight">
                   DSA Pattern Challenge
                 </h1>
                 <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium leading-none">
@@ -445,7 +445,7 @@ const PatternQuizPanel = ({
             </div>
 
             {/* Right: Question Count Badge */}
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-50/70 dark:bg-red-950/30 border border-red-100/90 dark:border-red-900/40 text-[11px] font-bold text-[#FF3B30] shadow-2xs shrink-0">
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-50/70 dark:bg-red-950/30 border border-red-100/90 dark:border-red-900/40 text-[10.5px] font-bold text-[#FF4D4D] shadow-2xs shrink-0">
               <span>
                 {currentIndex + 1} / {totalQuestions}
               </span>
@@ -455,7 +455,7 @@ const PatternQuizPanel = ({
           {/* Progress Bar */}
           <div className="w-full bg-slate-100 dark:bg-[#24242C] h-1 rounded-full overflow-hidden mt-2">
             <div
-              className="bg-[#FF3B30] h-1 rounded-full transition-all duration-300"
+              className="bg-[#FF4D4D] h-1 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -463,24 +463,24 @@ const PatternQuizPanel = ({
 
         {/* Question Card */}
         {currentQuestion && (
-          <div className="bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#24242A] rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col gap-3.5">
+          <div className="bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#24242A] rounded-xl p-3.5 sm:p-4 shadow-2xs flex flex-col gap-3">
             {/* Category Tag */}
             <div className="flex items-center justify-between">
-              <span className="inline-block px-2 py-0.5 rounded text-[9.5px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-[#FF3B30] border border-red-100/80 dark:border-red-900/40">
+              <span className="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border border-red-100/80 dark:border-red-900/40">
                 Question {currentIndex + 1}
               </span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <span className="text-[9.5px] font-bold text-slate-400 uppercase tracking-widest">
                 Difficulty: {currentQuestion.difficulty}
               </span>
             </div>
 
             {/* Question Text */}
-            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
+            <p className="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-white leading-relaxed">
               {currentQuestion.question}
             </p>
 
-            {/* Options List with A, B, C, D badges */}
-            <div className="space-y-2 pt-1">
+            {/* Options 2x2 Compact Square Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
               {currentQuestion.options.map((option, idx) => {
                 const isSelected = selectedForCurrent === idx;
 
@@ -490,25 +490,25 @@ const PatternQuizPanel = ({
                     type="button"
                     onClick={() => selectAnswer(currentQuestion.id, idx)}
                     className={cn(
-                      "w-full text-left p-2.5 sm:p-3 rounded-xl border transition-all duration-150 flex items-center gap-3 cursor-pointer group",
+                      "w-full text-left px-2.5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border transition-all duration-150 flex items-center gap-2 cursor-pointer group min-h-[42px]",
                       isSelected
-                        ? "bg-red-500/10 dark:bg-red-950/40 border-2 border-[#FF3B30] text-[#FF3B30] dark:text-[#FF4D4D] font-bold shadow-2xs"
+                        ? "bg-red-500/10 dark:bg-red-950/40 border-2 border-[#FF4D4D] text-[#FF4D4D] font-bold shadow-2xs"
                         : "bg-slate-50/70 dark:bg-[#1E1E24] border-slate-200/80 dark:border-[#282832] text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-[#383844] hover:bg-slate-100/80 dark:hover:bg-[#25252C]",
                     )}
                   >
                     {/* Circle badge */}
                     <div
                       className={cn(
-                        "w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold shrink-0 transition-colors",
+                        "w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-bold shrink-0 transition-colors",
                         isSelected
-                          ? "bg-[#FF3B30] text-white border-[#FF3B30]"
+                          ? "bg-[#FF4D4D] text-white border-[#FF4D4D]"
                           : "bg-white dark:bg-[#16161A] border-slate-300 dark:border-[#33333C] text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-white",
                       )}
                     >
                       {String.fromCharCode(65 + idx)}
                     </div>
 
-                    <span className="flex-1 text-xs sm:text-sm leading-snug font-medium">
+                    <span className="flex-1 text-[11px] sm:text-xs leading-snug font-medium line-clamp-2">
                       {option}
                     </span>
                   </button>
@@ -523,7 +523,7 @@ const PatternQuizPanel = ({
                 onClick={prevQuestion}
                 disabled={currentIndex === 0}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all",
+                  "px-3 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all",
                   currentIndex === 0
                     ? "opacity-30 border-transparent text-slate-400 cursor-not-allowed"
                     : "border-slate-200 dark:border-[#2A2A34] text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#202026] cursor-pointer",
@@ -539,10 +539,10 @@ const PatternQuizPanel = ({
                   onClick={handleSubmit}
                   disabled={selectedForCurrent === undefined}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-white transition-all shadow-xs flex items-center gap-1.5",
+                    "px-3.5 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider text-white transition-all shadow-xs flex items-center gap-1.5",
                     selectedForCurrent === undefined
                       ? "bg-slate-300 dark:bg-[#2C2C34] text-slate-500 cursor-not-allowed"
-                      : "bg-[#FF3B30] hover:bg-[#EE3126] cursor-pointer",
+                      : "bg-[#FF4D4D] hover:bg-[#EE3126] cursor-pointer",
                   )}
                 >
                   <span>Submit Quiz</span>
@@ -554,10 +554,10 @@ const PatternQuizPanel = ({
                   onClick={nextQuestion}
                   disabled={selectedForCurrent === undefined}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1",
+                    "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1",
                     selectedForCurrent === undefined
                       ? "bg-slate-100 dark:bg-[#202026] text-slate-400 cursor-not-allowed"
-                      : "bg-[#FF3B30] hover:bg-[#EE3126] text-white cursor-pointer shadow-xs",
+                      : "bg-[#FF4D4D] hover:bg-[#EE3126] text-white cursor-pointer shadow-xs",
                   )}
                 >
                   <span>Next</span>

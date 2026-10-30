@@ -33,7 +33,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
-  Filter,
   GitBranch,
   Grid2X2,
   Hash,
@@ -57,7 +56,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 /* -------------------------------------------------------------------------- */
 /* Topic UI Config matching Exact Lucide Icon Spec & Pastel Badges            */
@@ -341,18 +347,6 @@ function ExpandedTopicCard({
   const { questions, loading } = useDsaQuestionsForTopic(topicKey, {
     productType: "DSA_YATRA",
   });
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!router.isReady) return;
-    const qSlug = router.query.question;
-    if (qSlug && typeof qSlug === "string" && questions.length > 0) {
-      const found = findDsaQuestionByUrlSlug(questions, qSlug);
-      if (found) {
-        onSelectQuestion(found);
-      }
-    }
-  }, [router.isReady, router.query.question, questions, onSelectQuestion]);
 
   const [showAll, setShowAll] = useState(false);
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
@@ -668,14 +662,16 @@ function SheetsClient() {
 
   const [expandedTopic, setExpandedTopic] = useState<string | null>("ARRAY");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterMode, setFilterMode] = useState<
-    "all" | "in_progress" | "completed"
-  >("all");
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
   );
   const [showPayment, setShowPayment] = useState(false);
+  const closedQuestionSlugRef = useRef<string | null>(null);
+
+  const { questions: activeTopicQuestions } = useDsaQuestionsForTopic(
+    expandedTopic,
+    { productType: "DSA_YATRA" },
+  );
 
   const [topicOverrides, setTopicOverrides] = useState<
     Record<string, { total: number; solved: number }>
@@ -746,6 +742,24 @@ function SheetsClient() {
     }
   }, [router.isReady, router.query.topic]);
 
+  // Synchronize question from URL (e.g., initial page load, direct link, or browser back/forward)
+  useEffect(() => {
+    if (!router.isReady) return;
+    const qSlug = router.query.question;
+    if (typeof qSlug === "string" && qSlug && activeTopicQuestions.length > 0) {
+      if (closedQuestionSlugRef.current === qSlug) return;
+      const found = findDsaQuestionByUrlSlug(activeTopicQuestions, qSlug);
+      if (found) {
+        setSelectedQuestion(found);
+      } else {
+        closedQuestionSlugRef.current = qSlug;
+      }
+    } else if (!qSlug) {
+      closedQuestionSlugRef.current = null;
+      setSelectedQuestion(null);
+    }
+  }, [router.isReady, router.query.question, activeTopicQuestions]);
+
   const handleSelectTopic = useCallback(
     (topicKey: string) => {
       const nextTopic = expandedTopic === topicKey ? null : topicKey;
@@ -772,6 +786,7 @@ function SheetsClient() {
 
   const handleSelectQuestion = useCallback(
     (question: DsaQuestion, topicKey?: string) => {
+      closedQuestionSlugRef.current = null;
       setSelectedQuestion(question);
       const activeTopic = topicKey || expandedTopic || "ARRAY";
       void router.replace(
@@ -790,6 +805,9 @@ function SheetsClient() {
   );
 
   const handleCloseQuestion = useCallback(() => {
+    const currentSlug =
+      typeof router.query.question === "string" ? router.query.question : "";
+    closedQuestionSlugRef.current = currentSlug || "__closed__";
     setSelectedQuestion(null);
     if (expandedTopic) {
       void router.replace(
@@ -827,31 +845,37 @@ function SheetsClient() {
   }, [topicRows, topicOverrides]);
 
   const filteredTopics = useMemo(() => {
-    let result = topics;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (t) =>
-          t.meta.name.toLowerCase().includes(q) ||
-          t.topic.toLowerCase().includes(q),
-      );
-    }
-    if (filterMode === "completed") {
-      result = result.filter((t) => t.solved === t.count && t.count > 0);
-    } else if (filterMode === "in_progress") {
-      result = result.filter((t) => t.solved > 0 && t.solved < t.count);
-    }
-    return result;
-  }, [topics, searchQuery, filterMode]);
+    if (!searchQuery.trim()) return topics;
+    const q = searchQuery.toLowerCase();
+    return topics.filter(
+      (t) =>
+        t.meta.name.toLowerCase().includes(q) ||
+        t.topic.toLowerCase().includes(q),
+    );
+  }, [topics, searchQuery]);
+
+  const validCompletedIds = useMemo(() => {
+    return (completedIds || []).filter((id) =>
+      /^[0-9a-fA-F]{24}$/.test(String(id)),
+    );
+  }, [completedIds]);
 
   const totalQuestions = 399;
-  const totalSolved = completedIds.length;
+  const totalSolved = validCompletedIds.length;
   const overallPercentage =
     totalQuestions > 0
       ? Math.min(100, Math.round((totalSolved / totalQuestions) * 100))
       : 0;
 
-  if (topicsLoading || userLoading) {
+  if (
+    topicsLoading ||
+    userLoading ||
+    (router.isReady &&
+      typeof router.query.question === "string" &&
+      Boolean(router.query.question) &&
+      !selectedQuestion &&
+      closedQuestionSlugRef.current !== router.query.question)
+  ) {
     return (
       <div className="flex items-center justify-center h-full min-h-[500px]">
         <LoadingSpinner />
@@ -1030,102 +1054,25 @@ function SheetsClient() {
         </div>
       </div>
 
-      {/* 2. Search and Filter Bar - Slim padding */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 relative z-20">
-        <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search DSA topics (e.g., Array, Two Pointers, Graphs)..."
-            className="w-full pl-8 pr-7 py-1.5 sm:py-2 rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
-
-        <div className="relative shrink-0">
+      {/* 2. Search Bar - Half Width, Slim & Compact */}
+      <div className="relative w-full sm:w-1/2 max-w-lg z-20">
+        <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search DSA topics (e.g., Array, Two Pointers, Graphs)..."
+          className="w-full pl-8 pr-7 py-1.5 rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
+        />
+        {searchQuery && (
           <button
             type="button"
-            onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-            className="w-full sm:w-auto px-3 py-1.5 sm:py-2 rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-[#32323A] transition-colors flex items-center justify-between sm:justify-start gap-1.5 shadow-2xs"
+            onClick={() => setSearchQuery("")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
           >
-            <Filter className="w-3.5 h-3.5 text-slate-500" />
-            <span>
-              {filterMode === "all"
-                ? "All Topics"
-                : filterMode === "in_progress"
-                  ? "In Progress"
-                  : "Completed"}
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
+            <X className="w-3 h-3" />
           </button>
-
-          {isFilterDropdownOpen && (
-            <div className="absolute right-0 top-full mt-1.5 w-44 rounded-lg border border-slate-200/90 dark:border-[#2C2C36] bg-white dark:bg-[#18181D] shadow-xl py-1 z-30">
-              <button
-                type="button"
-                onClick={() => {
-                  setFilterMode("all");
-                  setIsFilterDropdownOpen(false);
-                }}
-                className={cn(
-                  "w-full px-3 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#202028]",
-                  filterMode === "all"
-                    ? "text-[#FF4D4D] font-bold"
-                    : "text-slate-700 dark:text-slate-300",
-                )}
-              >
-                <span>All Topics</span>
-                {filterMode === "all" && <Check className="w-3.5 h-3.5" />}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setFilterMode("in_progress");
-                  setIsFilterDropdownOpen(false);
-                }}
-                className={cn(
-                  "w-full px-3 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#202028]",
-                  filterMode === "in_progress"
-                    ? "text-[#FF4D4D] font-bold"
-                    : "text-slate-700 dark:text-slate-300",
-                )}
-              >
-                <span>In Progress</span>
-                {filterMode === "in_progress" && (
-                  <Check className="w-3.5 h-3.5" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setFilterMode("completed");
-                  setIsFilterDropdownOpen(false);
-                }}
-                className={cn(
-                  "w-full px-3 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#202028]",
-                  filterMode === "completed"
-                    ? "text-[#FF4D4D] font-bold"
-                    : "text-slate-700 dark:text-slate-300",
-                )}
-              >
-                <span>Completed</span>
-                {filterMode === "completed" && (
-                  <Check className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* 3. Topics Section: Inline Row Expansion in 3-Column Grid */}
@@ -1195,8 +1142,6 @@ function SheetsClient() {
           </div>
         )}
       </LayoutGroup>
-
-
 
       {/* Freemium Upsell Modal */}
       <DsaUpsellModal

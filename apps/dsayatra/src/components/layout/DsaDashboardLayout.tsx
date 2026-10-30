@@ -1,18 +1,20 @@
 import { useAuth } from "@tbe/auth";
-import { isDashboardSidebarLinkActive, LoadingSpinner } from "@tbe/components";
+import {
+  isDashboardSidebarLinkActive,
+  LoadingSpinner,
+  UserLevelProgressContainer,
+} from "@tbe/components";
 import { useGamification } from "@tbe/gamification";
 import { usePaymentStatus, useUser } from "@tbe/hooks";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FiChevronsLeft,
   FiChevronsRight,
   FiLogOut,
-  FiMoon,
-  FiSun,
   FiUser,
   FiZap,
 } from "react-icons/fi";
@@ -28,12 +30,20 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
   const router = useRouter();
   const { user, isAuth, loading } = useUser();
   const { signOut } = useAuth();
-  const { points: rawPoints } = useGamification();
+  const {
+    points: rawPoints,
+    currentLevel,
+    currentLevelName,
+    nextLevelName,
+    pointsLeftToNextLevel,
+    percentageProgress,
+  } = useGamification();
 
   const userPoints = rawPoints ?? 0;
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isXpPopoverOpen, setIsXpPopoverOpen] = useState(false);
+  const xpPopoverRef = useRef<HTMLDivElement>(null);
 
   const { isPurchased } = usePaymentStatus({
     userId: user?.id,
@@ -49,42 +59,25 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
   }, [loading, isAuth, router]);
 
   useEffect(() => {
-    const checkDark = () => {
-      if (typeof document !== "undefined") {
-        setIsDarkMode(document.documentElement.classList.contains("dark"));
-      }
-    };
     if (typeof document !== "undefined") {
-      if (
-        !document.documentElement.classList.contains("dark") &&
-        !document.documentElement.classList.contains("light")
-      ) {
-        document.documentElement.classList.add("dark");
-      }
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
     }
-    checkDark();
-    const observer = new MutationObserver(checkDark);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
   }, []);
 
-  const handleToggleDarkMode = () => {
-    if (typeof document !== "undefined") {
-      const isDark = document.documentElement.classList.contains("dark");
-      if (isDark) {
-        document.documentElement.classList.remove("dark");
-        document.documentElement.classList.add("light");
-        setIsDarkMode(false);
-      } else {
-        document.documentElement.classList.remove("light");
-        document.documentElement.classList.add("dark");
-        setIsDarkMode(true);
+  useEffect(() => {
+    if (!isXpPopoverOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        xpPopoverRef.current &&
+        !xpPopoverRef.current.contains(e.target as Node)
+      ) {
+        setIsXpPopoverOpen(false);
       }
-    }
-  };
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isXpPopoverOpen]);
 
   if (loading) {
     return (
@@ -119,32 +112,12 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
         } max-lg:hidden bg-white dark:bg-[#131316] rounded-2xl border border-slate-200/90 dark:border-[#24242A] shadow-2xs h-full flex flex-col justify-between py-1.5 sm:py-2 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 relative`}
       >
         <div className="space-y-1.5 flex-1 overflow-y-auto overflow-x-hidden scrollbar-none">
-          {/* Top Bar: Theme Mode Button + Collapse Toggle */}
+          {/* Top Bar: Collapse Toggle */}
           <div
             className={`flex items-center ${
-              isSidebarCollapsed
-                ? "flex-col gap-1 justify-center"
-                : "justify-between px-0.5"
+              isSidebarCollapsed ? "justify-center" : "justify-end px-0.5"
             } pb-0.5`}
           >
-            <button
-              type="button"
-              onClick={handleToggleDarkMode}
-              title={
-                isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
-              }
-              aria-label={
-                isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
-              }
-              className="w-5.5 h-5.5 rounded-md hover:bg-slate-100 dark:hover:bg-[#202026] flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors cursor-pointer shrink-0"
-            >
-              {isDarkMode ? (
-                <FiSun className="w-3.5 h-3.5 text-amber-400" />
-              ) : (
-                <FiMoon className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-              )}
-            </button>
-
             <button
               type="button"
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
@@ -161,14 +134,6 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
 
           {/* Navigation Section */}
           <div className="space-y-0.5 pt-0.5">
-            <div
-              className={`px-2 text-[9px] font-extrabold text-slate-400 dark:text-slate-500 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
-                isSidebarCollapsed ? "opacity-0 h-0 my-0" : "opacity-100 py-0.5"
-              }`}
-            >
-              Navigation
-            </div>
-
             <nav className="space-y-0.5">
               {DSA_DASHBOARD_NAV_ITEMS.map((item) => {
                 const isActive = isDashboardSidebarLinkActive(
@@ -300,7 +265,15 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
             </div>
 
             {/* Avatar with XP dot */}
-            <div className="relative cursor-pointer p-0.5">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsXpPopoverOpen((prev) => !prev);
+              }}
+              title={`${userPoints} Total XP — Click to view level progress`}
+              className="relative cursor-pointer p-0.5 border-0 bg-transparent block"
+            >
               <div className="w-5 h-5 rounded-full overflow-hidden bg-gradient-to-tr from-[#FF3B30] to-orange-400 text-white font-bold text-[9px] flex items-center justify-center border border-slate-200/80 dark:border-white/10 shadow-2xs">
                 {avatarUrl ? (
                   <img
@@ -318,7 +291,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
               <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <FiZap className="w-1.5 h-1.5 fill-white text-white" />
               </div>
-            </div>
+            </button>
           </div>
         ) : (
           /* Expanded State */
@@ -387,14 +360,47 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
                 </div>
               </div>
 
-              {/* XP Count */}
-              <div
-                title={`${userPoints} Total XP`}
-                className="flex items-center gap-0.5 px-1 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0"
+              {/* XP Count Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsXpPopoverOpen((prev) => !prev);
+                }}
+                title={`${userPoints} Total XP — Click to view level progress`}
+                className="flex items-center gap-0.5 px-1 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0 cursor-pointer transition-all active:scale-95"
               >
                 <FiZap className="w-2.5 h-2.5 text-amber-500 fill-amber-500/30 shrink-0" />
                 <span className="text-[10px] font-black">{userPoints}</span>
-              </div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* XP Level Progress Popover */}
+        {isXpPopoverOpen && (
+          <div
+            ref={xpPopoverRef}
+            className="absolute left-full bottom-2 ml-2.5 z-50 animate-fadeIn drop-shadow-2xl"
+          >
+            <div className="relative">
+              <UserLevelProgressContainer
+                currentLevel={currentLevel}
+                currentLevelName={currentLevelName}
+                nextLevelName={nextLevelName}
+                percentageProgress={percentageProgress}
+                points={userPoints}
+                pointsLeftToNextLevel={pointsLeftToNextLevel}
+                theme="dark"
+              />
+              <button
+                type="button"
+                onClick={() => setIsXpPopoverOpen(false)}
+                className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer"
+                title="Close"
+              >
+                ✕
+              </button>
             </div>
           </div>
         )}
