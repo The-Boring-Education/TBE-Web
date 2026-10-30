@@ -40,7 +40,10 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     router?.pathname === "/profile" ||
     router?.pathname === "/user/profile" ||
     Boolean(router?.pathname?.endsWith("/profile")) ||
-    Boolean(router?.pathname?.includes("/profile"));
+    Boolean(router?.pathname?.includes("/profile")) ||
+    router?.pathname === "/quizzes/[id]" ||
+    router?.pathname === "/quizzes/quiz/[id]" ||
+    Boolean(router?.pathname?.startsWith("/quizzes/quiz/"));
 
   if (isExcludedRoute) {
     return (
