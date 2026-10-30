@@ -15,362 +15,528 @@ import {
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import { AnimatePresence, motion } from "framer-motion";
 import {
-  CheckCircle2,
+  AppWindow,
+  ArrowUpDown,
+  Bookmark,
+  Calculator,
+  Check,
   ChevronDown,
-  Circle,
-  Eye,
-  FileText,
-  Folder,
-  FolderOpen,
+  ChevronRight,
+  ChevronUp,
+  Database,
+  Filter,
+  Hash,
+  LayoutGrid,
+  ListOrdered,
   Lock,
+  MoveHorizontal,
+  Network,
+  RotateCcw,
+  Rows,
   Search,
-  Sparkles,
+  Share2,
+  Target,
+  Type,
+  Workflow,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useMemo, useState } from "react";
-import { SiLeetcode, SiYoutube } from "react-icons/si";
+
+import { DsaHeroIllustration } from "@/components/illustrations/DsaHeroIllustration";
 
 /* -------------------------------------------------------------------------- */
-/* Difficulty Badges                                                          */
+/* Topic UI Config matching Image 1 & Image 2                                 */
 /* -------------------------------------------------------------------------- */
-function DifficultyBadge({ difficulty }: { difficulty?: string }) {
+interface TopicMetadata {
+  name: string;
+  icon: any;
+  iconBg: string;
+  iconColor: string;
+  borderColor: string;
+  description: string;
+}
+
+const TOPIC_CONFIG: Record<string, TopicMetadata> = {
+  ARRAY: {
+    name: "Arrays",
+    icon: ListOrdered,
+    iconBg: "bg-orange-50 dark:bg-orange-950/40",
+    iconColor: "text-orange-500",
+    borderColor: "border-orange-100 dark:border-orange-900/40",
+    description: "Most important topic for interviews",
+  },
+  STRING: {
+    name: "Strings",
+    icon: Type,
+    iconBg: "bg-purple-50 dark:bg-purple-950/40",
+    iconColor: "text-purple-500",
+    borderColor: "border-purple-100 dark:border-purple-900/40",
+    description: "Sequence of characters & pattern matching algorithms",
+  },
+  HASHMAP: {
+    name: "HashMap",
+    icon: Hash,
+    iconBg: "bg-emerald-50 dark:bg-emerald-950/40",
+    iconColor: "text-emerald-500",
+    borderColor: "border-emerald-100 dark:border-emerald-900/40",
+    description: "Key-value hashing for O(1) average lookup",
+  },
+  MATH: {
+    name: "Math",
+    icon: Calculator,
+    iconBg: "bg-blue-50 dark:bg-blue-950/40",
+    iconColor: "text-blue-500",
+    borderColor: "border-blue-100 dark:border-blue-900/40",
+    description: "Number theory, bitwise math, and combinatorics",
+  },
+  RECURSION: {
+    name: "Recursion",
+    icon: RotateCcw,
+    iconBg: "bg-rose-50 dark:bg-rose-950/40",
+    iconColor: "text-rose-500",
+    borderColor: "border-rose-100 dark:border-rose-900/40",
+    description: "Recursive divide and conquer subproblem breakdowns",
+  },
+  SORTING: {
+    name: "Sorting",
+    icon: ArrowUpDown,
+    iconBg: "bg-amber-50 dark:bg-amber-950/40",
+    iconColor: "text-amber-500",
+    borderColor: "border-amber-100 dark:border-amber-900/40",
+    description: "QuickSort, MergeSort, heapsort, and partitioning",
+  },
+  BINARY_SEARCH: {
+    name: "Binary Search",
+    icon: Search,
+    iconBg: "bg-violet-50 dark:bg-violet-950/40",
+    iconColor: "text-violet-500",
+    borderColor: "border-violet-100 dark:border-violet-900/40",
+    description: "O(log n) search space reduction & binary search on answer",
+  },
+  TWO_POINTERS: {
+    name: "Two Pointers",
+    icon: MoveHorizontal,
+    iconBg: "bg-teal-50 dark:bg-teal-950/40",
+    iconColor: "text-teal-500",
+    borderColor: "border-teal-100 dark:border-teal-900/40",
+    description: "Opposite and same-direction pointer traversal",
+  },
+  SLIDING_WINDOW: {
+    name: "Sliding Window",
+    icon: AppWindow,
+    iconBg: "bg-red-50 dark:bg-red-950/40",
+    iconColor: "text-red-500",
+    borderColor: "border-red-100 dark:border-red-900/40",
+    description: "Fixed and variable contiguous subarray tracking",
+  },
+  STACK: {
+    name: "Stack",
+    icon: Database,
+    iconBg: "bg-sky-50 dark:bg-sky-950/40",
+    iconColor: "text-sky-500",
+    borderColor: "border-sky-100 dark:border-sky-900/40",
+    description: "LIFO evaluation, parentheses, monotonic stacks",
+  },
+  QUEUE: {
+    name: "Queue",
+    icon: Rows,
+    iconBg: "bg-yellow-50 dark:bg-yellow-950/40",
+    iconColor: "text-yellow-600",
+    borderColor: "border-yellow-100 dark:border-yellow-900/40",
+    description: "FIFO buffer processing and double-ended queues",
+  },
+  LINKED_LIST: {
+    name: "Linked List",
+    icon: Workflow,
+    iconBg: "bg-purple-50 dark:bg-purple-950/40",
+    iconColor: "text-purple-600",
+    borderColor: "border-purple-100 dark:border-purple-900/40",
+    description: "Pointer re-linking, reversal, fast/slow cycle detection",
+  },
+  TREE: {
+    name: "Trees",
+    icon: Network,
+    iconBg: "bg-rose-50 dark:bg-rose-950/40",
+    iconColor: "text-rose-500",
+    borderColor: "border-rose-100 dark:border-rose-900/40",
+    description: "Hierarchical traversal, BSTs, lowest common ancestor",
+  },
+  GRAPH: {
+    name: "Graphs",
+    icon: Share2,
+    iconBg: "bg-emerald-50 dark:bg-emerald-950/40",
+    iconColor: "text-emerald-600",
+    borderColor: "border-emerald-100 dark:border-emerald-900/40",
+    description: "BFS/DFS, Dijkstra, topological sort, union-find",
+  },
+  DYNAMIC_PROGRAMMING: {
+    name: "Dynamic Programming",
+    icon: LayoutGrid,
+    iconBg: "bg-blue-50 dark:bg-blue-950/40",
+    iconColor: "text-blue-600",
+    borderColor: "border-blue-100 dark:border-blue-900/40",
+    description: "Memoization, tabulation, optimal substructure",
+  },
+};
+
+function getTopicMeta(topicKey: string): TopicMetadata {
+  const normKey = topicKey.toUpperCase().replace(/\s+/g, "_");
+  if (TOPIC_CONFIG[normKey]) return TOPIC_CONFIG[normKey];
+
+  return {
+    name: TOPIC_LABELS[topicKey] || topicKey,
+    icon: LayoutGrid,
+    iconBg: "bg-slate-50 dark:bg-[#1A1A20]",
+    iconColor: "text-slate-600 dark:text-slate-400",
+    borderColor: "border-slate-100 dark:border-[#26262E]",
+    description: `Core patterns & interview problems on ${TOPIC_LABELS[topicKey] || topicKey}`,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Difficulty Badges matching Image 1                                         */
+/* -------------------------------------------------------------------------- */
+function DifficultyPill({ difficulty }: { difficulty?: string }) {
   const norm = (difficulty || "MEDIUM").toUpperCase();
   if (norm === "EASY") {
     return (
-      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 shrink-0">
         Easy
       </span>
     );
   }
   if (norm === "HARD") {
     return (
-      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 shrink-0">
+      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400 shrink-0">
         Hard
       </span>
     );
   }
   return (
-    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
+    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 shrink-0">
       Medium
     </span>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/* Question Row Component                                                     */
+/* Expanded Topic View (Image 1)                                              */
 /* -------------------------------------------------------------------------- */
-interface QuestionRowItemProps {
-  question: DsaQuestion;
-  isCompleted: boolean;
-  onToggle: (questionId: string | number) => void;
-  onSelect: (question: DsaQuestion) => void;
-  onLockedClick: () => void;
-}
-
-function QuestionRowItem({
-  question,
-  isCompleted,
-  onToggle,
-  onSelect,
-  onLockedClick,
-}: QuestionRowItemProps) {
-  const qId = question.id ?? question._id ?? question.name;
-  const isLocked = Boolean(question.isLocked);
-
-  return (
-    <div
-      className={cn(
-        "flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-3.5 sm:px-4 py-3 rounded-lg border transition-all duration-150 group",
-        isCompleted
-          ? "bg-emerald-500/[0.03] dark:bg-emerald-500/[0.04] border-emerald-500/20 hover:border-emerald-500/30"
-          : isLocked
-            ? "bg-slate-50/50 dark:bg-[#161619] border-slate-200/60 dark:border-[#222227] opacity-75"
-            : "bg-slate-50 dark:bg-[#161619] border-slate-200/70 dark:border-[#24242A] hover:bg-slate-100/80 dark:hover:bg-[#1B1B20] hover:border-slate-300 dark:hover:border-[#323238]",
-      )}
-    >
-      {/* Left: Checkbox + Name + Badges */}
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isLocked) {
-              onLockedClick();
-            } else {
-              onToggle(qId);
-            }
-          }}
-          className="shrink-0 transition-transform active:scale-90 focus:outline-none"
-          title={isCompleted ? "Mark incomplete" : "Mark completed"}
-        >
-          {isLocked ? (
-            <Lock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-          ) : isCompleted ? (
-            <CheckCircle2 className="w-4 h-4 text-[#FF4D4D] fill-[#FF4D4D]/15" />
-          ) : (
-            <Circle className="w-4 h-4 text-slate-300 dark:text-slate-600 hover:text-slate-500 dark:hover:text-slate-400" />
-          )}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            if (isLocked) {
-              onLockedClick();
-            } else {
-              onSelect(question);
-            }
-          }}
-          className="text-left font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-[#FF4D4D] dark:hover:text-[#FF4D4D] transition-colors truncate focus:outline-none"
-        >
-          <span
-            className={
-              isCompleted
-                ? "line-through text-slate-400 dark:text-slate-500"
-                : ""
-            }
-          >
-            {question.name}
-          </span>
-        </button>
-
-        <DifficultyBadge difficulty={question.difficultyLevel} />
-
-        {question.isRealWorldProblem && (
-          <span className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20 shrink-0">
-            Real World
-          </span>
-        )}
-      </div>
-
-      {/* Right: Actions (LeetCode, YouTube, Visualizer, View details) */}
-      <div className="flex items-center gap-1.5 self-end sm:self-auto shrink-0">
-        {question.visualizerId && (
-          <Link
-            href={`/visualizers/${question.visualizerId}`}
-            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold text-[#FF4D4D] bg-[#FF4D4D]/10 hover:bg-[#FF4D4D]/20 transition-colors"
-            title="Algorithm visualizer available"
-          >
-            <Eye className="w-3 h-3" />
-            <span className="hidden sm:inline">Visualizer</span>
-          </Link>
-        )}
-
-        {question.resources?.leetcodeURL && (
-          <a
-            href={question.resources.leetcodeURL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 rounded-md text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
-            title="Open on LeetCode"
-          >
-            <SiLeetcode className="w-3.5 h-3.5" />
-          </a>
-        )}
-
-        {question.resources?.youtubeURL && (
-          <a
-            href={question.resources.youtubeURL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 rounded-md text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
-            title="Watch video explanation"
-          >
-            <SiYoutube className="w-3.5 h-3.5" />
-          </a>
-        )}
-
-        <button
-          type="button"
-          onClick={() => {
-            if (isLocked) {
-              onLockedClick();
-            } else {
-              onSelect(question);
-            }
-          }}
-          className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold border border-slate-200 dark:border-[#2A2A32] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-[#383842] transition-colors"
-        >
-          <FileText className="w-3 h-3" />
-          <span>Details</span>
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Collapsible Topic Row Component                                            */
-/* -------------------------------------------------------------------------- */
-interface TopicRowProps {
-  topic: string;
-  label: string;
+interface ExpandedTopicCardProps {
+  topicKey: string;
+  topicMeta: TopicMetadata;
   totalCount: number;
   solvedCount: number;
-  isOpen: boolean;
-  onToggle: () => void;
+  onCollapse: () => void;
   completedIds: (string | number)[];
   onToggleComplete: (questionId: string | number) => void;
   onSelectQuestion: (question: DsaQuestion) => void;
   onLockedClick: () => void;
 }
 
-function TopicRow({
-  topic,
-  label,
+function ExpandedTopicCard({
+  topicKey,
+  topicMeta,
   totalCount,
   solvedCount,
-  isOpen,
-  onToggle,
+  onCollapse,
   completedIds,
   onToggleComplete,
   onSelectQuestion,
   onLockedClick,
-}: TopicRowProps) {
-  const { questions, loading } = useDsaQuestionsForTopic(
-    isOpen ? topic : null,
-    { productType: "DSA_YATRA" },
-  );
+}: ExpandedTopicCardProps) {
+  const { questions, loading } = useDsaQuestionsForTopic(topicKey, {
+    productType: "DSA_YATRA",
+  });
+
+  const [showAll, setShowAll] = useState(false);
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
 
   const completedSet = useMemo(
     () => new Set(completedIds.map(String)),
     [completedIds],
   );
 
-  // Compute live solved count for this topic's questions
-  const liveSolvedCount = useMemo(() => {
-    if (!questions.length) return solvedCount;
-    return questions.filter((q) => completedSet.has(String(q.id ?? q.name)))
-      .length;
-  }, [questions, completedSet, solvedCount]);
+  const toggleBookmark = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setBookmarkedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
-  const effectiveTotal = questions.length || totalCount || 1;
-  const progressPercent = Math.min(
-    100,
-    Math.round((liveSolvedCount / effectiveTotal) * 100),
-  );
-  const isAllSolved = progressPercent === 100 && effectiveTotal > 0;
+  const displayedQuestions = useMemo(() => {
+    if (showAll || questions.length <= 6) return questions;
+    return questions.slice(0, 6);
+  }, [questions, showAll]);
+
+  const IconComponent = topicMeta.icon;
 
   return (
-    <div className="rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden transition-all duration-200 shadow-2xs">
-      {/* Header / Accordion Trigger */}
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full flex items-center justify-between p-3.5 sm:p-4 text-left hover:bg-slate-50 dark:hover:bg-[#18181D] transition-colors focus:outline-none"
-      >
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          {isOpen ? (
-            <FolderOpen
-              className={cn(
-                "w-4 h-4 shrink-0 transition-colors",
-                isAllSolved ? "text-emerald-500" : "text-[#FF4D4D]",
-              )}
-            />
-          ) : (
-            <Folder
-              className={cn(
-                "w-4 h-4 shrink-0 transition-colors",
-                isAllSolved
-                  ? "text-emerald-500"
-                  : "text-slate-400 dark:text-slate-500",
-              )}
-            />
-          )}
+    <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs transition-all duration-300">
+      {/* Top Header of Expanded Card */}
+      <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 dark:border-[#1E1E24]">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className={`w-9 h-9 rounded-xl ${topicMeta.iconBg} ${topicMeta.iconColor} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs`}
+          >
+            <IconComponent className="w-5 h-5" />
+          </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 min-w-0">
-            <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white truncate">
-              {label}
-            </span>
-            <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-              {liveSolvedCount} / {questions.length || totalCount} Solved
-            </span>
+          <div className="min-w-0">
+            <h2 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white leading-tight">
+              {topicMeta.name}
+            </h2>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 font-medium truncate">
+              {questions.length || totalCount} problems • {solvedCount} solved •{" "}
+              {topicMeta.description}
+            </p>
           </div>
         </div>
 
-        {/* Progress & Chevron */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden sm:flex items-center gap-2">
-            <div className="h-1.5 w-24 rounded-full bg-slate-100 dark:bg-[#1E1E24] overflow-hidden">
+        <button
+          type="button"
+          onClick={onCollapse}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors"
+          title="Collapse topic"
+        >
+          <ChevronUp className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Questions List (Image 1) */}
+      <div className="p-3 sm:p-5 space-y-2">
+        {loading ? (
+          <div className="flex items-center justify-center py-10">
+            <LoadingSpinner />
+          </div>
+        ) : questions.length === 0 ? (
+          <div className="text-center py-8 text-xs text-slate-400">
+            No questions available for this topic yet.
+          </div>
+        ) : (
+          displayedQuestions.map((q, idx) => {
+            const qKey = String(q.id ?? q._id ?? q.name);
+            const isCompleted = completedSet.has(qKey);
+            const isBookmarked = bookmarkedIds.has(qKey);
+            const isLocked = Boolean(q.isLocked);
+
+            return (
               <div
+                key={qKey}
                 className={cn(
-                  "h-full transition-all duration-500 rounded-full",
-                  isAllSolved ? "bg-emerald-500" : "bg-[#FF4D4D]",
+                  "flex items-center justify-between gap-3 px-3.5 sm:px-4 py-2.5 rounded-xl transition-all duration-150 group",
+                  isCompleted
+                    ? "bg-slate-50/60 dark:bg-[#161619]/60 hover:bg-slate-100/70 dark:hover:bg-[#1B1B20]"
+                    : "bg-slate-50/40 dark:bg-[#161619]/40 hover:bg-slate-100/80 dark:hover:bg-[#1B1B20]",
                 )}
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-            <span
-              className={cn(
-                "text-[10px] font-bold font-mono w-8 text-right",
-                isAllSolved
-                  ? "text-emerald-500"
-                  : "text-slate-400 dark:text-slate-500",
-              )}
-            >
-              {progressPercent}%
-            </span>
-          </div>
+              >
+                {/* Left: Number + Checkbox + Title */}
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  {/* Number pill */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isLocked) onLockedClick();
+                      else onToggleComplete(q.id ?? q._id ?? q.name);
+                    }}
+                    className={cn(
+                      "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-transform active:scale-95",
+                      isCompleted
+                        ? "bg-red-50 dark:bg-red-950/40 text-[#FF4D4D]"
+                        : "bg-slate-100 dark:bg-[#202026] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-[#282830]",
+                    )}
+                    title={
+                      isCompleted
+                        ? "Question solved! Click to unmark"
+                        : "Click to mark as solved"
+                    }
+                  >
+                    {isCompleted ? (
+                      <Check className="w-3.5 h-3.5 text-[#FF4D4D]" />
+                    ) : (
+                      idx + 1
+                    )}
+                  </button>
 
-          <motion.div
-            animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ChevronDown className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-          </motion.div>
-        </div>
-      </button>
-
-      {/* Accordion Body */}
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-slate-100 dark:border-[#1E1E24]"
-          >
-            <div className="p-3 sm:p-4 space-y-2 bg-slate-50/50 dark:bg-[#0E0E11]/40">
-              {loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <LoadingSpinner />
+                  {/* Title */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isLocked) onLockedClick();
+                      else onSelectQuestion(q);
+                    }}
+                    className="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-[#FF4D4D] dark:hover:text-[#FF4D4D] transition-colors truncate text-left focus:outline-none"
+                  >
+                    <span
+                      className={
+                        isCompleted
+                          ? "line-through text-slate-400 dark:text-slate-500 font-medium"
+                          : ""
+                      }
+                    >
+                      {q.name}
+                    </span>
+                  </button>
                 </div>
-              ) : questions.length === 0 ? (
-                <p className="text-xs text-center py-4 text-slate-400">
-                  No questions available for this topic yet.
-                </p>
-              ) : (
-                questions.map((q) => {
-                  const qKey = String(q.id ?? q.name);
-                  const isCompleted = completedSet.has(qKey);
 
-                  return (
-                    <QuestionRowItem
-                      key={qKey}
-                      question={q}
-                      isCompleted={isCompleted}
-                      onToggle={onToggleComplete}
-                      onSelect={onSelectQuestion}
-                      onLockedClick={onLockedClick}
+                {/* Center / Right: Difficulty + Topic Tags + Bookmark + Solve CTA */}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <DifficultyPill difficulty={q.difficultyLevel} />
+
+                  {/* Topic tag pills */}
+                  <div className="hidden lg:flex items-center gap-1.5">
+                    {topicMeta.name && (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-[#1E1E24] text-slate-600 dark:text-slate-400">
+                        {topicMeta.name}
+                      </span>
+                    )}
+                    {q.topics &&
+                      q.topics
+                        .filter(
+                          (t) =>
+                            t.toLowerCase() !== topicKey.toLowerCase() &&
+                            t.toLowerCase() !== topicMeta.name.toLowerCase(),
+                        )
+                        .slice(0, 1)
+                        .map((subT) => (
+                          <span
+                            key={subT}
+                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-[#1E1E24] text-slate-600 dark:text-slate-400"
+                          >
+                            {TOPIC_LABELS[subT] || subT}
+                          </span>
+                        ))}
+                  </div>
+
+                  {/* Bookmark Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => toggleBookmark(qKey, e)}
+                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                    title={
+                      isBookmarked ? "Remove bookmark" : "Bookmark question"
+                    }
+                  >
+                    <Bookmark
+                      className={cn(
+                        "w-4 h-4",
+                        isBookmarked
+                          ? "fill-[#FF4D4D] text-[#FF4D4D]"
+                          : "text-slate-400",
+                      )}
                     />
-                  );
-                })
-              )}
-            </div>
-          </motion.div>
+                  </button>
+
+                  {/* Solve > Pill Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isLocked) onLockedClick();
+                      else onSelectQuestion(q);
+                    }}
+                    className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-[#FF4D4D] bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 transition-colors"
+                  >
+                    {isLocked ? (
+                      <>
+                        <Lock className="w-3 h-3 text-[#FF4D4D]" />
+                        <span>Unlock</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Solve</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            );
+          })
         )}
-      </AnimatePresence>
+
+        {/* View All Button */}
+        {questions.length > 6 && (
+          <div className="pt-2 text-center">
+            <button
+              type="button"
+              onClick={() => setShowAll(!showAll)}
+              className="w-full py-2.5 rounded-xl border border-slate-200/80 dark:border-[#24242A] text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#18181D] transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>
+                {showAll
+                  ? "Show Fewer Questions"
+                  : `View All ${questions.length} Problems`}
+              </span>
+              <ChevronDown
+                className={cn(
+                  "w-3.5 h-3.5 transition-transform",
+                  showAll ? "rotate-180" : "",
+                )}
+              />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/* Main Sheets Page Component                                                 */
+/* Unexpanded Topic Card (Image 2)                                            */
+/* -------------------------------------------------------------------------- */
+interface TopicGridCardProps {
+  topicKey: string;
+  topicMeta: TopicMetadata;
+  totalCount: number;
+  solvedCount: number;
+  onSelect: () => void;
+}
+
+function TopicGridCard({
+  topicMeta,
+  totalCount,
+  solvedCount,
+  onSelect,
+}: TopicGridCardProps) {
+  const IconComponent = topicMeta.icon;
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="w-full text-left rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-2xs hover:shadow-xs hover:border-slate-300 dark:hover:border-[#33333C] transition-all duration-200 group cursor-pointer"
+    >
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div
+          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${topicMeta.iconBg} ${topicMeta.iconColor} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}
+        >
+          <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white truncate group-hover:text-[#FF4D4D] transition-colors">
+            {topicMeta.name}
+          </h3>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-semibold truncate mt-0.5">
+            {solvedCount} / {totalCount} solved
+          </p>
+        </div>
+      </div>
+
+      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-slate-600 dark:group-hover:text-slate-300 group-hover:translate-x-0.5 transition-all shrink-0" />
+    </button>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Main Sheets Client Component                                               */
 /* -------------------------------------------------------------------------- */
 function SheetsClient() {
   const router = useRouter();
@@ -379,14 +545,18 @@ function SheetsClient() {
   const { refetch: refetchGamification } = useGamification();
   const { trackEvent } = useAnalytics();
 
-  const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
+  const [expandedTopic, setExpandedTopic] = useState<string | null>("ARRAY");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState<
+    "all" | "in_progress" | "completed"
+  >("all");
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
     null,
   );
   const [showPayment, setShowPayment] = useState(false);
 
-  // Fetch topics summary
+  // Fetch topics summary from backend
   const {
     data: topicRows,
     isLoading: topicsLoading,
@@ -394,22 +564,10 @@ function SheetsClient() {
     error: topicsErrorVal,
   } = useDsaTopicSummaries("DSA_YATRA");
 
-  // Fetch completed questions list & toggles
+  // Fetch completed questions
   const { completedIds, toggleComplete } = useDsaCompletedQuestions({
     userId: user?.id,
   });
-
-  const handleToggleTopic = (topic: string) => {
-    setExpandedTopics((prev) => {
-      const next = new Set(prev);
-      if (next.has(topic)) {
-        next.delete(topic);
-      } else {
-        next.add(topic);
-      }
-      return next;
-    });
-  };
 
   const handleToggleComplete = useCallback(
     async (questionId: string | number) => {
@@ -438,15 +596,27 @@ function SheetsClient() {
       topic: t.topic,
       count: t.count,
       solved: t.solved,
-      label: TOPIC_LABELS[t.topic] || t.topic,
+      meta: getTopicMeta(t.topic),
     }));
   }, [topicRows]);
 
   const filteredTopics = useMemo(() => {
-    if (!searchQuery.trim()) return topics;
-    const q = searchQuery.toLowerCase();
-    return topics.filter((t) => t.label.toLowerCase().includes(q));
-  }, [topics, searchQuery]);
+    let result = topics;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (t) =>
+          t.meta.name.toLowerCase().includes(q) ||
+          t.topic.toLowerCase().includes(q),
+      );
+    }
+    if (filterMode === "completed") {
+      result = result.filter((t) => t.solved === t.count && t.count > 0);
+    } else if (filterMode === "in_progress") {
+      result = result.filter((t) => t.solved > 0 && t.solved < t.count);
+    }
+    return result;
+  }, [topics, searchQuery, filterMode]);
 
   const totalQuestions = useMemo(
     () => topics.reduce((acc, t) => acc + t.count, 0),
@@ -488,70 +658,67 @@ function SheetsClient() {
     );
   }
 
-  const handleExpandAll = () => {
-    if (expandedTopics.size === topics.length) {
-      setExpandedTopics(new Set());
-    } else {
-      setExpandedTopics(new Set(topics.map((t) => t.topic)));
-    }
-  };
+  const expandedTopicItem = topics.find((t) => t.topic === expandedTopic);
+  const otherTopics = filteredTopics.filter((t) => t.topic !== expandedTopic);
 
   return (
-    <div className="w-full h-full overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-5 scrollbar-thin-grey">
-      {/* Breadcrumbs & Header */}
-      <div className="space-y-3">
-        <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
-          <Link
-            href="/dashboard"
-            className="hover:text-slate-900 dark:hover:text-white transition-colors"
-          >
-            DSA Yatra
-          </Link>
-          <span className="text-slate-300 dark:text-slate-600">›</span>
-          <span className="font-bold text-[#FF4D4D]">Problem Sheets</span>
-        </nav>
+    <div className="w-full h-full overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-5 scrollbar-thin-grey font-sans">
+      {/* 1. Breadcrumbs (Image 1 & 2: DSA Vault > Problem Sheets) */}
+      <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <Link
+          href="/dashboard"
+          className="hover:text-slate-900 dark:hover:text-white transition-colors"
+        >
+          DSA Vault
+        </Link>
+        <span className="text-slate-300 dark:text-slate-600">›</span>
+        <span className="font-bold text-[#FF4D4D]">Problem Sheets</span>
+      </nav>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              DSA Problem Sheets
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-              Curated topic-wise interview problems with step-by-step breakdowns
-              and visualizers.
-            </p>
-          </div>
+      {/* 2. Hero Section with Title and Laptop Illustration (Image 1 & 2) */}
+      <div className="flex items-center justify-between gap-6 pt-1">
+        <div className="space-y-1.5 max-w-2xl">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            DSA <span className="text-[#FF4D4D]">Problem Sheets</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+            Curated topic-wise interview problems with step-by-step breakdowns
+            and visualizers.
+          </p>
+        </div>
 
-          {/* Quick actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={handleExpandAll}
-              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#24242A] text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors"
-            >
-              {expandedTopics.size === topics.length
-                ? "Collapse All"
-                : "Expand All"}
-            </button>
-          </div>
+        {/* 3D Laptop Hero Illustration (Image 1 & 2) */}
+        <div className="hidden sm:block shrink-0">
+          <DsaHeroIllustration className="w-48 sm:w-56 lg:w-64" />
         </div>
       </div>
 
-      {/* Overall Progress Banner */}
-      <div className="p-4 sm:p-5 rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] shadow-2xs space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#FF4D4D]" />
-            <span className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+      {/* 3. Overall Preparation Progress Banner (Image 1 & 2) */}
+      <div className="p-4 sm:p-5 rounded-2xl border border-red-100/70 dark:border-[#262024] bg-white dark:bg-[#131316] shadow-2xs space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          {/* Left: Archery target icon + title */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-900/50 flex items-center justify-center text-[#FF4D4D] shrink-0">
+              <Target className="w-4 h-4 text-[#FF4D4D]" />
+            </div>
+            <span className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white">
               Overall Preparation Progress
             </span>
           </div>
-          <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
-            {totalSolved} of {totalQuestions} Solved ({overallPercentage}%)
-          </span>
+
+          {/* Right: Solved count + percentage badge */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
+              {totalSolved} / {totalQuestions} Problems
+            </span>
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 dark:bg-red-950/40 text-[#FF4D4D]">
+              {overallPercentage}%
+            </span>
+          </div>
         </div>
 
-        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-[#1E1E24] overflow-hidden">
+        {/* Progress bar */}
+        <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-[#1E1E24] overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-[#FF4D4D] to-[#FF3B30] rounded-full transition-all duration-700"
             style={{ width: `${overallPercentage}%` }}
@@ -559,49 +726,141 @@ function SheetsClient() {
         </div>
       </div>
 
-      {/* Search Input */}
-      <div className="relative">
-        <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search DSA topics (e.g., Array, Two Pointers, Graph)..."
-          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
-        />
-        {searchQuery && (
+      {/* 4. Search and Filter Bar (Image 1 & 2) */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 relative z-20">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search DSA topics (e.g., Array, Two Pointers, Graphs)..."
+            className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Filter Dropdown Button */}
+        <div className="relative shrink-0">
           <button
             type="button"
-            onClick={() => setSearchQuery("")}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+            onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-[#32323A] transition-colors flex items-center justify-between sm:justify-start gap-2 shadow-2xs"
           >
-            <X className="w-4 h-4" />
+            <Filter className="w-3.5 h-3.5 text-slate-500" />
+            <span>
+              {filterMode === "all"
+                ? "All Topics"
+                : filterMode === "in_progress"
+                  ? "In Progress"
+                  : "Completed"}
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1" />
           </button>
-        )}
+
+          {isFilterDropdownOpen && (
+            <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-slate-200/90 dark:border-[#2C2C36] bg-white dark:bg-[#18181D] shadow-xl py-1 z-30">
+              <button
+                type="button"
+                onClick={() => {
+                  setFilterMode("all");
+                  setIsFilterDropdownOpen(false);
+                }}
+                className={cn(
+                  "w-full px-3 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#202028]",
+                  filterMode === "all"
+                    ? "text-[#FF4D4D] font-bold"
+                    : "text-slate-700 dark:text-slate-300",
+                )}
+              >
+                <span>All Topics</span>
+                {filterMode === "all" && <Check className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFilterMode("in_progress");
+                  setIsFilterDropdownOpen(false);
+                }}
+                className={cn(
+                  "w-full px-3 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#202028]",
+                  filterMode === "in_progress"
+                    ? "text-[#FF4D4D] font-bold"
+                    : "text-slate-700 dark:text-slate-300",
+                )}
+              >
+                <span>In Progress</span>
+                {filterMode === "in_progress" && (
+                  <Check className="w-3.5 h-3.5" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFilterMode("completed");
+                  setIsFilterDropdownOpen(false);
+                }}
+                className={cn(
+                  "w-full px-3 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#202028]",
+                  filterMode === "completed"
+                    ? "text-[#FF4D4D] font-bold"
+                    : "text-slate-700 dark:text-slate-300",
+                )}
+              >
+                <span>Completed</span>
+                {filterMode === "completed" && (
+                  <Check className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Topic Rows List */}
-      <div className="space-y-2.5">
-        {filteredTopics.length === 0 ? (
-          <div className="text-center py-12 rounded-xl border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400">
-            No topics matched your search.
-          </div>
-        ) : (
-          filteredTopics.map((topicItem) => (
-            <TopicRow
-              key={topicItem.topic}
-              topic={topicItem.topic}
-              label={topicItem.label}
-              totalCount={topicItem.count}
-              solvedCount={topicItem.solved}
-              isOpen={expandedTopics.has(topicItem.topic)}
-              onToggle={() => handleToggleTopic(topicItem.topic)}
-              completedIds={completedIds}
-              onToggleComplete={handleToggleComplete}
-              onSelectQuestion={(q) => setSelectedQuestion(q)}
-              onLockedClick={() => setShowPayment(true)}
+      {/* 5. Topics Section: Expanded Card + 3-Column Grid */}
+      <div className="space-y-4">
+        {/* Expanded Topic Card (Image 1) */}
+        {expandedTopicItem && (
+          <ExpandedTopicCard
+            topicKey={expandedTopicItem.topic}
+            topicMeta={expandedTopicItem.meta}
+            totalCount={expandedTopicItem.count}
+            solvedCount={expandedTopicItem.solved}
+            onCollapse={() => setExpandedTopic(null)}
+            completedIds={completedIds}
+            onToggleComplete={handleToggleComplete}
+            onSelectQuestion={(q) => setSelectedQuestion(q)}
+            onLockedClick={() => setShowPayment(true)}
+          />
+        )}
+
+        {/* 3-Column Topics Grid (Image 2) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
+          {otherTopics.map((item) => (
+            <TopicGridCard
+              key={item.topic}
+              topicKey={item.topic}
+              topicMeta={item.meta}
+              totalCount={item.count}
+              solvedCount={item.solved}
+              onSelect={() => setExpandedTopic(item.topic)}
             />
-          ))
+          ))}
+        </div>
+
+        {filteredTopics.length === 0 && (
+          <div className="text-center py-12 rounded-2xl border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400">
+            No topics matched your search or filter.
+          </div>
         )}
       </div>
 
@@ -615,9 +874,7 @@ function SheetsClient() {
                 <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base truncate">
                   {selectedQuestion.name}
                 </span>
-                <DifficultyBadge
-                  difficulty={selectedQuestion.difficultyLevel}
-                />
+                <DifficultyPill difficulty={selectedQuestion.difficultyLevel} />
               </div>
 
               <button

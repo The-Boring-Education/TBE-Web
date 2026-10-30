@@ -2,7 +2,7 @@ import { useAuth } from "@tbe/auth";
 import { isDashboardSidebarLinkActive, LoadingSpinner } from "@tbe/components";
 import { useGamification } from "@tbe/gamification";
 import { usePaymentStatus, useUser } from "@tbe/hooks";
-import { Sparkles } from "lucide-react";
+import { ChevronRight, Flame, Layers, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
@@ -157,19 +157,19 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
           {/* Branding */}
           <div
             className={`flex items-center ${
-              isSidebarCollapsed ? "justify-center px-0" : "px-1.5 gap-2"
+              isSidebarCollapsed ? "justify-center px-0" : "px-1.5 gap-2.5"
             } py-1`}
           >
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#FF3B30] to-orange-400 text-white flex items-center justify-center shrink-0 shadow-xs font-black text-xs">
-              ⚡
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#FF4D4D] to-[#E02424] text-white flex items-center justify-center shrink-0 shadow-sm shadow-red-500/25">
+              <Layers className="w-4 h-4 text-white" />
             </div>
             {!isSidebarCollapsed && (
               <div className="min-w-0 flex-1">
-                <span className="font-black text-xs text-slate-900 dark:text-white tracking-tight block truncate">
-                  DSA Yatra
+                <span className="font-black text-sm text-slate-900 dark:text-white tracking-tight block truncate leading-tight">
+                  DSA Vault
                 </span>
-                <span className="text-[9px] text-[#FF4D4D] font-bold block -mt-0.5 tracking-wider uppercase">
-                  Patterns & Sheets
+                <span className="text-[9.5px] text-slate-400 dark:text-slate-500 font-semibold block tracking-wide">
+                  Learn • Practice • Grow
                 </span>
               </div>
             )}
@@ -254,6 +254,26 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
               >
                 Upgrade Now
               </button>
+            </div>
+          )}
+
+          {/* Stay Consistent Card (Image 2) */}
+          {!isSidebarCollapsed && (
+            <div className="mt-2 p-2 rounded-xl bg-red-50/70 dark:bg-red-950/20 border border-red-100/80 dark:border-red-900/30 flex items-center justify-between gap-1.5 transition-all hover:bg-red-50 dark:hover:bg-red-950/30">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-6 h-6 rounded-lg bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-[#FF4D4D] shrink-0">
+                  <Flame className="w-3.5 h-3.5 fill-[#FF4D4D]" />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-bold text-[11px] text-slate-900 dark:text-white block truncate leading-tight">
+                    Stay Consistent
+                  </span>
+                  <span className="text-[9px] text-slate-500 dark:text-slate-400 block truncate leading-tight">
+                    Solve a little everyday!
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />
             </div>
           )}
         </div>
