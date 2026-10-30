@@ -15,6 +15,7 @@ import {
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import {
   ArrowDownUp,
   Bookmark,
@@ -329,7 +330,7 @@ function ExpandedTopicCard({
   const IconComponent = topicMeta.icon;
 
   return (
-    <div className="rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs transition-all duration-200">
+    <div className="rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs">
       {/* Top Header of Expanded Card - Reduced spacing between icon & border bg */}
       <div className="flex items-center justify-between px-3 py-2 sm:px-3.5 sm:py-2.5 border-b border-slate-100 dark:border-[#1E1E24]">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -378,8 +379,14 @@ function ExpandedTopicCard({
             const isLocked = Boolean(q.isLocked);
 
             return (
-              <div
+              <motion.div
                 key={qKey}
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.16,
+                  delay: Math.min(idx * 0.02, 0.15),
+                }}
                 className={cn(
                   "flex items-center justify-between gap-3 px-2 sm:px-3 py-1.5 transition-colors group hover:bg-slate-50 dark:hover:bg-[#16161A]",
                   isCompleted && "bg-slate-50/40 dark:bg-[#141418]/40",
@@ -501,7 +508,7 @@ function ExpandedTopicCard({
                     )}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}
@@ -875,41 +882,73 @@ function SheetsClient() {
         </div>
       </div>
 
-      {/* 3. Topics Section: Expanded Card + 3-Column Grid */}
-      <div className="space-y-2.5">
-        {expandedTopicItem && (
-          <ExpandedTopicCard
-            topicKey={expandedTopicItem.topic}
-            topicMeta={expandedTopicItem.meta}
-            totalCount={expandedTopicItem.count}
-            solvedCount={expandedTopicItem.solved}
-            onCollapse={() => setExpandedTopic(null)}
-            completedIds={completedIds}
-            onToggleComplete={handleToggleComplete}
-            onSelectQuestion={(q) => setSelectedQuestion(q)}
-            onLockedClick={() => setShowPayment(true)}
-          />
-        )}
+      {/* 3. Topics Section: Smooth Animated Expanded Card + 3-Column Grid */}
+      <LayoutGroup id="dsa-topics-layout">
+        <div className="space-y-2.5">
+          <AnimatePresence initial={false} mode="wait">
+            {expandedTopicItem && (
+              <motion.div
+                key={expandedTopicItem.topic}
+                initial={{ opacity: 0, height: 0, y: -6 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -6 }}
+                transition={{
+                  duration: 0.3,
+                  ease: [0.16, 1, 0.3, 1],
+                  opacity: { duration: 0.2 },
+                }}
+                className="overflow-hidden"
+                layout
+              >
+                <ExpandedTopicCard
+                  topicKey={expandedTopicItem.topic}
+                  topicMeta={expandedTopicItem.meta}
+                  totalCount={expandedTopicItem.count}
+                  solvedCount={expandedTopicItem.solved}
+                  onCollapse={() => setExpandedTopic(null)}
+                  completedIds={completedIds}
+                  onToggleComplete={handleToggleComplete}
+                  onSelectQuestion={(q) => setSelectedQuestion(q)}
+                  onLockedClick={() => setShowPayment(true)}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
-          {otherTopics.map((item) => (
-            <TopicGridCard
-              key={item.topic}
-              topicKey={item.topic}
-              topicMeta={item.meta}
-              totalCount={item.count}
-              solvedCount={item.solved}
-              onSelect={() => setExpandedTopic(item.topic)}
-            />
-          ))}
+          <motion.div
+            layout
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5"
+          >
+            <AnimatePresence>
+              {otherTopics.map((item) => (
+                <motion.div
+                  layout="position"
+                  key={item.topic}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <TopicGridCard
+                    topicKey={item.topic}
+                    topicMeta={item.meta}
+                    totalCount={item.count}
+                    solvedCount={item.solved}
+                    onSelect={() => setExpandedTopic(item.topic)}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {filteredTopics.length === 0 && (
+            <div className="text-center py-10 rounded-lg border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs">
+              No topics matched your search or filter.
+            </div>
+          )}
         </div>
-
-        {filteredTopics.length === 0 && (
-          <div className="text-center py-10 rounded-lg border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs">
-            No topics matched your search or filter.
-          </div>
-        )}
-      </div>
+      </LayoutGroup>
 
       {/* Question Detail Slide-over / Modal */}
       {selectedQuestion && (
