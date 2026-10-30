@@ -49,7 +49,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
 /* -------------------------------------------------------------------------- */
 /* Topic UI Config matching Exact Lucide Icon Spec & Pastel Badges            */
@@ -287,6 +287,11 @@ interface ExpandedTopicCardProps {
   onToggleComplete: (questionId: string | number) => void;
   onSelectQuestion: (question: DsaQuestion) => void;
   onLockedClick: () => void;
+  onCountsDiscovered?: (
+    topicKey: string,
+    total: number,
+    solved: number,
+  ) => void;
 }
 
 function ExpandedTopicCard({
@@ -299,6 +304,7 @@ function ExpandedTopicCard({
   onToggleComplete,
   onSelectQuestion,
   onLockedClick,
+  onCountsDiscovered,
 }: ExpandedTopicCardProps) {
   const { questions, loading } = useDsaQuestionsForTopic(topicKey, {
     productType: "DSA_YATRA",
@@ -327,6 +333,22 @@ function ExpandedTopicCard({
     return questions.slice(0, 6);
   }, [questions, showAll]);
 
+  const currentSolvedCount = useMemo(() => {
+    if (!questions.length) return solvedCount;
+    return questions.filter((q) =>
+      completedSet.has(String(q.id ?? q._id ?? q.name)),
+    ).length;
+  }, [questions, completedSet, solvedCount]);
+
+  const currentTotalCount =
+    questions.length > 0 ? questions.length : totalCount;
+
+  useEffect(() => {
+    if (questions.length > 0 && onCountsDiscovered) {
+      onCountsDiscovered(topicKey, questions.length, currentSolvedCount);
+    }
+  }, [questions.length, currentSolvedCount, topicKey, onCountsDiscovered]);
+
   const IconComponent = topicMeta.icon;
 
   return (
@@ -345,7 +367,7 @@ function ExpandedTopicCard({
               {topicMeta.name}
             </h2>
             <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
-              {questions.length || totalCount} problems • {solvedCount} solved •{" "}
+              {currentTotalCount} problems • {currentSolvedCount} solved •{" "}
               {topicMeta.description}
             </p>
           </div>
@@ -513,7 +535,7 @@ function ExpandedTopicCard({
           })
         )}
 
-        {questions.length > 6 && (
+        {currentTotalCount > 6 && (
           <div className="py-1 text-center">
             <button
               type="button"
@@ -523,7 +545,7 @@ function ExpandedTopicCard({
               <span>
                 {showAll
                   ? "Show Fewer Questions"
-                  : `View All ${questions.length} Problems`}
+                  : `View All ${currentTotalCount} Problems`}
               </span>
               <ChevronDown
                 className={cn(
@@ -607,6 +629,28 @@ function SheetsClient() {
     null,
   );
   const [showPayment, setShowPayment] = useState(false);
+
+  const [topicOverrides, setTopicOverrides] = useState<
+    Record<string, { total: number; solved: number }>
+  >({});
+
+  const handleUpdateTopicCounts = useCallback(
+    (topicKey: string, total: number, solved: number) => {
+      setTopicOverrides((prev) => {
+        if (
+          prev[topicKey]?.total === total &&
+          prev[topicKey]?.solved === solved
+        ) {
+          return prev;
+        }
+        return {
+          ...prev,
+          [topicKey]: { total, solved },
+        };
+      });
+    },
+    [],
+  );
 
   // Fetch topics summary from backend
   const {
@@ -722,10 +766,10 @@ function SheetsClient() {
                 href="/dashboard"
                 className="hover:text-slate-800 dark:hover:text-white transition-colors"
               >
-                DSA Vault
+                DSA Yatra
               </Link>
               <span className="text-slate-300 dark:text-slate-600">›</span>
-              <span className="font-bold text-[#FF4D4D]">Problem Sheets</span>
+              <span className="font-bold text-[#FF4D4D]">Problem Sheet</span>
             </nav>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
               DSA <span className="text-[#FF4D4D]">Problem Sheets</span>
@@ -902,13 +946,16 @@ function SheetsClient() {
                   <ExpandedTopicCard
                     topicKey={item.topic}
                     topicMeta={item.meta}
-                    totalCount={item.count}
-                    solvedCount={item.solved}
+                    totalCount={topicOverrides[item.topic]?.total ?? item.count}
+                    solvedCount={
+                      topicOverrides[item.topic]?.solved ?? item.solved
+                    }
                     onCollapse={() => setExpandedTopic(null)}
                     completedIds={completedIds}
                     onToggleComplete={handleToggleComplete}
                     onSelectQuestion={(q) => setSelectedQuestion(q)}
                     onLockedClick={() => setShowPayment(true)}
+                    onCountsDiscovered={handleUpdateTopicCounts}
                   />
                 </motion.div>
               );
@@ -924,8 +971,10 @@ function SheetsClient() {
                 <TopicGridCard
                   topicKey={item.topic}
                   topicMeta={item.meta}
-                  totalCount={item.count}
-                  solvedCount={item.solved}
+                  totalCount={topicOverrides[item.topic]?.total ?? item.count}
+                  solvedCount={
+                    topicOverrides[item.topic]?.solved ?? item.solved
+                  }
                   onSelect={() => setExpandedTopic(item.topic)}
                 />
               </motion.div>

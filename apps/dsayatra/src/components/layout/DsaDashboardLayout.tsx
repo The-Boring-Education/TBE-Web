@@ -2,7 +2,7 @@ import { useAuth } from "@tbe/auth";
 import { isDashboardSidebarLinkActive, LoadingSpinner } from "@tbe/components";
 import { useGamification } from "@tbe/gamification";
 import { usePaymentStatus, useUser } from "@tbe/hooks";
-import { Layers, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
@@ -159,30 +159,6 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
             </button>
           </div>
 
-          {/* Branding */}
-          <div
-            className={`flex items-center ${
-              isSidebarCollapsed ? "justify-center px-0" : "px-1.5 gap-2.5"
-            } py-1`}
-          >
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#FF4D4D] to-[#E02424] text-white flex items-center justify-center shrink-0 shadow-sm shadow-red-500/25">
-              <Layers className="w-4 h-4 text-white" />
-            </div>
-            {!isSidebarCollapsed && (
-              <div className="min-w-0 flex-1">
-                <span className="font-black text-sm text-slate-900 dark:text-white tracking-tight block truncate leading-tight">
-                  DSA Vault
-                </span>
-                <span className="text-[9.5px] text-slate-400 dark:text-slate-500 font-semibold block tracking-wide">
-                  Learn • Practice • Grow
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Separator */}
-          <div className="border-b border-slate-100 dark:border-[#24242A] my-0.5" />
-
           {/* Navigation Section */}
           <div className="space-y-0.5 pt-0.5">
             <div
@@ -264,7 +240,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
 
           {/* Motivation Banner Image (Replaces Stay Consistent block) */}
           {!isSidebarCollapsed && (
-            <div className="mt-2 rounded-xl overflow-hidden shadow-2xs border border-slate-200/80 dark:border-[#24242A]">
+            <div className="mt-2 rounded-xl overflow-hidden shadow-2xs">
               <img
                 src="https://ik.imagekit.io/riufvimprm/TBE/dsayatra-motivation-banner.png"
                 alt="DSA Motivation"
