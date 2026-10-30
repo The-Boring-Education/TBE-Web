@@ -275,7 +275,7 @@ function DifficultyPill({ difficulty }: { difficulty?: string }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Expanded Topic View (Slim List, Checkbox Squares, No Fat Arrow Icons)       */
+/* Expanded Topic View (Slim Spaced-Between Row: Left Title, Center Easy/Topic, Right Save/Solve) */
 /* -------------------------------------------------------------------------- */
 interface ExpandedTopicCardProps {
   topicKey: string;
@@ -361,7 +361,7 @@ function ExpandedTopicCard({
         </button>
       </div>
 
-      {/* Questions List - Slim list with numbers 1, 2, 3, 4 and checkbox squares */}
+      {/* Questions List - Slim spaced row: Left Title, Center Easy/Topics, Right Save/Solve */}
       <div className="p-1 sm:p-1.5 divide-y divide-slate-100 dark:divide-[#1C1C22]">
         {loading ? (
           <div className="flex items-center justify-center py-6">
@@ -382,18 +382,17 @@ function ExpandedTopicCard({
               <div
                 key={qKey}
                 className={cn(
-                  "flex items-center justify-between gap-2 px-2 sm:px-3 py-1.5 transition-colors group hover:bg-slate-50 dark:hover:bg-[#16161A]",
+                  "flex items-center justify-between gap-3 px-2 sm:px-3 py-1.5 transition-colors group hover:bg-slate-50 dark:hover:bg-[#16161A]",
                   isCompleted && "bg-slate-50/40 dark:bg-[#141418]/40",
                 )}
               >
-                {/* Left: Number + Checkbox Square + Title */}
+                {/* 1. LEFT: Number + Small Green Checkbox Square + Title */}
                 <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
-                  {/* Slim Number: 1., 2., 3., 4. */}
-                  <span className="w-5 text-right text-[11px] font-medium text-slate-400 dark:text-slate-500 select-none shrink-0">
+                  <span className="w-4 text-right text-[11px] font-medium text-slate-400 dark:text-slate-500 select-none shrink-0">
                     {idx + 1}.
                   </span>
 
-                  {/* Square Checkbox showing completed or not */}
+                  {/* Small Square Checkbox with Green Fill when completed */}
                   <button
                     type="button"
                     onClick={(e) => {
@@ -402,10 +401,10 @@ function ExpandedTopicCard({
                       else onToggleComplete(q.id ?? q._id ?? q.name);
                     }}
                     className={cn(
-                      "w-4 h-4 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors cursor-pointer",
+                      "w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors cursor-pointer",
                       isCompleted
-                        ? "bg-[#FF4D4D] border-[#FF4D4D] text-white"
-                        : "border-slate-300 dark:border-[#33333D] hover:border-[#FF4D4D] dark:hover:border-[#FF4D4D] bg-white dark:bg-[#16161A]",
+                        ? "bg-emerald-500 border-emerald-500 text-white"
+                        : "border-slate-300 dark:border-[#33333D] hover:border-emerald-500 dark:hover:border-emerald-500 bg-white dark:bg-[#16161A]",
                     )}
                     title={
                       isCompleted
@@ -414,18 +413,17 @@ function ExpandedTopicCard({
                     }
                   >
                     {isCompleted && (
-                      <Check className="w-3 h-3 stroke-[3] text-white" />
+                      <Check className="w-2.5 h-2.5 stroke-[3] text-white" />
                     )}
                   </button>
 
-                  {/* Title */}
                   <button
                     type="button"
                     onClick={() => {
                       if (isLocked) onLockedClick();
                       else onSelectQuestion(q);
                     }}
-                    className="font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-[#FF4D4D] dark:hover:text-[#FF4D4D] transition-colors truncate text-left focus:outline-none"
+                    className="font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors truncate text-left focus:outline-none"
                   >
                     <span
                       className={
@@ -439,47 +437,48 @@ function ExpandedTopicCard({
                   </button>
                 </div>
 
-                {/* Right: Difficulty + Tags + Bookmark + Slim Solve (No fat arrow icons) */}
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                {/* 2. CENTER: Difficulty (Easy/Med/Hard) + Topic Tags */}
+                <div className="flex items-center justify-center gap-1.5 shrink-0 px-2">
                   <DifficultyPill difficulty={q.difficultyLevel} />
 
-                  <div className="hidden lg:flex items-center gap-1">
-                    {topicMeta.name && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400">
-                        {topicMeta.name}
-                      </span>
-                    )}
-                    {q.topics &&
-                      q.topics
-                        .filter(
-                          (t) =>
-                            t.toLowerCase() !== topicKey.toLowerCase() &&
-                            t.toLowerCase() !== topicMeta.name.toLowerCase(),
-                        )
-                        .slice(0, 1)
-                        .map((subT) => (
-                          <span
-                            key={subT}
-                            className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400"
-                          >
-                            {TOPIC_LABELS[subT] || subT}
-                          </span>
-                        ))}
-                  </div>
+                  {topicMeta.name && (
+                    <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400">
+                      {topicMeta.name}
+                    </span>
+                  )}
+                  {q.topics &&
+                    q.topics
+                      .filter(
+                        (t) =>
+                          t.toLowerCase() !== topicKey.toLowerCase() &&
+                          t.toLowerCase() !== topicMeta.name.toLowerCase(),
+                      )
+                      .slice(0, 1)
+                      .map((subT) => (
+                        <span
+                          key={subT}
+                          className="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400"
+                        >
+                          {TOPIC_LABELS[subT] || subT}
+                        </span>
+                      ))}
+                </div>
 
+                {/* 3. RIGHT: Save (Bookmark) & Solve button */}
+                <div className="flex items-center justify-end gap-2.5 shrink-0">
                   <button
                     type="button"
                     onClick={(e) => toggleBookmark(qKey, e)}
                     className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
                     title={
-                      isBookmarked ? "Remove bookmark" : "Bookmark question"
+                      isBookmarked ? "Saved (click to unsave)" : "Save question"
                     }
                   >
                     <Bookmark
                       className={cn(
                         "w-3.5 h-3.5",
                         isBookmarked
-                          ? "fill-[#FF4D4D] text-[#FF4D4D]"
+                          ? "fill-amber-500 text-amber-500"
                           : "text-slate-400",
                       )}
                     />
