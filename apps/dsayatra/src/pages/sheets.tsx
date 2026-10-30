@@ -249,33 +249,33 @@ function getTopicMeta(topicKey: string): TopicMetadata {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Difficulty Badges (Tighter, Compact)                                       */
+/* Difficulty Badges (Slim, Compact)                                          */
 /* -------------------------------------------------------------------------- */
 function DifficultyPill({ difficulty }: { difficulty?: string }) {
   const norm = (difficulty || "MEDIUM").toUpperCase();
   if (norm === "EASY") {
     return (
-      <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 shrink-0">
+      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 shrink-0">
         Easy
       </span>
     );
   }
   if (norm === "HARD") {
     return (
-      <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400 shrink-0">
+      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400 shrink-0">
         Hard
       </span>
     );
   }
   return (
-    <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 shrink-0">
+    <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 shrink-0">
       Medium
     </span>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/* Expanded Topic View (Thinner Dropdown, Closer Spacing)                     */
+/* Expanded Topic View (Slim List, Checkbox Squares, No Fat Arrow Icons)       */
 /* -------------------------------------------------------------------------- */
 interface ExpandedTopicCardProps {
   topicKey: string;
@@ -330,21 +330,21 @@ function ExpandedTopicCard({
   const IconComponent = topicMeta.icon;
 
   return (
-    <div className="rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs transition-all duration-300">
-      {/* Top Header of Expanded Card - Thinner, Closer */}
-      <div className="flex items-center justify-between px-3.5 py-2.5 sm:px-4 sm:py-3 border-b border-slate-100 dark:border-[#1E1E24]">
-        <div className="flex items-center gap-3 min-w-0">
+    <div className="rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs transition-all duration-200">
+      {/* Top Header of Expanded Card - Slim padding */}
+      <div className="flex items-center justify-between px-3 py-2 sm:px-3.5 sm:py-2.5 border-b border-slate-100 dark:border-[#1E1E24]">
+        <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className={`w-10 h-10 rounded-xl ${topicMeta.iconBg} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs`}
+            className={`w-8 h-8 rounded-lg ${topicMeta.iconBg} border ${topicMeta.borderColor} flex items-center justify-center shrink-0`}
           >
-            <IconComponent size={18} className={topicMeta.iconColor} />
+            <IconComponent size={16} className={topicMeta.iconColor} />
           </div>
 
           <div className="min-w-0">
-            <h2 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
+            <h2 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white leading-tight">
               {topicMeta.name}
             </h2>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate mt-0.5">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
               {questions.length || totalCount} problems • {solvedCount} solved •{" "}
               {topicMeta.description}
             </p>
@@ -354,21 +354,21 @@ function ExpandedTopicCard({
         <button
           type="button"
           onClick={onCollapse}
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors"
+          className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors"
           title="Collapse topic"
         >
           <ChevronUp className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Questions List - Thinner rows, reduced padding & tight spacing */}
-      <div className="p-2 sm:p-2.5 space-y-1">
+      {/* Questions List - Slim list with numbers 1, 2, 3, 4 and checkbox squares */}
+      <div className="p-1 sm:p-1.5 divide-y divide-slate-100 dark:divide-[#1C1C22]">
         {loading ? (
           <div className="flex items-center justify-center py-6">
             <LoadingSpinner />
           </div>
         ) : questions.length === 0 ? (
-          <div className="text-center py-6 text-xs text-slate-400">
+          <div className="text-center py-5 text-xs text-slate-400">
             No questions available for this topic yet.
           </div>
         ) : (
@@ -382,14 +382,18 @@ function ExpandedTopicCard({
               <div
                 key={qKey}
                 className={cn(
-                  "flex items-center justify-between gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-150 group",
-                  isCompleted
-                    ? "bg-slate-50/60 dark:bg-[#161619]/60 hover:bg-slate-100/70 dark:hover:bg-[#1B1B20]"
-                    : "bg-slate-50/40 dark:bg-[#161619]/40 hover:bg-slate-100/80 dark:hover:bg-[#1B1B20]",
+                  "flex items-center justify-between gap-2 px-2 sm:px-3 py-1.5 transition-colors group hover:bg-slate-50 dark:hover:bg-[#16161A]",
+                  isCompleted && "bg-slate-50/40 dark:bg-[#141418]/40",
                 )}
               >
-                {/* Left: Number + Title */}
-                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                {/* Left: Number + Checkbox Square + Title */}
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
+                  {/* Slim Number: 1., 2., 3., 4. */}
+                  <span className="w-5 text-right text-[11px] font-medium text-slate-400 dark:text-slate-500 select-none shrink-0">
+                    {idx + 1}.
+                  </span>
+
+                  {/* Square Checkbox showing completed or not */}
                   <button
                     type="button"
                     onClick={(e) => {
@@ -398,24 +402,23 @@ function ExpandedTopicCard({
                       else onToggleComplete(q.id ?? q._id ?? q.name);
                     }}
                     className={cn(
-                      "w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 transition-transform active:scale-95",
+                      "w-4 h-4 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors cursor-pointer",
                       isCompleted
-                        ? "bg-red-50 dark:bg-red-950/40 text-[#FF4D4D]"
-                        : "bg-slate-100 dark:bg-[#202026] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-[#282830]",
+                        ? "bg-[#FF4D4D] border-[#FF4D4D] text-white"
+                        : "border-slate-300 dark:border-[#33333D] hover:border-[#FF4D4D] dark:hover:border-[#FF4D4D] bg-white dark:bg-[#16161A]",
                     )}
                     title={
                       isCompleted
-                        ? "Question solved! Click to unmark"
-                        : "Click to mark as solved"
+                        ? "Completed (click to uncheck)"
+                        : "Click to mark completed"
                     }
                   >
-                    {isCompleted ? (
-                      <Check className="w-3 h-3 text-[#FF4D4D]" />
-                    ) : (
-                      idx + 1
+                    {isCompleted && (
+                      <Check className="w-3 h-3 stroke-[3] text-white" />
                     )}
                   </button>
 
+                  {/* Title */}
                   <button
                     type="button"
                     onClick={() => {
@@ -436,13 +439,13 @@ function ExpandedTopicCard({
                   </button>
                 </div>
 
-                {/* Right: Difficulty + Tags + Bookmark + Solve CTA */}
-                <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                {/* Right: Difficulty + Tags + Bookmark + Slim Solve (No fat arrow icons) */}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                   <DifficultyPill difficulty={q.difficultyLevel} />
 
                   <div className="hidden lg:flex items-center gap-1">
                     {topicMeta.name && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-[#1E1E24] text-slate-600 dark:text-slate-400">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400">
                         {topicMeta.name}
                       </span>
                     )}
@@ -457,7 +460,7 @@ function ExpandedTopicCard({
                         .map((subT) => (
                           <span
                             key={subT}
-                            className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-[#1E1E24] text-slate-600 dark:text-slate-400"
+                            className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400"
                           >
                             {TOPIC_LABELS[subT] || subT}
                           </span>
@@ -488,7 +491,7 @@ function ExpandedTopicCard({
                       if (isLocked) onLockedClick();
                       else onSelectQuestion(q);
                     }}
-                    className="flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold text-[#FF4D4D] bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 transition-colors"
+                    className="text-xs font-semibold text-[#FF4D4D] hover:underline px-1 py-0.5 flex items-center gap-1 transition-colors"
                   >
                     {isLocked ? (
                       <>
@@ -496,10 +499,7 @@ function ExpandedTopicCard({
                         <span>Unlock</span>
                       </>
                     ) : (
-                      <>
-                        <span>Solve</span>
-                        <ChevronRight className="w-3 h-3" />
-                      </>
+                      <span>Solve</span>
                     )}
                   </button>
                 </div>
@@ -509,11 +509,11 @@ function ExpandedTopicCard({
         )}
 
         {questions.length > 6 && (
-          <div className="pt-1 text-center">
+          <div className="py-1 text-center">
             <button
               type="button"
               onClick={() => setShowAll(!showAll)}
-              className="w-full py-1.5 sm:py-2 rounded-lg border border-slate-200/80 dark:border-[#24242A] text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#18181D] transition-colors flex items-center justify-center gap-1"
+              className="w-full py-1 rounded border border-slate-200/80 dark:border-[#24242A] text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#18181D] transition-colors flex items-center justify-center gap-1"
             >
               <span>
                 {showAll
@@ -522,7 +522,7 @@ function ExpandedTopicCard({
               </span>
               <ChevronDown
                 className={cn(
-                  "w-3.5 h-3.5 transition-transform",
+                  "w-3 h-3 transition-transform",
                   showAll ? "rotate-180" : "",
                 )}
               />
@@ -535,7 +535,7 @@ function ExpandedTopicCard({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Unexpanded Topic Card with Pastel Badge & Compact Padding                  */
+/* Unexpanded Topic Card with Slim Padding                                    */
 /* -------------------------------------------------------------------------- */
 interface TopicGridCardProps {
   topicKey: string;
@@ -557,26 +557,26 @@ function TopicGridCard({
     <button
       type="button"
       onClick={onSelect}
-      className="w-full text-left rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] p-2.5 sm:p-3 flex items-center justify-between gap-2.5 shadow-2xs hover:shadow-xs hover:border-slate-300 dark:hover:border-[#33333C] transition-all duration-200 group cursor-pointer"
+      className="w-full text-left rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] px-2.5 py-2 flex items-center justify-between gap-2 shadow-2xs hover:shadow-xs hover:border-slate-300 dark:hover:border-[#33333C] transition-all duration-150 group cursor-pointer"
     >
-      <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-center gap-2.5 min-w-0 flex-1">
         <div
-          className={`w-10 h-10 rounded-xl ${topicMeta.iconBg} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}
+          className={`w-8 h-8 rounded-lg ${topicMeta.iconBg} border ${topicMeta.borderColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}
         >
-          <IconComponent size={18} className={topicMeta.iconColor} />
+          <IconComponent size={16} className={topicMeta.iconColor} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white truncate group-hover:text-[#FF4D4D] transition-colors">
+          <h3 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate group-hover:text-[#FF4D4D] transition-colors">
             {topicMeta.name}
           </h3>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate mt-0.5">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate mt-0.5">
             {solvedCount} / {totalCount} solved
           </p>
         </div>
       </div>
 
-      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-slate-600 dark:group-hover:text-slate-300 group-hover:translate-x-0.5 transition-all shrink-0" />
+      <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-slate-600 dark:group-hover:text-slate-300 group-hover:translate-x-0.5 transition-all shrink-0" />
     </button>
   );
 }
@@ -708,9 +708,9 @@ function SheetsClient() {
   const otherTopics = filteredTopics.filter((t) => t.topic !== expandedTopic);
 
   return (
-    <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2.5 sm:py-3.5 space-y-3 sm:space-y-3.5 scrollbar-thin-grey font-sans">
+    <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-2.5 sm:space-y-3 scrollbar-thin-grey font-sans">
       {/* 1. Header / Hero Section with Breadcrumb tightly above the title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1 max-w-xl">
           <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500 mb-0.5">
             <Link
@@ -731,21 +731,21 @@ function SheetsClient() {
           </p>
         </div>
 
-        {/* Remote Hero Illustration */}
-        <div className="shrink-0 max-w-[150px] sm:max-w-[180px] md:max-w-[210px] w-full self-center md:self-auto">
+        {/* Remote Hero Illustration - noticeably bigger */}
+        <div className="shrink-0 max-w-[240px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[360px] w-full self-center md:self-auto">
           <img
             src="https://ik.imagekit.io/riufvimprm/TBE/dsa-hero-illustration.png"
             alt="DSA Problem Sheets"
-            className="w-full h-auto object-contain select-none drop-shadow-xs"
+            className="w-full h-auto object-contain select-none drop-shadow-sm"
           />
         </div>
       </div>
 
-      {/* 2. Overall Preparation Progress Banner - Compact & closer */}
-      <div className="p-3 sm:p-3.5 rounded-xl border border-red-100/70 dark:border-[#262024] bg-white dark:bg-[#131316] shadow-2xs space-y-2">
+      {/* 2. Overall Preparation Progress Banner - Compact */}
+      <div className="p-2.5 sm:p-3 rounded-lg border border-red-100/70 dark:border-[#262024] bg-white dark:bg-[#131316] shadow-2xs space-y-1.5">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-900/50 flex items-center justify-center text-[#FF4D4D] shrink-0">
+            <div className="w-6 h-6 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-900/50 flex items-center justify-center text-[#FF4D4D] shrink-0">
               <Target className="w-3.5 h-3.5 text-[#FF4D4D]" />
             </div>
             <span className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
@@ -771,7 +771,7 @@ function SheetsClient() {
         </div>
       </div>
 
-      {/* 3. Search and Filter Bar - Tighter padding */}
+      {/* 3. Search and Filter Bar - Slim padding */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 relative z-20">
         <div className="relative flex-1">
           <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
@@ -780,7 +780,7 @@ function SheetsClient() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search DSA topics (e.g., Array, Two Pointers, Graphs)..."
-            className="w-full pl-8 pr-7 py-1.5 sm:py-2 rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
+            className="w-full pl-8 pr-7 py-1.5 sm:py-2 rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
           />
           {searchQuery && (
             <button
@@ -797,7 +797,7 @@ function SheetsClient() {
           <button
             type="button"
             onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-            className="w-full sm:w-auto px-3 py-1.5 sm:py-2 rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-[#32323A] transition-colors flex items-center justify-between sm:justify-start gap-1.5 shadow-2xs"
+            className="w-full sm:w-auto px-3 py-1.5 sm:py-2 rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-[#32323A] transition-colors flex items-center justify-between sm:justify-start gap-1.5 shadow-2xs"
           >
             <Filter className="w-3.5 h-3.5 text-slate-500" />
             <span>
@@ -811,7 +811,7 @@ function SheetsClient() {
           </button>
 
           {isFilterDropdownOpen && (
-            <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-slate-200/90 dark:border-[#2C2C36] bg-white dark:bg-[#18181D] shadow-xl py-1 z-30">
+            <div className="absolute right-0 top-full mt-1.5 w-44 rounded-lg border border-slate-200/90 dark:border-[#2C2C36] bg-white dark:bg-[#18181D] shadow-xl py-1 z-30">
               <button
                 type="button"
                 onClick={() => {
@@ -870,7 +870,7 @@ function SheetsClient() {
       </div>
 
       {/* 4. Topics Section: Expanded Card + 3-Column Grid */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {expandedTopicItem && (
           <ExpandedTopicCard
             topicKey={expandedTopicItem.topic}
@@ -885,7 +885,7 @@ function SheetsClient() {
           />
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
           {otherTopics.map((item) => (
             <TopicGridCard
               key={item.topic}
@@ -899,7 +899,7 @@ function SheetsClient() {
         </div>
 
         {filteredTopics.length === 0 && (
-          <div className="text-center py-10 rounded-xl border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs">
+          <div className="text-center py-10 rounded-lg border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs">
             No topics matched your search or filter.
           </div>
         )}
