@@ -3,17 +3,20 @@ import {
   LoadingSpinner,
   QuestionDetailPanel,
   SEO,
+  StudyGuideReader,
 } from "@tbe/components";
-import { routes, TOPIC_LABELS } from "@tbe/constants";
+import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamificationFeedback } from "@tbe/gamification";
 import {
   useAnalytics,
   useDsaCompletedQuestions,
   useDsaQuestionsForTopic,
   useDsaTopicSummaries,
+  useStudyGuideTopic,
   useUser,
 } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
+import type { StudyGuideModel } from "@tbe/types";
 import {
   cn,
   decodeDsaTopicFromUrl,
@@ -26,6 +29,7 @@ import { LayoutGroup, motion } from "framer-motion";
 import {
   ArrowDownUp,
   Bookmark,
+  BookOpen,
   Calculator,
   ChartNoAxesCombined,
   Check,
@@ -38,6 +42,7 @@ import {
   Hash,
   Layers,
   Layers2,
+  Lightbulb,
   List,
   ListOrdered,
   Lock,
@@ -313,6 +318,57 @@ function DifficultyPill({ difficulty }: { difficulty?: string }) {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Question Row Skeleton Loader (Exact Slim Fit to Question Component)        */
+/* -------------------------------------------------------------------------- */
+function QuestionListSkeleton() {
+  const skeletonRows = [
+    { titleWidth: "w-44 sm:w-60" },
+    { titleWidth: "w-36 sm:w-48" },
+    { titleWidth: "w-48 sm:w-68" },
+    { titleWidth: "w-32 sm:w-44" },
+    { titleWidth: "w-40 sm:w-56" },
+    { titleWidth: "w-44 sm:w-52" },
+  ];
+
+  return (
+    <div className="divide-y divide-slate-100 dark:divide-[#1C1C22] animate-pulse">
+      {skeletonRows.map((row, idx) => (
+        <div
+          key={idx}
+          className="flex items-center justify-between gap-3 px-2 sm:px-3 py-1.5"
+        >
+          {/* 1. LEFT: Number placeholder + Square Checkbox placeholder + Title bar */}
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
+            <span className="w-4 text-right text-[11px] font-medium text-slate-300 dark:text-slate-700 select-none shrink-0">
+              {idx + 1}.
+            </span>
+            <div className="w-3.5 h-3.5 rounded-[3px] bg-slate-200/90 dark:bg-[#202026] shrink-0" />
+            <div
+              className={cn(
+                "h-3 rounded-sm bg-slate-200/90 dark:bg-[#202026] shrink-0",
+                row.titleWidth,
+              )}
+            />
+          </div>
+
+          {/* 2. CENTER: Difficulty pill placeholder + Topic tag placeholder */}
+          <div className="flex items-center justify-center gap-1.5 shrink-0 px-2">
+            <div className="w-10 h-3.5 rounded bg-slate-200/90 dark:bg-[#202026] shrink-0" />
+            <div className="w-12 h-3.5 rounded bg-slate-200/90 dark:bg-[#202026] shrink-0 hidden sm:inline-block" />
+          </div>
+
+          {/* 3. RIGHT: Bookmark placeholder + Solve text placeholder */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-3.5 h-3.5 rounded bg-slate-200/90 dark:bg-[#202026] shrink-0 mx-1" />
+            <div className="w-8 h-3.5 rounded bg-slate-200/90 dark:bg-[#202026] shrink-0" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Expanded Topic View (Slim Spaced-Between Row: Left Title, Center Easy/Topic, Right Save/Solve) */
 /* -------------------------------------------------------------------------- */
 interface ExpandedTopicCardProps {
@@ -344,9 +400,30 @@ function ExpandedTopicCard({
   onLockedClick,
   onCountsDiscovered,
 }: ExpandedTopicCardProps) {
+  const normKey = topicKey ? topicKey.toUpperCase().replace(/\s+/g, "_") : "";
+  const guideConfig = normKey ? DSA_STUDY_GUIDE_CONFIGS[normKey] : null;
+
+  const [viewMode, setViewMode] = useState<"questions" | "guide">("questions");
+  const [activeSectionId, setActiveSectionId] = useState<string>("");
+
   const { questions, loading } = useDsaQuestionsForTopic(topicKey, {
     productType: "DSA_YATRA",
   });
+
+  const { data: studyGuideData, isLoading: guideLoading } = useStudyGuideTopic(
+    viewMode === "guide" ? topicKey : "",
+  );
+
+  useEffect(() => {
+    if (guideConfig?.sections) {
+      const firstSection = guideConfig.sections.find(
+        (s) => "id" in s && Boolean(s.id),
+      );
+      if (firstSection && "id" in firstSection) {
+        setActiveSectionId(firstSection.id);
+      }
+    }
+  }, [topicKey, guideConfig]);
 
   const [showAll, setShowAll] = useState(false);
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
@@ -404,200 +481,308 @@ function ExpandedTopicCard({
             <h2 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white leading-tight">
               {topicMeta.name}
             </h2>
-            <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate mt-0.5">
               {currentTotalCount} problems • {currentSolvedCount} solved •{" "}
               {topicMeta.description}
             </p>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={onCollapse}
-          className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors"
-          title="Collapse topic"
-        >
-          <ChevronUp className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Questions List - Slim spaced row: Left Title, Center Easy/Topics, Right Save/Solve */}
-      <div className="p-1 sm:p-1.5 divide-y divide-slate-100 dark:divide-[#1C1C22]">
-        {loading ? (
-          <div className="flex items-center justify-center py-6">
-            <LoadingSpinner />
-          </div>
-        ) : questions.length === 0 ? (
-          <div className="text-center py-5 text-xs text-slate-400">
-            No questions available for this topic yet.
-          </div>
-        ) : (
-          displayedQuestions.map((q, idx) => {
-            const qKey = String(q.id ?? q._id ?? q.name);
-            const isCompleted = completedSet.has(qKey);
-            const isBookmarked = bookmarkedIds.has(qKey);
-            const isLocked = Boolean(q.isLocked);
-
-            return (
-              <motion.div
-                key={qKey}
-                initial={{ opacity: 0, y: 3 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.16,
-                  delay: Math.min(idx * 0.02, 0.15),
-                }}
-                className={cn(
-                  "flex items-center justify-between gap-3 px-2 sm:px-3 py-1.5 transition-colors group hover:bg-slate-50 dark:hover:bg-[#16161A]",
-                  isCompleted && "bg-slate-50/40 dark:bg-[#141418]/40",
-                )}
-              >
-                {/* 1. LEFT: Number + Small Green Checkbox Square + Title */}
-                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
-                  <span className="w-4 text-right text-[11px] font-medium text-slate-400 dark:text-slate-500 select-none shrink-0">
-                    {idx + 1}.
-                  </span>
-
-                  {/* Small Square Checkbox with Green Fill when completed */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isLocked) onLockedClick();
-                      else onToggleComplete(q.id ?? q._id ?? q.name);
-                    }}
-                    className={cn(
-                      "w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors cursor-pointer",
-                      isCompleted
-                        ? "bg-emerald-500 border-emerald-500 text-white"
-                        : "border-slate-300 dark:border-[#33333D] hover:border-emerald-500 dark:hover:border-emerald-500 bg-white dark:bg-[#16161A]",
-                    )}
-                    title={
-                      isCompleted
-                        ? "Completed (click to uncheck)"
-                        : "Click to mark completed"
-                    }
-                  >
-                    {isCompleted && (
-                      <Check className="w-2.5 h-2.5 stroke-[3] text-white" />
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (isLocked) onLockedClick();
-                      else onSelectQuestion(q);
-                    }}
-                    className="font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors truncate text-left focus:outline-none"
-                  >
-                    <span
-                      className={
-                        isCompleted
-                          ? "line-through text-slate-400 dark:text-slate-500 font-normal"
-                          : ""
-                      }
-                    >
-                      {q.name}
-                    </span>
-                  </button>
-                </div>
-
-                {/* 2. CENTER: Difficulty (Easy/Med/Hard) + Topic Tags */}
-                <div className="flex items-center justify-center gap-1.5 shrink-0 px-2">
-                  <DifficultyPill difficulty={q.difficultyLevel} />
-
-                  {topicMeta.name && (
-                    <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400">
-                      {topicMeta.name}
-                    </span>
-                  )}
-                  {q.topics &&
-                    q.topics
-                      .filter(
-                        (t) =>
-                          t.toLowerCase() !== topicKey.toLowerCase() &&
-                          t.toLowerCase() !== topicMeta.name.toLowerCase(),
-                      )
-                      .slice(0, 1)
-                      .map((subT) => (
-                        <span
-                          key={subT}
-                          className="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400"
-                        >
-                          {TOPIC_LABELS[subT] || subT}
-                        </span>
-                      ))}
-                </div>
-
-                {/* 3. RIGHT: Save (Bookmark) & Solve button */}
-                <div className="flex items-center justify-end gap-2.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={(e) => toggleBookmark(qKey, e)}
-                    className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                    title={
-                      isBookmarked ? "Saved (click to unsave)" : "Save question"
-                    }
-                  >
-                    <Bookmark
-                      className={cn(
-                        "w-3.5 h-3.5",
-                        isBookmarked
-                          ? "fill-amber-500 text-amber-500"
-                          : "text-slate-400",
-                      )}
-                    />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (isLocked) onLockedClick();
-                      else onSelectQuestion(q);
-                    }}
-                    className={cn(
-                      "text-xs font-semibold px-1 py-0.5 flex items-center gap-1 transition-colors cursor-pointer",
-                      isLocked
-                        ? "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
-                        : "text-[#FF4D4D] hover:underline",
-                    )}
-                    title={isLocked ? "Locked question" : "Solve question"}
-                  >
-                    {isLocked ? (
-                      <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                    ) : (
-                      <span>Solve</span>
-                    )}
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })
-        )}
-
-        {currentTotalCount > 6 && (
-          <div className="py-1 text-center">
+        {/* Right side: Study Guide (with Bulb icon, no bg) / Questions toggle + Collapse button */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {viewMode === "questions" ? (
             <button
               type="button"
-              onClick={() => setShowAll(!showAll)}
-              className="w-full py-1 rounded border border-slate-200/80 dark:border-[#24242A] text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#18181D] transition-colors flex items-center justify-center gap-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                setViewMode("guide");
+              }}
+              className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#FF4D4D] dark:text-slate-400 dark:hover:text-[#FF4D4D] transition-colors cursor-pointer py-0.5 px-1 bg-transparent border-0"
+              title={`View ${topicMeta.name} Study Guide`}
             >
-              <span>
-                {showAll
-                  ? "Show Fewer Questions"
-                  : `View All ${currentTotalCount} Problems`}
-              </span>
-              <ChevronDown
-                className={cn(
-                  "w-3 h-3 transition-transform",
-                  showAll ? "rotate-180" : "",
-                )}
-              />
+              <Lightbulb className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+              <span>Study Guide</span>
             </button>
-          </div>
-        )}
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setViewMode("questions");
+              }}
+              className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#FF4D4D] dark:text-slate-300 dark:hover:text-[#FF4D4D] transition-colors cursor-pointer py-0.5 px-1 bg-transparent border-0"
+              title="Show Questions List"
+            >
+              <List className="w-3.5 h-3.5 text-[#FF4D4D] shrink-0" />
+              <span>Questions ({currentTotalCount})</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onCollapse}
+            className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1E1E24] transition-colors"
+            title="Collapse topic"
+          >
+            <ChevronUp className="w-4 h-4" />
+          </button>
+        </div>
       </div>
+
+      {viewMode === "questions" ? (
+        /* Questions List - Slim spaced row: Left Title, Center Easy/Topics, Right Save/Solve */
+        <div className="p-1 sm:p-1.5 divide-y divide-slate-100 dark:divide-[#1C1C22]">
+          {loading ? (
+            <QuestionListSkeleton />
+          ) : questions.length === 0 ? (
+            <div className="text-center py-5 text-xs text-slate-400">
+              No questions available for this topic yet.
+            </div>
+          ) : (
+            displayedQuestions.map((q, idx) => {
+              const qKey = String(q.id ?? q._id ?? q.name);
+              const isCompleted = completedSet.has(qKey);
+              const isBookmarked = bookmarkedIds.has(qKey);
+              const isLocked = Boolean(q.isLocked);
+
+              return (
+                <motion.div
+                  key={qKey}
+                  initial={{ opacity: 0, y: 3 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.16,
+                    delay: Math.min(idx * 0.02, 0.15),
+                  }}
+                  className={cn(
+                    "flex items-center justify-between gap-3 px-2 sm:px-3 py-1.5 transition-colors group hover:bg-slate-50 dark:hover:bg-[#16161A]",
+                    isCompleted && "bg-slate-50/40 dark:bg-[#141418]/40",
+                  )}
+                >
+                  {/* 1. LEFT: Number + Small Green Checkbox Square + Title */}
+                  <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
+                    <span className="w-4 text-right text-[11px] font-medium text-slate-400 dark:text-slate-500 select-none shrink-0">
+                      {idx + 1}.
+                    </span>
+
+                    {/* Small Square Checkbox with Green Fill when completed */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isLocked) onLockedClick();
+                        else onToggleComplete(q.id ?? q._id ?? q.name);
+                      }}
+                      className={cn(
+                        "w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors cursor-pointer",
+                        isCompleted
+                          ? "bg-emerald-500 border-emerald-500 text-white"
+                          : "border-slate-300 dark:border-[#33333D] hover:border-emerald-500 dark:hover:border-emerald-500 bg-white dark:bg-[#16161A]",
+                      )}
+                      title={
+                        isCompleted
+                          ? "Completed (click to uncheck)"
+                          : "Click to mark completed"
+                      }
+                    >
+                      {isCompleted && (
+                        <Check className="w-2.5 h-2.5 stroke-[3] text-white" />
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isLocked) onLockedClick();
+                        else onSelectQuestion(q);
+                      }}
+                      className="font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-emerald-500 dark:hover:emerald-400 transition-colors truncate text-left focus:outline-none"
+                    >
+                      <span
+                        className={
+                          isCompleted
+                            ? "line-through text-slate-400 dark:text-slate-500 font-normal"
+                            : ""
+                        }
+                      >
+                        {q.name}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* 2. CENTER: Difficulty (Easy/Med/Hard) + Topic Tags */}
+                  <div className="flex items-center justify-center gap-1.5 shrink-0 px-2">
+                    <DifficultyPill difficulty={q.difficultyLevel} />
+
+                    {topicMeta.name && (
+                      <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400">
+                        {topicMeta.name}
+                      </span>
+                    )}
+                    {q.topics &&
+                      q.topics
+                        .filter(
+                          (t) =>
+                            t.toLowerCase() !== topicKey.toLowerCase() &&
+                            t.toLowerCase() !== topicMeta.name.toLowerCase(),
+                        )
+                        .slice(0, 1)
+                        .map((subT) => (
+                          <span
+                            key={subT}
+                            className="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-[#1E1E24] text-slate-500 dark:text-slate-400"
+                          >
+                            {TOPIC_LABELS[subT] || subT}
+                          </span>
+                        ))}
+                  </div>
+
+                  {/* 3. RIGHT: Save (Bookmark) & Solve button */}
+                  <div className="flex items-center justify-end gap-2.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={(e) => toggleBookmark(qKey, e)}
+                      className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                      title={
+                        isBookmarked
+                          ? "Saved (click to unsave)"
+                          : "Save question"
+                      }
+                    >
+                      <Bookmark
+                        className={cn(
+                          "w-3.5 h-3.5",
+                          isBookmarked
+                            ? "fill-amber-500 text-amber-500"
+                            : "text-slate-400",
+                        )}
+                      />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isLocked) onLockedClick();
+                        else onSelectQuestion(q);
+                      }}
+                      className={cn(
+                        "text-xs font-semibold px-1 py-0.5 flex items-center gap-1 transition-colors cursor-pointer",
+                        isLocked
+                          ? "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                          : "text-[#FF4D4D] hover:underline",
+                      )}
+                      title={isLocked ? "Locked question" : "Solve question"}
+                    >
+                      {isLocked ? (
+                        <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                      ) : (
+                        <span>Solve</span>
+                      )}
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })
+          )}
+
+          {currentTotalCount > 6 && (
+            <div className="py-1 text-center">
+              <button
+                type="button"
+                onClick={() => setShowAll(!showAll)}
+                className="w-full py-1 rounded border border-slate-200/80 dark:border-[#24242A] text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#18181D] transition-colors flex items-center justify-center gap-1"
+              >
+                <span>
+                  {showAll
+                    ? "Show Fewer Questions"
+                    : `View All ${currentTotalCount} Problems`}
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "w-3 h-3 transition-transform",
+                    showAll ? "rotate-180" : "",
+                  )}
+                />
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        /* Study Guide View inside Card */
+        <div className="flex flex-col">
+          {/* Section Tabs Bar */}
+          {guideConfig?.sections && guideConfig.sections.length > 0 && (
+            <div className="flex items-center gap-1.5 px-3 py-2 border-b border-slate-100 dark:border-[#1E1E24] overflow-x-auto no-scrollbar bg-slate-50/50 dark:bg-[#101014]/50 shrink-0">
+              {guideConfig.sections.map((sec, idx) => {
+                if ("divider" in sec) {
+                  if (sec.divider === null) {
+                    return (
+                      <div
+                        key={`div-${idx}`}
+                        className="h-3.5 w-[1px] bg-slate-200 dark:bg-[#2A2A34] mx-1 shrink-0"
+                      />
+                    );
+                  }
+                  return (
+                    <span
+                      key={`div-${idx}`}
+                      className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider px-1 shrink-0"
+                    >
+                      {sec.divider}
+                    </span>
+                  );
+                }
+
+                const isActive = activeSectionId === sec.id;
+                return (
+                  <button
+                    key={sec.id}
+                    type="button"
+                    onClick={() => setActiveSectionId(sec.id)}
+                    className={cn(
+                      "px-2.5 py-1 rounded-md text-xs font-semibold whitespace-nowrap transition-colors shrink-0 cursor-pointer",
+                      isActive
+                        ? "bg-[#FF4D4D] text-white shadow-xs font-bold"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-[#1E1E24]",
+                    )}
+                  >
+                    {sec.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Guide Reader Content */}
+          <div className="min-h-[300px] max-h-[650px] flex flex-col">
+            {guideLoading ? (
+              <div className="p-4 sm:p-6 space-y-3 animate-pulse">
+                <div className="h-5 w-1/4 bg-slate-200 dark:bg-[#202026] rounded-md" />
+                <div className="h-3.5 w-3/4 bg-slate-200 dark:bg-[#202026] rounded" />
+                <div className="h-3.5 w-1/2 bg-slate-200 dark:bg-[#202026] rounded" />
+                <div className="h-28 w-full bg-slate-200 dark:bg-[#202026] rounded-xl mt-3" />
+              </div>
+            ) : studyGuideData ? (
+              <StudyGuideReader
+                topic={topicKey}
+                sectionId={activeSectionId}
+                data={studyGuideData as StudyGuideModel}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-2">
+                <BookOpen className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+                <p className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                  Study Guide Coming Soon
+                </p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm">
+                  Curated patterns, visual walkthrough, and cheatsheet for{" "}
+                  {topicMeta.name} are being prepared.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
