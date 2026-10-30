@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import SectionHeader from "@/components/SectionHeader";
 import { LANDING } from "@/config/landing";
 
 function RoleIcon({ type }: { type: string }) {
@@ -62,18 +63,12 @@ export default function RolesGrowthSection() {
   return (
     <section id="roles" className="py-16 md:py-20 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <span className="text-[#EA4544] font-bold text-xs tracking-widest uppercase">
-            {roles.badge}
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mt-2">
-            {roles.heading}
-          </h2>
-          <p className="text-sm sm:text-base text-gray-500 mt-2.5">
-            {roles.subheading}
-          </p>
-        </div>
+        <SectionHeader
+          badge={roles.badge}
+          heading={roles.heading}
+          subheading={roles.subheading}
+          className="mb-12 sm:mb-16"
+        />
 
         {/* 3 Roles Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch relative">

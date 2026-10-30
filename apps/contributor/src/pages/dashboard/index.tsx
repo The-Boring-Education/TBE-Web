@@ -1,4 +1,5 @@
-import { useAuth } from "@tbe/auth";
+import { ProtectedRoute, useAuth } from "@tbe/auth";
+import { CAPTAIN_XP_THRESHOLD, CONTRIBUTION_TYPE_GROUPS } from "@tbe/constants";
 import {
   BookOpen,
   Calendar,
@@ -13,115 +14,58 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 
-import {
-  fetchContributorProfile,
-  fetchUserSubmissions,
-} from "@/api/contributor";
+import type { ContributionItem } from "@/api/contributor";
 import SubmitContributionModal from "@/components/SubmitContributionModal";
 import { LANDING } from "@/config/landing";
+import {
+  type ContributionFilter,
+  useContributorProfile,
+  useContributorSubmissions,
+} from "@/hooks/useContributor";
 
-interface ContributorData {
-  name: string;
-  email: string;
-  role: string;
-  totalXp: number;
-  approvedCount: number;
-  pendingCount: number;
-  isCaptain: boolean;
-  avatar?: string;
-}
-
-interface ContributionItem {
-  _id: string;
-  category: string;
-  typeGroup: "blogs" | "code" | "content" | "community";
-  title: string;
-  proofUrl: string;
-  standardXp: number;
-  awardedXp: number;
-  status: "pending" | "approved" | "rejected";
-  adminFeedback?: string;
-  createdAt: string;
-}
+const FILTERS: ContributionFilter[] = ["all", ...CONTRIBUTION_TYPE_GROUPS];
 
 export default function DashboardPage() {
-  const { user, isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
+  return (
+    <ProtectedRoute
+      redirectTo="/"
+      loadingComponent={
+        <div className="flex h-screen items-center justify-center bg-gray-50 text-gray-500 text-sm">
+          Loading dashboard...
+        </div>
+      }
+    >
+      <Dashboard />
+    </ProtectedRoute>
+  );
+}
 
-  const [profile, setProfile] = useState<ContributorData | null>(null);
-  const [submissions, setSubmissions] = useState<ContributionItem[]>([]);
-  const [activeFilter, setActiveFilter] = useState<string>("all");
+const Dashboard = () => {
+  const { user } = useAuth();
+
+  const [activeFilter, setActiveFilter] = useState<ContributionFilter>("all");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
-  const [loadingData, setLoadingData] = useState(true);
-  const [fetchError, setFetchError] = useState<string | null>(null);
-  const activeRequestId = useRef(0);
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  const loadData = async (typeGroup = activeFilter, targetPage = 1) => {
-    setLoadingData(true);
-    setFetchError(null);
-    const reqId = ++activeRequestId.current;
-
-    try {
-      const [profileResult, subsResult] = await Promise.allSettled([
-        fetchContributorProfile(),
-        fetchUserSubmissions(typeGroup, targetPage),
-      ]);
-
-      if (reqId !== activeRequestId.current) return;
-
-      if (profileResult.status === "fulfilled" && profileResult.value.status) {
-        setProfile(profileResult.value.data);
-      }
-
-      if (subsResult.status === "fulfilled" && subsResult.value.status) {
-        setSubmissions(subsResult.value.data?.items || []);
-        setTotalPages(subsResult.value.data?.totalPages || 1);
-        setPage(targetPage);
-      } else if (subsResult.status === "rejected") {
-        setFetchError("Failed to load submissions. Please retry.");
-      }
-    } catch {
-      if (reqId === activeRequestId.current) {
-        setFetchError("Failed to load dashboard data. Please retry.");
-      }
-    } finally {
-      if (reqId === activeRequestId.current) {
-        setLoadingData(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setPage(1);
-      loadData(activeFilter, 1);
-    }
-  }, [isAuthenticated, activeFilter]);
-
-  if (isLoading || (!isAuthenticated && !profile)) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 text-gray-500 text-sm">
-        Loading dashboard...
-      </div>
-    );
-  }
+  const { data: profile } = useContributorProfile();
+  const {
+    data: submissionsPage,
+    error: submissionsError,
+    isLoading: loadingData,
+    refetch: refetchSubmissions,
+  } = useContributorSubmissions(activeFilter, page);
+  const submissions = submissionsPage?.items ?? [];
+  const totalPages = submissionsPage?.totalPages || 1;
 
   const firstName =
     profile?.name?.split(" ")[0] || user?.name?.split(" ")[0] || "Contributor";
   const totalXp = profile?.totalXp || 0;
-  const isCaptain = profile?.isCaptain || totalXp >= 100;
-  const xpProgress = Math.min(100, isCaptain ? 100 : totalXp);
+  const isCaptain = profile?.isCaptain || totalXp >= CAPTAIN_XP_THRESHOLD;
+  const xpProgress = isCaptain
+    ? 100
+    : Math.min(100, (totalXp / CAPTAIN_XP_THRESHOLD) * 100);
 
   const getCategoryIcon = (category: string, typeGroup: string) => {
     if (typeGroup === "code" || category === "PR_BUG_FIX") {
@@ -316,7 +260,9 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2">
                 <span>XP Progress</span>
-                <span>{totalXp} / 100 XP</span>
+                <span>
+                  {totalXp} / {CAPTAIN_XP_THRESHOLD} XP
+                </span>
               </div>
               <div className="h-2.5 w-full rounded-full bg-red-100/80 overflow-hidden">
                 <div
@@ -367,35 +313,36 @@ export default function DashboardPage() {
 
             {/* Filter Pills */}
             <div className="flex items-center gap-1.5 flex-wrap">
-              {["all", "blogs", "code", "content", "community"].map(
-                (filter) => (
-                  <button
-                    key={filter}
-                    type="button"
-                    onClick={() => setActiveFilter(filter)}
-                    className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-all ${
-                      activeFilter === filter
-                        ? "bg-red-50 text-[#EF4444]"
-                        : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                    }`}
-                  >
-                    {filter}
-                  </button>
-                ),
-              )}
+              {FILTERS.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => {
+                    setActiveFilter(filter);
+                    setPage(1);
+                  }}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-all ${
+                    activeFilter === filter
+                      ? "bg-red-50 text-[#EF4444]"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Table / List */}
           <div className="divide-y divide-gray-50 mt-2">
-            {fetchError ? (
+            {submissionsError ? (
               <div className="py-12 text-center">
                 <p className="text-sm font-semibold text-red-600">
-                  {fetchError}
+                  {submissionsError.message}
                 </p>
                 <button
                   type="button"
-                  onClick={() => loadData(activeFilter, page)}
+                  onClick={() => refetchSubmissions()}
                   className="mt-2 rounded-xl bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-black"
                 >
                   Retry
@@ -469,11 +416,7 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       disabled={page <= 1 || loadingData}
-                      onClick={() => {
-                        const prev = Math.max(1, page - 1);
-                        setPage(prev);
-                        loadData(activeFilter, prev);
-                      }}
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
                       className="rounded-lg border border-gray-200 px-3 py-1.5 hover:bg-gray-50 disabled:opacity-40"
                     >
                       Previous
@@ -484,11 +427,9 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       disabled={page >= totalPages || loadingData}
-                      onClick={() => {
-                        const next = Math.min(totalPages, page + 1);
-                        setPage(next);
-                        loadData(activeFilter, next);
-                      }}
+                      onClick={() =>
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }
                       className="rounded-lg border border-gray-200 px-3 py-1.5 hover:bg-gray-50 disabled:opacity-40"
                     >
                       Next
@@ -505,8 +446,7 @@ export default function DashboardPage() {
       <SubmitContributionModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSuccess={() => loadData(activeFilter)}
       />
     </div>
   );
-}
+};

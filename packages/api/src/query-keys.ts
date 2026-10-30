@@ -191,4 +191,16 @@ export const queryKeys = {
     status: (userId: string) =>
       [...queryKeys.onboarding.all, "status", userId] as const,
   },
+
+  // ── Contributor Program ──
+  contributor: {
+    all: ["contributor"] as const,
+    profile: (userId?: string) =>
+      [...queryKeys.contributor.all, "profile", userId] as const,
+    submissions: (filters: {
+      userId?: string;
+      typeGroup: string;
+      page: number;
+    }) => [...queryKeys.contributor.all, "submissions", filters] as const,
+  },
 } as const;

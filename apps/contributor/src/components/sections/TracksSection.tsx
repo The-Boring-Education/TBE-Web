@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import SectionHeader from "@/components/SectionHeader";
 import { LANDING } from "@/config/landing";
 import { LINKS } from "@/config/links";
 
@@ -10,18 +11,11 @@ export default function TracksSection() {
   return (
     <section id="tracks" className="py-16 md:py-20 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-[#EA4544] font-bold text-xs tracking-widest uppercase">
-            {tracks.badge}
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mt-2">
-            {tracks.heading}
-          </h2>
-          <p className="text-sm sm:text-base text-gray-500 mt-2.5">
-            {tracks.subheading}
-          </p>
-        </div>
+        <SectionHeader
+          badge={tracks.badge}
+          heading={tracks.heading}
+          subheading={tracks.subheading}
+        />
 
         {/* Tracks Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

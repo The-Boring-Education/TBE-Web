@@ -1,34 +1,27 @@
+import {
+  BASELINE_CATEGORY_XP,
+  CONTRIBUTION_CATEGORIES,
+  CONTRIBUTION_CATEGORY_LABELS,
+  type ContributionCategoryType,
+} from "@tbe/constants";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 
-import { submitContribution } from "../api/contributor";
-
-const CATEGORIES = [
-  { value: "PR_BUG_FIX", label: "Pull Request / Bug Fix (5 XP)" },
-  { value: "CREATE_ISSUE", label: "Create Issue / Bug Report (3 XP)" },
-  { value: "REVIEW_PR", label: "Review a PR (2 XP)" },
-  { value: "BLOG", label: "Technical Blog / Article (5 XP)" },
-  { value: "POST", label: "Social Media Post / Content (5 XP)" },
-  { value: "EVENT_SESSION", label: "Organize Event / Session (15 XP)" },
-];
+import { useSubmitContribution } from "../hooks/useContributor";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
-export default function SubmitContributionModal({
-  isOpen,
-  onClose,
-  onSuccess,
-}: Props) {
-  const [category, setCategory] = useState("PR_BUG_FIX");
+export default function SubmitContributionModal({ isOpen, onClose }: Props) {
+  const [category, setCategory] = useState<ContributionCategoryType>(
+    CONTRIBUTION_CATEGORIES[0],
+  );
   const [title, setTitle] = useState("");
   const [proofUrl, setProofUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const submit = useSubmitContribution();
 
   const modalRef = React.useRef<HTMLDivElement>(null);
 
@@ -80,35 +73,19 @@ export default function SubmitContributionModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const res = await submitContribution({
-        category,
-        title,
-        proofUrl,
-        description,
-      });
-
-      if (!res.status) {
-        setError(res.message || "Failed to submit contribution");
-        setLoading(false);
-        return;
-      }
-
-      setTitle("");
-      setProofUrl("");
-      setDescription("");
-      setLoading(false);
-      onSuccess();
-      onClose();
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
-      setLoading(false);
-    }
+    submit.mutate(
+      { category, title, proofUrl, description },
+      {
+        onSuccess: () => {
+          setTitle("");
+          setProofUrl("");
+          setDescription("");
+          onClose();
+        },
+      },
+    );
   };
 
   return (
@@ -144,9 +121,9 @@ export default function SubmitContributionModal({
           </button>
         </div>
 
-        {error && (
+        {submit.error && (
           <div className="mt-4 rounded-xl bg-red-50 p-3 text-xs font-medium text-red-600 border border-red-100">
-            {error}
+            {submit.error.message}
           </div>
         )}
 
@@ -161,12 +138,14 @@ export default function SubmitContributionModal({
             <select
               id="contrib-category"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) =>
+                setCategory(e.target.value as ContributionCategoryType)
+              }
               className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-red-500 focus:outline-none"
             >
-              {CATEGORIES.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
+              {CONTRIBUTION_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {`${CONTRIBUTION_CATEGORY_LABELS[cat]} (${BASELINE_CATEGORY_XP[cat]} XP)`}
                 </option>
               ))}
             </select>
@@ -235,10 +214,10 @@ export default function SubmitContributionModal({
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={submit.isPending}
               className="rounded-xl bg-[#EF4444] hover:bg-[#DC2626] disabled:opacity-50 px-5 py-2 text-xs font-semibold text-white shadow-sm transition-all"
             >
-              {loading ? "Submitting..." : "Submit for Review →"}
+              {submit.isPending ? "Submitting..." : "Submit for Review →"}
             </button>
           </div>
         </form>

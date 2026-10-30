@@ -376,9 +376,21 @@ importers:
       "@tbe/auth":
         specifier: workspace:*
         version: link:../../packages/auth
+      "@tbe/constants":
+        specifier: workspace:*
+        version: link:../../packages/constants
+      "@tbe/query":
+        specifier: workspace:*
+        version: link:../../packages/api
+      "@tbe/types":
+        specifier: workspace:*
+        version: link:../../packages/types
       "@tbe/typescript-config":
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      lucide-react:
+        specifier: ^0.462.0
+        version: 0.462.0(react@18.3.1)
       next:
         specifier: 14.2.35
         version: 14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

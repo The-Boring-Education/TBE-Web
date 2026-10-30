@@ -21,6 +21,9 @@ export {
 // Config
 export { AUTH_CONFIG, getAuthApiUrl } from "./config";
 
+// Redirect safety
+export { getSafeRedirectPath } from "./redirect";
+
 // Middleware
 export type {
   AuthenticatedRequest,

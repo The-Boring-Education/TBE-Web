@@ -3,6 +3,7 @@ export * from "./apps";
 export * from "./campusPrep";
 export * from "./challenges";
 export * from "./component";
+export * from "./contributor";
 export * from "./database";
 export * from "./dsaDifficulty";
 export * from "./dsaFreemium";

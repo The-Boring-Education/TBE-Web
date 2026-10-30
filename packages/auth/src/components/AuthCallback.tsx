@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { getAuthApiUrl } from "../config";
 import { PENDING_AUTH_ANALYTICS_KEY } from "../constants";
+import { getSafeRedirectPath } from "../redirect";
 import { setTokens } from "../token";
 
 /**
@@ -34,7 +35,12 @@ async function exchangeCodeForTokens(code: string): Promise<Response> {
   });
 }
 
-export const AuthCallback = () => {
+interface AuthCallbackProps {
+  /** Where to send the user when sign-in fails. Apps without a login page can use "/". */
+  loginPath?: string;
+}
+
+export const AuthCallback = ({ loginPath = "/login" }: AuthCallbackProps) => {
   const [status, setStatus] = useState("Completing sign in...");
   const [error, setError] = useState<string | null>(null);
 
@@ -42,12 +48,12 @@ export const AuthCallback = () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const errorParam = params.get("error");
-    const returnTo = params.get("returnTo") || "/";
+    const returnTo = getSafeRedirectPath(params.get("returnTo"), "/");
 
     if (errorParam) {
       setError(`Authentication error: ${errorParam}`);
       setTimeout(() => {
-        window.location.href = `/login?error=${errorParam}`;
+        window.location.href = `${loginPath}?error=${encodeURIComponent(errorParam)}`;
       }, 2000);
       return;
     }
@@ -55,7 +61,7 @@ export const AuthCallback = () => {
     if (!code) {
       setError("Missing authorization code");
       setTimeout(() => {
-        window.location.href = "/login?error=missing_code";
+        window.location.href = `${loginPath}?error=missing_code`;
       }, 2000);
       return;
     }
@@ -92,13 +98,13 @@ export const AuthCallback = () => {
         console.error("Auth callback error:", err);
         setError("Authentication failed. Redirecting to login...");
         setTimeout(() => {
-          window.location.href = "/login?error=token_exchange_failed";
+          window.location.href = `${loginPath}?error=token_exchange_failed`;
         }, 2000);
       }
     };
 
     doExchange();
-  }, []);
+  }, [loginPath]);
 
   return (
     <div
