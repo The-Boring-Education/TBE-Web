@@ -9,7 +9,7 @@ import {
 } from "@tbe/constants";
 import { useDsaTopicSummaries } from "@tbe/hooks";
 import type { PageProps, RoadmapNode } from "@tbe/interface";
-import { cn, getPreFetchProps } from "@tbe/utils";
+import { getPreFetchProps } from "@tbe/utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Code } from "lucide-react";
 import Head from "next/head";
@@ -58,11 +58,11 @@ function VisualizerTopBanner() {
   return (
     <Link
       href={routes.dsayatra.visualizers}
-      className="group relative mb-4 mx-auto max-w-fit flex items-center justify-center gap-3.5 rounded-xl px-3 py-2.5 transition-all duration-300 hover:bg-white/[0.04] sm:px-4"
+      className="group relative flex items-center justify-between gap-3.5 rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] hover:dark:bg-[#18181D] px-3.5 py-2.5 transition-all duration-300 shadow-2xs"
     >
-      <div className="flex items-center gap-3.5 sm:gap-4">
+      <div className="flex items-center gap-3 sm:gap-3.5">
         {/* Slim squarish mini-visualizer preview box with moving element bars */}
-        <div className="relative flex h-10 w-10 shrink-0 items-end justify-between overflow-hidden rounded-lg border border-white/10 bg-[#0a0a0c] p-1.5 transition-colors group-hover:border-[#ff5757]/60">
+        <div className="relative flex h-9 w-9 shrink-0 items-end justify-between overflow-hidden rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-slate-50 dark:bg-[#0E0E12] p-1.5 transition-colors group-hover:border-[#FF4D4D]/60">
           {/* Moving element bars */}
           <div className="relative flex h-full w-full items-end justify-between gap-0.5">
             {[
@@ -89,7 +89,7 @@ function VisualizerTopBanner() {
             ].map((bar, idx) => (
               <motion.div
                 key={idx}
-                className="w-full rounded-xs bg-gradient-to-t from-[#ff5757]/40 to-[#ff5757]"
+                className="w-full rounded-xs bg-gradient-to-t from-[#FF4D4D]/40 to-[#FF4D4D]"
                 style={{ height: bar.initial }}
                 animate={{ height: bar.animate }}
                 transition={{
@@ -103,15 +103,19 @@ function VisualizerTopBanner() {
         </div>
 
         {/* Text Content */}
-        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-          <span className="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+        <div className="flex items-center gap-2">
+          <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors">
             Explore Interactive Algorithm Visualizers
           </span>
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff5757] group-hover:text-[#ff7777] transition-colors shrink-0">
-            <span>Explore</span>
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+          <span className="hidden sm:inline-block text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+            — Step through sorting, trees & graphs dynamically
           </span>
         </div>
+      </div>
+
+      <div className="inline-flex items-center gap-1 text-xs font-bold text-[#FF4D4D] group-hover:translate-x-0.5 transition-transform shrink-0">
+        <span>Explore</span>
+        <ArrowRight className="h-3.5 w-3.5" />
       </div>
     </Link>
   );
@@ -180,34 +184,42 @@ function TopicsClient() {
   };
 
   return (
-    <Fragment>
+    <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-3 font-sans scrollbar-thin-grey">
+      {/* Breadcrumb Navigation on Top */}
+      <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+        <Link
+          href="/dashboard"
+          className="hover:text-slate-800 dark:hover:text-white transition-colors"
+        >
+          DSA Yatra
+        </Link>
+        <span className="text-slate-300 dark:text-slate-600">›</span>
+        <span className="font-bold text-[#FF4D4D]">Topics Roadmap</span>
+      </nav>
+
       <VisualizerTopBanner />
-      <InteractiveRoadmap
-        className={cn(
-          /* Match DsaDashboardLayout inset so the roadmap is not a darker “card”. */
-          "!bg-[#0f0f0f]",
-          /* Bleed past shell horizontal padding (px-3 sm:px-5 lg:px-6 xl:px-8). */
-          "-mx-3 max-w-none sm:-mx-5 lg:-mx-6 xl:-mx-8",
-          /* Hide the top blackish divider line from InteractiveRoadmap */
-          "[&>div.-top-px]:hidden",
-        )}
-        nodes={nodes}
-        onNodeClick={handleNodeClick}
-        title={
-          <>
-            DATA
-            <br />
-            <span className="text-[#ff5757]">STRUCTURES</span>
-          </>
-        }
-        subtitle="Master the fundamentals of computer science through a structured and interactive milestone journey."
-        stats={stats}
-        overallProgress={overallProgress}
-        accentColor="#ff5757"
-        iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
-        defaultIcon={Code}
-      />
-    </Fragment>
+
+      <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] overflow-hidden shadow-2xs">
+        <InteractiveRoadmap
+          className="!bg-transparent dark:!bg-[#131316] [&>div.-top-px]:hidden [&_.bg-[#0a0a0a]]:!bg-[#131316] min-h-[500px]"
+          nodes={nodes}
+          onNodeClick={handleNodeClick}
+          title={
+            <>
+              DATA
+              <br />
+              <span className="text-[#FF4D4D]">STRUCTURES</span>
+            </>
+          }
+          subtitle="Master the fundamentals of computer science through a structured and interactive milestone journey."
+          stats={stats}
+          overallProgress={overallProgress}
+          accentColor="#FF4D4D"
+          iconMap={DSA_TOPIC_ROADMAP_ICON_MAP}
+          defaultIcon={Code}
+        />
+      </div>
+    </div>
   );
 }
 

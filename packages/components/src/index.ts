@@ -193,6 +193,8 @@ export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetai
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as SheetCard } from "./containers/Cards/SheetCard";
 export { default as ShikshaCard } from "./containers/Cards/ShikshaCard";
+export { default as StudyGuideNav } from "./containers/Cards/StudyGuideNav";
+export { default as StudyGuideReader } from "./containers/Cards/StudyGuideReader";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";

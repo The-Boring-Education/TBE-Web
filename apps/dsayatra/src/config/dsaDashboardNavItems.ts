@@ -1,5 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { Brain, ClipboardList, FileText, Home, Target } from "lucide-react";
+import {
+  BookOpen,
+  Brain,
+  FileText,
+  Home,
+  Layers,
+  PlayCircle,
+} from "lucide-react";
 
 export type DsaDashboardNavItem = {
   name: string;
@@ -8,12 +15,13 @@ export type DsaDashboardNavItem = {
 };
 
 /**
- * Single source of truth for DSA Yatra app shell navigation (sidebar + mobile bar).
+ * Single source of truth for DSA Yatra navigation.
  */
 export const DSA_DASHBOARD_NAV_ITEMS: DsaDashboardNavItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Sheets", href: "/sheets", icon: Target },
-  { name: "Revisions", href: "/revisions", icon: FileText },
-  { name: "Topics", href: "/topics", icon: ClipboardList },
+  { name: "Sheets", href: "/sheets", icon: FileText },
+  { name: "Visualizers", href: "/visualizers", icon: PlayCircle },
+  { name: "Revisions", href: "/revisions", icon: BookOpen },
+  { name: "Topics", href: "/topics", icon: Layers },
   { name: "Pattern Quiz", href: "/pattern-quiz", icon: Brain },
 ];
