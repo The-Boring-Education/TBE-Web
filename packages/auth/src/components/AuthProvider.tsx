@@ -160,6 +160,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         window.location.pathname;
 
       const apiUrl = getAuthApiUrl();
+
+      // Without a configured API base URL the login URL would resolve against
+      // the app's own origin (e.g. `/auth/login?...`) and dead-end on a 404.
+      if (!apiUrl) {
+        console.error(
+          "[@tbe/auth] Cannot start sign in: NEXT_PUBLIC_API_URL is not set.",
+        );
+        window.location.href = "/login?error=auth_unavailable";
+        return;
+      }
+
       const redirectUri = `${window.location.origin}/auth/callback?returnTo=${encodeURIComponent(returnTo)}`;
       window.location.href = `${apiUrl}/auth/login?provider=${encodeURIComponent(provider)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
     },
