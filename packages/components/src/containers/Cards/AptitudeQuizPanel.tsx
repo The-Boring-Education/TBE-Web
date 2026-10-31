@@ -94,7 +94,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
 
           {/* Explanation Content (In Main Workspace) */}
           {showExplanation && (
-            <div className="mt-4 p-5 bg-[#0D0D0D] border border-gray-800/80 rounded-xl shadow-2xl">
+            <div className="mt-4 p-5 bg-[#131316] border border-gray-800/80 rounded-xl shadow-2xl">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                 <Text
@@ -123,7 +123,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
       </div>
 
       {/* Quiz Sidebar (Control & Context) */}
-      <div className="w-full lg:w-[260px] flex-shrink-0 bg-[#0A0A0A] border-l border-gray-800 p-4 flex flex-col z-10 overflow-y-auto scrollbar-thin-grey gap-5">
+      <div className="w-full lg:w-[260px] flex-shrink-0 bg-[#131316] border-l border-gray-800 p-4 flex flex-col z-10 overflow-y-auto scrollbar-thin-grey gap-5">
         {/* 1. Progress */}
         <div>
           <Text
@@ -132,7 +132,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
           >
             Progress
           </Text>
-          <div className="px-3 py-1.5 bg-[#111] border border-gray-800/60 rounded-md inline-flex items-baseline gap-1">
+          <div className="px-3 py-1.5 bg-[#18181D] border border-gray-800/60 rounded-md inline-flex items-baseline gap-1">
             <span className="text-white font-bold text-sm">
               {currentIndex + 1}
             </span>
@@ -166,7 +166,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
               </span>
             )}
             {currentQuestion.difficulty && (
-              <span className="px-2 py-0.5 bg-[#141414] border border-gray-800/60 rounded text-[9px] font-bold text-gray-500 uppercase tracking-wider">
+              <span className="px-2 py-0.5 bg-[#18181D] border border-gray-800/60 rounded text-[9px] font-bold text-gray-500 uppercase tracking-wider">
                 {currentQuestion.difficulty}
               </span>
             )}
@@ -180,7 +180,7 @@ export const AptitudeQuizPanel: React.FC<AptitudeQuizPanelProps> = ({
             className={`w-full px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-[0.15em] border transition-all duration-200 ${
               showExplanation
                 ? "border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/15"
-                : "border-gray-800 bg-[#111] text-gray-400 hover:border-gray-600 hover:text-gray-300"
+                : "border-gray-800 bg-[#131316] text-gray-400 hover:border-gray-600 hover:text-gray-300"
             }`}
           >
             {showExplanation ? "Hide Explanation" : "View Explanation"}
