@@ -36,7 +36,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "GET") {
       return handleGetApplications(req, res);
     } else if (req.method === "PUT") {
-      return handleUpdateApplication(req, res, user._id.toString());
+      return handleUpdateApplication(
+        req,
+        res,
+        user._id.toString(),
+        session.user.email ?? "",
+      );
     } else {
       return res.status(apiStatusCodes.METHOD_NOT_ALLOWED).json(
         sendAPIResponse({
@@ -107,6 +112,7 @@ const handleUpdateApplication = async (
   req: NextApiRequest,
   res: NextApiResponse,
   userId: string,
+  interviewerEmail: string,
 ) => {
   const { applicationId, status, notes, interviewDate, interviewLink } =
     req.body;
@@ -144,7 +150,7 @@ const handleUpdateApplication = async (
       application.interviewData = {
         scheduledAt: new Date(interviewDate),
         meetingLink: interviewLink,
-        interviewerEmail: "", // Will be populated from session
+        interviewerEmail,
       };
     }
 
