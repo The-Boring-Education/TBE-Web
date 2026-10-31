@@ -12,7 +12,7 @@ import { setTokens } from "../token";
  * Tries same-origin proxy first (for Next.js apps with CSP), falls back to
  * direct API call (for Vite apps without proxy route).
  */
-async function exchangeCodeForTokens(code: string): Promise<Response> {
+const exchangeCodeForTokens = async (code: string): Promise<Response> => {
   // Try same-origin proxy first — avoids CSP issues in Next.js apps
   const proxyUrl = "/api/proxy/auth/token";
   const proxyResponse = await fetch(proxyUrl, {
@@ -33,7 +33,7 @@ async function exchangeCodeForTokens(code: string): Promise<Response> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code }),
   });
-}
+};
 
 interface AuthCallbackProps {
   /** Where to send the user when sign-in fails. Apps without a login page can use "/". */
