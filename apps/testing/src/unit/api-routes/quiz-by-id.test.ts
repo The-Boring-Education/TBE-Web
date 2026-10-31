@@ -3,11 +3,11 @@ import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import handler from "../../../../api/src/pages/api/v1/quiz/[id]";
+import { adminGuardMock } from "../../test-utils/api-handler-mock";
 
 const mockGetQuizByIdFromDB = vi.fn();
 const mockUpdateAQuizInDB = vi.fn();
 const mockAppendQuestionsToQuizInDB = vi.fn();
-const mockEnsureAdminAccess = vi.fn();
 
 vi.mock("../../../../api/src/lib/database", () => ({
   getQuizByIdFromDB: (...args: unknown[]) => mockGetQuizByIdFromDB(...args),
@@ -20,15 +20,13 @@ vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (payload: unknown) => payload,
 }));
 
-vi.mock("../../../../api/src/middleware/admin", () => ({
-  ensureAdminAccess: (...args: unknown[]) => mockEnsureAdminAccess(...args),
-}));
+vi.mock("../../../../api/src/middleware/requestLogger", async () => {
+  const { withApiHandlerMock } =
+    await import("../../test-utils/api-handler-mock");
+  return { withApiHandler: withApiHandlerMock };
+});
 
-vi.mock("../../../../api/src/middleware/requestLogger", () => ({
-  withApiHandler: (h: typeof handler) => h,
-}));
-
-/** Simulates ensureAdminAccess denying access: writes 401 and returns false. */
+/** Simulates the admin guard denying access: writes 401 and returns false. */
 const denyAdmin = async (
   _req: NextApiRequest,
   res: NextApiResponse,
@@ -40,7 +38,7 @@ const denyAdmin = async (
 describe("GET /api/v1/quiz/[id]", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockEnsureAdminAccess.mockResolvedValue(true);
+    adminGuardMock.mockResolvedValue(true);
   });
 
   it("returns at most 10 questions for default client GET", async () => {
@@ -96,7 +94,7 @@ describe("GET /api/v1/quiz/[id]", () => {
 
     await handler(req, res);
 
-    expect(mockEnsureAdminAccess).not.toHaveBeenCalled();
+    expect(adminGuardMock).not.toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
   });
 
@@ -134,7 +132,7 @@ describe("GET /api/v1/quiz/[id]", () => {
 
     await handler(req, res);
 
-    expect(mockEnsureAdminAccess).not.toHaveBeenCalled();
+    expect(adminGuardMock).not.toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
     const body = JSON.parse(res._getData());
     // Legacy privileged shape is gone: capped at 10, difficulty stripped.
@@ -147,11 +145,11 @@ describe("GET /api/v1/quiz/[id]", () => {
 describe("PUT /api/v1/quiz/[id] (admin-gated)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockEnsureAdminAccess.mockResolvedValue(true);
+    adminGuardMock.mockResolvedValue(true);
   });
 
   it("rejects an unauthenticated PUT with 401 and does not write", async () => {
-    mockEnsureAdminAccess.mockImplementation(denyAdmin);
+    adminGuardMock.mockImplementation(denyAdmin);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
@@ -161,7 +159,7 @@ describe("PUT /api/v1/quiz/[id] (admin-gated)", () => {
 
     await handler(req, res);
 
-    expect(mockEnsureAdminAccess).toHaveBeenCalled();
+    expect(adminGuardMock).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(401);
     expect(mockUpdateAQuizInDB).not.toHaveBeenCalled();
   });
@@ -180,7 +178,7 @@ describe("PUT /api/v1/quiz/[id] (admin-gated)", () => {
 
     await handler(req, res);
 
-    expect(mockEnsureAdminAccess).toHaveBeenCalled();
+    expect(adminGuardMock).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
     expect(mockUpdateAQuizInDB).toHaveBeenCalled();
   });
@@ -189,11 +187,11 @@ describe("PUT /api/v1/quiz/[id] (admin-gated)", () => {
 describe("POST /api/v1/quiz/[id] (admin-gated)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockEnsureAdminAccess.mockResolvedValue(true);
+    adminGuardMock.mockResolvedValue(true);
   });
 
   it("rejects an unauthenticated POST with 401 and does not append", async () => {
-    mockEnsureAdminAccess.mockImplementation(denyAdmin);
+    adminGuardMock.mockImplementation(denyAdmin);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
@@ -203,7 +201,7 @@ describe("POST /api/v1/quiz/[id] (admin-gated)", () => {
 
     await handler(req, res);
 
-    expect(mockEnsureAdminAccess).toHaveBeenCalled();
+    expect(adminGuardMock).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(401);
     expect(mockAppendQuestionsToQuizInDB).not.toHaveBeenCalled();
   });
@@ -224,7 +222,7 @@ describe("POST /api/v1/quiz/[id] (admin-gated)", () => {
 
     await handler(req, res);
 
-    expect(mockEnsureAdminAccess).toHaveBeenCalled();
+    expect(adminGuardMock).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
     expect(mockAppendQuestionsToQuizInDB).toHaveBeenCalled();
   });

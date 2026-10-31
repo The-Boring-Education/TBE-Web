@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { RestrictedResourceList } from "@/components/RestrictedResourceList";
 import { getResourceIndex } from "@/lib/content";
-import { getSiteBaseUrl } from "@/lib/site";
+import { getOgImage, getSiteBaseUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 export const revalidate = false;
@@ -20,12 +20,15 @@ export const metadata: Metadata = {
     title: "Learning resources",
     description: homeDescription,
     url: getSiteBaseUrl(),
+    siteName: "TBE Resources",
     type: "website",
+    images: [getOgImage()],
   },
   twitter: {
     card: "summary_large_image",
     title: "Learning resources | TBE Resources",
     description: homeDescription,
+    images: [getOgImage()],
   },
 };
 

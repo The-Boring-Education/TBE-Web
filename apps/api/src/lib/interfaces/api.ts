@@ -1,5 +1,7 @@
 import type { DSATopicSlug } from "@tbe/constants";
 
+import type { ContributionCategoryType } from "@/lib/constants";
+
 import type { ProjectDocumentModel } from "./database";
 
 export interface APIResponse<T = any> {
@@ -49,7 +51,7 @@ export type SkillsType =
   | "NextJS";
 
 export type RoadmapsType =
-  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA";
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
 
 export type QuestionFrequencyType =
   "Most Asked" | "Asked Frequently" | "Asked Sometimes";
@@ -58,6 +60,8 @@ export type PlatformUsageType =
   "LEARNING_TECH" | "BUILDING_PROJECTS" | "INTERVIEW_PREP" | "JOB_SEARCH";
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
+
+export type CourseStatusType = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 export type CompanyType =
   | "Startup"
@@ -281,3 +285,16 @@ export type ProjectPickedPageProps = Pick<
   isEnrolled?: boolean;
   _id: string;
 };
+
+export interface CreateContributionPayload {
+  category: ContributionCategoryType;
+  title: string;
+  proofUrl: string;
+  description?: string;
+}
+
+export interface ReviewContributionPayload {
+  action: "approve" | "reject";
+  awardedXp?: number;
+  feedback?: string;
+}

@@ -12,7 +12,9 @@ const LearnPage = ({ seoMeta }: PageProps) => {
 
   useEffect(() => {
     if (!loadingUser && !isAuth) {
-      router.push(`/login?returnTo=${encodeURIComponent(routes.learn)}`);
+      router.push(
+        `/login?returnTo=${encodeURIComponent(router.asPath || routes.learn)}`,
+      );
     }
   }, [isAuth, loadingUser, router]);
 

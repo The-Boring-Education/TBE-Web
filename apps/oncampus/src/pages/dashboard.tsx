@@ -1,15 +1,17 @@
-import {
-  Button,
-  Card,
-  LoadingSpinner,
-  PatternQuizBanner,
-  Progress,
-} from "@tbe/components";
+import { LoadingSpinner } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
 import { CACHE_TIMES, queryKeys, useQuery } from "@tbe/query";
 import { sendRequest } from "@tbe/utils";
-import { Target, Trophy } from "lucide-react";
+import {
+  BarChart2,
+  BookOpen,
+  FileText,
+  Play,
+  Target,
+  Trophy,
+} from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
@@ -81,7 +83,7 @@ const CampusPrepDashboard = () => {
     const sheets = Array.isArray(enrolledSheetsResponse.data)
       ? enrolledSheetsResponse.data
       : [];
-    return sheets.slice(0, 3); // Get last 3 sheets (already sorted by lastUpdated)
+    return sheets.slice(0, 3);
   }, [enrolledSheetsResponse]);
 
   const quizPerformance: QuizPerformance | null = useMemo(() => {
@@ -126,231 +128,267 @@ const CampusPrepDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A]">
-        <div className="text-white">Loading...</div>
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <LoadingSpinner />
       </div>
     );
   }
 
   return (
     <div className="w-full min-w-0 space-y-6 pb-6">
-      {/* Header Section */}
-      <header className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between mb-2">
-        <div>
-          <h2 className="text-[1.35rem] font-black leading-snug tracking-tight text-[#f0f0f0] sm:text-2xl md:text-3xl">
-            Welcome back, {user?.name}! 👋
-          </h2>
-          <p className="text-[#808080] text-sm font-medium mt-1">
-            Ready to master your interviews today?
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="PRIMARY"
-            className="w-full sm:w-auto bg-[#ff5757] hover:bg-[#ff4040] text-white px-6 py-2.5 h-auto font-bold text-xs rounded-xl transition-all hover:shadow-[0_4px_20px_rgba(255,87,87,0.25)] hover:scale-[1.02]"
-            text="Continue Learning"
-            onClick={() => router.push("/interview-sheets")}
-          />
-        </div>
-      </header>
+      {/* 1. Hero Card: Welcome + Laptop Illustration + CTA */}
+      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-[#222227] bg-white dark:bg-[#111114] p-6 sm:p-7 shadow-xs">
+        {/* Subtle red ambient glow behind laptop illustration */}
+        <div className="hidden md:block absolute -top-10 right-8 lg:right-20 w-[340px] h-[340px] rounded-full bg-[#FF4D4D]/15 blur-[90px] pointer-events-none z-0" />
 
-      {/* Pattern Quiz Welcome Banner */}
-      <PatternQuizBanner
-        onStart={() => router.push(routes.oncampus.patternQuiz)}
-        compact
-        className="w-full"
-      />
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 relative z-10 min-h-[140px] sm:min-h-[160px]">
+          {/* Left Column: Welcome greetings */}
+          <div className="space-y-2 max-w-sm sm:max-w-md lg:max-w-lg z-10">
+            <p className="text-[11px] font-bold tracking-[0.16em] text-slate-400 dark:text-[#9CA3AF] uppercase">
+              OnCampus
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-[#F5F5F5] tracking-tight leading-tight">
+              Welcome back,{" "}
+              <span className="text-[#FF4D4D]">{user?.name || "Learner"}</span>!{" "}
+              <span aria-hidden className="inline-block">
+                👋
+              </span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-[#9CA3AF] font-medium leading-relaxed">
+              Ready to master your interviews today?
+            </p>
+          </div>
 
-      {/* Grid for main sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Laptop Graphic on Right */}
+          <div className="hidden md:flex absolute -bottom-6 lg:-bottom-8 right-6 lg:right-16 xl:right-24 z-0 pointer-events-none select-none">
+            <img
+              src="https://ik.imagekit.io/riufvimprm/TBE/dsayatra-dashboard-laptop.png"
+              alt="Laptop Illustration"
+              className="w-[280px] sm:w-[330px] md:w-[380px] lg:w-[430px] h-auto object-contain drop-shadow-[0_15px_35px_rgba(255,77,77,0.25)]"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Middle Grid: Continue Learning + Quiz Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Continue Learning Column */}
-        <div className="space-y-6">
-          <Card className="bg-[#111] border-[#222] rounded-2xl p-6 relative overflow-hidden group h-full">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ff5757]/5 blur-[60px] pointer-events-none" />
-
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-black text-[#f0f0f0] tracking-tight">
-                  Continue Learning
-                </h3>
-                <p className="text-[#606060] text-sm font-medium mt-1 uppercase tracking-widest">
-                  Recent Sheets
-                </p>
+        <div className="bg-white dark:bg-[#111114] border border-slate-200/80 dark:border-[#222227] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-[#202026]">
+              <div className="flex items-center gap-2.5">
+                <Play className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D4D] fill-[#FF4D4D] shrink-0" />
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                    Continue Learning
+                  </h3>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">
+                    Recent Sheets
+                  </p>
+                </div>
               </div>
-              <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
-                <Target className="w-5 h-5 text-[#ff5757]" />
-              </div>
+              <Target className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D4D] shrink-0" />
             </div>
 
             <div className="space-y-3">
               {sheetsLoading ? (
-                <div className="flex items-center justify-center py-10">
+                <div className="flex items-center justify-center py-8">
                   <LoadingSpinner />
                 </div>
               ) : enrolledSheets.length === 0 ? (
-                <div className="text-center py-10 border-2 border-dashed border-[#222] rounded-2xl">
-                  <p className="text-sm font-bold text-[#606060] uppercase tracking-widest">
-                    No sheets studied yet
+                <div className="text-center py-8 border border-dashed border-slate-200 dark:border-[#26262E] rounded-xl space-y-2">
+                  <p className="text-xs font-semibold text-slate-400">
+                    No sheets started yet
                   </p>
+                  <Link
+                    href="/interview-sheets"
+                    className="text-xs font-bold text-[#FF4D4D] hover:underline inline-block"
+                  >
+                    Browse interview sheets →
+                  </Link>
                 </div>
               ) : (
                 enrolledSheets.map((sheet) => (
                   <div
                     key={sheet._id}
-                    className="bg-[#1a1a1a] border border-[#2a2a2a] p-4 rounded-xl hover:border-[#ff5757]/40 transition-all group/item"
+                    className="bg-slate-50 dark:bg-[#18181D] border border-slate-200/60 dark:border-[#26262E] p-4 rounded-xl space-y-3 hover:border-[#FF4D4D]/40 transition-all"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-black text-[#f0f0f0] truncate pr-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate pr-2">
                         {sheet.name}
                       </h4>
-                      <Button
-                        variant="OUTLINE"
-                        className="bg-transparent border-[#333] text-[#a0a0a0] hover:text-[#ff5757] hover:border-[#ff5757]/50 text-xs font-black h-8 px-4 rounded-lg uppercase tracking-tight"
-                        text="Resume"
+                      <button
+                        type="button"
                         onClick={() =>
                           router.push(`/interview-sheets?topic=${sheet.slug}`)
                         }
-                      />
+                        className="border border-[#FF4D4D] text-[#FF4D4D] hover:bg-[#FF4D4D] hover:text-white px-3 py-1 rounded-md text-[11px] font-bold transition-all uppercase tracking-wider cursor-pointer shrink-0"
+                      >
+                        Resume
+                      </button>
                     </div>
-                    {sheet.progress && (
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-                          <span className="text-[#606060]">Progress</span>
-                          <span className="text-[#ff5757]">
-                            {sheet.progress.percentage}%
-                          </span>
-                        </div>
-                        <Progress
-                          value={sheet.progress.percentage}
-                          className="h-1.5 bg-[#252525] rounded-full overflow-hidden"
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between text-[10px] font-bold text-slate-400 tracking-wider uppercase">
+                        <span>Progress</span>
+                        <span className="text-[#FF4D4D]">
+                          {sheet.progress?.percentage ?? 0}%
+                        </span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-200 dark:bg-[#25252D] rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-[#FF4D4D] rounded-full transition-all duration-500"
+                          style={{
+                            width: `${sheet.progress?.percentage ?? 0}%`,
+                          }}
                         />
                       </div>
-                    )}
+                    </div>
                   </div>
                 ))
               )}
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Quiz Insights Column */}
-        <div className="space-y-6">
-          <Card className="bg-[#111] border-[#222] rounded-2xl p-6 h-full relative overflow-hidden group">
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#ff5757]/5 blur-[60px] pointer-events-none" />
-
-            <div className="flex items-center justify-between mb-6">
+        <div className="bg-white dark:bg-[#111114] border border-slate-200/80 dark:border-[#222227] rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-[#202026]">
+            <div className="flex items-center gap-2.5">
+              <BarChart2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF4D4D] shrink-0" />
               <div>
-                <h3 className="text-lg font-black text-[#f0f0f0] tracking-tight">
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                   Quiz Insights
                 </h3>
-                <p className="text-[#606060] text-sm font-medium mt-1 uppercase tracking-widest">
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">
                   Performance Data
                 </p>
               </div>
-              <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
-                <Trophy className="w-5 h-5 text-yellow-500" />
-              </div>
             </div>
+            <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 shrink-0" />
+          </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-4 rounded-xl">
-                <p className="text-xs text-[#606060] uppercase font-black tracking-widest mb-1">
-                  Total Attempts
-                </p>
-                <p className="text-2xl font-black text-[#f0f0f0]">
-                  {quizLoading ? "..." : totalQuizAttempts}
-                </p>
-              </div>
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-4 rounded-xl">
-                <p className="text-xs text-[#606060] uppercase font-black tracking-widest mb-1">
-                  Avg. Score
-                </p>
-                <p className="text-2xl font-black text-[#ff5757]">
-                  {quizLoading ? "..." : averageScore}%
-                </p>
-              </div>
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="bg-slate-50 dark:bg-[#18181D] border border-slate-200/60 dark:border-[#26262E] p-3.5 rounded-xl">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                TOTAL ATTEMPTS
+              </p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+                {quizLoading ? "..." : totalQuizAttempts}
+              </p>
             </div>
+            <div className="bg-slate-50 dark:bg-[#18181D] border border-slate-200/60 dark:border-[#26262E] p-3.5 rounded-xl">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                AVG. SCORE
+              </p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-[#FF4D4D] mt-1">
+                {quizLoading ? "..." : `${averageScore}%`}
+              </p>
+            </div>
+          </div>
 
-            {quizAttempts.length > 0 && (
-              <div className="space-y-3">
-                <p className="text-xs font-black text-[#606060] uppercase tracking-widest">
-                  Recent Performance
+          <div className="space-y-2">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+              RECENT PERFORMANCE
+            </p>
+            {quizAttempts.length === 0 ? (
+              <div className="text-center py-6 border border-dashed border-slate-200 dark:border-[#26262E] rounded-xl space-y-1">
+                <p className="text-xs font-semibold text-slate-400">
+                  No quiz attempts yet
                 </p>
-                <div className="space-y-2">
-                  {quizAttempts.slice(0, 3).map((attempt) => (
-                    <div
-                      key={attempt._id}
-                      className="flex items-center justify-between p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl"
-                    >
-                      <div>
-                        <p className="text-xs font-bold text-[#f0f0f0]">
-                          {attempt.categoryName}
-                        </p>
-                        <p className="text-xs text-[#505050] font-medium">
-                          {new Date(attempt.completedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs font-black text-[#ff5757]">
-                          {attempt.score}%
-                        </p>
-                        <p className="text-xs text-[#505050] font-bold">
-                          {Math.round(attempt.totalTimeSpent / 60)}m
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                <Link
+                  href="/dashboard/quizzes"
+                  className="text-xs font-bold text-[#FF4D4D] hover:underline inline-block"
+                >
+                  Start your first quiz →
+                </Link>
+              </div>
+            ) : (
+              quizAttempts.slice(0, 3).map((attempt) => (
+                <div
+                  key={attempt._id}
+                  className="flex items-center justify-between p-3 bg-slate-50 dark:bg-[#18181D] border border-slate-200/60 dark:border-[#26262E] rounded-xl text-xs"
+                >
+                  <div>
+                    <p className="font-bold text-slate-900 dark:text-white text-xs">
+                      {attempt.categoryName || "Challenge"}
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                      {new Date(attempt.completedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-[#FF4D4D] text-xs">
+                      {attempt.score}%
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">
+                      {Math.round((attempt.totalTimeSpent || 0) / 60)}m
+                    </p>
+                  </div>
                 </div>
-              </div>
+              ))
             )}
-          </Card>
+          </div>
         </div>
       </div>
 
-      {/* Practice Modules */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="h-px bg-[#222] flex-1" />
-          <h3 className="text-xs font-black text-[#505050] uppercase tracking-[0.3em] whitespace-nowrap">
-            Practice Modules
-          </h3>
-          <div className="h-px bg-[#222] flex-1" />
+      {/* 3. Practice Modules Section Header with centered text and divider line */}
+      <div className="relative my-6 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-200 dark:border-[#222227]" />
         </div>
+        <div className="relative bg-[#FAFAFA] dark:bg-[#0A0A0C] px-4">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+            Practice Modules
+          </span>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-[#111] border border-[#222] p-5 rounded-2xl hover:border-[#ff5757]/40 transition-all flex items-center justify-between group">
+      {/* 4. Practice Modules Cards (Quizzes & Interview Sheets) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Quizzes Module */}
+        <div className="bg-white dark:bg-[#111114] border border-slate-200/80 dark:border-[#222227] rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-2xs hover:border-[#FF4D4D]/40 transition-all">
+          <div className="flex items-center gap-3.5">
+            <FileText className="w-6 h-6 text-[#FF4D4D] shrink-0" />
             <div>
-              <h4 className="text-sm font-black text-[#f0f0f0]">Quizzes</h4>
-              <p className="text-[11px] text-[#606060] font-medium mt-0.5">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                Quizzes
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Topic-wise MCQs with instant results
               </p>
             </div>
-            <Button
-              variant="PRIMARY"
-              className="bg-[#1a1a1a] border border-[#2a2a2a] text-[#a0a0a0] group-hover:text-white group-hover:bg-[#ff5757] group-hover:border-transparent transition-all font-black text-xs h-10 px-5 rounded-xl uppercase"
-              text="Explore"
-              onClick={() => router.push("/dashboard/quizzes")}
-            />
           </div>
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/quizzes")}
+            className="px-4 py-2 bg-[#FF4D4D] hover:bg-[#EE3126] text-white font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer shrink-0"
+          >
+            Explore →
+          </button>
+        </div>
 
-          <div className="bg-[#111] border border-[#222] p-5 rounded-2xl hover:border-[#ff5757]/40 transition-all flex items-center justify-between group">
+        {/* Interview Sheets Module */}
+        <div className="bg-white dark:bg-[#111114] border border-slate-200/80 dark:border-[#222227] rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-2xs hover:border-[#FF4D4D]/40 transition-all">
+          <div className="flex items-center gap-3.5">
+            <BookOpen className="w-6 h-6 text-[#FF4D4D] shrink-0" />
             <div>
-              <h4 className="text-sm font-black text-[#f0f0f0]">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
                 Interview Sheets
               </h4>
-              <p className="text-[11px] text-[#606060] font-medium mt-0.5">
-                Practice Q&As and mark progress
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Practice Q&amp;As and track progress
               </p>
             </div>
-            <Button
-              variant="PRIMARY"
-              className="bg-[#1a1a1a] border border-[#2a2a2a] text-[#a0a0a0] group-hover:text-white group-hover:bg-[#ff5757] group-hover:border-transparent transition-all font-black text-xs h-10 px-5 rounded-xl uppercase"
-              text="Open"
-              onClick={() => router.push("/interview-sheets")}
-            />
           </div>
+          <button
+            type="button"
+            onClick={() => router.push("/interview-sheets")}
+            className="px-4 py-2 bg-[#FF4D4D] hover:bg-[#EE3126] text-white font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer shrink-0"
+          >
+            Open →
+          </button>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

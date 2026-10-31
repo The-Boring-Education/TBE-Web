@@ -128,4 +128,6 @@ const handleDeleteChapter = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["PATCH", "DELETE"] },
+});

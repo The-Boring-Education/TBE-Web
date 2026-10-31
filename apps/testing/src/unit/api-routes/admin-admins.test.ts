@@ -10,7 +10,6 @@ vi.mock("@/middleware/requestLogger", () => ({
 
 vi.mock("@/middleware/api", async () => ({
   connectDB: vi.fn(),
-  adminMiddleware: vi.fn().mockResolvedValue(true),
 }));
 
 vi.mock("@/middleware/admin", () => ({

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import api from "@/lib/axios";
-import type { InterviewSheet, UserInterviewPrep } from "@/types";
+import type { InterviewSheet, RoadmapType, UserInterviewPrep } from "@/types";
 interface UserInterviewPrepsResponse {
   data: UserInterviewPrep[];
   pagination: {
@@ -154,7 +154,7 @@ export const useCreateInterviewSheet = () => {
       liveOn: string;
       slug: string;
       meta?: string;
-      roadmap: "Frontend" | "Backend" | "Fullstack" | "Tech";
+      roadmap: RoadmapType;
       isPremium?: boolean;
       price?: number;
       features?: string[];

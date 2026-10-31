@@ -25,13 +25,13 @@ import { pathToFileURL } from "url";
 import yargs from "yargs";
 
 import {
-  type GuardResult,
-  type ScriptEnv,
   assertProdConfirmed,
   cliArgv,
+  type GuardResult,
   loadScriptEnv,
   requireParsedValue,
   resolveScriptEnv,
+  type ScriptEnv,
 } from "./lib/script-env";
 
 export type EnvOption = ScriptEnv;
@@ -41,8 +41,8 @@ export const MIN_ADMIN_SECRET_LENGTH = 16;
 
 export {
   assertProdConfirmed,
-  resolveScriptEnv as resolveEnvOption,
   type GuardResult,
+  resolveScriptEnv as resolveEnvOption,
 };
 
 export const normalizeEmail = (email: string): string =>

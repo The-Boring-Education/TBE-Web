@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { ResourceSearch } from "@/components/ResourceSearch";
 import { getResourceIndex } from "@/lib/content";
-import { getSiteBaseUrl } from "@/lib/site";
+import { getOgImage, getSiteBaseUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 export const revalidate = false;
@@ -20,12 +20,15 @@ export const metadata: Metadata = {
     title: "Search",
     description: searchDescription,
     url: `${getSiteBaseUrl()}/search`,
+    siteName: "TBE Resources",
     type: "website",
+    images: [getOgImage()],
   },
   twitter: {
     card: "summary_large_image",
     title: "Search | TBE Resources",
     description: searchDescription,
+    images: [getOgImage()],
   },
 };
 

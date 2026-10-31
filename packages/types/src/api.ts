@@ -11,6 +11,7 @@ import type {
   CompanyType,
   CourseChapterModel,
   CourseModel,
+  CourseStatusType,
   DifficultyType,
   GoalType,
   InterestEventType,
@@ -214,8 +215,10 @@ export interface UpdateCourseRequestPayloadProps {
 }
 
 export interface AddChapterToCourseRequestProps {
+  key: string;
   name: string;
   content: string;
+  isOptional?: boolean;
 }
 
 export interface UpdateChapterInCourseRequestProps {
@@ -253,6 +256,7 @@ export interface BaseShikshaCourseResponseProps extends Partial<CourseModel> {
   isCompleted?: boolean;
   certificateId?: string;
   _id: string;
+  status?: CourseStatusType;
   progress?: {
     completed: number;
     total: number;

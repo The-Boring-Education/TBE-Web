@@ -20,7 +20,9 @@ export {
   useInfiniteQuery,
   useMutation,
   type UseMutationOptions,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
   type UseQueryOptions,
+  type UseQueryResult,
 } from "@tanstack/react-query";

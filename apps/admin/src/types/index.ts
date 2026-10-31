@@ -257,6 +257,20 @@ export interface QuizSessionProgress {
 }
 
 // Interview Prep Types
+export type RoadmapType =
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
+
+export const ROADMAP_OPTIONS: RoadmapType[] = [
+  "Frontend",
+  "Backend",
+  "Fullstack",
+  "Tech",
+  "DSA",
+  "AI",
+  "Data",
+  "GTM",
+];
+
 export interface InterviewSheet {
   _id: string;
   name: string;
@@ -265,7 +279,7 @@ export interface InterviewSheet {
   meta: string;
   coverImageURL: string;
   liveOn: Date;
-  roadmap: "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA";
+  roadmap: RoadmapType;
   isPremium: boolean;
   price: number;
   discountPercentage?: number;
@@ -549,4 +563,57 @@ export interface AdminUserUpdateData {
   name?: string;
   notes?: string;
   isActive?: boolean;
+}
+
+export interface CourseChapter {
+  _id?: string;
+  key: string;
+  name: string;
+  content: string;
+  isOptional?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Course {
+  _id: string;
+  contentId?: string;
+  name: string;
+  title?: string;
+  slug: string;
+  description: string;
+  meta?: string;
+  coverImageURL: string;
+  liveOn: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  isPremium?: boolean;
+  price?: number;
+  roadmap: RoadmapType;
+  difficultyLevel: "Beginner" | "Intermediate" | "Advanced";
+  features?: string[];
+  chapters?: CourseChapter[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CourseFormData {
+  name: string;
+  slug: string;
+  description: string;
+  meta?: string;
+  coverImageURL: string;
+  liveOn: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  isPremium?: boolean;
+  price?: number;
+  roadmap: RoadmapType;
+  difficultyLevel: "Beginner" | "Intermediate" | "Advanced";
+  features?: string[];
+}
+
+export interface ChapterFormData {
+  key: string;
+  name: string;
+  content: string;
+  isOptional?: boolean;
 }

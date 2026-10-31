@@ -71,7 +71,7 @@ export const useDsaTopicSummaries = (
         });
       return rows;
     },
-    enabled: !!userId,
+    enabled: true,
     ...CACHE_TIMES.STANDARD,
   });
 };

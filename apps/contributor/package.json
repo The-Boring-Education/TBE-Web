@@ -1,7 +1,7 @@
 {
   "name": "@tbe/contributor",
   "author": "The Boring Education",
-  "homepage": "https://contributors.theboringeducation.com",
+  "homepage": "https://contributor.theboringeducation.com",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,6 +14,11 @@
   },
   "dependencies": {
     "@tbe/typescript-config": "workspace:*",
+    "@tbe/auth": "workspace:*",
+    "@tbe/constants": "workspace:*",
+    "@tbe/query": "workspace:*",
+    "@tbe/types": "workspace:*",
+    "lucide-react": "^0.462.0",
     "next": "14.2.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

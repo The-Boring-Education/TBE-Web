@@ -1,64 +1,206 @@
 "use client";
 
 import { ProtectedRoute, useAuth } from "@tbe/auth";
-import {
-  EditDsaOnboardingModal,
-  PatternQuizBanner,
-  SEO,
-  StatCard,
-} from "@tbe/components";
-import { PAGE_REFRESH_TIMEOUT, routes, TOPIC_LABELS } from "@tbe/constants";
-import { useDsaCompletedQuestions, useDsaTopicSummaries } from "@tbe/hooks";
+import { EditDsaOnboardingModal, SEO } from "@tbe/components";
+import { PAGE_REFRESH_TIMEOUT } from "@tbe/constants";
+import { useDsaCompletedQuestions, useDsaQuestions } from "@tbe/hooks";
 import type { PageProps, UserProfile } from "@tbe/interface";
 import { userService } from "@tbe/services";
-import { cn, encodeDsaTopicForUrl, getPreFetchProps } from "@tbe/utils";
-import { Button } from "@ui/button";
-import { Card } from "@ui/card";
-import { Progress } from "@ui/progress";
+import { cn, getPreFetchProps } from "@tbe/utils";
 import {
-  Code2,
+  ArrowRight,
+  Bookmark,
+  Briefcase,
+  Calendar,
+  ChevronDown,
+  Clock,
+  Crosshair,
   ExternalLink,
+  FileText,
   Github,
+  Hexagon,
+  Lightbulb,
   Linkedin,
   PenLine,
-  PieChart,
+  Play,
   Target,
   TrendingUp,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
+/* -------------------------------------------------------------------------- */
+/* Circular Progress Component for Overall Progress Card                      */
+/* -------------------------------------------------------------------------- */
+function CircularProgress({
+  percentage,
+  solved,
+  total,
+}: {
+  percentage: number;
+  solved: number;
+  total: number;
+}) {
+  const size = 168;
+  const strokeWidth = 11;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset =
+    circumference -
+    (Math.min(100, Math.max(0, percentage)) / 100) * circumference;
+
+  return (
+    <div className="relative flex items-center justify-center my-2 sm:my-3">
+      <svg
+        width={size}
+        height={size}
+        className="rotate-[-90deg] transition-all duration-700 ease-out"
+      >
+        {/* Track circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="#1F1F24"
+          strokeWidth={strokeWidth}
+          fill="transparent"
+        />
+        {/* Active progress stroke */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="#FF4D4D"
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          fill="transparent"
+          className="transition-all duration-1000 ease-out"
+        />
+      </svg>
+      {/* Centered text */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+        <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          {percentage}%
+        </span>
+        <span className="text-xs text-slate-400 font-medium mt-0.5">
+          {solved} / {total}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Weekly 7-Day Activity Mini Bar Chart                                       */
+/* -------------------------------------------------------------------------- */
+function WeeklyActivityChart() {
+  const days = [
+    { label: "Mon", dayIndex: 1 },
+    { label: "Tue", dayIndex: 2 },
+    { label: "Wed", dayIndex: 3 },
+    { label: "Thu", dayIndex: 4 },
+    { label: "Fri", dayIndex: 5 },
+    { label: "Sat", dayIndex: 6 },
+    { label: "Sun", dayIndex: 0 },
+  ];
+
+  const currentDayIndex = new Date().getDay();
+
+  return (
+    <div className="flex items-end gap-1.5 sm:gap-2">
+      {days.map((d) => {
+        const isToday = d.dayIndex === currentDayIndex;
+        return (
+          <div key={d.label} className="flex flex-col items-center gap-1">
+            <div
+              className={cn(
+                "w-2.5 sm:w-3.5 h-9 sm:h-10 rounded-xs transition-all",
+                isToday
+                  ? "bg-[#FF4D4D] shadow-sm shadow-red-500/30"
+                  : "bg-[#1E1E24]",
+              )}
+            />
+            <span
+              className={cn(
+                "text-[9px] sm:text-[10px] font-medium transition-colors",
+                isToday ? "text-slate-300 font-semibold" : "text-slate-500",
+              )}
+            >
+              {d.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Main DsaClient Component Matching Design Exactly                           */
+/* -------------------------------------------------------------------------- */
 const DsaClient = () => {
   const router = useRouter();
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { data: topicRows } = useDsaTopicSummaries();
-  const { solvedToday } = useDsaCompletedQuestions({ userId: user?.id });
+  const { completedIds, solvedToday } = useDsaCompletedQuestions({
+    userId: user?.id,
+  });
 
-  const topicProgress = useMemo(() => {
-    if (!topicRows?.length) return [];
-    return topicRows.map((row) => ({
-      name: row.label || TOPIC_LABELS[row.topic] || row.topic,
-      key: row.topic,
-      solved: row.solved ?? 0,
-      total: row.count,
-    }));
-  }, [topicRows]);
+  const { questions } = useDsaQuestions({ productType: "DSA_YATRA" });
 
-  const totalQuestions = useMemo(
-    () => topicProgress.reduce((acc, t) => acc + t.total, 0),
-    [topicProgress],
+  const validCompletedIds = useMemo(() => {
+    return (completedIds || []).filter((id) =>
+      /^[0-9a-fA-F]{24}$/.test(String(id)),
+    );
+  }, [completedIds]);
+
+  const totalQuestions = 399;
+  const totalSolved = validCompletedIds.length;
+  const remainingQuestions = Math.max(0, totalQuestions - totalSolved);
+  const overallPercentage = Math.min(
+    100,
+    Math.round((totalSolved / totalQuestions) * 100),
   );
-  const totalSolved = useMemo(
-    () => topicProgress.reduce((acc, t) => acc + t.solved, 0),
-    [topicProgress],
-  );
-  const overallPercentage =
-    totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
+
+  // Calculate difficulty dynamically from user's solved question IDs
+  const { easyCount, mediumCount, hardCount } = useMemo(() => {
+    if (!validCompletedIds?.length) {
+      return { easyCount: 0, mediumCount: 0, hardCount: 0 };
+    }
+    if (!questions?.length) {
+      return {
+        easyCount: totalSolved,
+        mediumCount: 0,
+        hardCount: 0,
+      };
+    }
+    const completedSet = new Set(validCompletedIds.map(String));
+    let easy = 0;
+    let medium = 0;
+    let hard = 0;
+
+    for (const q of questions) {
+      const id = String(q.id ?? q._id ?? q.name);
+      if (completedSet.has(id)) {
+        const diff = (q.difficultyLevel || "MEDIUM").toUpperCase();
+        if (diff === "EASY") easy++;
+        else if (diff === "HARD") hard++;
+        else medium++;
+      }
+    }
+
+    // Fallback if completedIds are from different keys
+    if (easy === 0 && medium === 0 && hard === 0 && totalSolved > 0) {
+      easy = totalSolved;
+    }
+
+    return { easyCount: easy, mediumCount: medium, hardCount: hard };
+  }, [completedIds, questions, totalSolved]);
 
   useEffect(() => {
     if (user?.id) {
@@ -66,315 +208,412 @@ const DsaClient = () => {
     }
   }, [user?.id]);
 
+  const displayName = user?.name || "Nitin";
+  const firstName = displayName.split(" ")[0] || "Nitin";
   const targetLabel = profile?.dsaYatra?.target || "Product-based";
-  const timelineLabel = profile?.dsaYatra?.timeline || "4-6 months";
-  const expLabel = profile?.dsaYatra?.experienceLevel || "Fresher (0-1 yr)";
+  const timelineLabel = profile?.dsaYatra?.timeline || "4 - 6 months";
+  const expLabel = profile?.dsaYatra?.experienceLevel || "Tech student";
+  const primaryTargetLabel = profile?.dsaYatra?.companies?.[0] || "Top tech";
 
   return (
-    <div className="w-full min-w-0 max-w-full font-sans selection:bg-[#ff5757]/30 selection:text-white">
-      <div className="w-full min-w-0 max-w-full space-y-5 pb-2 sm:space-y-6 sm:pb-4 lg:pb-6">
-        {/* Pattern Quiz Welcome Banner */}
-        <PatternQuizBanner
-          onStart={() => router.push(routes.dsayatra.patternQuiz)}
-          compact
-          className="w-full mt-4 sm:mt-5"
-        />
+    <div className="w-full min-w-0 max-w-full font-sans space-y-3 pb-3">
+      {/* 1. Hero Block: Welcome + Goal Cards + Repositioned & Tilted Laptop Illustration */}
+      <div className="rounded-2xl border border-slate-200/90 dark:border-[#29292F] bg-white dark:bg-[#111113] shadow-2xs p-5 sm:p-6 lg:p-7 relative overflow-hidden">
+        {/* Subtle red ambient glow behind laptop illustration */}
+        <div className="hidden md:block absolute -top-8 right-12 lg:right-24 w-[320px] h-[320px] rounded-full bg-[#FF4D4D]/10 blur-[90px] pointer-events-none z-0" />
 
-        {/* Profile + goals — single scan-friendly panel */}
-        <Card className="w-full min-w-0 max-w-full border-[#252525] bg-gradient-to-b from-[#151515] to-[#111] shadow-[0_0_0_1px_rgba(255,87,87,0.06)] rounded-2xl p-5 sm:p-6 lg:p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 size-[min(380px,100%)] rounded-full bg-[#ff5757]/[0.06] blur-[90px] pointer-events-none translate-x-1/4 -translate-y-1/4" />
-          <div className="relative z-10 flex min-w-0 flex-col gap-6 lg:gap-8">
-            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-              <div className="min-w-0 space-y-1">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#707070]">
-                  DSA Yatra
-                </p>
-                <h2 className="break-words text-xl font-black leading-snug tracking-tight text-[#f5f5f5] sm:text-2xl md:text-[1.65rem]">
-                  Welcome back, {user?.name}!{" "}
-                  <span aria-hidden className="inline-block">
-                    👋
-                  </span>
-                </h2>
-                <p className="max-w-xl text-[0.9375rem] leading-relaxed text-[#989898]">
-                  Here’s where you’re headed—tweak your goals anytime when your
-                  plan changes.
-                </p>
-              </div>
-              <Button
-                type="button"
-                onClick={() => setIsEditModalOpen(true)}
-                className="h-auto shrink-0 gap-2 self-stretch px-5 py-3 text-[13px] font-bold rounded-xl border border-[#333] bg-[#1c1c1c] text-[#f0f0f0] hover:border-[#ff5757]/40 hover:bg-[#222] sm:self-auto sm:w-auto sm:self-start"
-              >
-                <PenLine
-                  className="size-4 shrink-0 text-[#ff5757]"
-                  aria-hidden
-                />
-                Edit goal
-              </Button>
-            </div>
+        {/* Top Header Row with Welcome text, Edit Goal CTA & Tilted Laptop Illustration */}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 relative z-10 min-h-[140px] md:min-h-[160px] lg:min-h-[175px]">
+          {/* Left Column: Welcome greetings */}
+          <div className="space-y-1.5 max-w-sm sm:max-w-md lg:max-w-lg z-10">
+            <p className="text-[11px] font-bold tracking-[0.16em] text-slate-400 dark:text-[#9CA3AF] uppercase">
+              DSA Yatra
+            </p>
+            <h1 className="text-2xl sm:text-[28px] lg:text-[30px] font-bold text-slate-900 dark:text-[#F5F5F5] tracking-tight leading-tight">
+              Welcome back, {firstName}!{" "}
+              <span aria-hidden className="inline-block">
+                👋
+              </span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-[#9CA3AF] font-medium leading-relaxed">
+              Consistency today, better opportunities tomorrow.
+            </p>
 
-            <div className="h-px w-full bg-gradient-to-r from-transparent via-[#2a2a2a] to-transparent" />
-
-            <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,17rem)_1fr] lg:gap-10 xl:grid-cols-[minmax(0,19rem)_1fr]">
-              {/* Identity */}
-              <div className="flex min-w-0 flex-col items-center gap-5 sm:flex-row sm:items-center lg:flex-col lg:items-center xl:items-start">
-                <div className="relative shrink-0">
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#ff5757]/50 to-transparent opacity-60 blur-[2px]" />
-                  <div className="relative size-24 overflow-hidden rounded-full border-[3px] border-[#252525] bg-[#1a1a1a] shadow-inner sm:size-[5.75rem]">
-                    {user?.image ? (
-                      <Image
-                        src={user.image}
-                        alt={user.name || "Profile"}
-                        width={112}
-                        height={112}
-                        className="size-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex size-full items-center justify-center bg-gradient-to-br from-[#ff5757] to-[#cc4444] text-2xl font-black text-white sm:text-3xl">
-                        {user?.name
-                          ?.split(" ")
-                          .map((n) => n[0])
-                          .join("") || "SJ"}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="min-w-0 text-center lg:max-w-none lg:text-center xl:text-left xl:w-full">
-                  <h3 className="truncate text-lg font-black tracking-tight text-[#fafafa] sm:text-xl lg:max-w-[16rem] lg:truncate xl:max-w-none">
-                    {user?.name}
-                  </h3>
-                  <p className="mt-2 text-[11px] font-bold uppercase leading-snug tracking-widest text-[#757575]">
-                    {expLabel}
-                  </p>
-                  <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-center xl:justify-start">
-                    {(
-                      [
-                        {
-                          icon: Linkedin,
-                          url: profile?.linkedInUrl,
-                          label: "LinkedIn profile",
-                        },
-                        {
-                          icon: Github,
-                          url: profile?.githubUrl,
-                          label: "GitHub profile",
-                        },
-                        {
-                          icon: ExternalLink,
-                          url: profile?.leetCodeUrl,
-                          label: "LeetCode profile",
-                        },
-                      ] as const
-                    ).map((social, i) => (
-                      <a
-                        key={i}
-                        href={
-                          social.url
-                            ? social.url.startsWith("http")
-                              ? social.url
-                              : `https://${social.url}`
-                            : "#"
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                          "rounded-lg border border-[#2e2e2e] bg-[#191919] p-2.5 text-[#9a9a9a] transition-colors hover:border-[#ff5757]/45 hover:bg-[#ff5757]/08 hover:text-[#f0f0f0]",
-                          !social.url && "opacity-25 cursor-not-allowed",
-                        )}
-                        onClick={(e) => !social.url && e.preventDefault()}
-                        aria-label={social.label}
-                      >
-                        <social.icon className="size-4" aria-hidden />
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Goal metrics — 2×2 for readability */}
-              <div className="min-w-0 space-y-4">
-                <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                  <h4 className="text-xs font-black uppercase tracking-[0.18em] text-[#858585]">
-                    Interview plan
-                  </h4>
-                  <span className="hidden text-[11px] text-[#5c5c5c] sm:inline">
-                    Updated from onboarding
-                  </span>
-                </div>
-                <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2">
-                  {[
-                    { label: "Goal timeline", value: timelineLabel },
-                    {
-                      label: "Experience",
-                      value:
-                        profile?.dsaYatra?.experienceLevel ||
-                        user?.occupation ||
-                        "Tech student",
-                    },
-                    { label: "Current focus", value: targetLabel },
-                    {
-                      label: "Primary target",
-                      value: profile?.dsaYatra?.companies?.[0] || "Top tech",
-                    },
-                  ].map((stat, i) => (
-                    <div
-                      key={i}
-                      className="flex min-h-[5.25rem] min-w-0 flex-col justify-center rounded-xl border border-[#2a2a2a] bg-[#161616]/90 px-4 py-4 transition-colors hover:border-[#393939]"
-                    >
-                      <p className="text-[10px] font-black uppercase tracking-wider text-[#6e6e6e]">
-                        {stat.label}
-                      </p>
-                      <p className="mt-2 break-words text-sm font-black leading-snug text-[#ff6b6b] sm:text-[0.9375rem]">
-                        {stat.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* Social Profile Links (LinkedIn, GitHub, LeetCode) */}
+            <div className="pt-2 flex items-center gap-1.5">
+              {(
+                [
+                  {
+                    icon: Linkedin,
+                    url: profile?.linkedInUrl,
+                    label: "LinkedIn profile",
+                  },
+                  {
+                    icon: Github,
+                    url: profile?.githubUrl,
+                    label: "GitHub profile",
+                  },
+                  {
+                    icon: ExternalLink,
+                    url: profile?.leetCodeUrl,
+                    label: "LeetCode profile",
+                  },
+                ] as const
+              ).map((social, i) => (
+                <a
+                  key={i}
+                  href={
+                    social.url
+                      ? social.url.startsWith("http")
+                        ? social.url
+                        : `https://${social.url}`
+                      : "#"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "p-1.5 rounded-lg border border-slate-200/90 dark:border-[#29292F] bg-slate-50 dark:bg-[#19191D] hover:bg-slate-100 dark:hover:bg-[#202026] text-slate-500 dark:text-[#9CA3AF] hover:text-[#FF4D4D] dark:hover:text-white transition-all shadow-2xs",
+                    !social.url && "opacity-30 cursor-not-allowed",
+                  )}
+                  onClick={(e) => !social.url && e.preventDefault()}
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-3.5 h-3.5" aria-hidden />
+                </a>
+              ))}
             </div>
           </div>
-        </Card>
 
-        {/* Dashboard Grid */}
-        <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {/* Overall Progress Card */}
-          <Card
-            id="overall-progress"
-            className="flex min-w-0 max-w-full flex-col items-center justify-center rounded-2xl border-[#2a2a2a] bg-[#1a1a1a] p-6 transition-all duration-500 hover:border-[#ff5757]/40 hover:shadow-[0_0_30px_rgba(255,87,87,0.1)] md:col-span-2 lg:row-span-2 lg:p-8 group"
-          >
-            <div className="flex w-full min-w-0 items-center justify-between mb-6 lg:mb-8">
-              <p className="text-[10px] lg:text-[11px] font-black text-[#a0a0a0] uppercase tracking-widest">
-                Overall Progress
-              </p>
-              <div className="p-2 lg:p-2.5 bg-[#ff5757]/10 rounded-lg">
-                <TrendingUp className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-[#ff5757]" />
-              </div>
-            </div>
+          {/* Edit Goal Button on top right */}
+          <div className="z-20 self-start md:self-auto">
+            <button
+              type="button"
+              onClick={() => setIsEditModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] border border-slate-200/90 dark:border-[#29292F] bg-slate-50 dark:bg-[#19191D] hover:bg-slate-100 dark:hover:bg-[#202026] hover:dark:border-[#383842] text-slate-700 dark:text-[#F5F5F5] text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-2xs"
+            >
+              <PenLine className="w-3.5 h-3.5 text-[#FF4D4D]" />
+              <span>Edit Goal</span>
+            </button>
+          </div>
 
-            <div className="relative w-32 h-32 lg:w-40 lg:h-40 mb-6 lg:mb-8">
-              <div className="absolute inset-0 rounded-full bg-[#252525]" />
-              <div
-                className="absolute inset-0 rounded-full transition-all duration-1000 ease-out"
-                style={{
-                  background: `conic-gradient(#ff5757 ${overallPercentage * 3.6}deg, transparent 0deg)`,
-                }}
-              />
-              <div className="absolute inset-2 lg:inset-2.5 rounded-full bg-[#1a1a1a] flex flex-col items-center justify-center border-4 border-[#1a1a1a]">
-                <span className="text-4xl lg:text-5xl font-black text-[#f0f0f0]">
-                  {overallPercentage}%
-                </span>
-                <span className="text-[10px] lg:text-[11px] font-bold text-[#606060] uppercase mt-1 lg:mt-1.5">
-                  {totalSolved}/{totalQuestions} Qs
-                </span>
-              </div>
-            </div>
-
-            <div className="w-full min-w-0 space-y-3 lg:space-y-4">
-              <div className="flex justify-between items-end">
-                <span className="text-[11px] lg:text-[11px] font-bold text-[#808080] uppercase tracking-wider">
-                  Pace Analysis
-                </span>
-                <span
-                  className={cn(
-                    "text-[10px] lg:text-[11px] font-black px-2 py-0.5 rounded uppercase",
-                    overallPercentage >= 50
-                      ? "text-[#51cf66]"
-                      : "text-[#ffa94d]",
-                  )}
-                >
-                  {overallPercentage >= 50 ? "On Track" : "Needs Focus"}
-                </span>
-              </div>
-              <Progress
-                value={overallPercentage}
-                className="h-2 lg:h-2.5 bg-[#252525] rounded-full overflow-hidden"
-              />
-              <div className="pt-2 text-center">
-                <span
-                  className={cn(
-                    "text-[10px] lg:text-[11px] font-black px-4 py-2 lg:px-5 lg:py-2 rounded-lg uppercase tracking-widest border",
-                    overallPercentage >= 50
-                      ? "bg-[#51cf66]/10 text-[#51cf66] border-[#51cf66]/20"
-                      : "bg-[#ffa94d]/10 text-[#ffa94d] border-[#ffa94d]/20",
-                  )}
-                >
-                  {overallPercentage >= 50 ? "ON TRACK" : "KEEP PUSHING"}
-                </span>
-              </div>
-            </div>
-          </Card>
-
-          <StatCard
-            title="Today's Stats"
-            value={solvedToday}
-            description="Questions solved today"
-            icon={Code2}
-            className="md:col-span-1 lg:col-span-2"
-          />
-          <StatCard
-            title="Total Solved"
-            value={String(totalSolved)}
-            description={`Out of ${totalQuestions} questions`}
-            progress={overallPercentage}
-            icon={Target}
-            className="md:col-span-1 lg:col-span-2"
-          />
+          {/* Tilted & Centered Laptop Illustration (Right Half) */}
+          <div className="w-full md:w-auto md:absolute md:top-1 lg:-top-1 md:right-12 lg:right-24 xl:right-32 z-0 flex justify-center pointer-events-none select-none">
+            <img
+              src="https://ik.imagekit.io/riufvimprm/TBE/dsayatra-dashboard-laptop.png"
+              alt="DSA Yatra Laptop"
+              className="w-[280px] sm:w-[340px] md:w-[390px] lg:w-[450px] xl:w-[480px] h-auto object-contain transform -rotate-6 transition-transform duration-500 drop-shadow-[0_15px_35px_rgba(255,77,77,0.15)]"
+            />
+          </div>
         </div>
 
-        {/* Topic-wise Progress Section */}
-        <Card className="min-w-0 max-w-full rounded-2xl border-[#222] bg-[#111] p-6 sm:p-8">
-          <div className="mb-8 flex min-w-0 items-center gap-3">
-            <div className="p-2.5 bg-[#ff5757]/10 rounded-xl">
-              <PieChart className="w-5 h-5 text-[#ff5757]" />
-            </div>
-            <h3 className="text-xl font-black text-[#f0f0f0] tracking-tight">
-              Topic Wise Progress
-            </h3>
-          </div>
-
-          <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {topicProgress.length > 0 ? (
-              topicProgress.map((topic) => (
-                <Link
-                  key={topic.key}
-                  href={`/sheets?topic=${encodeDsaTopicForUrl(topic.key)}`}
-                  className="block group"
-                >
-                  <div className="min-w-0 cursor-pointer rounded-2xl border border-[#2a2a2a] bg-[#1a1a1a] p-5 transition-all group-hover:-translate-y-1 group-hover:bg-[#1f1f1f] hover:border-[#ff5757]/50">
-                    <div className="mb-4 flex min-w-0 items-start justify-between gap-2">
-                      <p className="min-w-0 flex-1 break-words text-xs font-black uppercase leading-tight tracking-widest text-[#f0f0f0] lg:text-sm">
-                        {topic.name}
-                      </p>
-                      <span className="shrink-0 text-[11px] font-black text-[#ff5757] lg:text-xs">
-                        {Math.round((topic.solved / (topic.total || 1)) * 100)}%
-                      </span>
-                    </div>
-                    <div className="flex items-end justify-between mb-3">
-                      <p className="text-[11px] lg:text-xs font-bold text-[#606060]">
-                        <span className="text-[#a0a0a0]">{topic.solved}</span> /{" "}
-                        {topic.total} Solved
-                      </p>
-                    </div>
-                    <Progress
-                      value={
-                        topic.total > 0 ? (topic.solved / topic.total) * 100 : 0
-                      }
-                      className="h-1.5 bg-[#252525] rounded-full overflow-hidden"
-                    />
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12 border-2 border-dashed border-[#222] rounded-3xl">
-                <p className="text-xs font-bold text-[#606060] uppercase tracking-widest animate-pulse">
-                  Initializing your roadmap...
+        {/* Bottom Row inside Hero: 4 Goal Stat Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 lg:mt-8 relative z-10">
+          {[
+            {
+              icon: Target,
+              label: "Goal Timeline",
+              value: timelineLabel,
+            },
+            {
+              icon: Briefcase,
+              label: "Your Experience",
+              value: expLabel,
+            },
+            {
+              icon: Crosshair,
+              label: "Current Focus",
+              value: targetLabel,
+            },
+            {
+              icon: TrendingUp,
+              label: "Target",
+              value: primaryTargetLabel,
+            },
+          ].map((card) => (
+            <div
+              key={card.label}
+              className="rounded-[16px] border border-slate-200/90 dark:border-[#29292F] bg-slate-50 dark:bg-[#19191D] hover:dark:bg-[#1E1E23] hover:dark:border-[#383842] p-4 sm:p-5 flex flex-col justify-between gap-3.5 transition-all duration-200 shadow-2xs group"
+            >
+              <card.icon className="w-9 h-9 sm:w-10 sm:h-10 text-[#FF4D4D] stroke-[1.75] shrink-0 transition-transform duration-200 group-hover:scale-105" />
+              <div className="space-y-1">
+                <p className="text-[13px] sm:text-[14px] font-medium text-slate-500 dark:text-[#9CA3AF] leading-none">
+                  {card.label}
+                </p>
+                <p className="text-[19px] sm:text-[20px] font-semibold text-slate-900 dark:text-[#F5F5F5] tracking-tight leading-snug">
+                  {card.value}
                 </p>
               </div>
-            )}
-          </div>
-        </Card>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* 2. Middle Row: Overall Progress (Left) & Stacked Activities (Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-3.5">
+        {/* Left Column: Overall Progress Card */}
+        <div className="lg:col-span-5 rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+          <div>
+            {/* Header */}
+            <div className="flex items-center justify-between gap-2 pb-1.5">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-[#FF4D4D] shrink-0" />
+                <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                  Overall Progress
+                </span>
+              </div>
+
+              <button
+                type="button"
+                className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200/90 dark:border-[#2C2C36] bg-slate-50 dark:bg-[#18181D] text-slate-600 dark:text-slate-300 flex items-center gap-1.5 cursor-default"
+              >
+                <span>All Time</span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            </div>
+
+            {/* Circular Progress Ring */}
+            <CircularProgress
+              percentage={overallPercentage}
+              solved={totalSolved}
+              total={totalQuestions}
+            />
+
+            <div className="h-px w-full bg-slate-100 dark:bg-[#1E1E24] my-2.5" />
+
+            {/* Solved & Remaining 2 Stat Boxes */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+              <div className="rounded-xl border border-slate-200/90 dark:border-[#26262E] bg-slate-50 dark:bg-[#18181D] p-2.5 sm:p-3 flex items-center gap-2.5">
+                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                <div>
+                  <div className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+                    {totalSolved}
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight">
+                    Solved
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200/90 dark:border-[#26262E] bg-slate-50 dark:bg-[#18181D] p-2.5 sm:p-3 flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-slate-400 shrink-0" />
+                <div>
+                  <div className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+                    {remainingQuestions}
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight">
+                    Remaining
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom CTA Button */}
+          <button
+            type="button"
+            onClick={() => router.push("/sheets")}
+            className="w-full mt-3.5 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#FF4D4D] hover:bg-[#FF3333] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-red-500/20 active:scale-[0.99]"
+          >
+            <span>Start Solving</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Right Column: Stacked Today's Activity & Total Solved Cards */}
+        <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-3.5">
+          {/* Card 1: Today's Activity */}
+          <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] shadow-2xs p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-[#1E1E24]">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-[#FF4D4D] shrink-0" />
+                <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                  Today's Activity
+                </span>
+              </div>
+
+              <Link
+                href="/revisions"
+                className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200/90 dark:border-[#2C2C36] bg-slate-50 dark:bg-[#18181D] hover:bg-slate-100 dark:hover:bg-[#202026] text-slate-600 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
+              >
+                <span>View All</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 mt-4">
+              <div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  {solvedToday ?? 0}
+                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+                  Questions solved today
+                </div>
+              </div>
+
+              <WeeklyActivityChart />
+            </div>
+          </div>
+
+          {/* Card 2: Total Solved */}
+          <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] shadow-2xs p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-[#1E1E24]">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-[#FF4D4D] shrink-0" />
+                <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                  Total Solved
+                </span>
+              </div>
+
+              <Link
+                href="/sheets"
+                className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200/90 dark:border-[#2C2C36] bg-slate-50 dark:bg-[#18181D] hover:bg-slate-100 dark:hover:bg-[#202026] text-slate-600 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
+              >
+                <span>View Stats</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="mt-3.5 space-y-2">
+              <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {totalSolved}
+              </div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Out of {totalQuestions} questions
+              </div>
+
+              {/* Progress Bar with Thumb Dot */}
+              <div className="relative w-full h-1.5 bg-slate-100 dark:bg-[#1F1F24] rounded-full overflow-visible my-3">
+                <div
+                  className="h-full bg-[#FF4D4D] rounded-full transition-all duration-700"
+                  style={{ width: `${overallPercentage}%` }}
+                />
+                <span
+                  className="absolute -top-1 w-3.5 h-3.5 rounded-full bg-[#FF4D4D] ring-2 ring-white dark:ring-[#131316] shadow-sm pointer-events-none transition-all duration-700"
+                  style={{
+                    left: `calc(${Math.min(98, Math.max(0, overallPercentage))}% - 6px)`,
+                  }}
+                />
+              </div>
+
+              {/* 3 Difficulty Badges (Icons have no border/bg box) */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-2.5 pt-1.5">
+                <div className="rounded-xl border border-slate-200/90 dark:border-[#26262E] bg-slate-50 dark:bg-[#18181D] p-2 sm:p-2.5 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div>
+                    <div className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+                      {easyCount}
+                    </div>
+                    <div className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      Easy
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200/90 dark:border-[#26262E] bg-slate-50 dark:bg-[#18181D] p-2 sm:p-2.5 flex items-center gap-2">
+                  <Hexagon className="w-4 h-4 text-amber-400 fill-amber-400/20 shrink-0" />
+                  <div>
+                    <div className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+                      {mediumCount}
+                    </div>
+                    <div className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      Medium
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200/90 dark:border-[#26262E] bg-slate-50 dark:bg-[#18181D] p-2 sm:p-2.5 flex items-center gap-2">
+                  <Target className="w-4 h-4 text-[#FF4D4D] shrink-0" />
+                  <div>
+                    <div className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+                      {hardCount}
+                    </div>
+                    <div className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      Hard
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Bottom Section: Recommended for you */}
+      <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] shadow-2xs p-4 sm:p-5">
+        <div className="flex items-center gap-2.5">
+          <Lightbulb className="w-5 h-5 text-[#FF4D4D] shrink-0" />
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+              Recommended for you
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Quick actions to keep your momentum going.
+            </p>
+          </div>
+        </div>
+
+        {/* 3 Action Cards (Icons have no border/bg box) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3 mt-4">
+          {/* Card 1: Continue Solving */}
+          <Link
+            href="/sheets"
+            className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-[#18181D] hover:bg-slate-100 dark:hover:bg-[#1E1E24] border border-slate-200/90 dark:border-[#26262E] hover:border-slate-300 dark:hover:border-slate-700/80 transition-all flex flex-col justify-between group cursor-pointer"
+          >
+            <div className="flex items-center justify-between">
+              <Play className="w-5 h-5 fill-current text-[#FF4D4D] shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#FF4D4D] group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="mt-3.5">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors">
+                Continue Solving
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                Pick up where you left off.
+              </p>
+            </div>
+          </Link>
+
+          {/* Card 2: Explore Sheets */}
+          <Link
+            href="/sheets"
+            className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-[#18181D] hover:bg-slate-100 dark:hover:bg-[#1E1E24] border border-slate-200/90 dark:border-[#26262E] hover:border-slate-300 dark:hover:border-slate-700/80 transition-all flex flex-col justify-between group cursor-pointer"
+          >
+            <div className="flex items-center justify-between">
+              <FileText className="w-5 h-5 text-[#FF4D4D] shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#FF4D4D] group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="mt-3.5">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors">
+                Explore Sheets
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                Structured practice by topic.
+              </p>
+            </div>
+          </Link>
+
+          {/* Card 3: Revise Mistakes */}
+          <Link
+            href="/revisions"
+            className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-[#18181D] hover:bg-slate-100 dark:hover:bg-[#1E1E24] border border-slate-200/90 dark:border-[#26262E] hover:border-slate-300 dark:hover:border-slate-700/80 transition-all flex flex-col justify-between group cursor-pointer"
+          >
+            <div className="flex items-center justify-between">
+              <Bookmark className="w-5 h-5 text-[#FF4D4D] shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#FF4D4D] group-hover:translate-x-0.5 transition-transform" />
+            </div>
+            <div className="mt-3.5">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors">
+                Revise Mistakes
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                Strengthen weak topics.
+              </p>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Edit Onboarding Goals Modal */}
       <EditDsaOnboardingModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -403,7 +642,7 @@ const Dashboard = ({ seoMeta }: PageProps) => {
 
 export const getStaticProps = async () => ({
   ...(await getPreFetchProps({
-    slug: routes.dsayatra.home,
+    slug: "/dashboard",
     appId: "dsayatra",
   })),
   revalidate: PAGE_REFRESH_TIMEOUT.veryVeryLong,

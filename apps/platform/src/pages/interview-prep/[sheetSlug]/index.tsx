@@ -563,6 +563,8 @@ const SheetPage = ({
                     }
                     frequency={currentQuestion?.frequency}
                     priority={currentQuestion?.priority}
+                    difficulty={currentQuestion?.difficulty}
+                    role={sheet?.roadmap}
                     companyTypes={currentQuestion?.companyTypes}
                     theme='light'
                     isStarred={isStarred}

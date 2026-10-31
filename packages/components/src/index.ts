@@ -12,12 +12,38 @@ export { default as AdminStats } from "./admin/AdminStats";
 export { default as AdminTable } from "./admin/AdminTable";
 
 // Learn Page Components
+export type {
+  CourseChapter,
+  CourseLearningSpaceProps,
+} from "./learn/CourseLearningSpace";
+export { CourseLearningSpace } from "./learn/CourseLearningSpace";
+export type {
+  LearnBreadcrumbItem,
+  LearnBreadcrumbProps,
+} from "./learn/LearnBreadcrumb";
+export { LearnBreadcrumb } from "./learn/LearnBreadcrumb";
+export type { LearnButtonProps } from "./learn/LearnButton";
+export { LearnButton } from "./learn/LearnButton";
 export type { LearnDashboardContainerProps } from "./learn/LearnDashboardContainer";
 export { LearnDashboardContainer } from "./learn/LearnDashboardContainer";
 export type { PersonalizationLoaderProps } from "./learn/PersonalizationLoader";
 export { PersonalizationLoader } from "./learn/PersonalizationLoader";
 export type { PersonalizationQuizData } from "./learn/PersonalizationQuiz";
 export { PersonalizationQuiz } from "./learn/PersonalizationQuiz";
+export {
+  getQuizLogo,
+  prefetchQuizData,
+  QuizCatalogSpace,
+} from "./learn/QuizCatalogSpace";
+export { QuizPlaySpace } from "./learn/QuizPlaySpace";
+export type {
+  SheetLearningSpaceProps,
+  SheetQuestion,
+} from "./learn/SheetLearningSpace";
+export {
+  prefetchSheetData,
+  SheetLearningSpace,
+} from "./learn/SheetLearningSpace";
 
 // Common Components
 export { default as Accordion } from "./common/Accordion";
@@ -170,6 +196,8 @@ export { default as QuestionDetailPanel } from "./containers/Cards/QuestionDetai
 export { default as QuizSection } from "./containers/Cards/QuizSection";
 export { default as SheetCard } from "./containers/Cards/SheetCard";
 export { default as ShikshaCard } from "./containers/Cards/ShikshaCard";
+export { default as StudyGuideNav } from "./containers/Cards/StudyGuideNav";
+export { default as StudyGuideReader } from "./containers/Cards/StudyGuideReader";
 export { default as Testimonials } from "./containers/Cards/Testimonials";
 export { default as UserLevelProgressContainer } from "./containers/Cards/UserLevelProgressContainer";
 export { default as WeAlreadyTaughtAt } from "./containers/Cards/WeAlreadyTaughtAt";

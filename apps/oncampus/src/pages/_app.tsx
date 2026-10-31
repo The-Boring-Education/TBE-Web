@@ -9,11 +9,19 @@ import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Toaster } from "sonner";
 
 import DashboardLayout from "@/components/DashboardLayout";
 import { OnboardingCheck } from "@/components/OnboardingCheck";
+
+const NON_SHELL_ROUTES = new Set([
+  "/",
+  "/login",
+  "/pricing",
+  "/campus-prep",
+  "/auth/callback",
+]);
 
 const AppContent = ({
   Component,
@@ -26,49 +34,25 @@ const AppContent = ({
   useUser();
   useTracking();
 
-  const isDashboardRoute = router.pathname.startsWith("/dashboard");
-  const isDSAPrepRoute = router.pathname.startsWith("/sheets");
-  const isPatternQuizRoute = router.pathname === "/pattern-quiz";
-  // Exclude slug pages from DashboardLayout (they should be full-screen study view)
-  // router.pathname for dynamic routes is the pattern like '/sheets' (with topic param) or '/dashboard/quizzes'
-  const isStudyRoute = router.pathname.includes("[sheetSlug]");
-  // Exclude the main DSA prep page for fullscreen experience
-  const isDSAMainRoute = router.pathname === "/sheets";
-  // Exclude the Aptitude page for fullscreen workspace experience
-  const isAptitudeRoute = router.pathname === "/aptitude";
-  // Exclude the Interview Prep main page for fullscreen workspace experience
-  const isInterviewPrepMainRoute = router.pathname === "/interview-sheets";
-  // Exclude the Quizzes page for fullscreen workspace experience
-  const isQuizzesRoute = router.pathname === "/dashboard/quizzes";
-  // Exclude the Core Subjects page for fullscreen workspace experience
-  const isCoreSubjectsRoute = router.pathname.startsWith("/coresubjects");
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
 
-  const shouldUseDashboardLayout =
-    (isDashboardRoute || isDSAPrepRoute || isPatternQuizRoute) &&
-    !isStudyRoute &&
-    !isDSAMainRoute &&
-    !isAptitudeRoute &&
-    !isInterviewPrepMainRoute &&
-    !isQuizzesRoute &&
-    !isCoreSubjectsRoute;
-
-  /** Same idea as DSA Yatra: /pricing is full-screen only (no shell, no app chrome wrapper). */
-  const isPricingRoute = router.pathname === "/pricing";
+  const isNonShellRoute =
+    NON_SHELL_ROUTES.has(router.pathname) ||
+    router.pathname.startsWith("/auth/");
 
   const pageContent = <Component {...pageProps} />;
 
   return (
     <GamificationProvider theme="dark">
-      {isPricingRoute ? (
+      {isNonShellRoute ? (
         pageContent
       ) : (
-        <div className="bg-[#0A0A0A] min-h-screen">
-          {shouldUseDashboardLayout ? (
-            <DashboardLayout>{pageContent}</DashboardLayout>
-          ) : (
-            pageContent
-          )}
-        </div>
+        <DashboardLayout>{pageContent}</DashboardLayout>
       )}
     </GamificationProvider>
   );

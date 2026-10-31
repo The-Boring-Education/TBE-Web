@@ -12,13 +12,14 @@
 export type CertificateType = "WEBINAR" | "SHIKSHA";
 
 export type QuestionFrequencyType =
-  | "Most Asked"
-  | "Asked Frequently"
-  | "Asked Sometimes";
+  "Most Asked" | "Asked Frequently" | "Asked Sometimes";
 
 export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
-export type RoadmapsType = "Frontend" | "Backend" | "Fullstack" | "Tech";
+export type CourseStatusType = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export type RoadmapsType =
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
 
 export type SkillsType =
   | "React"
@@ -42,10 +43,7 @@ export type UserRoleType =
   | "DEVREL_LEAD";
 
 export type PlatformUsageType =
-  | "LEARNING_TECH"
-  | "BUILDING_PROJECTS"
-  | "INTERVIEW_PREP"
-  | "JOB_SEARCH";
+  "LEARNING_TECH" | "BUILDING_PROJECTS" | "INTERVIEW_PREP" | "JOB_SEARCH";
 
 export type WorkDomainType =
   | "MERN Full-stack"
@@ -141,6 +139,7 @@ export interface ProjectChapter {
 
 export interface CourseChapterModel {
   chapterId: string;
+  key: string;
   chapterName: string;
   content: string;
   isOptional?: boolean;
@@ -157,6 +156,7 @@ export interface CourseModel {
   slug: string;
   meta?: string;
   roadmap: RoadmapsType;
+  status?: CourseStatusType;
   isPremium?: boolean;
   price?: number;
   features?: string[];

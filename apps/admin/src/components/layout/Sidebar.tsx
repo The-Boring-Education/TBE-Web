@@ -1,6 +1,7 @@
 import { useAuth } from "@tbe/auth";
 import {
   Activity,
+  Award,
   BarChart3,
   BookOpen,
   BookOpenCheck,
@@ -35,6 +36,11 @@ const Sidebar = () => {
   const navItems = [
     { name: "Dashboard", path: "/admin", icon: <Home size={20} /> },
     { name: "Users", path: "/users", icon: <Users size={20} /> },
+    {
+      name: "Contributors",
+      path: "/contributors",
+      icon: <Award size={20} />,
+    },
     {
       name: "User Interests",
       path: "/user-interests",

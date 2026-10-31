@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Integration test: Admin authentication middleware
- * Verifies JWT + RBAC behavior via adminMiddleware compatibility wrapper.
+ * Verifies JWT + RBAC behavior of the shared `ensureAdminAccess` guard.
  */
 
 vi.mock("@/lib/utils", () => ({
@@ -27,7 +27,7 @@ vi.mock("@/lib/services/admin-cache", () => ({
   warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
 }));
 
-import { adminMiddleware } from "@/middleware/api";
+import { ensureAdminAccess } from "@/middleware/admin";
 
 describe("Admin Middleware Integration", () => {
   const adminToken = "valid-admin-jwt";
@@ -53,7 +53,7 @@ describe("Admin Middleware Integration", () => {
       headers: { authorization: "Bearer " + adminToken },
     });
 
-    const result = await adminMiddleware(req, res);
+    const result = await ensureAdminAccess(req, res);
     expect(result).toBe(true);
   });
 
@@ -71,7 +71,7 @@ describe("Admin Middleware Integration", () => {
       headers: { authorization: "Bearer " + userToken },
     });
 
-    const result = await adminMiddleware(req, res);
+    const result = await ensureAdminAccess(req, res);
     expect(result).toBe(false);
     expect(res._getStatusCode()).toBe(403);
   });
@@ -82,7 +82,7 @@ describe("Admin Middleware Integration", () => {
       headers: {},
     });
 
-    const result = await adminMiddleware(req, res);
+    const result = await ensureAdminAccess(req, res);
     expect(result).toBe(false);
     expect(res._getStatusCode()).toBe(401);
   });

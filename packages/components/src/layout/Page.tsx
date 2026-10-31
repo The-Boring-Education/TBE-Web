@@ -40,11 +40,20 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     router?.pathname === "/profile" ||
     router?.pathname === "/user/profile" ||
     Boolean(router?.pathname?.endsWith("/profile")) ||
-    Boolean(router?.pathname?.includes("/profile"));
+    Boolean(router?.pathname?.includes("/profile")) ||
+    router?.pathname === routes.learn ||
+    router?.pathname === "/learn" ||
+    Boolean(router?.pathname?.startsWith("/learn")) ||
+    Boolean(router?.pathname?.includes("/learn")) ||
+    router?.pathname === "/quizzes/[id]" ||
+    router?.pathname === "/quizzes/quiz/[id]" ||
+    Boolean(router?.pathname?.startsWith("/quizzes/quiz/"));
 
   if (isExcludedRoute) {
     return (
-      <main className="bg-lightBG flex min-h-screen flex-col">{children}</main>
+      <main className="bg-lightBG dark:bg-[#131316] flex min-h-screen flex-col">
+        {children}
+      </main>
     );
   }
 

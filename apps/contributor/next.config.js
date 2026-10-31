@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: [
+    "@tbe/auth",
+    "@tbe/constants",
+    "@tbe/query",
+    "@tbe/types",
+  ],
   images: {
     remotePatterns: [
       {

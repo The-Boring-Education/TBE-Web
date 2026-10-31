@@ -5,6 +5,7 @@ import { useTracking } from "@tbe/hooks";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import DsaDashboardLayout from "@/components/layout/DsaDashboardLayout";
 import Layout from "@/components/layout/Layout";
@@ -13,14 +14,24 @@ import { Providers } from "@/components/providers/Providers";
 
 const DSA_APP_SHELL_PATHS = new Set([
   "/dashboard",
+  "/sheets",
   "/revisions",
   "/topics",
   "/pattern-quiz",
+  "/visualizers",
+  "/visualizers/[slug]",
 ]);
 
 function AppWithShell({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const useDsaShell = DSA_APP_SHELL_PATHS.has(router.pathname);
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
 
   useTracking();
   const page = <Component {...pageProps} />;

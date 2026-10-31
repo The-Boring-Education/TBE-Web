@@ -46,7 +46,23 @@ const DATABASE_MODELS = {
   LEARNING_CREDIT: "LearningCredit",
   PERIOD_SCORE: "PeriodScore",
   PERIOD_CLOSE: "PeriodClose",
+  CONTRIBUTOR: "Contributor",
+  CONTRIBUTION: "Contribution",
 };
+
+export {
+  BASELINE_CATEGORY_XP,
+  CAPTAIN_XP_THRESHOLD,
+  CATEGORY_TO_TYPE_GROUP,
+  CONTRIBUTION_CATEGORIES,
+  CONTRIBUTION_STATUS,
+  CONTRIBUTION_TYPE_GROUPS,
+  type ContributionCategoryType,
+  type ContributionStatusType,
+  type ContributionTypeGroup,
+  CONTRIBUTOR_ROLES,
+  type ContributorRoleType,
+} from "@tbe/constants";
 
 export const FEEDBACK_TYPES = [
   "GENERAL",
@@ -108,7 +124,7 @@ export type InterestEventType = (typeof INTEREST_EVENT_TYPES)[number];
 
 const modelSelectParams = {
   coursePreview:
-    "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage",
+    "_id name slug coverImageURL description liveOn isPremium roadmap price discountPercentage status difficultyLevel chapters._id chapters.name chapters.key chapters.isOptional",
   projectPreview: "_id name slug coverImageURL description isActive",
 };
 

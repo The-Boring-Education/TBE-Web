@@ -7,6 +7,7 @@ import {
   Toaster as SonnerToaster,
   TooltipProvider,
 } from "@tbe/components/ui";
+import { DEFAULT_OG_IMAGE } from "@tbe/constants";
 import { useTracking } from "@tbe/hooks";
 import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
@@ -21,23 +22,41 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Resume Yatra - Build Your Perfect Resume</title>
+        <title key="title">Resume Yatra - Build Your Perfect Resume</title>
         <meta
+          key="description"
           name="description"
           content="Build a professional resume with guided steps, best practices, and expert tips. Resume Yatra helps you create a resume that gets you hired."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 
-        {/* Open Graph / Social Media */}
-        <meta property="og:type" content="website" />
+        {/* Open Graph / Social Media (overridden by page-level SEO via matching keys) */}
+        <meta key="og:type" property="og:type" content="website" />
         <meta
+          key="og:title"
           property="og:title"
           content="Resume Yatra - Build Your Perfect Resume"
         />
         <meta
+          key="og:description"
           property="og:description"
           content="Build a professional resume with guided steps and expert tips."
+        />
+        <meta
+          key="og:image"
+          property="og:image"
+          content={DEFAULT_OG_IMAGE.url}
+        />
+        <meta
+          key="twitter:card"
+          name="twitter:card"
+          content="summary_large_image"
+        />
+        <meta
+          key="twitter:image"
+          name="twitter:image"
+          content={DEFAULT_OG_IMAGE.url}
         />
 
         {/* PWA meta tags */}

@@ -9,7 +9,6 @@ import { apiStatusCodes } from "@/lib/constants";
 import { closePeriod, PeriodCloseError } from "@/lib/database";
 import { sendLeaderboardTopFinishEmail } from "@/lib/services/leaderboardEmail";
 import { sendAPIResponse } from "@/lib/utils";
-import { ensureAdminAccessOrSecret } from "@/middleware/admin";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -30,18 +29,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  if (!(await ensureAdminAccessOrSecret(req, res))) return;
-
   const { type, periodKey } = (req.body ?? {}) as {
     type?: unknown;
     periodKey?: unknown;
   };
   if (type !== undefined && !isLeaderboardType(type)) {
-    return res.status(apiStatusCodes.BAD_REQUEST).json(
-      sendAPIResponse({ status: false, message: "Invalid leaderboard type" }),
-    );
+    return res
+      .status(apiStatusCodes.BAD_REQUEST)
+      .json(
+        sendAPIResponse({ status: false, message: "Invalid leaderboard type" }),
+      );
   }
-  if (periodKey !== undefined && (type === undefined || typeof periodKey !== "string")) {
+  if (
+    periodKey !== undefined &&
+    (type === undefined || typeof periodKey !== "string")
+  ) {
     return res.status(apiStatusCodes.BAD_REQUEST).json(
       sendAPIResponse({
         status: false,
@@ -75,12 +77,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   } catch (error) {
     if (error instanceof PeriodCloseError) {
-      return res.status(apiStatusCodes.BAD_REQUEST).json(
-        sendAPIResponse({ status: false, message: error.message }),
-      );
+      return res
+        .status(apiStatusCodes.BAD_REQUEST)
+        .json(sendAPIResponse({ status: false, message: error.message }));
     }
     throw error;
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["POST"], allowSecret: true },
+});

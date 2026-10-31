@@ -112,5 +112,43 @@ describe("getCoursePageProps", () => {
       expect(result.props.currentChapterId).toBe(FIRST_CHAPTER_ID);
       expect(result.props.meta).toBe("CHAPTER_ONE");
     });
+
+    it("redirects to shiksha catalog if the course is in DRAFT status", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+          json: async () => ({
+            status: true,
+            data: { ...course, status: "DRAFT" },
+          }),
+        }),
+      );
+
+      const result: any = await getCoursePageProps(
+        buildContext(overviewUrl, {}),
+      );
+
+      expect(result.redirect).toBeDefined();
+      expect(result.redirect.destination).toBe("/shiksha/explore");
+    });
+
+    it("redirects to shiksha catalog if the course is in ARCHIVED status", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+          json: async () => ({
+            status: true,
+            data: { ...course, status: "ARCHIVED" },
+          }),
+        }),
+      );
+
+      const result: any = await getCoursePageProps(
+        buildContext(overviewUrl, {}),
+      );
+
+      expect(result.redirect).toBeDefined();
+      expect(result.redirect.destination).toBe("/shiksha/explore");
+    });
   });
 });
