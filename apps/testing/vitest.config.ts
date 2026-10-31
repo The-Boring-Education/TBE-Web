@@ -108,6 +108,10 @@ export default defineConfig({
       "@/lib/auth": path.resolve(__dirname, "../api/src/lib/auth"),
       "@/lib/analytics": path.resolve(__dirname, "../api/src/lib/analytics"),
       "@/lib/constants": path.resolve(__dirname, "../api/src/lib/constants"),
+      "@/lib/contributor": path.resolve(
+        __dirname,
+        "../api/src/lib/contributor",
+      ),
       "@/lib/database": path.resolve(__dirname, "../api/src/lib/database"),
       "@/lib/interfaces": path.resolve(__dirname, "../api/src/lib/interfaces"),
       "@/lib/services": path.resolve(__dirname, "../api/src/lib/services"),
