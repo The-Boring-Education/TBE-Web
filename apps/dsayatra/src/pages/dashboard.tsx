@@ -159,10 +159,10 @@ const DsaClient = () => {
   const totalQuestions = 399;
   const totalSolved = validCompletedIds.length;
   const remainingQuestions = Math.max(0, totalQuestions - totalSolved);
-  const overallPercentage =
-    totalQuestions > 0
-      ? Math.min(100, Math.round((totalSolved / totalQuestions) * 100))
-      : 0;
+  const overallPercentage = Math.min(
+    100,
+    Math.round((totalSolved / totalQuestions) * 100),
+  );
 
   // Calculate difficulty dynamically from user's solved question IDs
   const { easyCount, mediumCount, hardCount } = useMemo(() => {
