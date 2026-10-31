@@ -1,19 +1,24 @@
+import {
+  LINKS as TBE_LINKS,
+  seoCommonMeta,
+  toPlatformUrl,
+} from "@tbe/constants";
+
 export const LINKS = {
-  joinDevRelAdvocate:
-    "https://docs.google.com/forms/d/e/1FAIpQLSfYHF6BlVfzcela42McNzHZo3WFfjgEV_e0EBrlsxNUdmK_KA/viewform?usp=dialog",
+  joinDevRelAdvocate: TBE_LINKS.joinDevRelAdvocate,
   viewSessionDetails: "https://bit.ly/TBECampusConnect",
-  home: "https://theboringeducation.com",
-  products: "https://theboringeducation.com/products",
-  community: "https://theboringeducation.com/community",
-  about: "https://theboringeducation.com/about",
-  github: "https://github.com/The-Boring-Education",
-  instagram: "https://www.instagram.com/theboringeducation",
-  youtube: "https://www.youtube.com/@TheBoringEducation",
-  linkedin: "https://www.linkedin.com/company/theboringeducation",
+  home: toPlatformUrl(""),
+  products: toPlatformUrl("/products"),
+  community: toPlatformUrl("/community"),
+  about: toPlatformUrl("/about"),
+  github: seoCommonMeta.github,
+  instagram: TBE_LINKS.instagram,
+  youtube: TBE_LINKS.youtube,
+  linkedin: TBE_LINKS.officialLinkedIn,
 };
 
 export const SITE = {
-  name: "The Boring Education",
+  name: seoCommonMeta.publisher,
   programName: "TBE Contributor Program",
   baseUrl: "https://contributors.theboringeducation.com",
 };

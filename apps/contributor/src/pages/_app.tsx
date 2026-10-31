@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 
-import { AuthProvider, useAuth } from "@tbe/auth";
+import { AuthProvider, getAccessToken, useAuth } from "@tbe/auth";
+import { TBEQueryProvider } from "@tbe/query";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 
@@ -9,8 +10,7 @@ function CrossTabAuthSync() {
 
   useEffect(() => {
     const syncAuth = () => {
-      // Check cookies for access token
-      const hasToken = document.cookie.includes("tbe_access_token=");
+      const hasToken = Boolean(getAccessToken());
       if (isAuthenticated && !hasToken) {
         // Logged out in another tab
         signOut();
@@ -42,8 +42,10 @@ function CrossTabAuthSync() {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
-      <CrossTabAuthSync />
-      <Component {...pageProps} />
+      <TBEQueryProvider>
+        <CrossTabAuthSync />
+        <Component {...pageProps} />
+      </TBEQueryProvider>
     </AuthProvider>
   );
 }

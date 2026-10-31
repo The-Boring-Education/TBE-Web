@@ -1,3 +1,4 @@
+import SectionHeader from "@/components/SectionHeader";
 import { LANDING } from "@/config/landing";
 
 function PerkIcon({ type }: { type: string }) {
@@ -73,18 +74,11 @@ export default function PerksSection() {
   return (
     <section id="perks" className="py-16 md:py-20 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-[#EA4544] font-bold text-xs tracking-widest uppercase">
-            {perks.badge}
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mt-2">
-            {perks.heading}
-          </h2>
-          <p className="text-sm sm:text-base text-gray-500 mt-2.5">
-            {perks.subheading}
-          </p>
-        </div>
+        <SectionHeader
+          badge={perks.badge}
+          heading={perks.heading}
+          subheading={perks.subheading}
+        />
 
         {/* Perks Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
