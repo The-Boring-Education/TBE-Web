@@ -407,7 +407,7 @@ const DsaDashboardLayout = ({ children }: DsaDashboardLayoutProps) => {
       </aside>
 
       {/* Right Column: Main Content Area in Matching Curved Rectangle */}
-      <main className="flex-1 min-w-0 bg-white dark:bg-[#131316] rounded-2xl border border-slate-200/90 dark:border-[#24242A] shadow-2xs h-full p-2.5 sm:p-3.5 md:p-4 space-y-2.5 overflow-y-auto overflow-x-hidden relative max-lg:pb-18">
+      <main className="flex-1 min-w-0 bg-white dark:bg-[#131316] rounded-2xl border border-slate-200/90 dark:border-[#24242A] shadow-2xs h-full p-2.5 sm:p-3.5 md:p-4 space-y-2.5 overflow-y-auto overflow-x-hidden scrollbar-thin-grey relative max-lg:pb-18">
         {children}
       </main>
 

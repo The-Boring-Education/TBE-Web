@@ -1,12 +1,9 @@
 import {
   AptitudeQuizPanel,
-  Button,
   ContentFeedbackWidget,
   DsaUpsellModal,
-  FlexContainer,
   FreemiumLockBanner,
   LoadingSpinner,
-  Text,
 } from "@tbe/components";
 import { routes } from "@tbe/constants";
 import { useUser } from "@tbe/hooks";
@@ -17,16 +14,21 @@ import {
   AlertTriangle,
   ArrowLeft,
   BookOpen,
+  Brain,
+  Calculator,
+  Check,
   ChevronRight,
   Clock,
-  Folder,
-  FolderOpen,
   Lightbulb,
   List,
-  ListFilter,
   Lock,
+  Search,
   Sparkles,
+  X,
+  Zap,
 } from "lucide-react";
+import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, {
   useCallback,
@@ -37,86 +39,145 @@ import React, {
 } from "react";
 
 import { CoreSubjectMDXRenderer } from "@/components/CoreSubjectMDXRenderer";
-import OnCampusLearningLayout from "@/components/OnCampusLearningLayout";
 
-/* ─────────────────────────────────────────────
-   Sub-components
-   ───────────────────────────────────────────── */
+type AptitudeCategory = "QUANTITATIVE" | "LOGICAL" | "VERBAL";
 
-/** Single topic entry in the left sidebar */
-function TopicItem({
-  topic,
-  isActive,
-  onClick,
-}: {
-  topic: { topic: string; count: number; label: string; isLocked: boolean };
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "w-full group relative py-2.5 px-4 rounded-r-lg border-l-[3px] transition-all duration-300 cursor-pointer text-left focus:outline-none",
-        isActive
-          ? "bg-red-500/[0.03] border-red-500 shadow-[0_1px_6px_rgba(239,68,68,0.02)] text-white"
-          : "border-transparent bg-transparent hover:bg-white/[0.02] hover:border-gray-800 text-gray-400",
-      )}
-      aria-pressed={isActive}
-    >
-      <FlexContainer
-        className="items-center w-full gap-3"
-        itemCenter
-        justifyCenter={false}
-      >
-        {isActive ? (
-          <FolderOpen className="w-[15px] h-[15px] shrink-0 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-        ) : topic.isLocked ? (
-          <Lock className="w-[15px] h-[15px] shrink-0 text-red-500/80" />
-        ) : (
-          <Folder className="w-[15px] h-[15px] shrink-0 text-gray-600 group-hover:text-gray-400 transition-colors" />
-        )}
-        <Text
-          level="p"
-          className="text-[13px] font-semibold leading-tight transition-colors duration-300 py-0.5 text-left break-words whitespace-normal flex-1"
-        >
-          {topic.label}
-        </Text>
-      </FlexContainer>
-    </button>
-  );
+interface TopicData {
+  topic: string;
+  count: number;
+  label: string;
+  category?: string;
+  subCategory?: string;
+  isLocked: boolean;
 }
 
-/* ─────────────────────────────────────────────
-   Main Component Page
-   ───────────────────────────────────────────── */
+const CATEGORY_TABS = [
+  { id: "ALL", label: "All Topics" },
+  { id: "QUANTITATIVE", label: "Quantitative", icon: Calculator },
+  { id: "LOGICAL", label: "Logical Reasoning", icon: Brain },
+  { id: "VERBAL", label: "Verbal Ability", icon: BookOpen },
+];
 
-const AptitudePrepPage = () => {
+function getTopicCategory(topic: {
+  topic: string;
+  label: string;
+  category?: string;
+}): AptitudeCategory {
+  if (topic.category) {
+    const cat = topic.category.toUpperCase();
+    if (cat.includes("QUANT")) return "QUANTITATIVE";
+    if (cat.includes("VERBAL")) return "VERBAL";
+    if (cat.includes("LOGIC") || cat.includes("REASON")) return "LOGICAL";
+  }
+
+  const text = `${topic.topic} ${topic.label}`.toLowerCase();
+  if (
+    text.includes("blood") ||
+    text.includes("relation") ||
+    text.includes("direction") ||
+    text.includes("syllogism") ||
+    text.includes("coding") ||
+    text.includes("decoding") ||
+    text.includes("series") ||
+    text.includes("analogy") ||
+    text.includes("seating") ||
+    text.includes("puzzle") ||
+    text.includes("venn") ||
+    text.includes("statement") ||
+    text.includes("logic") ||
+    text.includes("reasoning")
+  ) {
+    return "LOGICAL";
+  }
+
+  if (
+    text.includes("grammar") ||
+    text.includes("vocabulary") ||
+    text.includes("comprehension") ||
+    text.includes("sentence") ||
+    text.includes("synonym") ||
+    text.includes("antonym") ||
+    text.includes("idiom") ||
+    text.includes("phrase") ||
+    text.includes("verbal")
+  ) {
+    return "VERBAL";
+  }
+
+  return "QUANTITATIVE";
+}
+
+function getCategoryColor(category: AptitudeCategory) {
+  switch (category) {
+    case "QUANTITATIVE":
+      return {
+        bg: "bg-blue-500/10 dark:bg-blue-500/15",
+        text: "text-blue-600 dark:text-blue-400",
+        border: "border-blue-500/20",
+        label: "Quantitative",
+        Icon: Calculator,
+      };
+    case "LOGICAL":
+      return {
+        bg: "bg-purple-500/10 dark:bg-purple-500/15",
+        text: "text-purple-600 dark:text-purple-400",
+        border: "border-purple-500/20",
+        label: "Logical",
+        Icon: Brain,
+      };
+    case "VERBAL":
+      return {
+        bg: "bg-emerald-500/10 dark:bg-emerald-500/15",
+        text: "text-emerald-600 dark:text-emerald-400",
+        border: "border-emerald-500/20",
+        label: "Verbal",
+        Icon: BookOpen,
+      };
+  }
+}
+
+export default function AptitudePrepPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user, loading: userLoading, isAuth } = useUser();
+
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedTopicLabel, setSelectedTopicLabel] = useState<string>("");
   const [viewMode, setViewMode] = useState<"STUDY" | "QUIZ">("STUDY");
-  const [isMobileTopicsOpen, setIsMobileTopicsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [showPayment, setShowPayment] = useState(false);
   const [activeHeadingId, setActiveHeadingId] = useState<string>("");
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isStudyCompleted, setIsStudyCompleted] = useState<boolean>(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Sync state with URL query parameters
+  useEffect(() => {
+    if (!router.isReady) return;
+    const topicParam = router.query.topic;
+    if (typeof topicParam === "string" && topicParam) {
+      setSelectedTopic(topicParam);
+      const modeParam = router.query.mode;
+      if (modeParam === "quiz") {
+        setViewMode("QUIZ");
+      } else {
+        setViewMode("STUDY");
+      }
+    }
+  }, [router.isReady, router.query.topic, router.query.mode]);
 
   const handleAptitudeProgressSaved = useCallback(() => {
     if (selectedTopic && user?.id) {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.aptitude.questions(selectedTopic, user.id),
       });
-      // Server awards COMPLETE_APTITUDE_QUESTION; refresh navbar points.
       void queryClient.invalidateQueries({
         queryKey: queryKeys.gamification.points(user.id),
       });
     }
   }, [queryClient, selectedTopic, user?.id]);
 
-  // Fetch Topics (auto-fetch, includes userId parameter to personalize locked/unlocked state)
+  // Fetch Topics
   const { data: topicsResponse, isLoading: topicsLoading } = useQuery<any>({
     queryKey: queryKeys.aptitude.topics(user?.id),
     queryFn: () => {
@@ -131,19 +192,31 @@ const AptitudePrepPage = () => {
     ...CACHE_TIMES.STATIC,
   });
 
-  const topicsWithCounts = useMemo(() => {
+  const topicsWithCounts: TopicData[] = useMemo(() => {
     const data = topicsResponse?.data;
     if (!Array.isArray(data)) return [];
 
     return data
       .map((t: any) => ({
         topic: t.slug,
-        count: t.questionCount,
+        count: t.questionCount || 0,
         label: t.name,
-        isLocked: t.isLocked || false,
+        category: t.category,
+        subCategory: t.subCategory,
+        isLocked: Boolean(t.isLocked),
       }))
       .sort((a: any, b: any) => a.label.localeCompare(b.label));
   }, [topicsResponse]);
+
+  // Set topic label from loaded topics if not set
+  useEffect(() => {
+    if (selectedTopic && !selectedTopicLabel && topicsWithCounts.length > 0) {
+      const found = topicsWithCounts.find((t) => t.topic === selectedTopic);
+      if (found) {
+        setSelectedTopicLabel(found.label);
+      }
+    }
+  }, [selectedTopic, selectedTopicLabel, topicsWithCounts]);
 
   const selectedTopicData = useMemo(() => {
     return selectedTopic
@@ -152,11 +225,10 @@ const AptitudePrepPage = () => {
   }, [selectedTopic, topicsWithCounts]);
 
   const isSelectedTopicLocked = selectedTopicData?.isLocked || false;
-
   const topicHasQuestions =
     !selectedTopicData || (selectedTopicData.count ?? 0) > 0;
 
-  // Fetch Questions (enabled when topic selected and has questions)
+  // Fetch Questions for active topic
   const {
     data: questionsResponse,
     isLoading: questionsLoading,
@@ -181,7 +253,7 @@ const AptitudePrepPage = () => {
       (!isAuth || (!!user?.id && !userLoading)),
   });
 
-  // Fetch Study Guide (enabled when topic selected)
+  // Fetch Study Guide for active topic
   const { data: studyGuideResponse, isLoading: studyGuideLoading } =
     useQuery<any>({
       queryKey: queryKeys.aptitude.studyGuide(selectedTopic ?? "", user?.id),
@@ -197,13 +269,11 @@ const AptitudePrepPage = () => {
       enabled: !!selectedTopic && (!isAuth || (!!user?.id && !userLoading)),
     });
 
-  const questions = useMemo(() => {
+  const questions: AptitudeQuestion[] = useMemo(() => {
     const data = questionsResponse?.data?.questions;
     if (!Array.isArray(data)) return [];
     return data as AptitudeQuestion[];
   }, [questionsResponse]);
-
-  const isTopicEmpty = !!selectedTopicData && selectedTopicData.count === 0;
 
   useEffect(() => {
     if (!userLoading && !isAuth) {
@@ -218,18 +288,29 @@ const AptitudePrepPage = () => {
     }
   }, [selectedTopic]);
 
-  const handleTopicClick = (topic: string, label: string) => {
+  const handleTopicClick = (
+    topic: string,
+    label: string,
+    mode: "STUDY" | "QUIZ" = "STUDY",
+  ) => {
     setSelectedTopic(topic);
     setSelectedTopicLabel(label);
-    setViewMode("STUDY");
-    setIsMobileTopicsOpen(false);
+    setViewMode(mode);
+    void router.push(
+      {
+        pathname: "/aptitude",
+        query: { topic, mode: mode.toLowerCase() },
+      },
+      undefined,
+      { shallow: true },
+    );
   };
 
   const handleBackToTopics = () => {
     setSelectedTopic(null);
     setSelectedTopicLabel("");
     setViewMode("STUDY");
-    setIsMobileTopicsOpen(true);
+    void router.push("/aptitude", undefined, { shallow: true });
   };
 
   const toggleStudyCompleted = () => {
@@ -240,7 +321,21 @@ const AptitudePrepPage = () => {
     localStorage.setItem(key, String(nextState));
   };
 
-  // Extract headings for Table of Contents (sticky sidebar)
+  // Filter topics by Category and Search
+  const filteredTopics = useMemo(() => {
+    return topicsWithCounts.filter((t) => {
+      const cat = getTopicCategory(t);
+      const matchesCategory =
+        selectedCategory === "ALL" || cat === selectedCategory;
+      const matchesSearch =
+        !searchQuery.trim() ||
+        t.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.topic.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [topicsWithCounts, selectedCategory, searchQuery]);
+
+  // Extract headings for Table of Contents
   const headings = useMemo(() => {
     const markdown = studyGuideResponse?.data?.content || "";
     if (!markdown) return [];
@@ -272,7 +367,6 @@ const AptitudePrepPage = () => {
     return list;
   }, [studyGuideResponse?.data?.content]);
 
-  // Table of Contents navigation scroll
   const scrollToHeading = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -280,25 +374,25 @@ const AptitudePrepPage = () => {
     }
   };
 
-  // Observe heading in view for TOC active states
   useEffect(() => {
     if (headings.length === 0 || viewMode !== "STUDY") return;
 
-    const observerOptions = {
-      root: scrollContainerRef.current,
-      rootMargin: "-20px 0px -65% 0px",
-      threshold: 0,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-      if (visibleEntries.length > 0) {
-        const sorted = visibleEntries.sort(
-          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
-        );
-        setActiveHeadingId(sorted[0].target.id);
-      }
-    }, observerOptions);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          const sorted = visibleEntries.sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
+          );
+          setActiveHeadingId(sorted[0].target.id);
+        }
+      },
+      {
+        root: scrollContainerRef.current,
+        rootMargin: "-20px 0px -65% 0px",
+        threshold: 0,
+      },
+    );
 
     headings.forEach((heading) => {
       const el = document.getElementById(heading.id);
@@ -308,526 +402,590 @@ const AptitudePrepPage = () => {
     return () => observer.disconnect();
   }, [headings, viewMode]);
 
-  // Scroll content container to top on topic or viewMode change
-  useEffect(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = 0;
-    }
-  }, [selectedTopic, viewMode]);
-
   const overallLoading = userLoading || topicsLoading;
 
   if (overallLoading) {
     return (
-      <OnCampusLearningLayout backHref={routes.oncampus.dashboard} isLoading>
-        <div className="flex-1 flex items-center justify-center">
-          <LoadingSpinner height={8} width={8} />
-          <Text level="p" className="text-gray-400 ml-3">
-            Loading...
-          </Text>
-        </div>
-      </OnCampusLearningLayout>
+      <div className="flex-1 flex items-center justify-center min-h-[50vh]">
+        <LoadingSpinner />
+      </div>
     );
   }
 
   if (topicsResponse?.error) {
     return (
-      <OnCampusLearningLayout backHref={routes.oncampus.dashboard}>
-        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-          <Text level="h2" className="text-xl font-bold text-red-500 mb-2">
-            Failed to load topics
-          </Text>
-          <Text level="p" className="text-gray-400 mb-6">
-            There was an error fetching the aptitude topics. Please try again.
-          </Text>
-          <Button
-            onClick={() => router.reload()}
-            variant="PRIMARY"
-            text="Retry"
-          />
-        </div>
-      </OnCampusLearningLayout>
+      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-base font-bold text-[#FF4D4D] mb-1">
+          Failed to load aptitude topics
+        </h2>
+        <p className="text-xs text-slate-500 max-w-sm mb-4">
+          There was an error fetching the aptitude syllabus. Please try again.
+        </p>
+        <button
+          type="button"
+          onClick={() => router.reload()}
+          className="px-4 py-2 text-xs font-bold rounded-lg bg-[#FF4D4D] text-white hover:bg-[#EE3126] transition-colors"
+        >
+          Retry
+        </button>
+      </div>
     );
   }
 
   const hasLockedTopics = topicsWithCounts.some((t) => t.isLocked);
   const unlockedCount = topicsWithCounts.filter((t) => !t.isLocked).length;
+  const totalQuestionsCount = topicsWithCounts.reduce(
+    (acc, t) => acc + (t.count || 0),
+    0,
+  );
 
   return (
-    <OnCampusLearningLayout
-      backHref={routes.oncampus.dashboard}
-      layoutMode="workspace"
-    >
-      {hasLockedTopics && (
+    <div className="w-full min-w-0 max-w-full font-sans px-1 sm:px-2 py-1 space-y-3 pb-4">
+      <Head>
+        <title>
+          {selectedTopic
+            ? `${selectedTopicLabel || "Topic"} | Aptitude Preparation | OnCampus`
+            : "Aptitude Preparation | OnCampus"}
+        </title>
+        <meta
+          name="description"
+          content="Comprehensive quantitative aptitude, logical reasoning, and verbal tests with study guides and timed quizzes."
+        />
+      </Head>
+
+      {/* 1. Header with Breadcrumb Navigation */}
+      <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500 flex-wrap">
+        <Link
+          href="/dashboard"
+          className="hover:text-slate-800 dark:hover:text-white transition-colors"
+        >
+          OnCampus
+        </Link>
+        <span className="text-slate-300 dark:text-slate-600">›</span>
+        <button
+          type="button"
+          onClick={handleBackToTopics}
+          className={cn(
+            "transition-colors cursor-pointer",
+            selectedTopic
+              ? "hover:text-slate-800 dark:hover:text-white"
+              : "font-bold text-[#FF4D4D]",
+          )}
+        >
+          Aptitude
+        </button>
+        {selectedTopic && (
+          <>
+            <span className="text-slate-300 dark:text-slate-600">›</span>
+            <span className="font-bold text-[#FF4D4D] truncate max-w-[200px]">
+              {selectedTopicLabel || selectedTopic}
+            </span>
+          </>
+        )}
+      </nav>
+
+      {hasLockedTopics && !selectedTopic && (
         <FreemiumLockBanner
           unlockedCount={unlockedCount}
-          message={`Freemium preview — ${unlockedCount} topics unlocked. Subscribe to access all.`}
+          message={`Freemium preview — ${unlockedCount} topics unlocked. Subscribe to access all ${topicsWithCounts.length} topics.`}
           onUpgradeClick={() => router.push(routes.oncampus.pricing)}
         />
       )}
-      <div className="flex flex-col h-full w-full">
-        {/* ── Top header bar & Mobile drawer (Hidden during active Study/Quiz modes) ── */}
-        {!selectedTopic && (
-          <div className="w-full min-h-[72px] border-b border-gray-800 bg-[#0A0A0A] flex shrink-0">
-            {/* Left column — sidebar label */}
-            <div className="border-r border-gray-800/60 px-3 py-3.5 flex items-center justify-between shrink-0 transition-all duration-300 w-auto lg:w-[260px]">
-              <div className="hidden lg:block">
-                <Text
-                  level="h2"
-                  className="text-[13px] font-black text-white mb-0.5 tracking-tight"
-                >
-                  Explore Topics
-                </Text>
-                <Text
-                  level="p"
-                  className="text-[9px] font-bold text-gray-550 uppercase tracking-[0.1em]"
-                >
-                  Choose a topic
-                </Text>
-              </div>
-            </div>
 
-            {/* Right header area */}
-            <div className="flex flex-1 items-center justify-between px-4">
-              <div className="flex items-center min-w-0">
-                <div className="flex flex-col min-w-0">
-                  <Text
-                    level="h1"
-                    className="strong-text font-bold text-white mb-0.5 tracking-tight line-clamp-1"
-                  >
-                    Aptitude Preparation
-                  </Text>
-                  <Text
-                    level="p"
-                    className="text-[10px] font-medium text-gray-500 uppercase tracking-wider hidden sm:block"
-                  >
-                    Select a topic to start practicing
-                  </Text>
+      {/* 2. Main Page Content: Catalog View vs Topic Detail View */}
+      {!selectedTopic ? (
+        /* ══════════════ CATALOG VIEW: TOPIC CARDS GRID ══════════════ */
+        <div className="space-y-3">
+          {/* Hero Section */}
+          <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] p-4 sm:p-5 lg:p-6 shadow-2xs space-y-3">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1 max-w-xl">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <div className="w-5 h-5 rounded-md bg-[#FF4D4D]/10 text-[#FF4D4D] flex items-center justify-center shrink-0">
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-[#FF4D4D] uppercase tracking-wider">
+                    Placement & Assessment Preparation
+                  </span>
+                </div>
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                  Aptitude{" "}
+                  <span className="text-[#FF4D4D]">Preparation Vault</span>
+                </h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                  Master quantitative aptitude, logical reasoning, and verbal
+                  ability with structured conceptual study guides and timed
+                  practice tests.
+                </p>
+              </div>
+
+              {/* Quick Stat Counter */}
+              <div className="flex items-center gap-2 self-start md:self-auto shrink-0 bg-slate-50 dark:bg-[#1A1A20] border border-slate-200/80 dark:border-[#282830] px-3.5 py-2 rounded-xl shadow-2xs">
+                <div className="w-8 h-8 rounded-lg bg-[#FF4D4D]/10 text-[#FF4D4D] flex items-center justify-center shrink-0">
+                  <Zap className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-black text-slate-900 dark:text-white">
+                    {topicsWithCounts.length} Topics
+                  </div>
+                  <div className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">
+                    {totalQuestionsCount} Practice Questions
+                  </div>
                 </div>
               </div>
-
-              {/* Mobile-only: topics list toggle pill */}
-              <button
-                onClick={() => setIsMobileTopicsOpen(!isMobileTopicsOpen)}
-                className={cn(
-                  "lg:hidden flex items-center gap-1.5 shrink-0 ml-2 px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all duration-200 active:scale-95",
-                  isMobileTopicsOpen
-                    ? "bg-red-500/10 border-red-500/60 text-red-400"
-                    : "bg-gray-900/50 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600",
-                )}
-                title="Toggle topics list"
-              >
-                <ListFilter className="w-3.5 h-3.5" />
-                <span>{topicsWithCounts.length} Topics</span>
-              </button>
             </div>
-          </div>
-        )}
 
-        {/* ── Mobile collapsible topics drawer ── */}
-        {!selectedTopic && (
-          <div
-            className={cn(
-              "lg:hidden w-full bg-[#0A0A0A] border-b border-gray-800 overflow-y-auto scrollbar-thin-grey transition-[max-height] duration-300 ease-in-out",
-              isMobileTopicsOpen ? "max-h-[50vh]" : "max-h-0 overflow-hidden",
-            )}
-          >
-            <div className="px-3 py-2 space-y-1">
-              {topicsWithCounts.map((topic) => {
-                const isActive = selectedTopic === topic.topic;
-                return (
-                  <TopicItem
-                    key={topic.topic}
-                    topic={topic}
-                    isActive={isActive}
-                    onClick={() => {
-                      if (topic.isLocked) {
-                        setShowPayment(true);
-                        return;
-                      }
-                      handleTopicClick(topic.topic, topic.label);
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
+            {/* Filter Tabs & Search Bar Row */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2 border-t border-slate-100 dark:border-[#1E1E24]">
+              {/* Category Filter Tabs */}
+              <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none flex-nowrap">
+                {CATEGORY_TABS.map((tab) => {
+                  const isActive = selectedCategory === tab.id;
+                  const Icon = tab.icon;
 
-        {/* ── Body: sidebar + content ── */}
-        <FlexContainer
-          direction="col"
-          className="lg:flex-row flex-1 min-h-0 w-full"
-          itemCenter={false}
-          justifyCenter={false}
-          wrap={false}
-        >
-          {/* Desktop Left Sidebar */}
-          <div className="hidden lg:flex lg:w-[260px] flex-shrink-0 border-r border-gray-800 flex-col bg-[#0A0A0A]">
-            <div className="flex-1 overflow-y-auto px-3 py-3 scrollbar-thin-grey">
-              <div className="space-y-1">
-                {selectedTopic ? (
-                  <div className="space-y-3">
+                  return (
                     <button
-                      onClick={handleBackToTopics}
-                      className="flex items-center gap-1.5 px-2 py-1.5 text-xs font-bold text-gray-550 hover:text-white transition-colors cursor-pointer w-full text-left focus:outline-none"
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(tab.id)}
+                      className={cn(
+                        "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                        isActive
+                          ? "bg-[#FF3B30] text-white shadow-2xs font-bold"
+                          : "bg-slate-50 dark:bg-[#1E1E24] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#26262E] hover:text-slate-900 dark:hover:text-white border border-slate-200/60 dark:border-transparent",
+                      )}
                     >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>All Topics</span>
+                      {Icon && <Icon className="w-3.5 h-3.5" />}
+                      <span>{tab.label}</span>
                     </button>
-                    <div className="border-t border-gray-900 my-1 pt-2">
-                      <p className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 mb-2">
-                        {selectedTopicLabel}
-                      </p>
-                      <div className="space-y-0.5">
-                        {/* Option 1: Study Guide */}
-                        <button
-                          onClick={() => {
-                            if (isSelectedTopicLocked) {
-                              setShowPayment(true);
-                            } else {
-                              setViewMode("STUDY");
-                            }
-                          }}
-                          className={cn(
-                            "w-full text-left py-2 px-3 rounded-lg border transition-all duration-200 text-xs flex items-center gap-2 cursor-pointer focus:outline-none",
-                            viewMode === "STUDY"
-                              ? "bg-red-500/[0.08] border-red-500/25 text-white font-bold"
-                              : "border-transparent text-gray-400 hover:bg-white/[0.02] hover:text-white",
-                          )}
-                        >
-                          {isSelectedTopicLocked ? (
-                            <Lock className="w-3.5 h-3.5 text-red-500/80 shrink-0" />
-                          ) : (
-                            <BookOpen className="w-3.5 h-3.5 text-gray-600 shrink-0" />
-                          )}
-                          <span className="truncate flex-1">Study Guide</span>
-                        </button>
+                  );
+                })}
+              </div>
 
-                        {/* Option 2: Practice Quiz */}
-                        <button
-                          onClick={() => {
-                            if (isSelectedTopicLocked) {
-                              setShowPayment(true);
-                            } else {
-                              setViewMode("QUIZ");
-                            }
-                          }}
-                          className={cn(
-                            "w-full text-left py-2 px-3 rounded-lg border transition-all duration-200 text-xs flex items-center gap-2 cursor-pointer focus:outline-none",
-                            viewMode === "QUIZ"
-                              ? "bg-red-500/[0.08] border-red-500/25 text-white font-bold"
-                              : "border-transparent text-gray-400 hover:bg-white/[0.02] hover:text-white",
-                          )}
-                        >
-                          {isSelectedTopicLocked ? (
-                            <Lock className="w-3.5 h-3.5 text-red-500/80 shrink-0" />
-                          ) : (
-                            <Sparkles className="w-3.5 h-3.5 text-gray-600 shrink-0" />
-                          )}
-                          <span className="truncate flex-1">Practice Quiz</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <FlexContainer
-                    direction="col"
-                    fullWidth
-                    itemCenter={false}
-                    justifyCenter={false}
-                    wrap={false}
-                    className="gap-1"
+              {/* Search Bar */}
+              <div className="relative w-full sm:w-64 shrink-0">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search aptitude topics..."
+                  className="w-full pl-8 pr-7 py-1.5 rounded-lg border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#131316] text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#FF4D4D] transition-colors shadow-2xs"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
                   >
-                    {topicsWithCounts.map((topic) => {
-                      const isActive = selectedTopic === topic.topic;
-                      return (
-                        <TopicItem
-                          key={topic.topic}
-                          topic={topic}
-                          isActive={isActive}
-                          onClick={() => {
-                            if (topic.isLocked) {
-                              setShowPayment(true);
-                              return;
-                            }
-                            handleTopicClick(topic.topic, topic.label);
-                          }}
-                        />
-                      );
-                    })}
-                  </FlexContainer>
+                    <X className="w-3 h-3" />
+                  </button>
                 )}
               </div>
             </div>
           </div>
 
-          {/* ── Main Content Area ── */}
-          {!selectedTopic ? (
-            /* Welcome / Landing View: Aptitude Vault */
-            <div className="flex flex-1 flex-col min-w-0 bg-[#050505] relative overflow-hidden p-4 lg:p-8">
-              {/* Subtle Background Glows */}
-              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-[100px] pointer-events-none" />
-              <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
+          {/* Topics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredTopics.map((topic) => {
+              const category = getTopicCategory(topic);
+              const { bg, text, border, label, Icon } =
+                getCategoryColor(category);
+              const isCompleted =
+                typeof window !== "undefined" &&
+                localStorage.getItem(`aptitude-completed-${topic.topic}`) ===
+                  "true";
 
-              <FlexContainer
-                className="h-full z-10"
-                itemCenter
-                justifyCenter
-                fullWidth
-                wrap={false}
-              >
-                <div className="text-center space-y-5 max-w-md px-6 my-auto">
-                  <div className="relative mx-auto w-24 h-24 mb-6">
-                    <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
-                    <div className="relative w-full h-full bg-[#111] border border-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
-                      <Lightbulb className="w-10 h-10 text-white opacity-80 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+              return (
+                <div
+                  key={topic.topic}
+                  onClick={() => {
+                    if (topic.isLocked) {
+                      setShowPayment(true);
+                      return;
+                    }
+                    handleTopicClick(topic.topic, topic.label, "STUDY");
+                  }}
+                  className={cn(
+                    "rounded-2xl border bg-white dark:bg-[#16161A] p-4 transition-all shadow-2xs hover:shadow-md cursor-pointer group flex flex-col justify-between space-y-3.5",
+                    topic.isLocked
+                      ? "border-slate-200/80 dark:border-[#222228] opacity-85"
+                      : "border-slate-200/90 dark:border-[#24242A] hover:border-[#FF4D4D]/50 hover:-translate-y-0.5",
+                  )}
+                >
+                  {/* Top Bar: Icon + Status Pill */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div
+                      className={cn(
+                        "w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105",
+                        bg,
+                        text,
+                        border,
+                      )}
+                    >
+                      <Icon className="w-4 h-4" />
                     </div>
-                  </div>
 
-                  <div>
-                    <Text
-                      level="h2"
-                      className="text-white text-3xl font-extrabold tracking-tight mb-2"
-                    >
-                      Aptitude Vault
-                    </Text>
-                    <Text
-                      level="p"
-                      className="text-gray-400 text-[15px] leading-relaxed"
-                    >
-                      Sharpen your quantitative, logical, and verbal reasoning
-                      skills. Select a topic on the left to review concepts and
-                      start practice sessions.
-                    </Text>
-                  </div>
-                </div>
-              </FlexContainer>
-            </div>
-          ) : isSelectedTopicLocked ? (
-            /* Gated Topic Screen */
-            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#050505] relative overflow-hidden">
-              <div className="relative mx-auto w-20 h-20 mb-6">
-                <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
-                <div className="relative w-full h-full bg-[#111] border border-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
-                  <Lock className="w-8 h-8 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-                </div>
-              </div>
-              <h2 className="text-xl font-bold text-white mb-2">
-                🔒 This Topic is Locked
-              </h2>
-              <p className="text-gray-400 mb-6 max-w-md text-sm leading-relaxed">
-                You have completed the free portion of Aptitude. To access this
-                topic and get full access to all prep guides and practice
-                questions, please upgrade your plan.
-              </p>
-              <button
-                onClick={() => router.push(routes.oncampus.pricing)}
-                className="rounded-lg bg-red-500 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-red-600 active:scale-95 shadow-[0_4px_12px_rgba(239,68,68,0.2)]"
-              >
-                View Pricing Plans
-              </button>
-            </div>
-          ) : viewMode === "STUDY" ? (
-            /* Study Guide Content View (Just like Core Subjects chapter content) */
-            <div
-              ref={scrollContainerRef}
-              className="flex-1 overflow-y-auto bg-[#050505] scrollbar-thin-grey scroll-smooth relative"
-            >
-              {studyGuideLoading ? (
-                <div className="h-full w-full flex flex-col items-center justify-center space-y-4">
-                  <LoadingSpinner height={8} width={8} />
-                  <Text level="p" className="text-gray-400 font-medium">
-                    Loading study guide...
-                  </Text>
-                </div>
-              ) : (
-                <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8 flex gap-8 items-start">
-                  {/* Left column - Content */}
-                  <div className="flex-1 min-w-0 xl:max-w-[72%]">
-                    {/* Back Button */}
-                    <button
-                      onClick={handleBackToTopics}
-                      className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-400 transition-colors mb-4 cursor-pointer"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to topics</span>
-                    </button>
-
-                    {/* Title */}
-                    <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
-                      {selectedTopicLabel} Study Guide
-                    </h1>
-
-                    {/* Meta row */}
-                    <div className="flex items-center gap-3 text-xs text-gray-500 pb-4 border-b border-gray-900 mb-6 flex-wrap">
-                      <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded">
-                        Study Guide
-                      </span>
-                      <span className="text-gray-700 font-semibold">•</span>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-gray-500 shrink-0" />
-                        <span>
-                          {Math.max(
-                            1,
-                            Math.ceil(
-                              (studyGuideResponse?.data?.content || "").split(
-                                /\s+/,
-                              ).length / 200,
-                            ),
-                          )}{" "}
-                          min read
+                    <div className="flex items-center gap-1.5">
+                      {topic.isLocked ? (
+                        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                          <Lock className="w-3 h-3" />
+                          Locked
                         </span>
-                      </div>
-                      <span className="text-gray-700 font-semibold">•</span>
-                      <button
-                        onClick={toggleStudyCompleted}
-                        className={cn(
-                          "flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer",
-                          isStudyCompleted
-                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                            : "bg-red-500/5 border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40",
-                        )}
-                      >
-                        {isStudyCompleted ? "Completed" : "Mark Read"}
-                      </button>
-                    </div>
-
-                    {/* Markdown Renderer */}
-                    <div className="prose prose-invert max-w-none prose-red prose-headings:scroll-mt-6">
-                      <CoreSubjectMDXRenderer
-                        mdxSource={studyGuideResponse?.data?.content || ""}
-                      />
-                    </div>
-
-                    {/* Bottom Next Button */}
-                    {!isTopicEmpty && (
-                      <div className="flex items-center justify-end border-t border-gray-800/60 mt-12 pt-8 pb-16">
-                        <button
-                          type="button"
-                          onClick={() => setViewMode("QUIZ")}
-                          className="group flex flex-col items-end px-4 py-2.5 sm:px-5 sm:py-3.5 bg-[#0A0A0A] border border-gray-800 rounded-xl hover:border-red-500/30 text-right transition-all duration-300 w-full sm:w-auto"
+                      ) : isCompleted ? (
+                        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                          <Check className="w-3 h-3" />
+                          Completed
+                        </span>
+                      ) : (
+                        <span
+                          className={cn(
+                            "text-[10px] font-bold px-2 py-0.5 rounded-md border",
+                            bg,
+                            text,
+                            border,
+                          )}
                         >
-                          <span className="text-[9px] font-black text-gray-555 uppercase tracking-widest flex items-center gap-1.5 mb-1">
-                            PRACTICE QUIZ
-                            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                          </span>
-                          <span className="text-white font-bold text-xs sm:text-[13px] line-clamp-1 group-hover:text-red-400 transition-colors">
-                            Attempt Questions
-                          </span>
-                        </button>
+                          {label}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Middle: Topic Name and Info */}
+                  <div className="space-y-1">
+                    <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors line-clamp-1 leading-snug">
+                      {topic.label}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium line-clamp-1">
+                      {topic.count > 0
+                        ? `${topic.count} practice questions available`
+                        : "Conceptual study guide available"}
+                    </p>
+                  </div>
+
+                  {/* Bottom Actions Row */}
+                  <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-[#202026]">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (topic.isLocked) {
+                          setShowPayment(true);
+                          return;
+                        }
+                        handleTopicClick(topic.topic, topic.label, "STUDY");
+                      }}
+                      className="flex-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-slate-50 dark:bg-[#1E1E24] hover:bg-slate-100 dark:hover:bg-[#26262E] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-[#2C2C34] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <BookOpen className="w-3.5 h-3.5 text-[#FF4D4D]" />
+                      <span>Study Guide</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (topic.isLocked) {
+                          setShowPayment(true);
+                          return;
+                        }
+                        handleTopicClick(topic.topic, topic.label, "QUIZ");
+                      }}
+                      className="flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold bg-[#FF4D4D] hover:bg-[#EE3126] text-white transition-colors flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Take Quiz</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {filteredTopics.length === 0 && (
+            <div className="text-center py-12 rounded-2xl border border-dashed border-slate-200 dark:border-[#24242A] text-slate-400 text-xs space-y-1">
+              <p className="font-bold text-slate-600 dark:text-slate-300">
+                No topics matched your search
+              </p>
+              <p>
+                Try clearing your search query or selecting a different
+                category.
+              </p>
+            </div>
+          )}
+        </div>
+      ) : isSelectedTopicLocked ? (
+        /* ══════════════ GATED LOCKED TOPIC VIEW ══════════════ */
+        <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#16161A] p-8 text-center shadow-2xs space-y-4 max-w-xl mx-auto my-6">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 flex items-center justify-center mx-auto">
+            <Lock className="w-8 h-8" />
+          </div>
+          <div className="space-y-1.5">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+              {selectedTopicLabel} is Locked
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
+              You are viewing the freemium preview. Upgrade to the OnCampus Pass
+              to unlock complete study guides, all practice question banks, and
+              timed assessments.
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleBackToTopics}
+              className="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-[#2C2C36] text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1E1E24] transition-colors cursor-pointer"
+            >
+              Back to Topics
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push(routes.oncampus.pricing)}
+              className="px-5 py-2 text-xs font-bold rounded-xl bg-[#FF4D4D] hover:bg-[#EE3126] text-white transition-all shadow-2xs cursor-pointer"
+            >
+              Unlock OnCampus Pass
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* ══════════════ TOPIC DETAIL WORKSPACE: STUDY GUIDE & PRACTICE QUIZ ══════════════ */
+        <div className="space-y-3">
+          {/* Top Bar: Back Button, Segmented View Switcher, Reading Status */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-slate-100 dark:border-[#202026]">
+            <button
+              type="button"
+              onClick={handleBackToTopics}
+              className="flex items-center gap-1.5 text-xs font-bold text-[#FF4D4D] hover:underline cursor-pointer self-start"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to all topics</span>
+            </button>
+
+            {/* Segmented Switch: Study Guide vs Practice Quiz */}
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#1E1E24] p-1 rounded-xl border border-slate-200/80 dark:border-[#282830] self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setViewMode("STUDY")}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  viewMode === "STUDY"
+                    ? "bg-white dark:bg-[#2A2A34] text-slate-900 dark:text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white",
+                )}
+              >
+                <BookOpen className="w-3.5 h-3.5 text-[#FF4D4D]" />
+                <span>Study Guide</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewMode("QUIZ")}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  viewMode === "QUIZ"
+                    ? "bg-[#FF4D4D] text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white",
+                )}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>
+                  Practice Quiz (
+                  {questions.length || selectedTopicData?.count || 0})
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {viewMode === "STUDY" ? (
+            /* ──────────────── STUDY GUIDE MODE ──────────────── */
+            studyGuideLoading ? (
+              <div className="flex items-center justify-center py-20 rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#16161A]">
+                <LoadingSpinner />
+              </div>
+            ) : (
+              <div className="flex gap-6 items-start">
+                {/* Main Content Area */}
+                <div className="flex-1 min-w-0 space-y-4">
+                  <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#16161A] p-4 sm:p-6 lg:p-7 shadow-2xs space-y-4">
+                    {/* Header */}
+                    <div className="space-y-1.5 border-b border-slate-100 dark:border-[#202026] pb-3">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-[#FF4D4D] bg-red-500/10 px-2 py-0.5 rounded-md">
+                          Aptitude Syllabus Guide
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+                            <Clock className="w-3 h-3" />
+                            <span>
+                              {Math.max(
+                                1,
+                                Math.ceil(
+                                  (
+                                    studyGuideResponse?.data?.content || ""
+                                  ).split(/\s+/).length / 200,
+                                ),
+                              )}{" "}
+                              min read
+                            </span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={toggleStudyCompleted}
+                            className={cn(
+                              "px-2.5 py-1 rounded-md text-[11px] font-bold border transition-all cursor-pointer",
+                              isStudyCompleted
+                                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500"
+                                : "bg-slate-100 dark:bg-[#202026] border-slate-200 dark:border-[#2A2A32] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white",
+                            )}
+                          >
+                            {isStudyCompleted ? "Completed" : "Mark as read"}
+                          </button>
+                        </div>
+                      </div>
+
+                      <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                        {selectedTopicLabel}
+                      </h1>
+                    </div>
+
+                    {/* Markdown Reader */}
+                    {studyGuideResponse?.data?.content ? (
+                      <div className="prose prose-slate dark:prose-invert max-w-none prose-sm sm:prose-base leading-relaxed">
+                        <CoreSubjectMDXRenderer
+                          mdxSource={studyGuideResponse.data.content}
+                        />
+                      </div>
+                    ) : (
+                      <div className="py-12 text-center text-xs text-slate-400 space-y-2">
+                        <Lightbulb className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600" />
+                        <p className="font-bold text-slate-600 dark:text-slate-300">
+                          Study guide is being compiled for this topic.
+                        </p>
+                        <p>You can proceed directly to the practice quiz.</p>
                       </div>
                     )}
+
+                    {/* Next step: Jump to Quiz */}
+                    <div className="pt-4 border-t border-slate-100 dark:border-[#202026] flex items-center justify-between">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
+                        Done revising concepts? Test your speed and accuracy.
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setViewMode("QUIZ")}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF4D4D] hover:bg-[#EE3126] text-white text-xs font-bold transition-all shadow-2xs cursor-pointer ml-auto"
+                      >
+                        <span>Start Practice Quiz</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-
-                  {/* Right column - Sticky Table of Contents */}
-                  {headings.length > 0 && (
-                    <aside className="w-[28%] shrink-0 hidden xl:block sticky top-24 self-start space-y-6">
-                      <div className="bg-[#0A0A0A]/50 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur-sm">
-                        <div className="flex items-center gap-2 border-b border-gray-800 pb-3 mb-4">
-                          <List className="w-4 h-4 text-red-500" />
-                          <span className="text-[11px] font-black text-white uppercase tracking-wider">
-                            Table of Contents
-                          </span>
-                        </div>
-                        <nav className="space-y-0.5 max-h-[60vh] overflow-y-auto scrollbar-thin-grey pr-1">
-                          {headings.map((heading) => (
-                            <button
-                              key={heading.id}
-                              onClick={() => scrollToHeading(heading.id)}
-                              className={cn(
-                                "w-full text-left transition-all duration-200 py-1.5 px-3 border-l text-[12px] block truncate",
-                                heading.level === 3
-                                  ? "pl-6 text-[11px]"
-                                  : "font-bold",
-                                activeHeadingId === heading.id
-                                  ? "text-red-500 border-red-500 bg-red-500/[0.02] font-extrabold"
-                                  : "text-gray-500 border-transparent hover:text-gray-300 hover:border-gray-700",
-                              )}
-                            >
-                              {heading.text}
-                            </button>
-                          ))}
-                        </nav>
-                      </div>
-
-                      <div className="bg-gradient-to-br from-red-500/[0.02] to-transparent border border-gray-800/60 rounded-2xl p-5 shadow-lg">
-                        <h3 className="text-white font-bold text-[12px] mb-1.5 tracking-tight flex items-center gap-1.5">
-                          💡 Learning Guide
-                        </h3>
-                        <p className="text-gray-400 text-[11px] leading-relaxed">
-                          Review core concepts, follow the step-by-step solving
-                          guidelines, and attempt practice questions afterwards.
-                        </p>
-                      </div>
-                    </aside>
-                  )}
                 </div>
-              )}
-            </div>
+
+                {/* Sticky Table of Contents on Right */}
+                {headings.length > 0 && (
+                  <aside className="w-64 shrink-0 hidden xl:block sticky top-2 space-y-3">
+                    <div className="bg-white dark:bg-[#16161A] p-3.5 rounded-2xl border border-slate-200/90 dark:border-[#24242A] shadow-2xs space-y-2.5">
+                      <div className="flex items-center gap-1.5 pb-2 border-b border-slate-100 dark:border-[#202026]">
+                        <List className="w-3.5 h-3.5 text-[#FF4D4D]" />
+                        <span className="text-xs font-bold text-slate-900 dark:text-white">
+                          On this page
+                        </span>
+                      </div>
+
+                      <nav className="space-y-1 max-h-[70vh] overflow-y-auto scrollbar-thin-grey pr-1">
+                        {headings.map((heading) => (
+                          <button
+                            key={heading.id}
+                            type="button"
+                            onClick={() => scrollToHeading(heading.id)}
+                            className={cn(
+                              "w-full text-left transition-all py-1 px-2 rounded-lg text-[11px] block truncate cursor-pointer",
+                              heading.level === 3
+                                ? "pl-4 text-[10px]"
+                                : "font-semibold",
+                              activeHeadingId === heading.id
+                                ? "text-[#FF4D4D] bg-red-500/10 font-bold"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#1E1E24] hover:text-slate-900 dark:hover:text-white",
+                            )}
+                          >
+                            {heading.text}
+                          </button>
+                        ))}
+                      </nav>
+                    </div>
+                  </aside>
+                )}
+              </div>
+            )
           ) : (
-            /* Practice Quiz Workspace */
-            <div className="flex-1 flex flex-col h-full w-full overflow-hidden bg-[#0A0A0A]">
+            /* ──────────────── PRACTICE QUIZ MODE ──────────────── */
+            <div className="rounded-2xl border border-slate-200/90 dark:border-[#24242A] bg-white dark:bg-[#16161A] shadow-2xs overflow-hidden">
               {questionsLoading ? (
-                <div className="flex-1 flex flex-col items-center justify-center space-y-4">
-                  <LoadingSpinner height={8} width={8} />
-                  <Text level="p" className="text-gray-400 font-medium">
-                    Loading questions...
-                  </Text>
+                <div className="flex items-center justify-center py-20">
+                  <LoadingSpinner />
                 </div>
               ) : questionsResponse?.error ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center px-4 h-full">
-                  <div className="w-16 h-16 bg-red-950/30 border border-red-500/20 rounded-full flex items-center justify-center mb-4">
-                    <AlertTriangle className="w-7 h-7 text-red-500" />
+                <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                  <div className="w-12 h-12 bg-red-500/10 text-[#FF4D4D] rounded-full flex items-center justify-center mb-3">
+                    <AlertTriangle className="w-6 h-6" />
                   </div>
-                  <Text level="p" className="text-red-400 text-sm mb-6">
-                    Network error while fetching questions.
-                  </Text>
-                  <Button
+                  <p className="text-xs font-bold text-[#FF4D4D] mb-1">
+                    Failed to load questions
+                  </p>
+                  <p className="text-xs text-slate-500 mb-4">
+                    Network error while fetching aptitude question set.
+                  </p>
+                  <button
+                    type="button"
                     onClick={() => refetchQuestions()}
-                    variant="PRIMARY"
-                    size="MEDIUM"
-                    text="Try Again"
-                  />
+                    className="px-4 py-1.5 text-xs font-bold rounded-lg bg-[#FF4D4D] text-white hover:bg-[#EE3126] transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : questions.length === 0 ? (
+                <div className="py-16 text-center text-xs text-slate-400 space-y-2">
+                  <Sparkles className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600" />
+                  <p className="font-bold text-slate-600 dark:text-slate-300">
+                    No questions uploaded for this topic yet.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("STUDY")}
+                    className="text-xs font-bold text-[#FF4D4D] hover:underline cursor-pointer"
+                  >
+                    ← Read Study Guide Instead
+                  </button>
                 </div>
               ) : (
-                <div className="flex-1 h-full w-full overflow-hidden flex flex-col">
-                  {/* Back to Study Guide Header in Workspace */}
-                  <div className="px-4 py-2 border-b border-gray-800/60 bg-[#0C0C0C] flex items-center justify-between shrink-0">
-                    <button
-                      onClick={() => setViewMode("STUDY")}
-                      className="flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-white transition-colors cursor-pointer"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to study guide</span>
-                    </button>
-                    <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded">
-                      Practice Mode
-                    </span>
-                  </div>
-                  <div className="flex-1 h-full w-full overflow-hidden">
-                    <AptitudeQuizPanel
-                      questions={questions}
-                      topicSlug={selectedTopic ?? undefined}
-                      userId={user?.id ?? undefined}
-                      onProgressSaved={handleAptitudeProgressSaved}
-                    />
-                  </div>
+                <div className="w-full">
+                  <AptitudeQuizPanel
+                    questions={questions}
+                    topicSlug={selectedTopic}
+                    userId={user?.id ?? undefined}
+                    onProgressSaved={handleAptitudeProgressSaved}
+                  />
                 </div>
               )}
             </div>
           )}
-        </FlexContainer>
-      </div>
+        </div>
+      )}
+
+      {/* Upsell Modal */}
       <DsaUpsellModal
         open={showPayment}
         onViewPlans={() => router.push(routes.oncampus.pricing)}
         onDismiss={() => setShowPayment(false)}
         title="Unlock OnCampus Aptitude Preparation"
-        description="Subscribe to OnCampus to access all quantitative, logical, and verbal reasoning topics, complete study guides, and practice questions."
+        description="Subscribe to OnCampus to access all quantitative, logical, and verbal reasoning topics, complete study guides, and timed practice assessments."
       />
 
-      {/* Aptitude topic feedback widget */}
+      {/* Content Feedback */}
       {isAuth && selectedTopic && (
         <ContentFeedbackWidget
           contentType="APTITUDE_TOPIC"
@@ -837,10 +995,9 @@ const AptitudePrepPage = () => {
             topicId: selectedTopic,
             topicName: selectedTopicLabel || selectedTopic,
           }}
+          theme="dark"
         />
       )}
-    </OnCampusLearningLayout>
+    </div>
   );
-};
-
-export default AptitudePrepPage;
+}

@@ -15,9 +15,12 @@ import {
   ChevronDown,
   Clock,
   Crosshair,
+  ExternalLink,
   FileText,
+  Github,
   Hexagon,
   Lightbulb,
+  Linkedin,
   PenLine,
   Play,
   Target,
@@ -235,6 +238,50 @@ const DsaClient = () => {
             <p className="text-xs sm:text-sm text-slate-500 dark:text-[#9CA3AF] font-medium leading-relaxed">
               Consistency today, better opportunities tomorrow.
             </p>
+
+            {/* Social Profile Links (LinkedIn, GitHub, LeetCode) */}
+            <div className="pt-2 flex items-center gap-1.5">
+              {(
+                [
+                  {
+                    icon: Linkedin,
+                    url: profile?.linkedInUrl,
+                    label: "LinkedIn profile",
+                  },
+                  {
+                    icon: Github,
+                    url: profile?.githubUrl,
+                    label: "GitHub profile",
+                  },
+                  {
+                    icon: ExternalLink,
+                    url: profile?.leetCodeUrl,
+                    label: "LeetCode profile",
+                  },
+                ] as const
+              ).map((social, i) => (
+                <a
+                  key={i}
+                  href={
+                    social.url
+                      ? social.url.startsWith("http")
+                        ? social.url
+                        : `https://${social.url}`
+                      : "#"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "p-1.5 rounded-lg border border-slate-200/90 dark:border-[#29292F] bg-slate-50 dark:bg-[#19191D] hover:bg-slate-100 dark:hover:bg-[#202026] text-slate-500 dark:text-[#9CA3AF] hover:text-[#FF4D4D] dark:hover:text-white transition-all shadow-2xs",
+                    !social.url && "opacity-30 cursor-not-allowed",
+                  )}
+                  onClick={(e) => !social.url && e.preventDefault()}
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-3.5 h-3.5" aria-hidden />
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Edit Goal Button on top right */}

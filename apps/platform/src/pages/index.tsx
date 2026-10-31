@@ -9,15 +9,23 @@ import {
 } from '@tbe/components';
 import { PAGE_REFRESH_TIMEOUT, routes, STATIC_FILE_PATH } from '@tbe/constants';
 import { PublicLeaderboardStrip } from '@tbe/gamification';
+import { useUser } from '@tbe/hooks';
 import type { PageProps } from '@tbe/interface';
 import { getPreFetchProps } from '@tbe/utils';
 import { useRouter } from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 
 import { TopContributorsSection } from '../components/TopContributorsSection';
 
 const Home = ({ seoMeta }: PageProps) => {
   const router = useRouter();
+  const { isAuth, loading } = useUser();
+
+  useEffect(() => {
+    if (!loading && isAuth) {
+      router.replace(routes.learn);
+    }
+  }, [isAuth, loading, router]);
 
   return (
     <Fragment>

@@ -1097,7 +1097,7 @@ function SheetsClient() {
     );
 
     return (
-      <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-3 scrollbar-thin-grey font-sans">
+      <div className="w-full min-w-0 max-w-full font-sans px-3 sm:px-6 py-2 sm:py-3 space-y-3 pb-4">
         {/* Top Breadcrumbs & Back CTA: DSA Yatra > Problem Sheet > Question Name */}
         <div className="flex items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-[#202026]">
           <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500 min-w-0">
@@ -1169,7 +1169,7 @@ function SheetsClient() {
   }
 
   return (
-    <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-2.5 sm:space-y-3 scrollbar-thin-grey font-sans">
+    <div className="w-full min-w-0 max-w-full font-sans px-3 sm:px-6 py-2 sm:py-3 space-y-2.5 sm:space-y-3 pb-4">
       {/* 1. Hero & Progress Section (Left: Breadcrumbs, Title, Subtitle, Progress; Right: Hero Image) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 lg:gap-6">
         {/* Left Column: Title + Subtitle + Progress Bar (not full width, left of hero) */}

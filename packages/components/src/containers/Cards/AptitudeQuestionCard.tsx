@@ -94,7 +94,7 @@ export const AptitudeQuestionCard: React.FC<AptitudeQuestionCardProps> = ({
     question.options[selectedOptionIndex]?.isCorrect;
 
   return (
-    <div className="bg-[#0D0D0D] border border-gray-800/80 rounded-xl p-4 md:p-5 w-full shadow-2xl relative flex flex-col flex-shrink-0">
+    <div className="bg-[#131316] border border-gray-800/80 rounded-xl p-4 md:p-5 w-full shadow-2xl relative flex flex-col flex-shrink-0">
       <div className="flex items-start gap-3.5 mb-5">
         <div className="flex items-center justify-center min-w-[24px] w-[24px] h-[24px] rounded-full bg-red-500/10 border border-red-500/20 text-red-500 font-extrabold text-xs shrink-0 mt-0.5 shadow-[0_0_10px_rgba(239,68,68,0.15)]">
           {index + 1}

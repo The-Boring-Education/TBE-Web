@@ -225,7 +225,7 @@ const ContentFeedbackWidget = ({
           className={`relative w-full max-w-sm rounded-2xl p-5 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 ${
             isLight
               ? "bg-white border border-gray-200 text-gray-900"
-              : "bg-[#121215] border border-white/10 text-white"
+              : "bg-[#131316] border border-white/10 text-white"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
