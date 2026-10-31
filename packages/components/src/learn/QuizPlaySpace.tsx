@@ -453,7 +453,6 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
             {questions.map((q, qIdx) => {
               const chosen = selectedAnswers[qIdx];
               const isCorrect = chosen === q.correctAnswer;
-              const hasAnswered = chosen !== undefined;
 
               return (
                 <div
