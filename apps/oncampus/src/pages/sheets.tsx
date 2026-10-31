@@ -1019,10 +1019,10 @@ function SheetsClient() {
 
   const totalQuestions = 399;
   const totalSolved = validCompletedIds.length;
-  const overallPercentage =
-    totalQuestions > 0
-      ? Math.min(100, Math.round((totalSolved / totalQuestions) * 100))
-      : 0;
+  const overallPercentage = Math.min(
+    100,
+    Math.round((totalSolved / totalQuestions) * 100),
+  );
 
   if (selectedQuestion) {
     const isCompleted = validCompletedIds.some(

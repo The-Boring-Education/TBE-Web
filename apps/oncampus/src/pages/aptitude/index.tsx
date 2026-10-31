@@ -965,7 +965,7 @@ export default function AptitudePrepPage() {
                 <div className="w-full">
                   <AptitudeQuizPanel
                     questions={questions}
-                    topicSlug={selectedTopic ?? undefined}
+                    topicSlug={selectedTopic}
                     userId={user?.id ?? undefined}
                     onProgressSaved={handleAptitudeProgressSaved}
                   />
