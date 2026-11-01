@@ -131,12 +131,21 @@ const SheetPage = ({
   });
 
   const { isStarred, toggleStar, setIsStarred } = useQuestionStarred({
-    userId: user?.id || '',
+    userId: user?.id || (user as any)?._id || '',
     sheetId: sheet?._id?.toString() || '',
     questionId: currentQuestionId || '',
     initialIsStarred:
       questions.find((q) => q._id.toString() === currentQuestionId)
         ?.isStarred || false,
+    onSuccess: (newStarred) => {
+      setQuestions((prev) =>
+        prev.map((question) =>
+          question._id.toString() === currentQuestionId
+            ? { ...question, isStarred: newStarred }
+            : question,
+        ),
+      );
+    },
   });
 
   if (!sheet) return null;
@@ -313,13 +322,11 @@ const SheetPage = ({
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
   const handleStarToggle = async () => {
+    if (!user) {
+      router.push(routes.login);
+      return;
+    }
     await toggleStar();
-    const updatedQuestions = questions.map((question) =>
-      question._id.toString() === currentQuestionId
-        ? { ...question, isStarred: !isStarred }
-        : question,
-    );
-    setQuestions(updatedQuestions);
   };
 
   return (
