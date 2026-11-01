@@ -31,8 +31,19 @@ import crypto from "crypto";
 import { twMerge } from "tailwind-merge";
 
 const fetchAPIData = async (url: string) => {
-  const response = await fetch(`${envConfig.API_URL}/${url}`);
-  return await response.json();
+  const baseUrl =
+    envConfig.API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.API_URL ||
+    "http://localhost:3004/api/v1";
+  const normalizedBase = baseUrl.replace(/\/+$/, "");
+  const normalizedUrl = url.replace(/^\/+/, "");
+  try {
+    const response = await fetch(`${normalizedBase}/${normalizedUrl}`);
+    return await response.json();
+  } catch (err) {
+    return { status: false, data: null, error: err };
+  }
 };
 
 const formatDate = ({

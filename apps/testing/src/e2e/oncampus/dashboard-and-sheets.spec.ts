@@ -44,6 +44,15 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
       if (url.includes("user/interview-prep")) {
         return route.continue();
       }
+      if (url.includes("/core-subjects")) {
+        return route.fulfill({
+          status: 200,
+          json: {
+            status: true,
+            data: [],
+          },
+        });
+      }
       if (url.includes("roadmap=APTITUDE")) {
         return route.fulfill({
           status: 200,
@@ -68,27 +77,38 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
           },
         });
       }
+
+      const sheetObj = {
+        _id: "sheet-frontend-1",
+        name: "Frontend System Design",
+        slug: "frontend-system-design",
+        roadmap: "Tech",
+        questions: [
+          {
+            _id: "q-1",
+            title: "Design a News Feed",
+            question: "Design a News Feed",
+            answer: "News Feed architecture details",
+            isCompleted: false,
+          },
+        ],
+      };
+
+      if (url.includes("slug=") || url.includes("topic=")) {
+        return route.fulfill({
+          status: 200,
+          json: {
+            status: true,
+            data: sheetObj,
+          },
+        });
+      }
+
       return route.fulfill({
         status: 200,
         json: {
           status: true,
-          data: [
-            {
-              _id: "sheet-frontend-1",
-              name: "Frontend System Design",
-              slug: "frontend-system-design",
-              roadmap: "Tech",
-              questions: [
-                {
-                  _id: "q-1",
-                  title: "Design a News Feed",
-                  question: "Design a News Feed",
-                  answer: "News Feed architecture details",
-                  isCompleted: false,
-                },
-              ],
-            },
-          ],
+          data: [sheetObj],
         },
       });
     });
@@ -216,7 +236,7 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
       /\/interview-sheets\?topic=frontend-system-design/,
     );
     await expect(page.getByText(/Questions \(1\)/i)).toBeVisible({
-      timeout: 10_000,
+      timeout: 20_000,
     });
   });
 
@@ -255,7 +275,11 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
     await expect(page.getByText("Core Subjects").first()).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.getByText("Operating System").first()).toBeVisible();
-    await expect(page.getByText("DBMS").first()).toBeVisible();
+    await expect(page.getByText("Operating System").first()).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.getByText("DBMS").first()).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });

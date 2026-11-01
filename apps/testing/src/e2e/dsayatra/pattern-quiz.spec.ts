@@ -60,7 +60,10 @@ test.describe("DSA Yatra — Pattern Quiz E2E Flow", () => {
     await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
 
     // Click Pattern Quiz in sidebar
-    const patternQuizNav = page.getByRole("link", { name: /pattern quiz/i });
+    const patternQuizNav = page
+      .getByRole("button", { name: /pattern quiz/i })
+      .or(page.getByRole("link", { name: /pattern quiz/i }))
+      .first();
     await expect(patternQuizNav).toBeVisible({ timeout: 25_000 });
 
     await patternQuizNav.click();
