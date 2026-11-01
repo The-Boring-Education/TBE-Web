@@ -9,6 +9,7 @@ const useQuestionStarred = ({
   sheetId,
   questionId,
   initialIsStarred,
+  onSuccess,
 }: useQuestionStarredProps) => {
   const [isStarred, setIsStarred] = useState(initialIsStarred);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +20,10 @@ const useQuestionStarred = ({
   }, [initialIsStarred, questionId]);
 
   const toggleStar = async () => {
-    if (!userId) return;
+    if (!userId || !questionId || !sheetId) return;
     const oldState = isStarred;
-    setIsStarred(!isStarred); // Optimistic update
+    const newState = !oldState;
+    setIsStarred(newState); // Optimistic update
     setIsLoading(true);
     try {
       const result = await makeRequest({
@@ -31,10 +33,14 @@ const useQuestionStarred = ({
           userId,
           sheetId,
           questionId,
-          isStarred: !isStarred,
+          isStarred: newState,
         },
       });
-      if (!result.status) setIsStarred(oldState);
+      if (result && (result.status === true || result.success === true)) {
+        onSuccess?.(newState);
+      } else {
+        setIsStarred(oldState);
+      }
     } catch (e) {
       console.error(e);
       setIsStarred(oldState);

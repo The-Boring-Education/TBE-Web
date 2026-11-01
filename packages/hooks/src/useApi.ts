@@ -37,6 +37,9 @@ const useApi = (
     if (!params) {
       throw new Error("Params are required to make a request.");
     }
+    if (params.method && params.method !== "GET") {
+      return fetchFunction(params);
+    }
     return queryClient.fetchQuery({
       queryKey: [queryKey, params],
       queryFn: () => fetchFunction(params),
