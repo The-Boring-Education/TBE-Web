@@ -48,6 +48,7 @@ export interface useQuestionStarredProps {
   sheetId: string;
   questionId: string;
   initialIsStarred: boolean;
+  onSuccess?: (isStarred: boolean) => void;
 }
 
 export interface UsePaymentAccessProps {

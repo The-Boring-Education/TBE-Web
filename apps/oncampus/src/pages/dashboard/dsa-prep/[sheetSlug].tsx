@@ -81,12 +81,21 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     toggleStar,
     setIsStarred,
   } = useQuestionStarred({
-    userId: user?.id || "",
+    userId: user?.id || (user as any)?._id || "",
     sheetId: sheet._id?.toString() || "",
     questionId: currentQuestionId || "",
     initialIsStarred:
       questions.find((q) => q._id.toString() === currentQuestionId)
         ?.isStarred || false,
+    onSuccess: (newStarred) => {
+      setQuestions((prev) =>
+        prev.map((q) =>
+          q._id.toString() === currentQuestionId
+            ? { ...q, isStarred: newStarred }
+            : q,
+        ),
+      );
+    },
   });
 
   // Get current question and its resources
@@ -264,6 +273,14 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
     }
   };
 
+  const handleToggleStar = async () => {
+    if (!user) {
+      router.push(routes.login);
+      return;
+    }
+    await toggleStar();
+  };
+
   // Show small loader if data is not ready
   const isDataLoading = !sheet || !questions || questions.length === 0;
 
@@ -418,7 +435,7 @@ const DSASheetPage = ({ sheet, meta, slug, seoMeta }: SheetPageProps) => {
                       <StarButton
                         key="star"
                         isStarred={isStarred}
-                        onToggle={toggleStar}
+                        onToggle={handleToggleStar}
                         isLoading={isStarLoading}
                         className="mt-2 ml-2"
                       />

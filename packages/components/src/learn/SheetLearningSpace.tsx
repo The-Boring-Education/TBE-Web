@@ -12,9 +12,9 @@ import {
   FiSearch,
 } from "react-icons/fi";
 
+import LoadingSpinner from "../common/LoadingSpinner";
 import MDXRenderer from "../common/MDXRenderer";
 import { LearnButton } from "./LearnButton";
-import { PersonalizationLoader } from "./PersonalizationLoader";
 
 export interface SheetQuestion {
   _id: string;
@@ -116,6 +116,7 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     !cachedSheet?.questions?.length && !initialSheet?.questions?.length,
   );
   const [isUpdatingQuestion, setIsUpdatingQuestion] = useState<boolean>(false);
+  const [isUpdatingSave, setIsUpdatingSave] = useState<boolean>(false);
   const [isNavCollapsed, setIsNavCollapsed] = useState<boolean>(false);
   const [filterQuery, setFilterQuery] = useState<string>("");
   const [savedQuestionIds, setSavedQuestionIds] = useState<
@@ -301,17 +302,91 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
     }
   };
 
-  const toggleSaveCurrentQuestion = () => {
-    if (!activeQuestion) return;
+  const isCurrentQuestionSaved = useMemo(() => {
+    if (!activeQuestion) return false;
+    const qId = activeQuestion._id?.toString?.() || String(activeQuestion._id);
+    if (qId in savedQuestionIds) {
+      return Boolean(savedQuestionIds[qId]);
+    }
+    return Boolean(activeQuestion.isStarred);
+  }, [activeQuestion, savedQuestionIds]);
+
+  const toggleSaveCurrentQuestion = useCallback(async () => {
+    if (!activeQuestion || !sheet?._id) return;
+    const userId = user?.id || (user as any)?._id;
+    if (!userId) {
+      console.warn("User must be logged in to save questions");
+      return;
+    }
+
+    const qId = activeQuestion._id?.toString?.() || String(activeQuestion._id);
+    const sheetId = sheet._id?.toString?.() || String(sheet._id);
+    const currentStatus = isCurrentQuestionSaved;
+    const newStatus = !currentStatus;
+
+    // Optimistic UI update
     setSavedQuestionIds((prev) => ({
       ...prev,
-      [activeQuestion._id]: !prev[activeQuestion._id],
+      [qId]: newStatus,
     }));
-  };
+    setQuestions((prev) =>
+      prev.map((q) => {
+        const id = q._id?.toString?.() || String(q._id);
+        return id === qId ? { ...q, isStarred: newStatus } : q;
+      }),
+    );
 
-  const isCurrentQuestionSaved = Boolean(
-    activeQuestion && savedQuestionIds[activeQuestion._id],
-  );
+    setIsUpdatingSave(true);
+    try {
+      const response = await sendRequest({
+        method: "POST",
+        url: routes.api.markSheetQuestionAsStarred,
+        body: {
+          userId,
+          sheetId,
+          questionId: qId,
+          isStarred: newStatus,
+        },
+      });
+
+      if (!response?.status && !response?.success) {
+        // Revert on failure
+        setSavedQuestionIds((prev) => ({
+          ...prev,
+          [qId]: currentStatus,
+        }));
+        setQuestions((prev) =>
+          prev.map((q) => {
+            const id = q._id?.toString?.() || String(q._id);
+            return id === qId ? { ...q, isStarred: currentStatus } : q;
+          }),
+        );
+      } else {
+        const cached = sheetDataCache.get(sheetSlug);
+        if (cached?.questions) {
+          cached.questions = cached.questions.map((q: any) => {
+            const id = q._id?.toString?.() || String(q._id);
+            return id === qId ? { ...q, isStarred: newStatus } : q;
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to star question", err);
+      // Revert on error
+      setSavedQuestionIds((prev) => ({
+        ...prev,
+        [qId]: currentStatus,
+      }));
+      setQuestions((prev) =>
+        prev.map((q) => {
+          const id = q._id?.toString?.() || String(q._id);
+          return id === qId ? { ...q, isStarred: currentStatus } : q;
+        }),
+      );
+    } finally {
+      setIsUpdatingSave(false);
+    }
+  }, [activeQuestion, sheet?._id, user, isCurrentQuestionSaved, sheetSlug]);
 
   // Filter questions by search text
   const filteredQuestions = useMemo(() => {
@@ -341,14 +416,11 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
 
   if (isLoading && (!sheet || questions.length === 0)) {
     return (
-      <div className="w-full h-full min-h-[550px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6">
-        <PersonalizationLoader
-          fullScreen={false}
-          theme="dark"
-          title="Loading Interview Sheet..."
-          subtitle="Preparing interview questions & answers..."
-          className="bg-black text-white"
-        />
+      <div className="w-full h-full min-h-[450px] flex flex-col items-center justify-center gap-3 bg-white dark:bg-[#16161A] border border-slate-200/90 dark:border-[#26262C] rounded-2xl p-8 shadow-2xs">
+        <LoadingSpinner height={8} width={8} />
+        <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+          Loading interview questions...
+        </p>
       </div>
     );
   }
@@ -509,6 +581,15 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
                       >
                         {displayTitle}
                       </span>
+                      {Boolean(
+                        q._id &&
+                        (savedQuestionIds[
+                          q._id.toString?.() || String(q._id)
+                        ] ??
+                          q.isStarred),
+                      ) && (
+                        <FiBookmark className="w-3 h-3 text-[#FF4D4D] fill-[#FF4D4D] shrink-0" />
+                      )}
                     </div>
 
                     <FiChevronRight
@@ -558,11 +639,12 @@ export const SheetLearningSpace: React.FC<SheetLearningSpaceProps> = ({
             <button
               type="button"
               onClick={toggleSaveCurrentQuestion}
+              disabled={isUpdatingSave}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer shadow-2xs ${
                 isCurrentQuestionSaved
                   ? "bg-rose-50 dark:bg-red-950/40 border-rose-200 dark:border-red-900 text-[#FF4D4D]"
                   : "bg-white dark:bg-[#1E1E24] border-slate-200/90 dark:border-[#2C2C34] text-[#101828] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#26262E]"
-              }`}
+              } ${isUpdatingSave ? "opacity-60 cursor-not-allowed" : ""}`}
             >
               <FiBookmark
                 className={`w-3.5 h-3.5 ${

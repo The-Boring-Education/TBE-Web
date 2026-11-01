@@ -246,7 +246,8 @@ export const InterviewSheetWorkspace = ({
   };
 
   const toggleStar = async () => {
-    if (!user?.id || !currentQuestionId) return;
+    const userId = user?.id || (user as any)?._id;
+    if (!userId || !currentQuestionId) return;
     const oldQuestions = [...questions];
     const newStarStatus = !isQuestionStarred;
 
@@ -264,13 +265,13 @@ export const InterviewSheetWorkspace = ({
         method: "POST",
         url: routes.api.markSheetQuestionAsStarred,
         body: {
-          userId: user?.id,
+          userId,
           sheetId: sheet._id,
           questionId: currentQuestionId,
           isStarred: newStarStatus,
         },
       });
-      if (!response?.status) {
+      if (!response?.status && !response?.success) {
         setQuestions(oldQuestions);
       } else {
         trackEvent({
