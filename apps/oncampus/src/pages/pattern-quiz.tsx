@@ -11,7 +11,7 @@ export default function PatternQuizPage({ seoMeta }: Partial<PageProps> = {}) {
       <Head>
         <title>Pattern Quiz | OnCampus</title>
       </Head>
-      <SEO seoMeta={seoMeta} />
+      {seoMeta && <SEO seoMeta={seoMeta} />}
       <div className="w-full min-w-0 max-w-full font-sans px-1 sm:px-2 py-1 space-y-2.5 pb-4">
         {/* Breadcrumb Navigation on Top */}
         <nav className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">

@@ -120,11 +120,7 @@ test.describe("DSA Yatra — Dashboard & Actions E2E Flow", () => {
 
     await editGoalBtn.click();
     // Modal dialog opens
-    await expect(
-      page
-        .getByRole("dialog")
-        .or(page.getByText(/target role|target companies|timeline/i).first()),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("dialog")).toBeVisible({ timeout: 10_000 });
   });
 
   test("Start Solving button navigates to /sheets", async ({ page }) => {
@@ -135,7 +131,10 @@ test.describe("DSA Yatra — Dashboard & Actions E2E Flow", () => {
     });
     await expect(startSolvingBtn).toBeVisible({ timeout: 25_000 });
 
-    await startSolvingBtn.click();
+    await Promise.all([
+      page.waitForURL(/\/sheets/, { timeout: 15_000 }),
+      startSolvingBtn.click(),
+    ]);
     await expect(page).toHaveURL(/\/sheets/);
   });
 

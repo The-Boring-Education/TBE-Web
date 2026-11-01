@@ -20,6 +20,19 @@ export async function mockPrepYatraChallengesEmpty(page: Page): Promise<void> {
 }
 
 export async function mockDsayatraDashboardApis(page: Page): Promise<void> {
+  await page.route("**/api/proxy/payment/checkstatus**", (route) => {
+    if (route.request().method() !== "GET") {
+      return route.continue();
+    }
+    return route.fulfill({
+      status: 200,
+      json: {
+        status: true,
+        data: { purchased: true, hasAccess: true },
+      },
+    });
+  });
+
   await page.route("**/api/proxy/interview-prep/dsa-sheet**", (route) => {
     if (route.request().method() !== "GET") {
       return route.continue();
@@ -69,6 +82,19 @@ export async function mockDsayatraDashboardApis(page: Page): Promise<void> {
 }
 
 export async function mockOnCampusDashboardApis(page: Page): Promise<void> {
+  await page.route("**/api/proxy/payment/checkstatus**", (route) => {
+    if (route.request().method() !== "GET") {
+      return route.continue();
+    }
+    return route.fulfill({
+      status: 200,
+      json: {
+        status: true,
+        data: { purchased: true, hasAccess: true },
+      },
+    });
+  });
+
   await page.route("**/api/proxy/user/interview-prep**", (route) => {
     if (route.request().method() !== "GET") {
       return route.continue();

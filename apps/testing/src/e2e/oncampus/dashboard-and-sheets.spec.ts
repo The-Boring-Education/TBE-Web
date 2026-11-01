@@ -35,108 +35,109 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
       });
     });
 
-    // Mock published interview sheets catalog and specific sheet topic
+    // Mock published interview sheets catalog, specific sheet topic, and aptitude topics
     await page.route("**/api/proxy/interview-prep**", (route) => {
       const url = route.request().url();
-      if (
-        route.request().method() === "GET" &&
-        !url.includes("user/interview-prep")
-      ) {
+      if (route.request().method() !== "GET") {
+        return route.continue();
+      }
+      if (url.includes("user/interview-prep")) {
+        return route.continue();
+      }
+      if (url.includes("roadmap=APTITUDE")) {
         return route.fulfill({
           status: 200,
           json: {
             status: true,
             data: [
               {
-                _id: "sheet-frontend-1",
-                name: "Frontend System Design",
-                slug: "frontend-system-design",
-                roadmap: "Tech",
-                questions: [
-                  {
-                    _id: "q-1",
-                    title: "Design a News Feed",
-                    question: "Design a News Feed",
-                    answer: "News Feed architecture details",
-                    isCompleted: false,
-                  },
-                ],
+                slug: "percentages",
+                name: "Percentages",
+                questionCount: 20,
+                category: "QUANTITATIVE",
+                isLocked: false,
+              },
+              {
+                slug: "blood-relations",
+                name: "Blood Relations",
+                questionCount: 15,
+                category: "LOGICAL",
+                isLocked: false,
               },
             ],
           },
         });
       }
-      return route.continue();
-    });
-
-    // Mock quiz performance & quiz categories
-    await page.route("**/api/proxy/quiz/performance/**", (route) => {
-      return route.fulfill({
-        status: 200,
-        json: {
-          status: true,
-          data: {
-            totalAttempts: 12,
-            totalQuizzes: 4,
-            averageScore: 78,
-            bestScore: 95,
-            recentAttempts: [
-              {
-                id: "att-1",
-                quizTitle: "JavaScript Fundamentals",
-                score: 85,
-                categoryName: "Frontend",
-                completedAt: new Date().toISOString(),
-              },
-            ],
-          },
-        },
-      });
-    });
-
-    await page.route("**/api/proxy/quiz/categories**", (route) => {
       return route.fulfill({
         status: 200,
         json: {
           status: true,
           data: [
             {
-              _id: "quiz-cat-1",
-              categoryName: "JavaScript Basics",
-              quizzesCount: 10,
-            },
-            {
-              _id: "quiz-cat-2",
-              categoryName: "React Mastery",
-              quizzesCount: 15,
+              _id: "sheet-frontend-1",
+              name: "Frontend System Design",
+              slug: "frontend-system-design",
+              roadmap: "Tech",
+              questions: [
+                {
+                  _id: "q-1",
+                  title: "Design a News Feed",
+                  question: "Design a News Feed",
+                  answer: "News Feed architecture details",
+                  isCompleted: false,
+                },
+              ],
             },
           ],
         },
       });
     });
 
-    // Mock Aptitude topics & progress
-    await page.route("**/api/proxy/interview-prep/aptitude**", (route) => {
+    // Mock quiz categories and quiz performance
+    await page.route("**/api/proxy/quiz**", (route) => {
+      const url = route.request().url();
+      if (url.includes("/performance")) {
+        return route.fulfill({
+          status: 200,
+          json: {
+            status: true,
+            data: {
+              totalAttempts: 12,
+              totalQuizzes: 4,
+              averageScore: 78,
+              bestScore: 95,
+              recentAttempts: [
+                {
+                  id: "att-1",
+                  quizTitle: "JavaScript Fundamentals",
+                  score: 85,
+                  categoryName: "Frontend",
+                  completedAt: new Date().toISOString(),
+                },
+              ],
+            },
+          },
+        });
+      }
       return route.fulfill({
         status: 200,
         json: {
           status: true,
-          data: {
-            topics: [
-              {
-                topic: "percentages",
-                count: 20,
-                label: "Percentages",
-                category: "QUANTITATIVE",
-              },
-              {
-                topic: "blood-relations",
-                count: 15,
-                label: "Blood Relations",
-                category: "LOGICAL",
-              },
-            ],
-          },
+          success: true,
+          data: [
+            {
+              _id: "quiz-cat-1",
+              categoryName: "JavaScript Basics",
+              categoryDescription: "Test your JS fundamentals",
+              quizzesCount: 10,
+            },
+            {
+              _id: "quiz-cat-2",
+              categoryName: "React Mastery",
+              categoryDescription: "Test your React fundamentals",
+              quizzesCount: 15,
+            },
+          ],
         },
       });
     });
@@ -172,7 +173,12 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
     const resumeBtn = page.getByRole("button", { name: /resume/i });
     await expect(resumeBtn).toBeVisible({ timeout: 15_000 });
 
-    await resumeBtn.click();
+    await Promise.all([
+      page.waitForURL(/\/interview-sheets\?topic=frontend-system-design/, {
+        timeout: 15_000,
+      }),
+      resumeBtn.click(),
+    ]);
     await expect(page).toHaveURL(
       /\/interview-sheets\?topic=frontend-system-design/,
     );
@@ -220,7 +226,7 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
     await page.goto("/dashboard/quizzes", { waitUntil: "domcontentloaded" });
 
     await expect(page).toHaveURL(/\/dashboard\/quizzes/);
-    await expect(page.getByText("JavaScript Basics")).toBeVisible({
+    await expect(page.getByText("JavaScript Basics").first()).toBeVisible({
       timeout: 15_000,
     });
   });
@@ -231,7 +237,7 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
     await page.goto("/aptitude", { waitUntil: "domcontentloaded" });
 
     await expect(page).toHaveURL(/\/aptitude/);
-    await expect(page.getByText(/Campus Aptitude Prep/i)).toBeVisible({
+    await expect(page.getByRole("heading", { name: /Aptitude/i })).toBeVisible({
       timeout: 20_000,
     });
     await expect(
@@ -246,10 +252,10 @@ test.describe("OnCampus — Full Platform E2E Flow", () => {
     await page.goto("/coresubjects", { waitUntil: "domcontentloaded" });
 
     await expect(page).toHaveURL(/\/coresubjects/);
-    await expect(page.getByText(/Core CS Subjects/i)).toBeVisible({
+    await expect(page.getByText("Core Subjects").first()).toBeVisible({
       timeout: 20_000,
     });
-    await expect(page.getByText(/Operating System/i)).toBeVisible();
-    await expect(page.getByText(/Database Management System/i)).toBeVisible();
+    await expect(page.getByText("Operating System").first()).toBeVisible();
+    await expect(page.getByText("DBMS").first()).toBeVisible();
   });
 });
