@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { Fragment } from "react";
 
-export default function PatternQuizPage({ seoMeta }: PageProps) {
+export default function PatternQuizPage({ seoMeta }: Partial<PageProps> = {}) {
   return (
     <Fragment>
       <Head>

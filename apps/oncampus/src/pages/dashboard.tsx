@@ -219,9 +219,19 @@ const CampusPrepDashboard = () => {
                       </h4>
                       <button
                         type="button"
-                        onClick={() =>
-                          router.push(`/interview-sheets?topic=${sheet.slug}`)
-                        }
+                        onClick={() => {
+                          const isDsa =
+                            (sheet as any).isDsa ||
+                            (sheet as any).roadmap === "DSA" ||
+                            (sheet.slug || "").includes("dsa");
+                          if (isDsa) {
+                            router.push(`/sheets?topic=${sheet.slug}`);
+                          } else {
+                            router.push(
+                              `/interview-sheets?topic=${sheet.slug}`,
+                            );
+                          }
+                        }}
                         className="border border-[#FF4D4D] text-[#FF4D4D] hover:bg-[#FF4D4D] hover:text-white px-3 py-1 rounded-md text-[11px] font-bold transition-all uppercase tracking-wider cursor-pointer shrink-0"
                       >
                         Resume
