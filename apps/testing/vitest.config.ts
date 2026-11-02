@@ -164,6 +164,14 @@ export default defineConfig({
         __dirname,
         "../dsayatra/src/utils/dsaGamificationAward.ts",
       ),
+      "@/components/CoreSubjectMDXRenderer": path.resolve(
+        __dirname,
+        "../oncampus/src/components/CoreSubjectMDXRenderer.tsx",
+      ),
+      "@/config/coreSubjectsData": path.resolve(
+        __dirname,
+        "../oncampus/src/config/coreSubjectsData.ts",
+      ),
     },
   },
 });

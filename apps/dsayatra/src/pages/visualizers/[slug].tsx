@@ -8,8 +8,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { Fragment } from "react";
 
-interface VisualizerPageProps extends PageProps {
+interface VisualizerPageProps {
   slug: string;
+  seoMeta?: PageProps["seoMeta"];
 }
 
 const VisualizerViewerPage = ({ seoMeta, slug }: VisualizerPageProps) => {
@@ -48,7 +49,7 @@ const VisualizerViewerPage = ({ seoMeta, slug }: VisualizerPageProps) => {
       <Head>
         <title>{meta.title} | DSA Visualizer</title>
       </Head>
-      <SEO seoMeta={seoMeta} appId="dsayatra" />
+      {seoMeta && <SEO seoMeta={seoMeta} appId="dsayatra" />}
 
       <div className="w-full h-full overflow-y-auto px-3 sm:px-6 py-2 sm:py-3 space-y-3 sm:space-y-4 scrollbar-thin-grey font-sans">
         {/* Top Header & Breadcrumb Section */}

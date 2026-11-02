@@ -44,13 +44,17 @@ const getPreFetchProps = async ({
 
   const seoMeta = getSEOMeta(baseSlug, appId);
 
-  const redirect = !seoMeta && {
-    destination: routes.home,
-  };
+  if (!seoMeta) {
+    return {
+      redirect: {
+        destination: routes.home,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: { slug, seoMeta },
-    redirect,
   };
 };
 

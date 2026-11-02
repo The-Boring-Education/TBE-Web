@@ -98,4 +98,70 @@ describe("useQuestionStarred", () => {
 
     expect(result.current.isStarred).toBe(false);
   });
+
+  it("calls onSuccess callback with new starred state when API succeeds", async () => {
+    mockMakeRequest.mockResolvedValue({ status: true });
+    const onSuccess = vi.fn();
+
+    const { result } = renderHook(() =>
+      useQuestionStarred({
+        userId: "u1",
+        sheetId: "s1",
+        questionId: "q1",
+        initialIsStarred: false,
+        onSuccess,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.toggleStar();
+    });
+
+    expect(result.current.isStarred).toBe(true);
+    expect(onSuccess).toHaveBeenCalledWith(true);
+  });
+
+  it("handles result.success === true and calls onSuccess", async () => {
+    mockMakeRequest.mockResolvedValue({ success: true });
+    const onSuccess = vi.fn();
+
+    const { result } = renderHook(() =>
+      useQuestionStarred({
+        userId: "u1",
+        sheetId: "s1",
+        questionId: "q1",
+        initialIsStarred: true,
+        onSuccess,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.toggleStar();
+    });
+
+    expect(result.current.isStarred).toBe(false);
+    expect(onSuccess).toHaveBeenCalledWith(false);
+  });
+
+  it("does not call onSuccess and reverts state when request throws an error", async () => {
+    mockMakeRequest.mockRejectedValue(new Error("Network error"));
+    const onSuccess = vi.fn();
+
+    const { result } = renderHook(() =>
+      useQuestionStarred({
+        userId: "u1",
+        sheetId: "s1",
+        questionId: "q1",
+        initialIsStarred: false,
+        onSuccess,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.toggleStar();
+    });
+
+    expect(result.current.isStarred).toBe(false);
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
 });

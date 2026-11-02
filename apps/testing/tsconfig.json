@@ -15,7 +15,7 @@
     "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*", "../api/src/*"],
+      "@/*": ["./src/*", "../api/src/*", "../oncampus/src/*"],
       "@test-utils/*": ["./src/test-utils/*"],
       "@/lib/*": ["../api/src/lib/*"],
       "@/middleware/*": ["../api/src/middleware/*"],

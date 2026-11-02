@@ -232,19 +232,25 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
 
   // If a topic is selected, render the reusable SheetLearningSpace matching Platform
   if (router.query.topic) {
+    const topicSlug = String(router.query.topic);
+    const matchedSheet =
+      props.sheet ||
+      sheetsData.find((s: any) => s.slug === topicSlug) ||
+      enrolledSheets.find((s: any) => s.slug === topicSlug);
+
     return (
       <Fragment>
         <Head>
           <title>
-            {props.sheet?.name
-              ? `${props.sheet.name} | OnCampus Sheets`
+            {matchedSheet?.name
+              ? `${matchedSheet.name} | OnCampus Sheets`
               : "Interview Sheet | OnCampus"}
           </title>
         </Head>
         <div className="w-full min-w-0 max-w-full font-sans space-y-2.5 pb-4">
           <SheetLearningSpace
-            sheetSlug={String(router.query.topic)}
-            initialSheet={props.sheet}
+            sheetSlug={topicSlug}
+            initialSheet={matchedSheet}
             user={user}
             onBack={() => router.push("/interview-sheets")}
             onNavigateToDashboard={() => router.push("/dashboard")}
@@ -523,7 +529,7 @@ export const getServerSideProps = async (context: any) => {
     const pagePropsResult = await getSheetPageProps(context);
 
     if ("redirect" in pagePropsResult) {
-      return pagePropsResult;
+      return { props: { topic } };
     }
 
     const props = pagePropsResult.props as any;

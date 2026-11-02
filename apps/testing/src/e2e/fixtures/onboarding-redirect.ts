@@ -143,6 +143,19 @@ export async function installOnboardingRedirectMocks(
     route.fulfill({ status: 200, json: { status: true, data: null } }),
   );
 
+  await page.route("**/api/proxy/payment/checkstatus**", (route) => {
+    if (route.request().method() !== "GET") {
+      return route.continue();
+    }
+    return route.fulfill({
+      status: 200,
+      json: {
+        status: true,
+        data: { purchased: true, hasAccess: true },
+      },
+    });
+  });
+
   // Keep redirect tests stable even when onboarding preview server is slow/unavailable in CI.
   await page.route("http://localhost:5173/**", (route) =>
     route.fulfill({
