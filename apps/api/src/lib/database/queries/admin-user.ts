@@ -1,20 +1,37 @@
-import type { DatabaseQueryResponseType } from "@/lib/interfaces";
+import type {
+  AdminUserModel,
+  DatabaseQueryResponseType,
+} from "@/lib/interfaces";
 import { logger } from "@/lib/utils/logger";
 
 import AdminUser from "../models/AdminUser";
 
 const normalizeEmail = (email: string): string => email.trim().toLowerCase();
 
+const failed = (
+  operation: string,
+  message: string,
+  error: unknown,
+): DatabaseQueryResponseType => {
+  logger.error(`DB: ${operation} failed`, {
+    error: error instanceof Error ? error.message : String(error),
+    stack: error instanceof Error ? error.stack : undefined,
+  });
+  return { error: message, details: error };
+};
+
+const isLastActiveAdmin = async (admin: AdminUserModel): Promise<boolean> =>
+  admin.isActive && (await AdminUser.countDocuments({ isActive: true })) <= 1;
+
 const getAllAdminUsersFromDB = async (): Promise<DatabaseQueryResponseType> => {
   try {
-    const admins = await AdminUser.find({}).sort({ createdAt: -1 });
-    return { data: admins };
+    return { data: await AdminUser.find({}).sort({ createdAt: -1 }) };
   } catch (error) {
-    logger.error("DB: getAllAdminUsersFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to fetch admin users", details: error };
+    return failed(
+      "getAllAdminUsersFromDB",
+      "Failed to fetch admin users",
+      error,
+    );
   }
 };
 
@@ -23,16 +40,13 @@ const getAdminUserByIdFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const admin = await AdminUser.findById(adminId);
-    if (!admin) {
-      return { error: "Admin user not found" };
-    }
-    return { data: admin };
+    return admin ? { data: admin } : { error: "Admin user not found" };
   } catch (error) {
-    logger.error("DB: getAdminUserByIdFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to fetch admin user", details: error };
+    return failed(
+      "getAdminUserByIdFromDB",
+      "Failed to fetch admin user",
+      error,
+    );
   }
 };
 
@@ -41,62 +55,27 @@ const getAdminUserByEmailFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const admin = await AdminUser.findOne({ email: normalizeEmail(email) });
-    if (!admin) {
-      return { error: "Admin user not found" };
-    }
-    return { data: admin };
+    return admin ? { data: admin } : { error: "Admin user not found" };
   } catch (error) {
-    logger.error("DB: getAdminUserByEmailFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to fetch admin user", details: error };
+    return failed(
+      "getAdminUserByEmailFromDB",
+      "Failed to fetch admin user",
+      error,
+    );
   }
 };
 
-const isActiveAdminEmailInDB = async (
-  email: string,
-): Promise<DatabaseQueryResponseType> => {
-  try {
-    const admin = await AdminUser.findOne({
-      email: normalizeEmail(email),
-      isActive: true,
-    });
-    return { data: Boolean(admin) };
-  } catch (error) {
-    logger.error("DB: isActiveAdminEmailInDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to verify admin email", details: error };
-  }
-};
-
-const countActiveAdminUsersFromDB =
+const getActiveAdminEmailsFromDB =
   async (): Promise<DatabaseQueryResponseType> => {
     try {
-      const count = await AdminUser.countDocuments({ isActive: true });
-      return { data: count };
+      const admins = await AdminUser.find({ isActive: true }).select("email");
+      return { data: admins.map((admin) => admin.email) };
     } catch (error) {
-      logger.error("DB: countActiveAdminUsersFromDB failed", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      return { error: "Failed to count active admin users", details: error };
-    }
-  };
-
-const countAllAdminUsersFromDB =
-  async (): Promise<DatabaseQueryResponseType> => {
-    try {
-      const count = await AdminUser.countDocuments({});
-      return { data: count };
-    } catch (error) {
-      logger.error("DB: countAllAdminUsersFromDB failed", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      return { error: "Failed to count admin users", details: error };
+      return failed(
+        "getActiveAdminEmailsFromDB",
+        "Failed to fetch active admin emails",
+        error,
+      );
     }
   };
 
@@ -112,8 +91,7 @@ const createAdminUserFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const email = normalizeEmail(payload.email);
-    const existing = await AdminUser.findOne({ email });
-    if (existing) {
+    if (await AdminUser.findOne({ email })) {
       return { error: "Admin user with this email already exists" };
     }
 
@@ -127,11 +105,11 @@ const createAdminUserFromDB = async (
 
     return { data: admin };
   } catch (error) {
-    logger.error("DB: createAdminUserFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to create admin user", details: error };
+    return failed(
+      "createAdminUserFromDB",
+      "Failed to create admin user",
+      error,
+    );
   }
 };
 
@@ -151,36 +129,33 @@ const updateAdminUserFromDB = async (
       return { error: "Admin user not found" };
     }
 
-    if (payload.isActive === false && existing.isActive) {
-      const { data: activeCount } = await countActiveAdminUsersFromDB();
-      if (typeof activeCount === "number" && activeCount <= 1) {
-        return { error: "Cannot deactivate the last active admin" };
-      }
+    if (payload.isActive === false && (await isLastActiveAdmin(existing))) {
+      return { error: "Cannot deactivate the last active admin" };
     }
 
-    const updateFields: UpdateAdminUserPayload = {};
+    const updates: UpdateAdminUserPayload = {};
     if (payload.name !== undefined) {
-      updateFields.name = payload.name.trim() || undefined;
+      updates.name = payload.name.trim() || undefined;
     }
     if (payload.notes !== undefined) {
-      updateFields.notes = payload.notes.trim() || undefined;
+      updates.notes = payload.notes.trim() || undefined;
     }
     if (payload.isActive !== undefined) {
-      updateFields.isActive = payload.isActive;
+      updates.isActive = payload.isActive;
     }
 
-    const admin = await AdminUser.findByIdAndUpdate(adminId, updateFields, {
+    const admin = await AdminUser.findByIdAndUpdate(adminId, updates, {
       new: true,
       runValidators: true,
     });
 
     return { data: admin };
   } catch (error) {
-    logger.error("DB: updateAdminUserFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to update admin user", details: error };
+    return failed(
+      "updateAdminUserFromDB",
+      "Failed to update admin user",
+      error,
+    );
   }
 };
 
@@ -193,48 +168,27 @@ const deleteAdminUserFromDB = async (
       return { error: "Admin user not found" };
     }
 
-    if (existing.isActive) {
-      const { data: activeCount } = await countActiveAdminUsersFromDB();
-      if (typeof activeCount === "number" && activeCount <= 1) {
-        return { error: "Cannot delete the last active admin" };
-      }
+    if (await isLastActiveAdmin(existing)) {
+      return { error: "Cannot delete the last active admin" };
     }
 
     await AdminUser.findByIdAndDelete(adminId);
     return { data: { deleted: true } };
   } catch (error) {
-    logger.error("DB: deleteAdminUserFromDB failed", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return { error: "Failed to delete admin user", details: error };
+    return failed(
+      "deleteAdminUserFromDB",
+      "Failed to delete admin user",
+      error,
+    );
   }
 };
 
-const getActiveAdminEmailsFromDB =
-  async (): Promise<DatabaseQueryResponseType> => {
-    try {
-      const admins = await AdminUser.find({ isActive: true }).select("email");
-      const emails = admins.map((admin) => admin.email);
-      return { data: emails };
-    } catch (error) {
-      logger.error("DB: getActiveAdminEmailsFromDB failed", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      return { error: "Failed to fetch active admin emails", details: error };
-    }
-  };
-
 export {
-  countActiveAdminUsersFromDB,
-  countAllAdminUsersFromDB,
   createAdminUserFromDB,
   deleteAdminUserFromDB,
   getActiveAdminEmailsFromDB,
   getAdminUserByEmailFromDB,
   getAdminUserByIdFromDB,
   getAllAdminUsersFromDB,
-  isActiveAdminEmailInDB,
   updateAdminUserFromDB,
 };

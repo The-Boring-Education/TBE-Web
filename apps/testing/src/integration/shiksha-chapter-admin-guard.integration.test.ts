@@ -48,10 +48,8 @@ vi.mock("@/lib/auth/jwt", () => ({
 }));
 
 const mockIsAdminEmail = vi.fn();
-const mockWarmAdminEmailCache = vi.fn();
 vi.mock("@/lib/services/admin-cache", () => ({
   isAdminEmail: (...args: unknown[]) => mockIsAdminEmail(...args),
-  warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
 }));
 
 const mockAddChapterToCourseInDB = vi.fn();
@@ -153,7 +151,6 @@ const expectNoWrites = () => {
 describe("Shiksha chapter write routes admin guard", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockWarmAdminEmailCache.mockResolvedValue(undefined);
     mockIsAdminEmail.mockResolvedValue(false);
     mockGetACourseFromDBById.mockResolvedValue({ data: { _id: COURSE_ID } });
     mockAddChapterToCourseInDB.mockResolvedValue({ data: { _id: CHAPTER_ID } });

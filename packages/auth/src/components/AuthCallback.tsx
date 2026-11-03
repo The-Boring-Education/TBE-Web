@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { getAuthApiUrl } from "../config";
+import { getAuthApiUrl, isProxyUnavailable } from "../config";
 import { PENDING_AUTH_ANALYTICS_KEY } from "../constants";
 import { getSafeRedirectPath } from "../redirect";
 import { setTokens } from "../token";
@@ -21,8 +21,7 @@ async function exchangeCodeForTokens(code: string): Promise<Response> {
     body: JSON.stringify({ code }),
   });
 
-  // If proxy works or returns a real error (not 404), use that response
-  if (proxyResponse.status !== 404) {
+  if (!isProxyUnavailable(proxyResponse)) {
     return proxyResponse;
   }
 

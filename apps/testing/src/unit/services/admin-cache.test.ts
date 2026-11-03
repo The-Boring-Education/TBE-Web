@@ -16,7 +16,6 @@ import {
   __setAdminCacheForTests,
   invalidateAdminCache,
   isAdminEmail,
-  isAdminEmailCached,
 } from "../../../../api/src/lib/services/admin-cache";
 
 describe("Admin Cache Service", () => {
@@ -25,13 +24,16 @@ describe("Admin Cache Service", () => {
     __resetAdminCacheForTests();
   });
 
-  it("isAdminEmailCached returns false for empty cache", () => {
-    expect(isAdminEmailCached("admin@example.com")).toBe(false);
+  it("isAdminEmail returns false for empty input without hitting the DB", async () => {
+    await expect(isAdminEmail("")).resolves.toBe(false);
+    await expect(isAdminEmail(undefined)).resolves.toBe(false);
+    expect(mockGetActiveAdminEmailsFromDB).not.toHaveBeenCalled();
   });
 
-  it("isAdminEmailCached matches normalized emails", () => {
+  it("isAdminEmail matches normalized emails from a fresh cache", async () => {
     __setAdminCacheForTests(["Admin@Example.com"]);
-    expect(isAdminEmailCached("admin@example.com")).toBe(true);
+    await expect(isAdminEmail(" admin@example.COM ")).resolves.toBe(true);
+    expect(mockGetActiveAdminEmailsFromDB).not.toHaveBeenCalled();
   });
 
   it("isAdminEmail loads emails from DB when cache is stale", async () => {
@@ -40,14 +42,22 @@ describe("Admin Cache Service", () => {
     });
 
     await expect(isAdminEmail("admin@example.com")).resolves.toBe(true);
+    await expect(isAdminEmail("admin@example.com")).resolves.toBe(true);
     expect(mockGetActiveAdminEmailsFromDB).toHaveBeenCalledTimes(1);
-    expect(isAdminEmailCached("admin@example.com")).toBe(true);
   });
 
-  it("invalidateAdminCache clears cached emails", async () => {
+  it("isAdminEmail returns false when the DB load fails", async () => {
+    mockGetActiveAdminEmailsFromDB.mockResolvedValue({ error: "boom" });
+    await expect(isAdminEmail("admin@example.com")).resolves.toBe(false);
+  });
+
+  it("invalidateAdminCache forces a reload on next lookup", async () => {
     __setAdminCacheForTests(["admin@example.com"]);
     invalidateAdminCache();
-    expect(isAdminEmailCached("admin@example.com")).toBe(false);
+    mockGetActiveAdminEmailsFromDB.mockResolvedValue({ data: [] });
+
+    await expect(isAdminEmail("admin@example.com")).resolves.toBe(false);
+    expect(mockGetActiveAdminEmailsFromDB).toHaveBeenCalledTimes(1);
   });
 
   it("resolves a script-created admin after cache invalidation", async () => {
@@ -64,6 +74,5 @@ describe("Admin Cache Service", () => {
     invalidateAdminCache();
 
     await expect(isAdminEmail("new-admin@example.com")).resolves.toBe(true);
-    expect(isAdminEmailCached("new-admin@example.com")).toBe(true);
   });
 });

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { type AccessTokenPayload, verifyToken } from "@/lib/auth/jwt";
 import { extractBearerToken } from "@/lib/auth/token";
 import { apiStatusCodes } from "@/lib/constants";
-import { isAdminEmail, warmAdminEmailCache } from "@/lib/services/admin-cache";
+import { isAdminEmail } from "@/lib/services/admin-cache";
 import { sendAPIResponse } from "@/lib/utils";
 import { matchesAdminSecret } from "@/middleware/adminSecret";
 
@@ -21,29 +21,33 @@ export interface AdminAuthenticatedRequest extends NextApiRequest {
 // dependency-light "@/lib/auth/token" module so it can be shared freely.
 export { extractBearerToken };
 
-export const verifyJwtAdmin = async (
+export const verifyAuthenticatedUser = (
   req: NextApiRequest,
-): Promise<AdminAuthenticatedUser | null> => {
+): AccessTokenPayload | null => {
   const token = extractBearerToken(req);
   if (!token) return null;
 
   try {
     const payload = verifyToken<AccessTokenPayload>(token);
     if (payload.type !== "access") return null;
-
-    await warmAdminEmailCache();
-    if (!(await isAdminEmail(payload.email))) {
-      return null;
-    }
-
-    return {
-      id: payload.sub,
-      email: payload.email,
-      name: payload.name,
-    };
+    return payload;
   } catch {
     return null;
   }
+};
+
+const toAdminUser = (payload: AccessTokenPayload): AdminAuthenticatedUser => ({
+  id: payload.sub,
+  email: payload.email,
+  name: payload.name,
+});
+
+export const verifyJwtAdmin = async (
+  req: NextApiRequest,
+): Promise<AdminAuthenticatedUser | null> => {
+  const payload = verifyAuthenticatedUser(req);
+  if (!payload || !(await isAdminEmail(payload.email))) return null;
+  return toAdminUser(payload);
 };
 
 /**
@@ -64,56 +68,29 @@ export const ensureAdminAccess = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<boolean> => {
-  const token = extractBearerToken(req);
-
-  if (token) {
-    try {
-      const payload = verifyToken<AccessTokenPayload>(token);
-      if (payload.type !== "access") {
-        res.status(apiStatusCodes.UNAUTHORIZED).json(
-          sendAPIResponse({
-            status: false,
-            message: "Invalid access token",
-          }),
-        );
-        return false;
-      }
-
-      await warmAdminEmailCache();
-      if (!(await isAdminEmail(payload.email))) {
-        res.status(apiStatusCodes.FORBIDDEN).json(
-          sendAPIResponse({
-            status: false,
-            message: "Admin access required",
-          }),
-        );
-        return false;
-      }
-
-      (req as AdminAuthenticatedRequest).adminUser = {
-        id: payload.sub,
-        email: payload.email,
-        name: payload.name,
-      };
-      return true;
-    } catch {
-      res.status(apiStatusCodes.UNAUTHORIZED).json(
-        sendAPIResponse({
-          status: false,
-          message: "Authentication required",
-        }),
-      );
-      return false;
-    }
+  const payload = verifyAuthenticatedUser(req);
+  if (!payload) {
+    res.status(apiStatusCodes.UNAUTHORIZED).json(
+      sendAPIResponse({
+        status: false,
+        message: "Authentication required",
+      }),
+    );
+    return false;
   }
 
-  res.status(apiStatusCodes.UNAUTHORIZED).json(
-    sendAPIResponse({
-      status: false,
-      message: "Authentication required",
-    }),
-  );
-  return false;
+  if (!(await isAdminEmail(payload.email))) {
+    res.status(apiStatusCodes.FORBIDDEN).json(
+      sendAPIResponse({
+        status: false,
+        message: "Admin access required",
+      }),
+    );
+    return false;
+  }
+
+  (req as AdminAuthenticatedRequest).adminUser = toAdminUser(payload);
+  return true;
 };
 
 /**
@@ -150,31 +127,6 @@ export const withVerifiedAdminAuthOrSecret = (
     if (!authorized) return;
     return handler(req, res);
   };
-};
-
-export const withAdminAuth: (
-  handler: (
-    req: AdminAuthenticatedRequest,
-    res: NextApiResponse,
-  ) => Promise<void> | void,
-) => (req: NextApiRequest, res: NextApiResponse) => Promise<void> = (handler) =>
-  withVerifiedAdminAuth(async (req, res) =>
-    handler(req as AdminAuthenticatedRequest, res),
-  );
-
-export const verifyAuthenticatedUser = (
-  req: NextApiRequest,
-): AccessTokenPayload | null => {
-  const token = extractBearerToken(req);
-  if (!token) return null;
-
-  try {
-    const payload = verifyToken<AccessTokenPayload>(token);
-    if (payload.type !== "access") return null;
-    return payload;
-  } catch {
-    return null;
-  }
 };
 
 const normalizeStringVal = (val: unknown): string | undefined => {

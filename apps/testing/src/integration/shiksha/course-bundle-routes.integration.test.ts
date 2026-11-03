@@ -46,10 +46,8 @@ vi.mock("@/lib/auth/jwt", () => ({
 }));
 
 const mockIsAdminEmail = vi.fn();
-const mockWarmAdminEmailCache = vi.fn();
 vi.mock("@/lib/services/admin-cache", () => ({
   isAdminEmail: (...args: unknown[]) => mockIsAdminEmail(...args),
-  warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
 }));
 
 const mockImportCourseBundleToDB = vi.fn();
@@ -104,7 +102,6 @@ const asNonAdmin = () => {
 describe("Course Bundle import/export routes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockWarmAdminEmailCache.mockResolvedValue(undefined);
     mockIsAdminEmail.mockResolvedValue(false);
     mockImportCourseBundleToDB.mockResolvedValue({
       data: { dryRun: false, slug: "react-basics", course: "CREATED" },

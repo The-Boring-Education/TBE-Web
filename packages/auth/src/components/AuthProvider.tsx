@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 
-import { getAuthApiUrl } from "../config";
+import { getAuthApiUrl, isProxyUnavailable } from "../config";
 import {
   clearTokens,
   decodeToken,
@@ -70,8 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         body: JSON.stringify({ refreshToken }),
       });
 
-      // If proxy doesn't exist (404), fall back to direct API call (Vite apps)
-      if (response.status === 404) {
+      if (isProxyUnavailable(response)) {
         const apiUrl = getAuthApiUrl();
         response = await fetch(`${apiUrl}/auth/refresh`, {
           method: "POST",

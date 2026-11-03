@@ -20,3 +20,7 @@ export const getAuthApiUrl = (): string => {
 
   return url;
 };
+
+// Vite SPAs have no /api/proxy route; their index.html rewrite answers POSTs with 405.
+export const isProxyUnavailable = (response: Response): boolean =>
+  response.status === 404 || response.status === 405;

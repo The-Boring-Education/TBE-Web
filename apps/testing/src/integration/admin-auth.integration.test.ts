@@ -21,10 +21,8 @@ vi.mock("@/lib/auth/jwt", () => ({
 }));
 
 const mockIsAdminEmail = vi.fn();
-const mockWarmAdminEmailCache = vi.fn();
 vi.mock("@/lib/services/admin-cache", () => ({
   isAdminEmail: (...args: unknown[]) => mockIsAdminEmail(...args),
-  warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
 }));
 
 import { ensureAdminAccess } from "@/middleware/admin";
@@ -35,7 +33,6 @@ describe("Admin Middleware Integration", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockWarmAdminEmailCache.mockResolvedValue(undefined);
     mockIsAdminEmail.mockResolvedValue(false);
   });
 

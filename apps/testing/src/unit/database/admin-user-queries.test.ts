@@ -79,13 +79,10 @@ vi.mock("@/lib/utils/logger", () => ({
 }));
 
 import {
-  countActiveAdminUsersFromDB,
-  countAllAdminUsersFromDB,
   createAdminUserFromDB,
   deleteAdminUserFromDB,
   getActiveAdminEmailsFromDB,
   getAllAdminUsersFromDB,
-  isActiveAdminEmailInDB,
   updateAdminUserFromDB,
 } from "../../../../api/src/lib/database/queries/admin-user";
 
@@ -121,16 +118,6 @@ describe("Admin User Queries", () => {
     expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 });
   });
 
-  it("isActiveAdminEmailInDB returns true when active admin exists", async () => {
-    mockFindOne.mockResolvedValue(VALID_ADMIN);
-    const result = await isActiveAdminEmailInDB("admin@example.com");
-    expect(result.data).toBe(true);
-    expect(mockFindOne).toHaveBeenCalledWith({
-      email: "admin@example.com",
-      isActive: true,
-    });
-  });
-
   it("createAdminUserFromDB rejects duplicate email", async () => {
     mockFindOne.mockResolvedValue(VALID_ADMIN);
     const result = await createAdminUserFromDB({
@@ -163,26 +150,35 @@ describe("Admin User Queries", () => {
       isActive: false,
     });
     expect(result.error).toBe("Cannot deactivate the last active admin");
+    expect(mockCountDocuments).toHaveBeenCalledWith({ isActive: true });
+    expect(mockFindByIdAndUpdate).not.toHaveBeenCalled();
+  });
+
+  it("updateAdminUserFromDB deactivates when other active admins exist", async () => {
+    mockCountDocuments.mockResolvedValue(2);
+    const result = await updateAdminUserFromDB(VALID_ADMIN._id, {
+      isActive: false,
+    });
+    expect(result.error).toBeUndefined();
+    expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+      VALID_ADMIN._id,
+      { isActive: false },
+      { new: true, runValidators: true },
+    );
   });
 
   it("deleteAdminUserFromDB blocks deleting last active admin", async () => {
     mockCountDocuments.mockResolvedValue(1);
     const result = await deleteAdminUserFromDB(VALID_ADMIN._id);
     expect(result.error).toBe("Cannot delete the last active admin");
+    expect(mockFindByIdAndDelete).not.toHaveBeenCalled();
   });
 
-  it("countActiveAdminUsersFromDB returns active count", async () => {
-    mockCountDocuments.mockResolvedValue(2);
-    const result = await countActiveAdminUsersFromDB();
-    expect(result.data).toBe(2);
-    expect(mockCountDocuments).toHaveBeenCalledWith({ isActive: true });
-  });
-
-  it("countAllAdminUsersFromDB returns total count", async () => {
-    mockCountDocuments.mockResolvedValue(3);
-    const result = await countAllAdminUsersFromDB();
-    expect(result.data).toBe(3);
-    expect(mockCountDocuments).toHaveBeenCalledWith({});
+  it("deleteAdminUserFromDB skips the count for inactive admins", async () => {
+    mockFindById.mockResolvedValue({ ...VALID_ADMIN, isActive: false });
+    const result = await deleteAdminUserFromDB(VALID_ADMIN._id);
+    expect(result.data).toEqual({ deleted: true });
+    expect(mockCountDocuments).not.toHaveBeenCalled();
   });
 
   it("getActiveAdminEmailsFromDB returns email list", async () => {

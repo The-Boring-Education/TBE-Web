@@ -12,7 +12,6 @@
         "API_URL",
         "AUTH_JWT_SECRET",
         "ADMIN_SECRET",
-        "ADMIN_BOOTSTRAP_EMAILS",
         "ADMIN_SECRET_CONFIRM",
         "AGENTS_API_BASE",
         "AGENTS_API_BASE_DEV",

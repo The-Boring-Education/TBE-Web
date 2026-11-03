@@ -41,7 +41,6 @@ vi.mock("../../../../api/src/middleware/api", () => ({
 
 vi.mock("../../../../api/src/lib/services/admin-cache", () => ({
   isAdminEmail: vi.fn().mockResolvedValue(false),
-  warmAdminEmailCache: vi.fn().mockResolvedValue(undefined),
 }));
 
 vi.mock("../../../../api/src/middleware/admin", () => ({

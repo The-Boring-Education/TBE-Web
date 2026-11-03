@@ -33,6 +33,7 @@ describe("AuthCallback", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
     fetchMock.mockReset();
     // @ts-expect-error test double
     window.location = originalLocation;
@@ -67,4 +68,28 @@ describe("AuthCallback", () => {
     vi.advanceTimersByTime(2000);
     expect(window.location.href).toBe("/?error=access_denied");
   });
+
+  it.each([404, 405])(
+    "falls back to the API when the proxy answers %i (Vite SPA)",
+    async (proxyStatus) => {
+      vi.stubEnv("NEXT_PUBLIC_API_URL", "https://api.example.com/api/v1");
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: proxyStatus,
+        json: async () => {
+          throw new Error("not json");
+        },
+      });
+      stubLocation("?code=abc&returnTo=%2Fadmin");
+
+      render(<AuthCallback />);
+
+      await waitFor(() => expect(window.location.href).toBe("/admin"));
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        2,
+        "https://api.example.com/api/v1/auth/token",
+        expect.objectContaining({ method: "POST" }),
+      );
+    },
+  );
 });

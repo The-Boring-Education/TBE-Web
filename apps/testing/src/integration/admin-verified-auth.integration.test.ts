@@ -16,11 +16,9 @@ vi.mock("@/lib/auth/jwt", () => ({
 }));
 
 const mockIsAdminEmail = vi.fn();
-const mockWarmAdminEmailCache = vi.fn();
 
 vi.mock("@/lib/services/admin-cache", () => ({
   isAdminEmail: (...args: unknown[]) => mockIsAdminEmail(...args),
-  warmAdminEmailCache: (...args: unknown[]) => mockWarmAdminEmailCache(...args),
 }));
 
 import {
@@ -35,7 +33,6 @@ describe("Verified Admin Auth Integration", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockWarmAdminEmailCache.mockResolvedValue(undefined);
     mockIsAdminEmail.mockResolvedValue(false);
   });
 
@@ -143,7 +140,6 @@ describe("ensureAdminAccessOrSecret", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.ADMIN_SECRET = adminSecret;
-    mockWarmAdminEmailCache.mockResolvedValue(undefined);
     mockIsAdminEmail.mockResolvedValue(false);
   });
 
