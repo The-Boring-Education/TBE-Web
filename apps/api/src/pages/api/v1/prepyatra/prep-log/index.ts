@@ -212,7 +212,7 @@ const handleAddMentorFeedback = async (
         const { emailClient } = await import("@/lib/services");
 
         await emailClient.sendEmail({
-          from_email: process.env.FROM_EMAIL || "theboringeducation@gmail.com",
+          from_email: process.env.FROM_EMAIL || "hello@theboringeducation.com",
           from_name: "Sachin from The Boring Education",
           to_email: userEmail,
           to_name: userName,

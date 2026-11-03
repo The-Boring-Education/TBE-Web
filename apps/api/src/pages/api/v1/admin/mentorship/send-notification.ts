@@ -89,7 +89,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     `;
 
     const result = await emailClient.sendEmail({
-      from_email: "theboringeducation@gmail.com",
+      from_email: "hello@theboringeducation.com",
       from_name: "TBE",
       to_email: userEmail,
       to_name: userName,

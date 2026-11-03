@@ -19,7 +19,7 @@ const sendEmailFromDB = async (
 ): Promise<DatabaseQueryResponseType> => {
   try {
     const formattedEmailData: EmailRequest = {
-      from_email: emailData.from_email || "theboringeducation@gmail.com",
+      from_email: emailData.from_email || "hello@theboringeducation.com",
       from_name: emailData.from_name || "TBE",
       to_email: emailData.to_email,
       to_name: emailData.to_name,
