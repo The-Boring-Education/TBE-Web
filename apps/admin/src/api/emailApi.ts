@@ -95,7 +95,7 @@ export const useSendOfferLetter = () => {
       });
 
       const emailRequest: EmailRequest = {
-        from_email: "theboringeducation@gmail.com",
+        from_email: "hello@theboringeducation.com",
         from_name: "Sachin from The Boring Education",
         to_email: offerData.candidateEmail,
         to_name: offerData.candidateName,
@@ -154,7 +154,7 @@ export const useSendDevRelOfferLetter = () => {
       });
 
       const emailRequest: EmailRequest = {
-        from_email: "theboringeducation@gmail.com",
+        from_email: "hello@theboringeducation.com",
         from_name: "Sachin from The Boring Education",
         to_email: offerData.candidateEmail,
         to_name: offerData.candidateName,
