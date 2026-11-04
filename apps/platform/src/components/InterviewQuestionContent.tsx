@@ -73,7 +73,8 @@ const InterviewQuestionContent = ({
       {/* Question Title and Bookmark */}
       <div className='flex items-start justify-between gap-4 mb-3'>
         <h1
-          className={`text-xl sm:text-2xl font-semibold tracking-tight leading-snug ${
+          title={questionTitle}
+          className={`flex-1 min-w-0 break-words text-xl sm:text-2xl font-semibold tracking-tight leading-snug ${
             isDark ? 'text-white' : 'text-foreground'
           }`}
         >

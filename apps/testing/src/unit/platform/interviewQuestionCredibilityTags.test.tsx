@@ -64,4 +64,15 @@ describe("InterviewQuestionContent credibility tags", () => {
     expect(screen.queryByText(/Priority/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Asked at/)).not.toBeInTheDocument();
   });
+
+  it("renders heading with flex-1 min-w-0 break-words and accessible title to prevent clipping", () => {
+    render(<InterviewQuestionContent {...baseProps} />);
+
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect(heading).toHaveTextContent(baseProps.questionTitle);
+    expect(heading).toHaveAttribute("title", baseProps.questionTitle);
+    expect(heading.className).toContain("flex-1");
+    expect(heading.className).toContain("min-w-0");
+    expect(heading.className).toContain("break-words");
+  });
 });

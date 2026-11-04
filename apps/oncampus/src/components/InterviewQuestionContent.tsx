@@ -29,7 +29,10 @@ const InterviewQuestionContent = ({
     <div className="w-full flex flex-col">
       {/* Sleek Minimal Title */}
       <div className="flex items-start justify-between gap-4 mb-4">
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+        <h1
+          title={questionTitle}
+          className="flex-1 min-w-0 break-words text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight"
+        >
           {questionTitle}
         </h1>
         <button
