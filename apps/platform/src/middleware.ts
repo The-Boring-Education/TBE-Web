@@ -105,7 +105,7 @@ const middleware = async (req: NextRequest) => {
           data: {
             url: currentUrl,
             redirectTo: loginUrl.pathname,
-          }
+          },
         });
 
         return NextResponse.redirect(loginUrl);

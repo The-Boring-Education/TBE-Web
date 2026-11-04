@@ -2,7 +2,12 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { ModalProps } from "@tbe/interface";
 
 const Modal = ({ isOpen, closeModal, title, children }: ModalProps) => (
-  <Dialog as="div" className="relative z-[60]" open={isOpen} onClose={closeModal}>
+  <Dialog
+    as="div"
+    className="relative z-[60]"
+    open={isOpen}
+    onClose={closeModal}
+  >
     <div className="fixed inset-0 bg-black bg-opacity-30" />
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-2">
       <DialogPanel className="w-full max-w-lg rounded-lg bg-white shadow-lg p-2">

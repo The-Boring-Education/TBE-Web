@@ -47,7 +47,7 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       host: "::",
-      port: 3008,
+      port: 3009,
     },
     plugins: [react(), sentryStubPlugin()],
     define: {
