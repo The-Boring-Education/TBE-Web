@@ -71,6 +71,15 @@ export interface DevRelLeadModel extends Document {
     lastActivityAt?: Date;
   };
 
+  // Program lifecycle
+  cohortStartedAt?: Date;
+  cohortEndsAt?: Date;
+
+  // Program accounting (derived from the Contribution ledger)
+  totalContributionPoints: number;
+  currentTier: ContributorTierType;
+  approvedContributionsCount: number;
+
   reviewedBy?: Schema.Types.ObjectId;
   approvedBy?: Schema.Types.ObjectId;
   rejectedAt?: Date;
@@ -101,6 +110,20 @@ type ApplicationStatusType =
   | "offer_sent"
   | "offer_accepted"
   | "onboarded";
+
+type ContributorTierType = "contributor" | "lead" | "captain";
+
+export const CONTRIBUTOR_TIERS = ["contributor", "lead", "captain"] as const;
+
+/** Cohorts run for 4 calendar months from onboarding. */
+export const COHORT_DURATION_MONTHS = 4;
+
+/** `cohortStartedAt` + 4 calendar months. */
+export const getCohortEndDate = (startedAt: Date): Date => {
+  const endsAt = new Date(startedAt.getTime());
+  endsAt.setMonth(endsAt.getMonth() + COHORT_DURATION_MONTHS);
+  return endsAt;
+};
 
 const APPLICATION_STATUS = {
   APPLIED: "applied",
@@ -374,6 +397,25 @@ const DevRelLeadSchema = new Schema<DevRelLeadModel>(
       required: [true, "Commitments are required"],
     },
 
+    cohortStartedAt: Date,
+    cohortEndsAt: Date,
+
+    totalContributionPoints: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    currentTier: {
+      type: String,
+      enum: CONTRIBUTOR_TIERS,
+      default: "contributor",
+    },
+    approvedContributionsCount: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+
     assessmentResults: AssessmentResultsSchema,
     interviewData: InterviewDataSchema,
 
@@ -417,6 +459,10 @@ const DevRelLeadSchema = new Schema<DevRelLeadModel>(
 DevRelLeadSchema.index({ email: 1 });
 DevRelLeadSchema.index({ status: 1 });
 DevRelLeadSchema.index({ createdAt: -1 });
+// Admin "top active leads" view
+DevRelLeadSchema.index({ status: 1, totalContributionPoints: -1 });
+// Graduation sweeps
+DevRelLeadSchema.index({ cohortEndsAt: 1 });
 
 // Virtual fields
 DevRelLeadSchema.virtual("isOnboarded").get(function () {
@@ -457,9 +503,15 @@ DevRelLeadSchema.methods.updateStatus = function (
   }
 
   if (status === APPLICATION_STATUS.ONBOARDED) {
-    this.onboardedAt = new Date();
+    const onboardedAt = new Date();
+    this.onboardedAt = onboardedAt;
     this.onboardingProgress.isStarted = true;
-    this.onboardingProgress.startedAt = new Date();
+    this.onboardingProgress.startedAt = onboardedAt;
+
+    if (!this.cohortStartedAt) {
+      this.cohortStartedAt = onboardedAt;
+      this.cohortEndsAt = getCohortEndDate(onboardedAt);
+    }
   }
 
   return this.save();
