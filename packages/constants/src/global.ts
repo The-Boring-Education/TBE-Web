@@ -28,7 +28,7 @@ const imageMeta = {
   logo: {
     light: `${STATIC_FILE_PATH.svg}/logo.svg`,
     dark: `${STATIC_FILE_PATH.svg}/logo-dark.svg`,
-    alt: `${STATIC_FILE_PATH.svg}/the-boring-education-logo`,
+    alt: "The Boring Education",
   },
 };
 
