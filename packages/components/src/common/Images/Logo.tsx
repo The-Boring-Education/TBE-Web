@@ -5,7 +5,6 @@ import { Image, Link } from "../..";
 
 const Logo = ({ className, isDark }: LogoProps) => (
   <Link className={`${className || ""} block relative`} href="/">
-    <span className="sr-only">The Boring Education</span>
     <Image
       alt={imageMeta.logo.alt}
       className={className || ""}
