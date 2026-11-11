@@ -1222,19 +1222,6 @@ export const LearnDashboardContainer: React.FC<
         !info.isInProgress
       )
         return false;
-      if (shikshaCategory === "beginner") {
-        const diff = (c.difficultyLevel || "").toLowerCase();
-        if (!diff.includes("beginner") && !diff.includes("easy")) return false;
-      }
-      if (shikshaCategory === "intermediate") {
-        const diff = (c.difficultyLevel || "").toLowerCase();
-        if (
-          !diff.includes("intermediate") &&
-          !diff.includes("advanced") &&
-          !diff.includes("hard")
-        )
-          return false;
-      }
 
       if (shikshaSearchQuery.trim()) {
         const q = shikshaSearchQuery.toLowerCase();
@@ -1904,8 +1891,6 @@ export const LearnDashboardContainer: React.FC<
                     {[
                       { id: "all", label: "All Courses" },
                       { id: "enrolled", label: "My Enrolled" },
-                      { id: "beginner", label: "Beginner" },
-                      { id: "intermediate", label: "Intermediate" },
                     ].map((tab) => (
                       <button
                         key={tab.id}
