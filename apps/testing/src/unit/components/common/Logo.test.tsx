@@ -19,13 +19,13 @@ vi.mock("next/link", () => ({
 }));
 
 describe("Logo", () => {
-  it("links home with sr-only label and light logo by default", () => {
+  it("links home with descriptive alt text and light logo by default", () => {
     render(<Logo />);
 
-    const link = screen.getByRole("link", { name: /the boring education/i });
+    const link = screen.getByRole("link", { name: "The Boring Education" });
     expect(link).toHaveAttribute("href", "/");
     const img = screen.getByRole("img");
-    expect(img.getAttribute("alt")).toContain("the-boring-education-logo");
+    expect(img).toHaveAttribute("alt", "The Boring Education");
     expect(img.getAttribute("src")).toContain("logo.svg");
     expect(img.getAttribute("src")).not.toContain("logo-dark");
   });

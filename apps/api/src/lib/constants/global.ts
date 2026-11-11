@@ -16,7 +16,7 @@ const imageMeta = {
   logo: {
     light: `${STATIC_FILE_PATH.svg}/logo.svg`,
     dark: `${STATIC_FILE_PATH.svg}/logo-dark.svg`,
-    alt: `${STATIC_FILE_PATH.svg}/the-boring-education-logo`,
+    alt: "The Boring Education",
   },
 };
 
@@ -149,18 +149,18 @@ const JOB_EXPERIENCE_LEVEL: {
   min: number;
   max: number;
 }[] = [
-  { label: "Fresher (0 yrs)", value: "FRESHER", min: 0, max: 1 },
-  { label: "Early Career (1–2 yrs)", value: "EARLY_CAREER", min: 1, max: 2 },
-  { label: "Mid-Level (2–4 yrs)", value: "MID_LEVEL", min: 2, max: 4 },
-  { label: "Senior (4–7 yrs)", value: "SENIOR", min: 4, max: 7 },
-  { label: "Staff Engineer (7–10 yrs)", value: "STAFF", min: 7, max: 10 },
-  {
-    label: "Principal Engineer (10+ yrs)",
-    value: "PRINCIPAL",
-    min: 10,
-    max: 100,
-  },
-];
+    { label: "Fresher (0 yrs)", value: "FRESHER", min: 0, max: 1 },
+    { label: "Early Career (1–2 yrs)", value: "EARLY_CAREER", min: 1, max: 2 },
+    { label: "Mid-Level (2–4 yrs)", value: "MID_LEVEL", min: 2, max: 4 },
+    { label: "Senior (4–7 yrs)", value: "SENIOR", min: 4, max: 7 },
+    { label: "Staff Engineer (7–10 yrs)", value: "STAFF", min: 7, max: 10 },
+    {
+      label: "Principal Engineer (10+ yrs)",
+      value: "PRINCIPAL",
+      min: 10,
+      max: 100,
+    },
+  ];
 
 const PAGE_REFRESH_TIMEOUT = {
   short: 10, // 10 seconds
