@@ -1,10 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/axios";
-import type { UserProject } from "@/types";
+
+export interface ProjectSummary {
+  _id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  coverImageURL?: string;
+  roadmap?: string;
+  difficultyLevel?: string;
+  isActive?: boolean;
+  sections?: unknown[];
+}
+
+export interface UserProjectProgress {
+  _id: string;
+  user?: {
+    userName?: string;
+    userEmail?: string;
+    userContactNo?: string;
+  };
+  project?: {
+    name?: string;
+    slug?: string;
+  };
+  isCompleted?: boolean;
+  lastUpdated?: string;
+}
 
 interface UserProjectsResponse {
-  data: UserProject[];
+  data: UserProjectProgress[];
   pagination: {
     total: number;
     page: number;
@@ -12,6 +38,16 @@ interface UserProjectsResponse {
     totalPages: number;
   };
 }
+
+export const useProjects = () =>
+  useQuery<ProjectSummary[]>({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      const response = await api.get("/projects");
+      return response.data?.data || [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 
 export const useUserProjects = (page = 1, limit = 10, search = "") => {
   const query = useQuery<UserProjectsResponse>({
@@ -26,15 +62,14 @@ export const useUserProjects = (page = 1, limit = 10, search = "") => {
         },
       });
 
-      const { items, total, totalPages } = response.data?.data || [];
-
+      const responseData = response.data?.data || {};
       return {
-        data: items,
+        data: responseData.items || [],
         pagination: {
+          total: responseData.total || 0,
           page,
           limit,
-          total,
-          totalPages,
+          totalPages: responseData.totalPages || 0,
         },
       };
     },
