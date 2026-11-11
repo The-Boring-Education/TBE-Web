@@ -1,4 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
+import { getAdminEnvironment } from "@/hooks/useEnvironment";
 
 export interface ErrorDetails {
   message: string;
@@ -28,10 +29,7 @@ export class ErrorLogger {
     const details: ErrorDetails = {
       message: this.extractErrorMessage(error),
       timestamp: new Date().toISOString(),
-      environment:
-        typeof window !== "undefined"
-          ? localStorage.getItem("tbe-admin-api-env") || "unknown"
-          : "server",
+      environment: getAdminEnvironment(),
       userAgent:
         typeof window !== "undefined" ? navigator.userAgent : "unknown",
     };

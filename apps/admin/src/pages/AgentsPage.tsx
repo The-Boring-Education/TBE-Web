@@ -11,11 +11,14 @@ import SessionProgress from "@/components/SessionProgress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAgentsApiBaseForEnv, getStoredEnv } from "@/hooks/useEnvironment";
+import {
+  getAdminEnvironment,
+  getAgentsApiBaseUrl,
+} from "@/hooks/useEnvironment";
 
 const AgentsPage = () => {
-  const env = getStoredEnv();
-  const agentsBaseUrl = getAgentsApiBaseForEnv(env);
+  const env = getAdminEnvironment();
+  const agentsBaseUrl = getAgentsApiBaseUrl();
   const [sessions, setSessions] = useState<QuizSessionInfo[]>([]);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
     () => {

@@ -4,7 +4,10 @@ import { getQuizTopics, pingAgents } from "@/api/quizApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAgentsApiBaseForEnv, getStoredEnv } from "@/hooks/useEnvironment";
+import {
+  getAdminEnvironment,
+  getAgentsApiBaseUrl,
+} from "@/hooks/useEnvironment";
 import { errorLogger } from "@/utils/errorLogger";
 
 interface AgentsStatusProps {
@@ -20,8 +23,8 @@ const AgentsStatus = ({
   const [topicsCount, setTopicsCount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [lastChecked, setLastChecked] = useState<string>("");
-  const env = getStoredEnv();
-  const agentsBaseUrl = getAgentsApiBaseForEnv(env);
+  const env = getAdminEnvironment();
+  const agentsBaseUrl = getAgentsApiBaseUrl();
 
   const checkAgentsStatus = async () => {
     setLoading(true);

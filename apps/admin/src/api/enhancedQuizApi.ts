@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAccessToken } from "@tbe/auth";
 import { toast } from "sonner";
 
+import { getPlatformApiBaseUrl } from "@/hooks/useEnvironment";
 import type {
   ApiResponse,
   LeaderboardEntry,
@@ -11,9 +12,7 @@ import type {
   UserAnalytics,
 } from "@/types";
 
-const API_BASE_URL =
-  (import.meta.env.VITE_BASE_API_URL as string) ||
-  "http://localhost:3004/api/v1";
+const API_BASE_URL = getPlatformApiBaseUrl();
 
 const authHeaders = (): HeadersInit => {
   const token = getAccessToken();
