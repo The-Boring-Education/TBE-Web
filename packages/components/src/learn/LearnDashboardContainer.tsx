@@ -2117,102 +2117,65 @@ export const LearnDashboardContainer: React.FC<
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
                     {filteredInterviewSheets.map((s: any) => {
                       const info = getSheetEnrollmentInfo(s);
+                      const logoUrl = getSheetLogo(s);
+                      const totalQuestions =
+                        info.totalQuestions ||
+                        s.totalQuestions ||
+                        (Array.isArray(s.questions) ? s.questions.length : 0);
+
                       return (
                         <div
                           key={s._id || s.slug}
                           onMouseEnter={() =>
                             prefetchSheetData(s.slug, user?.id || user?._id)
                           }
-                          className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all group"
+                          className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-xl p-2.5 sm:p-3 flex flex-col justify-between shadow-2xs hover:shadow-xs transition-all group"
                         >
                           <div>
-                            {/* Image or Banner */}
-                            {s.coverImageURL ? (
-                              <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-[#222228]">
-                                <img
-                                  src={s.coverImageURL}
-                                  alt={s.name || s.title}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-black/60 text-white backdrop-blur-xs">
-                                  {s.roadmap || "SHEET"}
-                                </div>
-                                {info.isInProgress ? (
-                                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FF4D4D] text-white shadow-xs">
-                                    In Progress
-                                  </div>
-                                ) : info.isEnrolled ? (
-                                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-600 text-white shadow-xs">
-                                    Enrolled
-                                  </div>
-                                ) : null}
+                            <div className="flex items-center gap-2 sm:gap-2.5">
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center shrink-0">
+                                {logoUrl ? (
+                                  <img
+                                    src={logoUrl}
+                                    alt={s.name || s.title}
+                                    className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                                  />
+                                ) : (
+                                  <FiFileText className="w-5 h-5 text-[#FF3B30]" />
+                                )}
                               </div>
-                            ) : (
-                              <div className="p-4 bg-gradient-to-r from-rose-50 to-red-50 dark:from-red-950/40 dark:to-rose-950/20 border-b border-rose-100 dark:border-red-950/60 flex items-center justify-between">
-                                <span className="text-[10px] font-extrabold tracking-wider uppercase text-[#FF4D4D]">
-                                  {s.roadmap || "INTERVIEW SHEET"}
-                                </span>
-                                {info.isInProgress ? (
-                                  <span className="text-[10px] font-black uppercase text-[#FF4D4D] bg-white dark:bg-[#24242C] px-2 py-0.5 rounded-full shadow-2xs">
-                                    In Progress
-                                  </span>
-                                ) : null}
-                              </div>
-                            )}
-
-                            <div className="p-4 space-y-2">
-                              <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors leading-snug">
+                              <h3 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors leading-snug line-clamp-1">
                                 {s.name || s.title}
                               </h3>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                                {s.description ||
-                                  "Curated list of technical interview questions."}
-                              </p>
-
-                              {/* Progress info if enrolled */}
-                              {info.isInProgress && (
-                                <div className="pt-2 space-y-1">
-                                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                                    <span>{info.progressPct}% Solved</span>
-                                    <span className="text-slate-400 font-medium text-[10px]">
-                                      {info.completedQuestions}/
-                                      {info.totalQuestions} Solved
-                                    </span>
-                                  </div>
-                                  <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1.5 overflow-hidden">
-                                    <div
-                                      className="bg-[#FF4D4D] h-1.5 rounded-full transition-all"
-                                      style={{ width: `${info.progressPct}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              )}
                             </div>
+                            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mt-1.5 mb-2 font-normal">
+                              {s.description ||
+                                "Curated list of technical interview questions."}
+                            </p>
                           </div>
-
-                          <div className="p-4 pt-0 mt-auto">
+                          <div className="flex items-center justify-between gap-1.5 mt-2 pt-2 border-t border-slate-100 dark:border-[#222228]">
+                            <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                              <FiBookOpen className="w-3 h-3 text-[#FF3B30] shrink-0" />
+                              <span>
+                                {info.isInProgress
+                                  ? `${info.completedQuestions}/${totalQuestions} Solved`
+                                  : `${totalQuestions} ${totalQuestions === 1 ? "Question" : "Questions"}`}
+                              </span>
+                            </div>
                             <button
                               type="button"
                               onClick={() =>
                                 navigateToSheet(s.slug, s.name || s.title)
                               }
-                              className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
-                                info.isInProgress
-                                  ? "bg-[#FF4D4D] hover:bg-[#EE3126] text-white"
-                                  : info.isEnrolled
-                                    ? "bg-slate-900 hover:bg-slate-800 dark:bg-[#2A2A32] dark:hover:bg-[#34343E] text-white"
-                                    : "bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-950/60 text-[#FF4D4D] border border-red-200 dark:border-red-900/60"
-                              }`}
+                              className="px-2.5 py-1 rounded-md text-[10px] sm:text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer bg-[#FF3B30] hover:bg-[#EE3126] text-white group/btn"
                             >
-                              {info.isInProgress
-                                ? "Resume Sheet"
-                                : info.isEnrolled
-                                  ? "Start Sheet"
-                                  : "Start Learning"}{" "}
-                              <FiArrowRight className="w-3.5 h-3.5" />
+                              <span>
+                                {info.isInProgress ? "Resume" : "Start"}
+                              </span>
+                              <FiArrowRight className="w-2.5 h-2.5 group-hover/btn:translate-x-0.5 transition-transform" />
                             </button>
                           </div>
                         </div>
