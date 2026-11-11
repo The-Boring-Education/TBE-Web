@@ -1,6 +1,9 @@
 import {
+  Edit,
   FolderKanban,
   FolderOpen,
+  Layers,
+  Plus,
   RefreshCw,
   Search,
   Users,
@@ -13,6 +16,8 @@ import {
   type UserProjectProgress,
   useUserProjects,
 } from "@/api/projectsApi";
+import { ProjectModal } from "@/components/projects/ProjectModal";
+import { ProjectSectionsDrawer } from "@/components/projects/ProjectSectionsDrawer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +43,12 @@ const ProjectsPage = () => {
   const [progressStatusFilter, setProgressStatusFilter] =
     useState<ProgressStatusFilter>("ALL");
   const [page, setPage] = useState(1);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [projectToEdit, setProjectToEdit] = useState<ProjectSummary | null>(
+    null,
+  );
+  const [selectedProjectForContent, setSelectedProjectForContent] =
+    useState<ProjectSummary | null>(null);
 
   const {
     data: projects = [],
@@ -149,6 +160,29 @@ const ProjectsPage = () => {
       </td>
       <td className="px-4 py-3.5 text-gray-600">
         {project.sections?.length ?? 0}
+      </td>
+      <td className="px-4 py-3.5 text-right">
+        <div className="flex justify-end gap-1">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSelectedProjectForContent(project)}
+          >
+            <Layers className="mr-1 h-4 w-4" /> Content
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`Edit ${project.name} details`}
+            title="Edit project details"
+            onClick={() => {
+              setProjectToEdit(project);
+              setIsProjectModalOpen(true);
+            }}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+        </div>
       </td>
     </tr>
   );
@@ -266,6 +300,15 @@ const ProjectsPage = () => {
                 {filteredProjects.length} of {projects.length} projects
               </span>
               <Button
+                size="sm"
+                onClick={() => {
+                  setProjectToEdit(null);
+                  setIsProjectModalOpen(true);
+                }}
+              >
+                <Plus className="mr-1 h-4 w-4" /> Create project
+              </Button>
+              <Button
                 type="button"
                 variant="outline"
                 size="icon"
@@ -326,6 +369,7 @@ const ProjectsPage = () => {
                       <th className="px-4 py-3">Roadmap &amp; Level</th>
                       <th className="px-4 py-3">Status</th>
                       <th className="px-4 py-3">Sections</th>
+                      <th className="px-4 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -471,6 +515,21 @@ const ProjectsPage = () => {
             )}
         </TabsContent>
       </Tabs>
+
+      <ProjectModal
+        isOpen={isProjectModalOpen}
+        onClose={() => {
+          setIsProjectModalOpen(false);
+          setProjectToEdit(null);
+        }}
+        projectToEdit={projectToEdit}
+      />
+
+      <ProjectSectionsDrawer
+        isOpen={Boolean(selectedProjectForContent)}
+        onClose={() => setSelectedProjectForContent(null)}
+        project={selectedProjectForContent}
+      />
     </div>
   );
 };

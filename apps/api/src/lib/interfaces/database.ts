@@ -838,14 +838,12 @@ export interface AddProjectRequestPayloadProps {
 }
 
 export interface AddSectionRequestPayloadProps {
-  toObject: any;
   sectionId: string;
   sectionName: string;
   chapters: ProjectChapter[];
 }
 
 export interface AddChapterRequestPayloadProps {
-  toObject: any;
   chapterId: string;
   chapterName: string;
   content: string;
