@@ -1,7 +1,13 @@
 import { applyContentIdOnCreate } from "@tbe/utils";
 import { type Model, model, models, Schema } from "mongoose";
 
-import { DATABASE_MODELS, DIFFICULTY_LEVEL, ROADMAPS } from "@/lib/constants";
+import {
+  COURSE_STATUS,
+  COURSE_STATUS_DEFAULT,
+  DATABASE_MODELS,
+  DIFFICULTY_LEVEL,
+  ROADMAPS,
+} from "@/lib/constants";
 import type { CourseChapterModel, CourseModel } from "@/lib/interfaces";
 
 const chapterSchema = new Schema<CourseChapterModel>(
@@ -48,6 +54,13 @@ const CourseSchema = new Schema<CourseModel>(
     liveOn: {
       type: Date,
       required: [true, "Live on is required"],
+    },
+    status: {
+      type: String,
+      enum: COURSE_STATUS,
+      default: COURSE_STATUS_DEFAULT,
+      required: true,
+      index: true,
     },
     isPremium: {
       type: Boolean,
