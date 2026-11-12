@@ -138,6 +138,7 @@ export interface ProjectChapter {
 
 export interface CourseChapterModel {
   chapterId: string;
+  key: string;
   chapterName: string;
   content: string;
   isOptional?: boolean;

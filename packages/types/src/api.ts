@@ -214,8 +214,10 @@ export interface UpdateCourseRequestPayloadProps {
 }
 
 export interface AddChapterToCourseRequestProps {
+  key: string;
   name: string;
   content: string;
+  isOptional?: boolean;
 }
 
 export interface UpdateChapterInCourseRequestProps {
