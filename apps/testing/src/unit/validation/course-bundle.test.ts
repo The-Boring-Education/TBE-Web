@@ -1,7 +1,9 @@
-import { describe, expect, it } from "vitest";
-
 import type { CourseBundle } from "@tbe/types";
-import { validateCourseBundle } from "@tbe/utils/courseBundle";
+import {
+  COURSE_BUNDLE_ROADMAPS,
+  validateCourseBundle,
+} from "@tbe/utils/courseBundle";
+import { describe, expect, it } from "vitest";
 
 const validBundle = () => ({
   schemaVersion: "shiksha-course@1",
@@ -151,6 +153,19 @@ describe("validateCourseBundle", () => {
     delete (bundle as Record<string, unknown>).chapters;
 
     expect(errorFields(bundle)).toEqual(["chapters"]);
+  });
+
+  it("accepts every roadmap in the shared roadmap vocabulary", () => {
+    expect(COURSE_BUNDLE_ROADMAPS).toEqual(
+      expect.arrayContaining(["AI", "Data", "GTM"]),
+    );
+
+    COURSE_BUNDLE_ROADMAPS.forEach((roadmap) => {
+      const bundle = validBundle();
+      bundle.course.roadmap = roadmap;
+
+      expect(validateCourseBundle(bundle).valid).toBe(true);
+    });
   });
 
   it("rejects an unknown roadmap", () => {

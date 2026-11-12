@@ -79,6 +79,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { usePushSessionFlow } from "@/hooks/usePushSessionFlow";
+import { ROADMAP_OPTIONS } from "@/types";
 
 // Helper function to get question ID from question object
 const getQuestionId = (question: any): string => {
@@ -872,11 +873,11 @@ const InterviewPrepPage = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Frontend">Frontend</SelectItem>
-                        <SelectItem value="Backend">Backend</SelectItem>
-                        <SelectItem value="Fullstack">Fullstack</SelectItem>
-                        <SelectItem value="Tech">Tech</SelectItem>
-                        <SelectItem value="DSA">DSA</SelectItem>
+                        {ROADMAP_OPTIONS.map((roadmapOption) => (
+                          <SelectItem key={roadmapOption} value={roadmapOption}>
+                            {roadmapOption}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

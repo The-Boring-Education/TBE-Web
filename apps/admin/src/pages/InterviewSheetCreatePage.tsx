@@ -5,6 +5,7 @@ import { useCreateInterviewSheet } from "@/api/interviewPrepApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import type { RoadmapType } from "@/types";
 
 const InterviewSheetCreatePage = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const InterviewSheetCreatePage = () => {
     coverImageURL: "",
     liveOn: new Date().toISOString().slice(0, 10),
     meta: "",
-    roadmap: "Tech" as "Frontend" | "Backend" | "Fullstack" | "Tech",
+    roadmap: "Tech" as RoadmapType,
     isPremium: false,
     price: 0,
     features: [] as string[],

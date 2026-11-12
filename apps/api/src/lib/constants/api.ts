@@ -60,6 +60,9 @@ const ROADMAPS: RoadmapsType[] = [
   "Fullstack",
   "Tech",
   "DSA",
+  "AI",
+  "Data",
+  "GTM",
 ];
 const INTERVIEW_QUESTION_FREQUENCY: QuestionFrequencyType[] = [
   "Most Asked",

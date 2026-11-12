@@ -18,7 +18,8 @@ export type DifficultyType = "Beginner" | "Intermediate" | "Advanced";
 
 export type CourseStatusType = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
-export type RoadmapsType = "Frontend" | "Backend" | "Fullstack" | "Tech";
+export type RoadmapsType =
+  "Frontend" | "Backend" | "Fullstack" | "Tech" | "DSA" | "AI" | "Data" | "GTM";
 
 export type SkillsType =
   | "React"
