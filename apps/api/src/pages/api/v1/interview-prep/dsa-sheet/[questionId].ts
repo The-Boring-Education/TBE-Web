@@ -7,7 +7,6 @@ import {
   updateDSAQuestionInDB,
 } from "@/lib/database";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 /**
@@ -41,10 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (method === "DELETE") {
-    // Admin access required for deletions
-    const isAdmin = await adminMiddleware(req, res);
-    if (!isAdmin) return;
-
     try {
       const { data, error } = await deleteDSAQuestionFromDB(questionId);
 
@@ -82,9 +77,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Admin access required for updates
-  const isAdmin = await adminMiddleware(req, res);
-  if (!isAdmin) return;
-
   try {
     const updatedData = req.body;
 
@@ -134,4 +126,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["PATCH", "DELETE"] },
+});

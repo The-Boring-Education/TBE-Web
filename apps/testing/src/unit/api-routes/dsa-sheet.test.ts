@@ -31,9 +31,7 @@ vi.mock("../../../../api/src/lib/utils", async (importOriginal) => {
   };
 });
 
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: vi.fn().mockResolvedValue(true),
-}));
+vi.mock("../../../../api/src/middleware/api", () => ({}));
 
 vi.mock("../../../../api/src/lib/constants", async (importOriginal) => {
   const actual =

@@ -6,7 +6,6 @@ const mockAddANotificationToDB = vi.fn();
 const mockGetAllNotificationsFromDB = vi.fn();
 const mockUpdateANotificationInDB = vi.fn();
 const mockDeleteANotificationsFromDB = vi.fn();
-const mockAdminMiddleware = vi.fn();
 
 vi.mock("../../../../api/src/lib/constants", () => ({
   apiStatusCodes: {
@@ -34,27 +33,23 @@ vi.mock("../../../../api/src/lib/utils", () => ({
   sendAPIResponse: (payload: unknown) => payload,
 }));
 
-vi.mock("../../../../api/src/middleware/api", () => ({
-  adminMiddleware: (...args: unknown[]) => mockAdminMiddleware(...args),
-}));
-
-vi.mock("../../../../api/src/middleware/requestLogger", () => ({
-  withApiHandler: (
-    handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>,
-  ) => handler,
-}));
+vi.mock("../../../../api/src/middleware/requestLogger", async () => {
+  const { withApiHandlerMock } =
+    await import("../../test-utils/api-handler-mock");
+  return { withApiHandler: withApiHandlerMock };
+});
 
 import handler from "../../../../api/src/pages/api/v1/notification/index";
+import { adminGuardMock } from "../../test-utils/api-handler-mock";
 
 describe("Notification API — /api/v1/notification", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAdminMiddleware.mockResolvedValue(true);
+    adminGuardMock.mockResolvedValue(true);
   });
 
   describe("Admin auth gate", () => {
     it("allows GET without admin access", async () => {
-      mockAdminMiddleware.mockResolvedValue(false);
       mockGetAllNotificationsFromDB.mockResolvedValue({
         data: [{ _id: "1", title: "Welcome" }],
         error: null,
@@ -66,12 +61,12 @@ describe("Notification API — /api/v1/notification", () => {
 
       await handler(req, res);
 
-      expect(mockAdminMiddleware).not.toHaveBeenCalled();
+      expect(adminGuardMock).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(200);
     });
 
     it("rejects mutating requests when admin check fails", async () => {
-      mockAdminMiddleware.mockImplementation(
+      adminGuardMock.mockImplementation(
         async (_req: NextApiRequest, res: NextApiResponse) => {
           res.statusCode = 403;
           (res as any).json({
@@ -85,7 +80,8 @@ describe("Notification API — /api/v1/notification", () => {
       for (const method of ["POST", "PATCH", "DELETE"] as const) {
         const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
           method,
-          body: method === "DELETE" ? { notificationId: "n1" } : { title: "Test" },
+          body:
+            method === "DELETE" ? { notificationId: "n1" } : { title: "Test" },
         });
         await handler(req, res);
         expect(res._getStatusCode()).toBe(403);

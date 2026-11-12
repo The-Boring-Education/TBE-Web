@@ -7,7 +7,6 @@ import {
 } from "@/lib/database";
 import type { AddInterviewQuestionRequestPayloadProps } from "@/lib/interfaces";
 import { sendAPIResponse } from "@/lib/utils";
-import { adminMiddleware } from "@/middleware/api";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -19,12 +18,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "PATCH":
-      const isAdminPatch = await adminMiddleware(req, res);
-      if (!isAdminPatch) return;
       return handleUpdateQuestion(req, res, sheetId, questionId);
     case "DELETE":
-      const isAdminDelete = await adminMiddleware(req, res);
-      if (!isAdminDelete) return;
       return handleDeleteQuestion(req, res, sheetId, questionId);
 
     default:
@@ -109,4 +104,6 @@ const handleDeleteQuestion = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, {
+  admin: { methods: ["PATCH", "DELETE"] },
+});

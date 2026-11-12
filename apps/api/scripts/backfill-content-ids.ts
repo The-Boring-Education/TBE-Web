@@ -20,11 +20,11 @@ import yargs from "yargs";
 
 import { CONTENT_ENTITY_MAP } from "../src/lib/migration/content-entity-map";
 import {
-  type ScriptEnv,
-  SCRIPT_ENV_CHOICES,
   cliArgv,
   loadScriptEnv,
   requireParsedValue,
+  SCRIPT_ENV_CHOICES,
+  type ScriptEnv,
 } from "./lib/script-env";
 
 interface BackfillArgs {

@@ -44,6 +44,7 @@ vi.mock("../../../../api/src/lib/utils/logger", () => ({
 
 vi.mock("../../../../api/src/lib/utils/sentry", () => ({
   captureAPIError: vi.fn(),
+  captureAuthError: vi.fn(),
 }));
 
 vi.mock("../../../../api/src/lib/utils/cors", () => ({
