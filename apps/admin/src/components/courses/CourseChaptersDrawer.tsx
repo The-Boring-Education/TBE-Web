@@ -2,7 +2,9 @@ import { BookOpen, Edit, FileText, Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
+import { useContentOrder } from "@/api/contentOrderApi";
 import { useCourse, useDeleteChapter } from "@/api/coursesApi";
+import { ReorderableList } from "@/components/ReorderableList";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,8 +48,9 @@ export const CourseChaptersDrawer: React.FC<CourseChaptersDrawerProps> = ({
   );
 
   // Fetch live course details with chapters
-  const { data: liveCourse, isLoading } = useCourse(course?._id);
+  const { data: liveCourse, isLoading, isError } = useCourse(course?._id);
   const deleteChapter = useDeleteChapter();
+  const reorder = useContentOrder("course-chapters", course?._id || "");
 
   const chapters = liveCourse?.chapters || course?.chapters || [];
 
@@ -93,7 +96,11 @@ export const CourseChaptersDrawer: React.FC<CourseChaptersDrawerProps> = ({
                   Slug: {course.slug} • {chapters.length} chapters
                 </SheetDescription>
               </div>
-              <Button onClick={handleOpenAddChapter} size="sm">
+              <Button
+                onClick={handleOpenAddChapter}
+                size="sm"
+                disabled={reorder.isPending}
+              >
                 <Plus className="w-4 h-4 mr-1" /> Add Chapter
               </Button>
             </div>
@@ -104,6 +111,10 @@ export const CourseChaptersDrawer: React.FC<CourseChaptersDrawerProps> = ({
               <div className="text-center py-12 text-gray-400">
                 Loading chapters...
               </div>
+            ) : isError ? (
+              <p role="alert" className="text-sm text-red-600">
+                Could not load chapters. Close and reopen this editor to retry.
+              </p>
             ) : chapters.length === 0 ? (
               <div className="text-center py-12 border-2 border-dashed rounded-lg space-y-3">
                 <FileText className="w-10 h-10 mx-auto text-gray-300 mb-2" />
@@ -122,8 +133,17 @@ export const CourseChaptersDrawer: React.FC<CourseChaptersDrawerProps> = ({
                 </Button>
               </div>
             ) : (
-              <div className="space-y-3">
-                {chapters.map((chapter, idx) => (
+              <ReorderableList
+                items={chapters}
+                getId={(chapter) => chapter._id}
+                getLabel={(chapter) => chapter.name}
+                onReorder={(order) => reorder.mutateAsync(order)}
+                disabled={
+                  deleteChapter.isPending ||
+                  isChapterModalOpen ||
+                  Boolean(chapterToDelete)
+                }
+                renderItem={(chapter, idx, controls) => (
                   <div
                     key={chapter._id || chapter.key || idx}
                     className="p-4 border rounded-lg bg-white shadow-sm hover:border-gray-300 transition-colors"
@@ -152,6 +172,7 @@ export const CourseChaptersDrawer: React.FC<CourseChaptersDrawerProps> = ({
                       </div>
 
                       <div className="flex items-center gap-1">
+                        {controls}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -173,8 +194,8 @@ export const CourseChaptersDrawer: React.FC<CourseChaptersDrawerProps> = ({
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                )}
+              />
             )}
           </div>
         </SheetContent>

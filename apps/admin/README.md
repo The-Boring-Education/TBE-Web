@@ -62,6 +62,24 @@ The Admin UI supports three environments with automatic configuration and **sepa
 
 The environment is selected at build time and cannot be changed from the admin UI. Local API URLs can be overridden with `VITE_BASE_API_URL` and `VITE_AGENTS_API_BASE`.
 
+## Content ordering
+
+Admins can reorder Shiksha chapters in a course's chapter drawer, interview
+questions in a sheet's detail/editor view, and project sections in the content
+drawer. Drag a grip handle onto another item or use the move-up/down buttons.
+Changes save automatically; controls are disabled while saving.
+
+Ordering uses `PATCH /api/v1/admin/content-order` with an admin JWT and
+`{ contentType, parentId, previousIds, orderedIds }`. Supported content types are
+`course-chapters`, `interview-questions`, and `project-sections`. The new order
+must be a permutation of all existing child IDs. A stale list returns `409` and
+the editor refreshes before the next attempt.
+
+Only array order changes: child IDs, chapter keys, content, and learner progress
+are preserved. Learners see the saved order, including existing project
+enrollments. Catalog ordering and unpublished AI generation sessions are not
+affected.
+
 ## Quiz Generation UI
 
 - Topic can be selected from a dynamic dropdown powered by Agents `/quiz/topics`

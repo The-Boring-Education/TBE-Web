@@ -2,6 +2,7 @@ import { Plus, Tag, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useContentOrder } from "@/api/contentOrderApi";
 import {
   useAddSheetToCoupon,
   useCoupons,
@@ -17,6 +18,7 @@ import {
   useDeleteInterviewQuestion,
 } from "@/api/interviewPrepApi";
 import InterviewSheetHeader from "@/components/InterviewSheetHeader";
+import { ReorderableList } from "@/components/ReorderableList";
 import {
   Accordion,
   AccordionContent,
@@ -42,7 +44,8 @@ import { useToast } from "@/components/ui/use-toast";
 const InterviewSheetDetailPage = () => {
   const { sheetId } = useParams();
   const navigate = useNavigate();
-  const { data: sheet, isLoading } = useInterviewSheet(sheetId);
+  const { data: sheet, isLoading, isError } = useInterviewSheet(sheetId);
+  const reorder = useContentOrder("interview-questions", sheetId || "");
   const { data: coupon } = useCoupons();
   const { toast } = useToast();
   const addSheetToCoupon = useAddSheetToCoupon();
@@ -89,6 +92,10 @@ const InterviewSheetDetailPage = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
+  if (isError)
+    return (
+      <div role="alert">Could not load interview sheet. Refresh to retry.</div>
+    );
   if (!sheet || !sheet._id) return <div>Not found</div>;
 
   return (
@@ -113,120 +120,137 @@ const InterviewSheetDetailPage = () => {
       <div className="bg-white p-6 rounded-lg shadow-sm mt-6">
         <h2 className="text-xl font-semibold mb-4">Questions</h2>
         {/* Add Question */}
-        <AddQuestionForm
-          onAdd={async (payload) => {
-            if (!sheetId) return;
-            await addQuestion.mutateAsync({ sheetId, question: payload });
-          }}
-        />
+        <fieldset disabled={reorder.isPending}>
+          <AddQuestionForm
+            onAdd={async (payload) => {
+              if (!sheetId) return;
+              await addQuestion.mutateAsync({ sheetId, question: payload });
+            }}
+          />
+        </fieldset>
         <div className="h-4" />
         <Accordion type="multiple" className="w-full">
-          {(sheet.questions || []).map((q) => (
-            <AccordionItem key={q._id} value={q._id}>
-              <AccordionTrigger>
-                <div className="flex items-center justify-between w-full">
-                  <span className="font-medium text-left truncate pr-4">
-                    {q.title}
-                  </span>
-                  {/* Add small info if needed */}
+          <ReorderableList
+            items={sheet.questions || []}
+            getId={(question) => question._id}
+            getLabel={(question) => question.title}
+            onReorder={(order) => reorder.mutateAsync(order)}
+            disabled={
+              addQuestion.isPending ||
+              deleteQuestion.isPending ||
+              updateQuestion.isPending
+            }
+            renderItem={(q, index, controls) => (
+              <AccordionItem key={q._id} value={q._id}>
+                <div className="flex items-center justify-between gap-2 pt-2">
+                  <span className="text-xs text-gray-500">#{index + 1}</span>
+                  {controls}
                 </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  <div className="flex justify-end">
-                    <DeleteQuestionButton
-                      onConfirm={async () => {
-                        if (!sheetId) return;
-                        await deleteQuestion.mutateAsync({
-                          sheetId,
-                          questionId: q._id,
-                        });
-                      }}
-                    />
+                <AccordionTrigger>
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-medium text-left truncate pr-4">
+                      {q.title}
+                    </span>
+                    {/* Add small info if needed */}
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Title
-                    </label>
-                    <InlineEditInput
-                      initialValue={q.title}
-                      onSave={async (value) => {
-                        if (!sheetId) return;
-                        await updateQuestion.mutateAsync({
-                          sheetId,
-                          questionId: q._id,
-                          updated: { title: value },
-                        });
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Question (MDX)
-                    </label>
-                    <InlineEditTextarea
-                      initialValue={q.question}
-                      onSave={async (value) => {
-                        if (!sheetId) return;
-                        await updateQuestion.mutateAsync({
-                          sheetId,
-                          questionId: q._id,
-                          updated: { question: value },
-                        });
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Answer (MDX)
-                    </label>
-                    <InlineEditTextarea
-                      initialValue={q.answer}
-                      onSave={async (value) => {
-                        if (!sheetId) return;
-                        await updateQuestion.mutateAsync({
-                          sheetId,
-                          questionId: q._id,
-                          updated: { answer: value },
-                        });
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Resources
-                    </label>
-                    <div className="space-y-2">
-                      {q.resources && q.resources.length > 0 ? (
-                        <div className="grid gap-2">
-                          {q.resources.map((res: any, idx: number) => (
-                            <div
-                              key={idx}
-                              className="flex items-center gap-2 text-sm bg-gray-50 p-2 rounded"
-                            >
-                              <Badge variant="outline">{res.type}</Badge>
-                              <a
-                                href={res.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline truncate flex-1"
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-end">
+                      <DeleteQuestionButton
+                        onConfirm={async () => {
+                          if (!sheetId) return;
+                          await deleteQuestion.mutateAsync({
+                            sheetId,
+                            questionId: q._id,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Title
+                      </label>
+                      <InlineEditInput
+                        initialValue={q.title}
+                        onSave={async (value) => {
+                          if (!sheetId) return;
+                          await updateQuestion.mutateAsync({
+                            sheetId,
+                            questionId: q._id,
+                            updated: { title: value },
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Question (MDX)
+                      </label>
+                      <InlineEditTextarea
+                        initialValue={q.question}
+                        onSave={async (value) => {
+                          if (!sheetId) return;
+                          await updateQuestion.mutateAsync({
+                            sheetId,
+                            questionId: q._id,
+                            updated: { question: value },
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Answer (MDX)
+                      </label>
+                      <InlineEditTextarea
+                        initialValue={q.answer}
+                        onSave={async (value) => {
+                          if (!sheetId) return;
+                          await updateQuestion.mutateAsync({
+                            sheetId,
+                            questionId: q._id,
+                            updated: { answer: value },
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Resources
+                      </label>
+                      <div className="space-y-2">
+                        {q.resources && q.resources.length > 0 ? (
+                          <div className="grid gap-2">
+                            {q.resources.map((res: any, idx: number) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 text-sm bg-gray-50 p-2 rounded"
                               >
-                                {res.label || res.url}
-                              </a>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-gray-400 italic">
-                          No resources available
-                        </p>
-                      )}
+                                <Badge variant="outline">{res.type}</Badge>
+                                <a
+                                  href={res.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline truncate flex-1"
+                                >
+                                  {res.label || res.url}
+                                </a>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-400 italic">
+                            No resources available
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+          />
         </Accordion>
       </div>
 

@@ -719,29 +719,35 @@ const getAProjectForUserFromDB = async (userId: string, projectId: string) => {
       };
     }
 
-    const mappedSections = userProject.sections.map((userSection) => {
-      const correspondingProjectSection = project.sections.find(
-        (section) => section.sectionId === userSection.sectionId,
-      );
-
-      const chapters = correspondingProjectSection?.chapters.map((chapter) => {
-        const isCompleted = userSection.chapters.some(
-          (userChapter) =>
-            userChapter.chapterId === chapter.chapterId &&
-            userChapter.isCompleted,
+    const mappedSections = project.sections
+      .filter((section) =>
+        userProject.sections.some(
+          (progress) => progress.sectionId === section.sectionId,
+        ),
+      )
+      .map((section) => {
+        const userSection = userProject.sections.find(
+          (progress) => progress.sectionId === section.sectionId,
         );
 
+        const chapters = section.chapters.map((chapter) => {
+          const isCompleted = userSection?.chapters.some(
+            (userChapter) =>
+              userChapter.chapterId === chapter.chapterId &&
+              userChapter.isCompleted,
+          );
+
+          return {
+            ...chapter.toObject(),
+            isCompleted: !!isCompleted,
+          };
+        });
+
         return {
-          ...chapter.toObject(),
-          isCompleted: !!isCompleted,
+          ...section.toObject(),
+          chapters,
         };
       });
-
-      return {
-        ...correspondingProjectSection?.toObject(),
-        chapters,
-      };
-    });
 
     return {
       data: {
