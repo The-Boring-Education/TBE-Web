@@ -128,6 +128,7 @@ export interface CourseModel extends Document {
   roadmap: RoadmapsType;
   difficultyLevel: DifficultyType;
   features: string[];
+  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
 }
 
 export interface InterviewSheetModel extends Document {

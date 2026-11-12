@@ -67,6 +67,31 @@ export interface CourseBundle {
   chapters: CourseBundleChapter[];
 }
 
+/** What Import did to the Course document itself. */
+export type CourseBundleCourseAction = "CREATED" | "UPDATED" | "UNCHANGED";
+
+/**
+ * Exactly what an Import did (or, for a dry run, exactly what it would do).
+ * Chapters are reported by Chapter Key because that is the stable identity
+ * shared by the Bundle and the database.
+ */
+export interface CourseBundleImportReport {
+  /** True when the report was computed without writing anything. */
+  dryRun: boolean;
+  slug: string;
+  /** Null only for a dry run that would create the course. */
+  courseId: string | null;
+  course: CourseBundleCourseAction;
+  /** Keys in the Bundle that did not exist in the database. */
+  chaptersAdded: string[];
+  /** Keys whose stored content changed, updated in place. */
+  chaptersUpdated: string[];
+  /** Keys whose position relative to the other shared keys changed. */
+  chaptersReordered: string[];
+  /** Keys in the database but absent from the Bundle. Never deleted. */
+  chaptersOrphaned: string[];
+}
+
 /** A single field-level validation problem. */
 export interface CourseBundleValidationError {
   field: string;

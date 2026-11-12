@@ -564,3 +564,56 @@ export interface AdminUserUpdateData {
   notes?: string;
   isActive?: boolean;
 }
+
+export interface CourseChapter {
+  _id?: string;
+  key: string;
+  name: string;
+  content: string;
+  isOptional?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Course {
+  _id: string;
+  contentId?: string;
+  name: string;
+  title?: string;
+  slug: string;
+  description: string;
+  meta?: string;
+  coverImageURL: string;
+  liveOn: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  isPremium?: boolean;
+  price?: number;
+  roadmap: RoadmapType;
+  difficultyLevel: "Beginner" | "Intermediate" | "Advanced";
+  features?: string[];
+  chapters?: CourseChapter[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CourseFormData {
+  name: string;
+  slug: string;
+  description: string;
+  meta?: string;
+  coverImageURL: string;
+  liveOn: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  isPremium?: boolean;
+  price?: number;
+  roadmap: RoadmapType;
+  difficultyLevel: "Beginner" | "Intermediate" | "Advanced";
+  features?: string[];
+}
+
+export interface ChapterFormData {
+  key: string;
+  name: string;
+  content: string;
+  isOptional?: boolean;
+}

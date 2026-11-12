@@ -7,6 +7,7 @@ export * from "./content-feedback";
 export * from "./content-sync";
 export * from "./core-subjects";
 export * from "./coupon";
+export * from "./courseBundle";
 export * from "./dsayatra";
 export * from "./email";
 export * from "./feedback";
