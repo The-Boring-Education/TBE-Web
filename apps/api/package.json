@@ -19,7 +19,8 @@
     "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env prod --yes",
     "admin:add": "tsx scripts/manage-admin.ts add",
     "admin:list": "tsx scripts/manage-admin.ts list",
-    "admin:deactivate": "tsx scripts/manage-admin.ts deactivate"
+    "admin:deactivate": "tsx scripts/manage-admin.ts deactivate",
+    "validate:course-bundles": "tsx scripts/validate-course-bundles.ts"
   },
   "dependencies": {
     "@google-analytics/data": "^5.1.0",

@@ -53,6 +53,7 @@
     "admin:add": "pnpm --filter=@tbe/api run admin:add",
     "admin:list": "pnpm --filter=@tbe/api run admin:list",
     "admin:deactivate": "pnpm --filter=@tbe/api run admin:deactivate",
+    "validate:course-bundles": "pnpm --filter=@tbe/api run validate:course-bundles",
     "prepare": "husky install || true"
   },
   "lint-staged": {

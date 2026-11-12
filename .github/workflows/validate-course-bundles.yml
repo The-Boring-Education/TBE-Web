@@ -1,0 +1,52 @@
+name: 📚 Validate Course Bundles
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - "content/shiksha/**.json"
+      - "apps/api/scripts/validate-course-bundles.ts"
+      - "packages/utils/src/courseBundle.ts"
+      - ".github/workflows/validate-course-bundles.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-course-bundles:
+    name: Validate Course Bundles
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: 📦 Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: ✅ Validate Course Bundles
+        run: pnpm validate:course-bundles
+
+      - name: 📄 Validation Summary
+        if: failure()
+        run: |
+          echo "❌ One or more Course Bundle files are invalid."
+          echo "Fix the field-level errors listed above, then run"
+          echo "  pnpm validate:course-bundles"
+          echo "locally before pushing again."
+          echo ""
+          echo "Schema reference: docs/shiksha/course-bundle-schema.md"

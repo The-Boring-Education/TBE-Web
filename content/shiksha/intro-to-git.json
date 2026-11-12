@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "shiksha-course@1",
+  "course": {
+    "slug": "intro-to-git",
+    "title": "Introduction to Git",
+    "description": "Learn the handful of Git commands you actually use every day.",
+    "coverImageURL": "https://cdn.theboringeducation.com/courses/intro-to-git.png",
+    "roadmap": "Tech",
+    "difficulty": "Beginner",
+    "isPremium": false,
+    "features": ["Two short chapters", "Hands-on commands"],
+    "credits": [
+      {
+        "githubHandle": "imsks",
+        "displayName": "Sachin Kumar",
+        "role": "AUTHOR"
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "chapterKey": "why-version-control",
+      "title": "Why Version Control",
+      "content": "# Why Version Control\n\nVersion control records every change to your code so you can see what changed, when, and why — and undo it when you need to.\n\n- **History**: every commit is a checkpoint you can return to.\n- **Collaboration**: several people can work on the same project without overwriting each other.\n",
+      "credits": [
+        {
+          "githubHandle": "imsks",
+          "displayName": "Sachin Kumar",
+          "role": "AUTHOR"
+        }
+      ]
+    },
+    {
+      "chapterKey": "your-first-commit",
+      "title": "Your First Commit",
+      "content": "# Your First Commit\n\n```bash\ngit init\ngit add README.md\ngit commit -m \"Add README\"\n```\n\n`git init` creates the repository, `git add` stages the file and `git commit` records it in history.\n",
+      "isOptional": false,
+      "credits": [
+        {
+          "githubHandle": "imsks",
+          "displayName": "Sachin Kumar",
+          "role": "AUTHOR"
+        }
+      ]
+    }
+  ]
+}

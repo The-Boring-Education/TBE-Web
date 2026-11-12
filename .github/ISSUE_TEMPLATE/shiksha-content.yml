@@ -1,0 +1,75 @@
+name: 📚 Shiksha Content Contribution
+description: Propose a new Shiksha course or a chapter for an existing course
+title: "[Shiksha Content]: "
+labels: ["shiksha-content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing content to Shiksha!
+
+        Once this proposal is accepted you will open a pull request adding a
+        **Course Bundle** JSON file under `content/shiksha/`. See the
+        [Course Bundle schema reference](https://github.com/The-Boring-Education/TBE-Web/blob/development/docs/shiksha/course-bundle-schema.md)
+        for the schema and a complete worked example.
+
+        Merging your pull request does **not** publish the course — an admin
+        imports and publishes it separately.
+
+  - type: dropdown
+    id: contribution-type
+    attributes:
+      label: What are you proposing?
+      options:
+        - A new course
+        - A new chapter for an existing course
+    validations:
+      required: true
+
+  - type: input
+    id: course
+    attributes:
+      label: Course
+      description: Title of the new course, or the slug of the existing course.
+      placeholder: Learn React, or learn-react
+    validations:
+      required: true
+
+  - type: input
+    id: chapter
+    attributes:
+      label: Chapter
+      description: Title of the chapter, if you are proposing a single chapter.
+      placeholder: Handling Forms in React
+    validations:
+      required: false
+
+  - type: textarea
+    id: outline
+    attributes:
+      label: Outline
+      description: A chapter-by-chapter outline of what you plan to write.
+      placeholder: |
+        1. Introduction — what React is and why it exists
+        2. Components — props, composition and reuse
+    validations:
+      required: true
+
+  - type: input
+    id: github-handle
+    attributes:
+      label: Your GitHub handle
+      description: Used to credit you in the Course Bundle when the work ships.
+      placeholder: imsks
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: This content is my own work and I am happy for it to be published by The Boring Education.
+          required: true
+        - label: I understand that merging a Course Bundle does not publish it — an admin imports and publishes it separately.
+          required: true
