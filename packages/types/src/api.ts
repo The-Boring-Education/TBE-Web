@@ -38,6 +38,16 @@ import type {
 
 export type APIMethodTypes = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
+export type ContentOrderType =
+  "course-chapters" | "interview-questions" | "project-sections";
+
+export interface ContentOrderRequest {
+  contentType: ContentOrderType;
+  parentId: string;
+  previousIds: string[];
+  orderedIds: string[];
+}
+
 export interface APIMakeRequestProps {
   method?: APIMethodTypes;
   url: string;

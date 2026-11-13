@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import { useContentOrder } from "@/api/contentOrderApi";
 import { useGetSession } from "@/api/interviewAgentsApi";
 import {
   type IQuestion,
@@ -18,6 +19,7 @@ import {
   useGetSheetDetail,
   useUpdateDatabaseQuestion,
 } from "@/api/interviewSheetModifyApi";
+import { ReorderableList } from "@/components/ReorderableList";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,6 +58,7 @@ const InterviewSheetEditor = ({
 }: InterviewSheetEditorProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const reorder = useContentOrder("interview-questions", id);
 
   // --- State for Add/Edit Modals ---
   const [editingQuestion, setEditingQuestion] = useState<IQuestion | null>(
@@ -185,7 +188,7 @@ const InterviewSheetEditor = ({
   const dbAddMutation = useAddDatabaseQuestion();
 
   // --- Logic Helpers ---
-  const getQuestionId = (q: IQuestion | any) => q.id || q._id || "";
+  const getQuestionId = (q: IQuestion): string => q._id || q.id || "";
 
   const handleEditSave = () => {
     if (!editingQuestion) return;
@@ -294,7 +297,11 @@ const InterviewSheetEditor = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button onClick={() => setAddQuestionDialogOpen(true)} size="sm">
+              <Button
+                onClick={() => setAddQuestionDialogOpen(true)}
+                size="sm"
+                disabled={reorder.isPending}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Question
               </Button>
@@ -311,83 +318,102 @@ const InterviewSheetEditor = ({
       {/* Questions List */}
       <div className="space-y-4">
         {sheet.questions && sheet.questions.length > 0 ? (
-          sheet.questions.map((question: IQuestion, index: number) => (
-            <Card
-              key={getQuestionId(question)}
-              className="hover:border-primary/50 transition-colors"
-            >
-              <CardContent className="p-4 space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-bold text-gray-400">
-                        #{index + 1}
-                      </span>
-                      <Badge
-                        variant="outline"
-                        className="text-[10px] h-5 px-1.5 font-normal uppercase tracking-wider"
-                      >
-                        {question.difficulty || "Medium"}
-                      </Badge>
-                      {question.category && (
+          <ReorderableList<IQuestion>
+            items={sheet.questions}
+            getId={getQuestionId}
+            getLabel={(question) => question.question}
+            onReorder={
+              type === "sheet"
+                ? (order) => reorder.mutateAsync(order)
+                : undefined
+            }
+            disabled={
+              editDialogOpen ||
+              addQuestionDialogOpen ||
+              deleteConfirmOpen ||
+              dbUpdateMutation.isPending ||
+              dbDeleteMutation.isPending ||
+              dbAddMutation.isPending
+            }
+            renderItem={(question, index, controls) => (
+              <Card
+                key={getQuestionId(question)}
+                className="hover:border-primary/50 transition-colors"
+              >
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-bold text-gray-400">
+                          #{index + 1}
+                        </span>
                         <Badge
-                          variant="secondary"
-                          className="text-[10px] h-5 px-1.5 font-normal"
+                          variant="outline"
+                          className="text-[10px] h-5 px-1.5 font-normal uppercase tracking-wider"
                         >
-                          {question.category}
+                          {question.difficulty || "Medium"}
                         </Badge>
-                      )}
+                        {question.category && (
+                          <Badge
+                            variant="secondary"
+                            className="text-[10px] h-5 px-1.5 font-normal"
+                          >
+                            {question.category}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="font-medium text-sm leading-relaxed">
+                        {question.question}
+                      </p>
                     </div>
-                    <p className="font-medium text-sm leading-relaxed">
-                      {question.question}
-                    </p>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {controls}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-gray-500 hover:text-blue-600"
+                        onClick={() => {
+                          setEditingQuestion(question);
+                          setEditedQuestionForm({
+                            question: question.question,
+                            difficulty: question.difficulty || "Medium",
+                            category: question.category || "",
+                            answer: question.answer || "",
+                            resources: question.resources || [],
+                          });
+                          setEditDialogOpen(true);
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-gray-500 hover:text-red-600"
+                        onClick={() => {
+                          setQuestionToDelete(getQuestionId(question));
+                          setDeleteConfirmOpen(true);
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-500 hover:text-blue-600"
-                      onClick={() => {
-                        setEditingQuestion(question);
-                        setEditedQuestionForm({
-                          question: question.question,
-                          difficulty: question.difficulty || "Medium",
-                          category: question.category || "",
-                          answer: question.answer || "",
-                          resources: question.resources || [],
-                        });
-                        setEditDialogOpen(true);
-                      }}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-500 hover:text-red-600"
-                      onClick={() => {
-                        setQuestionToDelete(getQuestionId(question));
-                        setDeleteConfirmOpen(true);
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
 
-                {question.answer && (
-                  <div className="pl-6 border-l-2 border-gray-100 py-1">
-                    <p className="text-[11px] font-bold text-gray-400 uppercase tracking-tight mb-1">
-                      Answer
-                    </p>
-                    <p className="text-sm text-gray-600 leading-relaxed italic line-clamp-3">
-                      {question.answer}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))
+                  {question.answer && (
+                    <div className="pl-6 border-l-2 border-gray-100 py-1">
+                      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-tight mb-1">
+                        Answer
+                      </p>
+                      <p className="text-sm text-gray-600 leading-relaxed italic line-clamp-3">
+                        {question.answer}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+          />
         ) : (
           <Card>
             <CardContent className="py-12 flex flex-col items-center justify-center text-gray-400">

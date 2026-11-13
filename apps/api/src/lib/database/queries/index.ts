@@ -5,6 +5,7 @@ export * from "./certificate";
 export * from "./common";
 export * from "./content-feedback";
 export * from "./content-sync";
+export * from "./contentOrder";
 export * from "./contribution";
 export * from "./contributor";
 export * from "./core-subjects";
