@@ -35,6 +35,7 @@ const DATABASE_MODELS = {
   USER_INTEREST: "UserInterest",
   COUPON: "Coupon",
   DSA_QUESTION: "DSAQuestion",
+  USER_QUESTION_CODE: "UserQuestionCode",
   APTITUDE_TOPIC: "AptitudeTopic",
   CORE_SUBJECT: "CoreSubject",
   STUDY_GUIDE: "StudyGuide",
