@@ -410,7 +410,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                 <div
                   key={s._id || s.slug}
                   onMouseEnter={() => prefetchSheetData(s.slug, user?.id)}
-                  className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all group"
+                  className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-xl overflow-hidden flex flex-col h-full justify-between shadow-sm hover:shadow-md transition-all group"
                 >
                   <div>
                     {/* Image or Banner */}
@@ -419,7 +419,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                         <img
                           src={coverImage}
                           alt={s.name || s.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain object-center transition-opacity duration-300"
                         />
                         <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-black/60 text-white backdrop-blur-xs">
                           {s.roadmap || "SHEET"}
