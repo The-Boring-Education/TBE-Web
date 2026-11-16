@@ -160,6 +160,12 @@ export default defineConfig({
       ),
       // API app path aliases for testing API routes
       "@api": path.resolve(__dirname, "../api/src"),
+      "@admin": path.resolve(__dirname, "../admin/src"),
+      "@/components/ui/button": path.resolve(
+        __dirname,
+        "../admin/src/components/ui/button.tsx",
+      ),
+      "@/lib/axios": path.resolve(__dirname, "../admin/src/lib/axios.ts"),
       "@dsayatra/dsa-gamification-award": path.resolve(
         __dirname,
         "../dsayatra/src/utils/dsaGamificationAward.ts",

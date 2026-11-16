@@ -2,6 +2,7 @@ import { Edit, FileText, Plus, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
+import { useContentOrder } from "@/api/contentOrderApi";
 import {
   type ProjectChapter,
   type ProjectSection,
@@ -14,6 +15,7 @@ import {
   useUpdateProjectChapter,
   useUpdateProjectSection,
 } from "@/api/projectsApi";
+import { ReorderableList } from "@/components/ReorderableList";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -98,6 +100,7 @@ export const ProjectSectionsDrawer = ({
   const addChapter = useAddProjectChapter();
   const updateChapter = useUpdateProjectChapter();
   const deleteChapter = useDeleteProjectChapter();
+  const reorder = useContentOrder("project-sections", project?._id || "");
 
   const sections = liveProject?.sections || [];
   const isSavingSection = addSection.isPending || updateSection.isPending;
@@ -248,7 +251,11 @@ export const ProjectSectionsDrawer = ({
                   sections
                 </SheetDescription>
               </div>
-              <Button size="sm" onClick={openAddSection}>
+              <Button
+                size="sm"
+                onClick={openAddSection}
+                disabled={reorder.isPending}
+              >
                 <Plus className="mr-1 h-4 w-4" /> Add section
               </Button>
             </div>
@@ -278,116 +285,131 @@ export const ProjectSectionsDrawer = ({
                 </Button>
               </div>
             ) : (
-              sections.map((section, sectionIndex) => (
-                <section
-                  key={section.sectionId}
-                  className="overflow-hidden rounded-lg border bg-white"
-                >
-                  <header className="flex flex-wrap items-center justify-between gap-3 border-b bg-gray-50 px-4 py-3">
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="text-xs font-semibold text-gray-400">
-                        {String(sectionIndex + 1).padStart(2, "0")}
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="truncate font-semibold text-gray-900">
-                          {section.sectionName}
-                        </h3>
-                        <p className="text-xs text-gray-500">
-                          {section.chapters.length} chapters
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openAddChapter(section.sectionId)}
-                      >
-                        <Plus className="mr-1 h-4 w-4" /> Chapter
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={`Rename ${section.sectionName}`}
-                        title="Rename section"
-                        onClick={() => openRenameSection(section)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={`Delete ${section.sectionName}`}
-                        title="Delete section"
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => setSectionToDelete(section)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </header>
-
-                  {section.chapters.length === 0 ? (
-                    <div className="px-4 py-5 text-sm text-gray-500">
-                      No chapters in this section yet.
-                    </div>
-                  ) : (
-                    <div className="divide-y">
-                      {section.chapters.map((chapter, chapterIndex) => (
-                        <div
-                          key={chapter.chapterId}
-                          className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-                        >
-                          <div className="flex min-w-0 items-center gap-3">
-                            <span className="text-xs text-gray-400">
-                              {sectionIndex + 1}.{chapterIndex + 1}
-                            </span>
-                            <p className="truncate text-sm font-medium text-gray-800">
-                              {chapter.chapterName}
-                            </p>
-                            {chapter.isOptional && (
-                              <Badge
-                                variant="outline"
-                                className="shrink-0 text-xs"
-                              >
-                                Optional
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label={`Edit ${chapter.chapterName}`}
-                              title="Edit chapter content"
-                              onClick={() =>
-                                openEditChapter(section.sectionId, chapter)
-                              }
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label={`Delete ${chapter.chapterName}`}
-                              title="Delete chapter"
-                              className="text-red-600 hover:text-red-700"
-                              onClick={() =>
-                                setChapterToDelete({
-                                  sectionId: section.sectionId,
-                                  chapter,
-                                })
-                              }
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+              <ReorderableList
+                items={sections}
+                getId={(section) => section.sectionId}
+                getLabel={(section) => section.sectionName}
+                onReorder={(order) => reorder.mutateAsync(order)}
+                disabled={
+                  sectionDialogOpen ||
+                  chapterDialogOpen ||
+                  Boolean(sectionToDelete) ||
+                  Boolean(chapterToDelete) ||
+                  deleteSection.isPending ||
+                  deleteChapter.isPending
+                }
+                renderItem={(section, sectionIndex, controls) => (
+                  <section
+                    key={section.sectionId}
+                    className="overflow-hidden rounded-lg border bg-white"
+                  >
+                    <header className="flex flex-wrap items-center justify-between gap-3 border-b bg-gray-50 px-4 py-3">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className="text-xs font-semibold text-gray-400">
+                          {String(sectionIndex + 1).padStart(2, "0")}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="truncate font-semibold text-gray-900">
+                            {section.sectionName}
+                          </h3>
+                          <p className="text-xs text-gray-500">
+                            {section.chapters.length} chapters
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </section>
-              ))
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {controls}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openAddChapter(section.sectionId)}
+                        >
+                          <Plus className="mr-1 h-4 w-4" /> Chapter
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Rename ${section.sectionName}`}
+                          title="Rename section"
+                          onClick={() => openRenameSection(section)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Delete ${section.sectionName}`}
+                          title="Delete section"
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => setSectionToDelete(section)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </header>
+
+                    {section.chapters.length === 0 ? (
+                      <div className="px-4 py-5 text-sm text-gray-500">
+                        No chapters in this section yet.
+                      </div>
+                    ) : (
+                      <div className="divide-y">
+                        {section.chapters.map((chapter, chapterIndex) => (
+                          <div
+                            key={chapter.chapterId}
+                            className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+                          >
+                            <div className="flex min-w-0 items-center gap-3">
+                              <span className="text-xs text-gray-400">
+                                {sectionIndex + 1}.{chapterIndex + 1}
+                              </span>
+                              <p className="truncate text-sm font-medium text-gray-800">
+                                {chapter.chapterName}
+                              </p>
+                              {chapter.isOptional && (
+                                <Badge
+                                  variant="outline"
+                                  className="shrink-0 text-xs"
+                                >
+                                  Optional
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label={`Edit ${chapter.chapterName}`}
+                                title="Edit chapter content"
+                                onClick={() =>
+                                  openEditChapter(section.sectionId, chapter)
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label={`Delete ${chapter.chapterName}`}
+                                title="Delete chapter"
+                                className="text-red-600 hover:text-red-700"
+                                onClick={() =>
+                                  setChapterToDelete({
+                                    sectionId: section.sectionId,
+                                    chapter,
+                                  })
+                                }
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+                )}
+              />
             )}
           </div>
         </SheetContent>
