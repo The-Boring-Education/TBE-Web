@@ -1,10 +1,4 @@
-import {
-  DsaUpsellModal,
-  LoadingSpinner,
-  QuestionDetailPanel,
-  SEO,
-  StudyGuideReader,
-} from "@tbe/components";
+import { DsaUpsellModal, LoadingSpinner, QuestionDetailPanel, DsaPracticeIDE, SEO, StudyGuideReader, } from "@tbe/components";
 import { DSA_STUDY_GUIDE_CONFIGS, routes, TOPIC_LABELS } from "@tbe/constants";
 import { useGamification, useGamificationFeedback } from "@tbe/gamification";
 import {
@@ -847,9 +841,7 @@ function SheetsClient() {
 
   const [expandedTopic, setExpandedTopic] = useState<string | null>("ARRAY");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedQuestion, setSelectedQuestion] = useState<DsaQuestion | null>(
-    null,
-  );
+  const [isPracticeIdeOpen, setIsPracticeIdeOpen] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const closedQuestionSlugRef = useRef<string | null>(null);
 
@@ -1155,10 +1147,34 @@ function SheetsClient() {
             </button>
           </div>
 
-          <QuestionDetailPanel question={selectedQuestion} />
+          <QuestionDetailPanel
+            question={selectedQuestion}
+            onSolved={() =>
+              handleToggleComplete(
+                selectedQuestion.id ??
+                  selectedQuestion._id ??
+                  selectedQuestion.name,
+              )
+            }
+            onPracticeCode={() => setIsPracticeIdeOpen(true)}
+          />
         </div>
 
-        {/* Freemium Upsell Modal */}
+        {isPracticeIdeOpen && (
+          <DsaPracticeIDE
+            question={selectedQuestion!}
+            isOpen={isPracticeIdeOpen}
+            onClose={() => setIsPracticeIdeOpen(false)}
+            onSolved={() => {
+              handleToggleComplete(
+                selectedQuestion.id ??
+                  selectedQuestion._id ??
+                  selectedQuestion.name,
+              );
+            }}
+          />
+        )}
+
         <DsaUpsellModal
           open={showPayment}
           onViewPlans={() => router.push(routes.dsayatra.pricing)}
@@ -1328,7 +1344,21 @@ function SheetsClient() {
         )}
       </LayoutGroup>
 
-      {/* Freemium Upsell Modal */}
+      {isPracticeIdeOpen && (
+          <DsaPracticeIDE
+            question={selectedQuestion!}
+            isOpen={isPracticeIdeOpen}
+            onClose={() => setIsPracticeIdeOpen(false)}
+            onSolved={() => {
+              handleToggleComplete(
+                selectedQuestion.id ??
+                  selectedQuestion._id ??
+                  selectedQuestion.name,
+              );
+            }}
+          />
+        )}
+
       <DsaUpsellModal
         open={showPayment}
         onViewPlans={() => router.push(routes.dsayatra.pricing)}

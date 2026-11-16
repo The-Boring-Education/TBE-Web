@@ -1,4 +1,5 @@
 import {
+  DsaPracticeIDE,
   LeetCodeIcon,
   LoadingSpinner,
   SEO,
@@ -8,7 +9,7 @@ import {
 import { useDsaCompletedQuestions, useDsaQuestions, useUser } from "@tbe/hooks";
 import type { DsaQuestion, PageProps } from "@tbe/interface";
 import { cn, getPreFetchProps } from "@tbe/utils";
-import { Check, ChevronRight, Info, Link, Lock, Target } from "lucide-react";
+import { Check, ChevronRight, Code2, Info, Link, Lock, Target } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
@@ -23,6 +24,8 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
   const [weekProgress, setWeekProgress] = useState<Record<number, string[]>>(
     {},
   );
+  const [practicingQuestion, setPracticingQuestion] =
+    useState<DsaQuestion | null>(null);
 
   const { questions: dsaQuestions, loading: sheetsLoading } = useDsaQuestions();
   const { completedIds } = useDsaCompletedQuestions({ userId: user?.id });
@@ -665,6 +668,17 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPracticingQuestion(q);
+                      }}
+                      className="p-1.5 bg-[#FF4D4D]/10 hover:bg-[#FF4D4D] text-[#FF4D4D] hover:text-white rounded-lg transition-all border border-[#FF4D4D]/30 group/icon cursor-pointer shadow-2xs"
+                      title="Practice Code"
+                    >
+                      <Code2 className="w-3.5 h-3.5" />
+                    </button>
                     {!q.isRealWorldProblem && q.resources?.leetcodeURL && (
                       <a
                         href={q.resources.leetcodeURL}
@@ -704,6 +718,22 @@ export default function RevisionsUI({ seoMeta }: PageProps) {
           </div>
         </section>
       </div>
+
+      {practicingQuestion && (
+        <DsaPracticeIDE
+          question={practicingQuestion}
+          isOpen={Boolean(practicingQuestion)}
+          onClose={() => setPracticingQuestion(null)}
+          onSolved={() => {
+            const qIdStr = String(
+              practicingQuestion.id ??
+                practicingQuestion._id ??
+                practicingQuestion.name,
+            );
+            toggleRevisionQuestion(qIdStr);
+          }}
+        />
+      )}
     </Fragment>
   );
 }

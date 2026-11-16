@@ -262,6 +262,15 @@ export interface UserSheetModel extends Document {
   questions: UserSheetQuestionModel[];
 }
 
+export interface UserQuestionCodeModel extends Document {
+  userId: typeof Schema.Types.ObjectId;
+  questionId: typeof Schema.Types.ObjectId;
+  language: string;
+  code: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface UserSheetQuestionModel {
   questionId: typeof Schema.Types.ObjectId;
   isCompleted?: boolean;

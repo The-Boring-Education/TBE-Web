@@ -22,11 +22,12 @@ import type {
   QuestionDifficulty,
 } from "@tbe/interface";
 import { cn, sendRequest } from "@tbe/utils";
-import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
+import { Check, Code2, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
 import { Fragment, useEffect, useState } from "react";
 
 import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
+import { DsaPracticeIDE } from "../../dsayatra/ide";
 import { VISUALIZER_MAP } from "../../visualizers";
 
 const md = markdownit();
@@ -150,38 +151,51 @@ function ExternalResourceIcons({
   resources,
   className,
   iconClassName = "w-5 h-5",
+  onPracticeCode,
 }: {
   resources?: DsaQuestion["resources"];
   className?: string;
   iconClassName?: string;
+  onPracticeCode?: () => void;
 }) {
-  if (!resources?.leetcodeURL && !resources?.youtubeURL) {
+  if (!resources?.leetcodeURL && !resources?.youtubeURL && !onPracticeCode) {
     return null;
   }
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {resources.leetcodeURL && (
+      {resources?.leetcodeURL && (
         <a
           href={resources.leetcodeURL}
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-all duration-300 opacity-90 hover:opacity-100"
+          className="transition-all duration-300 opacity-90 hover:opacity-100 p-1 rounded-lg bg-amber-500/10 border border-amber-500/20 hover:border-amber-500/40"
           title="LeetCode Problem"
         >
           <LeetCodeIcon className={iconClassName} />
         </a>
       )}
-      {resources.youtubeURL && (
+      {resources?.youtubeURL && (
         <a
           href={resources.youtubeURL}
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-all duration-300 opacity-90 hover:opacity-100"
+          className="transition-all duration-300 opacity-90 hover:opacity-100 p-1 rounded-lg bg-red-500/10 border border-red-500/20 hover:border-red-500/40"
           title="YouTube Explanation"
         >
           <YouTubeIcon className={iconClassName} />
         </a>
+      )}
+      {onPracticeCode && (
+        <button
+          type="button"
+          onClick={onPracticeCode}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#FF4D4D] hover:bg-[#EE3126] text-white transition-all duration-200 cursor-pointer shadow-2xs group"
+          title="Practice Code in IDE"
+        >
+          <Code2 className="w-3.5 h-3.5 text-white" />
+          <span>Practice Code</span>
+        </button>
       )}
     </div>
   );
@@ -327,17 +341,26 @@ function FallbackMarkdownDescription({ question }: { question: DsaQuestion }) {
 interface QuestionDetailProps {
   question: DsaQuestion | null;
   onNoteSaveSuccess?: (note: string) => void;
+  onPracticeCode?: () => void;
+  onSolved?: () => void;
+}
+  question: DsaQuestion | null;
+  onNoteSaveSuccess?: (note: string) => void;
+  onPracticeCode?: () => void;
 }
 
 const QuestionDetailPanel = ({
   question,
   onNoteSaveSuccess,
+  onSolved,
+  onPracticeCode,
 }: QuestionDetailProps) => {
   const { user, isAuth } = useUser();
   const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
   const [noteText, setNoteText] = useState("");
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
 
   const qStableId = question ? getQuestionStableId(question) : null;
 
@@ -446,12 +469,11 @@ const QuestionDetailPanel = ({
               </div>
             </div>
 
-            {!question.isRealWorldProblem && (
-              <ExternalResourceIcons
-                resources={question.resources}
-                className="shrink-0 pt-1"
-              />
-            )}
+            <ExternalResourceIcons
+              resources={question.resources}
+              className="shrink-0 pt-1"
+              onPracticeCode={() => setIsPracticeIdeOpen(true)}
+            />
           </div>
 
           {question.isRealWorldProblem && <RealWorldBanner />}
@@ -514,6 +536,7 @@ const QuestionDetailPanel = ({
                     <ExternalResourceIcons
                       resources={question.resources}
                       className="gap-4 justify-center"
+                      onPracticeCode={() => setIsPracticeIdeOpen(true)}
                     />
                   </div>
                 </div>
@@ -649,6 +672,8 @@ const QuestionDetailPanel = ({
           }}
         />
       )}
+
+
     </>
   );
 };

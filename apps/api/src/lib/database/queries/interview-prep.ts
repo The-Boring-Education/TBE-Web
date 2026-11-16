@@ -32,6 +32,7 @@ import {
   InterviewSheet,
   StudyGuide,
   User,
+  UserQuestionCode,
   UserSheet,
 } from "../models";
 import { toObjectId } from "./common";
@@ -1278,6 +1279,66 @@ const saveDSAQuestionNote = async (
   }
 };
 
+const saveUserQuestionCode = async (
+  userId: string,
+  questionId: string,
+  language: string,
+  code: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const uid = toObjectId(userId);
+    const qid = toObjectId(questionId);
+
+    const updated = await UserQuestionCode.findOneAndUpdate(
+      { userId: uid, questionId: qid, language },
+      { code },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+
+    return { data: updated };
+  } catch (error) {
+    logger.error("DB: saveUserQuestionCode failed", {
+      error: error instanceof Error ? error.message : String(error),
+      userId,
+      questionId,
+      language,
+    });
+    return { error: "Failed to save user code", details: error };
+  }
+};
+
+const getUserQuestionCode = async (
+  userId: string,
+  questionId: string,
+  language?: string,
+): Promise<DatabaseQueryResponseType> => {
+  try {
+    const uid = toObjectId(userId);
+    const qid = toObjectId(questionId);
+
+    const query: Record<string, any> = { userId: uid, questionId: qid };
+    if (language) {
+      query.language = language;
+      const doc = await UserQuestionCode.findOne(query).lean();
+      return { data: doc };
+    }
+
+    const docs = await UserQuestionCode.find(query).lean();
+    const codesByLanguage: Record<string, string> = {};
+    docs.forEach((item: any) => {
+      codesByLanguage[item.language] = item.code;
+    });
+    return { data: { codes: codesByLanguage, list: docs } };
+  } catch (error) {
+    logger.error("DB: getUserQuestionCode failed", {
+      error: error instanceof Error ? error.message : String(error),
+      userId,
+      questionId,
+    });
+    return { error: "Failed to get user code", details: error };
+  }
+};
+
 const syncDSAQuestionsProgress = async (
   userId: string,
   questions: Array<{
@@ -1372,9 +1433,11 @@ export {
   getInterviewSheetBySlugFromDB,
   getStarredQuestionsFromDB,
   getStudyGuideByTopicFromDB,
+  getUserQuestionCode,
   markQuestionCompletedByUser,
   markQuestionStarredByUser,
   saveDSAQuestionNote,
+  saveUserQuestionCode,
   syncDSAQuestionsProgress,
   updateDSAQuestionInDB,
   updateInterviewQuestionInDB,

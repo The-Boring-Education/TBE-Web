@@ -57,6 +57,7 @@ const routes = {
     journey: (username: string) => `/journey/${encodeURIComponent(username)}`,
     visualizers: "/visualizers",
     visualizer: (slug: string) => `/visualizers/${slug}`,
+    practice: "/practice",
     baseUrl: "https://dsayatra.theboringeducation.com",
   },
   // Quizzes (Platform)
@@ -155,6 +156,8 @@ const routes = {
     dsaSheet: "/interview-prep/dsa-sheet",
     dsaSync: "/interview-prep/dsa-sheet/sync",
     dsaQuestionNote: "/interview-prep/dsa-sheet/question/note",
+    dsaCode: "/dsayatra/code",
+    dsaExecute: "/dsayatra/execute",
     studyGuide: (topicId: string) =>
       `/interview-prep/dsa-sheet/study-guide?topic=${encodeURIComponent(topicId)}`,
     enrollCourse: "/user/shiksha/enroll",
