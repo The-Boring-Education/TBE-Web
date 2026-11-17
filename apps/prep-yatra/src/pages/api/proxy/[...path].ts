@@ -39,12 +39,17 @@ export default async function handler(
         ...req.headers,
         // Remove host header to avoid issues
         host: undefined,
+        // Hop-by-hop / body headers must not be reused: axios re-serializes
+        // the parsed body, so a stale content-length can stall the upstream
+        // request (e.g. the POST /auth/token exchange during sign in).
+        connection: undefined,
+        "content-length": undefined,
         // Forward any auth headers
         authorization: req.headers.authorization,
         "x-admin-secret": req.headers["x-admin-secret"],
       },
       data: req.body,
-      params: req.query,
+      params: { ...req.query, path: undefined }, // Remove path from query params
       // Don't throw on error status codes
       validateStatus: () => true,
     });
