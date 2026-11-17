@@ -14,6 +14,7 @@
     "backfill:course-status": "tsx scripts/backfill-course-status.ts",
     "backfill:chapter-keys": "tsx scripts/backfill-chapter-keys.ts",
     "migrate": "tsx scripts/migrate-content.ts",
+    "migrate:devrel-contributions": "tsx scripts/migrate-devrel-contributions.ts",
     "seed:subscription-plans": "tsx scripts/seed-subscription-plans.ts",
     "seed:subscription-plans:dev": "tsx scripts/seed-subscription-plans.ts --env dev",
     "seed:subscription-plans:prod": "tsx scripts/seed-subscription-plans.ts --env prod --yes",

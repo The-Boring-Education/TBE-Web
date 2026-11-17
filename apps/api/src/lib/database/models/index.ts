@@ -19,7 +19,7 @@ export { default as UserInterest } from "./UserInterest";
 export { default as Webinar } from "./Webinar";
 
 // DevRel models
-export { DevRelLead, DevRelTask } from "./DevRel";
+export { Contribution, DevRelLead, DevRelTask, FounderMessage } from "./DevRel";
 
 // Interview Prep models
 export { default as AptitudeTopic } from "./InterviewPrep/AptitudeTopic";
