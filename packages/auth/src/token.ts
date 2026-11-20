@@ -2,11 +2,32 @@ import { AUTH_CONFIG } from "./config";
 
 // ── Client-side cookie operations ──
 
+const getCookieDomain = (): string | undefined => {
+  if (typeof window === "undefined") return undefined;
+  const hostname = window.location.hostname;
+  if (
+    hostname === "theboringeducation.com" ||
+    hostname.endsWith(".theboringeducation.com")
+  ) {
+    return ".theboringeducation.com";
+  }
+  return undefined; // localhost or other envs - no domain attribute
+};
+
 export const setTokens = (accessToken: string, refreshToken: string): void => {
   if (typeof document === "undefined") return;
 
-  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${accessToken}; path=/; max-age=${AUTH_CONFIG.ACCESS_TOKEN_MAX_AGE}; SameSite=Lax`;
-  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${refreshToken}; path=/; max-age=${AUTH_CONFIG.REFRESH_TOKEN_MAX_AGE}; SameSite=Lax`;
+  const domain = getCookieDomain();
+  const domainAttr = domain ? `; domain=${domain}` : "";
+  const secureAttr =
+    typeof window !== "undefined" && window.location.protocol === "https:"
+      ? "; Secure"
+      : "";
+
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=${accessToken}; path=/; max-age=${AUTH_CONFIG.ACCESS_TOKEN_MAX_AGE}; SameSite=Lax${domainAttr}${secureAttr}`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=${refreshToken}; path=/; max-age=${AUTH_CONFIG.REFRESH_TOKEN_MAX_AGE}; SameSite=Lax${domainAttr}${secureAttr}`;
 };
 
 export const getAccessToken = (): string | null => {
@@ -19,8 +40,16 @@ export const getRefreshToken = (): string | null => {
 
 export const clearTokens = (): void => {
   if (typeof document === "undefined") return;
+  const domain = getCookieDomain();
+  const domainAttr = domain ? `; domain=${domain}` : "";
+
+  // Clear host-only variant
   document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
   document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0`;
+
+  // Clear domain-scoped variant (if applicable)
+  document.cookie = `${AUTH_CONFIG.ACCESS_TOKEN_KEY}=; path=/; max-age=0${domainAttr}`;
+  document.cookie = `${AUTH_CONFIG.REFRESH_TOKEN_KEY}=; path=/; max-age=0${domainAttr}`;
 };
 
 // ── JWT payload decoding (client-side only, no signature verification) ──
