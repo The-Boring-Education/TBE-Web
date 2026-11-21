@@ -518,7 +518,7 @@ const DsaPrepWorkspace = ({
                   </div>
                 </div>
               ) : (
-                <div className="w-full max-w-3xl mx-auto">
+                <div className="w-full max-w-7xl mx-auto">
                   <div className="pb-1 w-full">
                     <QuestionDetailPanel
                       question={{
@@ -536,6 +536,8 @@ const DsaPrepWorkspace = ({
                           );
                         }
                       }}
+                      onToggleComplete={onToggleComplete}
+                      isCompleted={isSelectedQuestionCompleted}
                     />
                   </div>
                 </div>

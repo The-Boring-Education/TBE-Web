@@ -1155,7 +1155,11 @@ function SheetsClient() {
             </button>
           </div>
 
-          <QuestionDetailPanel question={selectedQuestion} />
+          <QuestionDetailPanel
+            question={selectedQuestion}
+            onToggleComplete={handleToggleComplete}
+            isCompleted={isCompleted}
+          />
         </div>
 
         {/* Freemium Upsell Modal */}

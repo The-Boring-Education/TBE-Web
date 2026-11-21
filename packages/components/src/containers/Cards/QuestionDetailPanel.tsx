@@ -22,12 +22,14 @@ import type {
   QuestionDifficulty,
 } from "@tbe/interface";
 import { cn, sendRequest } from "@tbe/utils";
-import { Check, Crown, Loader2, Save, Sparkles } from "lucide-react";
+import { Check, Code2, Crown, Loader2, Save, Sparkles } from "lucide-react";
 import markdownit from "markdown-it";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import { sanitizeHTML } from "../../common/MDXRenderer/sanitize";
 import { VISUALIZER_MAP } from "../../visualizers";
+import DsaQuestionCodeEditor from "./dsa-code-editor/DsaQuestionCodeEditor";
+import type { TestCase } from "./dsa-code-editor/types";
 
 const md = markdownit();
 
@@ -150,18 +152,22 @@ function ExternalResourceIcons({
   resources,
   className,
   iconClassName = "w-5 h-5",
+  isEditorOpen,
+  onToggleEditor,
 }: {
   resources?: DsaQuestion["resources"];
   className?: string;
   iconClassName?: string;
+  isEditorOpen?: boolean;
+  onToggleEditor?: () => void;
 }) {
-  if (!resources?.leetcodeURL && !resources?.youtubeURL) {
+  if (!resources?.leetcodeURL && !resources?.youtubeURL && !onToggleEditor) {
     return null;
   }
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {resources.leetcodeURL && (
+      {resources?.leetcodeURL && (
         <a
           href={resources.leetcodeURL}
           target="_blank"
@@ -172,7 +178,7 @@ function ExternalResourceIcons({
           <LeetCodeIcon className={iconClassName} />
         </a>
       )}
-      {resources.youtubeURL && (
+      {resources?.youtubeURL && (
         <a
           href={resources.youtubeURL}
           target="_blank"
@@ -182,6 +188,25 @@ function ExternalResourceIcons({
         >
           <YouTubeIcon className={iconClassName} />
         </a>
+      )}
+      {onToggleEditor && (
+        <button
+          type="button"
+          onClick={onToggleEditor}
+          className={cn(
+            "p-1.5 rounded-lg border transition-all duration-200 cursor-pointer flex items-center justify-center",
+            isEditorOpen
+              ? "bg-[#FF4D4D] text-white border-[#FF4D4D] shadow-sm shadow-red-500/30 scale-105"
+              : "border-slate-700/80 bg-[#16161A] text-slate-300 hover:text-white hover:border-[#FF4D4D]/60 hover:bg-[#1E1E24]",
+          )}
+          title={
+            isEditorOpen
+              ? "Close Code Editor"
+              : "Practice in Code Editor (Split View)"
+          }
+        >
+          <Code2 className="w-4 h-4" />
+        </button>
       )}
     </div>
   );
@@ -327,17 +352,22 @@ function FallbackMarkdownDescription({ question }: { question: DsaQuestion }) {
 interface QuestionDetailProps {
   question: DsaQuestion | null;
   onNoteSaveSuccess?: (note: string) => void;
+  onToggleComplete?: (questionId: string | number) => void;
+  isCompleted?: boolean;
 }
 
 const QuestionDetailPanel = ({
   question,
   onNoteSaveSuccess,
+  onToggleComplete,
+  isCompleted = false,
 }: QuestionDetailProps) => {
   const { user, isAuth } = useUser();
   const [activeTab, setActiveTab] = useState<DsaSectionTabs>("description");
   const [noteText, setNoteText] = useState("");
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const qStableId = question ? getQuestionStableId(question) : null;
 
@@ -348,6 +378,55 @@ const QuestionDetailPanel = ({
       setActiveTab("description");
     }
   }, [qStableId]);
+
+  const parsedTestCases: TestCase[] = useMemo(() => {
+    if (!question) return [];
+    if (question.sections?.examples && question.sections.examples.length > 0) {
+      return question.sections.examples.map((ex, idx) => ({
+        id: `example-${idx + 1}`,
+        label: ex.label || `Case ${idx + 1}`,
+        input: ex.input || "",
+        expectedOutput: ex.output || "",
+        explanation: ex.explanation,
+      }));
+    }
+    if (question.examples && question.examples.length > 0) {
+      return question.examples.map((ex, idx) => ({
+        id: `example-${idx + 1}`,
+        label: `Case ${idx + 1}`,
+        input: ex.inputText || "",
+        expectedOutput: ex.outputText || "",
+        explanation: ex.explanation,
+      }));
+    }
+    return [
+      {
+        id: "case-1",
+        label: "Case 1",
+        input: "nums = [2, 7, 11, 15], target = 9",
+        expectedOutput: "[0, 1]",
+      },
+      {
+        id: "case-2",
+        label: "Case 2",
+        input: "nums = [3, 2, 4], target = 6",
+        expectedOutput: "[1, 2]",
+      },
+    ];
+  }, [question]);
+
+  const initialCodeMap = useMemo(() => {
+    if (!question) return undefined;
+    const working = question.sections?.working_code?.languages;
+    if (!working) return undefined;
+    return {
+      python: working.python?.code,
+      java: working.java?.code,
+      cpp: working.cpp?.code,
+      javascript:
+        (working as any).javascript?.code || (working as any).js?.code,
+    };
+  }, [question]);
 
   if (!question) {
     return (
@@ -413,91 +492,147 @@ const QuestionDetailPanel = ({
 
   return (
     <>
-      <FlexContainer
-        direction="col"
-        className="text-white space-y-5 h-full relative"
-        fullWidth
-        itemCenter={false}
-        justifyCenter={false}
-        wrap={false}
+      <div
+        className={cn(
+          "w-full transition-all duration-300",
+          isEditorOpen
+            ? "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start"
+            : "w-full",
+        )}
       >
-        <div className="space-y-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="flex flex-col gap-1">
-                {isRecommended && (
-                  <div className="flex items-center gap-1 text-[9px] font-black text-red-500 uppercase tracking-widest">
-                    <Sparkles className="w-3 h-3" /> Recommended for you
+        <div
+          className={cn(
+            "min-w-0 space-y-4",
+            isEditorOpen
+              ? "lg:col-span-6 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto lg:pr-2 scrollbar-thin-grey"
+              : "w-full",
+          )}
+        >
+          <FlexContainer
+            direction="col"
+            className="text-white space-y-5 h-full relative"
+            fullWidth
+            itemCenter={false}
+            justifyCenter={false}
+            wrap={false}
+          >
+            <div className="space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <div className="flex flex-col gap-1">
+                    {isRecommended && (
+                      <div className="flex items-center gap-1 text-[9px] font-black text-red-500 uppercase tracking-widest">
+                        <Sparkles className="w-3 h-3" /> Recommended for you
+                      </div>
+                    )}
+                    <Text
+                      level="h1"
+                      className="text-2xl font-bold tracking-tight"
+                    >
+                      {question.name}
+                    </Text>
                   </div>
-                )}
-                <Text level="h1" className="text-2xl font-bold tracking-tight">
-                  {question.name}
-                </Text>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0",
+                        difficultyBadgeClass(question.difficultyLevel),
+                      )}
+                    >
+                      {question.difficultyLevel}
+                    </span>
+                  </div>
+                </div>
+
+                <ExternalResourceIcons
+                  resources={
+                    question.isRealWorldProblem ? undefined : question.resources
+                  }
+                  className="shrink-0 pt-1"
+                  isEditorOpen={isEditorOpen}
+                  onToggleEditor={() => setIsEditorOpen((prev) => !prev)}
+                />
               </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={cn(
-                    "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0",
-                    difficultyBadgeClass(question.difficultyLevel),
-                  )}
-                >
-                  {question.difficultyLevel}
-                </span>
+
+              {question.isRealWorldProblem && <RealWorldBanner />}
+
+              <div className="flex flex-wrap gap-1.5 pb-1">
+                {detailTabs.map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setActiveTab(tab)}
+                    className={cn(
+                      "px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap",
+                      effectiveTab === tab
+                        ? "border-red-500 text-red-400 bg-red-950/30"
+                        : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200",
+                    )}
+                  >
+                    {tab === "visualizer"
+                      ? "Visualizer"
+                      : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {tab === "notes" && showNotesTabDot && (
+                      <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {!question.isRealWorldProblem && (
-              <ExternalResourceIcons
-                resources={question.resources}
-                className="shrink-0 pt-1"
-              />
-            )}
-          </div>
+            <div className="space-y-4">
+              {effectiveTab === "description" && (
+                <div className="space-y-6 w-full">
+                  {hasStructured && structured ? (
+                    <StructuredSections sections={structured} />
+                  ) : (
+                    <FallbackMarkdownDescription question={question} />
+                  )}
 
-          {question.isRealWorldProblem && <RealWorldBanner />}
+                  {VisualizerComponent && (
+                    <div className="space-y-3 pt-6 border-t border-gray-800/80">
+                      <div className="flex items-center gap-2">
+                        <Text
+                          level="h2"
+                          className="text-red-500 font-bold text-sm"
+                        >
+                          Interactive Visualizer
+                        </Text>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-950/40 border border-red-900/50 text-red-400 uppercase tracking-wider">
+                          Interactive
+                        </span>
+                      </div>
+                      <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
+                        <VisualizerComponent />
+                      </div>
+                    </div>
+                  )}
 
-          <div className="flex flex-wrap gap-1.5 pb-1">
-            {detailTabs.map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={cn(
-                  "px-3 py-1.5 text-xs rounded-full border transition-all duration-200 font-medium whitespace-nowrap",
-                  effectiveTab === tab
-                    ? "border-red-500 text-red-400 bg-red-950/30"
-                    : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200",
-                )}
-              >
-                {tab === "visualizer"
-                  ? "Visualizer"
-                  : tab.charAt(0).toUpperCase() + tab.slice(1)}
-                {tab === "notes" && showNotesTabDot && (
-                  <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {effectiveTab === "description" && (
-            <div className="space-y-6 w-full">
-              {hasStructured && structured ? (
-                <StructuredSections sections={structured} />
-              ) : (
-                <FallbackMarkdownDescription question={question} />
+                  {!hasStructured && !question.isRealWorldProblem && (
+                    <div className="space-y-1.5 pt-1">
+                      <Text
+                        level="h2"
+                        className="text-red-500 font-bold text-sm"
+                      >
+                        Resources
+                      </Text>
+                      <div className="bg-[#111] border border-gray-800 rounded-lg p-1.5 flex gap-4 items-center justify-center w-fit min-w-[120px]">
+                        <ExternalResourceIcons
+                          resources={question.resources}
+                          className="gap-4 justify-center"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
 
-              {VisualizerComponent && (
-                <div className="space-y-3 pt-6 border-t border-gray-800/80">
-                  <div className="flex items-center gap-2">
+              {effectiveTab === "visualizer" && VisualizerComponent && (
+                <div className="space-y-4 w-full">
+                  <div className="flex items-center justify-between">
                     <Text level="h2" className="text-red-500 font-bold text-sm">
-                      Interactive Visualizer
+                      Interactive Algorithm Visualizer
                     </Text>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-950/40 border border-red-900/50 text-red-400 uppercase tracking-wider">
-                      Interactive
-                    </span>
                   </div>
                   <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
                     <VisualizerComponent />
@@ -505,137 +640,131 @@ const QuestionDetailPanel = ({
                 </div>
               )}
 
-              {!hasStructured && !question.isRealWorldProblem && (
-                <div className="space-y-1.5 pt-1">
-                  <Text level="h2" className="text-red-500 font-bold text-sm">
-                    Resources
+              {effectiveTab === "topics" && (
+                <div>
+                  <Text level="h2" className="text-red-500 font-semibold mb-3">
+                    TOPICS
                   </Text>
-                  <div className="bg-[#111] border border-gray-800 rounded-lg p-1.5 flex gap-4 items-center justify-center w-fit min-w-[120px]">
-                    <ExternalResourceIcons
-                      resources={question.resources}
-                      className="gap-4 justify-center"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {effectiveTab === "visualizer" && VisualizerComponent && (
-            <div className="space-y-4 w-full">
-              <div className="flex items-center justify-between">
-                <Text level="h2" className="text-red-500 font-bold text-sm">
-                  Interactive Algorithm Visualizer
-                </Text>
-              </div>
-              <div className="rounded-xl overflow-hidden border border-gray-800 bg-[#0a0a0a]">
-                <VisualizerComponent />
-              </div>
-            </div>
-          )}
-
-          {effectiveTab === "topics" && (
-            <div>
-              <Text level="h2" className="text-red-500 font-semibold mb-3">
-                TOPICS
-              </Text>
-              <div className="flex flex-wrap gap-2">
-                {question.topics?.map((topic) => (
-                  <Text
-                    level="span"
-                    key={topic}
-                    className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
-                  >
-                    {topic}
-                  </Text>
-                )) ?? (
-                  <Text level="p" className="text-gray-500 text-sm">
-                    No topics available.
-                  </Text>
-                )}
-              </div>
-            </div>
-          )}
-
-          {effectiveTab === "companies" && (
-            <div>
-              <Text level="h2" className="text-red-500 font-semibold mb-3">
-                COMPANIES
-              </Text>
-              <div className="flex flex-wrap gap-2">
-                {question.companyType?.map((company) => (
-                  <Text
-                    level="span"
-                    key={company}
-                    className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
-                  >
-                    {company}
-                  </Text>
-                )) ?? (
-                  <Text level="p" className="text-gray-500 text-sm">
-                    No companies available.
-                  </Text>
-                )}
-              </div>
-            </div>
-          )}
-
-          {effectiveTab === "notes" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Text level="h2" className="text-red-500 font-semibold">
-                  YOUR NOTES
-                </Text>
-                {isAuth ? (
-                  <button
-                    type="button"
-                    onClick={handleSaveNote}
-                    disabled={isSavingNote}
-                    className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
-                  >
-                    {isSavingNote ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : saveSuccess ? (
-                      <Check className="w-3 h-3" />
-                    ) : (
-                      <Save className="w-3 h-3" />
+                  <div className="flex flex-wrap gap-2">
+                    {question.topics?.map((topic) => (
+                      <Text
+                        level="span"
+                        key={topic}
+                        className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
+                      >
+                        {topic}
+                      </Text>
+                    )) ?? (
+                      <Text level="p" className="text-gray-500 text-sm">
+                        No topics available.
+                      </Text>
                     )}
-                    {isSavingNote
-                      ? "Saving..."
-                      : saveSuccess
-                        ? "Saved!"
-                        : "Save Note"}
-                  </button>
-                ) : (
-                  <div className="text-[10px] text-gray-500 font-bold uppercase">
-                    Login to save notes
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              <textarea
-                value={noteText}
-                onChange={(e) => setNoteText(e.target.value)}
-                placeholder="Jot down your logic, edge cases, or anything you want to remember about this problem..."
-                className="w-full h-64 bg-[#111] border border-gray-800 rounded-xl p-4 text-gray-300 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 outline-none transition-all resize-none scrollbar-thin-grey placeholder:text-gray-700"
-              />
-
-              {!isAuth && (
-                <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
-                  <Text
-                    level="p"
-                    className="text-xs text-red-400 leading-relaxed"
-                  >
-                    <strong>Wait!</strong> You need to be logged in to sync your
-                    notes across devices. Otherwise, they won&apos;t be saved
-                    permanently.
+              {effectiveTab === "companies" && (
+                <div>
+                  <Text level="h2" className="text-red-500 font-semibold mb-3">
+                    COMPANIES
                   </Text>
+                  <div className="flex flex-wrap gap-2">
+                    {question.companyType?.map((company) => (
+                      <Text
+                        level="span"
+                        key={company}
+                        className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-gray-300"
+                      >
+                        {company}
+                      </Text>
+                    )) ?? (
+                      <Text level="p" className="text-gray-500 text-sm">
+                        No companies available.
+                      </Text>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {effectiveTab === "notes" && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Text level="h2" className="text-red-500 font-semibold">
+                      YOUR NOTES
+                    </Text>
+                    {isAuth ? (
+                      <button
+                        type="button"
+                        onClick={handleSaveNote}
+                        disabled={isSavingNote}
+                        className="flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-500 disabled:bg-gray-800 text-white text-[11px] font-bold rounded-md transition-all uppercase tracking-wider shadow-lg shadow-red-900/20"
+                      >
+                        {isSavingNote ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : saveSuccess ? (
+                          <Check className="w-3 h-3" />
+                        ) : (
+                          <Save className="w-3 h-3" />
+                        )}
+                        {isSavingNote
+                          ? "Saving..."
+                          : saveSuccess
+                            ? "Saved!"
+                            : "Save Note"}
+                      </button>
+                    ) : (
+                      <div className="text-[10px] text-gray-500 font-bold uppercase">
+                        Login to save notes
+                      </div>
+                    )}
+                  </div>
+
+                  <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    placeholder="Jot down your logic, edge cases, or anything you want to remember about this problem..."
+                    className="w-full h-64 bg-[#111] border border-gray-800 rounded-xl p-4 text-gray-300 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 outline-none transition-all resize-none scrollbar-thin-grey placeholder:text-gray-700"
+                  />
+
+                  {!isAuth && (
+                    <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
+                      <Text
+                        level="p"
+                        className="text-xs text-red-400 leading-relaxed"
+                      >
+                        <strong>Wait!</strong> You need to be logged in to sync
+                        your notes across devices. Otherwise, they won&apos;t be
+                        saved permanently.
+                      </Text>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          )}
+          </FlexContainer>
         </div>
-      </FlexContainer>
+
+        {/* Right Column: Interactive Code Editor */}
+        {isEditorOpen && (
+          <div className="lg:col-span-6 lg:sticky lg:top-1 min-w-0 h-full">
+            <DsaQuestionCodeEditor
+              questionName={question.name}
+              questionId={question.id || question.name}
+              initialCode={initialCodeMap}
+              testCases={parsedTestCases}
+              onClose={() => setIsEditorOpen(false)}
+              isAlreadySolved={isCompleted}
+              onSolveSuccess={() => {
+                if (onToggleComplete && !isCompleted) {
+                  onToggleComplete(
+                    question.id ?? question._id ?? question.name,
+                  );
+                }
+              }}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Per-question feedback widget (authenticated users only) */}
       {isAuth && (
