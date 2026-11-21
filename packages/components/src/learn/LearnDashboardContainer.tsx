@@ -32,6 +32,7 @@ import {
 } from "react-icons/fi";
 
 import { CourseLearningSpace, prefetchCourseData } from "./CourseLearningSpace";
+import { InterviewSheetCover } from "./InterviewSheetCover";
 import type { PersonalizationQuizData } from "./PersonalizationQuiz";
 import { PersonalizationQuiz } from "./PersonalizationQuiz";
 import { prefetchQuizData, QuizCatalogSpace } from "./QuizCatalogSpace";
@@ -2144,39 +2145,22 @@ export const LearnDashboardContainer: React.FC<
                           className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all group"
                         >
                           <div>
-                            {/* Image or Banner */}
-                            {s.coverImageURL ? (
-                              <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-[#222228]">
-                                <img
-                                  src={s.coverImageURL}
-                                  alt={s.name || s.title}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-black/60 text-white backdrop-blur-xs">
-                                  {s.roadmap || "SHEET"}
-                                </div>
-                                {info.isInProgress ? (
-                                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FF4D4D] text-white shadow-xs">
+                            {/* High-contrast, sharp Interview Sheet Cover */}
+                            <InterviewSheetCover
+                              sheet={s}
+                              badgeRoadmap={s.roadmap || "SHEET"}
+                              statusBadge={
+                                info.isInProgress ? (
+                                  <div className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FF4D4D] text-white shadow-xs">
                                     In Progress
                                   </div>
                                 ) : info.isEnrolled ? (
-                                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-600 text-white shadow-xs">
+                                  <div className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-600 text-white shadow-xs">
                                     Enrolled
                                   </div>
-                                ) : null}
-                              </div>
-                            ) : (
-                              <div className="p-4 bg-gradient-to-r from-rose-50 to-red-50 dark:from-red-950/40 dark:to-rose-950/20 border-b border-rose-100 dark:border-red-950/60 flex items-center justify-between">
-                                <span className="text-[10px] font-extrabold tracking-wider uppercase text-[#FF4D4D]">
-                                  {s.roadmap || "INTERVIEW SHEET"}
-                                </span>
-                                {info.isInProgress ? (
-                                  <span className="text-[10px] font-black uppercase text-[#FF4D4D] bg-white dark:bg-[#24242C] px-2 py-0.5 rounded-full shadow-2xs">
-                                    In Progress
-                                  </span>
-                                ) : null}
-                              </div>
-                            )}
+                                ) : null
+                              }
+                            />
 
                             <div className="p-4 space-y-2">
                               <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors leading-snug">

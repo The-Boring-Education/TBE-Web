@@ -17,6 +17,11 @@ export type {
   CourseLearningSpaceProps,
 } from "./learn/CourseLearningSpace";
 export { CourseLearningSpace } from "./learn/CourseLearningSpace";
+export type { InterviewSheetCoverProps } from "./learn/InterviewSheetCover";
+export {
+  InterviewSheetCover,
+  resolveTechBranding,
+} from "./learn/InterviewSheetCover";
 export type {
   LearnBreadcrumbItem,
   LearnBreadcrumbProps,

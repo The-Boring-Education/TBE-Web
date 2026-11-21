@@ -1,7 +1,9 @@
 import type { PrimaryCardWithCTAProps } from "@tbe/interface";
-import { BookOpen, ChevronRight, FileText, Lock, Sparkles } from "lucide-react";
+import { ChevronRight, FileText, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import React from "react";
+
+import { InterviewSheetCover } from "../../learn/InterviewSheetCover";
 
 interface SheetCardProps extends PrimaryCardWithCTAProps {
   totalQuestions?: number;
@@ -10,7 +12,6 @@ interface SheetCardProps extends PrimaryCardWithCTAProps {
 
 const SheetCard = ({
   image,
-  imageAltText,
   title,
   content,
   href,
@@ -20,10 +21,8 @@ const SheetCard = ({
   isPurchased,
   totalQuestions,
   launchingOn,
+  roadmap,
 }: SheetCardProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
   const isLocked = isPremium && !isPurchased;
   const buttonText = isPurchased
     ? "Continue Preparing"
@@ -34,70 +33,37 @@ const SheetCard = ({
         : "View Sheet";
 
   const isDisabled = !active && !isPurchased;
-  const hasImage = Boolean(image && !imageError);
 
   return (
     <Link href={isDisabled ? "#" : href} className="group block h-full">
       <div className="relative h-full rounded-xl border border-border bg-card hover:bg-accent/40 hover:border-foreground/20 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 shadow-xs hover:shadow-md flex flex-col">
-        {/* Cover image from DB */}
-        {hasImage ? (
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200/70 shrink-0">
-            {!imageLoaded && (
-              <div className="absolute inset-0 bg-gray-200/80 animate-pulse z-0" />
-            )}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={image}
-              alt={imageAltText || title}
-              loading="lazy"
-              decoding="async"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageError(true)}
-              className={`w-full h-full object-cover group-hover:scale-[1.03] transition-all duration-500 relative z-10 ${
-                imageLoaded ? "opacity-100" : "opacity-0"
-              }`}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10" />
-
-            {/* Overlaid Badges */}
-            {isLocked && (
-              <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20 backdrop-blur-xs z-20">
+        {/* High-contrast, sharp Interview Sheet Cover */}
+        <InterviewSheetCover
+          sheet={{
+            name: title,
+            title,
+            coverImageURL: image,
+            roadmap,
+          }}
+          badgeRoadmap={roadmap || "SHEET"}
+          statusBadge={
+            isLocked ? (
+              <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20 backdrop-blur-xs">
                 <Lock className="w-2.5 h-2.5 text-amber-400" />
                 <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider">
                   Premium
                 </span>
               </div>
-            )}
-            {isPurchased && (
-              <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20 backdrop-blur-xs z-20">
+            ) : isPurchased ? (
+              <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20 backdrop-blur-xs">
                 <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
                 <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider">
                   Purchased
                 </span>
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="relative w-full aspect-[16/9] bg-gradient-to-br from-primary/10 via-accent to-background flex items-center justify-center border-b border-border shrink-0">
-            <BookOpen className="w-8 h-8 text-primary/40" />
-            {isLocked && (
-              <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20">
-                <Lock className="w-2.5 h-2.5 text-amber-400" />
-                <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider">
-                  Premium
-                </span>
-              </div>
-            )}
-            {isPurchased && (
-              <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/60 border border-white/20">
-                <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
-                <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider">
-                  Purchased
-                </span>
-              </div>
-            )}
-          </div>
-        )}
+            ) : null
+          }
+        />
 
         {/* Body content */}
         <div className="p-4 flex flex-col flex-1 gap-2">
