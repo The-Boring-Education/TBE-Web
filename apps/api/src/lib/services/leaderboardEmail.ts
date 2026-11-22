@@ -101,7 +101,10 @@ export const sendLeaderboardTopFinishEmail = async (
   recipient: LeaderboardEmailRecipient,
 ) => {
   // API_URL is configured both with and without the /api/v1 suffix across environments.
-  const apiBase = envConfig.API_URL.replace(/\/$/, "").replace(/\/api\/v1$/, "");
+  const apiBase = envConfig.API_URL.replace(/\/$/, "").replace(
+    /\/api\/v1$/,
+    "",
+  );
   const platform = (
     envConfig.PLATFORM_URL || "https://www.theboringeducation.com"
   ).replace(/\/$/, "");
@@ -111,7 +114,7 @@ export const sendLeaderboardTopFinishEmail = async (
     unsubscribe: `${apiBase}/api/v1/leaderboard/unsubscribe?token=${encodeURIComponent(token)}`,
   });
   const result = await emailClient.sendEmail({
-    from_email: envConfig.FROM_EMAIL || "theboringeducation@gmail.com",
+    from_email: envConfig.FROM_EMAIL || "hello@theboringeducation.com",
     from_name: "TBE",
     to_email: recipient.email,
     to_name: recipient.name,

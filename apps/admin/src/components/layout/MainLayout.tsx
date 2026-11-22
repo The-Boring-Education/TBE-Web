@@ -2,8 +2,7 @@ import { useAuth } from "@tbe/auth";
 import { useAdmin } from "@tbe/hooks";
 import { Bot } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,13 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  type AdminEnv,
-  getStoredAgentsEnv,
-  getStoredPlatformEnv,
-  setStoredAgentsEnv,
-  setStoredPlatformEnv,
-} from "@/hooks/useEnvironment";
+import { getAdminEnvironment } from "@/hooks/useEnvironment";
 
 import AgentsStatus from "../AgentsStatus";
 import DebugPanel from "../DebugPanel";
@@ -31,51 +24,7 @@ interface MainLayoutProps {
 const MainLayout = ({ children }: MainLayoutProps) => {
   const { isAuthenticated, isLoading, signOut } = useAuth();
   const { isAdmin } = useAdmin();
-  const location = useLocation();
-
-  const [platformEnv, setPlatformEnv] = useState<AdminEnv>(() =>
-    getStoredPlatformEnv(),
-  );
-  const [agentsEnv, setAgentsEnv] = useState<AdminEnv>(() =>
-    getStoredAgentsEnv(),
-  );
-
-  const routeUsesAgents = [
-    "/quizzes",
-    "/lab/interview-sheets",
-    "/email-management",
-    "/agents",
-    "/content",
-  ].some((path) => location.pathname.startsWith(path));
-
-  useEffect(() => {
-    const platformHandler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { env: AdminEnv } | undefined;
-      if (detail?.env) setPlatformEnv(detail.env);
-    };
-    const agentsHandler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { env: AdminEnv } | undefined;
-      if (detail?.env) setAgentsEnv(detail.env);
-    };
-    window.addEventListener(
-      "tbe-admin-platform-env-change",
-      platformHandler as EventListener,
-    );
-    window.addEventListener(
-      "tbe-admin-agents-env-change",
-      agentsHandler as EventListener,
-    );
-    return () => {
-      window.removeEventListener(
-        "tbe-admin-platform-env-change",
-        platformHandler as EventListener,
-      );
-      window.removeEventListener(
-        "tbe-admin-agents-env-change",
-        agentsHandler as EventListener,
-      );
-    };
-  }, []);
+  const adminEnv = getAdminEnvironment();
 
   if (isLoading) {
     return (
@@ -108,9 +57,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     );
   }
 
-  const labelFor = (e: AdminEnv) =>
-    e === "local" ? "Local" : e === "dev" ? "Dev" : "Prod";
-
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
@@ -132,64 +78,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 <AgentsStatus showDetails />
               </PopoverContent>
             </Popover>
-
-            <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
-              <span>Platform API:</span>
-              <select
-                className="h-7 rounded-md border bg-white px-2 text-xs"
-                value={platformEnv}
-                onChange={(e) => {
-                  const v = e.target.value as AdminEnv;
-                  setStoredPlatformEnv(v);
-                  setPlatformEnv(v);
-                  window.dispatchEvent(
-                    new CustomEvent("tbe-admin-platform-env-change", {
-                      detail: { env: v },
-                    }),
-                  );
-                }}
-              >
-                <option value="local">Local</option>
-                <option value="dev">Dev</option>
-                <option value="prod">Prod</option>
-              </select>
-              <span className="text-xs text-gray-500">
-                (Active: {labelFor(platformEnv)})
-              </span>
-            </div>
           </div>
 
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 items-center justify-end">
             <LogViewer />
-          </div>
-
-          <div className="flex flex-1 items-center justify-end gap-3">
-            {routeUsesAgents && (
-              <div className="flex items-center gap-3 text-sm font-medium text-gray-700">
-                <span>Agents:</span>
-                <select
-                  className="h-7 rounded-md border bg-white px-2 text-xs"
-                  value={agentsEnv}
-                  onChange={(e) => {
-                    const v = e.target.value as AdminEnv;
-                    setStoredAgentsEnv(v);
-                    setAgentsEnv(v);
-                    window.dispatchEvent(
-                      new CustomEvent("tbe-admin-agents-env-change", {
-                        detail: { env: v },
-                      }),
-                    );
-                  }}
-                >
-                  <option value="local">Local</option>
-                  <option value="dev">Dev</option>
-                  <option value="prod">Prod</option>
-                </select>
-                <span className="text-xs text-gray-500">
-                  (Active: {labelFor(agentsEnv)})
-                </span>
-              </div>
-            )}
           </div>
         </div>
 
@@ -199,14 +91,14 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               <div className="h-2 w-2 rounded-full bg-green-500" />
               <span className="font-semibold">Platform API</span>
               <span className="rounded bg-green-100 px-2 py-0.5 text-green-800">
-                Env: {labelFor(platformEnv)}
+                Env: {adminEnv.toUpperCase()}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-purple-500" />
               <span className="font-semibold">Agents</span>
               <span className="rounded bg-purple-100 px-2 py-0.5 text-purple-800">
-                Env: {labelFor(agentsEnv)}
+                Env: {adminEnv.toUpperCase()}
               </span>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getBaseUrlForPlatformEnv } from "@/hooks/useEnvironment";
+import { getPlatformApiBaseUrl } from "@/hooks/useEnvironment";
 import api from "@/lib/axios";
 import type {
   PrepLogsResponse,
@@ -10,7 +10,7 @@ import type {
 
 export const usePrepLogs = () => {
   const query = useQuery<PrepLogsResponse>({
-    queryKey: ["prep-logs", getBaseUrlForPlatformEnv()],
+    queryKey: ["prep-logs", getPlatformApiBaseUrl()],
     queryFn: async () => {
       const response = await api.get("/admin/prepyatra/userlogs");
       return response.data;

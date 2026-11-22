@@ -3166,7 +3166,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"The Boring Education\",\n    \"email\": \"theboringeducation@gmail.com\",\n    \"provider\": \"google\"\n}",
+                  "raw": "{\n    \"name\": \"The Boring Education\",\n    \"email\": \"hello@theboringeducation.com\",\n    \"provider\": \"google\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -3187,7 +3187,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"name\": \"The Boring Education\",\n    \"email\": \"theboringeducation@gmail.com\"\n}",
+                      "raw": "{\n    \"name\": \"The Boring Education\",\n    \"email\": \"hello@theboringeducation.com\"\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3234,7 +3234,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n    \"status\": true,\n    \"message\": \"User already exists\",\n    \"data\": {\n        \"_id\": \"66af0e1e80209f07d4c58915\",\n        \"name\": \"The Boring Education\",\n        \"email\": \"theboringeducation@gmail.com\",\n        \"createdAt\": \"2024-08-04T05:14:06.442Z\",\n        \"updatedAt\": \"2024-08-04T05:14:06.442Z\",\n        \"__v\": 0\n    }\n}"
+                  "body": "{\n    \"status\": true,\n    \"message\": \"User already exists\",\n    \"data\": {\n        \"_id\": \"66af0e1e80209f07d4c58915\",\n        \"name\": \"The Boring Education\",\n        \"email\": \"hello@theboringeducation.com\",\n        \"createdAt\": \"2024-08-04T05:14:06.442Z\",\n        \"updatedAt\": \"2024-08-04T05:14:06.442Z\",\n        \"__v\": 0\n    }\n}"
                 },
                 {
                   "name": "Success - Create A User",
@@ -3243,7 +3243,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"name\": \"The Boring Education\",\n    \"email\": \"theboringeducation@gmail.com\"\n}",
+                      "raw": "{\n    \"name\": \"The Boring Education\",\n    \"email\": \"hello@theboringeducation.com\"\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3290,7 +3290,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n    \"status\": true,\n    \"data\": {\n        \"name\": \"The Boring Education\",\n        \"email\": \"theboringeducation@gmail.com\",\n        \"_id\": \"66af0ea980209f07d4c5891a\",\n        \"createdAt\": \"2024-08-04T05:16:25.522Z\",\n        \"updatedAt\": \"2024-08-04T05:16:25.522Z\",\n        \"__v\": 0\n    }\n}"
+                  "body": "{\n    \"status\": true,\n    \"data\": {\n        \"name\": \"The Boring Education\",\n        \"email\": \"hello@theboringeducation.com\",\n        \"_id\": \"66af0ea980209f07d4c5891a\",\n        \"createdAt\": \"2024-08-04T05:16:25.522Z\",\n        \"updatedAt\": \"2024-08-04T05:16:25.522Z\",\n        \"__v\": 0\n    }\n}"
                 }
               ]
             },
@@ -3300,13 +3300,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{HOST}}/user?email=theboringeducation@gmail.com",
+                  "raw": "{{HOST}}/user?email=hello@theboringeducation.com",
                   "host": ["{{HOST}}"],
                   "path": ["user"],
                   "query": [
                     {
                       "key": "email",
-                      "value": "theboringeducation@gmail.com"
+                      "value": "hello@theboringeducation.com"
                     }
                   ]
                 }
@@ -3318,13 +3318,13 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{HOST}}/user?email=theboringeducation@gmail.com",
+                      "raw": "{{HOST}}/user?email=hello@theboringeducation.com",
                       "host": ["{{HOST}}"],
                       "path": ["user"],
                       "query": [
                         {
                           "key": "email",
-                          "value": "theboringeducation@gmail.com"
+                          "value": "hello@theboringeducation.com"
                         }
                       ]
                     }
@@ -3363,7 +3363,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n    \"status\": true,\n    \"data\": {\n        \"_id\": \"66af0ea980209f07d4c5891a\",\n        \"name\": \"The Boring Education\",\n        \"email\": \"theboringeducation@gmail.com\",\n        \"createdAt\": \"2024-08-04T05:16:25.522Z\",\n        \"updatedAt\": \"2024-08-04T05:16:25.522Z\",\n        \"__v\": 0\n    }\n}"
+                  "body": "{\n    \"status\": true,\n    \"data\": {\n        \"_id\": \"66af0ea980209f07d4c5891a\",\n        \"name\": \"The Boring Education\",\n        \"email\": \"hello@theboringeducation.com\",\n        \"createdAt\": \"2024-08-04T05:16:25.522Z\",\n        \"updatedAt\": \"2024-08-04T05:16:25.522Z\",\n        \"__v\": 0\n    }\n}"
                 },
                 {
                   "name": "Error - Get A User",
@@ -3371,13 +3371,13 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{HOST}}/user?email=theboringeducation@gmail.co",
+                      "raw": "{{HOST}}/user?email=hello@theboringeducation.com",
                       "host": ["{{HOST}}"],
                       "path": ["user"],
                       "query": [
                         {
                           "key": "email",
-                          "value": "theboringeducation@gmail.co"
+                          "value": "hello@theboringeducation.com"
                         }
                       ]
                     }
@@ -6372,13 +6372,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{HOST}}/user/dashboard?email=theboringeducation@gmail.com",
+                  "raw": "{{HOST}}/user/dashboard?email=hello@theboringeducation.com",
                   "host": ["{{HOST}}"],
                   "path": ["user", "dashboard"],
                   "query": [
                     {
                       "key": "email",
-                      "value": "theboringeducation@gmail.com"
+                      "value": "hello@theboringeducation.com"
                     }
                   ]
                 }

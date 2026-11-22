@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getBaseUrlForPlatformEnv } from "@/hooks/useEnvironment";
+import { getPlatformApiBaseUrl } from "@/hooks/useEnvironment";
 import api from "@/lib/axios";
 
 export type LeaderboardType = "DAILY" | "WEEKLY" | "MONTHLY";
@@ -40,15 +40,12 @@ export interface AdminLeaderboardData {
 
 const leaderboardKey = (type: LeaderboardType, periodKey: string) => [
   "admin-leaderboard",
-  getBaseUrlForPlatformEnv(),
+  getPlatformApiBaseUrl(),
   type,
   periodKey,
 ];
 
-export const useAdminLeaderboard = (
-  type: LeaderboardType,
-  periodKey: string,
-) =>
+export const useAdminLeaderboard = (type: LeaderboardType, periodKey: string) =>
   useQuery<AdminLeaderboardData>({
     queryKey: leaderboardKey(type, periodKey),
     queryFn: async () => {
@@ -74,7 +71,10 @@ export const useSetLeaderboardExclusion = () => {
 export const useClosePeriod = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { type: LeaderboardType; periodKey?: string }) => {
+    mutationFn: async (params: {
+      type: LeaderboardType;
+      periodKey?: string;
+    }) => {
       const response = await api.post("/leaderboard/close-period", params);
       return response.data;
     },

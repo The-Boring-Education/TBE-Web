@@ -23,7 +23,7 @@ import {
 
 class EmailTriggerService {
   private getDefaultFromEmail(): string {
-    return envConfig.FROM_EMAIL || "theboringeducation@gmail.com";
+    return envConfig.FROM_EMAIL || "hello@theboringeducation.com";
   }
 
   private getDefaultFromName(): string {

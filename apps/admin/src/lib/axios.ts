@@ -1,10 +1,7 @@
 import { getAccessToken } from "@tbe/auth";
 import axios from "axios";
 
-import {
-  getBaseUrlForPlatformEnv,
-  getStoredPlatformEnv,
-} from "@/hooks/useEnvironment";
+import { getPlatformApiBaseUrl } from "@/hooks/useEnvironment";
 
 const api = axios.create({
   headers: {
@@ -19,8 +16,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    const env = getStoredPlatformEnv();
-    config.baseURL = getBaseUrlForPlatformEnv(env);
+    config.baseURL = getPlatformApiBaseUrl();
     return config;
   },
   (error) => Promise.reject(error),

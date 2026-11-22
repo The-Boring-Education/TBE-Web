@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import { getStoredAgentsEnv } from "@/hooks/useEnvironment";
+import { getAdminEnvironment } from "@/hooks/useEnvironment";
 import api from "@/lib/axios";
 
 /**
@@ -8,9 +8,8 @@ import api from "@/lib/axios";
  * API's authenticated proxy (`/agents-proxy/*`, gated by admin JWT) instead of
  * hitting the Agents service directly from the browser.
  *
- * The selected Agents environment (local | dev | prod) is forwarded via the
- * `x-agents-env` header so the runtime environment switcher keeps working; the
- * proxy maps it to a server-side allowlist of Agents base URLs.
+ * The app's build environment (local | dev | prod) is forwarded via the
+ * `x-agents-env` header so the proxy can select its allowlisted Agents URL.
  */
 
 const PROXY_PREFIX = "/agents-proxy";
@@ -19,7 +18,7 @@ const withAgentsEnv = (config?: AxiosRequestConfig): AxiosRequestConfig => ({
   ...config,
   headers: {
     ...config?.headers,
-    "x-agents-env": getStoredAgentsEnv(),
+    "x-agents-env": getAdminEnvironment(),
   },
 });
 

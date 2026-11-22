@@ -42,7 +42,18 @@ const root = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, root, "");
-  const apiUrl = env.VITE_BASE_API_URL || "http://localhost:3004/api/v1";
+  const adminEnv =
+    process.env.VERCEL_ENV === "production"
+      ? "prod"
+      : process.env.VERCEL_ENV === "preview"
+        ? "dev"
+        : "local";
+  const apiUrl =
+    adminEnv === "dev"
+      ? "https://tbe-dev-git-development-tbe.vercel.app/api/v1"
+      : adminEnv === "prod"
+        ? env.VITE_PROD_API_URL || "https://api.theboringeducation.com/api/v1"
+        : env.VITE_BASE_API_URL || "http://localhost:3004/api/v1";
 
   return {
     server: {
@@ -51,6 +62,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react(), sentryStubPlugin()],
     define: {
+      "import.meta.env.VITE_ADMIN_ENV": JSON.stringify(adminEnv),
       "process.env.NEXT_PUBLIC_API_URL": JSON.stringify(apiUrl),
       "process.env.VITE_BASE_API_URL": JSON.stringify(apiUrl),
     },

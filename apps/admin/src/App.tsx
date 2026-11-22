@@ -26,7 +26,6 @@ import MentorshipPage from "./pages/MentorshipPage";
 import PrepLogsPage from "./pages/PrepLogsPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import QuizzesPage from "./pages/QuizzesPage";
-import SimpleQuizAnalyticsPage from "./pages/SimpleQuizAnalyticsPage";
 import UserInterestsPage from "./pages/UserInterestsPage";
 import UsersPage from "./pages/UsersPage";
 
@@ -118,14 +117,6 @@ const App = () => {
                 element={
                   <MainLayout>
                     <ContentRedirect />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/content/analytics/quiz"
-                element={
-                  <MainLayout>
-                    <SimpleQuizAnalyticsPage />
                   </MainLayout>
                 }
               />

@@ -8,7 +8,7 @@ import {
   getChaptersFromSectionInDB,
 } from "@/lib/database";
 import type { AddChapterRequestPayloadProps } from "@/lib/interfaces";
-import { getMDXContent, sendAPIResponse } from "@/lib/utils";
+import { sendAPIResponse } from "@/lib/utils";
 import { withApiHandler } from "@/middleware/requestLogger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -44,7 +44,6 @@ const handleAddChapter = async (
   chapterData = {
     ...chapterData,
     chapterId: v4().replace(/-/g, ""),
-    content: getMDXContent(),
   };
 
   try {
@@ -122,4 +121,4 @@ const handleGetChapters = async (
   }
 };
 
-export default withApiHandler(handler);
+export default withApiHandler(handler, { admin: { methods: ["POST"] } });

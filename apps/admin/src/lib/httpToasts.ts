@@ -31,8 +31,9 @@ function onResponseSuccess(response: AxiosResponse) {
   const path = buildPath(cfg.url);
   const status = response.status;
 
-  // Show success toast for all requests
-  toast.success(`${method} ${path} → ${status}`);
+  if (method !== "GET") {
+    toast.success(`${method} ${path} → ${status}`);
+  }
 
   // Log API success response
   logApiSuccess(method, path, status, response.data);
@@ -50,9 +51,11 @@ function onResponseError(error: AxiosError) {
     (error.response?.data as any)?.detail ||
     error.message;
 
-  toast.error(`${method} ${path} → ${status}`, {
-    description: serverMessage,
-  });
+  if (method !== "GET") {
+    toast.error(`${method} ${path} → ${status}`, {
+      description: serverMessage,
+    });
+  }
 
   // Log API error response
   logApiError(method, path, status, serverMessage, error.response?.data);

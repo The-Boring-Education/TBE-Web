@@ -151,7 +151,7 @@ const EmailManagementPage = () => {
     if (!selectedTemplate) return;
 
     const testEmailData = {
-      from_email: "theboringeducation@gmail.com",
+      from_email: "hello@theboringeducation.com",
       from_name: "Sachin from The Boring Education",
       to_email: testEmail,
       to_name: "Test User",

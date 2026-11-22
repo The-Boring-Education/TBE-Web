@@ -32,7 +32,7 @@ The Admin UI supports three environments with automatic configuration and **sepa
 - **Gradient Background**: Beautiful blue-to-indigo gradient with modern styling
 - **Separate Sections**: Platform API and AI Agents have distinct, independent configuration areas
 - **Visual Indicators**: Color-coded status indicators and badges
-- **Environment Selector**: Dropdown with emojis for Local 🚀, Dev 🔧, and Prod 🚀
+- **Environment routing**: Automatically selects Local for local runs, Dev for Vercel previews, and Prod for production deployments
 
 ### 🔗 **Platform API Section** (Green Theme)
 
@@ -60,7 +60,7 @@ The Admin UI supports three environments with automatic configuration and **sepa
   - Platform API: `https://www.theboringeducation.com/api/v1`
   - Agents API: `https://tbe-agents-prod.vercel.app/api/v1`
 
-**Note**: Update the Agents API URLs in `src/hooks/useEnvironment.ts` with your actual deployment URLs.
+The environment is selected at build time and cannot be changed from the admin UI. Local API URLs can be overridden with `VITE_BASE_API_URL` and `VITE_AGENTS_API_BASE`.
 
 ## Quiz Generation UI
 

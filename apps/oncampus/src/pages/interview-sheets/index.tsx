@@ -405,7 +405,7 @@ const InterviewPrepDashboardPage = (props: SheetPageProps) => {
                 <div
                   key={s._id || s.slug}
                   onMouseEnter={() => prefetchSheetData(s.slug, user?.id)}
-                  className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md transition-all group"
+                  className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] rounded-xl overflow-hidden flex flex-col h-full justify-between shadow-sm hover:shadow-md transition-all group"
                 >
                   <div>
                     {/* High-contrast, sharp Interview Sheet Cover */}

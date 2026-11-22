@@ -111,7 +111,7 @@ export const useUpdateQuiz = () => {
   });
 };
 
-import { getStoredAgentsEnv } from "@/hooks/useEnvironment";
+import { getAdminEnvironment } from "@/hooks/useEnvironment";
 import { agentsClient } from "@/lib/agentsClient";
 
 export type GenerateQuizPayload = {
@@ -123,7 +123,7 @@ export type GenerateQuizPayload = {
 };
 
 export async function generateQuiz(payload: GenerateQuizPayload) {
-  const env = getStoredAgentsEnv();
+  const env = getAdminEnvironment();
 
   const res = await agentsClient.post("/quiz/generate", {
     ...payload,

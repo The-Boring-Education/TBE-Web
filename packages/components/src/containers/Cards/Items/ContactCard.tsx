@@ -45,7 +45,7 @@ const ContactCard = () => (
                   text: "Send Email",
                   className: "w-full sm:w-auto",
                 }}
-                href="mailto:theboringeducation@gmail.com"
+                href="mailto:hello@theboringeducation.com"
               />
             </FlexContainer>
           </FlexContainer>
@@ -87,10 +87,10 @@ const ContactCard = () => (
             <LinkButton
               buttonProps={{
                 variant: "PRIMARY",
-                text: "theboringeducation@gmail.com",
+                text: "hello@theboringeducation.com",
                 className: "text-sm",
               }}
-              href="mailto:theboringeducation@gmail.com"
+              href="mailto:hello@theboringeducation.com"
             />
           </FlexContainer>
         </GradientContainer>

@@ -2,7 +2,6 @@ import { useAuth } from "@tbe/auth";
 import {
   Activity,
   Award,
-  BarChart3,
   BookOpen,
   BookOpenCheck,
   Briefcase,
@@ -49,11 +48,6 @@ const Sidebar = () => {
     { name: "Courses", path: "/courses", icon: <BookOpen size={20} /> },
     { name: "Projects", path: "/projects", icon: <Briefcase size={20} /> },
     { name: "Quizzes", path: "/quizzes", icon: <ListChecks size={20} /> },
-    {
-      name: "Quiz Analytics",
-      path: "/content/analytics/quiz",
-      icon: <BarChart3 size={20} />,
-    },
     {
       name: "Interview Prep",
       path: "/interview-prep",
