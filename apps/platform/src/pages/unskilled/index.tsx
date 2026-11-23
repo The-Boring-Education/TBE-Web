@@ -80,6 +80,7 @@ const UnskilledLandingPage = ({
   const {
     file,
     handleFileUpload,
+    isParsing,
     selectedDomains,
     setSelectedDomains,
     selectedExperience,
@@ -105,7 +106,7 @@ const UnskilledLandingPage = ({
         <YAxis type='number' />
         <XAxis dataKey='name' type='category' width={100} />
         <Tooltip />
-        <Bar dataKey='count' fill='bg-primary' />
+        <Bar dataKey='count' fill='hsl(var(--chart-1))' />
       </BarChart>
     </ResponsiveContainer>,
 
@@ -283,6 +284,7 @@ const UnskilledLandingPage = ({
               <UploadFileInput
                 accept='pdf'
                 file={file}
+                isProcessing={isParsing}
                 onChange={handleFileUpload}
               />
             </FlexContainer>
