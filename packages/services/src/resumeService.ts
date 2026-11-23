@@ -1,41 +1,47 @@
 /**
  * Resume Evaluation Service
- * Handles API calls to Unskilled backend for resume evaluation
- * Follows same pattern as graph API calls
+ * Handles API calls to the local API backend for resume evaluation
  */
 
-import { envConfig } from "@tbe/constants";
+import { JOB_EXPERIENCE_LEVEL } from "@tbe/constants";
 import type {
   ResumeEvaluationRequest,
   ResumeEvaluationResponse,
 } from "@tbe/types";
 
+const getExperienceRange = (
+  experienceLevel: string,
+): { min: number; max: number } => {
+  const found = JOB_EXPERIENCE_LEVEL.find((e) => e.value === experienceLevel);
+  return found ? { min: found.min, max: found.max } : { min: 0, max: 100 };
+};
+
 /**
- * Evaluate resume against job market
- * Calls Unskilled backend directly (like graph API)
+ * Evaluate resume against job market via the local API
  */
 export const evaluateResume = async (
   payload: ResumeEvaluationRequest,
 ): Promise<ResumeEvaluationResponse> => {
   try {
-    const apiUrl = `${envConfig.UNSKILLED_API_URL}/resume/evaluate`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/unskilled/evaluation`;
+
+    const requestBody = {
+      skills: payload.resumeSkills,
+      domains: payload.domains,
+      experience: getExperienceRange(payload.experienceLevel),
+    };
 
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(requestBody),
     });
 
-    console.log("Response status:", response.status);
-    console.log("Response headers:", response.headers);
-
-    // Check content type before parsing
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       const textResponse = await response.text();
-      console.error("Non-JSON response:", textResponse);
       throw new Error(
         `Server returned ${response.status}: ${textResponse.substring(0, 200)}`,
       );
@@ -43,7 +49,7 @@ export const evaluateResume = async (
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to evaluate resume");
+      throw new Error(errorData.message || "Failed to evaluate resume");
     }
 
     const result: ResumeEvaluationResponse = await response.json();
@@ -64,7 +70,7 @@ export const checkResumeServiceHealth = async (): Promise<{
 }> => {
   try {
     const response = await fetch(
-      `${envConfig.UNSKILLED_API_URL}/evaluate/health`,
+      `${process.env.NEXT_PUBLIC_API_URL}/unskilled/evaluation/health`,
     );
 
     if (!response.ok) {
