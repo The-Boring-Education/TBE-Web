@@ -12,6 +12,7 @@ import {
   XCircle,
 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { runCodeAgainstTestCases } from "./codeRunner";
 import {
@@ -59,6 +60,7 @@ export const DsaQuestionCodeEditor: React.FC<CodeEditorProps> = ({
   }, [questionName, questionId]);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,6 +70,28 @@ export const DsaQuestionCodeEditor: React.FC<CodeEditorProps> = ({
   const [selectedCaseIndex, setSelectedCaseIndex] = useState(0);
   const [executionResult, setExecutionResult] =
     useState<ExecutionResult | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Handle ESC key to exit fullscreen and prevent background body scrolling
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isFullscreen]);
 
   // Initialize test cases from props or defaults
   const [testCases, setTestCases] = useState<TestCase[]>(() => {
@@ -209,12 +233,12 @@ export const DsaQuestionCodeEditor: React.FC<CodeEditorProps> = ({
   const activeCase = testCases[selectedCaseIndex] || testCases[0];
   const activeCaseResult = executionResult?.results?.[selectedCaseIndex];
 
-  return (
+  const editorContent = (
     <div
       className={cn(
         "flex flex-col rounded-xl border border-slate-200/90 dark:border-[#24242A] bg-[#0E0E11] text-slate-100 shadow-md overflow-hidden transition-all duration-300 font-sans",
         isFullscreen
-          ? "fixed inset-0 z-50 rounded-none w-screen h-screen"
+          ? "fixed inset-0 z-[100] rounded-none w-screen h-screen bg-[#0E0E11]"
           : "w-full h-full min-h-[580px] lg:min-h-[640px]",
       )}
     >
@@ -281,7 +305,10 @@ export const DsaQuestionCodeEditor: React.FC<CodeEditorProps> = ({
           {onClose && (
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => {
+                setIsFullscreen(false);
+                onClose();
+              }}
               title="Close Code Editor (Return to Full Question)"
               className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors ml-1 cursor-pointer"
             >
@@ -616,6 +643,12 @@ export const DsaQuestionCodeEditor: React.FC<CodeEditorProps> = ({
       </div>
     </div>
   );
+
+  if (isFullscreen && mounted && typeof document !== "undefined") {
+    return createPortal(editorContent, document.body);
+  }
+
+  return editorContent;
 };
 
 export default DsaQuestionCodeEditor;
