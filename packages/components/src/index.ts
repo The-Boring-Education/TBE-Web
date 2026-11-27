@@ -167,6 +167,8 @@ export { default as AptitudeQuizPanel } from "./containers/Cards/AptitudeQuizPan
 export { default as AptitudeStudyGuide } from "./containers/Cards/AptitudeStudyGuide";
 export { default as CardContainerA } from "./containers/Cards/CardContainerA";
 export { default as CardContainerB } from "./containers/Cards/CardContainerB";
+export { default as DsaQuestionCodeEditor } from "./containers/Cards/dsa-code-editor/DsaQuestionCodeEditor";
+export * from "./containers/Cards/dsa-code-editor/types";
 export {
   CommonMistakesSection,
   ConstraintsSection,
