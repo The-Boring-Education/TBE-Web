@@ -3,6 +3,8 @@ import type { QuizCategoryAPI } from "@tbe/types";
 import React, { useMemo, useState } from "react";
 import { FiArrowRight, FiHelpCircle, FiSearch, FiZap } from "react-icons/fi";
 
+import { LEARN_TYPOGRAPHY } from "./typography";
+
 // In-memory cache for questions to eliminate loading lag
 export const quizQuestionsCache = new Map<string, any>();
 
@@ -17,8 +19,6 @@ export const prefetchQuizData = async (quizId: string) => {
     console.error("Failed to prefetch quiz data", err);
   }
 };
-
-
 
 export const getQuizLogo = (name?: string, fallbackIcon?: string) => {
   if (!name) return null;
@@ -137,17 +137,17 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#16161A] p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-[#24242A] shadow-2xs">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-red-500/10 text-[#FF3B30] border border-red-500/20">
+            <span className="px-2 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
               Skill Assessments
             </span>
-            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
+            <span className={LEARN_TYPOGRAPHY.meta}>
               {categories.length} Topics Available
             </span>
           </div>
-          <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className={LEARN_TYPOGRAPHY.spaceHeading}>
             Technical Quizzes &amp; Assessments
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-normal max-w-xl">
+          <p className={`${LEARN_TYPOGRAPHY.cardDescription} max-w-xl`}>
             Test conceptual depth, debug real code snippets, and assess
             interview readiness topic-by-topic.
           </p>
@@ -174,10 +174,10 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
               key={tab.id}
               type="button"
               onClick={() => setSelectedFilter(tab.id)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-[13px] sm:text-sm font-semibold transition-all shrink-0 cursor-pointer ${
                 selectedFilter === tab.id
                   ? "bg-[#FF3B30] text-white shadow-2xs"
-                  : "bg-slate-50 dark:bg-[#202026] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#282830] hover:text-slate-900 dark:hover:text-white"
+                  : "bg-slate-50 dark:bg-[#202026] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#282830] hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               {tab.label}
@@ -186,20 +186,20 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
         </div>
 
         <div className="relative w-full sm:w-60 shrink-0">
-          <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 w-3.5 h-3.5 pointer-events-none" />
+          <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 w-3.5 h-3.5 pointer-events-none" />
           <input
             type="text"
             placeholder="Search topic..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-7.5 pr-3 py-1 bg-slate-50 dark:bg-[#202026] border border-slate-200 dark:border-[#282830] rounded-lg text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#1A1A20] focus:border-[#FF3B30] transition-all"
+            className={`w-full pl-[32px] pr-3 py-1.5 bg-slate-50 dark:bg-[#202026] border border-slate-200 dark:border-[#282830] rounded-lg ${LEARN_TYPOGRAPHY.input} focus:outline-none focus:bg-white dark:focus:bg-[#1A1A20] focus:border-[#FF3B30] transition-all`}
           />
         </div>
       </div>
 
       {/* Quizzes Grid (Clean, Compact, Responsive) */}
       {loading ? (
-        <div className="py-12 text-center text-xs font-bold text-slate-400">
+        <div className="py-12 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
           Loading available quizzes...
         </div>
       ) : filteredCategories.length === 0 ? (
@@ -208,7 +208,7 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
             No quizzes found
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             Try adjusting your search query or topic filter.
           </p>
         </div>
@@ -245,14 +245,18 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors leading-tight truncate">
+                      <h3
+                        className={`${LEARN_TYPOGRAPHY.compactCardTitle} group-hover:text-[#FF3B30] transition-colors truncate`}
+                      >
                         {category.categoryName}
                       </h3>
                     </div>
                   </div>
 
                   {/* Description: Clean, 2-line clamp */}
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mt-1.5 mb-2 font-normal">
+                  <p
+                    className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-2 mt-1.5 mb-2`}
+                  >
                     {category.categoryDescription ||
                       "Curated timed questions covering core concepts, edge cases, and best practices."}
                   </p>
@@ -260,13 +264,15 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
 
                 {/* Footer: Metadata & Start Action */}
                 <div className="flex items-center justify-between gap-1.5 pt-2 border-t border-slate-100 dark:border-[#202026]">
-                  <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  <div
+                    className={`flex items-center gap-2 ${LEARN_TYPOGRAPHY.meta}`}
+                  >
                     <div className="flex items-center gap-1">
-                      <FiHelpCircle className="w-3 h-3 text-[#FF3B30] shrink-0" />
+                      <FiHelpCircle className="w-3.5 h-3.5 text-[#FF3B30] shrink-0" />
                       <span>{questionCount} Qs</span>
                     </div>
-                    <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-semibold">
-                      <FiZap className="w-3 h-3 shrink-0" />
+                    <div className="flex items-center gap-1 text-amber-700 dark:text-amber-400 font-semibold">
+                      <FiZap className="w-3.5 h-3.5 shrink-0" />
                       <span>+50 XP</span>
                     </div>
                   </div>
@@ -277,7 +283,7 @@ export const QuizCatalogSpace: React.FC<QuizCatalogSpaceProps> = ({
                       e.stopPropagation();
                       onSelectQuiz(category._id, category.categoryName);
                     }}
-                    className="px-2.5 py-1 rounded-md text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer bg-[#FF3B30] hover:bg-[#EE3126] text-white group/btn"
+                    className="px-2.5 py-1 rounded-md text-xs font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer bg-[#FF3B30] hover:bg-[#EE3126] text-white group/btn"
                   >
                     <span>Start</span>
                     <FiArrowRight className="w-2.5 h-2.5 group-hover/btn:translate-x-0.5 transition-transform" />

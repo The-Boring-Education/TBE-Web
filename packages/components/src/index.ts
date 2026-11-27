@@ -49,6 +49,8 @@ export {
   prefetchSheetData,
   SheetLearningSpace,
 } from "./learn/SheetLearningSpace";
+export type { LearnTypographyToken } from "./learn/typography";
+export { LEARN_TYPOGRAPHY } from "./learn/typography";
 
 // Common Components
 export { default as Accordion } from "./common/Accordion";

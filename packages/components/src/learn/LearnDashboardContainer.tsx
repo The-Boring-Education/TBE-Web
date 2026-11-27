@@ -38,6 +38,7 @@ import { PersonalizationQuiz } from "./PersonalizationQuiz";
 import { prefetchQuizData, QuizCatalogSpace } from "./QuizCatalogSpace";
 import { QuizPlaySpace } from "./QuizPlaySpace";
 import { prefetchSheetData, SheetLearningSpace } from "./SheetLearningSpace";
+import { LEARN_TYPOGRAPHY } from "./typography";
 
 export interface LearnDashboardContainerProps {
   user: any;
@@ -1310,7 +1311,7 @@ export const LearnDashboardContainer: React.FC<
           className={`${
             isSidebarCollapsed
               ? "w-11 sm:w-[54px] px-0.5 sm:px-1"
-              : "w-[180px] sm:w-[215px] px-1 sm:px-2"
+              : "w-[200px] sm:w-[240px] px-1 sm:px-2"
           } bg-white dark:bg-[#131316] rounded-2xl border border-slate-200/90 dark:border-[#24242A] shadow-2xs h-full flex flex-col justify-between py-1.5 sm:py-2 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 relative`}
         >
           <div className="space-y-1 flex-1 overflow-y-auto overflow-x-hidden scrollbar-none sm:[&::-webkit-scrollbar]:w-1 sm:[&::-webkit-scrollbar-thumb]:bg-slate-200 dark:sm:[&::-webkit-scrollbar-thumb]:bg-[#26262D] sm:[&::-webkit-scrollbar-thumb]:rounded-full">
@@ -1364,10 +1365,10 @@ export const LearnDashboardContainer: React.FC<
                   title={isSidebarCollapsed ? "Dashboard" : undefined}
                   className={`w-full relative flex items-center ${
                     isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                  } py-1 rounded-lg text-xs transition-colors duration-200 cursor-pointer overflow-hidden ${
+                  } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} transition-colors duration-200 cursor-pointer overflow-hidden ${
                     activeTab === "dashboard"
-                      ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-medium shadow-2xs"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal"
+                      ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-semibold shadow-2xs"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium"
                   }`}
                 >
                   {activeTab === "dashboard" && (
@@ -1395,7 +1396,7 @@ export const LearnDashboardContainer: React.FC<
               {/* LEARNING Section */}
               <div className="space-y-0.5 pt-0.5">
                 <div
-                  className={`px-2 text-[9px] font-extrabold text-slate-400 dark:text-slate-500 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                  className={`px-2 ${LEARN_TYPOGRAPHY.sidebarGroupLabel} whitespace-nowrap overflow-hidden transition-all duration-200 ${
                     isSidebarCollapsed
                       ? "opacity-0 h-0 my-0"
                       : "opacity-100 py-0.5"
@@ -1409,10 +1410,10 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Catalog" : undefined}
                     className={`w-full relative flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "explore"
-                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal"
+                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-semibold shadow-2xs"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium"
                     }`}
                   >
                     {activeTab === "explore" && (
@@ -1442,10 +1443,10 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Shiksha" : undefined}
                     className={`w-full relative flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "shiksha"
-                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal"
+                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-semibold shadow-2xs"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium"
                     }`}
                   >
                     {activeTab === "shiksha" && (
@@ -1475,10 +1476,10 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Interview Prep" : undefined}
                     className={`w-full relative flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "interview-prep"
-                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal"
+                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-semibold shadow-2xs"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium"
                     }`}
                   >
                     {activeTab === "interview-prep" && (
@@ -1507,10 +1508,10 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Ecosystem" : undefined}
                     className={`w-full relative flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs transition-colors duration-200 cursor-pointer overflow-hidden ${
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} transition-colors duration-200 cursor-pointer overflow-hidden ${
                       activeTab === "ecosystem"
-                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-medium shadow-2xs"
-                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal"
+                        ? "bg-red-50/70 dark:bg-red-950/40 text-[#FF4D4D] font-semibold shadow-2xs"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium"
                     }`}
                   >
                     {activeTab === "ecosystem" && (
@@ -1542,7 +1543,7 @@ export const LearnDashboardContainer: React.FC<
               {/* PRACTICE Section */}
               <div className="space-y-0.5 pt-0.5">
                 <div
-                  className={`px-2 text-[9px] font-extrabold text-slate-400 dark:text-slate-500 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                  className={`px-2 ${LEARN_TYPOGRAPHY.sidebarGroupLabel} whitespace-nowrap overflow-hidden transition-all duration-200 ${
                     isSidebarCollapsed
                       ? "opacity-0 h-0 my-0"
                       : "opacity-100 py-0.5"
@@ -1558,10 +1559,10 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Quizzes" : undefined}
                     className={`w-full flex items-center relative ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs transition-colors overflow-hidden cursor-pointer ${
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} transition-colors overflow-hidden cursor-pointer ${
                       activeTab === "quizzes"
-                        ? "bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] font-medium"
-                        : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal"
+                        ? "bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] font-semibold"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium"
                     }`}
                   >
                     {activeTab === "quizzes" && (
@@ -1584,7 +1585,7 @@ export const LearnDashboardContainer: React.FC<
                       Quizzes
                     </span>
                     {!isSidebarCollapsed && (
-                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-red-100 dark:bg-red-950/60 text-[#FF3B30]">
+                      <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400">
                         New
                       </span>
                     )}
@@ -1597,7 +1598,7 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "DSA Practice" : undefined}
                     className={`w-full flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium transition-colors overflow-hidden`}
                   >
                     <div className="w-4 h-4 flex items-center justify-center shrink-0">
                       <FiCode className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
@@ -1618,7 +1619,7 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Aptitude Practice" : undefined}
                     className={`w-full flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium transition-colors overflow-hidden`}
                   >
                     <div className="w-4 h-4 flex items-center justify-center shrink-0">
                       <FiBarChart2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
@@ -1640,7 +1641,7 @@ export const LearnDashboardContainer: React.FC<
               {/* COMMUNITY Section */}
               <div className="space-y-0.5 pt-0.5">
                 <div
-                  className={`px-2 text-[9px] font-extrabold text-slate-400 dark:text-slate-500 tracking-wider uppercase whitespace-nowrap overflow-hidden transition-all duration-200 ${
+                  className={`px-2 ${LEARN_TYPOGRAPHY.sidebarGroupLabel} whitespace-nowrap overflow-hidden transition-all duration-200 ${
                     isSidebarCollapsed
                       ? "opacity-0 h-0 my-0"
                       : "opacity-100 py-0.5"
@@ -1656,7 +1657,7 @@ export const LearnDashboardContainer: React.FC<
                     title={isSidebarCollapsed ? "Resources" : undefined}
                     className={`w-full flex items-center ${
                       isSidebarCollapsed ? "justify-center px-0" : "px-2 gap-2"
-                    } py-1 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-normal transition-colors overflow-hidden`}
+                    } py-1.5 rounded-lg ${LEARN_TYPOGRAPHY.navItem} text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 font-medium transition-colors overflow-hidden`}
                   >
                     <div className="w-4 h-4 flex items-center justify-center shrink-0">
                       <FiFileText className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
@@ -1682,18 +1683,18 @@ export const LearnDashboardContainer: React.FC<
               <div className="absolute left-full bottom-0 ml-2 w-44 p-1.5 bg-white dark:bg-[#18181D] rounded-xl border border-slate-200/90 dark:border-[#2C2C36] shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 ease-out z-50">
                 <div className="flex items-center justify-between gap-1.5 pb-1.5 mb-1 border-b border-slate-100 dark:border-[#24242A]">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[11px] font-bold text-slate-900 dark:text-white truncate">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                       {displayName}
                     </div>
                     {displayEmail && (
-                      <div className="text-[9px] text-slate-400 dark:text-slate-500 truncate">
+                      <div className="text-[11px] text-slate-600 dark:text-slate-400 truncate">
                         {displayEmail}
                       </div>
                     )}
                   </div>
                   <div className="flex items-center gap-0.5 px-1 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0">
                     <FiZap className="w-2.5 h-2.5 text-amber-500 fill-amber-500/30 shrink-0" />
-                    <span className="text-[10px] font-black">
+                    <span className="text-[11px] font-black">
                       {userPoints} XP
                     </span>
                   </div>
@@ -1750,11 +1751,11 @@ export const LearnDashboardContainer: React.FC<
               {/* Hover Dropdown Menu (Appears above the user bar) */}
               <div className="absolute bottom-full left-0 right-0 mb-1.5 p-1 bg-white dark:bg-[#18181D] rounded-xl border border-slate-200/90 dark:border-[#2C2C36] shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 ease-out -translate-y-1 group-hover:translate-y-0 z-50">
                 <div className="px-2 py-1 mb-1 border-b border-slate-100 dark:border-[#24242A]">
-                  <div className="text-[11px] font-bold text-slate-900 dark:text-white truncate">
+                  <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                     {displayName}
                   </div>
                   {displayEmail && (
-                    <div className="text-[9px] text-slate-400 dark:text-slate-500 truncate">
+                    <div className="text-[11px] text-slate-600 dark:text-slate-400 truncate">
                       {displayEmail}
                     </div>
                   )}
@@ -1801,10 +1802,10 @@ export const LearnDashboardContainer: React.FC<
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[11px] font-bold text-slate-900 dark:text-white truncate leading-tight">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white truncate leading-tight">
                       {displayName}
                     </div>
-                    <div className="text-[9px] text-slate-400 dark:text-slate-500 truncate leading-tight">
+                    <div className="text-[11px] text-slate-600 dark:text-slate-400 truncate leading-tight">
                       {displayEmail ? "Learner" : "Signed in"}
                     </div>
                   </div>
@@ -1816,7 +1817,7 @@ export const LearnDashboardContainer: React.FC<
                   className="flex items-center gap-0.5 px-1 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0"
                 >
                   <FiZap className="w-2.5 h-2.5 text-amber-500 fill-amber-500/30 shrink-0" />
-                  <span className="text-[10px] font-black">{userPoints}</span>
+                  <span className="text-[11px] font-black">{userPoints}</span>
                 </div>
               </div>
             </div>
@@ -1845,7 +1846,9 @@ export const LearnDashboardContainer: React.FC<
               /* Shiksha Courses Space Catalog */
               <div className="space-y-2.5 sm:space-y-3">
                 {/* Breadcrumb */}
-                <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 flex-wrap px-0.5">
+                <nav
+                  className={`flex items-center gap-1.5 ${LEARN_TYPOGRAPHY.meta} flex-wrap px-0.5`}
+                >
                   <button
                     type="button"
                     onClick={() => navigateToTab("dashboard")}
@@ -1853,7 +1856,7 @@ export const LearnDashboardContainer: React.FC<
                   >
                     Learn
                   </button>
-                  <span className="text-slate-300 dark:text-slate-600">›</span>
+                  <span className="text-slate-400 dark:text-slate-500">›</span>
                   <span className="font-bold text-[#FF4D4D]">
                     Shiksha Courses
                   </span>
@@ -1863,24 +1866,26 @@ export const LearnDashboardContainer: React.FC<
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 bg-white dark:bg-[#17171B] p-3 sm:p-3.5 rounded-2xl border border-slate-200/80 dark:border-[#26262C] shadow-2xs">
                   <div className="space-y-0.5 sm:space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-50 dark:bg-red-950/40 text-[#FF3B30] border border-red-200/80 dark:border-red-900/60">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-bold uppercase bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border border-red-200/80 dark:border-red-900/60">
                         Shiksha Space
                       </span>
-                      <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                      <span className={LEARN_TYPOGRAPHY.meta}>
                         {coursesList.length} Courses Available
                       </span>
                     </div>
-                    <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                    <h1 className={LEARN_TYPOGRAPHY.spaceHeading}>
                       Learn With Shiksha
                     </h1>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl">
+                    <p
+                      className={`${LEARN_TYPOGRAPHY.cardDescription} max-w-xl`}
+                    >
                       Structured developer courses designed to take you from
                       foundational logic to production-ready engineering.
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] text-xs font-bold text-slate-700 dark:text-slate-200">
+                    <span className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] text-[13px] font-bold text-slate-700 dark:text-slate-200">
                       {enrolledCourses.length} Enrolled
                     </span>
                   </div>
@@ -1897,7 +1902,7 @@ export const LearnDashboardContainer: React.FC<
                         key={tab.id}
                         type="button"
                         onClick={() => setShikshaCategory(tab.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-xl ${LEARN_TYPOGRAPHY.control} transition-all shrink-0 cursor-pointer ${
                           shikshaCategory === tab.id
                             ? "bg-[#FF3B30] text-white shadow-xs"
                             : "bg-slate-50 dark:bg-[#222228] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2A2A32] hover:text-slate-900 dark:hover:text-white"
@@ -1909,20 +1914,20 @@ export const LearnDashboardContainer: React.FC<
                   </div>
 
                   <div className="relative w-full sm:w-64 shrink-0">
-                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 w-3.5 h-3.5 pointer-events-none" />
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 w-3.5 h-3.5 pointer-events-none" />
                     <input
                       type="text"
                       placeholder="Search course title..."
                       value={shikshaSearchQuery}
                       onChange={(e) => setShikshaSearchQuery(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF3B30] transition-all"
+                      className={`w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl ${LEARN_TYPOGRAPHY.input} focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF3B30] transition-all`}
                     />
                   </div>
                 </div>
 
                 {/* Courses Grid */}
                 {loadingCatalogData ? (
-                  <div className="py-16 text-center text-xs font-bold text-slate-400">
+                  <div className="py-16 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
                     Loading Shiksha courses...
                   </div>
                 ) : filteredShikshaCourses.length === 0 ? (
@@ -1931,7 +1936,7 @@ export const LearnDashboardContainer: React.FC<
                     <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
                       No courses found
                     </h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                       Try adjusting your search query or filter.
                     </p>
                   </div>
@@ -1964,13 +1969,17 @@ export const LearnDashboardContainer: React.FC<
                                   <FiPlayCircle className="w-5 h-5 text-[#FF3B30]" />
                                 )}
                               </div>
-                              <h3 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors leading-snug line-clamp-1">
+                              <h3
+                                className={`${LEARN_TYPOGRAPHY.compactCardTitle} group-hover:text-[#FF3B30] transition-colors line-clamp-1`}
+                              >
                                 {c.name}
                               </h3>
                             </div>
 
                             {/* Description */}
-                            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mt-1.5 mb-2 font-normal">
+                            <p
+                              className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-2 mt-1.5 mb-2`}
+                            >
                               {c.description ||
                                 "Comprehensive hands-on coding course covering essential concepts and real-world projects."}
                             </p>
@@ -1978,8 +1987,10 @@ export const LearnDashboardContainer: React.FC<
 
                           {/* Footer: Actual Chapter Count + Explore Button */}
                           <div className="flex items-center justify-between gap-1.5 mt-2 pt-2 border-t border-slate-100 dark:border-[#222228]">
-                            <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                              <FiBookOpen className="w-3 h-3 text-[#FF3B30] shrink-0" />
+                            <div
+                              className={`flex items-center gap-1.5 ${LEARN_TYPOGRAPHY.meta}`}
+                            >
+                              <FiBookOpen className="w-3.5 h-3.5 text-[#FF3B30] shrink-0" />
                               <span>
                                 {totalChapters}{" "}
                                 {totalChapters === 1 ? "Chapter" : "Chapters"}
@@ -1989,7 +2000,7 @@ export const LearnDashboardContainer: React.FC<
                             <button
                               type="button"
                               onClick={() => navigateToCourse(c.slug, c.name)}
-                              className="px-2.5 py-1 rounded-md text-[10px] sm:text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer bg-[#FF3B30] hover:bg-[#EE3126] text-white group/btn"
+                              className={`px-2.5 py-1 rounded-md ${LEARN_TYPOGRAPHY.control} transition-all shadow-2xs flex items-center gap-1 cursor-pointer bg-[#FF3B30] hover:bg-[#EE3126] text-white group/btn`}
                             >
                               <span>
                                 {info.isInProgress ? "Resume" : "Start"}
@@ -2024,7 +2035,9 @@ export const LearnDashboardContainer: React.FC<
               /* Interview Prep Space Catalog */
               <div className="space-y-2.5 sm:space-y-3">
                 {/* Breadcrumb */}
-                <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 flex-wrap px-0.5">
+                <nav
+                  className={`flex items-center gap-1.5 ${LEARN_TYPOGRAPHY.meta} flex-wrap px-0.5`}
+                >
                   <button
                     type="button"
                     onClick={() => navigateToTab("dashboard")}
@@ -2032,7 +2045,7 @@ export const LearnDashboardContainer: React.FC<
                   >
                     Learn
                   </button>
-                  <span className="text-slate-300 dark:text-slate-600">›</span>
+                  <span className="text-slate-400 dark:text-slate-500">›</span>
                   <span className="font-bold text-[#FF4D4D]">
                     Interview Sheets
                   </span>
@@ -2042,24 +2055,26 @@ export const LearnDashboardContainer: React.FC<
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 bg-white dark:bg-[#17171B] p-3 sm:p-3.5 rounded-2xl border border-slate-200/80 dark:border-[#26262C] shadow-2xs">
                   <div className="space-y-0.5 sm:space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-50 dark:bg-red-950/40 text-[#FF4D4D] border border-red-200/80 dark:border-red-900/60">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-bold uppercase bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border border-red-200/80 dark:border-red-900/60">
                         Interview Prep Space
                       </span>
-                      <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                      <span className={LEARN_TYPOGRAPHY.meta}>
                         {sheetsList.length} Sheets Available
                       </span>
                     </div>
-                    <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                    <h1 className={LEARN_TYPOGRAPHY.spaceHeading}>
                       Crack Tech Interviews
                     </h1>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl">
+                    <p
+                      className={`${LEARN_TYPOGRAPHY.cardDescription} max-w-xl`}
+                    >
                       Curated topic-wise sheets with top interview questions,
                       code snippets and in-depth answers.
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] text-xs font-bold text-slate-700 dark:text-slate-200">
+                    <span className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] text-[13px] font-bold text-slate-700 dark:text-slate-200">
                       {enrolledSheets.length} Enrolled
                     </span>
                   </div>
@@ -2079,7 +2094,7 @@ export const LearnDashboardContainer: React.FC<
                         key={tab.id}
                         type="button"
                         onClick={() => setSheetCategory(tab.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-xl ${LEARN_TYPOGRAPHY.control} transition-all shrink-0 cursor-pointer ${
                           sheetCategory === tab.id
                             ? "bg-[#FF4D4D] text-white shadow-xs"
                             : "bg-slate-50 dark:bg-[#222228] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2A2A32] hover:text-slate-900 dark:hover:text-white"
@@ -2091,20 +2106,20 @@ export const LearnDashboardContainer: React.FC<
                   </div>
 
                   <div className="relative w-full sm:w-64 shrink-0">
-                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 w-3.5 h-3.5 pointer-events-none" />
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 w-3.5 h-3.5 pointer-events-none" />
                     <input
                       type="text"
                       placeholder="Search sheet title..."
                       value={sheetSearchQuery}
                       onChange={(e) => setSheetSearchQuery(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF4D4D] transition-all"
+                      className={`w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl ${LEARN_TYPOGRAPHY.input} focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF4D4D] transition-all`}
                     />
                   </div>
                 </div>
 
                 {/* Sheets Grid */}
                 {loadingCatalogData ? (
-                  <div className="py-16 text-center text-xs font-bold text-slate-400">
+                  <div className="py-16 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
                     Loading Interview sheets...
                   </div>
                 ) : filteredInterviewSheets.length === 0 ? (
@@ -2113,7 +2128,7 @@ export const LearnDashboardContainer: React.FC<
                     <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
                       No sheets found
                     </h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                       Try adjusting your search query or filter.
                     </p>
                   </div>
@@ -2136,11 +2151,11 @@ export const LearnDashboardContainer: React.FC<
                               badgeRoadmap={s.roadmap || "SHEET"}
                               statusBadge={
                                 info.isInProgress ? (
-                                  <div className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FF4D4D] text-white shadow-xs">
+                                  <div className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase bg-red-600 text-white shadow-xs">
                                     In Progress
                                   </div>
                                 ) : info.isEnrolled ? (
-                                  <div className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-600 text-white shadow-xs">
+                                  <div className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase bg-emerald-700 text-white shadow-xs">
                                     Enrolled
                                   </div>
                                 ) : null
@@ -2148,10 +2163,14 @@ export const LearnDashboardContainer: React.FC<
                             />
 
                             <div className="p-4 space-y-2">
-                              <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF4D4D] transition-colors leading-snug">
+                              <h3
+                                className={`${LEARN_TYPOGRAPHY.compactCardTitle} group-hover:text-[#FF4D4D] transition-colors`}
+                              >
                                 {s.name || s.title}
                               </h3>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                              <p
+                                className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-2`}
+                              >
                                 {s.description ||
                                   "Curated list of technical interview questions."}
                               </p>
@@ -2159,9 +2178,9 @@ export const LearnDashboardContainer: React.FC<
                               {/* Progress info if enrolled */}
                               {info.isInProgress && (
                                 <div className="pt-2 space-y-1">
-                                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                                  <div className="flex items-center justify-between text-[13px] font-bold text-slate-700 dark:text-slate-200">
                                     <span>{info.progressPct}% Solved</span>
-                                    <span className="text-slate-400 font-medium text-[10px]">
+                                    <span className="text-slate-600 dark:text-slate-400 font-medium text-xs sm:text-[13px]">
                                       {info.completedQuestions}/
                                       {info.totalQuestions} Solved
                                     </span>
@@ -2183,7 +2202,7 @@ export const LearnDashboardContainer: React.FC<
                               onClick={() =>
                                 navigateToSheet(s.slug, s.name || s.title)
                               }
-                              className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
+                              className={`w-full py-2.5 rounded-xl ${LEARN_TYPOGRAPHY.control} transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
                                 info.isInProgress
                                   ? "bg-[#FF4D4D] hover:bg-[#EE3126] text-white"
                                   : info.isEnrolled
@@ -2217,7 +2236,9 @@ export const LearnDashboardContainer: React.FC<
               />
             ) : (
               <div className="space-y-2.5 sm:space-y-3">
-                <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 flex-wrap px-0.5">
+                <nav
+                  className={`flex items-center gap-1.5 ${LEARN_TYPOGRAPHY.meta} flex-wrap px-0.5`}
+                >
                   <button
                     type="button"
                     onClick={() => navigateToTab("dashboard")}
@@ -2225,7 +2246,7 @@ export const LearnDashboardContainer: React.FC<
                   >
                     Learn
                   </button>
-                  <span className="text-slate-300 dark:text-slate-600">›</span>
+                  <span className="text-slate-400 dark:text-slate-500">›</span>
                   <span className="font-bold text-[#FF4D4D]">Quizzes</span>
                 </nav>
                 <QuizCatalogSpace
@@ -2277,7 +2298,7 @@ export const LearnDashboardContainer: React.FC<
                           </h3>
                           <FiArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF3B30] shrink-0" />
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug mt-0.5">
+                        <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-medium leading-snug mt-0.5">
                           {app.desc}
                         </p>
                       </div>
@@ -2291,10 +2312,10 @@ export const LearnDashboardContainer: React.FC<
             <div className="space-y-3 sm:space-y-4">
               {/* Greeting Header */}
               <div className="space-y-0.5">
-                <h1 className="text-base sm:text-lg md:text-xl font-extrabold text-[#10162F] dark:text-white tracking-tight">
+                <h1 className={LEARN_TYPOGRAPHY.spaceHeading}>
                   {getGreeting()}, {user?.name?.split(" ")[0] || "Nitin"} 👋
                 </h1>
-                <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">
+                <p className={LEARN_TYPOGRAPHY.meta}>
                   Keep learning, keep growing!
                 </p>
               </div>
@@ -2303,13 +2324,13 @@ export const LearnDashboardContainer: React.FC<
               <section className="space-y-2 sm:space-y-2.5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                    <h2 className={LEARN_TYPOGRAPHY.sectionHeading}>
                       Recommended for you
                     </h2>
                   </div>
                   <button
                     onClick={() => setActiveTab("explore")}
-                    className="text-xs font-bold text-[#FF3B30] hover:underline flex items-center gap-1 shrink-0 cursor-pointer self-start sm:self-auto"
+                    className="text-[13px] sm:text-sm font-bold text-[#FF3B30] hover:underline flex items-center gap-1 shrink-0 cursor-pointer self-start sm:self-auto"
                   >
                     Explore all courses &amp; sheets{" "}
                     <FiArrowRight className="w-3.5 h-3.5" />
@@ -2331,10 +2352,12 @@ export const LearnDashboardContainer: React.FC<
                             className="h-20 sm:h-24 md:h-28 object-contain mx-auto"
                           />
                         </div>
-                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                        <h3 className={LEARN_TYPOGRAPHY.compactCardTitle}>
                           Explore courses & sheets
                         </h3>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-snug">
+                        <p
+                          className={`${LEARN_TYPOGRAPHY.cardDescription} mt-1.5`}
+                        >
                           Browse all interview sheets, core CS subjects & free
                           roadmaps.
                         </p>
@@ -2398,15 +2421,19 @@ export const LearnDashboardContainer: React.FC<
                         >
                           <div>
                             <div
-                              className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                              className={`px-3 sm:px-3.5 py-1.5 text-[11px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
                             >
                               {badgeText}
                             </div>
                             <div className="p-3 sm:p-3.5 space-y-1.5 sm:space-y-2">
-                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#FF3B30] transition-colors">
+                              <h3
+                                className={`${LEARN_TYPOGRAPHY.compactCardTitle} group-hover:text-[#FF3B30] transition-colors`}
+                              >
                                 {item.title}
                               </h3>
-                              <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-3">
+                              <p
+                                className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-3`}
+                              >
                                 {item.desc}
                               </p>
                               {isInProgress && (
@@ -2419,14 +2446,14 @@ export const LearnDashboardContainer: React.FC<
                                       }}
                                     />
                                   </div>
-                                  <div className="text-right text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                                  <div className="text-right text-xs font-bold text-slate-700 dark:text-slate-300">
                                     {progressPercentage}% Completed
                                   </div>
                                 </div>
                               )}
                             </div>
                           </div>
-                          <div className="px-3 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 dark:border-[#26262C] flex items-center justify-between text-[10px] font-medium text-slate-400">
+                          <div className="px-3 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 dark:border-[#26262C] flex items-center justify-between text-xs font-medium text-slate-600 dark:text-slate-400">
                             <span>
                               {item.type === "core-subject"
                                 ? "OnCampus"
@@ -2543,7 +2570,7 @@ export const LearnDashboardContainer: React.FC<
                         >
                           {/* Top border badge strip */}
                           <div
-                            className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                            className={`px-3 sm:px-3.5 py-1.5 text-[11px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
                           >
                             {badgeLabel}
                           </div>
@@ -2562,22 +2589,26 @@ export const LearnDashboardContainer: React.FC<
                                     <FiFileText className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
                                   )}
                                   <div className="min-w-0">
-                                    <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 dark:text-white leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                    <h3
+                                      className={`${LEARN_TYPOGRAPHY.compactCardTitle} truncate group-hover:text-[#FF3B30] transition-colors`}
+                                    >
                                       {sheet.title}
                                     </h3>
                                   </div>
                                 </div>
                                 <div className="shrink-0 text-right">
-                                  <span className="text-xs font-black text-slate-900 dark:text-white">
+                                  <span className="text-sm font-black text-slate-900 dark:text-white">
                                     {progressPercentage}%
                                   </span>
-                                  <div className="text-[9px] font-bold text-slate-400">
+                                  <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
                                     Solved
                                   </div>
                                 </div>
                               </div>
 
-                              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                              <p
+                                className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-2 mt-2 sm:mt-3`}
+                              >
                                 {sheet.description ||
                                   "Curated list of topic-wise interview preparation problems."}
                               </p>
@@ -2591,7 +2622,9 @@ export const LearnDashboardContainer: React.FC<
                                     style={{ width: `${progressPercentage}%` }}
                                   />
                                 </div>
-                                <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+                                <div
+                                  className={`flex items-center justify-between ${LEARN_TYPOGRAPHY.microMeta}`}
+                                >
                                   <span>
                                     {completedCount} / {totalCount} Problems
                                     Solved
@@ -2622,7 +2655,7 @@ export const LearnDashboardContainer: React.FC<
                                     setActiveTab("interview-prep");
                                   }
                                 }}
-                                className={`w-full py-2 sm:py-2.5 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer ${btnStyle}`}
+                                className={`w-full py-2 sm:py-2.5 ${LEARN_TYPOGRAPHY.control} rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all cursor-pointer ${btnStyle}`}
                               >
                                 {sheet.isCourse
                                   ? "Continue Course"
@@ -2642,7 +2675,7 @@ export const LearnDashboardContainer: React.FC<
                       <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
                         No active sheets in progress yet
                       </span>
-                      <p className="text-[11px] text-slate-400 max-w-sm">
+                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-sm">
                         Start solving questions in any interview sheet to see
                         your progress here.
                       </p>
@@ -2673,10 +2706,10 @@ export const LearnDashboardContainer: React.FC<
                         <FiHelpCircle className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors truncate">
+                        <h4 className="text-[13px] sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors truncate">
                           Tech Quizzes
                         </h4>
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                        <p className={`${LEARN_TYPOGRAPHY.meta} line-clamp-1`}>
                           Topic-wise quizzes &amp; skill assessments.
                         </p>
                       </div>
@@ -2695,10 +2728,10 @@ export const LearnDashboardContainer: React.FC<
                         <FiBarChart2 className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors truncate">
+                        <h4 className="text-[13px] sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors truncate">
                           Aptitude Practice
                         </h4>
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                        <p className={`${LEARN_TYPOGRAPHY.meta} line-clamp-1`}>
                           Company mock tests &amp; placement questions.
                         </p>
                       </div>
@@ -2717,10 +2750,10 @@ export const LearnDashboardContainer: React.FC<
                         <FiBookOpen className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors truncate">
+                        <h4 className="text-[13px] sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF3B30] transition-colors truncate">
                           Core Subjects
                         </h4>
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                        <p className={`${LEARN_TYPOGRAPHY.meta} line-clamp-1`}>
                           Master OS, DBMS, CN &amp; OOPs for interviews.
                         </p>
                       </div>
@@ -2738,7 +2771,7 @@ export const LearnDashboardContainer: React.FC<
                 <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                   Explore Courses, Sheets &amp; Resources
                 </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+                <p className={LEARN_TYPOGRAPHY.cardDescription}>
                   Master interview questions, college core subjects &amp; full
                   stack engineering.
                 </p>
@@ -2758,7 +2791,7 @@ export const LearnDashboardContainer: React.FC<
                     <button
                       key={tab.id}
                       onClick={() => setExploreCategory(tab.id as any)}
-                      className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                      className={`px-2.5 sm:px-3 py-1.5 rounded-xl ${LEARN_TYPOGRAPHY.control} transition-all shrink-0 cursor-pointer ${
                         exploreCategory === tab.id
                           ? "bg-[#FF3B30] text-white shadow-xs"
                           : "bg-slate-50 dark:bg-[#222228] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2A2A32] hover:text-slate-900 dark:hover:text-white"
@@ -2771,13 +2804,13 @@ export const LearnDashboardContainer: React.FC<
 
                 {/* Search Input */}
                 <div className="relative w-full sm:w-56 md:w-64 shrink-0">
-                  <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 w-3.5 h-3.5 pointer-events-none" />
+                  <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 w-3.5 h-3.5 pointer-events-none" />
                   <input
                     type="text"
                     placeholder="Search topics, languages..."
                     value={exploreSearchQuery}
                     onChange={(e) => setExploreSearchQuery(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF3B30] transition-all"
+                    className={`w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-xl ${LEARN_TYPOGRAPHY.input} focus:outline-none focus:bg-white dark:focus:bg-[#1F1F25] focus:border-[#FF3B30] transition-all`}
                   />
                 </div>
               </div>
@@ -2866,7 +2899,7 @@ export const LearnDashboardContainer: React.FC<
                     >
                       {/* Full-width top badge strip */}
                       <div
-                        className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                        className={`px-3 sm:px-3.5 py-1.5 ${LEARN_TYPOGRAPHY.badge} ${badgeStyle}`}
                       >
                         {badgeText}
                       </div>
@@ -2891,7 +2924,9 @@ export const LearnDashboardContainer: React.FC<
                         >
                           {item.title}
                         </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        <p
+                          className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-3 sm:line-clamp-none`}
+                        >
                           {item.desc}
                         </p>
 
@@ -2906,7 +2941,9 @@ export const LearnDashboardContainer: React.FC<
                                   style={{ width: `${progressPercentage}%` }}
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
+                              <div
+                                className={`flex items-center justify-between ${LEARN_TYPOGRAPHY.microMeta}`}
+                              >
                                 <span className="font-bold text-slate-700 dark:text-slate-200">
                                   {progressPercentage}% Solved
                                 </span>
@@ -2917,7 +2954,7 @@ export const LearnDashboardContainer: React.FC<
                             </div>
                           ) : (
                             /* Gray pill */
-                            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-lg text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-lg text-[11px] sm:text-xs font-semibold text-slate-600 dark:text-slate-400">
                               <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                               {item.type === "core-subject"
                                 ? "Core CS Subject"
@@ -2932,8 +2969,8 @@ export const LearnDashboardContainer: React.FC<
                       </div>
 
                       {/* Footer */}
-                      <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-t border-slate-100 dark:border-[#26262C] flex items-center justify-between text-[11px]">
-                        <span className="flex items-center gap-1.5 text-slate-400 font-medium">
+                      <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-t border-slate-100 dark:border-[#26262C] flex items-center justify-between text-xs">
+                        <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 font-medium">
                           {item.type === "course" ? (
                             <FiPlayCircle className="w-3.5 h-3.5" />
                           ) : (
@@ -2990,7 +3027,7 @@ export const LearnDashboardContainer: React.FC<
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {loadingLearning ? (
-                  <div className="col-span-full py-12 flex items-center justify-center text-xs font-bold text-slate-400 dark:text-slate-500">
+                  <div className="col-span-full py-12 flex items-center justify-center text-sm font-medium text-slate-600 dark:text-slate-400">
                     Loading your enrolled sheets...
                   </div>
                 ) : activeSheetsWithProgress &&
@@ -3054,7 +3091,7 @@ export const LearnDashboardContainer: React.FC<
                       >
                         {/* Top border badge strip */}
                         <div
-                          className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
+                          className={`px-3 sm:px-3.5 py-1.5 ${LEARN_TYPOGRAPHY.badge} ${badgeStyle}`}
                         >
                           {badgeLabel}
                         </div>
@@ -3073,22 +3110,26 @@ export const LearnDashboardContainer: React.FC<
                                   <FiFileText className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
                                 )}
                                 <div className="min-w-0">
-                                  <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 dark:text-white leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                  <h3
+                                    className={`${LEARN_TYPOGRAPHY.compactCardTitle} truncate group-hover:text-[#FF3B30] transition-colors`}
+                                  >
                                     {sheet.title}
                                   </h3>
                                 </div>
                               </div>
                               <div className="shrink-0 text-right">
-                                <span className="text-xs font-black text-slate-900 dark:text-white">
+                                <span className="text-sm font-black text-slate-900 dark:text-white">
                                   {progressPercentage}%
                                 </span>
-                                <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500">
+                                <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
                                   Solved
                                 </div>
                               </div>
                             </div>
 
-                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                            <p
+                              className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-2 mt-2 sm:mt-3`}
+                            >
                               {sheet.description ||
                                 "Curated list of topic-wise interview preparation problems."}
                             </p>
@@ -3102,7 +3143,9 @@ export const LearnDashboardContainer: React.FC<
                                   style={{ width: `${progressPercentage}%` }}
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-400 font-semibold">
+                              <div
+                                className={`flex items-center justify-between ${LEARN_TYPOGRAPHY.microMeta}`}
+                              >
                                 <span>
                                   {completedCount} / {totalCount} Problems
                                   Solved
@@ -3157,7 +3200,9 @@ export const LearnDashboardContainer: React.FC<
                         key={course.slug || course._id || index}
                         className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-[#FF3B30]/30 hover:shadow-md transition-all rounded-2xl overflow-hidden flex flex-col justify-between group"
                       >
-                        <div className="px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase bg-[#FF3B30] text-white">
+                        <div
+                          className={`px-3 sm:px-3.5 py-1.5 ${LEARN_TYPOGRAPHY.badge} bg-[#FF3B30] text-white`}
+                        >
                           SHIKSHA COURSE
                         </div>
                         <div className="p-3.5 sm:p-4 md:p-5 flex flex-col justify-between flex-1">
@@ -3173,20 +3218,24 @@ export const LearnDashboardContainer: React.FC<
                                 ) : (
                                   <FiPlayCircle className="w-7 h-7 sm:w-8 h-8 text-[#FF3B30] shrink-0" />
                                 )}
-                                <h3 className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-900 dark:text-white leading-snug truncate group-hover:text-[#FF3B30] transition-colors">
+                                <h3
+                                  className={`${LEARN_TYPOGRAPHY.compactCardTitle} truncate group-hover:text-[#FF3B30] transition-colors`}
+                                >
                                   {course.title}
                                 </h3>
                               </div>
                               <div className="shrink-0 text-right">
-                                <span className="text-xs font-black text-slate-900 dark:text-white">
+                                <span className="text-sm font-black text-slate-900 dark:text-white">
                                   {progressPct}%
                                 </span>
-                                <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500">
+                                <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
                                   Done
                                 </div>
                               </div>
                             </div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium line-clamp-2 mt-2 sm:mt-3">
+                            <p
+                              className={`${LEARN_TYPOGRAPHY.cardDescription} line-clamp-2 mt-2 sm:mt-3`}
+                            >
                               {course.description ||
                                 courseDef?.desc ||
                                 "Full-stack course on Shiksha."}
@@ -3200,7 +3249,9 @@ export const LearnDashboardContainer: React.FC<
                                   style={{ width: `${progressPct}%` }}
                                 />
                               </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-400 font-semibold">
+                              <div
+                                className={`flex items-center justify-between ${LEARN_TYPOGRAPHY.microMeta}`}
+                              >
                                 <span>
                                   {completedChapters} / {totalChapters} Chapters
                                   Done
@@ -3217,7 +3268,7 @@ export const LearnDashboardContainer: React.FC<
                               onClick={() => {
                                 navigateToCourse(course.slug, course.title);
                               }}
-                              className="w-full py-2 sm:py-2.5 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all bg-red-50/50 hover:bg-red-50 text-[#FF3B30] border border-red-100 dark:bg-[#1E1E24] dark:border-[#2C2C34] dark:text-[#FF4D4D] dark:hover:bg-[#282830] cursor-pointer"
+                              className={`w-full py-2 sm:py-2.5 ${LEARN_TYPOGRAPHY.control} rounded-xl flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xs hover:shadow-xs transition-all bg-red-50/50 hover:bg-red-50 text-[#FF3B30] border border-red-100 dark:bg-[#1E1E24] dark:border-[#2C2C34] dark:text-[#FF4D4D] dark:hover:bg-[#282830] cursor-pointer`}
                             >
                               Continue Course{" "}
                               <FiArrowRight className="w-3.5 h-3.5" />
@@ -3239,7 +3290,7 @@ export const LearnDashboardContainer: React.FC<
                       <span className="text-xs font-bold text-slate-700 dark:text-white">
                         No active learning in progress yet
                       </span>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-400 max-w-sm">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm">
                         Start solving questions in any interview sheet or course
                         to track your progress here.
                       </p>

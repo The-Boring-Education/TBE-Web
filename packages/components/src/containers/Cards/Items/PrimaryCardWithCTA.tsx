@@ -1,6 +1,8 @@
 import { GradientContainer, Image, LinkButton, Text } from "@tbe/components";
 import type { PrimaryCardWithCTAProps } from "@tbe/interface";
 
+import { LEARN_TYPOGRAPHY } from "../../../learn/typography";
+
 const PrimaryCardWithCTA = ({
   image,
   imageAltText,
@@ -62,20 +64,20 @@ const PrimaryCardWithCTA = ({
       )}
       <div className="mt-2">
         <Text
-          className={`heading-5 truncate ${isDark ? "text-white" : "text-gray-900"}`}
+          className={`${LEARN_TYPOGRAPHY.cardTitleBase} truncate ${isDark ? "text-white" : "text-slate-900"}`}
           level="h5"
         >
           {title}
         </Text>
         <Text
-          className={`pre-title mt-1 line-clamp-1 ${isDark ? "text-gray-400" : "text-grey"}`}
+          className={`${LEARN_TYPOGRAPHY.cardDescriptionBase} mt-1.5 line-clamp-2 ${isDark ? "text-slate-300" : "text-slate-600"}`}
           level="p"
         >
           {content}
         </Text>
         {launchingOn && (
           <Text
-            className={`pre-title mt-1 s ${isDark ? "text-red-400/90" : "text-primary"}`}
+            className={`text-sm font-medium mt-1 ${isDark ? "text-red-400" : "text-red-700"}`}
             level="p"
           >
             {launchingOn}

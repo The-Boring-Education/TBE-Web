@@ -28,6 +28,7 @@ import {
 import { CodeRenderer } from "../quizes/common/CodeRenderer";
 import { PersonalizationLoader } from "./PersonalizationLoader";
 import { getQuizLogo, quizQuestionsCache } from "./QuizCatalogSpace";
+import { LEARN_TYPOGRAPHY } from "./typography";
 
 interface QuizQuestion {
   _id?: string;
@@ -324,7 +325,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
         <h3 className="text-base font-bold text-slate-900 dark:text-white">
           {error || "No questions found in this assessment."}
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           We could not load the requested quiz. Please try again or explore
           other topics.
         </p>
@@ -332,7 +333,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
           <button
             type="button"
             onClick={onBack}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-[#25252C] dark:hover:bg-[#2F2F37] text-slate-800 dark:text-slate-200 transition-all cursor-pointer"
+            className={`px-4 py-2 rounded-xl ${LEARN_TYPOGRAPHY.control} bg-slate-100 hover:bg-slate-200 dark:bg-[#25252C] dark:hover:bg-[#2F2F37] text-slate-800 dark:text-slate-200 transition-all cursor-pointer`}
           >
             Back to Quizzes
           </button>
@@ -349,7 +350,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
         <div className="bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] rounded-2xl p-5 sm:p-7 shadow-xs">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-900/60">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-900/60">
                 <FiAward className="w-3 h-3" />
                 Assessment Completed
               </div>
@@ -358,7 +359,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                   ? "Outstanding Performance! 🎉"
                   : "Good Attempt! Keep Practicing 💪"}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <p className={`${LEARN_TYPOGRAPHY.cardDescription} mt-1`}>
                 You completed the{" "}
                 <span className="text-slate-800 dark:text-slate-200 font-bold">
                   {title}
@@ -373,7 +374,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                 <span className="text-3xl font-black text-[#FF3B30]">
                   {results.percentage}%
                 </span>
-                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                   Accuracy
                 </span>
               </div>
@@ -383,7 +384,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 pt-5 border-t border-slate-100 dark:border-[#24242C]">
             <div className="bg-slate-50 dark:bg-[#202026] p-3 rounded-xl text-center">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
                 Score
               </div>
               <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white mt-0.5">
@@ -392,7 +393,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
             </div>
 
             <div className="bg-slate-50 dark:bg-[#202026] p-3 rounded-xl text-center">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
                 Total Time
               </div>
               <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white mt-0.5">
@@ -401,7 +402,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
             </div>
 
             <div className="bg-slate-50 dark:bg-[#202026] p-3 rounded-xl text-center">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
                 XP Earned
               </div>
               <div className="text-sm sm:text-base font-black text-amber-500 mt-0.5 flex items-center justify-center gap-1">
@@ -422,7 +423,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                 setQuestionStartTime(Date.now());
                 setGameState("playing");
               }}
-              className="px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-[#2C2C34] hover:bg-slate-50 dark:hover:bg-[#222228] text-slate-700 dark:text-slate-300 transition-all flex items-center gap-1.5 cursor-pointer"
+              className={`px-4 py-2 rounded-xl ${LEARN_TYPOGRAPHY.control} border border-slate-200 dark:border-[#2C2C34] hover:bg-slate-50 dark:hover:bg-[#222228] text-slate-700 dark:text-slate-300 transition-all flex items-center gap-1.5 cursor-pointer`}
             >
               <FiRotateCcw className="w-3.5 h-3.5" />
               Retake Quiz
@@ -430,7 +431,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
             <button
               type="button"
               onClick={onBack}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF3B30] hover:bg-[#EE3126] text-white shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              className={`px-4 py-2 rounded-xl ${LEARN_TYPOGRAPHY.control} bg-[#FF3B30] hover:bg-[#EE3126] text-white shadow-xs transition-all flex items-center gap-1.5 cursor-pointer`}
             >
               <span>Explore More Quizzes</span>
               <FiArrowRight className="w-3.5 h-3.5" />
@@ -444,7 +445,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
             <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
               Questions &amp; Detailed Explanations
             </h3>
-            <span className="text-xs text-slate-400">
+            <span className="text-sm text-slate-600 dark:text-slate-400">
               {results.correct} of {results.total} correct
             </span>
           </div>
@@ -479,7 +480,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                       )}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white">
+                      <div className="text-sm sm:text-[15px] font-semibold text-slate-900 dark:text-white">
                         <CodeRenderer
                           content={q.question}
                           theme={isDarkMode ? "dark" : "light"}
@@ -506,9 +507,9 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                           return (
                             <div
                               key={optIdx}
-                              className={`px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs border flex items-center gap-2 transition-all ${optionStyle}`}
+                              className={`px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[13px] sm:text-sm border flex items-center gap-2 transition-all ${optionStyle}`}
                             >
-                              <span className="font-bold text-[10px] sm:text-[11px] opacity-80 shrink-0">
+                              <span className="font-bold text-xs opacity-80 shrink-0">
                                 {String.fromCharCode(65 + optIdx)}.
                               </span>
                               <span className="truncate flex-1 min-w-0">
@@ -524,7 +525,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
 
                       {/* Explanation */}
                       {(q.explanation || q.detailedExplanation) && (
-                        <div className="mt-3 pt-2.5 border-t border-slate-200/60 dark:border-[#2A2A32] text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 flex items-start gap-2">
+                        <div className="mt-3 pt-2.5 border-t border-slate-200/60 dark:border-[#2A2A32] text-[13px] sm:text-sm text-slate-600 dark:text-slate-300 flex items-start gap-2">
                           <FiInfo className="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" />
                           <div>
                             <span className="font-bold text-slate-800 dark:text-slate-200">
@@ -552,7 +553,9 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
     <div className="w-full h-full min-h-0 flex flex-col justify-center items-center py-1 animate-fadeIn">
       <div className="w-full max-w-[480px] flex flex-col gap-1.5 sm:gap-2">
         {/* Top Breadcrumb Navigation */}
-        <nav className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 flex-wrap px-0.5">
+        <nav
+          className={`flex items-center gap-1.5 ${LEARN_TYPOGRAPHY.meta} flex-wrap px-0.5`}
+        >
           <button
             type="button"
             onClick={onBack}
@@ -560,7 +563,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
           >
             Learn
           </button>
-          <span className="text-slate-300 dark:text-slate-600">›</span>
+          <span className="text-slate-400 dark:text-slate-500">›</span>
           <button
             type="button"
             onClick={onBack}
@@ -568,7 +571,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
           >
             Quizzes
           </button>
-          <span className="text-slate-300 dark:text-slate-600">›</span>
+          <span className="text-slate-400 dark:text-slate-500">›</span>
           <span className="font-bold text-[#FF4D4D] truncate max-w-[180px]">
             {title}
           </span>
@@ -604,10 +607,10 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
               </div>
 
               <div className="min-w-0">
-                <h1 className="text-xs font-black text-slate-900 dark:text-white tracking-tight truncate leading-tight">
+                <h1 className="text-sm font-black text-slate-900 dark:text-white tracking-tight truncate leading-tight">
                   {title}
                 </h1>
-                <p className="text-[9px] text-slate-400 dark:text-slate-500 font-medium leading-none">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium leading-none">
                   Technical Assessment
                 </p>
               </div>
@@ -616,7 +619,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
             {/* Right: Timer & Question Count Badges */}
             <div className="flex items-center gap-1 shrink-0">
               {/* Timer Badge */}
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-50/70 dark:bg-red-950/30 border border-red-100/90 dark:border-red-900/40 text-[10px] font-semibold text-slate-800 dark:text-slate-200 shadow-2xs">
+              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-50/70 dark:bg-red-950/30 border border-red-100/90 dark:border-red-900/40 text-[11px] font-semibold text-slate-800 dark:text-slate-200 shadow-2xs">
                 <FiClock className="w-2.5 h-2.5 text-[#FF3B30] stroke-[2.2] shrink-0" />
                 <span className="font-mono font-bold tracking-tight">
                   {formatTime(totalSeconds)}
@@ -624,7 +627,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
               </div>
 
               {/* Question Count Badge */}
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-50/70 dark:bg-red-950/30 border border-red-100/90 dark:border-red-900/40 text-[10px] font-bold text-[#FF3B30] shadow-2xs">
+              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-50/70 dark:bg-red-950/30 border border-red-100/90 dark:border-red-900/40 text-[11px] font-bold text-red-700 dark:text-red-400 shadow-2xs">
                 <FiFileText className="w-2.5 h-2.5 text-[#FF3B30] stroke-[2.2] shrink-0" />
                 <span>
                   {currentIndex + 1}/{questions.length}
@@ -646,13 +649,13 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
         <div className="bg-white dark:bg-[#16161A] border border-slate-200/80 dark:border-[#24242A] rounded-xl sm:rounded-2xl p-2 sm:p-2.5 shadow-2xs flex flex-col gap-1.5 min-h-0">
           {/* Question Tag */}
           <div className="flex items-center justify-between">
-            <span className="inline-block px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-[#FF3B30] border border-red-100/80 dark:border-red-900/40">
+            <span className="inline-block px-1.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-[#FF4D4D] border border-red-100/80 dark:border-red-900/40">
               QUESTION {currentIndex + 1}
             </span>
           </div>
 
           {/* Question Text & Code Snippet: scrollable internally only if extremely long */}
-          <div className="text-xs font-bold text-slate-900 dark:text-white tracking-tight leading-snug max-h-[140px] overflow-y-auto pr-1 scrollbar-thin [&_pre]:max-h-24 [&_pre]:overflow-y-auto [&_pre]:p-1.5 [&_pre]:text-[11px] [&_pre]:my-1 [&_p]:my-0.5 [&_p]:leading-snug">
+          <div className="text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-snug max-h-[140px] overflow-y-auto pr-1 scrollbar-thin [&_pre]:max-h-24 [&_pre]:overflow-y-auto [&_pre]:p-1.5 [&_pre]:text-xs [&_pre]:my-1 [&_p]:my-0.5 [&_p]:leading-snug">
             <CodeRenderer
               content={currentQuestion.question}
               theme={isDarkMode ? "dark" : "light"}
@@ -678,7 +681,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                   {/* Left: Letter Badge + Option Content */}
                   <div className="flex items-center gap-1.5 min-w-0 flex-1">
                     <div
-                      className={`w-4.5 h-4.5 rounded flex items-center justify-center font-black text-[10px] shrink-0 transition-all ${
+                      className={`w-4.5 h-4.5 rounded flex items-center justify-center font-black text-xs shrink-0 transition-all ${
                         isSelected
                           ? "bg-red-50 dark:bg-red-950/50 text-[#FF3B30]"
                           : "bg-slate-100 dark:bg-[#24242C] text-slate-800 dark:text-slate-200 group-hover:bg-slate-200/80 dark:group-hover:bg-[#2C2C34]"
@@ -687,7 +690,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                       {letter}
                     </div>
 
-                    <div className="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1 min-w-0 [&_*]:m-0 [&_*]:p-0 [&_p]:m-0 [&_p]:leading-tight">
+                    <div className="text-[13px] sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1 min-w-0 [&_*]:m-0 [&_*]:p-0 [&_p]:m-0 [&_p]:leading-tight">
                       <CodeRenderer
                         content={cleanOptionText(option)}
                         theme={isDarkMode ? "dark" : "light"}
@@ -711,15 +714,15 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
           </div>
 
           {/* Keyboard Shortcut Hint */}
-          <div className="text-[9px] text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1 pt-0.5">
+          <div className="text-xs text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1 pt-0.5">
             <FiHelpCircle className="w-2.5 h-2.5 text-[#FF3B30] shrink-0" />
             <span>
               Press{" "}
-              <span className="px-1 py-0.2 rounded bg-red-50 dark:bg-red-950/40 text-[#FF3B30] border border-red-100 dark:border-red-900/40 font-bold text-[8px]">
+              <span className="px-1 py-0.5 rounded bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-[#FF4D4D] border border-red-100 dark:border-red-900/40 font-bold text-[10px]">
                 1 — 4
               </span>{" "}
               or{" "}
-              <span className="px-1 py-0.2 rounded bg-red-50 dark:bg-red-950/40 text-[#FF3B30] border border-red-100 dark:border-red-900/40 font-bold text-[8px]">
+              <span className="px-1 py-0.5 rounded bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-[#FF4D4D] border border-red-100 dark:border-red-900/40 font-bold text-[10px]">
                 A — D
               </span>{" "}
               to select, arrows to navigate.
@@ -744,7 +747,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => handleJumpToQuestion(idx)}
-                    className={`w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-md text-[10px] sm:text-[11px] font-extrabold transition-all shrink-0 cursor-pointer ${
+                    className={`w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-md text-[11px] sm:text-xs font-extrabold transition-all shrink-0 cursor-pointer ${
                       isCurrent
                         ? "bg-[#FF3B30] text-white shadow-2xs scale-105"
                         : isAnswered
@@ -792,7 +795,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
               type="button"
               disabled={currentIndex === 0}
               onClick={handlePrev}
-              className="px-2 py-1 rounded-md border border-slate-200/90 dark:border-[#2C2C36] bg-white dark:bg-[#1A1A20] hover:bg-slate-50 dark:hover:bg-[#222228] text-slate-600 dark:text-slate-300 font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none shadow-2xs"
+              className="px-2 py-1 rounded-md border border-slate-200/90 dark:border-[#2C2C36] bg-white dark:bg-[#1A1A20] hover:bg-slate-50 dark:hover:bg-[#222228] text-slate-600 dark:text-slate-300 font-bold text-xs flex items-center gap-1 transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none shadow-2xs"
             >
               <FiArrowLeft className="w-2.5 h-2.5" />
               <span>Prev</span>
@@ -802,7 +805,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
               <button
                 type="button"
                 onClick={handleNext}
-                className="px-2.5 py-1 rounded-md bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-[11px] flex items-center gap-1 shadow-2xs transition-all cursor-pointer"
+                className="px-2.5 py-1 rounded-md bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer"
               >
                 <span>Next</span>
                 <FiArrowRight className="w-2.5 h-2.5" />
@@ -812,7 +815,7 @@ export const QuizPlaySpace: React.FC<QuizPlaySpaceProps> = ({
                 type="button"
                 disabled={isSubmitting}
                 onClick={handleSubmitQuiz}
-                className="px-2.5 py-1 rounded-md bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-[11px] flex items-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                className="px-2.5 py-1 rounded-md bg-[#FF3B30] hover:bg-[#EE3126] text-white font-bold text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
               >
                 <FiSend className="w-2.5 h-2.5" />
                 <span>{isSubmitting ? "..." : "Submit"}</span>

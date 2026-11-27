@@ -79,7 +79,7 @@
   }
 
   .paragraph {
-    @apply text-sm sm:text-base md:text-lg font-normal text-slate-600 leading-relaxed;
+    @apply text-[15px] sm:text-base md:text-lg font-normal text-slate-600 dark:text-slate-300 leading-relaxed;
   }
 
   .strong-text {
@@ -95,7 +95,7 @@
   }
 
   .label {
-    @apply text-label font-semibold text-greyDark;
+    @apply text-label font-semibold text-slate-600 dark:text-slate-400;
   }
 
   /* Link */
