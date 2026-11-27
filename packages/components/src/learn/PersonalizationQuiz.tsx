@@ -134,15 +134,15 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
   }
 
   return (
-    <div className="w-full text-[#10162F] py-2 sm:py-4 px-3 sm:px-8 lg:px-12 flex flex-col relative font-sans">
+    <div className="w-full text-[#10162F] dark:text-white py-2 sm:py-4 px-3 sm:px-8 lg:px-12 flex flex-col relative font-sans">
       {/* Main Container */}
       <div className="w-full max-w-5xl mx-auto flex-1 flex flex-col my-2 sm:my-4">
         {/* Title Header */}
         <div className="text-center mb-5 sm:mb-8 space-y-1 sm:space-y-1.5">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#10162F] tracking-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#10162F] dark:text-white tracking-tight">
             Find what's right for you
           </h1>
-          <p className="text-xs sm:text-sm md:text-base text-slate-600 font-medium max-w-lg mx-auto">
+          <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 font-medium max-w-lg mx-auto">
             Answer 3 quick questions to get recommendations that match your
             interests.
           </p>
@@ -160,10 +160,10 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                   key={num}
                   className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
                     isCompleted
-                      ? "bg-[#10162F] text-white shadow-xs"
+                      ? "bg-[#10162F] text-white shadow-xs dark:bg-slate-200 dark:text-slate-900"
                       : isActive
-                        ? "border-2 border-[#10162F] text-[#10162F] bg-white font-extrabold"
-                        : "border border-slate-300 text-slate-400 bg-transparent font-medium"
+                        ? "border-2 border-[#10162F] text-[#10162F] bg-white font-extrabold dark:border-white dark:text-white dark:bg-[#17171B]"
+                        : "border border-slate-300 text-slate-400 bg-transparent font-medium dark:border-slate-600 dark:text-slate-400"
                   }`}
                 >
                   {isCompleted ? (
@@ -180,7 +180,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
           <div className="md:col-span-7 space-y-4 sm:space-y-5">
             {step === 1 && (
               <div className="space-y-3 sm:space-y-4">
-                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F]">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F] dark:text-white">
                   What do you want to learn about?
                 </h2>
 
@@ -194,8 +194,8 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         onClick={() => handleSelectInterest(topic.id)}
                         className={`px-3.5 sm:px-4 py-3 sm:py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xl shadow-xs cursor-pointer ${
                           isSelected
-                            ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
-                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
+                            ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold dark:bg-red-950/40 dark:border-red-500 dark:text-white"
+                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800 dark:bg-[#17171B] dark:border-[#2C2C34] dark:hover:border-slate-500 dark:text-slate-200"
                         }`}
                       >
                         {topic.label}
@@ -208,7 +208,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
 
             {step === 2 && (
               <div className="space-y-3 sm:space-y-4">
-                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F]">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F] dark:text-white">
                   What do you want to achieve?
                 </h2>
 
@@ -222,8 +222,8 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         onClick={() => handleSelectGoal(goal.id)}
                         className={`w-full px-4 sm:px-5 py-3 sm:py-3.5 border text-left text-xs sm:text-sm font-semibold transition-all rounded-xl shadow-xs cursor-pointer ${
                           isSelected
-                            ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
-                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
+                            ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold dark:bg-red-950/40 dark:border-red-500 dark:text-white"
+                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800 dark:bg-[#17171B] dark:border-[#2C2C34] dark:hover:border-slate-500 dark:text-slate-200"
                         }`}
                       >
                         {goal.label}
@@ -236,7 +236,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
 
             {step === 3 && (
               <div className="space-y-3 sm:space-y-4">
-                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F]">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#10162F] dark:text-white">
                   How much coding experience do you have?
                 </h2>
 
@@ -250,14 +250,14 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                         onClick={() => handleSelectExperience(exp.id)}
                         className={`w-full p-3.5 sm:p-4 border text-left transition-all rounded-xl shadow-xs cursor-pointer ${
                           isSelected
-                            ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold"
-                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800"
+                            ? "bg-[#FFF0F0] border-[#FF4D4D] text-[#10162F] font-bold dark:bg-red-950/40 dark:border-red-500 dark:text-white"
+                            : "bg-white border-slate-200 hover:border-slate-800 text-slate-800 dark:bg-[#17171B] dark:border-[#2C2C34] dark:hover:border-slate-500 dark:text-slate-200"
                         }`}
                       >
-                        <h3 className="font-bold text-xs sm:text-sm md:text-base text-[#10162F]">
+                        <h3 className="font-bold text-xs sm:text-sm md:text-base text-[#10162F] dark:text-white">
                           {exp.title}
                         </h3>
-                        <p className="text-[11px] sm:text-xs text-slate-600 mt-1">
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
                           {exp.desc}
                         </p>
                       </button>
@@ -273,7 +273,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                 <button
                   type="button"
                   onClick={() => setStep((step - 1) as 1 | 2)}
-                  className="text-xs sm:text-sm font-bold text-indigo-700 hover:underline cursor-pointer"
+                  className="text-xs sm:text-sm font-bold text-indigo-700 dark:text-indigo-300 hover:underline cursor-pointer"
                 >
                   ← Back
                 </button>
@@ -290,7 +290,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                   alt="Learn topics"
                   className="max-h-40 sm:max-h-56 md:max-h-64 object-contain mx-auto"
                 />
-                <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xs mx-auto">
+                <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 max-w-xs mx-auto">
                   We have hundreds of courses that cover just about everything.
                 </p>
               </div>
@@ -303,7 +303,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                   alt="Set goals"
                   className="max-h-40 sm:max-h-56 md:max-h-64 object-contain mx-auto"
                 />
-                <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xs mx-auto">
+                <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 max-w-xs mx-auto">
                   People who set a goal are 40% more likely to achieve it.
                 </p>
               </div>
@@ -316,7 +316,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
                   alt="Coding experience"
                   className="max-h-40 sm:max-h-56 md:max-h-64 object-contain mx-auto"
                 />
-                <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xs mx-auto">
+                <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 max-w-xs mx-auto">
                   Our hands-on learning environment is designed for all levels.
                 </p>
               </div>
@@ -326,7 +326,7 @@ export const PersonalizationQuiz: React.FC<PersonalizationQuizProps> = ({
       </div>
 
       {/* Bottom Footer */}
-      <div className="w-full text-center text-[10px] text-slate-400 pt-4">
+      <div className="w-full text-center text-xs text-slate-600 dark:text-slate-400 pt-4">
         The Boring Education • Personalized Learning Roadmap
       </div>
     </div>
