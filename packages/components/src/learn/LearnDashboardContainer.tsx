@@ -1311,7 +1311,7 @@ export const LearnDashboardContainer: React.FC<
           className={`${
             isSidebarCollapsed
               ? "w-11 sm:w-[54px] px-0.5 sm:px-1"
-              : "w-[180px] sm:w-[215px] px-1 sm:px-2"
+              : "w-[200px] sm:w-[240px] px-1 sm:px-2"
           } bg-white dark:bg-[#131316] rounded-2xl border border-slate-200/90 dark:border-[#24242A] shadow-2xs h-full flex flex-col justify-between py-1.5 sm:py-2 shrink-0 transition-[width,padding] duration-300 ease-in-out select-none z-30 relative`}
         >
           <div className="space-y-1 flex-1 overflow-y-auto overflow-x-hidden scrollbar-none sm:[&::-webkit-scrollbar]:w-1 sm:[&::-webkit-scrollbar-thumb]:bg-slate-200 dark:sm:[&::-webkit-scrollbar-thumb]:bg-[#26262D] sm:[&::-webkit-scrollbar-thumb]:rounded-full">
