@@ -787,75 +787,232 @@ const CARD_THEMES = [
   },
 ];
 
-const getDiscoveryItemIcon = (item: RecommendedItem) => {
+const getDiscoveryItemIconData = (item: RecommendedItem) => {
   if (item.logoKey && LANGUAGE_LOGOS[item.logoKey]) {
-    return (
-      <img
-        src={LANGUAGE_LOGOS[item.logoKey]}
-        alt={item.title}
-        className="w-full h-full object-contain"
-      />
-    );
+    let containerStyle =
+      "bg-slate-50 dark:bg-[#222228] border-slate-200/80 dark:border-[#2C2C34]";
+    if (item.logoKey === "javascript" || item.logoKey === "js") {
+      containerStyle =
+        "bg-amber-50 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-800/40";
+    } else if (item.logoKey === "react" || item.logoKey === "frontend") {
+      containerStyle =
+        "bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200/70 dark:border-cyan-800/40";
+    } else if (item.logoKey === "java") {
+      containerStyle =
+        "bg-orange-50 dark:bg-orange-950/30 border-orange-200/70 dark:border-orange-800/40";
+    } else if (
+      item.logoKey === "nodejs" ||
+      item.logoKey === "node" ||
+      item.logoKey === "backend"
+    ) {
+      containerStyle =
+        "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200/70 dark:border-emerald-800/40";
+    } else if (item.logoKey === "python") {
+      containerStyle =
+        "bg-blue-50 dark:bg-blue-950/30 border-blue-200/70 dark:border-blue-800/40";
+    } else if (item.logoKey === "postgresql" || item.logoKey === "mysql") {
+      containerStyle =
+        "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200/70 dark:border-indigo-800/40";
+    } else if (item.logoKey === "logic") {
+      containerStyle =
+        "bg-red-50 dark:bg-red-950/30 border-red-200/70 dark:border-red-800/40";
+    }
+
+    return {
+      element: (
+        <img
+          src={LANGUAGE_LOGOS[item.logoKey]}
+          alt={item.title}
+          className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
+        />
+      ),
+      containerStyle,
+    };
   }
 
   switch (item.id) {
     case "os-core":
-      return <Cpu className="w-5 h-5 text-blue-500" />;
+      return {
+        element: <Cpu className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
+        containerStyle:
+          "bg-blue-50 dark:bg-blue-950/30 border-blue-200/70 dark:border-blue-800/40",
+      };
     case "cn-core":
-      return <Network className="w-5 h-5 text-blue-500" />;
+      return {
+        element: <Network className="w-7 h-7 text-sky-600 dark:text-sky-400" />,
+        containerStyle:
+          "bg-sky-50 dark:bg-sky-950/30 border-sky-200/70 dark:border-sky-800/40",
+      };
     case "dbms-core":
-      return <Database className="w-5 h-5 text-blue-500" />;
+      return {
+        element: (
+          <Database className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+        ),
+        containerStyle:
+          "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200/70 dark:border-indigo-800/40",
+      };
     case "oops-core":
-      return <Layers className="w-5 h-5 text-blue-500" />;
+      return {
+        element: (
+          <Layers className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+        ),
+        containerStyle:
+          "bg-blue-50 dark:bg-blue-950/30 border-blue-200/70 dark:border-blue-800/40",
+      };
     case "res-agentic-ai":
-      return <Sparkles className="w-5 h-5 text-purple-500" />;
+      return {
+        element: (
+          <Sparkles className="w-7 h-7 text-purple-600 dark:text-purple-400" />
+        ),
+        containerStyle:
+          "bg-purple-50 dark:bg-purple-950/30 border-purple-200/70 dark:border-purple-800/40",
+      };
     case "res-placement":
-      return <GraduationCap className="w-5 h-5 text-rose-500" />;
+      return {
+        element: (
+          <GraduationCap className="w-7 h-7 text-rose-600 dark:text-rose-400" />
+        ),
+        containerStyle:
+          "bg-rose-50 dark:bg-rose-950/30 border-rose-200/70 dark:border-rose-800/40",
+      };
     case "res-dsa-escape":
-      return <Code2 className="w-5 h-5 text-amber-500" />;
+      return {
+        element: (
+          <Code2 className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+        ),
+        containerStyle:
+          "bg-amber-50 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-800/40",
+      };
     case "res-backend":
-      return <Server className="w-5 h-5 text-emerald-500" />;
+      return {
+        element: (
+          <Server className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+        ),
+        containerStyle:
+          "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200/70 dark:border-emerald-800/40",
+      };
     case "res-frontend":
-      return <Layout className="w-5 h-5 text-cyan-500" />;
+      return {
+        element: (
+          <Layout className="w-7 h-7 text-cyan-600 dark:text-cyan-400" />
+        ),
+        containerStyle:
+          "bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200/70 dark:border-cyan-800/40",
+      };
     case "res-aiml":
-      return <Brain className="w-5 h-5 text-purple-500" />;
+      return {
+        element: (
+          <Brain className="w-7 h-7 text-purple-600 dark:text-purple-400" />
+        ),
+        containerStyle:
+          "bg-purple-50 dark:bg-purple-950/30 border-purple-200/70 dark:border-purple-800/40",
+      };
     case "res-genai":
-      return <Bot className="w-5 h-5 text-indigo-500" />;
+      return {
+        element: (
+          <Bot className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+        ),
+        containerStyle:
+          "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200/70 dark:border-indigo-800/40",
+      };
     case "res-devops":
-      return <Terminal className="w-5 h-5 text-orange-500" />;
+      return {
+        element: (
+          <Terminal className="w-7 h-7 text-orange-600 dark:text-orange-400" />
+        ),
+        containerStyle:
+          "bg-orange-50 dark:bg-orange-950/30 border-orange-200/70 dark:border-orange-800/40",
+      };
     case "res-cloud":
-      return <Cloud className="w-5 h-5 text-blue-500" />;
+      return {
+        element: <Cloud className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
+        containerStyle:
+          "bg-blue-50 dark:bg-blue-950/30 border-blue-200/70 dark:border-blue-800/40",
+      };
     case "res-git":
-      return <GitPullRequest className="w-5 h-5 text-slate-500" />;
+      return {
+        element: (
+          <GitPullRequest className="w-7 h-7 text-slate-700 dark:text-slate-300" />
+        ),
+        containerStyle:
+          "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700",
+      };
     case "res-cold-email":
-      return <Mail className="w-5 h-5 text-teal-500" />;
+      return {
+        element: <Mail className="w-7 h-7 text-teal-600 dark:text-teal-400" />,
+        containerStyle:
+          "bg-teal-50 dark:bg-teal-950/30 border-teal-200/70 dark:border-teal-800/40",
+      };
     case "res-freelance":
-      return <Briefcase className="w-5 h-5 text-emerald-500" />;
+      return {
+        element: (
+          <Briefcase className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+        ),
+        containerStyle:
+          "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200/70 dark:border-emerald-800/40",
+      };
     case "res-cybersecurity":
     case "res-ethical-hacking":
-      return <Shield className="w-5 h-5 text-red-500" />;
+      return {
+        element: <Shield className="w-7 h-7 text-red-600 dark:text-red-400" />,
+        containerStyle:
+          "bg-red-50 dark:bg-red-950/30 border-red-200/70 dark:border-red-800/40",
+      };
     case "res-mobile":
-      return <Smartphone className="w-5 h-5 text-violet-500" />;
+      return {
+        element: (
+          <Smartphone className="w-7 h-7 text-violet-600 dark:text-violet-400" />
+        ),
+        containerStyle:
+          "bg-violet-50 dark:bg-violet-950/30 border-violet-200/70 dark:border-violet-800/40",
+      };
     case "res-blockchain":
-      return <Blocks className="w-5 h-5 text-indigo-500" />;
+      return {
+        element: (
+          <Blocks className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+        ),
+        containerStyle:
+          "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200/70 dark:border-indigo-800/40",
+      };
     case "res-hr":
-      return <Users className="w-5 h-5 text-amber-500" />;
+      return {
+        element: (
+          <Users className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+        ),
+        containerStyle:
+          "bg-amber-50 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-800/40",
+      };
     case "res-system-design":
-      return <Layers className="w-5 h-5 text-sky-500" />;
+      return {
+        element: <Layers className="w-7 h-7 text-sky-600 dark:text-sky-400" />,
+        containerStyle:
+          "bg-sky-50 dark:bg-sky-950/30 border-sky-200/70 dark:border-sky-800/40",
+      };
     default:
       break;
   }
 
   if (item.type === "course") {
-    return <BookOpen className="w-5 h-5 text-[#FF3B30]" />;
+    return {
+      element: <BookOpen className="w-7 h-7 text-[#FF3B30]" />,
+      containerStyle:
+        "bg-red-50 dark:bg-red-950/30 border-red-200/70 dark:border-red-800/40",
+    };
   }
   if (item.type === "sheet") {
-    return <FileText className="w-5 h-5 text-sky-500" />;
+    return {
+      element: <FileText className="w-7 h-7 text-sky-600 dark:text-sky-400" />,
+      containerStyle:
+        "bg-sky-50 dark:bg-sky-950/30 border-sky-200/70 dark:border-sky-800/40",
+    };
   }
-  if (item.type === "core-subject") {
-    return <Cpu className="w-5 h-5 text-blue-500" />;
-  }
-  return <Sparkles className="w-5 h-5 text-purple-500" />;
+  return {
+    element: (
+      <Sparkles className="w-7 h-7 text-purple-600 dark:text-purple-400" />
+    ),
+    containerStyle:
+      "bg-purple-50 dark:bg-purple-950/30 border-purple-200/70 dark:border-purple-800/40",
+  };
 };
 
 const getDiscoveryItemFormat = (item: RecommendedItem) => {
@@ -976,7 +1133,7 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
       ? `/interview-prep/${enrolledMatch.slug}`
       : item.url;
 
-  const itemIcon = getDiscoveryItemIcon(item);
+  const iconData = getDiscoveryItemIconData(item);
   const formatInfo = getDiscoveryItemFormat(item);
   const platformLabel = getDiscoveryItemPlatform(item);
   const badgeStyle = getDiscoveryItemBadgeStyle(item);
@@ -1013,7 +1170,7 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
 
   const cardContent = (
     <div
-      className={`h-full bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden flex flex-col justify-between group ${
+      className={`h-full bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden flex flex-col justify-between group/card ${
         isGrid ? "w-full" : "w-56 sm:w-64 md:w-72 shrink-0 snap-start"
       }`}
     >
@@ -1038,24 +1195,26 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
       {/* Card Body */}
       <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between gap-3">
         <div>
-          {/* Header row: Title + Logo */}
-          <div className="flex items-start justify-between gap-3">
+          {/* Header row: Prominent Tech/Subject Logo on left + Format & Title on right */}
+          <div className="flex items-start gap-3">
+            <div
+              className={`w-12 h-12 rounded-xl border flex items-center justify-center p-2 shrink-0 shadow-2xs group-hover/card:scale-105 transition-transform ${iconData.containerStyle}`}
+            >
+              {iconData.element}
+            </div>
             <div className="min-w-0 flex-1">
-              <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+              <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-0.5">
                 <FormatIcon className="w-3 h-3 text-slate-400 shrink-0" />
                 <span>{formatInfo.label}</span>
               </div>
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#FF3B30] transition-colors line-clamp-2">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover/card:text-[#FF3B30] transition-colors line-clamp-2">
                 {item.title}
               </h3>
-            </div>
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-50 dark:bg-[#222228] border border-slate-100 dark:border-[#2C2C34] flex items-center justify-center p-2 shrink-0 group-hover:scale-105 transition-transform">
-              {itemIcon}
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal line-clamp-2 mt-2">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal line-clamp-2 mt-2.5">
             {item.desc}
           </p>
         </div>
@@ -1099,9 +1258,9 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
 
           {/* CTA Button */}
           <div className="pt-2 border-t border-slate-100 dark:border-[#26262C]">
-            <div className="w-full py-2 px-3 bg-slate-50 dark:bg-[#222228] group-hover:bg-[#FF3B30] text-slate-700 dark:text-slate-200 group-hover:text-white border border-slate-200/80 dark:border-[#2C2C34] group-hover:border-[#FF3B30] font-bold text-xs rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group-hover:shadow-xs">
+            <div className="w-full py-2 px-3 bg-slate-50 dark:bg-[#222228] group-hover/card:bg-[#FF3B30] text-slate-700 dark:text-slate-200 group-hover/card:text-white border border-slate-200/80 dark:border-[#2C2C34] group-hover/card:border-[#FF3B30] font-bold text-xs rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group-hover/card:shadow-xs">
               <span>{buttonText}</span>
-              <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              <FiArrowRight className="w-3.5 h-3.5 group-hover/card:translate-x-0.5 transition-transform" />
             </div>
           </div>
         </div>
@@ -1115,7 +1274,7 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
         href={item.url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`block group ${isGrid ? "h-full" : "shrink-0"}`}
+        className={`block group/card ${isGrid ? "h-full" : "shrink-0"}`}
       >
         {cardContent}
       </a>
@@ -1126,7 +1285,7 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
     <Link
       href={linkHref}
       onClick={handleCardClick}
-      className={`block group ${isGrid ? "h-full" : "shrink-0"}`}
+      className={`block group/card ${isGrid ? "h-full" : "shrink-0"}`}
     >
       {cardContent}
     </Link>
@@ -2685,7 +2844,7 @@ export const LearnDashboardContainer: React.FC<
                   </button>
                 </div>
 
-                <div className="relative group overflow-x-clip">
+                <div className="relative overflow-x-clip">
                   <div
                     id="recommended-scroll-container"
                     className="flex items-stretch gap-3 sm:gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 dark:[&::-webkit-scrollbar-track]:bg-[#1A1A1E] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-[#2C2C34] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400"
