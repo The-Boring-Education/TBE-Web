@@ -1213,8 +1213,8 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
           </div>
 
           {/* Row 2: Heading - perfectly on the SAME line across all cards */}
-          <div className="h-11 flex items-start mt-3">
-            <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover/card:text-[#FF3B30] transition-colors line-clamp-2">
+          <div className="h-11 sm:h-12 flex items-start mt-2.5 sm:mt-3">
+            <h3 className="text-sm sm:text-[15px] font-bold text-slate-900 dark:text-white leading-snug group-hover/card:text-[#FF3B30] transition-colors line-clamp-2">
               {item.title}
             </h3>
           </div>
@@ -2870,7 +2870,7 @@ export const LearnDashboardContainer: React.FC<
                             className="h-20 sm:h-24 md:h-28 object-contain mx-auto"
                           />
                         </div>
-                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                        <h3 className="text-sm sm:text-[15px] font-bold text-slate-900 dark:text-white leading-snug">
                           Explore courses & sheets
                         </h3>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-snug">
