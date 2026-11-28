@@ -3,6 +3,30 @@ import { routes } from "@tbe/constants";
 import { useGamification } from "@tbe/gamification";
 import { quizApi } from "@tbe/services";
 import { sendRequest } from "@tbe/utils";
+import {
+  Blocks,
+  BookOpen,
+  Bot,
+  Brain,
+  Briefcase,
+  Cloud,
+  Code2,
+  Cpu,
+  Database,
+  FileText,
+  GitPullRequest,
+  GraduationCap,
+  Layers,
+  Layout,
+  Mail,
+  Network,
+  Server,
+  Shield,
+  Smartphone,
+  Sparkles,
+  Terminal,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -11,7 +35,6 @@ import {
   FiArrowUpRight,
   FiBarChart2,
   FiBookOpen,
-  FiCheckCircle,
   FiChevronsLeft,
   FiChevronsRight,
   FiCode,
@@ -763,6 +786,352 @@ const CARD_THEMES = [
     logoBg: "bg-violet-50/60 text-violet-600 border-violet-100",
   },
 ];
+
+const getDiscoveryItemIcon = (item: RecommendedItem) => {
+  if (item.logoKey && LANGUAGE_LOGOS[item.logoKey]) {
+    return (
+      <img
+        src={LANGUAGE_LOGOS[item.logoKey]}
+        alt={item.title}
+        className="w-full h-full object-contain"
+      />
+    );
+  }
+
+  switch (item.id) {
+    case "os-core":
+      return <Cpu className="w-5 h-5 text-blue-500" />;
+    case "cn-core":
+      return <Network className="w-5 h-5 text-blue-500" />;
+    case "dbms-core":
+      return <Database className="w-5 h-5 text-blue-500" />;
+    case "oops-core":
+      return <Layers className="w-5 h-5 text-blue-500" />;
+    case "res-agentic-ai":
+      return <Sparkles className="w-5 h-5 text-purple-500" />;
+    case "res-placement":
+      return <GraduationCap className="w-5 h-5 text-rose-500" />;
+    case "res-dsa-escape":
+      return <Code2 className="w-5 h-5 text-amber-500" />;
+    case "res-backend":
+      return <Server className="w-5 h-5 text-emerald-500" />;
+    case "res-frontend":
+      return <Layout className="w-5 h-5 text-cyan-500" />;
+    case "res-aiml":
+      return <Brain className="w-5 h-5 text-purple-500" />;
+    case "res-genai":
+      return <Bot className="w-5 h-5 text-indigo-500" />;
+    case "res-devops":
+      return <Terminal className="w-5 h-5 text-orange-500" />;
+    case "res-cloud":
+      return <Cloud className="w-5 h-5 text-blue-500" />;
+    case "res-git":
+      return <GitPullRequest className="w-5 h-5 text-slate-500" />;
+    case "res-cold-email":
+      return <Mail className="w-5 h-5 text-teal-500" />;
+    case "res-freelance":
+      return <Briefcase className="w-5 h-5 text-emerald-500" />;
+    case "res-cybersecurity":
+    case "res-ethical-hacking":
+      return <Shield className="w-5 h-5 text-red-500" />;
+    case "res-mobile":
+      return <Smartphone className="w-5 h-5 text-violet-500" />;
+    case "res-blockchain":
+      return <Blocks className="w-5 h-5 text-indigo-500" />;
+    case "res-hr":
+      return <Users className="w-5 h-5 text-amber-500" />;
+    case "res-system-design":
+      return <Layers className="w-5 h-5 text-sky-500" />;
+    default:
+      break;
+  }
+
+  if (item.type === "course") {
+    return <BookOpen className="w-5 h-5 text-[#FF3B30]" />;
+  }
+  if (item.type === "sheet") {
+    return <FileText className="w-5 h-5 text-sky-500" />;
+  }
+  if (item.type === "core-subject") {
+    return <Cpu className="w-5 h-5 text-blue-500" />;
+  }
+  return <Sparkles className="w-5 h-5 text-purple-500" />;
+};
+
+const getDiscoveryItemFormat = (item: RecommendedItem) => {
+  switch (item.type) {
+    case "sheet":
+      return { label: "Q&A Sheet", icon: FileText };
+    case "course":
+      return { label: "Step-by-Step Course", icon: BookOpen };
+    case "core-subject":
+      return { label: "Theory & Notes Vault", icon: Cpu };
+    case "resource":
+      return { label: "Interactive Roadmap", icon: Sparkles };
+    default:
+      return { label: "Resource", icon: FileText };
+  }
+};
+
+const getDiscoveryItemPlatform = (item: RecommendedItem) => {
+  switch (item.type) {
+    case "sheet":
+      return "Interview Prep";
+    case "course":
+      return "Shiksha";
+    case "core-subject":
+      return "OnCampus";
+    case "resource":
+      return "Resources";
+    default:
+      return "TBE";
+  }
+};
+
+const getDiscoveryItemBadgeStyle = (item: RecommendedItem) => {
+  if (item.categoryStyle) {
+    return item.categoryStyle;
+  }
+  switch (item.type) {
+    case "sheet":
+      return "bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200/80 dark:border-sky-900/60";
+    case "course":
+      return "bg-rose-50 dark:bg-red-950/40 text-rose-700 dark:text-rose-300 border-rose-200/80 dark:border-red-900/60";
+    case "core-subject":
+      return "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200/80 dark:border-blue-900/60";
+    case "resource":
+      return "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200/80 dark:border-purple-900/60";
+    default:
+      return "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+  }
+};
+
+const getDiscoveryItemButtonText = (
+  item: RecommendedItem,
+  isInProgress?: boolean,
+) => {
+  if (isInProgress) {
+    return item.type === "course" ? "Continue Course" : "Resume Sheet";
+  }
+  switch (item.type) {
+    case "sheet":
+      return "Start Sheet";
+    case "course":
+      return "Start Course";
+    case "core-subject":
+      return "Read Notes";
+    case "resource":
+      return "View Roadmap";
+    default:
+      return "Explore";
+  }
+};
+
+interface DashboardDiscoveryCardProps {
+  item: RecommendedItem;
+  enrolledCourses: any[];
+  enrolledSheets: any[];
+  isGrid?: boolean;
+  onSelectLearningItem?: (item: {
+    type: "course" | "sheet";
+    slug: string;
+    title: string;
+  }) => void;
+  setActiveTab?: (tab: any) => void;
+}
+
+const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
+  item,
+  enrolledCourses,
+  enrolledSheets,
+  isGrid = false,
+  onSelectLearningItem,
+  setActiveTab,
+}) => {
+  const enrolledMatch = item.slug
+    ? item.type === "course"
+      ? enrolledCourses.find(
+          (c) =>
+            c.slug === item.slug ||
+            c.title?.toLowerCase() === item.title.toLowerCase(),
+        )
+      : enrolledSheets.find(
+          (s) =>
+            s.slug === item.slug ||
+            s.title?.toLowerCase() === item.title.toLowerCase(),
+        )
+    : null;
+
+  const isInProgress =
+    enrolledMatch &&
+    ((enrolledMatch.progress?.completed ?? 0) > 0 ||
+      (enrolledMatch.progress?.percentage ?? 0) > 0);
+
+  const progressPercentage = enrolledMatch?.progress?.percentage ?? 0;
+  const completedCount = enrolledMatch?.progress?.completed ?? 0;
+  const totalCount = enrolledMatch?.progress?.total ?? 0;
+
+  const linkHref =
+    item.type === "sheet" && enrolledMatch?.slug
+      ? `/interview-prep/${enrolledMatch.slug}`
+      : item.url;
+
+  const itemIcon = getDiscoveryItemIcon(item);
+  const formatInfo = getDiscoveryItemFormat(item);
+  const platformLabel = getDiscoveryItemPlatform(item);
+  const badgeStyle = getDiscoveryItemBadgeStyle(item);
+  const buttonText = getDiscoveryItemButtonText(item, Boolean(isInProgress));
+  const FormatIcon = formatInfo.icon;
+
+  const handleCardClick = () => {
+    if (!item.isExternal && item.slug) {
+      if (item.type === "sheet") {
+        if (onSelectLearningItem) {
+          onSelectLearningItem({
+            type: "sheet",
+            slug: item.slug,
+            title: item.title,
+          });
+        }
+        if (setActiveTab) {
+          setActiveTab("interview-prep");
+        }
+      } else if (item.type === "course") {
+        if (onSelectLearningItem) {
+          onSelectLearningItem({
+            type: "course",
+            slug: item.slug,
+            title: item.title,
+          });
+        }
+        if (setActiveTab) {
+          setActiveTab("shiksha");
+        }
+      }
+    }
+  };
+
+  const cardContent = (
+    <div
+      className={`h-full bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842] hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden flex flex-col justify-between group ${
+        isGrid ? "w-full" : "w-56 sm:w-64 md:w-72 shrink-0 snap-start"
+      }`}
+    >
+      {/* Top Header Strip */}
+      <div className="px-3.5 sm:px-4 py-2 bg-slate-50/70 dark:bg-[#1D1D22] border-b border-slate-100 dark:border-[#26262C] flex items-center justify-between gap-2">
+        {isInProgress ? (
+          <span className="px-2 py-0.5 text-[10px] font-extrabold tracking-wider uppercase bg-[#FF3B30] text-white rounded-md shadow-2xs">
+            IN PROGRESS
+          </span>
+        ) : (
+          <span
+            className={`px-2 py-0.5 text-[10px] font-extrabold tracking-wider uppercase rounded-md border ${badgeStyle}`}
+          >
+            {item.category}
+          </span>
+        )}
+        <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">
+          {platformLabel}
+        </span>
+      </div>
+
+      {/* Card Body */}
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between gap-3">
+        <div>
+          {/* Header row: Title + Logo */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+                <FormatIcon className="w-3 h-3 text-slate-400 shrink-0" />
+                <span>{formatInfo.label}</span>
+              </div>
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#FF3B30] transition-colors line-clamp-2">
+                {item.title}
+              </h3>
+            </div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-50 dark:bg-[#222228] border border-slate-100 dark:border-[#2C2C34] flex items-center justify-center p-2 shrink-0 group-hover:scale-105 transition-transform">
+              {itemIcon}
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal line-clamp-2 mt-2">
+            {item.desc}
+          </p>
+        </div>
+
+        {/* Progress or Status */}
+        <div className="space-y-2">
+          {isInProgress ? (
+            <div className="space-y-1.5 pt-1">
+              <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1.5 overflow-hidden">
+                <div
+                  className="bg-[#FF3B30] h-1.5 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                <span className="text-[#FF3B30]">
+                  {progressPercentage}%{" "}
+                  {item.type === "sheet" ? "Solved" : "Completed"}
+                </span>
+                {totalCount > 0 && (
+                  <span>
+                    {completedCount} / {totalCount}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-50 dark:bg-[#222228] border border-slate-100 dark:border-[#2C2C34] rounded-md text-[10px] font-medium text-slate-500 dark:text-slate-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+              <span>
+                {item.type === "sheet"
+                  ? "Interview Questions"
+                  : item.type === "course"
+                    ? "Full Course • Free"
+                    : item.type === "core-subject"
+                      ? "Revision Vault"
+                      : "Verified Roadmap"}
+              </span>
+            </div>
+          )}
+
+          {/* CTA Button */}
+          <div className="pt-2 border-t border-slate-100 dark:border-[#26262C]">
+            <div className="w-full py-2 px-3 bg-slate-50 dark:bg-[#222228] group-hover:bg-[#FF3B30] text-slate-700 dark:text-slate-200 group-hover:text-white border border-slate-200/80 dark:border-[#2C2C34] group-hover:border-[#FF3B30] font-bold text-xs rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group-hover:shadow-xs">
+              <span>{buttonText}</span>
+              <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (item.isExternal) {
+    return (
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`block group ${isGrid ? "h-full" : "shrink-0"}`}
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={linkHref}
+      onClick={handleCardClick}
+      className={`block group ${isGrid ? "h-full" : "shrink-0"}`}
+    >
+      {cardContent}
+    </Link>
+  );
+};
 
 export const LearnDashboardContainer: React.FC<
   LearnDashboardContainerProps
@@ -2322,7 +2691,7 @@ export const LearnDashboardContainer: React.FC<
                     className="flex items-stretch gap-3 sm:gap-3.5 overflow-x-auto snap-x pb-2 pt-1 flex-nowrap scroll-smooth [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-slate-100 dark:[&::-webkit-scrollbar-track]:bg-[#1A1A1E] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-[#2C2C34] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400"
                   >
                     {/* Bulb Card */}
-                    <div className="w-52 sm:w-60 md:w-64 shrink-0 bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between text-center shadow-xs hover:border-slate-300 dark:hover:border-[#383842] transition-all snap-start">
+                    <div className="w-56 sm:w-64 md:w-72 shrink-0 bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] rounded-2xl p-4 flex flex-col justify-between text-center shadow-xs hover:border-slate-300 dark:hover:border-[#383842] transition-all snap-start">
                       <div>
                         <div className="w-full flex items-center justify-center py-1 mb-2">
                           <img
@@ -2348,116 +2717,17 @@ export const LearnDashboardContainer: React.FC<
                     </div>
 
                     {/* Mixed Recommendation Cards */}
-                    {RECOMMENDED_DISCOVERY_ITEMS.map((item) => {
-                      const enrolledMatch = item.slug
-                        ? item.type === "course"
-                          ? enrolledCourses.find(
-                              (c) =>
-                                c.slug === item.slug ||
-                                c.title?.toLowerCase() ===
-                                  item.title.toLowerCase(),
-                            )
-                          : enrolledSheets.find(
-                              (s) =>
-                                s.slug === item.slug ||
-                                s.title?.toLowerCase() ===
-                                  item.title.toLowerCase(),
-                            )
-                        : null;
-
-                      const isInProgress =
-                        enrolledMatch &&
-                        ((enrolledMatch.progress?.completed ?? 0) > 0 ||
-                          (enrolledMatch.progress?.percentage ?? 0) > 0);
-
-                      const progressPercentage =
-                        enrolledMatch?.progress?.percentage ?? 0;
-
-                      let badgeText = item.category;
-                      let badgeStyle =
-                        item.categoryStyle ||
-                        "bg-[#E0F2FE] dark:bg-sky-950/40 text-[#0369A1] dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60";
-
-                      if (
-                        (item.type === "sheet" || item.type === "course") &&
-                        isInProgress
-                      ) {
-                        badgeText = "IN PROGRESS";
-                        badgeStyle = "bg-[#FF3B30] text-white font-extrabold";
-                      }
-
-                      const linkHref =
-                        item.type === "sheet" && enrolledMatch?.slug
-                          ? `/interview-prep/${enrolledMatch.slug}`
-                          : item.url;
-
-                      return (
-                        <div
-                          key={item.id}
-                          className="w-52 sm:w-60 md:w-64 shrink-0 bg-white dark:bg-[#17171B] border border-slate-200/80 dark:border-[#26262C] rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs hover:border-slate-300 dark:hover:border-[#383842] transition-all snap-start group"
-                        >
-                          <div>
-                            <div
-                              className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
-                            >
-                              {badgeText}
-                            </div>
-                            <div className="p-3 sm:p-3.5 space-y-1.5 sm:space-y-2">
-                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#FF3B30] transition-colors">
-                                {item.title}
-                              </h3>
-                              <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-3">
-                                {item.desc}
-                              </p>
-                              {isInProgress && (
-                                <div className="pt-1.5 space-y-1">
-                                  <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1.5">
-                                    <div
-                                      className="bg-[#FF3B30] h-1.5 rounded-full"
-                                      style={{
-                                        width: `${progressPercentage}%`,
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="text-right text-[10px] font-bold text-slate-700 dark:text-slate-300">
-                                    {progressPercentage}% Completed
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="px-3 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 dark:border-[#26262C] flex items-center justify-between text-[10px] font-medium text-slate-400">
-                            <span>
-                              {item.type === "core-subject"
-                                ? "OnCampus"
-                                : item.type === "resource"
-                                  ? "Resources"
-                                  : item.type === "course"
-                                    ? "Shiksha"
-                                    : "Interview Prep"}
-                            </span>
-                            {item.isExternal ? (
-                              <a
-                                href={item.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-bold text-[#FF3B30] group-hover:underline flex items-center gap-0.5"
-                              >
-                                Explore <FiArrowRight className="w-3 h-3" />
-                              </a>
-                            ) : (
-                              <Link
-                                href={linkHref}
-                                className="font-bold text-[#FF3B30] group-hover:underline flex items-center gap-0.5"
-                              >
-                                {isInProgress ? "Resume" : "Explore"}{" "}
-                                <FiArrowRight className="w-3 h-3" />
-                              </Link>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                    {RECOMMENDED_DISCOVERY_ITEMS.map((item) => (
+                      <DashboardDiscoveryCard
+                        key={item.id}
+                        item={item}
+                        enrolledCourses={enrolledCourses}
+                        enrolledSheets={enrolledSheets}
+                        isGrid={false}
+                        onSelectLearningItem={setActiveLearningItem}
+                        setActiveTab={setActiveTab}
+                      />
+                    ))}
                   </div>
                 </div>
               </section>
@@ -2808,169 +3078,17 @@ export const LearnDashboardContainer: React.FC<
                     return matchTitle || matchDesc || matchCat;
                   }
                   return true;
-                }).map((item, index) => {
-                  const theme = CARD_THEMES[index % CARD_THEMES.length]!;
-                  const logoUrl = item.logoKey
-                    ? LANGUAGE_LOGOS[item.logoKey]
-                    : null;
-
-                  const enrolledMatch = item.slug
-                    ? item.type === "course"
-                      ? enrolledCourses.find(
-                          (c) =>
-                            c.slug === item.slug ||
-                            c.title?.toLowerCase() === item.title.toLowerCase(),
-                        )
-                      : enrolledSheets.find(
-                          (s) =>
-                            s.slug === item.slug ||
-                            s.title?.toLowerCase() === item.title.toLowerCase(),
-                        )
-                    : null;
-
-                  const isInProgress =
-                    enrolledMatch &&
-                    ((enrolledMatch.progress?.completed ?? 0) > 0 ||
-                      (enrolledMatch.progress?.percentage ?? 0) > 0);
-
-                  const progressPercentage =
-                    enrolledMatch?.progress?.percentage ?? 0;
-                  const completedCount =
-                    enrolledMatch?.progress?.completed ?? 0;
-                  const totalCount = enrolledMatch?.progress?.total ?? 0;
-
-                  let badgeText = item.category;
-                  let badgeStyle = theme.badgeBg;
-
-                  if (
-                    (item.type === "sheet" || item.type === "course") &&
-                    isInProgress
-                  ) {
-                    badgeText = "IN PROGRESS";
-                    badgeStyle = "bg-[#FF3B30] text-white font-extrabold";
-                  }
-
-                  const linkHref =
-                    item.type === "sheet" && enrolledMatch?.slug
-                      ? `/interview-prep/${enrolledMatch.slug}`
-                      : item.url;
-
-                  return (
-                    <div
-                      key={item.id}
-                      className={`bg-white dark:bg-[#17171B] border rounded-2xl flex flex-col shadow-xs hover:shadow-md transition-all group overflow-hidden ${
-                        isInProgress
-                          ? "border-slate-200 dark:border-[#26262C]"
-                          : "border-slate-200/80 dark:border-[#26262C] hover:border-slate-300 dark:hover:border-[#383842]"
-                      }`}
-                    >
-                      {/* Full-width top badge strip */}
-                      <div
-                        className={`px-3 sm:px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider uppercase ${badgeStyle}`}
-                      >
-                        {badgeText}
-                      </div>
-
-                      {/* Language logo — interview sheets & shiksha courses */}
-                      {(item.type === "sheet" || item.type === "course") &&
-                        logoUrl && (
-                          <div className="px-3.5 sm:px-5 pt-3 sm:pt-4 flex justify-end">
-                            <img
-                              src={logoUrl}
-                              alt={item.title}
-                              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
-                            />
-                          </div>
-                        )}
-
-                      {/* Title + Description */}
-                      <div className="px-3.5 sm:px-5 pt-2 pb-3.5 sm:pb-4 flex-1 flex flex-col gap-1.5 sm:gap-2">
-                        <h3
-                          className="text-sm sm:text-[15px] font-bold text-slate-900 dark:text-white leading-snug"
-                          title={item.title}
-                        >
-                          {item.title}
-                        </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3 sm:line-clamp-none">
-                          {item.desc}
-                        </p>
-
-                        {/* Progress / Status */}
-                        <div className="mt-2.5 sm:mt-3">
-                          {isInProgress ? (
-                            <div className="space-y-1.5">
-                              {/* Thin colored bar */}
-                              <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1 overflow-hidden">
-                                <div
-                                  className="h-1 rounded-full bg-[#FF3B30]"
-                                  style={{ width: `${progressPercentage}%` }}
-                                />
-                              </div>
-                              <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
-                                <span className="font-bold text-slate-700 dark:text-slate-200">
-                                  {progressPercentage}% Solved
-                                </span>
-                                <span>
-                                  {completedCount} / {totalCount || 450}
-                                </span>
-                              </div>
-                            </div>
-                          ) : (
-                            /* Gray pill */
-                            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 dark:bg-[#222228] border border-slate-200 dark:border-[#2C2C34] rounded-lg text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                              <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                              {item.type === "core-subject"
-                                ? "Core CS Subject"
-                                : item.type === "resource"
-                                  ? "Developer Guide • 100% Free"
-                                  : item.type === "course"
-                                    ? "Shiksha Course • 100% Free"
-                                    : "Comprehensive Practice Sheet"}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Footer */}
-                      <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-t border-slate-100 dark:border-[#26262C] flex items-center justify-between text-[11px]">
-                        <span className="flex items-center gap-1.5 text-slate-400 font-medium">
-                          {item.type === "course" ? (
-                            <FiPlayCircle className="w-3.5 h-3.5" />
-                          ) : (
-                            <FiFileText className="w-3.5 h-3.5" />
-                          )}
-                          {item.type === "core-subject"
-                            ? "OnCampus Vault"
-                            : item.type === "resource"
-                              ? "Resource App"
-                              : item.type === "course"
-                                ? "Shiksha Course"
-                                : "Interview Sheet"}
-                        </span>
-                        {item.isExternal ? (
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`font-bold text-xs flex items-center gap-1 ${theme.linkColor} hover:underline shrink-0`}
-                          >
-                            Explore <FiArrowRight className="w-3.5 h-3.5" />
-                          </a>
-                        ) : (
-                          <Link
-                            href={linkHref}
-                            className={`font-bold text-xs flex items-center gap-1 shrink-0 hover:underline ${
-                              isInProgress ? "text-[#FF3B30]" : theme.linkColor
-                            }`}
-                          >
-                            {isInProgress ? "Resume" : "Explore"}{" "}
-                            <FiArrowRight className="w-3.5 h-3.5" />
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+                }).map((item) => (
+                  <DashboardDiscoveryCard
+                    key={item.id}
+                    item={item}
+                    enrolledCourses={enrolledCourses}
+                    enrolledSheets={enrolledSheets}
+                    isGrid
+                    onSelectLearningItem={setActiveLearningItem}
+                    setActiveTab={setActiveTab}
+                  />
+                ))}
               </div>
             </div>
           ) : (
