@@ -1015,6 +1015,10 @@ const getDiscoveryItemIconData = (item: RecommendedItem) => {
   };
 };
 
+const getDiscoveryItemIcon = (item: RecommendedItem) => {
+  return getDiscoveryItemIconData(item).element;
+};
+
 const getDiscoveryItemFormat = (item: RecommendedItem) => {
   switch (item.type) {
     case "sheet":
@@ -1175,7 +1179,7 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
       }`}
     >
       {/* Top Header Strip */}
-      <div className="px-3.5 sm:px-4 py-2 bg-slate-50/70 dark:bg-[#1D1D22] border-b border-slate-100 dark:border-[#26262C] flex items-center justify-between gap-2">
+      <div className="h-9 px-3.5 sm:px-4 bg-slate-50/70 dark:bg-[#1D1D22] border-b border-slate-100 dark:border-[#26262C] flex items-center justify-between gap-2">
         {isInProgress ? (
           <span className="px-2 py-0.5 text-[10px] font-extrabold tracking-wider uppercase bg-[#FF3B30] text-white rounded-md shadow-2xs">
             IN PROGRESS
@@ -1193,70 +1197,77 @@ const DashboardDiscoveryCard: React.FC<DashboardDiscoveryCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between gap-3">
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between">
         <div>
-          {/* Header row: Prominent Tech/Subject Logo on left + Format & Title on right */}
-          <div className="flex items-start gap-3">
+          {/* Row 1: Logo on left, Format pill on right - perfectly level across all cards */}
+          <div className="flex items-center justify-between h-12">
             <div
               className={`w-12 h-12 rounded-xl border flex items-center justify-center p-2 shrink-0 shadow-2xs group-hover/card:scale-105 transition-transform ${iconData.containerStyle}`}
             >
               {iconData.element}
             </div>
-            <div className="min-w-0 flex-1">
-              <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-0.5">
-                <FormatIcon className="w-3 h-3 text-slate-400 shrink-0" />
-                <span>{formatInfo.label}</span>
-              </div>
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover/card:text-[#FF3B30] transition-colors line-clamp-2">
-                {item.title}
-              </h3>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-[#222228] border border-slate-100 dark:border-[#2C2C34] text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+              <FormatIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span>{formatInfo.label}</span>
             </div>
           </div>
 
-          {/* Description */}
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal line-clamp-2 mt-2.5">
-            {item.desc}
-          </p>
+          {/* Row 2: Heading - perfectly on the SAME line across all cards */}
+          <div className="h-11 flex items-start mt-3">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug group-hover/card:text-[#FF3B30] transition-colors line-clamp-2">
+              {item.title}
+            </h3>
+          </div>
+
+          {/* Row 3: Description - perfectly on the SAME line across all cards */}
+          <div className="h-9 mt-1.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal line-clamp-2">
+              {item.desc}
+            </p>
+          </div>
         </div>
 
-        {/* Progress or Status */}
-        <div className="space-y-2">
-          {isInProgress ? (
-            <div className="space-y-1.5 pt-1">
-              <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="bg-[#FF3B30] h-1.5 rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercentage}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-                <span className="text-[#FF3B30]">
-                  {progressPercentage}%{" "}
-                  {item.type === "sheet" ? "Solved" : "Completed"}
-                </span>
-                {totalCount > 0 && (
-                  <span>
-                    {completedCount} / {totalCount}
+        {/* Bottom block: Status + Button */}
+        <div className="space-y-2.5 mt-auto pt-2">
+          {/* Row 4: Status / Progress pill */}
+          <div className="h-6 flex items-center">
+            {isInProgress ? (
+              <div className="w-full space-y-1">
+                <div className="w-full bg-slate-100 dark:bg-[#26262C] rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className="bg-[#FF3B30] h-1.5 rounded-full transition-all duration-300"
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 leading-none">
+                  <span className="text-[#FF3B30]">
+                    {progressPercentage}%{" "}
+                    {item.type === "sheet" ? "Solved" : "Completed"}
                   </span>
-                )}
+                  {totalCount > 0 && (
+                    <span>
+                      {completedCount} / {totalCount}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-50 dark:bg-[#222228] border border-slate-100 dark:border-[#2C2C34] rounded-md text-[10px] font-medium text-slate-500 dark:text-slate-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-              <span>
-                {item.type === "sheet"
-                  ? "Interview Questions"
-                  : item.type === "course"
-                    ? "Full Course • Free"
-                    : item.type === "core-subject"
-                      ? "Revision Vault"
-                      : "Verified Roadmap"}
-              </span>
-            </div>
-          )}
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-50 dark:bg-[#222228] border border-slate-100 dark:border-[#2C2C34] rounded-md text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                <span>
+                  {item.type === "sheet"
+                    ? "Interview Questions"
+                    : item.type === "course"
+                      ? "Full Course • Free"
+                      : item.type === "core-subject"
+                        ? "Revision Vault"
+                        : "Verified Roadmap"}
+                </span>
+              </div>
+            )}
+          </div>
 
-          {/* CTA Button */}
+          {/* Row 5: CTA Button */}
           <div className="pt-2 border-t border-slate-100 dark:border-[#26262C]">
             <div className="w-full py-2 px-3 bg-slate-50 dark:bg-[#222228] group-hover/card:bg-[#FF3B30] text-slate-700 dark:text-slate-200 group-hover/card:text-white border border-slate-200/80 dark:border-[#2C2C34] group-hover/card:border-[#FF3B30] font-bold text-xs rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group-hover/card:shadow-xs">
               <span>{buttonText}</span>
